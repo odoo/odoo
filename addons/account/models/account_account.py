@@ -598,6 +598,9 @@ class AccountAccount(models.Model):
             'domain': [('id', 'in', related_taxes_ids)],
         }
 
+    def _merge_method(self, destination, source):
+        raise UserError(_("You cannot merge accounts."))
+
 
 class AccountGroup(models.Model):
     _name = "account.group"
