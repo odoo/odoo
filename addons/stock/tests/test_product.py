@@ -273,3 +273,47 @@ class TestVirtualAvailable(TestStockCommon):
         res = self.env['product.template'].name_search(name='123', operator='not ilike')
         res_ids = [r[0] for r in res]
         self.assertNotIn(template.id, res_ids)
+
+    def test_product_qty_field_and_context(self):
+        main_warehouse = self.warehouse_1
+        other_warehouse = self.env['stock.warehouse'].search([('id', '!=', main_warehouse.id)], limit=1)
+        warehouses = main_warehouse | other_warehouse
+        main_loc = main_warehouse.lot_stock_id
+        other_loc = other_warehouse.lot_stock_id
+        self.assertTrue(other_warehouse, 'The test needs another warehouse')
+
+        (main_loc | other_loc).name = 'Stock'
+        sub_loc01, sub_loc02, sub_loc03 = self.env['stock.location'].create([{
+            'name': 'Sub0%s' % (i + 1),
+            'location_id': main_loc.id,
+        } for i in range(3)])
+
+        self.env['stock.quant'].search([('product_id', '=', self.product_3.id)]).unlink()
+        self.env['stock.quant']._update_available_quantity(self.product_3, other_loc, 1000)
+        self.env['stock.quant']._update_available_quantity(self.product_3, main_loc, 100)
+        self.env['stock.quant']._update_available_quantity(self.product_3, sub_loc01, 10)
+        self.env['stock.quant']._update_available_quantity(self.product_3, sub_loc02, 1)
+
+        for wh, loc, expected in [
+            (False, False, 1111.0),
+            (False, other_loc.id, 1000.0),
+            (False, main_loc.id, 111.0),
+            (False, sub_loc01.id, 10.0),
+            (False, sub_loc01.name, 10.0),
+            (False, 'sub', 11.0),
+            (False, main_loc.name, 1111.0),
+            (False, (sub_loc01 | sub_loc02 | sub_loc03).ids, 11.0),
+            (main_warehouse.id, main_loc.name, 111.0),
+            (main_warehouse.id, main_loc.id, 111.0),
+            (main_warehouse.id, (main_loc | other_loc).ids, 111.0),
+            (main_warehouse.id, sub_loc01.id, 10.0),
+            (main_warehouse.id, (sub_loc01 | sub_loc02).ids, 11.0),
+            (other_warehouse.id, main_loc.name, 1000.0),
+            (other_warehouse.id, main_loc.id, 0.0),
+            (main_warehouse.name, False, 111.0),
+            (main_warehouse.id, False, 111.0),
+            (warehouses.ids, False, 1111.0),
+            (warehouses.ids, (other_loc | sub_loc02).ids, 1001),
+        ]:
+            product_qty = self.product_3.with_context(warehouse=wh, location=loc).qty_available
+            self.assertEqual(product_qty, expected)
