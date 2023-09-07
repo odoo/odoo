@@ -1162,7 +1162,10 @@ export class Wysiwyg extends Component {
      */
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
-            const {res_model: resModel, res_id: resId} = this.options.recordInfo;
+            let { oeModel: resModel, oeId: resId } = editableEl.dataset;
+            if (!resModel) {
+                ({ res_model: resModel, res_id: resId } = this.options.recordInfo);
+            }
             // When saving a webp, o_b64_image_to_save is turned into
             // o_modified_image_to_save by _saveB64Image to request the saving
             // of the pre-converted webp resizes and all the equivalent jpgs.
