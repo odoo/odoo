@@ -16,6 +16,8 @@ class StockPickingType(models.Model):
         compute='_get_mo_count')
     count_mo_late = fields.Integer(string="Number of Manufacturing Orders Late",
         compute='_get_mo_count')
+    use_create_lots = fields.Boolean(compute='_compute_use_create_lots', store=True)
+    use_existing_lots = fields.Boolean(compute='_compute_use_existing_lots', store=True)
     use_create_components_lots = fields.Boolean(
         string="Create New Lots/Serial Numbers for Components",
         help="Allow to create new lot/serial numbers for the components",
@@ -25,6 +27,18 @@ class StockPickingType(models.Model):
         string="Consume Reserved Lots/Serial Numbers automatically",
         help="Allow automatic consumption of tracked components that are reserved",
     )
+
+    @api.depends('code')
+    def _compute_use_create_lots(self):
+        for picking_type in self:
+            if picking_type.code == 'mrp_operation':
+                picking_type.use_create_lots = True
+
+    @api.depends('code')
+    def _compute_use_existing_lots(self):
+        for picking_type in self:
+            if picking_type.code == 'mrp_operation':
+                picking_type.use_existing_lots = True
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
@@ -48,12 +62,6 @@ class StockPickingType(models.Model):
         if self:
             action['display_name'] = self.display_name
         return action
-
-    @api.onchange('code')
-    def _onchange_code(self):
-        if self.code == 'mrp_operation':
-            self.use_create_lots = True
-            self.use_existing_lots = True
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

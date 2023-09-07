@@ -22,13 +22,13 @@ class PickingType(models.Model):
         string="Number of Repair Orders Late", compute='_compute_count_repair')
 
     default_remove_location_dest_id = fields.Many2one(
-        'stock.location', 'Default Remove Destination Location',
-        check_company=True,
+        'stock.location', 'Default Remove Destination Location', compute='_compute_default_remove_location_dest_id',
+        check_company=True, store=True, readonly=False, precompute=True,
         help="This is the default remove destination location when you create a repair order with this operation type.")
 
     default_recycle_location_dest_id = fields.Many2one(
-        'stock.location', 'Default Recycle Destination Location',
-        check_company=True,
+        'stock.location', 'Default Recycle Destination Location', compute='_compute_default_recycle_location_dest_id',
+        check_company=True, store=True, readonly=False, precompute=True,
         help="This is the default recycle destination location when you create a repair order with this operation type.")
 
     is_repairable = fields.Boolean(
@@ -77,20 +77,48 @@ class PickingType(models.Model):
             if not(picking_type.code == 'incoming' and picking_type.return_type_of_ids):
                 picking_type.is_repairable = False
 
-    @api.onchange('code')
-    def _onchange_picking_code(self):
-        super()._onchange_picking_code()
+    def _compute_default_location_src_id(self):
+        remaining_picking_type = self.env['stock.picking.type']
+        for picking_type in self:
+            if picking_type.code != 'repair_operation':
+                remaining_picking_type |= picking_type
+                continue
+            stock_location = picking_type.warehouse_id.lot_stock_id
+            picking_type.default_location_src_id = stock_location.id
+        super(PickingType, remaining_picking_type)._compute_default_location_src_id()
 
-        if self.code == 'repair_operation':
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            stock_location = warehouse.lot_stock_id
-            prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
-            scrap_location = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.company_id.id, False])], limit=1)
+    def _compute_default_location_dest_id(self):
+        repair_picking_type = self.filtered(lambda pt: pt.code == 'repair_operation')
+        prod_locations = self.env['stock.location']._read_group(
+            [('usage', '=', 'production'), ('company_id', 'in', repair_picking_type.company_id.ids)],
+            ['company_id'],
+            ['id:min'],
+        )
+        prod_locations = {l[0].id: l[1] for l in prod_locations}
+        for picking_type in repair_picking_type:
+            picking_type.default_location_dest_id = prod_locations.get(picking_type.company_id.id)
+        super(PickingType, (self - repair_picking_type))._compute_default_location_dest_id()
 
-            self.default_location_src_id = stock_location.id
-            self.default_location_dest_id = prod_location.id
-            self.default_remove_location_dest_id = scrap_location.id
-            self.default_recycle_location_dest_id = stock_location.id
+    @api.depends('code')
+    def _compute_default_remove_location_dest_id(self):
+        repair_picking_type = self.filtered(lambda pt: pt.code == 'repair_operation')
+        company_ids = repair_picking_type.company_id.ids
+        company_ids.append(False)
+        scrap_locations = self.env['stock.location']._read_group(
+            [('scrap_location', '=', True), ('company_id', 'in', company_ids)],
+            ['company_id'],
+            ['id:min'],
+        )
+        scrap_locations = {l[0].id: l[1] for l in scrap_locations}
+        for picking_type in repair_picking_type:
+            picking_type.default_remove_location_dest_id = scrap_locations.get(picking_type.company_id.id)
+
+    @api.depends('code')
+    def _compute_default_recycle_location_dest_id(self):
+        for picking_type in self:
+            if picking_type.code == 'repair_operation':
+                stock_location = picking_type.warehouse_id.lot_stock_id
+                picking_type.default_recycle_location_dest_id = stock_location.id
 
     def get_repair_stock_picking_action_picking_type(self):
         action = self.env["ir.actions.actions"]._for_xml_id('repair.action_picking_repair')
