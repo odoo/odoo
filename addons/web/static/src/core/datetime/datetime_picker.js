@@ -412,6 +412,7 @@ export class DateTimePicker extends Component {
             this.state.timeValues[props.focusedDateIndex] = timeValues[props.focusedDateIndex];
         }
 
+        this.shouldAdjustFocusDate = !props.range;
         this.adjustFocus(this.values, props.focusedDateIndex);
         this.handle12HourSystem();
         this.state.timeValues = this.state.timeValues.map((timeValue) => timeValue.map(String));
