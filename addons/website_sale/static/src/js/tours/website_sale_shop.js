@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
     import { _t } from "@web/core/l10n/translation";
-    import { Markup } from "@web/legacy/js/core/utils";
     import wTourUtils from "@website/js/tours/tour_utils";
+
+    import { markup } from "@odoo/owl";
 
     wTourUtils.registerWebsitePreviewTour("shop", {
         url: '/shop',
@@ -15,7 +16,7 @@
         position: "bottom",
     }, {
         trigger: "a[data-module-xml-id='base.module_website_sale']",
-        content: Markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
+        content: markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
         position: "bottom",
     }, {
         trigger: ".modal-dialog input[type=text]",
@@ -23,7 +24,7 @@
         position: "left",
     }, {
         trigger: ".modal-footer button.btn-primary",
-        content: Markup(_t("Click on <em>Save</em> to create the product.")),
+        content: markup(_t("Click on <em>Save</em> to create the product.")),
         position: "right",
     }, {
         trigger: "iframe .product_price .oe_currency_value:visible",
@@ -58,7 +59,7 @@
         run: "drag_and_drop",
     }, {
         trigger: "button[data-action=save]",
-        content: Markup(_t("Once you click on <b>Save</b>, your product is updated.")),
+        content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
         position: "bottom",
     }, {
         trigger: ".o_menu_systray_item .o_switch_danger_success",

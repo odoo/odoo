@@ -2,7 +2,7 @@
 
 import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
 import { patch } from "@web/core/utils/patch";
-import { Markup } from "@web/legacy/js/core/utils";
+import { markup } from "@odoo/owl";
 
 patch(WysiwygAdapterComponent.prototype, {
     /**
@@ -20,7 +20,7 @@ patch(WysiwygAdapterComponent.prototype, {
             );
         }
         this.ribbons = Object.fromEntries(ribbons.map(ribbon => {
-            ribbon.html = Markup(ribbon.html);
+            ribbon.html = markup(ribbon.html);
             return [ribbon.id, ribbon];
         }));
         this.originalRibbons = Object.assign({}, this.ribbons);

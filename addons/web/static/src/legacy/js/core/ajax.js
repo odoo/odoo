@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import core from "@web/legacy/js/services/core";
-import { Markup } from "@web/legacy/js/core/utils";
 import time from "@web/legacy/js/core/time";
 import { session } from "@web/session";
+
+import { markup } from "@odoo/owl";
 
 // Create the final object containing all the functions first to allow monkey
 // patching them correctly if ever needed.
@@ -195,13 +196,13 @@ var loadAsset = (function () {
                     return $(this).attr('href');
                 }).get(),
                 cssContents: $xml.filter('style').map(function () {
-                    return Markup($(this).html());
+                    return markup($(this).html());
                 }).get(),
                 jsLibs: $xml.filter('script[src]').map(function () {
                     return $(this).attr('src');
                 }).get(),
                 jsContents: $xml.filter('script:not([src])').map(function () {
-                    return Markup($(this).html());
+                    return markup($(this).html());
                 }).get(),
             };
         }).guardedCatch(reason => {

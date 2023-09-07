@@ -2,11 +2,12 @@
 
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from '@web/legacy/js/core/utils';
 import { session } from "@web/session";
 import publicRootData from '@web/legacy/js/public/public_root';
 import "@website/libs/zoomodoo/zoomodoo";
 import { pick } from "@web/core/utils/objects";
+
+import { markup } from "@odoo/owl";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend({
     events: Object.assign({}, publicRootData.PublicRoot.prototype.events || {}, {
@@ -119,10 +120,10 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
                             type: 'warning',
                             sticky: true,
                             message:
-                                Markup`<div>
+                                markup(`<div>
                                     <span>${message}</span><br/>
                                     <a href="/web#action=website.action_website_configuration">${urlTitle}</a>
-                                </div>`,
+                                </div>`),
                         });
                     }
                     resolve(false);

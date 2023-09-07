@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -14,12 +13,12 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     sequence: 230,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
-    content: Markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
+    content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     position: 'right',
     edition: 'community'
 }, {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
-    content: Markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
+    content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     position: 'bottom',
     edition: 'enterprise'
 }, {
@@ -63,24 +62,24 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 }, {
     trigger: ".oe_kanban_action_button",
     extra_trigger: '.o_hr_recruitment_kanban',
-    content: Markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
+    content: markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
     position: "bottom"
 }, {
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',
-    content: Markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
+    content: markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
     position: "bottom",
     run: "drag_and_drop .o_kanban_group:eq(1) ",
 }, {
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',
-    content: Markup(_t("<b>Click to view</b> the application.")),
+    content: markup(_t("<b>Click to view</b> the application.")),
     position: "bottom",
     width: 195
 }, {
     trigger: "button:contains(Send message)",
     extra_trigger: '.o_applicant_form',
-    content: Markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
+    content: markup(_t("<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All emails sent or received are saved in the history here</i>")),
     position: "bottom"
 }, {
     trigger: ".o-mail-Chatter .o-mail-Composer button[aria-label='Send']",

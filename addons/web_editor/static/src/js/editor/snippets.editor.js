@@ -5,7 +5,6 @@ import { clamp } from "@web/core/utils/numbers";
 import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
-import { Markup } from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
 import options from "@web_editor/js/editor/snippets.options";
 import { SmoothScrollOnDrag } from "@web_editor/js/editor/smooth_scroll_on_drag";
@@ -21,6 +20,7 @@ import { attachComponent } from "@web/legacy/utils";
 import { Toolbar } from "@web_editor/js/editor/toolbar";
 import {
     Component,
+    markup,
     xml,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
@@ -3862,7 +3862,7 @@ var SnippetsMenu = Widget.extend({
                     }).guardedCatch(reason => {
                         reason.event.preventDefault();
                         this.close();
-                        const message = Markup(_t("Could not install module <strong>%s</strong>", escape(name)));
+                        const message = markup(_t("Could not install module <strong>%s</strong>", escape(name)));
                         self.displayNotification({
                             message: message,
                             type: 'danger',

@@ -3,7 +3,9 @@
     import { registry } from "@web/core/registry";
     import { stepUtils } from "@web_tour/tour_service/tour_utils";
     import { _t } from "@web/core/l10n/translation";
-    import { Markup } from "@web/legacy/js/core/utils";
+
+    import { markup } from "@odoo/owl";
+
     const { DateTime } = luxon;
 
     registry.category("web_tour.tours").add('mass_mailing_tour', {
@@ -23,11 +25,11 @@
     }, {
         trigger: '.o_list_button_add',
         extra_trigger: '.o_mass_mailing_mailing_tree',
-        content: Markup(_t("Start by creating your first <b>Mailing</b>.")),
+        content: markup(_t("Start by creating your first <b>Mailing</b>.")),
         position: 'bottom',
     }, {
         trigger: 'input[name="subject"]',
-        content: Markup(_t('Pick the <b>email subject</b>.')),
+        content: markup(_t('Pick the <b>email subject</b>.')),
         position: 'bottom',
         run: 'text ' + DateTime.now().toFormat("LLLL") + " Newsletter",
     }, {
@@ -40,13 +42,13 @@
         auto: true,
     }, {
         trigger: 'div[name="body_arch"] iframe #newsletter',
-        content: Markup(_t('Choose this <b>theme</b>.')),
+        content: markup(_t('Choose this <b>theme</b>.')),
         position: 'left',
         edition: 'enterprise',
         run: 'click',
     }, {
         trigger: 'div[name="body_arch"] iframe #default',
-        content: Markup(_t('Choose this <b>theme</b>.')),
+        content: markup(_t('Choose this <b>theme</b>.')),
         position: 'right',
         edition: 'community',
         run: 'click',
@@ -86,7 +88,7 @@
         run: "click",
     }, {
         trigger: '.o_back_button',
-        content: Markup(_t("By using the <b>Breadcrumb</b>, you can navigate back to the overview.")),
+        content: markup(_t("By using the <b>Breadcrumb</b>, you can navigate back to the overview.")),
         position: 'bottom',
         run: 'click',
     }]

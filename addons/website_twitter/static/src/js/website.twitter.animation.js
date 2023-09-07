@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
-import { Markup } from "@web/legacy/js/core/utils";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { escape } from "@web/core/utils/strings";
+
+import { markup } from "@odoo/owl";
 
 publicWidget.registry.twitter = publicWidget.Widget.extend({
     selector: '.twitter',
@@ -45,7 +46,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 }
 
                 // Parse tweet text
-                tweet.text = Markup(escape(tweet.text)
+                tweet.text = markup(escape(tweet.text)
                     .replace(
                         /[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g,
                         function (url) {
@@ -68,7 +69,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 return renderToElement('website.Twitter.Tweet', {tweet: tweet});
 
                 function _makeLink(url, text) {
-                    return Markup`<a href="${url}" target="_blank" rel="noreferrer noopener">${text}</a>`;
+                    return markup(`<a href="${url}" target="_blank" rel="noreferrer noopener">${text}</a>`);
                 }
             });
 

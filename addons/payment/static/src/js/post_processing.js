@@ -2,8 +2,9 @@
 
     import publicWidget from "@web/legacy/js/public/public_widget";
     import { renderToElement } from "@web/core/utils/render";
-    import { Markup } from "@web/legacy/js/core/utils";
     import { _t } from "@web/core/l10n/translation";
+
+    import { markup } from "@odoo/owl";
 
     publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
         selector: 'div[name="o_payment_status"]',
@@ -74,7 +75,7 @@
                 var key = 'tx_' + display_values.state;
                 if(key in render_values) {
                     if (display_values["display_message"]) {
-                        display_values.display_message = Markup(display_values.display_message)
+                        display_values.display_message = markup(display_values.display_message)
                     }
                     render_values[key].push(display_values);
                 }

@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
@@ -24,7 +25,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on "Add a product" to add a new product. We will add a service product.',
 }, {
     trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
-    content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
+    content: markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
     run: 'text Service Product (Prepaid Hours)',
 }, {
     trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
@@ -81,7 +82,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     position: 'bottom',
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: Markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
+    content: markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
     run: 'text Brandon Freeman',
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -156,7 +157,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     }
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
+    content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: 'text Brandon Freeman',
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -206,7 +207,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     // timer: 300,
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
+    content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: 'text Brandon Freeman',
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',

@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('account_tour', {
     url: "/web",
     sequence: 60,
     steps: () => [
-    ...stepUtils.goToAppSteps('account.menu_finance', Markup(_t('Send invoices to your customers in no time with the <b>Invoicing app</b>.'))),
+    ...stepUtils.goToAppSteps('account.menu_finance', markup(_t('Send invoices to your customers in no time with the <b>Invoicing app</b>.'))),
     {
         trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
         content: _t("Start by checking your company's data."),
@@ -42,7 +43,7 @@ registry.category("web_tour.tours").add('account_tour', {
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
-        content: Markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
+        content: markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
         position: "right",
     }, {
         trigger: "div[name=partner_id] input",
@@ -61,7 +62,7 @@ registry.category("web_tour.tours").add('account_tour', {
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
-        content: Markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
+        content: markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
         auto: true,
     }, {
         trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a",
@@ -106,7 +107,7 @@ registry.category("web_tour.tours").add('account_tour', {
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
-        content: Markup(_t("Write here <b>your own email address</b> to test the flow.")),
+        content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: 'text customer@example.com',
         auto: true,
     }, {

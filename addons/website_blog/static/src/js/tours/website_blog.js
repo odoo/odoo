@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
     import { _t } from "@web/core/l10n/translation";
-    import { Markup } from "@web/legacy/js/core/utils";
     import wTourUtils from "@website/js/tours/tour_utils";
+
+    import { markup } from "@odoo/owl";
 
     wTourUtils.registerWebsitePreviewTour("blog", {
         url: "/",
@@ -51,7 +52,7 @@
     }, {
         trigger: "we-button[data-background]:nth(1)",
         extra_trigger: "iframe #wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
-        content: Markup(_t("Set a blog post <b>cover</b>.")),
+        content: markup(_t("Set a blog post <b>cover</b>.")),
         position: "top",
     }, {
         trigger: ".o_select_media_dialog .o_we_search",
@@ -65,7 +66,7 @@
         position: "top",
     }, {
         trigger: "iframe #o_wblog_post_content",
-        content: Markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
+        content: markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
         position: "top",
         run: function (actions) {
             actions.auto();
@@ -75,7 +76,7 @@
     ...wTourUtils.clickOnSave(),
     {
         trigger: ".o_menu_systray_item.o_mobile_preview",
-        content: Markup(_t("Use this icon to preview your blog post on <b>mobile devices</b>.")),
+        content: markup(_t("Use this icon to preview your blog post on <b>mobile devices</b>.")),
         position: "bottom",
     }, {
         trigger: ".o_menu_systray_item.o_mobile_preview",
@@ -86,7 +87,7 @@
         trigger: '.o_menu_systray_item a:contains("Unpublished")',
         extra_trigger: "iframe body:not(.editor_enable)",
         position: "bottom",
-        content: Markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
+        content: markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
     }, {
         trigger: '.o_menu_systray_item a:contains("Published")',
         auto: true,
