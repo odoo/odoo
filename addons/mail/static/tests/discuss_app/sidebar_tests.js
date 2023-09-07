@@ -799,7 +799,7 @@ QUnit.test("chat - states: open manually by clicking the title", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebarCategory-chat span", { text: "Direct messages" });
-    await contains("button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 });
 
 QUnit.test("chat - states: close should call update server data", async (assert) => {
@@ -870,7 +870,7 @@ QUnit.test("chat - states: close from the bus", async () => {
         },
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains("button", { count: 0, text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
 });
 
 QUnit.test("chat - states: open from the bus", async () => {
@@ -889,7 +889,7 @@ QUnit.test("chat - states: open from the bus", async () => {
         },
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-    await contains("button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 });
 
 QUnit.test(
@@ -900,18 +900,18 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-        await contains("button", { text: "Mitchell Admin" });
+        await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 
-        await click("button", { text: "Mitchell Admin" });
+        await click(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
         await contains("button:contains(Mitchell Admin).o-active");
 
         await click(".o-mail-DiscussSidebarCategory-chat span", { text: "Direct messages" });
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-        await contains("button", { text: "Mitchell Admin" });
+        await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 
         await click("button div", { text: "Inbox" });
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-        await contains("button", { count: 0, text: "Mitchell Admin" });
+        await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
     }
 );
 

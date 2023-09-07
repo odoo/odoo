@@ -143,15 +143,15 @@ QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me
     });
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
-    await contains(".o_command", { text: "Assign/Unassign to meALT + SHIFT + I" });
+    await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
     // Assign me
     triggerHotkey("alt+shift+i");
     await contains(".o_field_many2one_avatar_user input", {
-        value: "Mitchell", // should be "Mitchell Admin" but session is not sync with currentUser
+        value: "Mitchell Admin", // should be "Mitchell Admin" but session is not sync with currentUser
     });
     // Unassign me
     triggerHotkey("control+k");
-    await click(".o_command", { text: "Assign/Unassign to meALT + SHIFT + I" });
+    await click(".o_command", { text: "Unassign from meALT + SHIFT + I" });
     await contains(".o_field_many2one_avatar_user input", { value: "" });
 });
 
@@ -195,6 +195,127 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..
     await contains(".o_tag_badge_text:eq(2)", { text: "Luigi" });
 });
 
+QUnit.test(
+    'many2one_avatar_user widget edited by the smart action "Assign to me" in form view',
+    async (assert) => {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { name: "Mario" },
+            { name: "Luigi" },
+        ]);
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
+            { name: "Mario", partner_id: partnerId_1 },
+            { name: "Luigi", partner_id: partnerId_2 },
+        ]);
+        const avatarUserId_1 = pyEnv["m2x.avatar.user"].create({ user_id: userId_1 });
+        const views = {
+            "m2x.avatar.user,false,form":
+                '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
+        };
+        await pyEnv.withUser(userId_2, async () => {
+            const { openView } = await start({ serverData: { views } });
+            await openView({
+                res_id: avatarUserId_1,
+                type: "ir.actions.act_window",
+                target: "current",
+                res_model: "m2x.avatar.user",
+                view_mode: "form",
+                views: [[false, "form"]],
+            });
+            await contains(".o_field_many2one_avatar_user input", 1, { value: "Mario" });
+            await triggerHotkey("control+k");
+            await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
+
+            // Assign me (Luigi)
+            await triggerHotkey("alt+shift+i");
+            await contains(".o_field_many2one_avatar_user input", 1, { value: "Luigi" });
+
+            // Unassign me
+            await triggerHotkey("control+k");
+            await click("#o_command_2");
+            await contains(".o_field_many2one_avatar_user input", 1, { value: "" });
+        });
+    }
+);
+
+QUnit.test(
+    'many2one_avatar_user widget edited by the smart action "Assign to me" in list view',
+    async (assert) => {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { name: "Mario" },
+            { name: "Luigi" },
+        ]);
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
+            { name: "Mario", partner_id: partnerId_1 },
+            { name: "Luigi", partner_id: partnerId_2 },
+        ]);
+        pyEnv["m2x.avatar.user"].create([{ user_id: userId_2 }, { user_id: userId_1 }]);
+        const views = {
+            "m2x.avatar.user,false,list":
+                '<tree multi_edit="1"><field name="user_id" widget="many2one_avatar_user"/></tree>',
+        };
+        await pyEnv.withUser(userId_2, async () => {
+            const { openView } = await start({ serverData: { views } });
+            await openView({
+                type: "ir.actions.act_window",
+                target: "current",
+                res_model: "m2x.avatar.user",
+                view_mode: "list",
+                views: [[false, "list"]],
+            });
+            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(0)", {
+                text: "Luigi",
+            });
+            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(1)", {
+                text: "Mario",
+            });
+            // Select all
+            await click(".o_list_table > thead .o_list_controller input");
+            await triggerHotkey("control+k");
+            await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
+
+            // Assign me (Luigi)
+            await triggerHotkey("alt+shift+i");
+            // Multi-edit confirmation dialog
+            await contains(".o_dialog");
+            // Cancel
+            await click(".o_dialog .modal-footer button:nth-child(2)");
+            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(0)", {
+                text: "Luigi",
+            });
+            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(1)", {
+                text: "Mario",
+            });
+
+            // Assign me (Luigi)
+            await triggerHotkey("alt+shift+i");
+            // Multi-edit confirmation dialog
+            await contains(".o_dialog");
+            // Confirm
+            await click(".o_dialog .modal-footer button:nth-child(1)");
+            await contains(".o_dialog", { count: 0 });
+            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(0)", {
+                text: "Luigi",
+            });
+            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(1)", {
+                text: "Luigi",
+            });
+
+            // Select all
+            await click(".o_list_table > thead .o_list_controller input");
+
+            // Unassign me (Luigi)
+            await triggerHotkey("alt+shift+u");
+            // Multi-edit confirmation dialog
+            await contains(".o_dialog");
+            // Confirm
+            await click(".o_dialog .modal-footer button:nth-child(1)");
+            await contains(".o_field_many2one_avatar_user .o_form_uri span", 0);
+        });
+    }
+);
+
 QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to me"', async () => {
     const pyEnv = await startServer();
     const [userId_1, userId_2] = pyEnv["res.users"].create([{ name: "Mario" }, { name: "Yoshi" }]);
@@ -218,16 +339,16 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to m
     await contains(".o_tag_badge_text:eq(0)", { text: "Mario" });
     await contains(".o_tag_badge_text:eq(1)", { text: "Yoshi" });
     triggerHotkey("control+k");
-    await contains(".o_command", { text: "Assign/Unassign to meALT + SHIFT + I" });
+    await contains(".o_command", { text: "Assign to meALT + SHIFT + I" });
     // Assign me
     triggerHotkey("alt+shift+i");
     await contains(".o_tag_badge_text", { count: 3 });
     await contains(".o_tag_badge_text:eq(0)", { text: "Mario" });
     await contains(".o_tag_badge_text:eq(1)", { text: "Yoshi" });
-    await contains(".o_tag_badge_text:eq(2)", { text: "Your Company, Mitchell Admin" });
+    await contains(".o_tag_badge_text:eq(2)", { text: "Mitchell Admin" });
     // Unassign me
     triggerHotkey("control+k");
-    await contains(".o_command", { text: "Assign/Unassign to meALT + SHIFT + I" });
+    await contains(".o_command", { text: "Unassign from meALT + SHIFT + I" });
     triggerHotkey("alt+shift+i");
     await contains(".o_tag_badge_text", { count: 2 });
     await contains(".o_tag_badge_text:eq(0)", { text: "Mario" });
