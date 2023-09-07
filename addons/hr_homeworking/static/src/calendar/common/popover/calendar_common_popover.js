@@ -3,10 +3,23 @@
 import { patch } from "@web/core/utils/patch";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 import { Field } from "@web/views/fields/field"
+import { createRecordFields } from "@web/views/record";
 
 patch(AttendeeCalendarCommonPopover.prototype, {
     setup() {
-        this.fieldNames = ["work_location_id", "work_location_name", "work_location_type", "employee_id", "weekday", "weekly", "start_date", "employee_name"];
+        const data = {
+            work_location_id: { type: "many2one", relation: "hr.employee.location" },
+            work_location_name: { type: "char" },
+            work_location_type: { type: "selection" },
+            employee_id: { type: "many2one", relation: "hr.employee" },
+            employee_name: { type: "char" },
+            weekday: { type: "integer" },
+            weekly: { type: "boolean" },
+            start_date: { type: "date" },
+        };
+        const { fields, activeFields } = createRecordFields(data);
+        this.fields = fields;
+        this._activeFields = activeFields;
         super.setup(...arguments)
     },
     isWorkLocationEvent(){

@@ -38,7 +38,7 @@ import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Field } from "@web/views/fields/field";
-import { Record } from "@web/views/record";
+import { Record, createRecordFields } from "@web/views/record";
 
 const serviceRegistry = registry.category("services");
 
@@ -1549,13 +1549,15 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("standalone many2one field", async function (assert) {
         class Comp extends owl.Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     partner_id: {
                         name: "partner_id",
                         type: "many2one",
                         relation: "partner",
                     },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.values = {
                     partner_id: [1, "first partner"],
                 };
@@ -1563,7 +1565,7 @@ QUnit.module("Fields", (hooks) => {
         }
         Comp.components = { Record, Field };
         Comp.template = owl.xml`
-            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
+            <Record resModel="'coucou'" fields="fields" activeFields="activeFields" values="values" mode="'edit'" t-slot-scope="scope">
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>
         `;
@@ -1905,7 +1907,7 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </sheet>
                 </form>`,
-            mockRPC(route, { method, args}) {
+            mockRPC(route, { method, args }) {
                 if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
                     throw new Error("read(['display_name']) should not be called");
                 }
@@ -1945,7 +1947,11 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>`,
                 mockRPC(route, { method, args }) {
-                    if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
+                    if (
+                        method === "read" &&
+                        args[1].length === 1 &&
+                        args[1][0] === "display_name"
+                    ) {
                         throw new Error("read(['display_name']) should not be called");
                     }
                 },

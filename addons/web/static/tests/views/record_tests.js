@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { Field } from "@web/views/fields/field";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Record } from "@web/views/record";
+import { Record, createRecordFields } from "@web/views/record";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
@@ -103,10 +103,19 @@ QUnit.module("Record Component", (hooks) => {
     });
 
     QUnit.test("display a simple field", async function (assert) {
-        class Parent extends Component {}
+        class Parent extends Component {
+            get recordProps() {
+                return {
+                    resModel: "partner",
+                    resId: 1,
+                    fields: { foo: { name: "foo", type: "char" } },
+                    activeFields: { foo: { name: "foo", type: "char" } },
+                };
+            }
+        }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" resId="1" fieldNames="['foo']" t-slot-scope="data">
+            <Record t-props="recordProps" t-slot-scope="data">
                 <span>hello</span>
                 <Field name="'foo'" record="data.record"/>
             </Record>`;
@@ -121,10 +130,7 @@ QUnit.module("Record Component", (hooks) => {
             target.innerHTML,
             '<span>hello</span><div name="foo" class="o_field_widget o_field_char"><span>yop</span></div>'
         );
-        assert.verifySteps([
-            "/web/dataset/call_kw/partner/fields_get",
-            "/web/dataset/call_kw/partner/web_read",
-        ]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/web_read"]);
     });
 
     QUnit.test("can be updated with different resId", async function (assert) {
@@ -134,10 +140,19 @@ QUnit.module("Record Component", (hooks) => {
                     resId: 1,
                 });
             }
+
+            get recordProps() {
+                return {
+                    resModel: "partner",
+                    resId: this.state.resId,
+                    fields: { foo: { name: "foo", type: "char" } },
+                    activeFields: { foo: { name: "foo", type: "char" } },
+                };
+            }
         }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
+            <Record t-props="recordProps" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
                 <button class="my-btn" t-on-click="() => this.state.resId++">Next</button>
             </Record>`;
@@ -148,10 +163,7 @@ QUnit.module("Record Component", (hooks) => {
             },
         });
         await mount(Parent, target, { env, dev: true });
-        assert.verifySteps([
-            "/web/dataset/call_kw/partner/fields_get",
-            "/web/dataset/call_kw/partner/web_read",
-        ]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/web_read"]);
         assert.containsOnce(target, ".o_field_char:contains(yop)");
         await click(target.querySelector("button.my-btn"));
         assert.containsOnce(target, ".o_field_char:contains(blip)");
@@ -161,7 +173,7 @@ QUnit.module("Record Component", (hooks) => {
     QUnit.test("predefined fields and values", async function (assert) {
         class Parent extends Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     foo: {
                         name: "foo",
                         type: "char",
@@ -170,7 +182,10 @@ QUnit.module("Record Component", (hooks) => {
                         name: "bar",
                         type: "boolean",
                     },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
+
                 this.values = {
                     foo: "abc",
                     bar: true,
@@ -179,7 +194,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -199,19 +214,16 @@ QUnit.module("Record Component", (hooks) => {
     QUnit.test("provides a way to handle changes in the record", async function (assert) {
         class Parent extends Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     foo: {
                         name: "foo",
                         type: "char",
                     },
-                    bar: {
-                        name: "bar",
-                        type: "boolean",
-                    },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.values = {
                     foo: "abc",
-                    bar: true,
                 };
             }
 
@@ -223,7 +235,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -251,10 +263,19 @@ QUnit.module("Record Component", (hooks) => {
             onWillSaveRecord(record) {
                 assert.step("onWillSaveRecord");
             }
+            get recordProps() {
+                return {
+                    resModel: "partner",
+                    resId: 1,
+                    fields: { foo: { name: "foo", type: "char" } },
+                    activeFields: { foo: { name: "foo", type: "char" } },
+                    mode: "edit",
+                };
+            }
         }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
+            <Record t-props="recordProps" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
                 <button class="save" t-on-click="() => data.record.save()">Save</button>
                 <Field name="'foo'" record="data.record"/>
             </Record>`;
@@ -269,13 +290,7 @@ QUnit.module("Record Component", (hooks) => {
 
         await editInput(target, "[name='foo'] input", "abc");
         await click(target, "button.save");
-        assert.verifySteps([
-            "fields_get",
-            "web_read",
-            "onWillSaveRecord",
-            "web_save",
-            "onRecordSaved",
-        ]);
+        assert.verifySteps(["web_read", "onWillSaveRecord", "web_save", "onRecordSaved"]);
     });
 
     QUnit.test("handles many2one fields", async function (assert) {
@@ -294,13 +309,15 @@ QUnit.module("Record Component", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     foo: {
                         name: "foo",
                         type: "many2one",
                         relation: "bar",
                     },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.values = {
                     foo: [1, "bar1"],
                 };
@@ -314,7 +331,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Many2OneField };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
                 <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
             </Record>
         `;
@@ -352,13 +369,15 @@ QUnit.module("Record Component", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     foo: {
                         name: "foo",
                         type: "many2one",
                         relation: "bar",
                     },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.values = {
                     foo: 1,
                 };
@@ -372,7 +391,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Many2OneField };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
                 <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
             </Record>
         `;
@@ -405,13 +424,15 @@ QUnit.module("Record Component", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     foo: {
                         name: "foo",
                         type: "many2one",
                         relation: "bar",
                     },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.values = {
                     foo: [1],
                 };
@@ -425,7 +446,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Many2OneField };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
                 <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
             </Record>
         `;
@@ -454,25 +475,16 @@ QUnit.module("Record Component", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                this.activeFields = {
-                    tags: {
-                        related: {
-                            activeFields: {
-                                display_name: {},
-                            },
-                            fields: {
-                                display_name: { name: "display_name", type: "string" },
-                            },
-                        },
-                    },
-                };
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     tags: {
                         name: "Tags",
                         type: "many2many",
                         relation: "tag",
+                        widget: "many2many_tags",
                     },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.values = {
                     tags: [1, 3],
                 };
@@ -480,7 +492,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Many2ManyTagsField };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
                 <Many2ManyTagsField name="'tags'" record="data.record"/>
             </Record>
         `;
@@ -502,19 +514,16 @@ QUnit.module("Record Component", (hooks) => {
         async (assert) => {
             class Parent extends Component {
                 setup() {
-                    this.fields = {
+                    const { fields, activeFields } = createRecordFields({
                         foo: {
                             name: "foo",
                             type: "char",
                         },
-                        bar: {
-                            name: "bar",
-                            type: "boolean",
-                        },
-                    };
+                    });
+                    this.fields = fields;
+                    this.activeFields = activeFields;
                     this.values = owl.useState({
                         foo: "abc",
-                        bar: true,
                     });
                 }
 
@@ -527,7 +536,7 @@ QUnit.module("Record Component", (hooks) => {
             }
             Parent.components = { Record, Field };
             Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'partner'" activeFields="activeFields" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -551,16 +560,13 @@ QUnit.module("Record Component", (hooks) => {
     QUnit.test("can switch records", async (assert) => {
         class Parent extends Component {
             setup() {
-                this.fields = {
+                const { fields, activeFields } = createRecordFields({
                     foo: {
-                        name: "foo",
                         type: "char",
                     },
-                    bar: {
-                        name: "bar",
-                        type: "boolean",
-                    },
-                };
+                });
+                this.fields = fields;
+                this.activeFields = activeFields;
                 this.state = useState({ currentId: 1, num: 0 });
             }
 
@@ -573,7 +579,7 @@ QUnit.module("Record Component", (hooks) => {
         Parent.template = xml`
             <a id="increment" t-on-click="() => state.num++" t-esc="state.num" />
             <a id="next" t-on-click="next">NEXT</a>
-            <Record resId="state.currentId" resModel="'partner'" fieldNames="['foo']" fields="fields" t-slot-scope="data">
+            <Record resId="state.currentId" resModel="'partner'" activeFields="activeFields" fields="fields" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;

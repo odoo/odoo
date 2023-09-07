@@ -3,10 +3,9 @@
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { getFieldsSpec } from "@web/model/relational_model/utils";
+import { getFieldsSpec, makeField, makeActiveField } from "@web/model/relational_model/utils";
 import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
-
-const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
+import { getFieldFromRegistry } from "./fields/field";
 
 class StandaloneRelationalModel extends RelationalModel {
     load(params = {}) {
@@ -22,17 +21,45 @@ class StandaloneRelationalModel extends RelationalModel {
     }
 }
 
+export function createRecordFields(data) {
+    const fields = {};
+    const activeFields = {};
+    for (const [fieldName, field] of Object.entries(data)) {
+        fields[fieldName] = makeField(fieldName, field.type, {
+            relation: field.relation,
+            string: field.string,
+            searchable: field.searchable,
+            domain: field.domain,
+        });
+        activeFields[fieldName] = makeActiveField(fieldName);
+        if (field.relation) {
+            const widget = getFieldFromRegistry(field.type, field.widget, "form");
+            if (widget.relatedFields) {
+                const relatedFields = Object.fromEntries(
+                    widget
+                        .relatedFields({ options: field.widgetOptions || {} })
+                        .map((f) => [f.name, f])
+                );
+                activeFields[fieldName].related = {
+                    fields: relatedFields,
+                    activeFields: relatedFields,
+                };
+            }
+        }
+    }
+    return { fields, activeFields };
+}
+
 class _Record extends Component {
     setup() {
         this.orm = useService("orm");
         const resModel = this.props.info.resModel;
-        const activeFields = this.getActiveFields();
         const modelParams = {
             config: {
                 resModel,
                 fields: this.props.fields,
                 isMonoRecord: true,
-                activeFields,
+                activeFields: this.props.info.activeFields,
                 resId: this.props.info.resId,
                 mode: this.props.info.mode,
             },
@@ -130,19 +157,6 @@ class _Record extends Component {
             }
         });
     }
-
-    getActiveFields() {
-        if (this.props.info.activeFields) {
-            const activeFields = {};
-            for (const [fName, fInfo] of Object.entries(this.props.info.activeFields)) {
-                activeFields[fName] = { ...defaultActiveField, ...fInfo };
-            }
-            return activeFields;
-        }
-        return Object.fromEntries(
-            this.props.info.fieldNames.map((f) => [f, { ...defaultActiveField }])
-        );
-    }
 }
 _Record.template = xml`<t t-slot="default" record="model.root"/>`;
 _Record.props = ["slots", "info", "fields", "values?"];
@@ -152,15 +166,7 @@ export class Record extends Component {
         if (this.props.fields) {
             this.fields = this.props.fields;
         } else {
-            const orm = useService("orm");
-            onWillStart(async () => {
-                this.fields = await orm.call(
-                    this.props.resModel,
-                    "fields_get",
-                    [this.props.fieldNames],
-                    {}
-                );
-            });
+            throw new Error("Not supported anymore");
         }
     }
 }
@@ -169,7 +175,6 @@ Record.components = { _Record };
 Record.props = [
     "slots",
     "resModel?",
-    "fieldNames?",
     "activeFields?",
     "fields?",
     "resId?",

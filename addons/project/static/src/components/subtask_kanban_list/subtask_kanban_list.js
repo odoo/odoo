@@ -58,19 +58,23 @@ export class SubtaskKanbanList extends Component {
     }
 
     get activeFields() {
+        const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
         return {
             display_name: {},
             state: {
                 name: "state",
                 viewType: "kanban",
                 field: getFieldFromRegistry(this.fields.state.type, "project_task_state_selection", "kanban"),
+                ...defaultActiveField,
             },
             user_ids: {
                 name: "user_ids",
                 field: getFieldFromRegistry(this.fields.user_ids.type, "many2many_avatar_user", "kanban"),
+                ...defaultActiveField,
             },
             project_id: {
-                field: getFieldFromRegistry(this.fields.project_id.type, "project", "kanban")
+                field: getFieldFromRegistry(this.fields.project_id.type, "project", "kanban"),
+                ...defaultActiveField,
             },
         };
     }

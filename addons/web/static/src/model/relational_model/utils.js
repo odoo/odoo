@@ -26,6 +26,17 @@ function convertBoolToPyExpr(value) {
     return value;
 }
 
+export function makeField(name, type, { string, relation, searchable, domain } = {}) {
+    return {
+        name,
+        type,
+        string: string || name,
+        relation: relation || false,
+        searchable: searchable || false,
+        domain: domain || [],
+    };
+}
+
 export function makeActiveField({
     context,
     invisible,
