@@ -12,7 +12,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
-from odoo.tools import mute_logger, email_normalize
+from odoo.tools import mute_logger, email_normalize, parse_contact_from_email
 
 
 @tagged('mail_followers')
@@ -908,12 +908,11 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
 
     def _post_message_and_get_unfollow_urls(self, record, partner_ids):
         """ Post a message on the record for the partners and extract the unfollow URLs. """
-        Partner = self.env['res.partner']
         with self.mock_mail_gateway():
             record.message_post(body='test message', subtype_id=self.env.ref('mail.mt_comment').id,
                                 partner_ids=partner_ids.ids)
         self.assertEqual(len(self._mails), len(partner_ids))
-        mail_by_email = {Partner._parse_partner_name(email_to)[1]: mail
+        mail_by_email = {parse_contact_from_email(email_to)[1]: mail
                          for mail in self._mails
                          for email_to in mail['email_to']}
 

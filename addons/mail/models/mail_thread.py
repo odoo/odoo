@@ -28,7 +28,7 @@ from markupsafe import Markup, escape
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
-from odoo.tools import is_html_empty, html_escape, html2plaintext
+from odoo.tools import is_html_empty, html_escape, html2plaintext, parse_contact_from_email
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -1730,8 +1730,8 @@ class MailThread(models.AbstractModel):
         elif partner:  # incomplete profile: id, name
             result[self.ids[0]].append((partner.id, partner.name, lang, reason, {}))
         else:  # unknown partner, we are probably managing an email address
-            _, parsed_email = self.env['res.partner']._parse_partner_name(email)
-            partner_create_values = self._get_customer_information().get(parsed_email, {})
+            _, parsed_email_normalized = parse_contact_from_email(email)
+            partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})
             result[self.ids[0]].append((False, partner_info.get('full_name') or email, lang, reason, partner_create_values))
         return result
 

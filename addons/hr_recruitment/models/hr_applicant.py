@@ -519,11 +519,11 @@ class Applicant(models.Model):
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
-        partner_name, email_from = self.env['res.partner']._parse_partner_name(msg.get('from'))
+        partner_name, email_from_normalized = tools.parse_contact_from_email(msg.get('from'))
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'partner_name': partner_name or email_from,
-            'email_from': email_from,
+            'partner_name': partner_name or email_from_normalized,
+            'email_from': email_from_normalized,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):

@@ -17,7 +17,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_split, is_html_empty, groupby
+from odoo.tools import date_utils, email_split, is_html_empty, groupby, parse_contact_from_email
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
@@ -1841,7 +1841,7 @@ class Lead(models.Model):
         Partner = self.env['res.partner']
         contact_name = self.contact_name
         if not contact_name:
-            contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
+            contact_name = parse_contact_from_email(self.email_from)[0] if self.email_from else False
 
         if self.partner_name:
             partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
@@ -1863,8 +1863,7 @@ class Lead(models.Model):
 
         for record in self.filtered('email_normalized'):
             values = email_normalized_to_values.setdefault(record.email_normalized, {})
-            contact_name = record.contact_name or record.partner_name or (
-                    Partner._parse_partner_name(record.email_from)[0] or record.email_from)
+            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0]
             # Note that we don't attempt to create the parent company even if partner name is set
             values.update(record._prepare_customer_values(contact_name, is_company=False))
             values['company_name'] = record.partner_name

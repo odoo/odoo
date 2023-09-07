@@ -73,14 +73,6 @@ class MassMailingContact(models.Model):
             for record in self:
                 record.opt_out = False
 
-    def get_name_email(self, name):
-        name, email = self.env['res.partner']._parse_partner_name(name)
-        if name and not email:
-            email = name
-        if email and not name:
-            name = email
-        return name, email
-
     @api.model_create_multi
     def create(self, vals_list):
         """ Synchronize default_list_ids (currently used notably for computed
@@ -127,13 +119,13 @@ class MassMailingContact(models.Model):
 
     @api.model
     def name_create(self, name):
-        name, email = self.get_name_email(name)
+        name, email = tools.parse_contact_from_email(name)
         contact = self.create({'name': name, 'email': email})
         return contact.id, contact.display_name
 
     @api.model
     def add_to_list(self, name, list_id):
-        name, email = self.get_name_email(name)
+        name, email = tools.parse_contact_from_email(name)
         contact = self.create({'name': name, 'email': email, 'list_ids': [(4, list_id)]})
         return contact.id, contact.display_name
 

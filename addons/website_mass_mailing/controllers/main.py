@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
+from odoo import tools, _
 from odoo.http import route, request
 from odoo.addons.mass_mailing.controllers import main
 
@@ -43,7 +43,7 @@ class MassMailController(main.MassMailController):
         ContactSubscription = request.env['mailing.contact.subscription'].sudo()
         Contacts = request.env['mailing.contact'].sudo()
         if subscription_type == 'email':
-            name, value = Contacts.get_name_email(value)
+            name, value = tools.parse_contact_from_email(value)
         elif subscription_type == 'mobile':
             name = value
 
