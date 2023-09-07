@@ -19,9 +19,10 @@ import { ensureArray } from "../utils/arrays";
  * @property {string} id
  * @property {boolean} includesToday
  * @property {boolean} isOutOfRange
- * @property {boolean} isInvalid
+ * @property {boolean} isValid
  * @property {string} label
  * @property {DateRange} range
+ * @property {string} extraClass
  *
  * @typedef {"today" | NullableDateTime} DateLimit
  *
@@ -41,7 +42,9 @@ import { ensureArray } from "../utils/arrays";
  *  rounding minutes without displaying seconds.
  * @property {{ buttons?: any }} [slots]
  * @property {"date" | "datetime"} [type]
- * @property {NullableDateTime | NullableDateRange} value
+ * @property {NullableDateTime | NullableDateRange} [value]
+ * @property {(date: DateTime) => boolean} [isDateValid]
+ * @property {(date: DateTime) => string} [dayCellClass]
  *
  * @typedef {DateItem | MonthItem} Item
  *
@@ -118,18 +121,20 @@ const parseLimitDate = (value, defaultValue) =>
 /**
  * @param {Object} params
  * @param {boolean} [params.isOutOfRange=false]
- * @param {boolean} [params.isInvalid=false]
+ * @param {boolean} [params.isValid=true]
  * @param {keyof DateTime} params.label
+ * @param {string} [params.extraClass]
  * @param {[DateTime, DateTime]} params.range
  * @returns {DateItem}
  */
-const toDateItem = ({ isOutOfRange = false, isInvalid = false, label, range }) => ({
+const toDateItem = ({ isOutOfRange = false, isValid = true, label, range, extraClass }) => ({
     id: range[0].toISODate(),
     includesToday: isInRange(today(), range),
     isOutOfRange,
-    isInvalid,
+    isValid,
     label: String(range[0][label]),
     range,
+    extraClass,
 });
 
 /**
@@ -165,7 +170,10 @@ const PRECISION_LEVELS = new Map()
             }
             return titles;
         },
-        getItems: (date, { additionalMonth, maxDate, minDate, showWeekNumbers }) => {
+        getItems: (
+            date,
+            { additionalMonth, maxDate, minDate, showWeekNumbers, isDateValid, dayCellClass }
+        ) => {
             const startDates = [date];
             if (additionalMonth) {
                 startDates.push(date.plus({ month: 1 }));
@@ -185,9 +193,10 @@ const PRECISION_LEVELS = new Map()
                         const range = [day, day.endOf("day")];
                         const dayItem = toDateItem({
                             isOutOfRange: !isInRange(day, monthRange),
-                            isInvalid: !isInRange(range, [minDate, maxDate]),
+                            isValid: isInRange(range, [minDate, maxDate]) && isDateValid?.(day),
                             label: "day",
                             range,
+                            extraClass: dayCellClass?.(day) || "",
                         });
                         weekDayItems.push(dayItem);
                         if (d === 6) {
@@ -227,7 +236,7 @@ const PRECISION_LEVELS = new Map()
                 const startOfMonth = startOfYear.plus({ month: i });
                 const range = [startOfMonth, startOfMonth.endOf("month")];
                 return toDateItem({
-                    isInvalid: !isInRange(range, [minDate, maxDate]),
+                    isValid: isInRange(range, [minDate, maxDate]),
                     label: "monthShort",
                     range,
                 });
@@ -247,7 +256,7 @@ const PRECISION_LEVELS = new Map()
                 const range = [startOfYear, startOfYear.endOf("year")];
                 return toDateItem({
                     isOutOfRange: i < 0 || i >= GRID_COUNT,
-                    isInvalid: !isInRange(range, [minDate, maxDate]),
+                    isValid: isInRange(range, [minDate, maxDate]),
                     label: "year",
                     range,
                 });
@@ -268,7 +277,7 @@ const PRECISION_LEVELS = new Map()
                 return toDateItem({
                     label: "year",
                     isOutOfRange: i < 0 || i >= GRID_COUNT,
-                    isInvalid: !isInRange(range, [minDate, maxDate]),
+                    isValid: isInRange(range, [minDate, maxDate]),
                     range,
                 });
             });
@@ -310,6 +319,8 @@ export class DateTimePicker extends Component {
             ],
             optional: true,
         },
+        isDateValid: { type: Function, optional: true },
+        dayCellClass: { type: Function, optional: true },
     };
 
     static defaultProps = {
@@ -426,6 +437,8 @@ export class DateTimePicker extends Component {
             maxDate: this.maxDate,
             minDate: this.minDate,
             showWeekNumbers: !this.props.range,
+            isDateValid: this.props.isDateValid,
+            dayCellClass: this.props.dayCellClass,
         };
         const referenceDate = this.state.focusDate;
         this.title = precision.getTitle(referenceDate, getterParams);
@@ -685,7 +698,7 @@ export class DateTimePicker extends Component {
      * @param {DateItem} dateItem
      */
     zoomOrSelect(dateItem) {
-        if (dateItem.isInvalid) {
+        if (!dateItem.isValid) {
             // Invalid item
             return;
         }
