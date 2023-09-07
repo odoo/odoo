@@ -1612,7 +1612,7 @@ class HolidaysRequest(models.Model):
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':
-                if holiday.holiday_status_id.responsible_ids:
+                if holiday.holiday_status_id.leave_validation_type != 'no_validation':
                     user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
                     for user_id in user_ids:
                         activity_vals.append({
