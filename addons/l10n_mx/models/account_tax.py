@@ -13,8 +13,8 @@ class AccountTax(models.Model):
         ],
         string="Factor Type",
         default='Tasa',
-        help="The CFDI version 3.3 have the attribute 'TipoFactor' in the tax lines. In it is indicated the factor "
-             "type that is applied to the base of the tax.")
+        help="Mexico: 'TipoFactor' is an attribute for CFDI 4.0. This indicates the factor type that is applied to the base of the tax.",
+    )
     l10n_mx_tax_type = fields.Selection(
         selection=[
             ('isr', "ISR"),
