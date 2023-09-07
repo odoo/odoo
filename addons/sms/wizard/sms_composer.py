@@ -135,7 +135,7 @@ class SendSMS(models.TransientModel):
                 composer.recipient_single_number = ''
                 continue
             records.ensure_one()
-            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
+            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             composer.recipient_single_description = res[records.id]['partner'].name or records._mail_get_partners()[records[0].id].display_name
             composer.recipient_single_number = res[records.id]['number'] or ''
 
