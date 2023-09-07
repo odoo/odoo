@@ -835,3 +835,11 @@ class ResPartner(models.Model):
                 if partner:
                     return partner
         return self.env['res.partner']
+
+    def _merge_method(self, destination, source):
+        """
+        Prevent merging partners that are linked to already hashed journal items.
+        """
+        if self.env['account.move.line'].sudo().search([('move_id.inalterable_hash', '!=', False), ('partner_id', 'in', source.ids)], limit=1):
+            raise UserError(_('Partners that are used in hashed entries cannot be merged.'))
+        return super()._merge_method(destination, source)
