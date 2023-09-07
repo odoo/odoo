@@ -256,6 +256,11 @@ export class PaymentScreen extends Component {
         }
 
         this.currentOrder.date_order = luxon.DateTime.now();
+        for (let line of this.paymentLines) {
+            if (!line.amount === 0) {
+                 this.currentOrder.remove_paymentline(line);
+            }
+        }
         this.currentOrder.finalized = true;
 
         // 1. Save order to server.
