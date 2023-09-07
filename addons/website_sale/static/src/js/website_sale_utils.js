@@ -28,10 +28,13 @@ export const cartHandlerMixin = {
      * @private
      */
     async _addToCartInPage(params) {
-        params.force_create = true;
         const data = await this._rpc({
             route: "/shop/cart/update_json",
-            params: params,
+            params: {
+                ...params,
+                display: false,
+                force_create: true,
+            },
         })
         sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
