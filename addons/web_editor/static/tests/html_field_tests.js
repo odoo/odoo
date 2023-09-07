@@ -296,7 +296,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     QUnit.module('Save scenarios');
 
     QUnit.test("Ensure that urgentSave works even with modified image to save", async (assert) => {
-        assert.expect(3);
+        assert.expect(5);
         let formController;
         // Patch to get the controller instance.
         patchWithCleanup(FormController.prototype, {
@@ -380,6 +380,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 route === `/web_editor/modify_image/${imageRecord.id}`
             ) {
                 if (modifyImageCount === 0) {
+                    assert.equal(args.res_model, 'partner');
+                    assert.equal(args.res_id, 1);
                     await modifyImagePromise;
                     return newImageSrc;
                 } else {
@@ -440,7 +442,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     });
 
     QUnit.test("Pasted/dropped images are converted to attachments on save", async (assert) => {
-        assert.expect(4);
+        assert.expect(6);
 
         // Patch to get a promise to get the htmlField component instance when
         // the wysiwyg is instancied.
@@ -460,6 +462,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         const mockRPC = async function (route, args) {
             if (route === '/web_editor/attachment/add_data') {
+                // Check that the correct record model and id were sent.
+                assert.equal(args.res_model, 'partner');
+                assert.equal(args.res_id, 1);
                 return {
                     image_src: '/test_image_url.png',
                     access_token: '1234',
