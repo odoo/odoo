@@ -55,8 +55,8 @@ class PosSession(models.Model):
 
     opening_notes = fields.Text(string="Opening Notes")
     closing_notes = fields.Text(string="Closing Notes")
-    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True)
-    cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
+    cash_control = fields.Boolean(compute='_compute_cash_control', string='Has Cash Control')
+    cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_journal', string='Cash Journal', store=True)
 
     cash_register_balance_end_real = fields.Monetary(
         string="Ending Balance",
@@ -154,15 +154,20 @@ class PosSession(models.Model):
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
 
-    @api.depends('config_id', 'payment_method_ids')
-    def _compute_cash_all(self):
+    @api.depends('cash_journal_id')
+    def _compute_cash_control(self):
         # Only one cash register is supported by point_of_sale.
         for session in self:
-            session.cash_journal_id = session.cash_control = False
+            if session.cash_journal_id:
+                session.cash_control = session.config_id.cash_control
+            else:
+                session.cash_control = False
+
+    @api.depends('config_id', 'payment_method_ids')
+    def _compute_cash_journal(self):
+        # Only one cash register is supported by point_of_sale.
+        for session in self:
             cash_journal = session.payment_method_ids.filtered('is_cash_count')[:1].journal_id
-            if not cash_journal:
-                continue
-            session.cash_control = session.config_id.cash_control
             session.cash_journal_id = cash_journal
 
     @api.constrains('config_id')
