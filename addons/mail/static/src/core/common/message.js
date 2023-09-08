@@ -251,10 +251,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get canAddReaction() {
-        return (
-            this.message.originThread?.allowReactions &&
-            Boolean(!this.message.isTransient && this.message.resId)
-        );
+        return Boolean(!this.message.isTransient && this.message.resId);
     }
 
     get deletable() {
@@ -269,7 +266,7 @@ export class Message extends Component {
     }
 
     get canReplyTo() {
-        return this.message.originThread?.allowReplies && this.props.messageToReplyTo;
+        return this.props.messageToReplyTo;
     }
 
     /**

@@ -5,5 +5,6 @@ from . import channel
 from . import chatbot
 from . import link_preview
 from . import main
+from . import message_reaction
 from . import thread
 from . import webclient
