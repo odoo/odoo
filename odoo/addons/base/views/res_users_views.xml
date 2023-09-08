@@ -262,11 +262,11 @@
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <tree string="Users">
-                    <field name="name"/>
-                    <field name="login"/>
+                <tree string="Users" multi_edit="1">
+                    <field name="name" readonly="1"/>
+                    <field name="login" readonly="1"/>
                     <field name="lang"/>
-                    <field name="login_date"/>
+                    <field name="login_date" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
