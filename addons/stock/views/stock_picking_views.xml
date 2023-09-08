@@ -298,10 +298,24 @@
                                         readonly="not product_id"/>
                                     <field name="product_uom_qty" string="Demand" column_invisible="parent.immediate_transfer" readonly="state != 'draft' and (not is_initial_demand_editable or (show_operations and is_locked and not is_initial_demand_editable))"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
+<<<<<<< HEAD
                                         invisible="forecast_availability &lt; 0 or parent.immediate_transfer or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+||||||| parent of 83c9fdbd898 (temp)
+                                        attrs="{'invisible': ['|', ('forecast_availability', '&lt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+=======
+                                        attrs="{'invisible': ['|', ('forecast_availability', '&lt;=', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+>>>>>>> 83c9fdbd898 (temp)
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger"
+<<<<<<< HEAD
                                         invisible="forecast_availability &gt;= 0 or parent.immediate_transfer or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
+||||||| parent of 83c9fdbd898 (temp)
+                                        attrs="{'invisible': ['|', ('forecast_availability', '&gt;=', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+                                    <field name="forecast_expected_date" invisible="1"/>
+=======
+                                        attrs="{'invisible': ['|', ('forecast_availability', '&gt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+                                    <field name="forecast_expected_date" invisible="1"/>
+>>>>>>> 83c9fdbd898 (temp)
                                     <field name="forecast_availability" string="Reserved"
                                         column_invisible="parent.state in ['draft', 'done'] or parent.picking_type_code != 'outgoing' or parent.immediate_transfer" widget="forecast_widget"/>
                                     <field name="reserved_availability" string="Reserved"
