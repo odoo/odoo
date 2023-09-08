@@ -1207,7 +1207,7 @@ Model({
             }
             if (
                 !this.messaging.userSetting.usePushToTalk ||
-                !this.messaging.userSetting.isPushToTalkKey(ev, { ignoreModifiers: true })
+                !this.messaging.userSetting.isPushToTalkKey(ev)
             ) {
                 return;
             }
