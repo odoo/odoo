@@ -2,9 +2,6 @@
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 
-import { markup } from "@odoo/owl";
-
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
@@ -16,8 +13,6 @@ threadService.dependencies.push(
 );
 
 patch(ThreadService.prototype, {
-    TEMPORARY_ID: "livechat_temporary_thread",
-
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
@@ -38,42 +33,10 @@ patch(ThreadService.prototype, {
     },
 
     /**
-     * Persist the given thread  and swap it with the temporary thread.
-     *
-     * @param {import("@mail/core/common/thread_model").Thread} thread
-     * @returns {import("@mail/core/common/thread_model").Thread} The
-     * persisted thread.
-     */
-    async persistThread(thread) {
-        if (thread.id !== this.TEMPORARY_ID) {
-            return thread;
-        }
-        if (this.persistPromise) {
-            return this.persistPromise;
-        }
-        this.persistPromise = this.getLivechatThread({ persisted: true });
-        const persistedThread = await this.persistPromise;
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === thread.localId
-        );
-        if (!persistedThread) {
-            this.chatWindowService.close(chatWindow);
-            this.remove(thread);
-            return;
-        }
-        chatWindow.thread = persistedThread;
-        this.remove(thread);
-        if (this.chatbotService.active) {
-            await this.chatbotService.postWelcomeSteps();
-        }
-        return persistedThread;
-    },
-
-    /**
      * @returns {Promise<import("@mail/core/common/message_model").Message}
      */
     async post(thread, body, params) {
-        thread = await this.persistThread(thread);
+        thread = thread.type === "livechat" ? await this.livechatService.persistThread() : thread;
         if (!thread) {
             return;
         }
@@ -86,7 +49,7 @@ patch(ThreadService.prototype, {
         if (this.chatbotService.shouldRestore) {
             this.chatbotService.restore();
         }
-        const thread = await this.getLivechatThread();
+        const thread = await this.livechatService.getOrCreateThread();
         if (!thread) {
             return;
         }
@@ -126,34 +89,5 @@ patch(ThreadService.prototype, {
         } else {
             return `${session.origin}/mail/static/src/img/smiley/avatar.jpg`;
         }
-    },
-
-    /**
-     * @param {Object} param0
-     * @param {boolean} param0.persisted
-     * @returns {Promise<import("@mail/core/common/thread_model").Thread?>}
-     */
-    async getLivechatThread({ persisted = false } = {}) {
-        const session = await this.livechatService.getSession({ persisted });
-        if (!session?.operator_pid) {
-            this.notification.add(_t("No available collaborator, please try again later."));
-            return;
-        }
-        const thread = this.store.Thread.insert({
-            ...session,
-            id: session.id ?? this.TEMPORARY_ID,
-            model: "discuss.channel",
-            type: "livechat",
-        });
-        if (session.messages) {
-            thread.messages = session.messages.map((message) => {
-                if (message.parentMessage) {
-                    message.parentMessage.body = markup(message.parentMessage.body);
-                }
-                message.body = markup(message.body);
-                return this.store.Message.insert(message);
-            });
-        }
-        return thread;
     },
 });

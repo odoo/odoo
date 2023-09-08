@@ -15,25 +15,8 @@ patch(Thread, {
         const chatbotService = this.env.services["im_livechat.chatbot"];
         const messageService = this.env.services["mail.message"];
         if (thread.type === "livechat" && isUnknown) {
-            if (livechatService.displayWelcomeMessage && !chatbotService.isChatbotThread(thread)) {
-                livechatService.welcomeMessage = this.store.Message.insert({
-                    id: messageService.getNextTemporaryId(),
-                    body: livechatService.options.default_message,
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                });
-            }
-            if (chatbotService.isChatbotThread(thread)) {
-                chatbotService.typingMessage = this.store.Message.insert({
-                    id: messageService.getNextTemporaryId(),
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                });
-            }
             onChange(thread, ["state", "seen_message_id", "message_unread_counter"], () => {
-                if (livechatService.state !== SESSION_STATE.NONE) {
+                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
                     livechatService.updateSession({
                         state: thread.state,
                         seen_message_id: thread.seen_message_id,
@@ -41,7 +24,22 @@ patch(Thread, {
                     });
                 }
             });
-            this.store.livechatThread = thread;
+            if (chatbotService.isChatbotThread(thread)) {
+                thread.chatbotTypingMessage = this.store.Message.insert({
+                    id: messageService.getNextTemporaryId(),
+                    res_id: thread.id,
+                    model: thread.model,
+                    author: thread.operator,
+                });
+            } else {
+                thread.livechatWelcomeMessage = this.store.Message.insert({
+                    id: messageService.getNextTemporaryId(),
+                    body: livechatService.options.default_message,
+                    res_id: thread.id,
+                    model: thread.model,
+                    author: thread.operator,
+                });
+            }
         }
         return thread;
     },

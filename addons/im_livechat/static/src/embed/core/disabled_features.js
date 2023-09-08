@@ -8,6 +8,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { ThreadService } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
+import { SESSION_STATE } from "./livechat_service";
 
 patch(Composer.prototype, {
     get allowUpload() {
@@ -32,10 +33,9 @@ patch(Thread.prototype, {
 
 patch(ThreadService.prototype, {
     async fetchNewMessages(thread) {
-        return;
-    },
-    async loadAround() {
-        return;
+        if (thread.type !== "livechat" || this.livechatService.state === SESSION_STATE.PERSISTED) {
+            return super.fetchNewMessages(...arguments);
+        }
     },
 });
 
