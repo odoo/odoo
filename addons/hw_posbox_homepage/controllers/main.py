@@ -217,8 +217,7 @@ class IoTboxHomepage(Home):
             token = helpers.get_token()
         if iotname and platform.system() == 'Linux':
             subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/rename_iot.sh'), iotname])
-        else:
-            helpers.odoo_restart(3)
+        helpers.odoo_restart(5)
         return 'http://' + helpers.get_ip() + ':8069'
 
     @http.route('/steps', type='http', auth='none', cors='*', csrf=False)
