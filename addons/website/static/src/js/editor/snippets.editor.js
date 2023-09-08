@@ -97,7 +97,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         }
 
         const apiKey = await new Promise(resolve => {
-            this.getParent().trigger_up('gmap_api_key_request', {
+            this.getParent()._websiteRootEvent("gmap_api_key_request", {
                 onSuccess: key => resolve(key),
             });
         });
@@ -212,7 +212,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             alwaysReconfigure: ev.data.reconfigure,
             configureIfNecessary: ev.data.configureIfNecessary,
         });
-        this.getParent().trigger_up(gmapRequestEventName, {
+        this.getParent()._websiteRootEvent(gmapRequestEventName, {
             refetch: reconfigured,
             editableMode: true,
             onSuccess: key => ev.data.onSuccess(key),
