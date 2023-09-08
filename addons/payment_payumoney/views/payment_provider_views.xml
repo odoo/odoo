@@ -6,7 +6,7 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='provider_creation_warning']" position="after">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div class="alert alert-danger"
                      role="alert"
                      invisible="code != 'payumoney'">
