@@ -252,7 +252,7 @@ class ProductProduct(models.Model):
         # bom specific to this variant or global to template
         action['context'] = {
             'default_product_tmpl_id': template_ids[0],
-            'default_product_id': self.ids[0],
+            'default_product_id': self.env.user.has_group('product.group_product_variant') and self.ids[0] or False,
         }
         action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action
