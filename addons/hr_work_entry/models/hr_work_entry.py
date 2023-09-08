@@ -108,10 +108,6 @@ class HrWorkEntry(models.Model):
                 result[work_entry.id] = duration
         return result
 
-    # YTI TODO: Remove me in master: Deprecated, use _get_duration_batch instead
-    def _get_duration(self, date_start, date_stop):
-        return self._get_duration_batch()[self.id]
-
     def action_validate(self):
         """
         Try to validate work entries.
