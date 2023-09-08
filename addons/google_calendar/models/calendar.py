@@ -14,10 +14,13 @@ class Meeting(models.Model):
     _name = 'calendar.event'
     _inherit = ['calendar.event', 'google.calendar.sync']
 
+    MEET_ROUTE = 'meet.google.com'
+
     google_id = fields.Char(
         'Google Calendar Event Id', compute='_compute_google_id', store=True, readonly=False)
     guests_readonly = fields.Boolean(
         'Guests Event Modification Permission', default=False)
+    videocall_source = fields.Selection(selection_add=[('google_meet', 'Google Meet')], ondelete={'google_meet': 'set discuss'})
 
     @api.depends('recurrence_id.google_id')
     def _compute_google_id(self):
@@ -31,6 +34,12 @@ class Meeting(models.Model):
                 event.google_id = google_recurrence_id
             elif not event.google_id:
                 event.google_id = False
+
+    @api.depends('videocall_location')
+    def _compute_videocall_source(self):
+        events_with_google_url = self.filtered(lambda event: self.MEET_ROUTE in (event.videocall_location or ''))
+        events_with_google_url.videocall_source = 'google_meet'
+        super(Meeting, self - events_with_google_url)._compute_videocall_source()
 
     @api.model
     def _get_google_synced_fields(self):
