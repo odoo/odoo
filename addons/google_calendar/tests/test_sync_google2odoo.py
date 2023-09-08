@@ -1146,8 +1146,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         }])
         self.sync(gevent)
         # User attendee removed but gevent owner might be added after synch.
-        mails = sorted(set(event.attendee_ids.mapped('email')))
-        self.assertEqual(mails, ['odoobot@example.com'])
+        mails = event.attendee_ids.mapped('email')
+        self.assertFalse(mails)
 
         self.assertGoogleAPINotCalled()
 
