@@ -25,12 +25,15 @@ export class ChannelMemberService {
                 channelId: memberData.persona.guest ? memberData.channel.id : null,
             });
         }
-        member.threadId = memberData.threadId ?? member.threadId ?? memberData.channel?.id;
-        if (member.threadId && !member.thread) {
-            this.store.Thread.insert({
-                id: member.threadId,
+        let thread = memberData.thread ?? member.thread;
+        if (!thread && memberData.channel?.id) {
+            thread = this.store.Thread.insert({
+                id: memberData.channel.id,
                 model: "discuss.channel",
             });
+        }
+        if (thread && !member.thread) {
+            member.thread = thread;
         }
         switch (command) {
             case "insert":

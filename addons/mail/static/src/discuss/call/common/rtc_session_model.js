@@ -29,7 +29,7 @@ export class RtcSession extends Record {
         }
         if (channelMember) {
             const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
-            channelMemberRecord.rtcSessionId = session.id;
+            channelMemberRecord.rtcSession = session;
             session.channelMemberId = channelMemberRecord.id;
             if (channelMemberRecord.thread) {
                 channelMemberRecord.thread.rtcSessions[session.id] = session;

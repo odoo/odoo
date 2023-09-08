@@ -90,8 +90,8 @@ export class DiscussCoreWeb {
                 if (data.serverFoldState && thread && data.serverFoldState !== thread.state) {
                     thread.state = data.serverFoldState;
                     if (thread.state === "closed") {
-                        const chatWindow = this.store.ChatWindow.records.find(
-                            (chatWindow) => chatWindow.threadLocalId === thread.localId
+                        const chatWindow = this.store.ChatWindow.records.find((chatWindow) =>
+                            chatWindow.thread?.eq(thread)
                         );
                         if (chatWindow) {
                             this.chatWindowService.close(chatWindow);
