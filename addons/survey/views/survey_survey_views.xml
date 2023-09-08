@@ -99,9 +99,9 @@
                                     <field name="access_mode"/>
                                     <field name="users_login_required"/>
                                     <label for="is_attempts_limited" string="Limit Attempts"
-                                           attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                           attrs="{'ienvisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
                                     <div class="o_checkbox_optional_field"
-                                        attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
+                                        attrs="{'invisible': ['&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
                                         <field name="is_attempts_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_attempts_limited', '=', False)]}">
                                             to <field name="attempts_limit" nolabel="1" class="oe_inline"/> attempts
