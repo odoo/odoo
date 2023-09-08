@@ -209,6 +209,23 @@ QUnit.module("Views", (hooks) => {
                             default: 1,
                         },
                         salary: { string: "Monetary field", type: "monetary" },
+                        properties: {
+                            string: "Properties",
+                            type: "properties",
+                            definition_record: "parent_id",
+                            definition_record_field: "properties_definition",
+                            name: "properties",
+                        },
+                        parent_id: {
+                            string: "Parent",
+                            type: "many2one",
+                            relation: "partner",
+                            name: "parent_id",
+                        },
+                        properties_definition: {
+                            string: "Properties",
+                            type: "properties_definition",
+                        },
                     },
                     records: [
                         {
@@ -223,6 +240,13 @@ QUnit.module("Views", (hooks) => {
                             image: "R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==",
                             salary: 1750,
                             currency_id: 1,
+                            properties_definition: [
+                                {
+                                    name: "my_char",
+                                    string: "My Char",
+                                    type: "char",
+                                },
+                            ],
                         },
                         {
                             id: 2,
@@ -235,6 +259,15 @@ QUnit.module("Views", (hooks) => {
                             category_ids: [6],
                             salary: 1500,
                             currency_id: 1,
+                            parent_id: 1,
+                            properties: [
+                                {
+                                    name: "my_char",
+                                    string: "My Char",
+                                    type: "char",
+                                    value: "aaa",
+                                },
+                            ],
                         },
                         {
                             id: 3,
@@ -247,6 +280,15 @@ QUnit.module("Views", (hooks) => {
                             category_ids: [7],
                             salary: 2000,
                             currency_id: 2,
+                            parent_id: 1,
+                            properties: [
+                                {
+                                    name: "my_char",
+                                    string: "My Char",
+                                    type: "char",
+                                    value: "bbb",
+                                },
+                            ],
                         },
                         {
                             id: 4,
@@ -259,6 +301,7 @@ QUnit.module("Views", (hooks) => {
                             category_ids: [],
                             salary: 2222,
                             currency_id: 1,
+                            parent_id: 2,
                         },
                     ],
                 },
@@ -13826,4 +13869,102 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("group by properties and drag and drop", async (assert) => {
+        assert.expect(10);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="foo"/>
+                            <field name="properties"/>
+                        </div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ["properties.my_char"],
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/partner/web_read_group") {
+                    return {
+                        groups: [
+                            {
+                                "properties.my_char": false,
+                                __domain: [["properties.my_char", "=", false]],
+                                "properties.my_char_count": 2,
+                            },
+                            {
+                                "properties.my_char": "aaa",
+                                __domain: [["properties.my_char", "=", "aaa"]],
+                                "properties.my_char_count": 1,
+                            },
+                            {
+                                "properties.my_char": "bbb",
+                                __domain: [["properties.my_char", "=", "bbb"]],
+                                "properties.my_char_count": 1,
+                            },
+                        ],
+                        length: 3,
+                    };
+                } else if (route === "/web/dataset/call_kw/partner/web_search_read") {
+                    const value = args.kwargs.domain[0][2];
+                    return {
+                        length: 1,
+                        records: [
+                            {
+                                id: value === "aaa" ? 2 : 3,
+                                properties: [
+                                    {
+                                        name: "my_char",
+                                        string: "My Char",
+                                        type: "char",
+                                        value: value,
+                                    },
+                                ],
+                            },
+                        ],
+                    };
+                } else if (route === "/web/dataset/resequence") {
+                    assert.step("resequence");
+                } else if (route === "/web/dataset/call_kw/partner/web_save") {
+                    assert.step("web_save");
+                    const expected = {
+                        properties: [
+                            {
+                                name: "my_char",
+                                string: "My Char",
+                                type: "char",
+                                value: "bbb",
+                            },
+                        ],
+                    };
+                    assert.deepEqual(args.args[1], expected);
+                } else if (route === "/web/dataset/call_kw/partner/get_property_definition") {
+                    assert.step("get_property_definition");
+                    return {
+                        name: "my_char",
+                        type: "char",
+                    };
+                }
+            },
+        });
+
+        assert.verifySteps(["get_property_definition"]);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 1);
+
+        await dragAndDrop(
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            ".o_kanban_group:nth-child(3)"
+        );
+
+        assert.verifySteps(["web_save", "resequence"]);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 0);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
+    });
 });

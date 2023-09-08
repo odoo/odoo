@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import json
-
 import unittest
+
 from unittest.mock import patch
 
 from odoo import Command
 
 from odoo.exceptions import AccessError, UserError
+from odoo.osv import expression
 from odoo.tests.common import Form, TransactionCase, users
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, get_lang
 
 
 class TestPropertiesMixin(TransactionCase):
@@ -185,6 +187,34 @@ class PropertiesCase(TestPropertiesMixin):
             'type': 'char',
             'default': 'blue',
         }])
+
+    def test_properties_field_injection(self):
+        for c in '!#"\'- |+/\\':
+            with self.assertRaises(ValueError):
+                self.message_1.attributes = [{
+                    'name': f'discussion_color_code{c}',
+                    'type': 'char',
+                    'definition_changed': True
+                }]
+
+            with self.assertRaises(ValueError):
+                self.discussion_1.attributes_definition = [{
+                    'name': f'discussion_color_code{c}',
+                    'type': 'char',
+                }]
+
+        with self.assertRaises(ValueError):
+            self.message_1.attributes = [{
+                'name': 'a' * 513,
+                'type': 'char',
+                'definition_changed': True
+            }]
+
+        with self.assertRaises(ValueError):
+            self.discussion_1.attributes_definition = [{
+                'name': 'a' * 513,
+                'type': 'char',
+            }]
 
     @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
@@ -604,6 +634,41 @@ class PropertiesCase(TestPropertiesMixin):
         })
         self.assertEqual(self._get_sql_properties(record), {'my_char': 'my char', 'test': self.partner_2.id})
 
+        # use the context to set the default value, the default key in the definition is ignored
+        # (e.g. when you create a new record in a Kanban view grouped by a property)
+        del property_definition[0]['value']
+        self.discussion_1.attributes_definition = property_definition
+        partner = self.env['test_new_api.partner'].create({'name': 'Test Default'})
+        message = self.env['test_new_api.message'] \
+            .with_context({'default_attributes.my_many2one': partner.id}) \
+            .create({
+                'name': 'Test Message',
+                'author': self.user.id,
+                'discussion': self.discussion_1.id,
+                'attributes': property_definition,
+            })
+
+        sql_values = self._get_sql_properties(message)
+        self.assertEqual(sql_values, {'my_many2one': partner.id})
+        properties = message.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], (partner.id, partner.display_name))
+
+        # "None" is a valid default value
+        del property_definition[0]['value']
+        message = self.env['test_new_api.message'] \
+            .with_context({'default_attributes.my_many2one': None}) \
+            .create({
+                'name': 'Test Message',
+                'author': self.user.id,
+                'discussion': self.discussion_1.id,
+                'attributes': property_definition,
+            })
+
+        sql_values = self._get_sql_properties(message)
+        self.assertEqual(sql_values, {'my_many2one': False})
+        properties = message.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], False)
+
     def test_properties_field_read(self):
         """Test the behavior of the read method.
 
@@ -676,6 +741,21 @@ class PropertiesCase(TestPropertiesMixin):
         properties = self.message_2.read(['attributes'])[0]['attributes']
         self.assertEqual(properties[1]['value'], (self.partner_2.id, self.partner_2.display_name))
         self.assertEqual(properties[1]['comodel'], 'test_new_api.partner')
+
+        # should not be able to set a transient model
+        with self.assertRaises(ValueError):
+            self.message_2.attributes = [{
+                "name": "moderator_partner_id",
+                "type": "many2one",
+                "comodel": "test_new_api.transient_model",
+                "definition_changed": True,
+            }]
+        with self.assertRaises(ValueError):
+            self.discussion_1.attributes_definition = [{
+                "name": "moderator_partner_id",
+                "type": "many2one",
+                "comodel": "test_new_api.transient_model",
+            }]
 
     @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2one_unlink(self):
@@ -1168,6 +1248,21 @@ class PropertiesCase(TestPropertiesMixin):
                 'default': [(partners[8].id, partners[8].display_name)],
                 'value': [(partners[9].id, partners[9].display_name)],
             }])
+
+        # should not be able to set a transient model
+        with self.assertRaises(ValueError):
+            self.message_2.attributes = [{
+                "name": "partner_ids",
+                "type": "many2many",
+                "comodel": "test_new_api.transient_model",
+                "definition_changed": True,
+            }]
+        with self.assertRaises(ValueError):
+            self.discussion_1.attributes_definition = [{
+                "name": "partner_ids",
+                "type": "many2many",
+                "comodel": "test_new_api.transient_model",
+            }]
 
     @users('test')
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.fields')
@@ -1918,3 +2013,877 @@ class PropertiesSearchCase(TestPropertiesMixin):
             for order in orders:
                 with self.assertRaises(UserError), self.assertQueryCount(0):
                     self.env['test_new_api.message'].search(domain=[], order=order)
+
+
+class PropertiesGroupByCase(PropertiesCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.message_4 = cls.env['test_new_api.message'].create({
+            'name': 'Test Message',
+            'discussion': cls.discussion_1.id,
+            'author': cls.user.id,
+        })
+
+        cls.messages = cls.message_1 | cls.message_2 | cls.message_3 | cls.message_4
+        cls.env['test_new_api.message'].search([('id', 'not in', cls.messages.ids)]).unlink()
+
+        cls.wrong_discussion_id = cls.env['test_new_api.discussion'].search(
+            [], order="id DESC", limit=1).id + 1000
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_basic(self):
+        Model = self.env['test_new_api.message']
+
+        self.messages.discussion = self.discussion_1
+        # search on text properties
+        self.message_1.attributes = [{
+            'name': 'mychar',
+            'type': 'char',
+            'value': 'qsd',
+            'definition_changed': True,
+        }, {
+            'name': 'myinteger',
+            'type': 'integer',
+            'value': 1337,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mychar': 'qsd', 'myinteger': 5}
+        self.message_3.attributes = {'mychar': 'boum', 'myinteger': 1337}
+        self.env.flush_all()
+
+        # group by the char property
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.mychar'],
+            )
+
+        self.assertEqual(len(result), 3)
+
+        # check counts
+        count_by_values = {
+            value['attributes.mychar']: value['attributes.mychar_count']
+            for value in result
+        }
+        self.assertEqual(count_by_values['boum'], 1)
+        self.assertEqual(count_by_values['qsd'], 2)
+        self.assertEqual(count_by_values[False], 1)
+
+        # check domains
+        domain_by_values = {
+            value['attributes.mychar']: value['__domain']
+            for value in result
+        }
+        self.assertEqual(domain_by_values['boum'], [('attributes.mychar', '=', 'boum')])
+        self.assertEqual(domain_by_values['qsd'], [('attributes.mychar', '=', 'qsd')])
+        self._check_domains_count(result)
+
+        # group by the integer property
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.myinteger'],
+            )
+
+        self.assertEqual(len(result), 3)
+        count_by_values = {
+            value['attributes.myinteger']: value['attributes.myinteger_count']
+            for value in result
+        }
+
+        self.assertEqual(count_by_values[5], 1)
+        self.assertEqual(count_by_values[1337], 2)
+        self.assertEqual(count_by_values[False], 1)
+
+        # falsy properties
+        self.message_3.attributes = {'mychar': False, 'myinteger': False}
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.myinteger'],
+            )
+
+        self.assertEqual(result[-1]['attributes.myinteger_count'], 2)
+        self.assertEqual(result[-1]['__domain'], [('attributes.myinteger', '=', False)])
+        self._check_domains_count(result)
+
+        # non existing keys in the dict values should be grouped with False value
+        self.env.cr.execute(
+            """
+            UPDATE test_new_api_message
+               SET attributes = '{}'
+             WHERE id = %s
+            """,
+            [self.message_2.id],
+        )
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.myinteger'],
+            )
+
+        self.assertEqual(result[-1]['attributes.myinteger_count'], 3)
+        self.assertEqual(result[-1]['__domain'], [('attributes.myinteger', '=', False)])
+        result = Model.search(result[-1]['__domain'])  # check the domain is correct for the search
+        self.assertEqual(result, self.message_2 | self.message_3 | self.message_4)
+
+        # test the order by
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.myinteger'],
+            orderby='attributes.myinteger ASC'
+        )
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['attributes.myinteger'], 1337)
+        self.assertEqual(result[1]['attributes.myinteger'], False)
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.myinteger'],
+            orderby='attributes.myinteger DESC'
+        )
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['attributes.myinteger'], False)
+        self.assertEqual(result[1]['attributes.myinteger'], 1337)
+        self._check_domains_count(result)
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.myinteger', 'name'],
+            orderby='attributes.myinteger DESC',
+            lazy=False,
+        )
+        self.assertEqual(
+            result[0]['__domain'],
+            ['&', ('attributes.myinteger', '=', False), ('name', '=', self.message_1.name)],
+        )
+        self._check_domains_count(result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_progress_bar(self):
+        """Test the fallback of "_read_progress_bar" when we read a field non-stored."""
+        Model = self.env['test_new_api.message']
+
+        self.messages.discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': 'myinteger',
+            'type': 'integer',
+            'value': 1337,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'myinteger': 5}
+        self.message_3.attributes = {'myinteger': 1337}
+
+        result = Model.read_progress_bar(
+            domain=[],
+            group_by='attributes.myinteger',
+            progress_bar={'field': 'size', 'colors': [0]},
+        )
+        self.assertEqual(result, {'1337': {0: 2}, '5': {0: 1}, 'False': {0: 1}})
+
+    def _properties_field_read_group_date_prepare(self, date_type='date'):
+        # Format in database: 2023-03-29 09:30:16
+        self.messages.discussion = self.discussion_1
+        self.discussion_1.attributes_definition = [{
+            'type': date_type,
+            'name': 'mydate',
+        }]
+        hour = ' 13:05:34' if date_type == 'datetime' else ''
+        # message 5 has a different year
+        # message 6 has a False value
+        # message 7 is in a different discussion
+        self.message_5, self.message_6, self.message_7 = self.env['test_new_api.message'].create([
+                {'discussion': self.discussion_1.id, 'attributes': {'mydate': f'2077-05-02{hour}'}},
+                {'discussion': self.discussion_1.id, 'attributes': {'mydate': False}},
+                {'discussion': self.discussion_2.id},
+        ])
+        self.message_1.attributes = {'mydate': f'2023-01-02{hour}'}
+        self.message_2.attributes = {'mydate': f'2023-02-03{hour}'}
+        self.message_3.attributes = {'mydate': f'2023-01-02{hour}'}
+        self.message_4.attributes = {'mydate': f'2023-02-05{hour}'}
+        self.env.flush_all()
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_date_day(self, date_type='date'):
+        self._properties_field_read_group_date_prepare(date_type)
+        Model = self.env['test_new_api.message']
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:day'],
+            orderby='attributes.mydate DESC',
+        )
+
+        self.assertEqual(len(result), 5)
+        # check values and count
+        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['attributes.mydate:day'], False)
+        self.assertEqual(result[1]['attributes.mydate_count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:day'], '02 May 2077')
+        self.assertEqual(result[2]['attributes.mydate_count'], 1)
+        self.assertEqual(result[2]['attributes.mydate:day'], '05 Feb 2023')
+        self.assertEqual(result[3]['attributes.mydate_count'], 1)
+        self.assertEqual(result[3]['attributes.mydate:day'], '03 Feb 2023')
+        self.assertEqual(result[4]['attributes.mydate_count'], 2)
+        self.assertEqual(result[4]['attributes.mydate:day'], '02 Jan 2023')
+        # check domain
+        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(Model.search(result[2]['__domain']), self.message_4)
+        self.assertEqual(Model.search(result[3]['__domain']), self.message_2)
+        self.assertEqual(Model.search(result[4]['__domain']), self.message_1 | self.message_3)
+        self._check_domains_count(result)
+
+        # when the order is not specified, the ORM will generate one
+        # based on "attributes.mydate ASC", make sure it works
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:year'],
+        )
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[0]['attributes.mydate:year'], '2023')
+        self.assertEqual(result[1]['attributes.mydate:year'], '2077')
+        self.assertEqual(result[2]['attributes.mydate:year'], False)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_date_quarter(self, date_type='date'):
+        self._properties_field_read_group_date_prepare(date_type)
+        Model = self.env['test_new_api.message']
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:quarter'],
+            orderby='attributes.mydate DESC',
+        )
+
+        self.assertEqual(len(result), 3)
+        # check values and count
+        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['attributes.mydate:quarter'], False)
+        self.assertEqual(result[1]['attributes.mydate_count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:quarter'], 'Q2 2077')
+        self.assertEqual(result[2]['attributes.mydate_count'], 4)
+        self.assertEqual(result[2]['attributes.mydate:quarter'], 'Q1 2023')
+        # check domain
+        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(
+            Model.search(result[2]['__domain']),
+            self.message_1 | self.message_2 | self.message_3 | self.message_4)
+        self._check_domains_count(result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_date_month(self, date_type='date'):
+        self._properties_field_read_group_date_prepare()
+        Model = self.env['test_new_api.message']
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:month'],
+            orderby='attributes.mydate DESC',
+        )
+
+        self.assertEqual(len(result), 4)
+        # check values and count
+        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['attributes.mydate:month'], False)
+        self.assertEqual(result[1]['attributes.mydate_count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:month'], 'May 2077')
+        self.assertEqual(result[2]['attributes.mydate_count'], 2)
+        self.assertEqual(result[2]['attributes.mydate:month'], 'February 2023')
+        self.assertEqual(result[3]['attributes.mydate_count'], 2)
+        self.assertEqual(result[3]['attributes.mydate:month'], 'January 2023')
+        # check domain
+        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(Model.search(result[2]['__domain']), self.message_2 | self.message_4)
+        self.assertEqual(Model.search(result[3]['__domain']), self.message_1 | self.message_3)
+        self._check_domains_count(result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_date_week(self, date_type='date'):
+        first_week_day = int(get_lang(self.env).week_start) - 1
+        self.assertEqual(first_week_day, 6, "First day of the week must be Sunday")
+
+        self._properties_field_read_group_date_prepare()
+        Model = self.env['test_new_api.message']
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:week'],
+            orderby='attributes.mydate DESC',
+        )
+
+        self.assertEqual(len(result), 5)
+        # check values and count
+        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['attributes.mydate:week'], False)
+        self.assertEqual(result[1]['attributes.mydate_count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:week'], 'W19 2077')
+        self.assertEqual(result[2]['attributes.mydate_count'], 1)
+        self.assertEqual(result[2]['attributes.mydate:week'], 'W6 2023')
+        self.assertEqual(result[3]['attributes.mydate_count'], 1)
+        self.assertEqual(result[3]['attributes.mydate:week'], 'W5 2023')
+        self.assertEqual(result[4]['attributes.mydate_count'], 2)
+        self.assertEqual(result[4]['attributes.mydate:week'], 'W1 2022')
+        # check domain
+        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(Model.search(result[2]['__domain']), self.message_4)
+        self.assertEqual(Model.search(result[3]['__domain']), self.message_2)
+        self.assertEqual(Model.search(result[4]['__domain']), self.message_1 | self.message_3)
+        self._check_domains_count(result)
+
+        # test that the first day of the week in the domain care about the local
+        # (based on the lang, the first day of the week might change)
+        for line in result[1:]:
+            self.assertEqual(line['__domain'][1][1], ">=")
+            self.assertEqual(line['__domain'][2][1], "<")
+            start = datetime.datetime.strptime(line['__domain'][1][2], "%Y-%m-%d")
+            end = datetime.datetime.strptime(line['__domain'][2][2], "%Y-%m-%d")
+            self.assertEqual(start.weekday(), first_week_day)
+            self.assertEqual(end.weekday(), first_week_day)
+
+        # now, first day of the week is "Wednesday"
+        lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
+        self.assertEqual(len(lang), 1)
+        lang.write({'active': True, 'week_start': '3'})
+        result = Model.with_context(lang='fr_FR').read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:week'],
+            orderby='attributes.mydate DESC',
+        )
+        for line in result[1:]:
+            self.assertEqual(line['__domain'][1][1], ">=")
+            self.assertEqual(line['__domain'][2][1], "<")
+            start = datetime.datetime.strptime(line['__domain'][1][2], "%Y-%m-%d")
+            end = datetime.datetime.strptime(line['__domain'][2][2], "%Y-%m-%d")
+            self.assertEqual(start.weekday(), 2, "First day of the week must be Wednesday")
+            self.assertEqual(end.weekday(), 2, "First day of the week must be Wednesday")
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_date_year(self, date_type='date'):
+        self._properties_field_read_group_date_prepare()
+        Model = self.env['test_new_api.message']
+
+        result = Model.read_group(
+            domain=[],
+            fields=[],
+            groupby=['attributes.mydate:year'],
+            orderby='attributes.mydate DESC',
+        )
+
+        self.assertEqual(len(result), 3)
+        # check values and count
+        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['attributes.mydate:year'], False)
+        self.assertEqual(result[1]['attributes.mydate_count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:year'], '2077')
+        self.assertEqual(result[2]['attributes.mydate_count'], 4)
+        self.assertEqual(result[2]['attributes.mydate:year'], '2023')
+        # check domain
+        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(
+            Model.search(result[2]['__domain']),
+            self.message_1 | self.message_2 | self.message_3 | self.message_4)
+        self._check_domains_count(result)
+
+    def test_properties_field_read_group_datetime_day(self):
+        self.test_properties_field_read_group_date_day('datetime')
+
+    def test_properties_field_read_group_datetime_quarter(self):
+        self.test_properties_field_read_group_date_quarter('datetime')
+
+    def test_properties_field_read_group_datetime_month(self):
+        self.test_properties_field_read_group_date_month('datetime')
+
+    def test_properties_field_read_group_datetime_week(self):
+        self.test_properties_field_read_group_date_week('datetime')
+
+    def test_properties_field_read_group_datetime_year(self):
+        self.test_properties_field_read_group_date_year('datetime')
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_injection(self):
+        Model = self.env['test_new_api.message']
+        self.message_1.attributes = [{
+            'name': 'myinteger',
+            'type': 'integer',
+            'value': 1337,
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+
+        with self.assertRaises(ValueError), self.assertQueryCount(0):
+            Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.myinteger'],
+                orderby='attributes.myinteger OR 1=1 DESC'
+            )
+
+        with self.assertRaises(ValueError), self.assertQueryCount(0):
+            Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.myinteger OR 1=1'],
+                orderby='attributes.myinteger DESC'
+            )
+
+        with self.assertRaises(ValueError), self.assertQueryCount(0):
+            Model.read_group(
+                domain=[],
+                fields=[],
+                groupby=['attributes.myinteger:wrongfunction'],
+                orderby='attributes.myinteger DESC'
+            )
+
+    @mute_logger('odoo.fields', 'odoo.models.unlink')
+    def test_properties_field_read_group_many2many(self):
+        Model = self.env['test_new_api.message']
+
+        partners = self.env['test_new_api.partner'].create([
+            {'name': f'Partner {i}'}
+            for i in range(10)
+        ])
+
+        self.discussion_1.attributes_definition = [{
+            'name': 'mypartners',
+            'string': 'Partners',
+            'type': 'many2many',
+            'comodel': 'test_new_api.partner',
+        }]
+
+        self.messages.discussion = self.discussion_1
+
+        self.message_1.attributes = {'mypartners': partners[:5].ids}
+        self.message_2.attributes = {'mypartners': partners[3:8].ids}
+        self.message_3.attributes = {'mypartners': partners[8:].ids}
+
+        (partners[4] | partners[7] | partners[9]).unlink()
+
+        with self.assertQueryCount(4):
+            result = Model.read_group(
+                domain=[('discussion', '!=', self.wrong_discussion_id)],
+                fields=[],
+                groupby=['attributes.mypartners'],
+                lazy=False,
+            )
+
+        self.assertEqual(len(result), 8)
+        existing_partners = partners.exists()
+        self.assertEqual(len(existing_partners), 7)
+        for partner, line in zip(existing_partners, result):
+            self.assertEqual(partner.id, line['attributes.mypartners'][0])
+            self.assertEqual(partner.display_name, line['attributes.mypartners'][1])
+            self.assertEqual(
+                line['__domain'],
+                [
+                    '&',
+                    ('discussion', '!=', self.wrong_discussion_id),
+                    ('attributes.mypartners', 'in', partner.id),
+                ],
+            )
+            # only the fourth partner is in 2 messages
+            self.assertEqual(line['__count'], 2 if partner == partners[3] else 1)
+
+        # message 4 is in a different discussion, so it's value is False
+        self.assertEqual(Model.search(result[-1]['__domain']), self.message_4)
+        self._check_many_falsy_group('mypartners', result)
+        self._check_domains_count(result)
+
+        # now message 1 and 2 will also be in the falsy group
+        partners[:8].unlink()
+        with self.assertQueryCount(4):
+            result = Model.read_group(
+                domain=[('discussion', '!=', self.wrong_discussion_id)],
+                fields=[],
+                groupby=['attributes.mypartners'],
+                lazy=False,
+            )
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(Model.search(result[-1]['__domain']), self.message_1 | self.message_2 | self.message_4)
+        self._check_many_falsy_group('mypartners', result)
+        self._check_domains_count(result)
+
+        # special case, no partner exists
+        existing_partners.unlink()
+        result = Model.read_group(
+            domain=[('discussion', '!=', self.wrong_discussion_id)],
+            fields=[],
+            groupby=['attributes.mypartners'],
+            lazy=False,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertFalse(result[0]['attributes.mypartners'])
+        self.assertEqual(result[0]['__count'], 4)
+        self._check_domains_count(result)
+
+        # test an invalid model name (e.g. if we uninstalled the module of the model)
+        for invalid_model_name in ("invalid_model_name", "test_new_api.transient_model"):
+            self.env.cr.execute(
+                """
+                UPDATE test_new_api_discussion
+                   SET attributes_definition
+                       = jsonb_set(attributes_definition, '{0,comodel}', %s)
+                 WHERE id = %s
+                """,
+                [json.dumps(invalid_model_name), self.discussion_1.id],
+            )  # bypass the ORM to set an invalid model name
+            definition = self._get_sql_definition(self.discussion_1)
+            self.assertEqual(definition[0]['comodel'], invalid_model_name)
+            with self.assertQueryCount(3):
+                result = Model.read_group(
+                    domain=[('discussion', '!=', self.wrong_discussion_id)],
+                    fields=[],
+                    groupby=['attributes.mypartners'],
+                    lazy=False,
+                )
+
+            self.assertEqual(len(result), 1)
+            self.assertFalse(result[0]['attributes.mypartners'])
+            self.assertEqual(result[0]['__count'], 4)
+            self._check_domains_count(result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_many2one(self):
+        Model = self.env['test_new_api.message']
+
+        # group by many2one property
+        self.message_1.attributes = [{
+            'name': 'mypartner',
+            'type': 'many2one',
+            'value': self.partner_2.id,
+            'comodel': 'test_new_api.partner',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mypartner': self.partner.id}
+        self.message_4.attributes = {'mypartner': False}  # explicit False value
+
+        # this partner id doesn't exist
+        unexisting_record_id = self.env['test_new_api.partner'].search(
+            [], order="id DESC", limit=1).id + 1
+        self.env.cr.execute(
+            """
+            UPDATE test_new_api_message
+               SET attributes = '{"mypartner": %s}'
+             WHERE id = %s
+            """,
+            [unexisting_record_id, self.message_3.id],
+        )
+
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[],
+                fields=['name', 'attributes', 'discussion'],
+                groupby=['attributes.mypartner'],
+            )
+
+        self.assertEqual(len(result), 3, 'Should ignore the partner that has been removed')
+
+        self.assertEqual(result[0]['attributes.mypartner_count'], 1)
+        self.assertEqual(result[0]['attributes.mypartner'][0], self.partner.id)
+        self.assertEqual(result[0]['attributes.mypartner'][1], self.partner.display_name)
+        self.assertEqual(result[0]['__domain'], [('attributes.mypartner', '=', self.partner.id)])
+
+        self.assertEqual(result[1]['attributes.mypartner_count'], 1)
+        self.assertEqual(result[1]['attributes.mypartner'][0], self.partner_2.id)
+        self.assertEqual(result[1]['attributes.mypartner'][1], self.partner_2.display_name)
+        self.assertEqual(result[1]['__domain'], [('attributes.mypartner', '=', self.partner_2.id)])
+
+        # falsy domain, automatically generated, contains the false value
+        # and the ids of the records that doesn't exist in the database
+        self.assertEqual(result[2]['attributes.mypartner_count'], 2)
+        self.assertEqual(result[2]['attributes.mypartner'], False)
+        self.assertEqual(
+            result[2]['__domain'],
+            [
+                '|',
+                ('attributes.mypartner', '=', False),
+                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
+            ],
+        )
+
+        # when there's no "('property', '=', False)" domain, it should be created
+        self.message_4.attributes = {'mypartner': self.partner.id}
+        result = Model.read_group(
+            domain=[],
+            fields=['name', 'attributes', 'discussion'],
+            groupby=['attributes.mypartner'],
+        )
+        self.assertEqual(result[2]['attributes.mypartner_count'], 1)
+        self.assertEqual(
+            result[2]['__domain'],
+            [
+                '|',
+                ('attributes.mypartner', '=', False),
+                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
+            ],
+        )
+
+        # test an invalid model name (e.g. if we uninstalled the module of the model)
+        # should have only one group with the value "False", and all records
+        for invalid_model_name in ("invalid_model_name", "test_new_api.transient_model"):
+            self.env.cr.execute(
+                """
+                UPDATE test_new_api_discussion
+                   SET attributes_definition
+                       = jsonb_set(attributes_definition, '{0,comodel}', %s::jsonb)
+                 WHERE id = %s
+                """,
+                [json.dumps(invalid_model_name), self.discussion_1.id],
+            )  # bypass the ORM to set an invalid model name
+            definition = self._get_sql_definition(self.discussion_1)
+            self.assertEqual(definition[0]['comodel'], invalid_model_name)
+            with self.assertQueryCount(3):
+                result = Model.read_group(
+                    domain=[('discussion', '!=', self.wrong_discussion_id)],
+                    fields=[],
+                    groupby=['attributes.mypartner'],
+                    lazy=False,
+                )
+
+            self.assertEqual(len(result), 1)
+            self.assertEqual(result[0]['__count'], 4)
+            self._check_domains_count(result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_selection(self):
+        Model = self.env['test_new_api.message']
+
+        # group by selection property
+        self.message_1.attributes = [{
+            'name': 'myselection',
+            'type': 'selection',
+            'value': 'optionA',
+            'selection': [['optionA', 'A'], ['optionB', 'B']],
+            'definition_changed': True,
+        }, {
+            'name': 'mychar2',
+            'type': 'char',
+            'value': 'qsd',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'myselection': False}
+
+        self.env.cr.execute(
+            """
+            UPDATE test_new_api_message
+               SET attributes = '{"myselection": "invalid_option"}'
+             WHERE id = %s
+            """,
+            [self.message_3.id],
+        )
+
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[('discussion', '!=', self.wrong_discussion_id)],
+                fields=['name', 'attributes', 'discussion'],
+                groupby=['attributes.myselection'],
+            )
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]['attributes.myselection_count'], 1)
+        self.assertEqual(
+            result[0]['__domain'],
+            [
+                '&',
+                ('discussion', '!=', self.wrong_discussion_id),  # original domain should be preserved
+                ('attributes.myselection', '=', 'optionA'),
+            ],
+        )
+        self.assertEqual(result[0]['attributes.myselection'], 'optionA')
+
+        # check that the option that is not valid is included in the "False" domain
+        # the count should be updated as well
+        self.assertEqual(result[1]['attributes.myselection_count'], 3)
+        self.assertEqual(
+            result[1]['__domain'],
+            [
+                '&',
+                ('discussion', '!=', self.wrong_discussion_id),
+                '|',
+                ('attributes.myselection', '=', False),
+                ('attributes.myselection', 'not in', ('optionA', 'optionB')),
+            ],
+        )
+        self.assertEqual(result[1]['attributes.myselection'], False)
+        # double check that the returned domain filter the right record
+        self.assertEqual(
+            self.env['test_new_api.message'].search(result[1]['__domain']),
+            self.message_2 | self.message_3 | self.message_4,
+        )
+
+        # special case, there's no option
+        self.message_1.attributes = [{
+            'name': 'myselection',
+            'type': 'selection',
+            'value': 'optionA',
+            'selection': [],
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        result = Model.read_group(
+            domain=[],
+            fields=['attributes'],
+            groupby=['attributes.myselection'],
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['attributes.myselection_count'], 4)
+        self._check_domains_count(result)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_read_group_tags(self):
+        Model = self.env['test_new_api.message']
+
+        (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
+
+        # group by tags property
+        self.message_1.attributes = [{
+            'name': 'mytags',
+            'type': 'tags',
+            'value': ['a', 'c', 'g'],
+            'tags': [[x.lower(), x, i] for i, x in enumerate('ABCDEFG')],
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mytags': ['a', 'e', 'g']}
+        self.env.cr.execute(
+            """
+            UPDATE test_new_api_message
+               SET attributes = '{"mytags": ["a", "d", "invalid", "e"]}'
+             WHERE id = %s
+            """,
+            [self.message_3.id],
+        )
+        self.env.invalidate_all()
+
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[('discussion', '!=', self.wrong_discussion_id)],
+                fields=[],
+                groupby=['attributes.mytags'],
+                lazy=False,
+            )
+
+        self.assertNotIn('invalid', str(result))
+        self.assertEqual(len(result), 6)
+
+        all_tags = self.message_1.read(['attributes'])[0]['attributes'][0]['tags']
+        all_tags = {tag[0]: tag for tag in all_tags}
+
+        for group, (tag, count) in zip(result, (('a', 3), ('c', 1), ('d', 1), ('e', 2), ('g', 2))):
+            self.assertEqual(group['attributes.mytags'], all_tags[tag])
+            self.assertEqual(group['__count'], count)
+            self.assertEqual(
+                group['__domain'],
+                [
+                    '&',
+                    ('discussion', '!=', self.wrong_discussion_id),
+                    ('attributes.mytags', 'in', tag),
+                ],
+            )
+            # check that the value when we read the record match the value of the group
+            property_values = [
+                next(pro['value'] for pro in values['attributes'])
+                for values in Model.search(group['__domain']).read(['attributes'])
+            ]
+            self.assertTrue(all(tag in property_value for property_value in property_values))
+
+        self.assertEqual(Model.search(result[-1]['__domain']), self.message_4)
+        self._check_many_falsy_group('mytags', result)
+        self._check_domains_count(result)
+
+        # now message 3 has *only* invalid tags, so it should be in the falsy group
+        self.env.cr.execute(
+            """
+            UPDATE test_new_api_message
+               SET attributes = '{"mytags": ["invalid 1", "invalid 2", "invalid 3"]}'
+             WHERE id = %s
+            """,
+            [self.message_3.id],
+        )
+        self.env.invalidate_all()
+
+        with self.assertQueryCount(3):
+            result = Model.read_group(
+                domain=[('discussion', '!=', self.wrong_discussion_id)],
+                fields=[],
+                groupby=['attributes.mytags'],
+                lazy=False,
+            )
+        self.assertEqual(Model.search(result[-1]['__domain']), self.message_3 | self.message_4)
+        self._check_many_falsy_group('mytags', result)
+        self._check_domains_count(result)
+
+        # special case, there's no tag
+        for tags in ([], False, None):
+            self.message_1.attributes = [{
+                'name': 'mytags',
+                'type': 'tags',
+                'value': tags,
+                'tags': tags,
+                'definition_changed': True,
+            }]
+            self.env.flush_all()
+            result = Model.read_group(
+                domain=[('discussion', '!=', self.wrong_discussion_id)],
+                fields=[],
+                groupby=['attributes.mytags'],
+                lazy=False,
+            )
+            self.assertEqual(len(result), 1)
+            self.assertFalse(result[0]['attributes.mytags'])
+            self.assertEqual(result[0]['__count'], 4)
+            self._check_domains_count(result)
+
+    def _check_domains_count(self, result):
+        """Check that the domains in the result match the __count key."""
+        for line in result:
+            records = self.env['test_new_api.message'].search(line['__domain'])
+            count_key = next(key for key in line if "_count" in key)
+            self.assertEqual(len(records), line[count_key])
+
+    def _check_many_falsy_group(self, property_name, result):
+        """Check the falsy group from the many2many and tags read group result.
+
+        - if a record is in the falsy group, it can't be in a other group
+          (that sentence is not true for non-falsy group, a record
+          with a non-falsy value can be in many other groups)
+        - read the value of all records and check if they belongs to the correct group
+        """
+        Model = self.env['test_new_api.message']
+        falsy_group = result[-1]
+        self.assertFalse(falsy_group[f'attributes.{property_name}'])
+        falsy_records = Model.search(falsy_group['__domain'])
+        nonfalsy_records = Model.search(expression.OR([line['__domain'] for line in result[:-1]]))
+        self.assertEqual(Model.search_count([]), len(falsy_records) + len(nonfalsy_records))
+        for falsy_record in falsy_records:
+            self.assertNotIn(falsy_record, nonfalsy_records)
+
+        def _get_records_values(records):
+            return [
+                next(
+                    (pro['value'] for pro in properties['attributes']
+                     if pro['name'] == property_name),
+                )
+                for properties in records.read(['attributes'])
+            ]
+
+        self.assertTrue(not any(_get_records_values(falsy_records)))
+        self.assertTrue(all(_get_records_values(nonfalsy_records)))

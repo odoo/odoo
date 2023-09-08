@@ -3477,7 +3477,6 @@ class Properties(Field):
             ]
             for definition in value:
                 definition.pop('definition_changed', None)
-                check_property_field_value_name(definition.get('name', ''))
 
             # update the properties definition on the container
             container = records[self.definition_record]
@@ -3545,7 +3544,12 @@ class Properties(Field):
 
         for properties_value in properties_list_values:
             if properties_value.get('value') is None:
-                default = properties_value.get('default') or False
+                property_name = properties_value.get('name')
+                context_key = f"default_{self.name}.{property_name}"
+                if property_name and context_key in env.context:
+                    default = env.context[context_key]
+                else:
+                    default = properties_value.get('default') or False
                 properties_value['value'] = default
 
         return properties_list_values
@@ -3941,6 +3945,8 @@ class PropertiesDefinition(Field):
                     ', '.join(invalid_keys),
                 )
 
+            check_property_field_value_name(property_definition['name'])
+
             required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
                 raise ValueError(
@@ -3958,7 +3964,7 @@ class PropertiesDefinition(Field):
                 raise ValueError(f'Wrong property type {property_type!r}.')
 
             model = property_definition.get('comodel')
-            if model and model not in env:
+            if model and (model not in env or env[model].is_transient() or env[model]._abstract):
                 raise ValueError(f'Invalid model name {model!r}')
 
             property_selection = property_definition.get('selection')

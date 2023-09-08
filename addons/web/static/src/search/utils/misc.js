@@ -23,4 +23,5 @@ export const GROUPABLE_TYPES = [
     "many2one",
     "many2many",
     "selection",
+    "tags",
 ];
