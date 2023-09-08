@@ -93,6 +93,16 @@ describe('Link', () => {
         testNotUrlRegex('a.b.bc');
         testNotUrlRegex('20.08.2022');
         testNotUrlRegex('31.12');
+
+        // Url data and anchors count as part of the url.
+        testUrlRegex('google.com?data=hello', { expectedUrl: 'google.com?data=hello' });
+        testUrlRegex('google.com/?data=hello', { expectedUrl: 'google.com/?data=hello' });
+        testUrlRegex('google.com/foo/?data=hello', { expectedUrl: 'google.com/foo/?data=hello' });
+        testUrlRegex('google.com/.?data=hello', { expectedUrl: 'google.com/.?data=hello' });
+        testUrlRegex('google.com?data=hello#anchor', { expectedUrl: 'google.com?data=hello#anchor' });
+        testUrlRegex('google.com/?data=hello#anchor', { expectedUrl: 'google.com/?data=hello#anchor' });
+        testUrlRegex('google.com/.?data=hello#anchor', { expectedUrl: 'google.com/.?data=hello#anchor' });
+        testUrlRegex('google.com/foo/?data=hello&data2=foo#anchor', { expectedUrl: 'google.com/foo/?data=hello&data2=foo#anchor' });
     });
     describe('insert Link', () => {
         // This fails, but why would the cursor stay inside the link
