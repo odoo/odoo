@@ -271,14 +271,6 @@ export class Thread extends Record {
         return ["chat", "group", "channel"].includes(this.type);
     }
 
-    get allowReactions() {
-        return true;
-    }
-
-    get allowReplies() {
-        return true;
-    }
-
     get displayName() {
         if (this.type === "chat" && this.chatPartnerId) {
             return (

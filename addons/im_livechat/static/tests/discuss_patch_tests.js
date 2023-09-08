@@ -26,50 +26,6 @@ QUnit.test("No call buttons", async () => {
     await contains(".o-mail-Discuss-header button[title='Show Call Settings']", { count: 0 });
 });
 
-QUnit.test("No reaction button", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
-        channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
-        channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor" }) }),
-        ],
-    });
-    pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Message");
-    await contains("[title='Add a Reaction']", { count: 0 });
-});
-
-QUnit.test("No reply button", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
-        channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
-        channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor" }) }),
-        ],
-    });
-    pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Message");
-    await contains("[title='Reply']", { count: 0 });
-});
-
 QUnit.test("add livechat in the sidebar on visitor sending first message", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([pyEnv.currentUserId], { im_status: "online" });
@@ -108,26 +64,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     );
 });
 
-QUnit.test("reaction button should not be present on livechat", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
-        channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
-        channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor" }) }),
-        ],
-    });
-    const { insertText, openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer-send:not(:disabled)");
-    await click(".o-mail-Message");
-    await contains("[title='Add a Reaction']", { count: 0 });
-});
-
-QUnit.test("invite button should be present on livechat", async () => {
+QUnit.test("invite button should be present on livechat", async (assert) => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({

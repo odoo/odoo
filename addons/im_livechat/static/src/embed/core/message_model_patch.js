@@ -15,9 +15,3 @@ patch(Message, {
         return message;
     },
 });
-
-patch(Message.prototype, {
-    get editable() {
-        return this.originThread.type !== "livechat" && this._super();
-    },
-});
