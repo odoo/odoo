@@ -23,7 +23,7 @@ export class LinkPreviewConfirmDelete extends Component {
     }
 
     get message() {
-        return this.store.Message.get(this.props.linkPreview.message_id);
+        return this.props.linkPreview.message;
     }
 
     onClickOk() {

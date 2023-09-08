@@ -15,7 +15,7 @@ patch(Thread.prototype, {
             );
         }
         if (this.type === "chat") {
-            return `/web/image/res.partner/${this.chatPartnerId}/avatar_128`;
+            return `/web/image/res.partner/${this.chatPartner.id}/avatar_128`;
         }
         return super.imgUrl;
     },

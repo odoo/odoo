@@ -37,14 +37,12 @@ export class Follower extends Record {
         return follower;
     }
 
-    /** @type {import("@mail/core/common/thread_model").Thread} */
-    followedThread;
+    followedThread = Record.one("Thread");
     /** @type {number} */
     id;
     /** @type {boolean} */
     isActive;
-    /** @type {import("@mail/core/common/persona_model").Persona} */
-    partner;
+    partner = Record.one("Persona");
 
     /**
      * @returns {boolean}

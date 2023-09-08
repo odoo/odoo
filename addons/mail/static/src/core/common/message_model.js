@@ -42,8 +42,7 @@ export class Message extends Record {
 
     /** @type {Object[]} */
     attachments = [];
-    /** @type {import("@mail/core/common/persona_model").Persona} */
-    author;
+    author = Record.one("Persona");
     /** @type {string} */
     body;
     /** @type {string} */
@@ -64,8 +63,7 @@ export class Message extends Record {
     needaction_partner_ids = [];
     /** @type {number[]} */
     history_partner_ids = [];
-    /** @type {Message|undefined} */
-    parentMessage;
+    parentMessage = Record.one("Message");
     /** @type {MessageReactions[]} */
     reactions = [];
     /** @type {import("@mail/core/common/notification_model").Notification[]} */

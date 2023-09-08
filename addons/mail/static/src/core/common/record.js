@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
 
+const ONE_SYM = Symbol("one");
 const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 
@@ -31,7 +32,7 @@ export class Record {
     }
     static localId(data) {
         let idStr;
-        if (typeof data === "object") {
+        if (typeof data === "object" && data !== null) {
             idStr = this._localId(this.id, data);
         } else {
             idStr = data; // non-object data => single id
@@ -40,6 +41,10 @@ export class Record {
     }
     static _localId(expr, data, { brackets = false } = {}) {
         if (!Array.isArray(expr)) {
+            if (this.Class.__rels__.has(expr)) {
+                // relational field (note: optional when OR)
+                return `(${data[expr]?.localId})`;
+            }
             return data[expr];
         }
         const vals = [];
@@ -79,13 +84,28 @@ export class Record {
         }
         return record;
     }
-
+    /**
+     * @template {keyof import("model ").Models} M
+     * @param {M} modelName
+     * @returns {import("models").Models[M]}
+     */
+    static one(modelName) {
+        return ONE_SYM;
+    }
     /**
      * @param {Object} data
      * @returns {Record}
      */
     static insert(data) {}
 
+    /**
+     * Raw relational values of the record, each of which contains object id(s)
+     * rather than the record(s). This allows data in store and models being normalized,
+     * which eases handling relations notably in when a record gets deleted.
+     *
+     * @type {Map<string, any>}
+     */
+    __rels__ = new Map();
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     /**

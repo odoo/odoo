@@ -269,7 +269,7 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        if (channel.chatPartnerId !== this.store.odoobot?.id) {
+        if (!channel.chatPartner?.eq(this.store.odoobot)) {
             if (
                 !this.presence.isOdooFocused() &&
                 channel.isChatChannel &&

@@ -182,7 +182,7 @@ export class MessageService {
             {
                 action: "remove",
                 content: reaction.content,
-                message_id: reaction.messageId,
+                message_id: reaction.message.id,
             },
             { silent: true }
         );
@@ -284,7 +284,7 @@ export class MessageService {
         replaceArrayWithCompare(
             message.notifications,
             notifications.map((notification) =>
-                this.store.Notification.insert({ ...notification, messageId: message.id })
+                this.store.Notification.insert({ ...notification, message })
             )
         );
         replaceArrayWithCompare(
@@ -342,7 +342,7 @@ export class MessageService {
 
     updateNotification(notification, data) {
         Object.assign(notification, {
-            messageId: data.messageId,
+            message: data.message,
             notification_status: data.notification_status,
             notification_type: data.notification_type,
             failure_type: data.failure_type,
@@ -390,10 +390,10 @@ export class MessageService {
         group.notifications = group.notifications.filter(
             ({ id }) => !notificationIdsToRemove.has(id)
         );
-        group.lastMessageId = group.notifications[0]?.message.id;
+        group.lastMessage = group.notifications[0]?.message;
         for (const notification of group.notifications) {
-            if (group.lastMessageId < notification.message.id) {
-                group.lastMessageId = notification.message.id;
+            if (group.lastMessage?.id < notification.message?.id) {
+                group.lastMessage = notification.message;
             }
         }
         group.resIds.add(data.resId);

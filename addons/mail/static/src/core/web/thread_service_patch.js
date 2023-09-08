@@ -166,9 +166,7 @@ patch(ThreadService.prototype, {
         thread.suggestedRecipients = recipients;
     },
     async leaveChannel(channel) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === channel.localId
-        );
+        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(channel));
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
@@ -249,9 +247,7 @@ patch(ThreadService.prototype, {
         follower.delete();
     },
     unpin(thread) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === thread.localId
-        );
+        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(thread));
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }

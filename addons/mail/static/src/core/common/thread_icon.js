@@ -24,6 +24,6 @@ export class ThreadIcon extends Component {
     }
 
     get chatPartner() {
-        return this.store.Persona.get({ type: "partner", id: this.props.thread.chatPartnerId });
+        return this.props.thread.chatPartner;
     }
 }
