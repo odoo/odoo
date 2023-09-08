@@ -100,7 +100,8 @@ class AccountPaymentMethodLine(models.Model):
         string='Payment Method',
         comodel_name='account.payment.method',
         domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
-        required=True
+        required=True,
+        ondelete='cascade'
     )
     payment_account_id = fields.Many2one(
         comodel_name='account.account',
