@@ -58,9 +58,12 @@ class PosSession(models.Model):
 
     def _get_pos_ui_product_product(self, params):
         result = super()._get_pos_ui_product_product(params)
+        self = self.with_context(**params['context'])
         rewards = self.config_id._get_program_ids().reward_ids
         products = rewards.discount_line_product_id | rewards.reward_product_ids
-        products = self.env['product.product'].search_read([('id', 'in', products.ids)], fields=params['search_params']['fields'])
+        # Only load products that are not already in the result
+        products = list(set(products.ids) - set(product['id'] for product in result))
+        products = self.env['product.product'].search_read([('id', 'in', products)], fields=params['search_params']['fields'])
         self._process_pos_ui_product_product(products)
         result.extend(products)
         return result
