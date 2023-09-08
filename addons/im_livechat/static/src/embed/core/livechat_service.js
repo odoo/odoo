@@ -33,6 +33,7 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 )}_im_livechat.odoo_version`;
 
 export class LivechatService {
+    TEMPORARY_ID = "livechat_temporary_thread";
     SESSION_COOKIE = "im_livechat_session";
     OPERATOR_COOKIE = "im_livechat_previous_operator_pid";
     /** @type {keyof typeof SESSION_STATE} */
@@ -41,6 +42,8 @@ export class LivechatService {
     rule;
     initializedDeferred = new Deferred();
     initialized = false;
+    persistThreadPromise = null;
+    sessionInitialized = false;
     available = false;
     /** @type {string} */
     userName;
@@ -52,9 +55,10 @@ export class LivechatService {
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
-     * cookie: typeof import("@web/core/browser/cookie_service").cookieService.start,
-     * bus_service: typeof import("@bus/services/bus_service").busService.start,
-     * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
+     * cookie: ReturnType<typeof import("@web/core/browser/cookie_service").cookieService.start>,
+     * bus_service: ReturnType<typeof import("@bus/services/bus_service").busService.start>,
+     * rpc: ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>,
+     * "mail.chat_window": import("@mail/core/common/chat_window_service").ChatWindowService>,
      * "mail.store": import("@mail/core/common/store_service").Store
      * }} services
      */
@@ -62,9 +66,10 @@ export class LivechatService {
         this.env = env;
         this.cookie = services.cookie;
         this.busService = services.bus_service;
+        this.chatWindowService = services["mail.chat_window"];
         this.rpc = services.rpc;
+        this.notificationService = services.notification;
         this.store = services["mail.store"];
-
         this.available = session.livechatData?.isAvailable;
         this.userName = this.options.default_username ?? _t("Visitor");
     }
@@ -93,36 +98,6 @@ export class LivechatService {
         this.rule = init?.rule ?? {};
         this.initialized = true;
         this.initializedDeferred.resolve();
-    }
-
-    async _createSession({ persisted = false } = {}) {
-        const chatbotScriptId = this.sessionCookie
-            ? this.sessionCookie.chatbotScriptId
-            : this.rule.chatbot?.scriptId;
-        const session = await this.rpc(
-            "/im_livechat/get_session",
-            {
-                channel_id: this.options.channel_id,
-                anonymous_name: this.userName,
-                chatbot_script_id: chatbotScriptId,
-                previous_operator_id: this.cookie.current[this.OPERATOR_COOKIE],
-                persisted,
-            },
-            { shadow: true }
-        );
-        if (!session) {
-            this.cookie.deleteCookie(this.SESSION_COOKIE);
-            this.state = SESSION_STATE.NONE;
-            return;
-        }
-        session.chatbotScriptId = chatbotScriptId;
-        session.isLoaded = true;
-        session.status = "ready";
-        if (session.operator_pid) {
-            this.state = persisted ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
-            this.updateSession(session);
-        }
-        return session;
     }
 
     /**
@@ -154,6 +129,7 @@ export class LivechatService {
         const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
         this.cookie.deleteCookie(this.SESSION_COOKIE);
         this.state = SESSION_STATE.NONE;
+        this.sessionInitialized = false;
         if (!session?.uuid || !notifyServer) {
             return;
         }
@@ -161,26 +137,82 @@ export class LivechatService {
         await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
     }
 
-    async getSession({ persisted = false } = {}) {
-        let session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? false);
-        if (session?.uuid && this.state === SESSION_STATE.NONE) {
-            // Channel is already created on the server.
-            this.state = SESSION_STATE.PERSISTED;
-            const [messages] = await Promise.all([
-                this.rpc("/im_livechat/chat_history", {
-                    uuid: session.uuid,
-                }),
-                await this.initializePersistedSession(),
-            ]);
-            session.messages = messages.reverse();
+    /**
+     * Persist the livechat thread if it is not done yet and swap it with the
+     * temporary thread.
+     *
+     * @returns {Promise<import("@mail/core/common/thread_model").Thread|undefined>}
+     */
+    async persistThread() {
+        if (this.state === SESSION_STATE.PERSISTED) {
+            return this.thread;
         }
-        if (!session || (!session.uuid && persisted)) {
-            session = await this._createSession({ persisted });
-            if (this.state === SESSION_STATE.PERSISTED) {
-                await this.initializePersistedSession();
+        this.persistThreadPromise =
+            this.persistThreadPromise ?? this.getOrCreateThread({ persist: true });
+        try {
+            await this.persistThreadPromise;
+        } finally {
+            this.persistThreadPromise = null;
+        }
+        const chatWindow = this.store.ChatWindow.records.find(
+            (c) => c.thread.id === this.TEMPORARY_ID
+        );
+        if (chatWindow) {
+            this.env.services["mail.thread"].remove(chatWindow.thread);
+            if (!this.thread) {
+                this.chatWindowService.close(chatWindow);
+                return;
+            }
+            chatWindow.thread = this.thread;
+            if (this.env.services["im_livechat.chatbot"].active) {
+                await this.env.services["im_livechat.chatbot"].postWelcomeSteps();
             }
         }
-        return session;
+        return this.thread;
+    }
+
+    /**
+     *
+     * @param {{ persist: boolean}} [param0]
+     * @returns {Promise<import("@mail/core/common/thread_model").Thread>|undefined"}
+     */
+    async getOrCreateThread({ persist = false } = {}) {
+        let threadData = this.sessionCookie;
+        if (!threadData || (!threadData.uuid && persist)) {
+            const chatbotScriptId = this.sessionCookie
+                ? this.sessionCookie.chatbot_script_id
+                : this.rule.chatbot?.scriptId;
+            threadData = await this.rpc(
+                "/im_livechat/get_session",
+                {
+                    channel_id: this.options.channel_id,
+                    anonymous_name: this.userName,
+                    chatbot_script_id: chatbotScriptId,
+                    previous_operator_id: this.cookie.current[this.OPERATOR_COOKIE],
+                    persisted: persist,
+                },
+                { shadow: true }
+            );
+        }
+        if (!threadData?.operator_pid) {
+            this.notificationService.add(_t("No available collaborator, please try again later."));
+            this.state = SESSION_STATE.NONE;
+            this.cookie.deleteCookie(this.SESSION_COOKIE);
+            return;
+        }
+        this.updateSession(threadData);
+        const thread = this.store.Thread.insert({
+            ...threadData,
+            id: threadData.id ?? this.TEMPORARY_ID,
+            model: "discuss.channel",
+            type: "livechat",
+        });
+        this.state = thread.uuid ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
+        if (this.state === SESSION_STATE.PERSISTED && !this.sessionInitialized) {
+            this.sessionInitialized = true;
+            await this.initializePersistedSession();
+        }
+        return thread;
     }
 
     async initializePersistedSession() {
@@ -194,22 +226,6 @@ export class LivechatService {
             await this.busService.start();
         }
         await this.env.services["mail.messaging"].initialize();
-    }
-
-    /**
-     * @param {number} rate
-     * @param {string} reason
-     */
-    async sendFeedback(uuid, rate, reason) {
-        return this.rpc("/im_livechat/feedback", { reason, rate, uuid });
-    }
-
-    /**
-     * @param {number} uuid
-     * @param {string} email
-     */
-    sendTranscript(uuid, email) {
-        return this.rpc("/im_livechat/email_livechat_transcript", { uuid, email });
     }
 
     get options() {
@@ -254,7 +270,15 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: ["cookie", "notification", "rpc", "bus_service", "mail.store"],
+    dependencies: [
+        "bus_service",
+        "cookie",
+        "mail.chat_window",
+        "mail.store",
+        "notification",
+        "notification",
+        "rpc",
+    ],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         if (livechat.available) {

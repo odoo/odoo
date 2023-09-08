@@ -49,6 +49,8 @@ class DiscussChannel(models.Model):
         channel_infos = super()._channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
+            if channel.chatbot_current_step_id:
+                channel_infos_dict[channel.id]["chatbot_script_id"] = channel.chatbot_current_step_id.chatbot_script_id.id
             channel_infos_dict[channel.id]['channel']['anonymous_name'] = channel.anonymous_name
             channel_infos_dict[channel.id]['channel']['anonymous_country'] = {
                 'code': channel.country_id.code,

@@ -1,14 +1,6 @@
 /** @odoo-module **/
 
-import { patch } from "@web/core/utils/patch";
-import { RATING, LivechatService } from "@im_livechat/embed/core/livechat_service";
-
-patch(LivechatService.prototype, {
-    sendFeedback() {
-        document.body.classList.add("feedback_sent");
-        return super.sendFeedback(...arguments);
-    },
-});
+import { RATING } from "@im_livechat/embed/core/livechat_service";
 
 /*******************************
  *         Common Steps
@@ -71,11 +63,6 @@ export const feedback = [
     {
         content: "Send the feedback",
         trigger: "button:contains(Send):not(:disabled)",
-    },
-    {
-        content: "Check if feedback has been sent",
-        trigger: "body.feedback_sent",
-        shadow_dom: false,
     },
     {
         content: "Thanks for your feedback",
