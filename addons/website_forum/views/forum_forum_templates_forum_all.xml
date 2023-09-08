@@ -18,7 +18,17 @@
                     <t t-if="forums" t-call="website_forum.forum_all_all_entries">
                         <t t-set="_forums" t-value="forums"/>
                     </t>
-                    <div t-else="" class="alert alert-info">No forum is available yet.</div>
+                    <div t-else="" class="row">
+                        <div class="col-12 text-center pt-5 pb-4 border-top">
+                            <div t-call="website_forum.forum_empty_state_svg" class="mb-4"/>
+                            <h2>No forum is available yet.</h2>
+                            <div t-ignore="true" groups="website.group_website_designer" class="mt-4">
+                                <a role="button" class="o_btn_enterprise btn" data-post_force-top-window="true" href="/web?#model=forum.forum&amp;view_type=form&amp;action=website_forum.forum_forum_action_add">
+                                    <span class="fa fa-plus me-1"/> Create a forum
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_forum_all_bottom"/>

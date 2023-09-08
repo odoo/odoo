@@ -41,6 +41,7 @@ Featuring
         'views/slide_channel_tag_views.xml',
         'views/slide_snippets.xml',
         'views/website_slides_menu_views.xml',
+        'views/website_slides_templates_homepage_svg.xml',
         'views/website_slides_templates_homepage.xml',
         'views/website_slides_templates_course.xml',
         'views/website_slides_templates_lesson.xml',

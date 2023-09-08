@@ -418,6 +418,25 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+// Odoo btn Enterprise
+// When needed, ensure that a button in frontend remains odoo enterprise color regardless of the user's selected theme color palette 
+// e.g.: "Add a product" in /shop when no products exists yet )
+
+.o_btn_enterprise {
+    color: $white;
+    background-color: $o-enterprise-color;
+    border: $o-enterprise-color;
+    &:hover {
+        color: $white;
+        background-color: #624159;
+        border-color: #52374b;
+    }
+    &:focus {
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(134, 102, 126, 0.5);
+    }
+}
+
 // Texts
 p {
     margin-top: $paragraph-margin-top;

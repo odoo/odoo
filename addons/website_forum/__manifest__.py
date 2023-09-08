@@ -37,6 +37,7 @@ Ask questions, get answers, no distractions
 
         'views/base_contact_templates.xml',
         'views/forum_forum_templates.xml',
+        'views/forum_forum_templates_forum_all_svg.xml',
         'views/forum_forum_templates_forum_all.xml',
         'views/forum_forum_templates_layout.xml',
         'views/forum_forum_templates_moderation.xml',

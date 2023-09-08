@@ -16,6 +16,7 @@
         'data/blog_snippet_template_data.xml',
         'views/website_blog_views.xml',
         'views/website_blog_components.xml',
+        'views/website_blog_posts_loop_svg.xml',
         'views/website_blog_posts_loop.xml',
         'views/website_blog_templates.xml',
         'views/snippets/snippets.xml',

@@ -102,10 +102,15 @@
                     </div>
                     <div t-att-class="'col-lg-9 pe-lg-5 order-lg-1' if has_side_column else 'col-lg pr-lg'">
                         <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-esc="invite_error_msg"/>
-                        <div class="o_wslides_home_content_section mb-3"
+                        <div class="o_wslides_home_content_section mb-3 text-center"
                             t-if="not channels_popular">
-                            <p class="h2">No Course created yet.</p>
-                            <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
+                            <div t-call="website_slides.slide_empty_state_svg" class="mb-4"/>
+                            <h3 class="mt8 text-reset">No courses created yet</h3>
+                            <div t-ignore="true" groups="website_slides.group_website_slides_officer" class="o_not_editable mt-4">
+                                <a class="o_btn_enterprise btn" target="_blank" href="/web?#model=slide.channel&amp;action=website_slides.slide_channel_action_add">
+                                    <span class="fa fa-plus me-1"/> Create a course
+                                </a>
+                            </div>
                         </div>
                         <t t-if="channels_my">
                             <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
@@ -294,9 +299,14 @@
                 </t>
             </div>
             <div class="container o_wslides_home_main pb-5">
-                <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags">
-                    <p class="h2">No Course created yet.</p>
-                    <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
+                <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags" class="text-center">
+                    <div t-call="website_slides.slide_empty_state_svg" class="mb-4"/>
+                    <h3 class="mt8 text-reset">No courses created yet</h3>
+                    <div t-ignore="true" groups="website_slides.group_website_slides_officer" class="o_not_editable mt-4">
+                        <a class="o_btn_enterprise btn" href="/web?#model=slide.channel&amp;action=website_slides.slide_channel_action_add">
+                            <span class="fa fa-plus me-1"/> Create a course
+                        </a>
+                    </div>
                 </div>
                 <div t-elif="search_term and not channels" class="alert alert-info mb-5">
                     No course was found matching your search <code><t t-esc="search_term"/></code>.

@@ -21,7 +21,7 @@
                         <t t-call="website_event.searched_tags"/>
                     </div>
                     <div class="row">
-                        <div id="o_wevent_index_main_col" t-attf-class="col-md my-5 #{opt_events_list_columns and 'opt_events_list_columns' or 'opt_events_list_rows'}">
+                        <div id="o_wevent_index_main_col" t-attf-class="col-md mb-5 #{opt_events_list_columns and 'opt_events_list_columns' or 'opt_events_list_rows'}">
                             <div class="row">
                                 <!-- Events List -->
                                 <t t-call="website_event.events_list"/>
@@ -148,13 +148,13 @@
     <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-10 offset-xl-1'"/>
     <!-- No events -->
     <div t-if="not event_ids" class="col-12 text-center">
-        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <div t-call="website_event.event_empty_events_svg" class="mt-4"/>
         <h3>No events scheduled yet</h3>
         <p t-if="searches['search']">We couldn't find any event matching your search for: <strong t-out="searches['search']"/>.</p>
         <p t-elif="searches['tags']">No event matching your search criteria could be found.</p>
         <p t-else="">We couldn't find any event scheduled at this moment.</p>
         <div class="o_not_editable my-3" groups="event.group_event_user">
-            <a class="o_wevent_cta btn" target="_blank" href="/web?#model=event.event&amp;view_type=form&amp;action=event.action_event_view">
+            <a class="o_btn_enterprise btn" href="/web?#model=event.event&amp;view_type=form&amp;action=event.action_event_view">
                 <span class="fa fa-plus me-1"/> Create an Event
             </a>
         </div>

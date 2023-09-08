@@ -8,12 +8,12 @@
         <div t-if="not tracks_by_days" class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+                    <div t-call="website_event.event_empty_events_svg" class="mt-4"/>
                     <h2 class="mb-2">No track found.</h2>
                     <p t-if="search_key">We could not find any track matching your search for: <strong t-out="search_key"/>.</p>
                     <p t-else="">We could not find any track at this moment.</p>
                     <div class="o_not_editable my-3" groups="event.group_event_user">
-                        <a class="o_wevent_cta btn" target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
+                        <a class="o_btn_enterprise btn" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
                             <span class="fa fa-plus me-1"/> Schedule Tracks
                         </a>
                     </div>

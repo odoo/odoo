@@ -385,16 +385,21 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div t-else="" class="text-center text-muted mt128 mb256">
+                            <div t-else="" class="text-center mt128 mb256">
                                 <t t-if="not search">
-                                    <h3 class="mt8">No product defined</h3>
-                                    <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
+                                    <div t-call="website_sale.shop_empty_state_svg" class="mb-4"/>
+                                    <h3 class="mt8 text-reset">No product defined</h3>
+                                    <p t-if="category" class="text-muted">No product defined in category "<strong t-esc="category.display_name"/>".</p>
                                 </t>
                                 <t t-else="">
                                     <h3 class="mt8">No results</h3>
                                     <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
                                 </t>
-                                <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                                <div t-ignore="true" groups="sales_team.group_sale_manager" class="o_not_editable mt-4">
+                                    <a class="o_btn_enterprise btn" href="/web?#model=product.template&amp;view_type=form&amp;action=website_sale.product_product_action_add">
+                                        <span class="fa fa-plus me-1"/> Add a product
+                                    </a>
+                                </div>
                             </div>
                             <div class="products_pager d-flex justify-content-center pt-5 pb-3">
                                 <t t-call="website.pager"/>

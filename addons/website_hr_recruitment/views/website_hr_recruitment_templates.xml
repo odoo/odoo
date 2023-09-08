@@ -26,19 +26,22 @@
                     <div class="col-lg" id="jobs_grid">
                         <div class="row flex-column">
                             <t t-if="not jobs">
-                                <div class="col">
+                                <div class="col text-center">
+                                    <div t-call="website_hr_recruitment.hr_empty_state_svg"/>
                                     <div t-if="search" class="alert alert-warning text-center" role="alert">
                                         No results found for '<span t-out="search"/>'.
                                     </div>
-                                    <div class="alert alert-info text-center text-muted" groups="hr_recruitment.group_hr_recruitment_manager">
-                                        Create new job pages from the <strong>+ <i>New</i></strong> top-right button.
-                                    </div>
-                                    <div class="col-lg-12 text-center pt24">
-                                        <p class="h5 fw-light text-muted pb24">
+                                    <div class="col-lg-12 pt24">
+                                        <h3 class="mt8 text-reset">No jobs found</h3>
+                                        <p class="text-muted">
                                             There are currently no open job opportunities,<br class="mb-2"/>
                                             but feel free to <span class="fw-bold">contact us</span> for a spontaneous application.
                                         </p>
-                                        <img class="img-fluid o_we_custom_image pb24" src="/website_hr_recruitment/static/src/img/job_not_found.svg" style="width: 50% !important;" alt="Job not found"/>
+                                        <div t-ignore="true" groups="hr_recruitment.group_hr_recruitment_manager" class="o_not_editable mt-4">
+                                            <a class="o_btn_enterprise btn" href="#">
+                                                <span class="fa fa-plus me-1"/> Add a job
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </t>

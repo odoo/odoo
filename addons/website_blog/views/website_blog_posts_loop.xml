@@ -72,12 +72,17 @@ according to the enabled options.
             </div>
 
             <!-- No blog post yet -->
-            <div t-if="not posts" class="col">
-                <t t-set="no_results_str">No results for "%s".</t>
-                <h2 t-if="search" t-esc="no_results_str % search" class="fw-bold"/>
-                <h2 t-else="">No blog post yet.</h2>
-                <div class="alert alert-info" groups="website.group_website_designer">
-                    Click on "<b>New</b>" in the top-right corner to write your first blog post.
+            <div t-if="not posts" class="col text-center">
+                <div class="col-lg-12 text-center pt24">
+                    <div t-call="website_blog.blog_empty_state_svg" class="mb-4"/>
+                    <t t-set="no_results_str">No results for "%s".</t>
+                    <h3 t-if="search" t-esc="no_results_str % search"/>
+                    <h3 t-else="">No blog post yet</h3>
+                    <div t-ignore="true" groups="website.group_website_designer" class="mt-4">
+                        <a class="o_btn_enterprise btn" href="/web?#model=blog.post&amp;action=website_blog.blog_post_action_add">
+                            <span class="fa fa-pencil me-1"/> Write a blog post
+                        </a>
+                    </div>
                 </div>
             </div>
 

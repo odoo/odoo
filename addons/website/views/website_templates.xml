@@ -2255,11 +2255,19 @@
     <t t-call="http_routing.404">
         <div class="o_not_editable bg-100 pt40">
             <div class="container">
-                <div class="alert alert-info text-center d-lg-flex justify-content-between align-items-center">
-                    <p class="m-lg-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
-                    <a role="button" class="btn btn-info js_disable_on_click post_link" data-post_force-top-window="true" t-attf-href="/website/add/#{path}?redirect=1#{from_template and '&amp;template=%s' % from_template}">Create Page</a>
+                <div class="row">
+                    <div class="col-12 text-center pt24">
+                        <div t-call="website_blog.blog_empty_state_svg" class="mb-4"/>
+                        <h2>This page does not exist</h2>
+                        <p>As an editor of this site, you can create one.</p>
+                        <div t-ignore="true" groups="website.group_website_designer" class="mt-4">
+                            <a role="button" class="o_btn_enterprise btn js_disable_on_click post_link" data-post_force-top-window="true" t-attf-href="/website/add/#{path}?redirect=1#{from_template and '&amp;template=%s' % from_template}">
+                                <span class="fa fa-plus me-1"/> Create a page
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
+                <div class="alert alert-info text-center p-3 mt-5"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>
             <hr/>
         </div>
