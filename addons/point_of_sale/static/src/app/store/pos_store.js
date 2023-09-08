@@ -926,53 +926,9 @@ export class PosStore extends Reactive {
         };
     }
     async getClosePosInfo() {
-        const closingData = await this.orm.call("pos.session", "get_closing_control_data", [
+        return await this.orm.call("pos.session", "get_closing_control_data", [
             [this.pos_session.id],
         ]);
-        const ordersDetails = closingData.orders_details;
-        const paymentsAmount = closingData.payments_amount;
-        const payLaterAmount = closingData.pay_later_amount;
-        const openingNotes = closingData.opening_notes;
-        const defaultCashDetails = closingData.default_cash_details;
-        const otherPaymentMethods = closingData.other_payment_methods;
-        const isManager = closingData.is_manager;
-        const amountAuthorizedDiff = closingData.amount_authorized_diff;
-        const cashControl = this.config.cash_control;
-
-        // component state and refs definition
-        const state = { notes: "", acceptClosing: false, payments: {} };
-        if (cashControl) {
-            state.payments[defaultCashDetails.id] = {
-                counted: 0,
-                difference: -defaultCashDetails.amount,
-                number: 0,
-            };
-        }
-        if (otherPaymentMethods.length > 0) {
-            otherPaymentMethods.forEach((pm) => {
-                if (pm.type === "bank") {
-                    state.payments[pm.id] = {
-                        counted: this.env.utils
-                            .roundCurrency(pm.amount)
-                            .toFixed(this.currency.decimal_places),
-                        difference: 0,
-                        number: pm.number,
-                    };
-                }
-            });
-        }
-        return {
-            ordersDetails,
-            paymentsAmount,
-            payLaterAmount,
-            openingNotes,
-            defaultCashDetails,
-            otherPaymentMethods,
-            isManager,
-            amountAuthorizedDiff,
-            state,
-            cashControl,
-        };
     }
     set_start_order() {
         if (this.orders.length && !this.selectedOrder) {

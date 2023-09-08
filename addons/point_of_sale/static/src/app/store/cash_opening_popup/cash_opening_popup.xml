@@ -30,7 +30,7 @@
                     >
                     Open session 
                     <span t-if="env.utils.isValidFloat(state.openingCash)"
-                        t-esc="env.utils.formatCurrency(state.openingCash)"/>
+                        t-esc="env.utils.formatStrCurrency(state.openingCash)"/>
                 </button>
             </footer>
         </div>
