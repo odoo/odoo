@@ -133,9 +133,9 @@ function hasColor(element, mode) {
         }
     }
     return (
-        (style[mode] && style[mode] !== 'inherit' && style[mode] !== parent.style[mode]) ||
+        (style[mode] && style[mode] !== 'inherit' && (!parent || style[mode] !== parent.style[mode])) ||
         (classRegex.test(element.className) &&
-            getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
+            (!parent || getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode]))
     );
 }
 
@@ -567,54 +567,66 @@ export const editorCommands = {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
         const selectedNodes = selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
-        const fonts = selectedNodes.flatMap(node => {
-            let font = closestElement(node, 'font') || closestElement(node, 'span');
-            const children = font && descendants(font);
-            if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
-                // Partially selected <font>: split it.
-                const selectedChildren = children.filter(child => selectedNodes.includes(child));
-                if (selectedChildren.length) {
-                    font = splitAroundUntil(selectedChildren, font);
-                } else {
-                    font = [];
-                }
-            } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
-                    || (isEmptyBlock(node.parentNode))
-                    || (node.nodeType === Node.ELEMENT_NODE &&
-                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
-                        isVisibleStr(node.textContent) &&
-                        !node.classList.contains('btn') &&
-                        !node.querySelector('font'))) {
-                // Node is a visible text or inline node without font nor a button:
-                // wrap it in a <font>.
-                const previous = node.previousSibling;
-                const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
-                if (
-                    previous &&
-                    previous.nodeName === 'FONT' &&
-                    !previous.style[mode === 'color' ? 'backgroundColor' : 'color'] &&
-                    !classRegex.test(previous.className) &&
-                    selectedNodes.includes(previous.firstChild) &&
-                    selectedNodes.includes(previous.lastChild)
+        function getFonts(selectedNodes) {
+            return selectedNodes.flatMap(node => {
+                let font = closestElement(node, 'font') || closestElement(node, 'span');
+                const children = font && descendants(font);
+                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                    // Partially selected <font>: split it.
+                    const selectedChildren = children.filter(child => selectedNodes.includes(child));
+                    if (selectedChildren.length) {
+                        font = splitAroundUntil(selectedChildren, font);
+                    } else {
+                        font = [];
+                    }
+                } else if (
+                    (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
+                    (isEmptyBlock(node.parentNode)) ||
+                    (node.nodeType === Node.ELEMENT_NODE &&
+                    ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                    isVisibleStr(node.textContent) &&
+                    !node.classList.contains('btn') &&
+                    !node.querySelector('font'))
                 ) {
-                    // Directly follows a fully selected <font> that isn't
-                    // colored in the other mode: append to that.
-                    font = previous;
+                    // Node is a visible text or inline node without font nor a button:
+                    // wrap it in a <font>.
+                    const previous = node.previousSibling;
+                    const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
+                    if (
+                        previous &&
+                        previous.nodeName === 'FONT' &&
+                        !previous.style[mode === 'color' ? 'backgroundColor' : 'color'] &&
+                        !classRegex.test(previous.className) &&
+                        selectedNodes.includes(previous.firstChild) &&
+                        selectedNodes.includes(previous.lastChild)
+                    ) {
+                        // Directly follows a fully selected <font> that isn't
+                        // colored in the other mode: append to that.
+                        font = previous;
+                    } else {
+                        // No <font> found: insert a new one.
+                        font = document.createElement('font');
+                        node.after(font);
+                    }
+                    if (node.textContent) {
+                        font.appendChild(node);
+                    } else {
+                        fillEmpty(font);
+                    }
                 } else {
-                    // No <font> found: insert a new one.
-                    font = document.createElement('font');
-                    node.after(font);
+                    font = []; // Ignore non-text or invisible text nodes.
                 }
-                if (node.textContent) {
-                    font.appendChild(node);
-                } else {
-                    fillEmpty(font);
-                }
-            } else {
-                font = []; // Ignore non-text or invisible text nodes.
-            }
-            return font;
-        });
+                return font;
+            });
+        }
+
+        let fonts = getFonts(selectedNodes);
+        // Dirty fix as the previous call could have unconnected elements
+        // because of the `splitAroundUntil`. Another call should provide he
+        // correct list of fonts.
+        if (!fonts.every((font) => font.isConnected)) {
+            fonts = getFonts(selectedNodes);
+        }
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
