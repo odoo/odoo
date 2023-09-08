@@ -8,9 +8,7 @@
             <field name="groups" eval="[Command.link(ref('base.group_user')), Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
             <field name="domain_force">[
                 '|',
-                    '&amp;',
-                        ('channel_type', '!=', 'channel'),
-                        ('is_member', '=', True),
+                    ('is_member', '=', True),
                     '&amp;',
                         ('channel_type', '=', 'channel'),
                         '|',
