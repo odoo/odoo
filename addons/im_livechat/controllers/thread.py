@@ -9,3 +9,8 @@ class LivechatThreadController(ThreadController):
     @add_guest_to_context
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
         return super().mail_message_post(thread_model, thread_id, post_data, context)
+
+    @route("/mail/message/update_content", cors="*")
+    @add_guest_to_context
+    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None):
+        return super().mail_message_update_content(message_id, body, attachment_ids, attachment_tokens, partner_ids)

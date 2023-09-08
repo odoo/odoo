@@ -47,14 +47,6 @@ patch(Thread.prototype, {
         return this.type === "livechat" || super.allowSetLastSeenMessage;
     },
 
-    get allowReactions() {
-        return this.type === "livechat" ? false : super.allowReactions;
-    },
-
-    get allowReplies() {
-        return this.type === "livechat" ? false : super.allowReplies;
-    },
-
     get correspondents() {
         return super.correspondents.filter((correspondent) => !correspondent.is_bot);
     },
