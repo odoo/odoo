@@ -675,35 +675,5 @@
 
         <function model="pos.session" name="action_pos_session_closing_control"
             eval="[[ref('pos_closed_session_2')]]" />
-
-        <!-- Open Session -->
-
-        <record id="pos_open_session_1" model="pos.session" forcecreate="False">
-            <field name="config_id" ref="pos_config_main" />
-            <field name="user_id" ref="base.user_admin" />
-        </record>
-
-        <record id="pos_open_order_1" model="pos.order" forcecreate="False">
-            <field name="session_id" ref="pos_open_session_1" />
-            <field name="company_id" ref="base.main_company" />
-            <field name="name">Shop/00001</field>
-            <field name="state">draft</field>
-            <field name="amount_total">0.90</field>
-            <field name="amount_tax">0.0</field>
-            <field name="amount_paid">0.0</field>
-            <field name="amount_return">0.0</field>
-            <field name="pos_reference">Order 00001-001-0000</field>
-            <field name="partner_id" ref="base.res_partner_1" />
-        </record>
-
-        <record id="pos_orderline_1" model="pos.order.line" forcecreate="False">
-            <field name="name">Orderline 1</field>
-            <field name="product_id" ref="led_lamp" />
-            <field name="price_subtotal">0.90</field>
-            <field name="price_subtotal_incl">0.90</field>
-            <field name="price_unit">0.90</field>
-            <field name="order_id" ref="pos_open_order_1" />
-            <field name="full_product_name">LED Lamp</field>
-        </record>
     </data>
 </odoo>

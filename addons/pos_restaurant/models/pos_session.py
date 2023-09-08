@@ -5,6 +5,7 @@ from odoo import models, Command, api
 from odoo.tools import convert
 from itertools import groupby
 from odoo.osv.expression import AND
+import json
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
@@ -81,3 +82,18 @@ class PosSession(models.Model):
             'limit_categories': True,
             'iface_available_categ_ids': [Command.link(self.env.ref('pos_restaurant.food').id), Command.link(self.env.ref('pos_restaurant.drinks').id)]
         })
+
+    @api.model
+    def _set_last_order_preparation_change(self, order_ids):
+        for order_id in order_ids:
+            order = self.env['pos.order'].browse(order_id)
+            last_order_preparation_change = {}
+            for orderline in order['lines']:
+                last_order_preparation_change[orderline.uuid + " - "] = {
+                    "line_uuid": orderline.uuid,
+                    "name": orderline.full_product_name,
+                    "note": "",
+                    "product_id": orderline.product_id.id,
+                    "quantity": orderline.qty,
+                }
+            order.write({'last_order_preparation_change': json.dumps(last_order_preparation_change)})
