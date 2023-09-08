@@ -538,7 +538,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -582,7 +582,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -635,7 +635,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -685,7 +685,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -1343,7 +1343,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "attendees": [
                 {
                     "email": mail_alias.display_name,
-                    "state": "accepted",
+                    "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
