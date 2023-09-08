@@ -290,6 +290,17 @@ class StockMove(models.Model):
                     values['location_dest_id'] = mo.location_dest_id.id
         return super().create(vals_list)
 
+    @api.onchange('move_line_ids')
+    def _onchange_move_line_ids_mrp(self):
+        res = {}
+
+        for move in self:
+            if not move.raw_material_production_id:
+                continue
+            res.update(self._check_for_duplicated_serial_numbers(move))
+
+        return res
+
     def write(self, vals):
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True

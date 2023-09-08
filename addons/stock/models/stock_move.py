@@ -2,17 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import timedelta
-from markupsafe import escape
 from operator import itemgetter
 from re import findall as regex_findall
 
-from odoo import _, api, Command, fields, models
+from markupsafe import escape
+
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import clean_context, OrderedSet, groupby
+from odoo.tools.misc import OrderedSet, clean_context, groupby
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
@@ -1150,6 +1151,44 @@ Please change the quantity done or the rounding precision of your unit of measur
                 return 'assigned'
             else:
                 return moves_todo[-1:].state or 'draft'
+
+    def _check_for_duplicated_serial_numbers(self, move):
+        res = {}
+
+        # Serial numbers within a single order should be unique
+        serial_numbers = Counter([
+            ml.quant_id.lot_id.id for ml in move.move_line_ids
+            if ml.quant_id.lot_id.id is not False
+        ])
+        if len(serial_numbers) > 0 and serial_numbers.most_common(1)[0][1] > 1:
+            raise UserError(_(
+                'You cannot use the same serial number twice in one order.'
+            ))
+
+        for move_line in move.move_line_ids:
+            lot_id = move_line.quant_id.lot_id or move_line.lot_id
+            quant = self.env['stock.quant'].search([
+                ('product_id', '=', move_line.product_id.id),
+                ('location_id.usage', '=', 'production'),
+                ('company_id', '=', self.company_id.id),
+                ('lot_id', '=', lot_id.id),
+            ])
+            if (
+                float_compare(quant.quantity, 0, quant.product_uom_id.rounding) > 0 and
+                move_line.product_id.tracking == 'serial'
+            ):
+                res['warning'] = {
+                    'title': _('Warning'),
+                    'message': (_(
+                        'This serial number has already been consumed before. '
+                        'Double check that this is accurate before moving on.'
+                    ))
+                }
+                # Set the quantity to 1, so the user doesn't have to manually change it
+                if float_compare(move_line.qty_done, 0, move_line.product_uom_id.rounding) < 0:
+                    move_line.qty_done = 1.0
+
+        return res
 
     @api.onchange('product_id', 'picking_type_id')
     def _onchange_product_id(self):

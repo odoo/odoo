@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_warn_serial_number_already_consumed_form_view" model="ir.ui.view">
+        <field name="name">mrp.warn.serial.number.already.consumed.form.view</field>
+        <field name="model">mrp.warn.serial.number.already.consumed</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    Some component serial numbers have already been used in other manufacturing orders, are you sure you want to move ahead anyway?
+                </div>
+                <footer>
+                    <button string="Discard" class="btn-primary" special="cancel"/>
+                    <button string="Confirm" class="btn-secondary" name="action_confirm" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
