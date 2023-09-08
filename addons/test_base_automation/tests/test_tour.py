@@ -223,7 +223,7 @@ class BaseAutomationTestUi(HttpCase):
             "model_id": model.id,
         }
         automation.write(
-            {"action_server_ids": [Command.create(dict(action, name=action["name"] + f" {i}")) for i in range(3)]}
+            {"action_server_ids": [Command.create(dict(action, name=action["name"] + f" {i}", sequence=i)) for i in range(3)]}
         )
         self.assertEqual(
             automation.action_server_ids.mapped("name"),
