@@ -499,7 +499,7 @@ class Applicant(models.Model):
             if applicant.partner_id:
                 applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id.sudo(), reason=_('Contact'))
             elif applicant.email_from:
-                email_from = applicant.email_from
+                email_from = tools.email_normalize(applicant.email_from)
                 if applicant.partner_name:
                     email_from = tools.formataddr((applicant.partner_name, email_from))
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
@@ -527,11 +527,11 @@ class Applicant(models.Model):
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
-        partner_name, email_from = self.env['res.partner']._parse_partner_name(msg.get('from'))
+        partner_name, email_from_normalized = self.env['res.partner']._parse_partner_name(msg.get('from'))
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'partner_name': partner_name or email_from,
-            'email_from': email_from,
+            'partner_name': partner_name or email_from_normalized,
+            'email_from': email_from_normalized,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
@@ -547,18 +547,24 @@ class Applicant(models.Model):
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            email_normalized = tools.email_normalize(self.email_from)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email_from or (email_normalized and partner.email_normalized == email_normalized)
+            )
             if new_partner:
-                if new_partner.create_date.date() == fields.Date.today():
-                    new_partner.write({
+                if new_partner[0].create_date.date() == fields.Date.today():
+                    new_partner[0].write({
                         'name': self.partner_name or self.email_from,
                         'phone': self.partner_phone,
                         'mobile': self.partner_mobile,
                     })
+                if new_partner[0].email_normalized:
+                    email_domain = ('email_from', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = ('email_from', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
+                ]).write({'partner_id': new_partner[0].id})
         return super(Applicant, self)._message_post_after_hook(message, msg_vals)
 
     def create_employee_from_applicant(self):

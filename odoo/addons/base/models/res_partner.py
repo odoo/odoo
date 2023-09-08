@@ -164,7 +164,7 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
-    _order = "complete_name, id"
+    _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
 
     # the partner types that must be added to a partner's complete name, like "Delivery"
@@ -507,11 +507,36 @@ class Partner(models.Model):
 
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
+        """ Compute formatted email for partner, using formataddr. Be defensive
+        in computation, notably
+
+          * double format: if email already holds a formatted email like
+            'Name' <email@domain.com> we should not use it as it to compute
+            email formatted like "Name <'Name' <email@domain.com>>";
+          * multi emails: sometimes this field is used to hold several addresses
+            like email1@domain.com, email2@domain.com. We currently let this value
+            untouched, but remove any formatting from multi emails;
+          * invalid email: if something is wrong, keep it in email_formatted as
+            this eases management and understanding of failures at mail.mail,
+            mail.notification and mailing.trace level;
+          * void email: email_formatted is False, as we cannot do anything with
+            it;
+        """
+        self.email_formatted = False
         for partner in self:
-            if partner.email:
-                partner.email_formatted = tools.formataddr((partner.name or u"False", partner.email or u"False"))
-            else:
-                partner.email_formatted = ''
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                # note: multi-email input leads to invalid email like "Name" <email1, email2>
+                # but this is current behavior in Odoo 14+ and some servers allow it
+                partner.email_formatted = tools.formataddr((
+                    partner.name or u"False",
+                    ','.join(emails_normalized)
+                ))
+            elif partner.email:
+                partner.email_formatted = tools.formataddr((
+                    partner.name or u"False",
+                    partner.email
+                ))
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -840,7 +865,9 @@ class Partner(models.Model):
 
           * Raoul <raoul@grosbedon.fr>
           * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from
+            df40926d2a57c101a3e2d221ecfd08fbb4fea30e now supported directly
+            in 'email_split_tuples';
 
         Otherwise: default, everything is set as the name. Starting from 13.3
         returned email will be normalized to have a coherent encoding.
@@ -854,18 +881,12 @@ class Partner(models.Model):
         if split_results:
             name, email = split_results[0]
 
-        if email and not name:
-            fallback_emails = tools.email_split(text.replace(' ', ','))
-            if fallback_emails:
-                email = fallback_emails[0]
-                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
-
         if email:
-            email = tools.email_normalize(email)
+            email_normalized = tools.email_normalize(email, strict=False) or email
         else:
-            name, email = text, ''
+            name, email_normalized = text, ''
 
-        return name, email
+        return name, email_normalized
 
     @api.model
     def name_create(self, name):
@@ -880,13 +901,13 @@ class Partner(models.Model):
             context = dict(self._context)
             context.pop('default_type')
             self = self.with_context(context)
-        name, email = self._parse_partner_name(name)
-        if self._context.get('force_email') and not email:
+        name, email_normalized = self._parse_partner_name(name)
+        if self._context.get('force_email') and not email_normalized:
             raise ValidationError(_("Couldn't create contact without email address!"))
 
-        create_values = {self._rec_name: name or email}
-        if email:  # keep default_email in context
-            create_values['email'] = email
+        create_values = {self._rec_name: name or email_normalized}
+        if email_normalized:  # keep default_email in context
+            create_values['email'] = email_normalized
         partner = self.create(create_values)
         return partner.id, partner.display_name
 
@@ -904,17 +925,17 @@ class Partner(models.Model):
         if not email:
             raise ValueError(_('An email is required for find_or_create to work'))
 
-        parsed_name, parsed_email = self._parse_partner_name(email)
-        if not parsed_email and assert_valid_email:
+        parsed_name, parsed_email_normalized = self._parse_partner_name(email)
+        if not parsed_email_normalized and assert_valid_email:
             raise ValueError(_('A valid email is required for find_or_create to work properly.'))
 
-        partners = self.search([('email', '=ilike', parsed_email)], limit=1)
+        partners = self.search([('email', '=ilike', parsed_email_normalized)], limit=1)
         if partners:
             return partners
 
-        create_values = {self._rec_name: parsed_name or parsed_email}
-        if parsed_email:  # keep default_email in context
-            create_values['email'] = parsed_email
+        create_values = {self._rec_name: parsed_name or parsed_email_normalized}
+        if parsed_email_normalized:  # keep default_email in context
+            create_values['email'] = parsed_email_normalized
         return self.create(create_values)
 
     def _get_gravatar_image(self, email):
