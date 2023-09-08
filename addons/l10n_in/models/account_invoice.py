@@ -32,11 +32,6 @@ class AccountMove(models.Model):
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
-    @api.depends('amount_total')
-    def _compute_amount_total_words(self):
-        for invoice in self:
-            invoice.amount_total_words = invoice.currency_id.amount_to_text(invoice.amount_total)
-
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
