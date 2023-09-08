@@ -378,7 +378,7 @@ export class FormController extends Component {
             if (clickParams.special === "save" && this.props.saveRecord) {
                 saved = await this.props.saveRecord(record, clickParams);
             } else {
-                saved = await record.save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog });
+                saved = await record.save({ stayInEdition: true });
             }
             if (saved !== false && this.props.onSave) {
                 this.props.onSave(record, clickParams);
