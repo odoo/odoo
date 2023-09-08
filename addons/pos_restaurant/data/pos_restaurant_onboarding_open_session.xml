@@ -148,4 +148,7 @@
         <field name="order_id" ref="pos_open_order_5" />
         <field name="full_product_name">Pizza 4 Formaggi</field>
     </record>
+
+    <function model="pos.session" name="_set_last_order_preparation_change"
+            eval="[[ref('pos_open_order_2'), ref('pos_open_order_3'), ref('pos_open_order_4')]]"/>
 </odoo>

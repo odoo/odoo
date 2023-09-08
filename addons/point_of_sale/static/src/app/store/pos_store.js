@@ -226,9 +226,10 @@ export class PosStore extends Reactive {
         );
         const { start_category, iface_start_categ_id } = this.config;
         this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
-        this.load_server_orders();
         // Push orders in background, do not await
         this.push_orders();
+        // This method is to load the demo datas.
+        this.load_server_orders();
         this.markReady();
     }
 
@@ -469,26 +470,17 @@ export class PosStore extends Reactive {
     }
 
     loadOpenOrders(openOrders) {
+        // This method is for the demo data
+        let isOrderSet = false;
         for (const json of openOrders) {
             if (this.orders.find((el) => el.server_id === json.id)) {
                 continue;
             }
             this._createOrder(json);
-            const newOrder = this.orders[this.orders.length - 1];
-            if (newOrder.orderlines[0].uuid) {
-                for (const line of newOrder.orderlines) {
-                    newOrder.lastOrderPrepaChange[line.uuid + " - "] = {
-                        line_uuid: line.uuid,
-                        name: line.full_product_name,
-                        note: "",
-                        product_id: line.product.id,
-                        quantity: line.quantity,
-                    };
-                }
+            if (!isOrderSet) {
+                this.selectedOrder = this.orders[this.orders.length - 1];
+                isOrderSet = true;
             }
-        }
-        if (openOrders.length > 0) {
-            this.selectedOrder = this.orders[1];
         }
     }
 
