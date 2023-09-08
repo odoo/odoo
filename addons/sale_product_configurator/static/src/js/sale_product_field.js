@@ -90,29 +90,39 @@ patch(SaleOrderLineProductField.prototype, {
 
     async _openProductConfigurator(edit=false) {
         const saleOrderRecord = this.props.record.model.root;
+        let ptavIds = this.props.record.data.product_template_attribute_value_ids.records.map(
+            record => record.resId
+        );
+        let customAttributeValues = [];
 
-        /**
-         *  `product_custom_attribute_value_ids` records are not loaded in the view bc sub templates
-         *  are not loaded in list views. Therefore, we fetch them from the server if the record is
-         *  saved. Else we use the value stored on the line.
-         */
-        const customAttributeValues =
-            this.props.record.data.product_custom_attribute_value_ids.records[0]?.isNew ?
-            this.props.record.data.product_custom_attribute_value_ids.records.map(
-                record => record.data
-            ) :
-            await this.orm.read(
-                'product.attribute.custom.value',
-                this.props.record.data.product_custom_attribute_value_ids.currentIds,
-                ["custom_product_template_attribute_value_id", "custom_value"]
-            );
+        if (edit) {
+            /**
+             * no_variant and custom attribute don't need to be given to the configurator for new
+             * products.
+             */
+            ptavIds.concat(this.props.record.data.product_no_variant_attribute_value_ids.records.map(
+                record => record.resId
+            ));
+            /**
+             *  `product_custom_attribute_value_ids` records are not loaded in the view bc sub templates
+             *  are not loaded in list views. Therefore, we fetch them from the server if the record is
+             *  saved. Else we use the value stored on the line.
+             */
+            customAttributeValues =
+                this.props.record.data.product_custom_attribute_value_ids.records[0]?.isNew ?
+                this.props.record.data.product_custom_attribute_value_ids.records.map(
+                    record => record.data
+                ) :
+                await this.orm.read(
+                    'product.attribute.custom.value',
+                    this.props.record.data.product_custom_attribute_value_ids.currentIds,
+                    ["custom_product_template_attribute_value_id", "custom_value"]
+                )
+        }
+
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: this.props.record.data.product_template_id[0],
-            ptavIds: this.props.record.data.product_template_attribute_value_ids.records.map(
-                record => record.resId
-            ).concat(this.props.record.data.product_no_variant_attribute_value_ids.records.map(
-                record => record.resId
-            )),
+            ptavIds: ptavIds,
             customAttributeValues: customAttributeValues.map(
                 data => {
                     return {
