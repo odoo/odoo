@@ -728,8 +728,16 @@ class TestExpression(SavepointCaseWithUserDemo):
         helen = Model.create({'name': 'Hélène'})
         self.assertEqual(helen, Model.search([('name', 'ilike', 'Helene')]))
         self.assertEqual(helen, Model.search([('name', 'ilike', 'hélène')]))
+        self.assertEqual(helen, Model.search([('name', '=ilike', 'Hel%')]))
+        self.assertEqual(helen, Model.search([('name', '=ilike', 'hél%')]))
         self.assertNotIn(helen, Model.search([('name', 'not ilike', 'Helene')]))
         self.assertNotIn(helen, Model.search([('name', 'not ilike', 'hélène')]))
+
+        # =like and like should be case and accent sensitive
+        self.assertEqual(helen, Model.search([('name', '=like', 'Hél%')]))
+        self.assertNotIn(helen, Model.search([('name', '=like', 'Hel%')]))
+        self.assertEqual(helen, Model.search([('name', 'like', 'élè')]))
+        self.assertNotIn(helen, Model.search([('name', 'like', 'ele')]))
 
         hermione, nicostratus = Model.create([
             {'name': 'Hermione', 'parent_id': helen.id},
