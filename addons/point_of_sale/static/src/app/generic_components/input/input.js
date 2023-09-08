@@ -63,7 +63,6 @@ export class Input extends Component {
         return obj[key];
     }
     setValue(newValue, tModel = this.props.tModel) {
-        newValue = this.props.format(newValue);
         const [obj, key] = tModel;
         obj[key] = newValue;
         this.props.callback?.(newValue);

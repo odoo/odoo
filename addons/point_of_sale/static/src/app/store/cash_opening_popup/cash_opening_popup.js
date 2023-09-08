@@ -7,6 +7,7 @@ import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/
 import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Input } from "@point_of_sale/app/generic_components/input/input";
+import { parseFloat } from "@web/views/fields/parsers";
 
 export class CashOpeningPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.CashOpeningPopup";
