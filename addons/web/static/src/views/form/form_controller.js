@@ -407,7 +407,7 @@ export class FormController extends Component {
                 saved = await this.props.saveRecord(record, clickParams);
             } else {
                 const noReload = this.env.inDialog && clickParams.close;
-                saved = await record.save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog, noReload });
+                saved = await record.save({ stayInEdition: true, noReload });
             }
             if (saved !== false && this.props.onSave) {
                 this.props.onSave(record, clickParams);
