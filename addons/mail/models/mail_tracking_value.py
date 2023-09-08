@@ -13,8 +13,9 @@ class MailTracking(models.Model):
     _order = 'id DESC'
 
     field_id = fields.Many2one(
-        'ir.model.fields', required=True, readonly=True,
-        index=True, ondelete='cascade')
+        'ir.model.fields', required=False, readonly=True,
+        index=True, ondelete='set null')
+    field_info = fields.Json('Removed field information')
     field_groups = fields.Char(compute='_compute_field_groups')
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=True)
@@ -121,14 +122,24 @@ class MailTracking(models.Model):
             raise ValueError('All tracking value should belong to the same model.')
         TrackedModel = self.env[field_models[0]]
         tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
-        fields_col_info = (tracked_fields.get(tracking.field_id.name) for tracking in self)
-        fields_sequence_map = dict(TrackedModel._mail_track_order_fields(tracked_fields))
+        fields_col_info = (
+            tracked_fields.get(tracking.field_id.name) or {
+                'string': tracking.field_info['desc'],
+                'type': tracking.field_info['type'],
+            }
+            for tracking in self
+        )
+        fields_sequence_map = dict(
+            {tracking.field_info['name']: tracking.field_info.get('sequence', 100)
+             for tracking in self.filtered('field_info')},
+            **dict(TrackedModel._mail_track_order_fields(tracked_fields))
+        )
 
         formatted = [
             {
                 'changedField': col_info['string'],
                 'id': tracking.id,
-                'fieldName': tracking.field_id.name,
+                'fieldName': tracking.field_id.name or tracking.field_info['name'],
                 'fieldType': col_info['type'],
                 'newValue': {
                     'currencyId': tracking.currency_id.id,

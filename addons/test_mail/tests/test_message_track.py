@@ -725,10 +725,108 @@ class TestTrackingInternals(MailCommon):
         """ Check that removing a field removes its tracking values. """
         record = self.record.with_env(self.env)
         record.write({'email_from': 'new_value'})  # create a tracking value
+
+        record_other = self.env['mail.test.ticket'].create({})
         self.flush_tracking()
-        self.assertEqual(len(record.message_ids.sudo().tracking_value_ids), 1)
-        ir_model_field = self.env['ir.model.fields'].sudo().search([
+        record_other.write({'email_from': 'email.from.1@example.com'})
+        self.flush_tracking()
+        record_other.write({
+            'customer_id': self.test_partner.id,
+            'email_from': 'email.from.2@example.com',
+            'user_id': self.env.user.id,
+        })
+        self.flush_tracking()
+
+        self.assertTracking(
+            record.message_ids[0],
+            [('email_from', 'char', False, 'new_value')],
+            strict=True,
+        )
+        self.assertTracking(
+            record_other.message_ids[0],
+            [('customer_id', 'integer', False, self.test_partner.id),
+             ('email_from', 'char', 'email.from.1@example.com', 'email.from.2@example.com'),
+             ('user_id', 'integer', False, self.env.user.id)],
+            strict=True,
+        )
+        self.assertTracking(
+            record_other.message_ids[1],
+            [('email_from', 'char', False, 'email.from.1@example.com')],
+            strict=True,
+        )
+
+        # check display / format
+        trackings_all = (record + record_other).message_ids.sudo().tracking_value_ids
+        trackings_all_sorted = [
+            trackings_all.filtered(lambda t: t.field_id.name == 'user_id'),  # tracking=1
+            trackings_all.filtered(lambda t: t.field_id.name == 'customer_id'),  # tracking=2
+            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[0],  # tracking=True -> 100
+            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[1],  # tracking=True -> 100
+            trackings_all.filtered(lambda t: t.field_id.name == 'email_from')[2],  # tracking=True -> 100
+        ]
+        fields_info = [
+            ('user_id', 'many2one', 'Responsible'),
+            ('customer_id', 'many2one', 'Customer'),
+            ('email_from', 'char', 'Email From'),
+            ('email_from', 'char', 'Email From'),
+            ('email_from', 'char', 'Email From'),
+        ]
+        values_info = [
+            ('', self.env.user.name),
+            ('', self.test_partner.name),
+            (False, 'new_value'),
+            ('email.from.1@example.com', 'email.from.2@example.com'),
+            (False, 'email.from.1@example.com'),
+        ]
+        formatted = trackings_all._tracking_value_format()
+        self.assertEqual(
+            formatted,
+            [
+                {
+                    'changedField': field_info[2],
+                    'id': tracking.id,
+                    'fieldName': field_info[0],
+                    'fieldType': field_info[1],
+                    'newValue': {
+                        'currencyId': False,
+                        'value': values[1],
+                    },
+                    'oldValue': {
+                        'currencyId': False,
+                        'value': values[0],
+                    },
+                }
+                for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
+            ]
+        )
+
+        # remove fields
+        fields_toremove = self.env['ir.model.fields'].sudo().search([
             ('model', '=', 'mail.test.ticket'),
-            ('name', '=', 'email_from')])
-        ir_model_field.with_context(_force_unlink=True).unlink()
-        self.assertEqual(len(record.message_ids.sudo().tracking_value_ids), 0)
+            ('name', 'in', ('email_from', 'user_id', 'datetime'))  # also include a non tracked field
+        ])
+        fields_toremove.with_context(_force_unlink=True).unlink()
+        self.assertEqual(len(trackings_all.exists()), 5)
+
+        # check display / format, even if field is removed
+        formatted = trackings_all._tracking_value_format()
+        self.assertEqual(
+            formatted,
+            [
+                {
+                    'changedField': field_info[2],
+                    'id': tracking.id,
+                    'fieldName': field_info[0],
+                    'fieldType': field_info[1],
+                    'newValue': {
+                        'currencyId': False,
+                        'value': values[1],
+                    },
+                    'oldValue': {
+                        'currencyId': False,
+                        'value': values[0],
+                    },
+                }
+                for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
+            ]
+        )
