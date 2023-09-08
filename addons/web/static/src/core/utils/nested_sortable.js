@@ -36,6 +36,8 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  * a change in the list hierarchy (i.e. changing parent when moving horizontally)
  * @property {number | () => number} [maxLevels] The maximum depth of nested items
  * the list can accept. If set to '0' the levels are unlimited. Default: 0
+ * @property {(DraggableHookContext) => boolean}) [isAllowed] You can specify a custom function
+ * to verify if a drop location is allowed. return True by default
  *
  * HANDLERS (also optional)
  *
@@ -81,6 +83,7 @@ export const useNestedSortable = makeDraggableHook({
         listTagName: [String],
         nestInterval: [Number],
         maxLevels: [Number],
+        isAllowed: [Function],
     },
     defaultParams: {
         connectGroups: false,
@@ -93,6 +96,7 @@ export const useNestedSortable = makeDraggableHook({
         listTagName: "ul",
         nestInterval: 15,
         maxLevels: 0,
+        isAllowed: (ctx) => true,
     },
 
     // Set the parameters.
@@ -113,6 +117,7 @@ export const useNestedSortable = makeDraggableHook({
         ctx.nestInterval = params.nestInterval;
         ctx.isRTL = localization.direction === "rtl";
         ctx.maxLevels = params.maxLevels || 0;
+        ctx.isAllowed = params.isAllowed ?? (() => true);
     },
 
     // Set the current group and create the placeholder row that will take the
@@ -190,7 +195,9 @@ export const useNestedSortable = makeDraggableHook({
         return level > ctx.maxLevels;
     },
     _isAllowedNodeMove(ctx) {
-        return !this._hasReachMaxAllowedLevel(ctx);
+        return (
+            !this._hasReachMaxAllowedLevel(ctx) && ctx.isAllowed(ctx.current, ctx.elementSelector)
+        );
     },
     // Check if the cursor moved enough to trigger a move. If it did, move the
     // placeholder accordingly.
