@@ -101,21 +101,18 @@ export class Thread extends Record {
     areAttachmentsLoaded = false;
     /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
     attachments = [];
-    /** @type {integer} */
-    activeRtcSessionId;
+    activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
     /** @type {import("@mail/core/common/channel_member_model").ChannelMember[]} */
     channelMembers = [];
     /** @type {Object<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
     rtcSessions = {};
-    invitingRtcSessionId;
+    rtcInvitingSession = Record.one("RtcSession");
     /** @type {Set<number>} */
     invitedMemberIds = new Set();
-    /** @type {integer} */
-    chatPartnerId;
-    /** @type {import("@mail/core/common/composer_model").Composer} */
-    composer;
+    chatPartner = Record.one("Persona");
+    composer = Record.one("Composer");
     counter = 0;
     /** @type {string} */
     customName;
@@ -123,8 +120,7 @@ export class Thread extends Record {
     description;
     /** @type {Set<import("@mail/core/common/follower_model").Follower>} */
     followers = new Set();
-    /** @type {import("@mail/core/common/follower_model").Follower} */
-    selfFollower;
+    selfFollower = Record.one("Follower");
     /** @type {integer|undefined} */
     followersCount;
     isAdmin = false;
@@ -133,8 +129,7 @@ export class Thread extends Record {
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = false;
-    /** @type {import("@mail/core/common/attachment_model").Attachment} */
-    mainAttachment;
+    mainAttachment = Record.one("Attachment");
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
@@ -197,8 +192,7 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {String} */
     last_interest_dt;
-    /** @type {number} */
-    lastServerMessageId;
+    lastServerMessage = Record.one("Message");
     /** @type {Boolean} */
     is_editable;
 
@@ -209,14 +203,6 @@ export class Thread extends Record {
         return _t('Access restricted to group "%(groupFullName)s"', {
             groupFullName: this.authorizedGroupFullName,
         });
-    }
-
-    get activeRtcSession() {
-        return this._store.RtcSession.get(this.activeRtcSessionId);
-    }
-
-    set activeRtcSession(session) {
-        this.activeRtcSessionId = session?.id;
     }
 
     get areAllMembersLoaded() {
@@ -276,12 +262,8 @@ export class Thread extends Record {
     }
 
     get displayName() {
-        if (this.type === "chat" && this.chatPartnerId) {
-            return (
-                this.customName ||
-                this._store.Persona.get({ type: "partner", id: this.chatPartnerId })
-                    .nameOrDisplayName
-            );
+        if (this.type === "chat" && this.chatPartner) {
+            return this.customName || this.chatPartner.nameOrDisplayName;
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(
@@ -469,10 +451,6 @@ export class Thread extends Record {
 
     get unknownMembersCount() {
         return this.memberCount - this.channelMembers.length;
-    }
-
-    get rtcInvitingSession() {
-        return this._store.RtcSession.get(this.invitingRtcSessionId);
     }
 
     get hasNeedactionMessages() {

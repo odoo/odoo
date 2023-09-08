@@ -6,7 +6,7 @@
         <div t-if="chatWindowService.hidden.length > 0 and !ui.isSmall" t-ref="hiddenMenu" class="o-mail-ChatWindow-hiddenMenuContainer position-fixed bottom-0">
             <t t-call="mail.ChatWindowHiddenMenu"/>
         </div>
-        <t t-foreach="chatWindowService.visible" t-as="chatWindow" t-key="chatWindow.threadLocalId">
+        <t t-foreach="chatWindowService.visible" t-as="chatWindow" t-key="chatWindow.thread?.localId">
             <ChatWindow chatWindow="chatWindow" right="CHAT_WINDOW_END_GAP_WIDTH + chatWindow_index * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH * 2)"/>
         </t>
     </div>
@@ -21,7 +21,7 @@
         </t>
         <t t-set-slot="default">
             <ul class="m-0 p-0 overflow-auto" role="menu" t-ref="list">
-                <li t-foreach="[...chatWindowService.hidden].reverse()" t-as="chatWindow" t-key="chatWindow.threadLocalId" class="o-mail-ChatWindowHiddenMenu-item dropdown-item p-0" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
+                <li t-foreach="[...chatWindowService.hidden].reverse()" t-as="chatWindow" t-key="chatWindow.thread?.localId" class="o-mail-ChatWindowHiddenMenu-item dropdown-item p-0" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
                     <ChatWindow chatWindow="chatWindow"/>
                 </li>
             </ul>

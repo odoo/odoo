@@ -7,7 +7,7 @@ import { OR, Record } from "@mail/core/common/record";
  */
 
 export class Composer extends Record {
-    static id = OR("threadLocalId", "messageLocalId");
+    static id = OR("thread", "message");
     /** @returns {Composer} */
     static new(data) {
         return super.new(data);
@@ -57,8 +57,7 @@ export class Composer extends Record {
 
     /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
     attachments = [];
-    /** @type {import("@mail/core/common/message_model").Message.localId} */
-    messageLocalId;
+    message = Record.one("Message");
     /** @type {RawMentions} */
     rawMentions = {
         partnerIds: new Set(),
@@ -68,8 +67,7 @@ export class Composer extends Record {
     cannedResponseIds = new Set();
     /** @type {string} */
     textInputContent;
-    /** @type {import("@mail/core/common/thread_model").Thread.localId} */
-    threadLocalId;
+    thread = Record.one("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
         start: 0,
@@ -79,26 +77,6 @@ export class Composer extends Record {
     /** @type {boolean} */
     forceCursorMove;
     isFocused = false;
-
-    /** @type {import("@mail/core/common/message_model").Message} */
-    get message() {
-        return this._store.Message.records[this.messageLocalId];
-    }
-
-    /** @param {import("@mail/core/common/message_model").Message} */
-    set message(newMessage) {
-        this.messageLocalId = newMessage?.localId;
-    }
-
-    /** @type {import("@mail/core/common/thread_model").Thread} */
-    get thread() {
-        return this._store.Thread.records[this.threadLocalId];
-    }
-
-    /** @param {import("@mail/core/common/thread_model").Thread} */
-    set thread(newThread) {
-        this.threadLocalId = newThread?.localId;
-    }
 }
 
 Composer.register();

@@ -28,10 +28,10 @@ threadActionsRegistry.add("open-hr-profile", {
         const orm = useService("orm");
         const store = useService("mail.store");
         let employeeId;
-        if (!component.thread?.correspondent?.employeeId && component.thread?.chatPartnerId) {
+        if (!component.thread?.correspondent?.employeeId && component.thread?.chatPartner) {
             const employees = await orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", component.thread.chatPartnerId]],
+                [["user_partner_id", "=", component.thread.chatPartner.id]],
                 ["id"]
             );
             employeeId = employees[0]?.id;

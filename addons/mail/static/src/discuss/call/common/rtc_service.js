@@ -290,7 +290,9 @@ export class Rtc {
                 thread,
                 record: data.rtc_inviting_session,
             });
-            thread.invitingRtcSessionId = data.rtc_inviting_session.id;
+            thread.rtcInvitingSession = this.store.RtcSession.insert({
+                id: data.rtc_inviting_session.id,
+            });
             if (!this.store.ringingThreads.includes(thread.localId)) {
                 this.store.ringingThreads.push(thread.localId);
             }
@@ -298,7 +300,7 @@ export class Rtc {
         if ("rtcInvitingSession" in data) {
             if (Array.isArray(data.rtcInvitingSession)) {
                 if (data.rtcInvitingSession[0][0] === "unlink") {
-                    thread.invitingRtcSessionId = undefined;
+                    thread.rtcInvitingSession = undefined;
                     removeFromArray(this.store.ringingThreads, thread.localId);
                 }
                 return;
@@ -307,7 +309,9 @@ export class Rtc {
                 thread,
                 record: data.rtcInvitingSession,
             });
-            thread.invitingRtcSessionId = data.rtcInvitingSession.id;
+            thread.rtcInvitingSession = this.store.RtcSession.insert({
+                id: data.rtcInvitingSession.id,
+            });
             this.store.ringingThreads.push(thread.localId);
         }
         if ("rtcSessions" in data) {

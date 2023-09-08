@@ -35,8 +35,6 @@ export class Persona extends Record {
         return persona;
     }
 
-    /** @type {string} */
-    localId;
     /** @type {number} */
     id;
     /** @type {boolean | undefined} */

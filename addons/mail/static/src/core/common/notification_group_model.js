@@ -51,8 +51,7 @@ export class NotificationGroup extends Record {
     modelName;
     /** @type {string} */
     resModel;
-    /** @type {number} */
-    lastMessageId;
+    lastMessage = Record.one("Message");
     /** @type {Set<number>} */
     resIds = new Set();
     /** @type {'sms' | 'email'} */
@@ -64,10 +63,6 @@ export class NotificationGroup extends Record {
 
     get body() {
         return _t("An error occurred when sending an email");
-    }
-
-    get lastMessage() {
-        return this._store.Message.get(this.lastMessageId);
     }
 
     get datetime() {

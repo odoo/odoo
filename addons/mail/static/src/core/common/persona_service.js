@@ -110,7 +110,7 @@ export class PersonaService {
                 }
                 return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
             })
-            .map((thread) => thread.chatPartnerId);
+            .map((thread) => thread.chatPartner?.id);
     }
 }
 

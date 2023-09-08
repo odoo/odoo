@@ -78,7 +78,7 @@ export class ThreadService {
         thread.memberCount = results["memberCount"];
         for (const channelMember of channelMembers) {
             if (channelMember.persona || channelMember.partner) {
-                this.store.ChannelMember.insert({ ...channelMember, threadId: thread.id });
+                this.store.ChannelMember.insert({ ...channelMember, thread });
             }
         }
     }
@@ -533,7 +533,7 @@ export class ThreadService {
             return;
         }
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.type === "chat" && thread.chatPartnerId === partner.id
+            (thread) => thread.type === "chat" && thread.chatPartner?.eq(partner)
         );
     }
 
@@ -707,7 +707,12 @@ export class ThreadService {
             if (serverData.channel && "message_unread_counter" in serverData.channel) {
                 thread.message_unread_counter = serverData.channel.message_unread_counter;
             }
-            thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
+            const lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessage?.id;
+            if (thread.lastServerMessage?.id !== lastServerMessageId) {
+                thread.lastServerMessage = this.store.Message.insert({
+                    id: lastServerMessageId,
+                });
+            }
             if (thread.model === "discuss.channel" && serverData.channel) {
                 nullifyClearCommands(serverData.channel);
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
@@ -730,7 +735,7 @@ export class ThreadService {
                             (serverData.channel.channelMembers[0][1].length === 1 &&
                                 member.persona?.eq(thread._store.user))
                         ) {
-                            thread.chatPartnerId = member.persona.id;
+                            thread.chatPartner = member.persona;
                         }
                     }
                 }
