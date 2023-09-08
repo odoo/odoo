@@ -124,7 +124,12 @@ export const useNestedSortable = makeDraggableHook({
             ctx.prevNestX = ctx.pointer.x;
         }
         ctx.current.placeHolder = ctx.current.element.cloneNode(false);
-        ctx.current.placeHolder.classList.add("o_nested_sortable_placeholder");
+        ctx.current.placeHolder.classList.add(
+            "o_nested_sortable_placeholder",
+            "w-100",
+            "d-block",
+            "py-0"
+        );
         addCleanup(() => ctx.current.placeHolder.remove());
     },
 
