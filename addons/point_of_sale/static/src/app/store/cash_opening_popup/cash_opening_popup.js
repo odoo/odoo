@@ -15,7 +15,6 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
 
     setup() {
         super.setup();
-        this.manualInputCashCount = null;
         this.moneyDetails = null;
         this.pos = usePos();
         this.state = useState({
@@ -44,7 +43,6 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         this.hardwareProxy.openCashbox(action);
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
-            total: this.manualInputCashCount ? 0 : this.state.openingCash,
             action: action,
         });
         if (confirmed) {
@@ -53,7 +51,6 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
             }
-            this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
         }
     }
@@ -61,7 +58,6 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         if (!this.env.utils.isValidFloat(this.state.openingCash)) {
             return;
         }
-        this.manualInputCashCount = true;
         this.state.notes = "";
     }
 }

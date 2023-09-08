@@ -27,7 +27,6 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
         this.customerDisplay = useService("customer_display");
-        this.manualInputCashCount = false;
         this.cashControl = this.pos.config.cash_control;
         this.closeSessionClicked = false;
         this.moneyDetails = null;
@@ -74,9 +73,6 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.hardwareProxy.openCashbox(action);
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
-            total: this.manualInputCashCountpayments
-                ? 0
-                : this.state.payments[this.defaultCashDetails.id].counted,
             action: action,
         });
         if (confirmed) {
@@ -90,7 +86,6 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
             }
-            this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
         }
     }
@@ -103,7 +98,6 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
         let expectedAmount;
         if (paymentId === this.defaultCashDetails?.id) {
-            this.manualInputCashCount = true;
             this.moneyDetails = null;
             this.state.notes = "";
             expectedAmount = this.defaultCashDetails.amount;
