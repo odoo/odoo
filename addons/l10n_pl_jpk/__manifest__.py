@@ -12,7 +12,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'data/l10n_pl_tax_office.csv',
+        'data/l10n_pl_jpk.l10n_pl_tax_office.csv',
         'views/account_move_views.xml',
         'views/product_views.xml',
         'views/report_invoice.xml',
