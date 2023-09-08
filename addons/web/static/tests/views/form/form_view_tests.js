@@ -12297,6 +12297,47 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_form_error_dialog");
     });
 
+    QUnit.test("no 'oh snap' error when clicking on a view button", async (assert) => {
+        registry.category("services").add("error", errorService);
+        registry.category("error_dialogs").add("odoo.exceptions.UserError", WarningDialog);
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <button name="do_it" type="method" string="Do it"/>
+                    <field name="name"/>
+                </form>`,
+            mockRPC(route, { method }) {
+                assert.step(method);
+                if (method === "create") {
+                    const error = new RPCError("Some business message");
+                    error.data = { context: {} };
+                    error.exceptionName = "odoo.exceptions.UserError";
+                    throw error;
+                }
+            },
+        });
+
+        await click(target, "button[name=do_it]");
+        assert.containsNone(target, ".o_form_error_dialog");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal .modal-body").textContent,
+            "Some business message"
+        );
+        assert.verifySteps(["get_views", "onchange", "create"]);
+    });
+
     QUnit.test("no 'oh snap' error in form view in dialog", async (assert) => {
         assert.expect(5);
 
@@ -13243,7 +13284,9 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
         serverData.models.partner_type.records.push({
-            id: 3, display_name: 'very'.repeat(30) + '_long_name', color: 10,
+            id: 3,
+            display_name: "very".repeat(30) + "_long_name",
+            color: 10,
         });
 
         const record = serverData.models.partner.records[0];
@@ -13272,11 +13315,11 @@ QUnit.module("Views", (hooks) => {
             </form>`,
         });
 
-        const table = target.querySelector('table');
-        const group = target.querySelector('.o_inner_group:last-child');
+        const table = target.querySelector("table");
+        const group = target.querySelector(".o_inner_group:last-child");
 
         assert.equal(group.clientWidth, group.scrollWidth);
-        table.style.tableLayout = 'auto';
+        table.style.tableLayout = "auto";
         assert.ok(group.clientWidth < group.scrollWidth);
     });
 });
