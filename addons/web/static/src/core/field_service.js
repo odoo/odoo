@@ -55,19 +55,22 @@ export const fieldService = {
 
             domain = Domain.and([[[definitionRecordField, "!=", false]], domain]).toList();
 
-            const records = await orm.searchRead(definitionRecordModel, domain, [
-                "display_name",
-                definitionRecordField,
-            ]);
+            const result = await orm.webSearchRead(definitionRecordModel, domain, {
+                specification: {
+                    display_name: {},
+                    [definitionRecordField]: {},
+                },
+            });
 
             const definitions = {};
-            for (const record of records) {
+            for (const record of result.records) {
                 for (const definition of record[definitionRecordField]) {
                     definitions[definition.name] = {
                         is_property: true,
                         // for now, all properties are searchable but their definitions don't contain that info
                         searchable: true,
                         // differentiate definitions with same name but on different parent
+                        record_id: record.id,
                         record_name: record.display_name,
                         ...definition,
                     };

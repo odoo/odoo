@@ -962,6 +962,11 @@ class RequiredM2OTransient(models.TransientModel):
     bar = fields.Many2one('res.country', required=True)
 
 
+class TestTransient(models.TransientModel):
+    _name = 'test_new_api.transient_model'
+    _description = 'Transient Model'
+
+
 class Attachment(models.Model):
     _name = 'test_new_api.attachment'
     _description = 'Attachment'

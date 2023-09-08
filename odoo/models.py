@@ -72,7 +72,7 @@ regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_order = re.compile(r'''
     ^
     (\s*
-        ((?P<field>[a-z0-9:_]+|"[a-z0-9:_]+")(\.(?P<property>[a-z0-9_]+))?)
+        (?P<term>((?P<field>[a-z0-9_]+|"[a-z0-9_]+")(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
         (\s+(?P<direction>desc|asc))?
         (\s+(?P<nulls>nulls\ first|nulls\ last))?
         \s*
@@ -84,7 +84,7 @@ regex_order = re.compile(r'''
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
-regex_read_group_spec = re.compile(r'(\w+)(?::(\w+))?$')  # For _read_group
+regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -92,15 +92,17 @@ INSERT_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
 def parse_read_group_spec(spec: str) -> tuple:
-    """ Return a pair corresponding to the given groupby/aggregate specification. """
+    """ Return a triplet corresponding to the given groupby/path/aggregate specification. """
     res_match = regex_read_group_spec.match(spec)
     if not res_match:
         raise ValueError(
             f'Invalid aggregate/groupby specification {spec!r}.\n'
             '- Valid aggregate specification looks like "<field_name>:<agg>" example: "quantity:sum".\n'
-            '- Valid groupby specification looks like "<no_datish_field_name>" or "<datish_field_name>:<granularity>" example: "date:month".'
+            '- Valid groupby specification looks like "<no_datish_field_name>" or "<datish_field_name>:<granularity>" example: "date:month" or "<properties_field_name>.<property>:<granularity>".'
         )
-    return res_match.groups()
+
+    groups = res_match.groups()
+    return groups[0], groups[2], groups[3]
 
 def check_object_name(name):
     """ Check if the given name is a valid model name.
@@ -146,8 +148,8 @@ def check_method_name(name):
 
 
 def check_property_field_value_name(property_name):
-    if not regex_alphanumeric.match(property_name):
-        raise ValueError(_("Wrong property field value name %r.", property_name))
+    if not regex_alphanumeric.match(property_name) or len(property_name) > 512:
+        raise ValueError(f"Wrong property field value name {property_name!r}.")
 
 
 def fix_import_export_id_paths(fieldname):
@@ -1858,10 +1860,10 @@ class BaseModel(metaclass=MetaModel):
         query = self._search(domain)
 
         fnames_to_flush = OrderedSet()
-        groupby_terms = []  # [<SQL expression>,]
+        groupby_terms_map = {}  # {spec: <SQL expression>}
         for spec in groupby:
             sql_expression, fnames_used = self._read_group_groupby(spec, query)
-            groupby_terms.append(sql_expression)
+            groupby_terms_map[spec] = sql_expression
             fnames_to_flush.update(fnames_used)
 
         select_terms = []  # [<SQL expression>,]
@@ -1873,8 +1875,10 @@ class BaseModel(metaclass=MetaModel):
         having_expression, having_params, fnames_used = self._read_group_having(having, query)
         fnames_to_flush.update(fnames_used)
 
-        orderby_terms, extra_groupby_terms, fnames_used = self._read_group_orderby(order, groupby, query)
+        orderby_terms, extra_groupby_terms, fnames_used = self._read_group_orderby(order, groupby_terms_map, query)
         fnames_to_flush.update(fnames_used)
+
+        groupby_terms = list(groupby_terms_map.values())
 
         from_clause, where_clause, query_params = query.get_sql()
         query_parts = [
@@ -1932,12 +1936,14 @@ class BaseModel(metaclass=MetaModel):
         if aggregate_spec == '__count':
             return 'COUNT(*)', []
 
-        fname, func = parse_read_group_spec(aggregate_spec)
+        fname, property_name, func = parse_read_group_spec(aggregate_spec)
+
+        access_fname = f"{fname}.{property_name}" if property_name else fname
 
         if fname not in self:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r} for {aggregate_spec!r}.")
         if not func:
-            raise ValueError(f"Aggregate method is mandatory for {fname!r}")
+            raise ValueError(f"Aggregate method is mandatory for {access_fname!r}")
         if func not in READ_GROUP_AGGREGATE:
             raise ValueError(f"Invalid aggregate method {func!r} for {aggregate_spec!r}.")
 
@@ -1945,7 +1951,7 @@ class BaseModel(metaclass=MetaModel):
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
-        field_expression = self._inherits_join_calc(self._table, fname, query)
+        field_expression = self._inherits_join_calc(self._table, access_fname, query)
 
         expression = READ_GROUP_AGGREGATE[func](self._table, field_expression)
         return expression, [fname]
@@ -1955,24 +1961,33 @@ class BaseModel(metaclass=MetaModel):
         """ Return a pair (<SQL expression>, [<field names used in SQL expression>])
         corresponding to the given groupby element.
         """
-        fname, granularity = parse_read_group_spec(groupby_spec)
+        fname, property_name, granularity = parse_read_group_spec(groupby_spec)
         if fname not in self:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
         field = self._fields[fname]
 
-        if granularity and field.type not in ('datetime', 'date'):
-            raise ValueError(f"Granularity set on a no-datetime field: {groupby_spec!r}")
+        if property_name:
+            check_property_field_value_name(property_name)
+            if field.type != "properties":
+                raise ValueError(f"Property set on a non properties field: {property_name!r}")
+
+            access_fname = f"{fname}.{property_name}"
+        else:
+            access_fname = fname
+
+        if granularity and field.type not in ('datetime', 'date', 'properties'):
+            raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
 
         if not field.store and not field.inherited:  # TODO: should be manage by _inherits_join_calc
             raise ValueError(f"Groupby on no-store field: {groupby_spec!r}")
 
-        field_expression = self._inherits_join_calc(self._table, fname, query)
+        field_expression = self._inherits_join_calc(self._table, access_fname, query)
         if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
             # TODO: `self.env.context.get('tz')` should be passed as args
             field_expression = f"timezone('{self.env.context.get('tz')}', timezone('UTC', {field_expression}))"
 
-        if field.type in ('datetime', 'date'):
+        if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
                 raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
             if granularity not in READ_GROUP_TIME_GRANULARITY:
@@ -2033,14 +2048,18 @@ class BaseModel(metaclass=MetaModel):
         return expr, params, fnames_used
 
     @api.model
-    def _read_group_orderby(self, order, groupby, query):
+    def _read_group_orderby(self, order, groupby_terms, query):
         """ Return ([<SQL expression>], [<SQL expression>], [<field names used>])
         corresponding to the given order and groupby terms.
+
+        :param order: The order to use in SQL format
+        :param groupby_terms: The group by terms ({spec: sql_expression})
+        :param query: The query we are building
         """
         if order:
             traverse_many2one = True
         else:
-            order = ','.join(groupby)
+            order = ','.join(groupby_terms)
             traverse_many2one = False
 
         orderby_terms = []
@@ -2053,29 +2072,27 @@ class BaseModel(metaclass=MetaModel):
             order_match = regex_order.match(order_part)
             if not order_match:
                 raise ValueError(f"Invalid order {order!r} for _read_group()")
-            order_field = order_match['field']
-            if order_match['property']:
-                raise ValueError(f"Invalid order {order!r} for _read_group(): properties are not supported")
+            order_term = order_match['term']
             order_direction = (order_match['direction'] or 'ASC').upper()
             order_nulls = (order_match['nulls'] or '').upper()
 
-            if order_field not in groupby:
+            if order_term not in groupby_terms:
                 try:
-                    sql_expression, fnames_used_select = self._read_group_select(order_field, query)
+                    sql_expression, fnames_used_select = self._read_group_select(order_term, query)
                     fnames_used.extend(fnames_used_select)
                     orderby_terms.append(f'{sql_expression} {order_direction} {order_nulls}')
                     continue
                 except ValueError as e:
                     raise ValueError(f"Order term {order_part!r} is not a valid aggregate nor valid groupby") from e
 
-            if traverse_many2one and order_field in self and self._fields[order_field].type == 'many2one':
+            if traverse_many2one and order_term in self and self._fields[order_term].type == 'many2one':
                 # It will generated extra clause to add in the group by.
-                extra_order = self._generate_order_by(f'{order_field} {order_direction} {order_nulls}', query)
+                extra_order = self._generate_order_by(f'{order_term} {order_direction} {order_nulls}', query)
                 extra_order = extra_order.replace(' ORDER BY ', '')
                 orderby_terms.extend(order.strip() for order in extra_order.split(",") if order.strip())
                 extra_groupby_terms.extend(order.strip().split()[0] for order in extra_order.split(",") if order.strip())
             else:
-                sql_expression, __ = self._read_group_groupby(order_field, query)
+                sql_expression = groupby_terms[order_term]
                 orderby_terms.append(f'{sql_expression} {order_direction} {order_nulls}')
 
         return orderby_terms, extra_groupby_terms, fnames_used
@@ -2090,7 +2107,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the empty value corresponding to the given groupby spec or aggregate spec. """
         if spec == '__count':
             return 0
-        fname, func = parse_read_group_spec(spec)  # func is either None, granularity or an aggregate
+        fname, __, func = parse_read_group_spec(spec)  # func is either None, granularity or an aggregate
         if func in ('count', 'count_distinct'):
             return 0
         if func == 'array_agg':
@@ -2110,7 +2127,7 @@ class BaseModel(metaclass=MetaModel):
         """
         empty_value = self._read_group_empty_value(groupby_spec)
 
-        fname, __ = parse_read_group_spec(groupby_spec)
+        fname, *__ = parse_read_group_spec(groupby_spec)
         field = self._fields[fname]
 
         if field.relational or fname == 'id':
@@ -2137,7 +2154,7 @@ class BaseModel(metaclass=MetaModel):
         if aggregate_spec == '__count':
             return ((value if value is not None else empty_value) for value in raw_values)
 
-        fname, func = parse_read_group_spec(aggregate_spec)
+        fname, __, func = parse_read_group_spec(aggregate_spec)
         if func == 'recordset':
             field = self._fields[fname]
             Model = self.pool[field.comodel_name] if field.relational else self.pool[self._name]
@@ -2166,7 +2183,7 @@ class BaseModel(metaclass=MetaModel):
     def _read_group_fill_results(self, domain, groupby, annoted_aggregates, read_group_result, read_group_order=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
-        field_name, __ = groupby.split(':') if ':' in groupby else (groupby, 'month')
+        field_name = groupby.split('.')[0].split(':')[0]
         field = self._fields[field_name]
         if not field or not field.group_expand:
             return read_group_result
@@ -2326,9 +2343,9 @@ class BaseModel(metaclass=MetaModel):
         """
         # TODO: remove min_groups
         first_group = groupby[0]
-        field_name = first_group.split(':')[0]
+        field_name = first_group.split(':')[0].split(".")[0]
         field = self._fields[field_name]
-        if field.type not in ('date', 'datetime'):
+        if field.type not in ('date', 'datetime') and not (field.type == 'properties' and ':' in first_group):
             return data
 
         granularity = first_group.split(':')[1] if ':' in first_group else 'month'
@@ -2408,11 +2425,9 @@ class BaseModel(metaclass=MetaModel):
         :param data: a single group
         :param annotated_groupbys: expanded grouping metainformation
         :param groupby: original grouping metainformation
-        :param domain: original domain for read_group
         """
-
         for group in lazy_groupby:
-            field_name = group.split(':')[0]
+            field_name = group.split(':')[0].split('.')[0]
             field = self._fields[field_name]
 
             if field.type in ('date', 'datetime'):
@@ -2420,6 +2435,10 @@ class BaseModel(metaclass=MetaModel):
                 fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 granularity = group.split(':')[1] if ':' in group else 'month'
                 interval = READ_GROUP_TIME_GRANULARITY[granularity]
+
+            elif field.type == "properties":
+                self._read_group_format_result_properties(rows_dict, group)
+                continue
 
             for row in rows_dict:
                 value = row[group]
@@ -2467,6 +2486,123 @@ class BaseModel(metaclass=MetaModel):
                         row.setdefault('__range', {})[group] = False
 
                 row['__domain'] = expression.AND([row['__domain'], additional_domain])
+
+    def _read_group_format_result_properties(self, rows_dict, group):
+        """Modify the final read group properties result.
+
+        Replace the relational properties ids by a tuple with their display names,
+        replace the "raw" tags and selection values by a list containing their labels.
+        Adapt the domains for the Falsy group (we can't just keep (selection, =, False)
+        e.g. because some values in database might correspond to  option that have
+        been remove on the parent).
+        """
+        if '.' not in group:
+            raise ValueError('You must choose the property you want to group by.')
+        fullname, __, func = group.partition(':')
+
+        definition = self.get_property_definition(fullname)
+        property_type = definition.get('type')
+
+        if property_type == 'selection':
+            options = definition.get('selection') or []
+            options = tuple(option[0] for option in options)
+            for row in rows_dict:
+                if not row[fullname]:
+                    # can not do ('selection', '=', False) because we might have
+                    # option in database that does not exist anymore
+                    additional_domain = expression.OR([
+                        [(fullname, '=', False)],
+                        [(fullname, 'not in', options)],
+                    ])
+                else:
+                    additional_domain = [(fullname, '=', row[fullname])]
+
+                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+
+        elif property_type == 'many2one':
+            comodel = definition.get('comodel')
+            prefetch_ids = tuple(row[fullname] for row in rows_dict if row[fullname])
+            all_groups = tuple(row[fullname] for row in rows_dict if row[fullname])
+            for row in rows_dict:
+                if not row[fullname]:
+                    # can not only do ('many2one', '=', False) because we might have
+                    # record in database that does not exist anymore
+                    additional_domain = expression.OR([
+                        [(fullname, '=', False)],
+                        [(fullname, 'not in', all_groups)],
+                    ])
+                else:
+                    additional_domain = [(fullname, '=', row[fullname])]
+                    record = self.env[comodel].browse(row[fullname]).with_prefetch(prefetch_ids)
+                    row[fullname] = (row[fullname], record.display_name)
+
+                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+
+        elif property_type == 'many2many':
+            comodel = definition.get('comodel')
+            prefetch_ids = tuple(row[fullname] for row in rows_dict if row[fullname])
+            all_groups = tuple(row[fullname] for row in rows_dict if row[fullname])
+            for row in rows_dict:
+                if not row[fullname]:
+                    additional_domain = expression.OR([
+                        [(fullname, '=', False)],
+                        expression.AND([[(fullname, 'not in', group)] for group in all_groups]),
+                    ]) if all_groups else []
+                else:
+                    additional_domain = [(fullname, 'in', row[fullname])]
+                    record = self.env[comodel].browse(row[fullname]).with_prefetch(prefetch_ids)
+                    row[fullname] = (row[fullname], record.display_name)
+
+                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+
+        elif property_type == 'tags':
+            tags = definition.get('tags') or []
+            tags = {tag[0]: tag for tag in tags}
+            for row in rows_dict:
+                if not row[fullname]:
+                    additional_domain = expression.OR([
+                        [(fullname, '=', False)],
+                        expression.AND([[(fullname, 'not in', tag)] for tag in tags]),
+                    ]) if tags else []
+                else:
+                    additional_domain = [(fullname, 'in', row[fullname])]
+                    # replace tag raw value with list of raw value, label and color
+                    row[fullname] = tags.get(row[fullname])
+
+                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+
+        elif property_type in ('date', 'datetime'):
+            for row in rows_dict:
+                if not row[group]:
+                    row[group] = False
+                    row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', False)]])
+                    row['__range'] = {}
+                    continue
+
+                # Date / Datetime are not JSONifiable, so they are stored as raw text
+                db_format = '%Y-%m-%d' if property_type == 'date' else '%Y-%m-%d %H:%M:%S'
+
+                if func == 'week':
+                    # the value is the first day of the week (based on local)
+                    start = row[group].strftime(db_format)
+                    end = (row[group] + datetime.timedelta(days=7)).strftime(db_format)
+                else:
+                    start = (date_utils.start_of(row[group], func)).strftime(db_format)
+                    end = (date_utils.end_of(row[group], func) + datetime.timedelta(minutes=1)).strftime(db_format)
+
+                row['__domain'] = expression.AND([
+                    row['__domain'],
+                    [(fullname, '>=', start), (fullname, '<', end)],
+                ])
+                row['__range'] = {group: {'from': start, 'to': end}}
+                row[group] = babel.dates.format_date(
+                    row[group],
+                    format=READ_GROUP_DISPLAY_FORMAT[func],
+                    locale=get_lang(self.env).code
+                )
+        else:
+            for row in rows_dict:
+                row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', row[fullname])]])
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -2516,10 +2652,12 @@ class BaseModel(metaclass=MetaModel):
         # - Modify the order to be compatible with the _read_group specification
         annoted_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
         for group_spec in lazy_groupby:
-            field_name, granularity = parse_read_group_spec(group_spec)
+            field_name, property_name, granularity = parse_read_group_spec(group_spec)
             if field_name not in self._fields:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
             field = self._fields[field_name]
+            if property_name and field.type != 'properties':
+                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
             if field.type in ('date', 'datetime'):
                 annoted_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
             else:
@@ -2613,6 +2751,11 @@ class BaseModel(metaclass=MetaModel):
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
+        property_name = None
+        if '.' in fname:
+            fname, property_name = fname.split('.', 1)
+            check_property_field_value_name(property_name)
+
         # INVARIANT: alias is the SQL alias of model._table in query
         model, field = self, self._fields[fname]
         while field.inherited:
@@ -2650,8 +2793,126 @@ class BaseModel(metaclass=MetaModel):
             if lang == 'en_US':
                 return f'"{alias}"."{fname}"->>\'en_US\''
             return f'COALESCE("{alias}"."{fname}"->>\'{lang}\', "{alias}"."{fname}"->>\'en_US\')'
+        elif field.type == 'properties' and property_name:
+            return self._inherits_join_calc_properties(alias, fname, query, property_name)
         else:
             return '"%s"."%s"' % (alias, fname)
+
+    @api.model
+    def _inherits_join_calc_properties(self, alias, fname, query, property_name):
+        definition = self.get_property_definition(f"{fname}.{property_name}")
+        property_sql = f""""{alias}"."{fname}" -> '{property_name}'"""
+        property_type = definition.get('type')
+        property_alias = tools._generate_table_alias(alias, f'{fname}_{property_name}')
+
+        # JOIN on the JSON array
+        if property_type in ('tags', 'many2many'):
+            property_sql = f'''
+                CASE
+                     WHEN jsonb_typeof({property_sql}) = 'array'
+                     THEN {property_sql}
+                     ELSE '[]'::jsonb
+                 END
+            '''
+            join_property = f'LEFT JOIN jsonb_array_elements({property_sql}) {property_alias}'
+            if property_type == 'tags':
+                # ignore invalid tags
+                tags = [tag[0] for tag in definition.get('tags') or []]
+                # `->>0 : convert "JSON string" into string
+                expr = f'{join_property} ON {property_alias}->>0 = ANY(%s::text[])'
+                query._raw_joins[expr] = [tags]
+
+            elif property_type == 'many2many':
+                comodel = self.env.get(definition.get('comodel'))
+                if comodel is None or comodel._transient or comodel._abstract:
+                    # all value are false, because the model does not exist anymore
+                    # (or is a transient model e.g.)
+                    query._raw_joins[f'{join_property} ON FALSE'] = []
+                else:
+                    # check the existences of the many2many
+                    expr = f'{join_property} ON {property_alias}::int IN (SELECT id FROM {comodel._table})'
+                    query._raw_joins[expr] = []
+
+            return property_alias
+
+        elif property_type == 'selection':
+            options = definition.get('selection') or []
+            options = [option[0] for option in options]
+
+            # check the existence of the option
+            expr = f'''
+                LEFT JOIN (SELECT unnest(%s::text[]) {property_alias}) {property_alias}
+                       ON {property_sql}->>0 = {property_alias}
+            '''
+            query._raw_joins[expr] = [options]
+
+            return property_alias
+
+        elif property_type == 'many2one':
+            comodel = self.env.get(definition.get('comodel'))
+            if comodel is None or comodel._transient or comodel._abstract:
+                # all value are false, because the model does not exist anymore
+                # (or is a transient model e.g.)
+                return 'FALSE'
+
+            return f'''
+                CASE
+                    WHEN jsonb_typeof({property_sql}) = 'number'
+                     AND ({property_sql})::int IN (SELECT id FROM {comodel._table})
+                    THEN {property_sql}
+                    ELSE NULL
+                 END
+            '''
+
+        elif property_type == 'date':
+            return f'''
+                CASE
+                    WHEN jsonb_typeof({property_sql}) = 'string'
+                    THEN ({property_sql}->>0)::DATE
+                    ELSE NULL
+                 END
+            '''
+
+        elif property_type == 'datetime':
+            return f'''
+                CASE
+                    WHEN jsonb_typeof({property_sql}) = 'string'
+                    THEN to_timestamp({property_sql}->>0, 'YYYY-MM-DD HH24:MI:SS')
+                    ELSE NULL
+                 END
+            '''
+
+        # if the key is not present in the dict, fallback to false instead of none
+        return f"COALESCE({property_sql}, 'false')"
+
+    @api.model
+    def get_property_definition(self, full_name):
+        """Return the definition of the given property.
+
+        :param full_name: Name of the field / property
+            (e.g. "property.integer")
+        """
+        self.check_access_rights("read")
+        field_name, property_name = full_name.split(".")
+        check_property_field_value_name(property_name)
+        if field_name not in self._fields:
+            raise ValueError(f"Wrong field name {field_name!r}.")
+
+        field = self._fields[field_name]
+        target_model = self.env[self._fields[field.definition_record].comodel_name]
+        query = psycopg2.sql.SQL("""
+            SELECT definition
+              FROM {table},
+                   jsonb_array_elements({field}) definition
+             WHERE {field} IS NOT NULL
+               AND definition->>'name' = %(property_name)s
+             LIMIT 1
+        """).format(
+            table=psycopg2.sql.Identifier(target_model._table),
+            field=psycopg2.sql.Identifier(field.definition_record_field))
+        self.env.cr.execute(query, {'property_name': property_name})
+        result = self.env.cr.dictfetchone()
+        return result["definition"] if result else {}
 
     def _parent_store_compute(self):
         """ Compute parent_path field from scratch. """
@@ -3534,10 +3795,6 @@ class BaseModel(metaclass=MetaModel):
                 continue
             assert field.store
             (column_fields if field.column_type else other_fields).add(field)
-            if field.type == 'properties':
-                # force calling fields.read for properties field in order to
-                # read all relational properties in batch
-                other_fields.add(field)
 
         # necessary to retrieve the en_US value of fields without a translation
         translated_field_names = [field.name for field in column_fields if field.translate]
@@ -4798,9 +5055,6 @@ class BaseModel(metaclass=MetaModel):
         for order_part in order_spec.split(','):
             order_match = regex_order.match(order_part)
             order_field = order_match['field']
-            property_name = order_match['property']
-            if property_name:
-                check_property_field_value_name(property_name)
             order_direction = (order_match['direction'] or '').upper()
             order_nulls = (order_match['nulls'] or '').upper()
             if reverse_direction:
@@ -4812,6 +5066,12 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(order_field)
             if not field:
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
+
+            property_name = order_match['property']
+            if property_name:
+                check_property_field_value_name(property_name)
+                if field.type != 'properties':
+                    raise ValueError(f'Order a property ({property_name!r}) on a non-properties field ({field.name!r})')
 
             if order_field == 'id':
                 order_by_elements.append(f'"{alias}"."{order_field}" {order_direction} {order_nulls}')

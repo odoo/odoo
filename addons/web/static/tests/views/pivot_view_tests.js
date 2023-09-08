@@ -125,6 +125,23 @@ QUnit.module("Views", (hooks) => {
                             ],
                             group_operator: "count_distinct",
                         },
+                        properties: {
+                            string: "Properties",
+                            type: "properties",
+                            definition_record: "parent_id",
+                            definition_record_field: "properties_definition",
+                            name: "properties",
+                        },
+                        parent_id: {
+                            string: "Parent",
+                            type: "many2one",
+                            relation: "partner",
+                            name: "parent_id",
+                        },
+                        properties_definition: {
+                            string: "Properties",
+                            type: "properties_definition",
+                        },
                     },
                     records: [
                         {
@@ -137,6 +154,13 @@ QUnit.module("Views", (hooks) => {
                             computed_field: 19,
                             company_type: "company",
                             ref: "product,37",
+                            properties_definition: [
+                                {
+                                    name: "my_char",
+                                    string: "My Char",
+                                    type: "char",
+                                },
+                            ],
                         },
                         {
                             id: 2,
@@ -148,6 +172,15 @@ QUnit.module("Views", (hooks) => {
                             computed_field: 23,
                             company_type: "individual",
                             ref: "product,41",
+                            parent_id: 1,
+                            properties: [
+                                {
+                                    name: "my_char",
+                                    string: "My Char",
+                                    type: "char",
+                                    value: "aaa",
+                                },
+                            ],
                         },
                         {
                             id: 3,
@@ -159,6 +192,15 @@ QUnit.module("Views", (hooks) => {
                             computed_field: 26,
                             company_type: "company",
                             ref: "customer,1",
+                            parent_id: 1,
+                            properties: [
+                                {
+                                    name: "my_char",
+                                    string: "My Char",
+                                    type: "char",
+                                    value: "bbb",
+                                },
+                            ],
                         },
                         {
                             id: 4,
@@ -5636,4 +5678,82 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".o_pivot_view table");
         }
     );
+
+    QUnit.test("group by properties in pivot view", async function (assert) {
+        assert.expect(18);
+
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: "<pivot/>",
+            searchViewArch: `
+                <search>
+                    <filter name='group_by_properties' string="Properties" context="{'group_by':'properties'}"/>
+                </search>
+            `,
+            mockRPC(route, args) {
+                if (
+                    route === "/web/dataset/call_kw/partner/web_search_read" &&
+                    args.kwargs.specification?.properties_definition
+                ) {
+                    assert.step("fetch_definition");
+                } else if (
+                    route === "/web/dataset/call_kw/partner/read_group" &&
+                    args.kwargs.groupby?.includes("properties.my_char")
+                ) {
+                    assert.step("read_group");
+                    return [
+                        {
+                            "properties.my_char": false,
+                            __domain: [["properties.my_char", "=", false]],
+                            __count: 2,
+                        },
+                        {
+                            "properties.my_char": "aaa",
+                            __domain: [["properties.my_char", "=", "aaa"]],
+                            __count: 1,
+                        },
+                        {
+                            "properties.my_char": "bbb",
+                            __domain: [["properties.my_char", "=", "bbb"]],
+                            __count: 1,
+                        },
+                    ];
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelectorAll(".o_value").length, 1);
+        assert.strictEqual(target.querySelector(".o_value").innerText, "4");
+
+        await click(target, ".border-top-0 span");
+        assert.verifySteps([]);
+
+        const propertiesItem = target.querySelector(".o_accordion_toggle");
+        assert.ok(propertiesItem);
+        assert.strictEqual(propertiesItem.innerText, "Properties");
+        await click(propertiesItem);
+
+        await nextTick();
+        assert.verifySteps(["fetch_definition"]);
+
+        await click(target, ".o_accordion_values .o_menu_item");
+
+        await nextTick();
+        assert.verifySteps(["read_group"]);
+
+        const cells = target.querySelectorAll(".o_value");
+        assert.strictEqual(cells.length, 4);
+        assert.strictEqual(cells[0].innerText, "2");
+        assert.strictEqual(cells[1].innerText, "1");
+        assert.strictEqual(cells[2].innerText, "1");
+        assert.strictEqual(cells[3].innerText, "4");
+
+        const columns = target.querySelectorAll(".o_pivot_header_cell_closed");
+        assert.strictEqual(columns.length, 4);
+        assert.strictEqual(columns[0].innerText, "None");
+        assert.strictEqual(columns[1].innerText, "aaa");
+        assert.strictEqual(columns[2].innerText, "bbb");
+    });
 });

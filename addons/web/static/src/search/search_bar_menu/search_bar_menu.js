@@ -4,6 +4,7 @@ import { Component } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { DomainSelectorDialog } from "../../core/domain_selector_dialog/domain_selector_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
@@ -25,6 +26,7 @@ export class SearchBarMenu extends Component {
         SearchDropdownItem,
         CustomGroupByItem,
         AccordionItem,
+        PropertiesGroupByItem,
     };
     static props = {
         slots: {
@@ -104,8 +106,9 @@ export class SearchBarMenu extends Component {
      * @returns {Object[]}
      */
     get groupByItems() {
-        return this.env.searchModel.getSearchItems((searchItem) =>
-            ["groupBy", "dateGroupBy"].includes(searchItem.type)
+        return this.env.searchModel.getSearchItems(
+            (searchItem) =>
+                ["groupBy", "dateGroupBy"].includes(searchItem.type) && !searchItem.isProperty
         );
     }
 
