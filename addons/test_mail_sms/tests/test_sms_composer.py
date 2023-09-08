@@ -357,6 +357,7 @@ class TestSMSComposerMass(SMSCommon):
             'active': True,
         } for p in self.partners[:5]])
 
+        init_message_counts = self.get_message_count_per_record(self.records)
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
                 default_composition_mode='mass',
@@ -364,7 +365,7 @@ class TestSMSComposerMass(SMSCommon):
                 active_ids=self.records.ids,
             ).create({
                 'body': self._test_body,
-                'mass_keep_log': False,
+                'mass_keep_log': True,
                 'mass_use_blacklist': True,
             })
 
@@ -377,11 +378,11 @@ class TestSMSComposerMass(SMSCommon):
                 content='Hello %s zizisse an SMS.' % record.name
             )
         for partner, record in zip(self.partners[:5], self.records[:5]):
-            self.assertSMSCanceled(
-                partner, partner.phone_sanitized,
-                failure_type='sms_blacklist',
-                content='Hello %s zizisse an SMS.' % record.name
-            )
+            # canceled sms are not created (failure type sms_blacklist)
+            self.assertNoSMSMatching(partner, partner.phone_sanitized)
+
+        expected_message_counts = [0] * 5 + [1] * 5
+        self.assertMessageRecordsCount(self.records, expected_message_counts, init_message_counts)
 
     def test_composer_mass_active_ids_wo_blacklist(self):
         self.env['phone.blacklist'].create([{
@@ -420,6 +421,7 @@ class TestSMSComposerMass(SMSCommon):
             p.mobile = self.partners[5].mobile
             self.assertEqual(p.phone_sanitized, self.partners[5].phone_sanitized)
 
+        init_message_counts = self.get_message_count_per_record(self.records)
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
                 default_composition_mode='mass',
@@ -427,7 +429,7 @@ class TestSMSComposerMass(SMSCommon):
                 active_ids=self.records.ids,
             ).create({
                 'body': self._test_body,
-                'mass_keep_log': False,
+                'mass_keep_log': True,
                 'mass_use_blacklist': True,
             })
 
@@ -443,20 +445,15 @@ class TestSMSComposerMass(SMSCommon):
                 partner, partner.phone_sanitized,
                 content='Hello %s zizisse an SMS.' % record.name
             )
-        # duplicates
+        # duplicate sms are not created (failure_type=sms_duplicate)
         for partner, record in zip(self.partners[6:8], self.records[6:8]):
-            self.assertSMSCanceled(
-                partner, partner.phone_sanitized,
-                failure_type='sms_duplicate',
-                content='Hello %s zizisse an SMS.' % record.name
-            )
-        # blacklist
+            self.assertNoSMSMatching(partner, partner.phone_sanitized)
+        # blacklisted sms are not created (failure_type=sms_blacklist)
         for partner, record in zip(self.partners[:5], self.records[:5]):
-            self.assertSMSCanceled(
-                partner, partner.phone_sanitized,
-                failure_type='sms_blacklist',
-                content='Hello %s zizisse an SMS.' % record.name
-            )
+            self.assertNoSMSMatching(partner, partner.phone_sanitized)
+        # mail.message are ony created if not canceled (=here no failure_type)
+        expected_message_counts = [0, 0, 0, 0, 0] + [1, 0, 0] + [1, 1]
+        self.assertMessageRecordsCount(self.records, expected_message_counts, init_message_counts)
 
     def test_composer_mass_active_ids_w_template(self):
         with self.with_user('employee'):

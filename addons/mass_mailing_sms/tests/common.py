@@ -46,12 +46,14 @@ class MassSMSCase(SMSCase, MockLinkTracker):
           generated;
         :param records: records given to mailing that generated traces. It is
           used notably to find traces using their IDs;
-        :param check_sms: if set, check sms.sms records that should be linked to traces;
+        :param check_sms: if set, check sms.sms records that should be linked to traces
+          unless not sent (trace_status == 'cancel');
         :param sent_unlink: it True, sent sms.sms are deleted and we check gateway
           output result instead of actual sms.sms records;
         :param sms_links_info: if given, should follow order of ``recipients_info``
           and give details about links. See ``assertLinkShortenedHtml`` helper for
-          more details about content to give;
+          more details about content to give
+          Not tested for sms with trace status == 'cancel';
         ]
         """
         # map trace state to sms state
@@ -87,9 +89,11 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             )
             self.assertTrue(len(trace) == 1,
                             'SMS: found %s notification for number %s, (status: %s) (1 expected)' % (len(trace), number, status))
-            self.assertTrue(bool(trace.sms_sms_id_int))
+            # In mass mode, messages that would be canceled are not created, only the trace is created.
+            sms_not_created = trace.trace_status == 'cancel'
+            self.assertTrue(sms_not_created or bool(trace.sms_sms_id_int))
 
-            if check_sms:
+            if check_sms and not sms_not_created:
                 if status == 'sent':
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)
@@ -102,7 +106,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                 else:
                     raise NotImplementedError()
 
-            if link_info:
+            if link_info and not sms_not_created:
                 # shortened links are directly included in sms.sms record as well as
                 # in sent sms (not like mails who are post-processed)
                 sms_sent = self._find_sms_sent(partner, number)

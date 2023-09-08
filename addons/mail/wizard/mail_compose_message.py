@@ -733,7 +733,7 @@ class MailComposer(models.TransientModel):
     # RENDERING / VALUES GENERATION
     # ------------------------------------------------------------
 
-    def _prepare_mail_values(self, res_ids):
+    def _prepare_mail_values(self, res_ids, mass_include_canceled=False):
         """Generate the values that will be used by send_mail to create either
          mail_messages or mail_mails depending on composition mode.
 
@@ -772,6 +772,8 @@ class MailComposer(models.TransientModel):
             STA - 'subtype_id',
 
         :param list res_ids: list of record IDs on which composer runs;
+        :param bool mass_include_canceled: whether to include canceled message
+            in mass_mail mode or not
 
         :return dict: for each res_id, values to create the mail.mail or to
           give to message_post, depending on composition mode;
@@ -801,7 +803,9 @@ class MailComposer(models.TransientModel):
 
         if email_mode:
             mail_values_all = self._process_mail_values_state(mail_values_all)
-        return mail_values_all
+        if not email_mode or mass_include_canceled:
+            return mail_values_all
+        return {res_id: values for res_id, values in mail_values_all.items() if values.get('state') != 'cancel'}
 
     def _prepare_mail_values_static(self):
         """Prepare values always valid, not rendered or dynamic whatever the

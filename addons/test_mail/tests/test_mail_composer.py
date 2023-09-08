@@ -2310,7 +2310,10 @@ class TestComposerResultsMass(TestMailComposer):
 @tagged('mail_composer', 'mail_blacklist')
 class TestComposerResultsMassStatus(TestMailComposer):
     """ Test cases involving blacklist, opt-out, state management, ... specific
-    class to avoid bloating the base mailing-based composer tests. """
+    class to avoid bloating the base mailing-based composer tests.
+
+    Note that as canceled message are not created, we cannot test the failure type
+    but the failure types are shown as description of the test. """
 
     @classmethod
     def setUpClass(cls):
@@ -2383,28 +2386,35 @@ class TestComposerResultsMassStatus(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        init_message_counts = self.get_message_count_per_record(test_records)
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer._action_send_mail()
 
-        for record, expected_state, expected_ft in zip(
+        for record, _description, expected_state, init_message_count in zip(
             test_records,
+            ['mail_bl', False],
             ['cancel', 'sent'],
-            ['mail_bl', False]
+            init_message_counts,
         ):
-            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
-                self.assertMailMail(
-                    record.customer_id, expected_state,
-                    # author is current user, email_from is coming from template (user_id of record)
-                    author=self.user_employee.partner_id,
-                    fields_values={
-                        'email_from': self.user_employee_2.email_formatted,
-                        'failure_reason': False,
-                        'failure_type': expected_ft,
-                    },
-                    email_values={
-                        'email_from': self.user_employee_2.email_formatted,
-                    }
-                )
+            with self.subTest(record=record, expected_state=expected_state, _description=_description):
+                if expected_state == 'cancel':  # canceled mail are not created (failure type mail_bl)
+                    self.assertNoMail(record.customer_id, author=self.user_employee.partner_id)
+                    self.assertMessageRecordsCount(record, [0], [init_message_count])
+                else:
+                    self.assertMailMail(
+                        record.customer_id, expected_state,
+                        # author is current user, email_from is coming from template (user_id of record)
+                        author=self.user_employee.partner_id,
+                        fields_values={
+                            'email_from': self.user_employee_2.email_formatted,
+                            'failure_reason': False,
+                            'failure_type': False,
+                        },
+                        email_values={
+                            'email_from': self.user_employee_2.email_formatted,
+                        }
+                    )
+                    self.assertMessageRecordsCount(record, [1], [init_message_count])
         self.assertEqual(len(self._mails), 1, 'Should have sent 1 email, and skipped an excluded email.')
 
         # test exclusion list bypass
@@ -2450,53 +2460,67 @@ class TestComposerResultsMassStatus(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        init_message_counts = self.get_message_count_per_record(test_records)
 
         # by default duplicates are canceled
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer._action_send_mail()
 
-        for record, expected_state, expected_ft in zip(
+        for record, _description, expected_state, init_message_count in zip(
             test_records,
+            ['mail_bl', False, False, False, 'mail_dup', False, 'mail_dup'],
             ['cancel', 'sent', 'sent', 'sent', 'cancel', 'sent', 'cancel'],
-            ['mail_bl', False, False, False, 'mail_dup', False, 'mail_dup']
+            init_message_counts,
         ):
-            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
-                self.assertMailMailWRecord(
-                    record, record.customer_id, expected_state,
-                    # author is current user, email_from is coming from template (user_id of record)
-                    author=self.user_employee.partner_id,
-                    fields_values={
-                        'email_from': self.user_employee_2.email_formatted,
-                        'failure_reason': False,
-                        'failure_type': expected_ft,
-                    },
-                    email_values={
-                        'email_from': self.user_employee_2.email_formatted,
-                    }
-                )
+            with self.subTest(record=record, expected_state=expected_state, _description=_description):
+                if expected_state == 'cancel':  # canceled mail are not created
+                    self.assertNoMailWRecord(record)
+                    self.assertMessageRecordsCount(record, [0], [init_message_count])
+                else:
+                    self.assertMailMailWRecord(
+                        record, record.customer_id, expected_state,
+                        # author is current user, email_from is coming from template (user_id of record)
+                        author=self.user_employee.partner_id,
+                        fields_values={
+                            'email_from': self.user_employee_2.email_formatted,
+                            'failure_reason': False,
+                            'failure_type': False,
+                        },
+                        email_values={
+                            'email_from': self.user_employee_2.email_formatted,
+                        }
+                    )
+                    self.assertMessageRecordsCount(record, [1], [init_message_count])
         self.assertEqual(len(self._mails), 4, 'Should have sent 4 emails, and skipped an excluded and 2 duplicate emails.')
 
+        init_message_counts = self.get_message_count_per_record(test_records)
         # magic context key allowing to send duplicates when necessary
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             composer.with_context(mailing_document_based=True)._action_send_mail()
 
-        for record, expected_state, expected_ft in zip(
+        for record, _description, expected_state, init_message_count in zip(
             test_records,
+            ['mail_bl', False, False, False, False, False, False],
             ['cancel', 'sent', 'sent', 'sent', 'sent', 'sent', 'sent'],
-            ['mail_bl', False, False, False, False, False, False]
+            init_message_counts,
         ):
-            with self.subTest(record=record, expected_state=expected_state, expected_ft=expected_ft):
-                self.assertMailMailWRecord(
-                    record, record.customer_id, expected_state,
-                    # author is current user, email_from is coming from template (user_id of record)
-                    author=self.user_employee.partner_id,
-                    fields_values={
-                        'email_from': self.user_employee_2.email_formatted,
-                        'failure_reason': False,
-                        'failure_type': expected_ft,
-                    },
-                    email_values={
-                        'email_from': self.user_employee_2.email_formatted,
-                    }
-                )
+            with self.subTest(record=record, expected_state=expected_state, _description=_description):
+                if expected_state == 'cancel':  # canceled mail are not created
+                    self.assertNoMailWRecord(record)
+                    self.assertMessageRecordsCount(record, [0], [init_message_count])
+                else:
+                    self.assertMailMailWRecord(
+                        record, record.customer_id, expected_state,
+                        # author is current user, email_from is coming from template (user_id of record)
+                        author=self.user_employee.partner_id,
+                        fields_values={
+                            'email_from': self.user_employee_2.email_formatted,
+                            'failure_reason': False,
+                            'failure_type': False,
+                        },
+                        email_values={
+                            'email_from': self.user_employee_2.email_formatted,
+                        }
+                    )
+                    self.assertMessageRecordsCount(record, [1], [init_message_count])
         self.assertEqual(len(self._mails), 6, 'Should have sent 6 emails, and skipped an excluded email')
