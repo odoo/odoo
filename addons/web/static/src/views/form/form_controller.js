@@ -480,9 +480,6 @@ export class FormController extends Component {
                 saved = await this.props.saveRecord(record, clickParams);
             } else {
                 const params = { reload: !(this.env.inDialog && clickParams.close) };
-                if (!this.env.inDialog) {
-                    params.onError = this.onSaveError.bind(this);
-                }
                 saved = await record.save(params);
             }
             if (saved !== false && this.props.onSave) {

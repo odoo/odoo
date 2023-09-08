@@ -12611,6 +12611,44 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_error_dialog");
     });
 
+    QUnit.test("no 'oh snap' error when clicking on a view button", async (assert) => {
+        registry.category("services").add("error", errorService);
+        registry.category("error_dialogs").add("odoo.exceptions.UserError", WarningDialog);
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <button name="do_it" type="object" string="Do it"/>
+                    <field name="name"/>
+                </form>`,
+            mockRPC(route, { method }) {
+                assert.step(method);
+                if (method === "web_save") {
+                    throw makeServerError({ message: "Some business message" });
+                }
+            },
+        });
+
+        await click(target, "button[name=do_it]");
+        assert.containsNone(target, ".o_form_error_dialog");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal .modal-body").textContent,
+            "Some business message"
+        );
+        assert.verifySteps(["get_views", "onchange", "web_save"]);
+    });
+
     QUnit.test("no 'oh snap' error in form view in dialog", async (assert) => {
         assert.expect(5);
 
