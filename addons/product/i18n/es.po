@@ -468,9 +468,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"Código de barras utilizado para la identificación de los envases. Escanee "
-"este código de barras de embalaje desde una transferencia en la aplicación "
-"Código de barras para mover todas las unidades contenidas."
+"Código de barras utilizado para la identificación de los empaquetados. "
+"Escaneelo desde una transferencia en la aplicación Código de barras para "
+"mover todas las unidades contenidas."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -2131,7 +2131,7 @@ msgstr "Nombre del producto"
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr "Paquetes de productos"
+msgstr "Empaquetados del producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -2320,7 +2320,7 @@ msgstr "Ya se seleccionó la cantidad por defecto (%d)."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "Cantidad de productos contenidos en el envase."
+msgstr "Cantidad de productos contenidos en el empaquetado."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2724,7 +2724,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "La precisión de redondeo debe ser estrictamente positiva."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3329,6 +3329,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"No puede eliminar el valor %s porque se utiliza en los siguientes productos:\n"
+"%s\n"
+"No podrá eliminar el valor si se ha asociado a un producto en el pasado."
 
 #. module: product
 #: code:addons/product/models/product.py:0

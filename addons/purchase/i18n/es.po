@@ -538,8 +538,8 @@ msgid ""
 "Ability to select a package type in purchase orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Permite seleccionar un tipo de paquete en las órdenes de venta y forzar una "
-"cantidad que sea un múltiplo del número de unidades por paquete."
+"Permite seleccionar un tipo de empaquetado en los pedidos de compra y forzar"
+" una cantidad que sea un múltiplo del número de unidades por empaquetado."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -1349,7 +1349,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
 msgid "If true, the packaging can be used for purchase orders"
-msgstr "Si es verdad, el embalaje se puede usar para órdenes de compra"
+msgstr "Si se activa, el empaquetado se puede usar para los pedidos de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1884,7 +1884,7 @@ msgstr "Empaquetado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "Cantidad de embalaje"
+msgstr "Cantidad de empaquetado"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2211,7 +2211,7 @@ msgstr "Pedidos de compra que incluyen líneas no facturadas."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr "Comprar productos por múltiplo de unidad # por paquete"
+msgstr "Comprar productos por múltiplo de nº de unidades por empaquetado"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2867,8 +2867,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"Este producto se empaquetó en %(pack_size).2f %(pack_name)s. Debería comprar"
-" %(quantity).2f%(unit)s"
+"Este producto se envasa en %(pack_name)s, en múltiplos de %(pack_size).2f. "
+"Debería comprar %(quantity).2f %(unit)s."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0

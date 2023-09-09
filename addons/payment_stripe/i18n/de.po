@@ -78,7 +78,7 @@ msgstr "Zahlungsmethoden"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr "Zahlungs-Token"
+msgstr "Zahlungstoken"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
@@ -189,7 +189,7 @@ msgstr "Die Transaktion ist nicht mit einem Token verknüpft."
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr "Zahlungs-Token kann nicht in neue API konvertiert werden."
+msgstr "Zahlungstoken kann nicht in neue API konvertiert werden."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -218,6 +218,8 @@ msgid ""
 "You cannot set the acquirer state to Enabled until your onboarding to Stripe"
 " is completed."
 msgstr ""
+"Sie können den Anbieterstatus erst dann auf „Aktiviert“ setzen, wenn Ihr "
+"Einführung bei Stripe abgeschlossen ist."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -226,7 +228,7 @@ msgid ""
 "You cannot set the acquirer to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
-"Sie können den Acquirer nicht in den Testmodus versetzen, solange er mit "
+"Sie können den Anbieter nicht in den Testmodus versetzen, solange er mit "
 "Ihrem Stripe-Konto verbunden ist."
 
 #. module: payment_stripe

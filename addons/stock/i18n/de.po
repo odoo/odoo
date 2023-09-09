@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Chris Egal <sodaswed@web.de>, 2021
-# Florian Pose <fp@igh.de>, 2021
 # Rudolf Schnapka <rs@techno-flex.de>, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
 # Robert Förster <hello@suppliot.eu>, 2022
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -347,9 +346,9 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"       Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versandt wurde.\n"
+"       wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versandt wurde.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            Ihre Tracking-Referenz ist\n"
+"            Ihre Verfolgungsreferenz ist\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
 "                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
@@ -1107,7 +1106,7 @@ msgstr "Auto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Bestellung automatisieren"
+msgstr "Bestellungen automatisieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1418,6 +1417,8 @@ msgstr "Zu einem besseren Namen ändern"
 #, python-format
 msgid "Changing %s is restricted, you can't do this operation."
 msgstr ""
+"Die Änderung von %s ist eingeschränkt, Sie können diesen Vorgang nicht "
+"durchführen."
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -2550,7 +2551,7 @@ msgstr "Anzeigename"
 #. module: stock
 #: model:res.groups,name:stock.group_auto_reception_report
 msgid "Display Reception Report at Validation"
-msgstr ""
+msgstr "Empfangsbericht bei der Validierung anzeigen"
 
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
@@ -3557,7 +3558,7 @@ msgstr "Interner Typ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
 msgid "Internal locations amoung descendants"
-msgstr ""
+msgstr "Interne Standorte unter den Nachkommen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__ref
@@ -7966,7 +7967,7 @@ msgid ""
 " Product: %s, Serial Number: %s"
 msgstr ""
 "Diese Seriennummer wurde bereits zugewiesen:\n"
-"Produkt: 1%s, Seriennummer: 1%s"
+"Produkt: %s, Seriennummer: %s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -8049,6 +8050,8 @@ msgstr ""
 msgid ""
 "This is a technical field for calculating when a move should be reserved"
 msgstr ""
+"Das ist ein technisches Feld zur Berechnung, wann eine Bewegung reserviert "
+"werden sollte"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id

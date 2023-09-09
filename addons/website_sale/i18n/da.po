@@ -7,6 +7,7 @@
 # Mads Søndergaard, 2022
 # Sanne Kristensen <sanne@vkdata.dk>, 2023
 # Martin Trigaux, 2023
+# Sammi Iversen <sammi@vkdata.dk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Sammi Iversen <sammi@vkdata.dk>, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1051,6 +1052,14 @@ msgstr ""
 "Ændring af virksomhedsnavn er ikke tilladt når først dokument(er) er blevet "
 "udstedt for din konto. Vær venlig at kontakte os direkte for denne "
 "operation."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -2208,7 +2217,7 @@ msgstr "Ordre/dag"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "Ikke på lager"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token

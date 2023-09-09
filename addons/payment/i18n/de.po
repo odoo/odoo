@@ -5,8 +5,8 @@
 # Translators:
 # Raymond Vetter, 2021
 # Friederike Fasterling-Nesselbosch, 2022
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -579,7 +579,7 @@ msgstr "Erstellen Sie einen neuen Zahlungsdienstleister"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "Create a new payment token"
-msgstr "Ein neues Zahlungs-Token erstellen"
+msgstr "Ein neues Zahlungstoken erstellen"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -693,7 +693,7 @@ msgstr "Beschreibung"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "Description of the acquirer for customers"
-msgstr "Beschreibung des Acquirers für Kunden"
+msgstr "Beschreibung des Anbieters für Kunden"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
@@ -1122,7 +1122,7 @@ msgid ""
 "from the Payment Acquirer menu."
 msgstr ""
 "Es konnte keine manuelle Zahlungsmethode für diese Firma gefunden werden. "
-"Bitte erstellen Sie eine aus dem Menü Payment Acquirer."
+"Bitte erstellen Sie eine aus dem Menü Zahlungsanbieter."
 
 #. module: payment
 #. openerp-web
@@ -1638,12 +1638,12 @@ msgstr "Meine Zahlungsdaten speichern"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr "Gespeichertes Zahlungs-Token"
+msgstr "Gespeichertes Zahlungstoken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr "Zahlungs-Token gespeichert"
+msgstr "Zahlungstoken gespeichert"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1773,7 +1773,7 @@ msgstr "Stripe Geheimer Schlüssel"
 #: model:ir.model.fields,field_description:payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr "Geeignetes Zahlungs-Token"
+msgstr "Geeignetes Zahlungstoken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1817,7 +1817,7 @@ msgstr "Das Zugriffstoken ist ungültig."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
 msgid "The acquirer reference of the token of the transaction"
-msgstr "Die Referenz des Acquirers für das Token der Transaktion"
+msgstr "Die Referenz des Anbieters für das Transaktionstoken"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1867,7 +1867,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
 msgstr ""
-"Die Höhe der Gebühren; wird vom System festgelegt, da sie vom Acquirer "
+"Die Höhe der Gebühren; wird vom System festgelegt, da sie vom Anbieter "
 "abhängt"
 
 #. module: payment
@@ -1889,7 +1889,7 @@ msgstr "Das Journal, in dem die erfolgreichen Transaktionen gebucht werden"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "The list of acquirers supporting this payment icon"
-msgstr "The list of acquirers supporting this payment icon"
+msgstr "Die Liste der Anbieter, die dieses Zahlungssymbol unterstützen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
@@ -2048,8 +2048,8 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "acquirer's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Dies steuert, ob Kunden ihre Zahlungsmethoden als Zahlungs-Token speichern können.\n"
-"Ein Zahlungs-Token ist ein anonymer Link zu den in der Datenbank des Anbieters gespeicherten Zahlungsinformationen, so dass der Kunde sie bei seinem nächsten Einkauf wieder verwenden kann."
+"Dies steuert, ob Kunden ihre Zahlungsmethoden als Zahlungstoken speichern können.\n"
+"Ein Zahlungstoken ist ein anonymer Link zu den in der Datenbank des Anbieters gespeicherten Zahlungsinformationen, so dass der Kunde sie bei seinem nächsten Einkauf wieder verwenden kann."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
