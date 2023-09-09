@@ -19,10 +19,10 @@
 # Petr Hemza, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Jiří Podhorecký, 2023
-# Jakub Smolka, 2023
 # Tomáš Píšek, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ivana Bartonkova, 2023\n"
+"Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3530,6 +3530,15 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Nelze vytvořit nevyužitý kód účtu."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8507,12 +8516,12 @@ msgstr "Právě dokončeno"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr "Kanban ovládací panel"
+msgstr "Kanban dashboard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr "Graf ovládací panel Kanban"
+msgstr "Kanban graf dashboard"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
@@ -11958,7 +11967,7 @@ msgstr "Vykořenit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__root_report_id
 msgid "Root Report"
-msgstr ""
+msgstr "Výkaz předčíslí účtů"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -12024,7 +12033,7 @@ msgstr "Pravidla pro model párování"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr ""
+msgstr "Průběžný zůstatek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -12183,7 +12192,7 @@ msgstr "Hledat v bankovních výpisech"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__search_bar
 msgid "Search Bar"
-msgstr ""
+msgstr "Vyhledávací lišta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -12743,7 +12752,7 @@ msgstr "Zobrazit neaktivní daně"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Zobrazit deník na ovládacím panelu"
+msgstr "Zobrazit deník na přehledu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_included
@@ -12814,7 +12823,7 @@ msgstr "Někdy se nazývá BIC nebo Swift."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__sortable
 msgid "Sortable"
-msgstr ""
+msgstr "Seřaditelný"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
@@ -12883,7 +12892,7 @@ msgstr "Počáteční zůstatek"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
 msgid "State of the account dashboard onboarding panel"
-msgstr "Stav účtu přijímacího panelu"
+msgstr "Stav zaškolování na účetní přehled"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
@@ -13638,7 +13647,7 @@ msgstr "Šablony pro daně"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
 msgid "Term Key"
-msgstr ""
+msgstr "Klíč podmínky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__line_ids
@@ -14126,6 +14135,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
 msgstr ""
+"Zahraniční fiskální pozice, pro kterou je vytvořena tato externí hodnota."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14473,7 +14483,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
 msgid "The report this report is a variant of."
-msgstr ""
+msgstr "Výkaz, kterého je tento výkaz variantou."
 
 #. module: account
 #. odoo-python
@@ -14702,6 +14712,8 @@ msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Várování upozorňuje, že změna zaokrouhlovacího faktoru může být riskantní, v"
+" rámci formulářového zobrazení měny."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -14907,6 +14919,10 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
+"Toto dummy pole nám umožňuje uplatnit další vyhledávací metody na poli "
+"'název'. Tím získáváme větší svobodu na to, jak prohledávat 'název' v "
+"porovnání s 'filter_domain'. Více detailů o tom, proč toto není možné s "
+"'filter_domain' zjistíte na funkci '_search_name' a '_parse_name_search' "
 
 #. module: account
 #. odoo-python
@@ -14963,7 +14979,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
-msgstr "Toto je účetní ovládací panel"
+msgstr "Toto je přehled účetnictví"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_default_credit_limit
@@ -14971,6 +14987,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Toto je výchozí kreditní limit, který bude použit pro partnery, kteří nemají"
+" nastavení vlastní kreditní limit."
 
 #. module: account
 #. odoo-python
@@ -14995,6 +15013,8 @@ msgstr "Tento deník není v přísném režimu."
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
 msgstr ""
+"Tento řádek a jeho podřádky budou schovány, pokud se všechny jejich sloupce "
+"rovnají 0."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -15128,7 +15148,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr ""
+msgstr "Tento opakující záznam bude zaúčtován až do a včetně tohoto datumu."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15219,7 +15239,7 @@ msgstr "Celkem"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr ""
+msgstr "Celkem (včetně daně)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -15477,7 +15497,7 @@ msgstr "Rozbalit vše"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
-msgstr ""
+msgstr "Unikátní identifikátor pro tento řádek."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
@@ -15556,7 +15576,7 @@ msgstr "Nevyrovnaný"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
-msgstr ""
+msgstr "Nespárované záznamy"
 
 #. module: account
 #. odoo-python
@@ -15644,7 +15664,7 @@ msgstr "Použijte hotovostní základ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__selector
 msgid "Use Company Selector"
-msgstr ""
+msgstr "Použít výběr společnosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -15665,7 +15685,7 @@ msgstr "Účtovat storno doklady mínusovým zápisem"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr ""
+msgstr "Použít daňové entity"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15714,6 +15734,8 @@ msgid ""
 "Use this field to encode the total amount of the invoice.\n"
 "Odoo will automatically create one invoice line with default values to match it."
 msgstr ""
+"Použijte toto pole pro vložení celkové hodnoty faktury.\n"
+"Odoo poté automaticky vytvoří jeden řádek faktury s výchozí hodnotou pro její spárování."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -15736,7 +15758,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Slouží k objednání účetního deníku v zobrazení řídicího panelu"
+msgstr "Slouží k seřazení účetních deníků v přehledu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -16052,6 +16074,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
+"Když je zaúčtována interní platba, spárovaná platba je automaticky "
+"vytvořena. Tyto jsou na sebe napojeny pomocí tohoto pole."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -16065,7 +16089,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_column__blank_if_zero
 msgid "When checked, 0 values will not show in this column."
-msgstr ""
+msgstr "Pokud zaškrtnuto, nulové hodnoty nebudou zobrazeny v tomto sloupci."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
@@ -16073,6 +16097,8 @@ msgid ""
 "When checked, 0 values will not show when displaying this expression's "
 "value."
 msgstr ""
+"Pokud zaškrnuto, nulové hodnoty nebudou zobrazeny v rámci výsledku tohoto "
+"výrazu."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16100,7 +16126,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Zda se tento účetní deník zobrazuje na ovládacím panelu nebo ne"
+msgstr "Zda se tento účetní deník zobrazuje na přehledu nebo ne"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name

@@ -16,7 +16,6 @@
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2022
 # David Ramia, 2023
 # Jose Alejandro Echeverri Valencia <josealejandroeche@gmail.com>, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
 # Sonia Viciana, 2023
 # Gelo, 2023
@@ -28,6 +27,8 @@
 # Albert Parera, 2023
 # Jonny David Lezcano Algarin, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Rolando Duarte [Vauxoo], 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3665,6 +3666,15 @@ msgstr "No se puede generar un código de cuenta no usada."
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
 msgstr ""
 "No se puede generar un código de diario no utilizado. Por favor, rellene el "
@@ -5836,7 +5846,7 @@ msgstr "Mostrar código QR SEPA"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
 msgid "Display Type"
-msgstr "Mostrar tipo"
+msgstr "Tipo de visualización"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__description
@@ -13281,12 +13291,12 @@ msgstr "Cuenta transitoria"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into invoice/credit note"
-msgstr ""
+msgstr "Cambiar a factura/factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
 msgid "Switch to end of the month after having added months or days"
-msgstr ""
+msgstr "Cambiar a fin de mes después de agregar meses o días"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
@@ -14717,6 +14727,7 @@ msgstr ""
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
+"El saldo en ejecución (%s) no coincide con el saldo final especificado."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14827,6 +14838,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"El saldo inicial no coincide con el saldo final del estado de cuenta "
+"bancario anterior, o falta un estado de cuenta anterior."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -17030,7 +17043,7 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"No puedes cambiar una cuenta para evitar la conciliación si todavía hay "
+"No puede cambiar una cuenta para evitar la conciliación si todavía hay "
 "pendientes algunas conciliaciones parciales."
 
 #. module: account
@@ -17038,7 +17051,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
-msgstr ""
+msgstr "No puede cambiar el tipo de un documento publicado."
 
 #. module: account
 #. odoo-python

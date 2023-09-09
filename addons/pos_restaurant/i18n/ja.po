@@ -29,7 +29,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr ""
+msgstr "<strong>フロア名: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -42,6 +42,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
+"レストランのフロアは、お客様にサービスを提供する場所で、テーブルを定義し\n"
+"　　　　配置できる場所です。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
@@ -67,7 +69,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr ""
+msgstr "新しいレストランフロアを追加"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -79,7 +81,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Add a tip"
-msgstr ""
+msgstr "ヒントを追加"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -105,14 +107,14 @@ msgstr "支払い後にチップを追加（北アメリカ特有）"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Adjust Amount"
-msgstr ""
+msgstr "金額を調整"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__set_tip_after_payment
 msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
-msgstr ""
+msgstr "支払端末で許可された金額を調整し、顧客が帰った後、またはその日の終わりにチップを追加します。"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -144,7 +146,7 @@ msgstr "金額"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
 msgid "An internal identification of a table"
-msgstr ""
+msgstr "テーブルの内部識別"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
@@ -154,7 +156,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Appearance"
-msgstr ""
+msgstr "表示"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
@@ -228,7 +230,7 @@ msgstr "請求分割"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "ブロックされたアクション"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -252,7 +254,7 @@ msgstr "キャンセル済"
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Bar"
-msgstr ""
+msgstr "現金バー"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -262,7 +264,7 @@ msgstr "チーズバーガー"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
 msgid "Chicken Curry Sandwich"
-msgstr ""
+msgstr "チキンカレーサンドイッチ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -279,17 +281,17 @@ msgstr "閉じる"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Close Tab"
-msgstr ""
+msgstr "タブをクローズ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
 msgid "Club Sandwich"
-msgstr ""
+msgstr "クラブサンドイッチ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.coke_product_template
 msgid "Coca-Cola"
-msgstr ""
+msgstr "コカ・コーラ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -380,7 +382,7 @@ msgstr "編集"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr ""
+msgstr "POSでの請求書の分割を有効にします。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -392,7 +394,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
 msgid "Floor"
-msgstr ""
+msgstr "フロア"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
@@ -410,7 +412,7 @@ msgstr "フロアプラン"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
-msgstr ""
+msgstr "フロア: %s - POS作成: %s \n"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -437,12 +439,12 @@ msgstr "食品"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "For convenience, we are providing the following gratuity calculations:"
-msgstr ""
+msgstr "便宜上、チップの計算方法を以下にお知らせします:"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
-msgstr ""
+msgstr "紛議"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -484,7 +486,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "Guests:"
-msgstr ""
+msgstr "客:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
@@ -494,7 +496,7 @@ msgstr "高さ"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_h
 msgid "Horizontal Position"
-msgstr ""
+msgstr "水平ポジション"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__id
@@ -508,7 +510,7 @@ msgstr "ID"
 msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
-msgstr ""
+msgstr "タイムシートエントリが正常に生成されました。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -520,7 +522,7 @@ msgstr "内部注釈"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Internal Note added by the waiter."
-msgstr ""
+msgstr "ウェイターにより内部メモが追加されました。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -537,7 +539,7 @@ msgstr "バー/レストラン"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Keep Open"
-msgstr ""
+msgstr "オープンのまま残す"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -583,7 +585,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Light grey"
-msgstr ""
+msgstr "ライトグレー"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -595,12 +597,12 @@ msgstr "ロゴ"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
 msgid "Lunch Maki 18pc"
-msgstr ""
+msgstr "ランチ巻き 18個"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
 msgid "Lunch Salmon 20pc"
-msgstr ""
+msgstr "ランチサーモン 20個"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
@@ -610,17 +612,17 @@ msgstr "ランチ 手巻き寿司ミックス 3個"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
 msgid "Margherita"
-msgstr ""
+msgstr "マルゲリータ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
 msgid "Minute Maid"
-msgstr ""
+msgstr "ミニッツメイド"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
 msgid "Mozzarella Sandwich"
-msgstr ""
+msgstr "モッツアレラサンドイッチ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
@@ -647,7 +649,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "No Tip"
-msgstr ""
+msgstr "チップなし"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -744,17 +746,17 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "PRO FORMA"
-msgstr ""
+msgstr "見積送状"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pasta 4 formaggi "
-msgstr ""
+msgstr "パスタ4フォマッジ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
 msgid "Pasta Bolognese"
-msgstr ""
+msgstr "パスタボロネーゼ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -796,17 +798,17 @@ msgstr "POSセッション"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "POS Iface オーダ明細メモ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "POS Iface伝票印刷"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Pos Iface 伝票分割"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
@@ -821,7 +823,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "POS設定支払後チップ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -860,7 +862,7 @@ msgstr "プリンター"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "プリントに失敗しました"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -911,7 +913,7 @@ msgstr "赤"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Removing a table cannot be undone"
-msgstr ""
+msgstr "フロアを削除すると元に戻すことはできません。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -926,7 +928,7 @@ msgstr "名前の変更"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Reprint receipts"
-msgstr ""
+msgstr "レシート再印刷"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -960,7 +962,7 @@ msgstr "レストランプリンタ"
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr ""
+msgstr "レストランテーブル"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -979,7 +981,7 @@ msgstr "逆払い"
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
 msgid "Round"
-msgstr ""
+msgstr "丸い"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -987,12 +989,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Round Shape"
-msgstr ""
+msgstr "丸い形"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
 msgid "Salmon and Avocado"
-msgstr ""
+msgstr "サーモンとアボカド"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1018,7 +1020,7 @@ msgstr "担当"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
 msgid "Set Tip After Payment"
-msgstr ""
+msgstr "支払後チップを設定"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1026,7 +1028,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Settle"
-msgstr ""
+msgstr "支払う"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -1048,7 +1050,7 @@ msgstr "厨房プリンタにチケットを送信する際に明細をスキッ
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
 msgid "Spicy Tuna Sandwich"
-msgstr ""
+msgstr "スパイシーツナサンドイッチ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1073,7 +1075,7 @@ msgstr "スクエア"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Square Shape"
-msgstr ""
+msgstr "四角"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1127,62 +1129,62 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr ""
+msgstr "プリンタのハードウェアプロキシのIPアドレスまたはホスト名"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "このオーダによってサービスを受けた顧客の数。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "html互換フォーマットでの床の背景色"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "このテーブルのデフォルトの接客人数"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr ""
+msgstr "このPOSで接客されるレストランフロア"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "このオーダが提供されたテーブル"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
-msgstr ""
+msgstr "テーブルの色。有効な '背景' CSSプロパティの値として表されます"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__height
 msgid "The table's height in pixels"
-msgstr ""
+msgstr "ピクセルでのテーブルの高さ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
+msgstr "テーブルの左端から中央までの水平位置(ピクセル)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "上端からテーブルの中心までの垂直方向の位置(ピクセル)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "テーブルの幅(ピクセル)"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1205,7 +1207,7 @@ msgstr ""
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
-msgstr ""
+msgstr "このオーダはまだサーバに同期されていません。同期されていることを確認してから、もう一度試して下さい。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1213,7 +1215,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Tint"
-msgstr ""
+msgstr "色合い"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1228,14 +1230,14 @@ msgstr "チップ"
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Tip:"
-msgstr ""
+msgstr "チップ:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #, python-format
 msgid "Tipping"
-msgstr ""
+msgstr "チップ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1259,7 +1261,7 @@ msgstr "運送"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Turquoise"
-msgstr ""
+msgstr "ターコイズ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1308,7 +1310,7 @@ msgstr "不明なエラー"
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "未同期オーダ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
@@ -1325,12 +1327,12 @@ msgstr "消費税:"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_vege_product_template
 msgid "Vegetarian"
-msgstr ""
+msgstr "ベジタリアン"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
-msgstr ""
+msgstr "垂直ポジション"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1364,7 +1366,7 @@ msgstr "黄"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "%sを超える数を入力することはできません。"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1373,7 +1375,7 @@ msgstr ""
 msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
-msgstr ""
+msgstr "POSセッションで使用されているフロアを削除することはできません。最初にセッションをクローズして下さい:\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1382,7 +1384,7 @@ msgstr ""
 msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
-msgstr ""
+msgstr "POSセッションで使用されているテーブルを削除することはできません。最初にセッションをクローズして下さい。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1390,14 +1392,14 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "________________________"
-msgstr ""
+msgstr "________________________"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "______________________________________________"
-msgstr ""
+msgstr "______________________________________________"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1411,7 +1413,7 @@ msgstr "於"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "at table"
-msgstr ""
+msgstr "テーブルで"
 
 #. module: pos_restaurant
 #. odoo-javascript

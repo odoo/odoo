@@ -251,7 +251,7 @@ msgstr "<option value=\"\">Land ...</option>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Bundesland/Region/Provinz ...</option>"
+msgstr "<option value=\"\">Bundesland ...</option>"
 
 #. module: website_sale
 #. odoo-python
@@ -1216,7 +1216,7 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Eine Änderung des Namen des Unternehmens ist nicht mehr möglich, sobald "
+"Eine Änderung des Unternehmensnamens ist nicht mehr möglich, sobald "
 "Dokumente für Ihr Konto ausgestellt wurden. Bitte wenden Sie sich für diesen"
 " Vorgang direkt an uns."
 
@@ -1230,6 +1230,18 @@ msgid ""
 msgstr ""
 "Der Name darf nicht geändert werden, sobald eine Rechnung für Sie erzeugt "
 "wurde. Bitte wenden Sie sich direkt an uns."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Eine Änderung Ihres Namen ist nicht mehr möglich, sobald Dokumente für Ihr "
+"Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an"
+" uns."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3758,7 +3770,7 @@ msgstr "Einheit bestimmen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
-msgstr "Bundesland / Region"
+msgstr "Bundesland"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_provider_state
