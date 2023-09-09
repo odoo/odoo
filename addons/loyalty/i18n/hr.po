@@ -15,6 +15,7 @@
 # Martin Trigaux, 2022
 # Tina Milas, 2022
 # Bole <bole@dajmi5.com>, 2023
+# Antonijo Kovacevic, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"Last-Translator: Antonijo Kovacevic, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -372,19 +373,19 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
-msgstr ""
+msgstr "Pronađen je kupon s istim kodom."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr ""
+msgstr "Kupon/kartica vjernosti mora imati jedinstveni kod."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "A program must have at least one reward."
-msgstr ""
+msgstr "Program treba sadržavati barem jednu nagradu."
 
 #. module: loyalty
 #. odoo-python
@@ -417,12 +418,12 @@ msgstr "Dodaj"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr ""
+msgstr "Dodajte nagradu"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a rule"
-msgstr ""
+msgstr "Dodaj pravilo"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
@@ -539,7 +540,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__clear_wallet
 msgid "Clear Wallet"
-msgstr ""
+msgstr "Očisti novčanik"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -554,17 +555,17 @@ msgstr "Šifra"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
 msgid "Code for 10% on orders"
-msgstr ""
+msgstr "Kod za 10% na narudžbe"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
 msgid "Communication Plan"
-msgstr ""
+msgstr "Plan komunikacije"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Communications"
-msgstr ""
+msgstr "Komunikacije"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__company_id
@@ -606,7 +607,7 @@ msgstr "Tipke upravljačke ploče"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_ids
 msgid "Coupon"
-msgstr ""
+msgstr "Kupon"
 
 #. module: loyalty
 #: model:ir.actions.report,name:loyalty.report_loyalty_card
@@ -1404,6 +1405,11 @@ msgstr "Oznaka proizvoda"
 #: model:ir.model,name:loyalty.model_product_product
 msgid "Product Variant"
 msgstr "Varijanta proizvoda"
+
+#. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+msgid "Product used in the sales order to apply the discount."
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id
