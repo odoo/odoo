@@ -41,28 +41,30 @@ export class FileUploader extends Component {
                         type: "danger",
                     }
                 );
-            }
-            this.state.isUploading = true;
-            const data = await getDataURLFromFile(file);
-            if (!file.size) {
-                console.warn(`Error while uploading file : ${file.name}`);
-                this.notification.add(
-                    this.env._t("There was a problem while uploading your file."),
-                    {
-                        type: "danger",
-                    }
-                );
-            }
-            try {
-                await this.props.onUploaded({
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    data: data.split(",")[1],
-                    objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
-                });
-            } finally {
                 this.state.isUploading = false;
+            } else{
+                this.state.isUploading = true;
+                const data = await getDataURLFromFile(file);
+                if (!file.size) {
+                    console.warn(`Error while uploading file : ${file.name}`);
+                    this.notification.add(
+                        this.env._t("There was a problem while uploading your file."),
+                        {
+                            type: "danger",
+                        }
+                    );
+                }
+                try {
+                    await this.props.onUploaded({
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        data: data.split(",")[1],
+                        objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
+                    });
+                } finally {
+                    this.state.isUploading = false;
+                }
             }
         }
         if (this.props.multiUpload && this.props.onUploadComplete) {
