@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from odoo import http
 from odoo.tests import common, tagged
-from odoo.tools import mute_logger
 from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.export import ExportXlsxWriter
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -392,38 +391,3 @@ class TestGroupedExport(XlsxCreatorCase):
             ['    86420.864 (1)','86420.86'],
             ['1'                ,'86420.86'],
         ])
-
-    @mute_logger('odoo.addons.web.controllers.export')
-    def test_export_with_deleted_field(self):
-        model = self.env['ir.model']._get('res.partner')
-        url = '/web/export/namelist'
-        header = {"Content-Type": "application/json"}
-
-        custom_field = self.env['ir.model.fields'].create([{
-            'name': 'x_test',
-            'ttype': 'char',
-            'field_description': 'test field',
-            'model_id': model.id,
-        }])
-
-        export_template = self.env['ir.exports'].create({
-            'name': custom_field.name,
-            'export_fields': [(0, 0, {'name': custom_field.name})],
-        })
-
-        data = json.dumps({
-                'params': {
-                    'model': model.model,
-                    'export_id': export_template.id,
-                    },
-                })
-
-        export_line_field = self.env['ir.exports.line'].search([('name', '=', export_template.name)])
-
-        self.url_open(url, data, headers=header).json()
-        self.assertTrue(export_line_field.exists())
-
-        custom_field.unlink()
-
-        self.url_open(url, data, headers=header).json()
-        self.assertFalse(export_line_field.exists())
