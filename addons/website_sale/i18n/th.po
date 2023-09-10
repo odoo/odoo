@@ -11,6 +11,7 @@
 # Martin Trigaux, 2023
 # Wichanon Jamwutthipreecha, 2023
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1180,6 +1181,15 @@ msgstr ""
 "account. Please contact us directly for this operation."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Checkout Pages"
 msgstr ""
@@ -1269,7 +1279,10 @@ msgid "Companies"
 msgstr "บริษัท"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "ชื่อบริษัท"
 
@@ -2863,7 +2876,7 @@ msgstr "วิธีการชำระเงิน"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "ผู้ให้บริการชำระเงิน"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -2893,6 +2906,13 @@ msgstr "ระบบเปิดแบบแป้นเหยียบ"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "โทรศัพท์"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "หมายเลขโทรศัพท์"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4043,7 +4063,7 @@ msgstr "อันดับ #1"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "โทเค็นการเข้าถึงไม่ถูกต้อง"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -4746,6 +4766,20 @@ msgid ""
 "Your Dynamic Snippet will be displayed here...\n"
 "                                This message is displayed because youy did not provide both a filter and a template to use."
 msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "อีเมลของคุณ"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "ชื่อของคุณ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

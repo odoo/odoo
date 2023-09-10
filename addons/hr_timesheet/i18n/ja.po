@@ -238,6 +238,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"このプロジェクト、タスク、タイムシートがリンクされている分析アカウント。\n"
+"この分析アカウントを関連ドキュメント(例:販売オーダ、請求書、購買オーダ、仕入先請求書、経費など)に設定することで、プロジェクトの原価と収益を追跡できます。\n"
+"この分析アカウントは、必要に応じて各タスクで個別に変更することができます。\n"
+"タイムシートを使用するには、分析アカウントが必要です。"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -286,7 +290,7 @@ msgstr "キャンセル"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "共有済プロジェクトの共同作業者"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -475,7 +479,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr ""
+msgstr "日にちで単位をエンコード"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
@@ -580,7 +584,7 @@ msgstr "内部プロジェクト"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "無効なオペレータ: %s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -588,7 +592,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "無効な値: %s"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
@@ -873,7 +877,7 @@ msgstr ""
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "プロジェクトの検索"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -912,7 +916,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
 msgid "Settings"
-msgstr "設定"
+msgstr "管理設定"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1326,6 +1330,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"新しいタスクを設定するのにこれらのキーワードを使いましょう:\n"
+"\n"
+"       30h タスクに30時間を割り当てる\n"
+"      #タグ タスクにタグを設定する\n"
+"        @ユーザ タスクをユーザーに割り当てる \n"
+"        ! タスクに高い優先順位を設定\n"
+"\n"
+"        正しいフォーマットと順序を使うようにしましょう。 例: 設定画面の改善 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
