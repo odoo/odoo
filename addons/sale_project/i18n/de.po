@@ -3,8 +3,7 @@
 # 	* sale_project
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -30,7 +29,7 @@ msgstr "Rechnung erstellen"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr "Eine Bestellung erstellen"
+msgstr "Bei Auftrag erstellen"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -50,7 +49,7 @@ msgstr "Generierte Aufgabe"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr "In Rechnung zu stellender Kundenauftrag"
+msgstr "Hat abzurechnenden Verkaufsauftrag"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
@@ -96,7 +95,7 @@ msgstr ""
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr ""
-"Stellen Sie die bestellten Mengen in Rechnung, sobald dieser Service "
+"Stellen Sie die bestellten Mengen in Rechnung, sobald diese Dienstleistung "
 "verkauft ist."
 
 #. module: sale_project
@@ -113,12 +112,12 @@ msgstr "Neu"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order"
-msgstr "Kein Kundenauftrag"
+msgstr "Kein Verkaufsauftrag"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order Item"
-msgstr "Keine Auftragsposition"
+msgstr "Keine Verkaufsauftragsposition"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -143,7 +142,7 @@ msgid ""
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
 "Bei der Auftragsbestätigung kann dieses Produkt ein Projekt und/oder eine Aufgabe erzeugen. Anhand dieser können Sie die von Ihnen verkaufte Dienstleistung verfolgen. \n"
-"'Im Projekt des Verkaufsauftrags': Verwendet das konfigurierte Projekt des Verkaufsauftrags, falls definiert, oder erstellt ein neues Projekt auf der Grundlage der ausgewählten Vorlage."
+"„Im Projekt des Verkaufsauftrags“: Verwendet das konfigurierte Projekt des Verkaufsauftrags, falls definiert, oder erstellt ein neues Projekt auf der Grundlage der ausgewählten Vorlage."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -173,7 +172,7 @@ msgstr "Projekt & Aufgabe"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr "Projekt-Vorlage"
+msgstr "Projektvorlage"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__project_id
@@ -196,7 +195,7 @@ msgstr "Projekte"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr "Projekte in diesem Auftrag."
+msgstr "Projekte in diesem Verkaufsauftrag."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -207,7 +206,7 @@ msgstr "Verkaufsauftrag"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr "Verkaufsauftragsanzahl"
+msgstr "Anzahl Verkaufsaufträge"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -236,7 +235,7 @@ msgstr "Auftrags-ID"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order Item"
-msgstr "Auftragsposition"
+msgstr "Verkaufsauftragsposition"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -250,7 +249,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Auftragsposition"
+msgstr "Verkaufsauftragszeile"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
@@ -274,22 +273,23 @@ msgid ""
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
-"Kundenauftragsposition, mit der das Projekt verknüpft ist. Verknüpft den "
-"Stundenzettel-Eintrag mit der im Projekt definierten Kundenauftragsposition."
-" Gilt nur für Aufgaben, für die keine Kundenauftragsposition definiert ist, "
-"und wenn der Mitarbeiter nicht in der Zuordnung "
-"'Mitarbeiter/Kundenauftragsposition' des Projekts enthalten ist."
+"Verkaufsauftragsposition, mit der das Projekt verknüpft ist. Verknüpft den "
+"Zeiterfassungseintrag mit der im Projekt definierten "
+"Verkaufsauftragsposition. Gilt nur für Aufgaben, für die keine "
+"Verkaufsauftragsposition definiert ist, und wenn der Mitarbeiter nicht in "
+"der Zuordnung 'Mitarbeiter/Verkaufsauftragsposition' des Projekts enthalten "
+"ist."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr "Auftrag mit dem das Projekt verlinkt ist."
+msgstr "Verkaufsauftrag, mit dem das Projekt verknüpft ist."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Auftrag, mit dem die Aufgabe verknüpft ist."
+msgstr "Verkaufsauftrag, mit dem die Aufgabe verknüpft ist."
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -301,13 +301,13 @@ msgstr "In Rechnung suchen"
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr "In Auftrag suchen"
+msgstr "In Verkaufsauftrag suchen"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr "Suche in Kundenauftragspositionen"
+msgstr "Suche in Verkaufsauftragsposition"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -334,7 +334,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
-"Wählen Sie ein nicht abrechenbares Projekt aus, um Aufgaben darin zu "
+"Wählen Sie ein nichtabrechenbares Projekt aus, um Aufgaben darin zu "
 "erstellen."
 
 #. module: sale_project
@@ -421,7 +421,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr "Zu Berechnen"
+msgstr "Abzurechnen"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -430,6 +430,6 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"Sie können die Auftragsposition %(order_id)s - %(product_id)snicht mit "
+"Sie können die Auftragsposition %(order_id)s - %(product_id)s nicht mit "
 "dieser Aufgabe verknüpfen, da es sich um eine weiterberechnete Auslage "
 "handelt."
