@@ -20,7 +20,8 @@
 # eriiikgt, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
+# Eugeni Chafer <eugeni@chafer.cat>, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: jabelchi, 2023\n"
+"Last-Translator: Eugeni Chafer <eugeni@chafer.cat>, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -903,8 +904,8 @@ msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
 msgstr ""
-"L'usuari assignat %s no té accés al document i no és capaç de gestionar "
-"aquesta activitat."
+"L'usuari assignat %s no té accés al document i no pot gestionar aquesta "
+"activitat."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2709,13 +2710,12 @@ msgstr "Enrutament HTTP"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr "Gestiona per correus"
+msgstr "Gestiona per correu"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "Handle in Odoo"
-msgstr ""
-"Gestionar a OdooCity name (optional, probably does not need a translation)"
+msgstr "Gestionar a Odoo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
@@ -4916,9 +4916,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
-"Política sobre com manejar notificacions de xat:\n"
-"- Gestor de correus: Les notificacions s' envien a la vostra adreça de correu electrònic\n"
-"- Gestors a Odoo: les notificacions apareixen a la vostra caixa d' entrada Odo"
+"Política sobre com gestionar notificacions del Chatter:\n"
+"- Gestionar per correu: Les notificacions s'envien a la vostra adreça de correu electrònic\n"
+"- Gestionar a Odoo: les notificacions apareixen a la vostra bústia d'entrada a Odoo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -6686,6 +6686,14 @@ msgstr ""
 "correus/receitius a les versions de la Comunitat i de l'Enterprise. Els "
 "usuaris en línia ja s'han beneficiat d'un servidor de correu electrònic a "
 "punt per usar- lo (@my empresa.odeo.com)."
+
+#. module: mail
+#: code:addons/mail/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. openerp-web
