@@ -164,6 +164,7 @@
                   <field name="application"/>
                   <templates>
                     <t t-name="kanban-menu">
+                        <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <a type="edit" class="dropdown-item">Module Info</a>
                         <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
                         <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
@@ -171,7 +172,6 @@
                     </t>
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
-                        <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <div class="oe_module_icon">
                             <img t-attf-src="#{record.icon.value}" class="w-100" alt="Icon"/>
                             <span t-if="record.icon_flag" class="oe_module_flag"><t t-out="record.icon_flag.raw_value"/></span>
