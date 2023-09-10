@@ -285,11 +285,9 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Confirm Attendance\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -312,21 +310,22 @@ msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
+msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+"<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"Previous state "
+"button\" title=\"Previous state\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Previous state button\" "
+"title=\"Previous state\"/>"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -361,11 +360,9 @@ msgstr "<span class=\"text-bg-danger\">Archiviert</span>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<span class=\"text-muted\" states=\"done\">Attended</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+"<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
-"<span class=\"text-muted\" states=\"done\">Teilgenommen</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Abgebrochen</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -3167,6 +3164,11 @@ msgid "Please enter a valid base64 secret"
 msgstr "Bitte geben Sie ein gültiges base64-Geheimnis ein"
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "Previous state"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
 msgstr "Kassensystem, Einführung in die Berichtsanpassung."
@@ -3811,6 +3813,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_attendee_search
 msgid "Ticket"
 msgstr "Ticket"
 

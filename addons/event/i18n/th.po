@@ -259,11 +259,9 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Confirm Attendance\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"ปุ่มยืนยัน\" "
-"title=\"ยืนยันการลงทะเบียน\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -284,21 +282,22 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
+msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-"
-"label=\"ปุ่มการเข้าร่วม\" title=\"ยีนยันการเข้าร่วม\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+"<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"Previous state "
+"button\" title=\"Previous state\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"ปุ่มการเข้าร่วม\" "
-"title=\"ยืนยันการเข้าร่วม\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Previous state button\" "
+"title=\"Previous state\"/>"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -323,16 +322,14 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">เก็บถาวรแล้ว</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<span class=\"text-muted\" states=\"done\">Attended</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+"<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
-"<span class=\"text-muted\" states=\"done\">เข้าร่วมแล้ว</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">ยกเลิกแล้ว</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -2666,6 +2663,11 @@ msgid "Please enter a valid base64 secret"
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "Previous state"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
 msgstr "การขายหน้าร้าน (POS) ข้อมูลเบื้องต้นเกี่ยวกับการปรับแต่งรายงาน"
@@ -3277,6 +3279,7 @@ msgstr "ขั้นตอนนี้เสร็จสิ้น คลิก�
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_attendee_search
 msgid "Ticket"
 msgstr "ทิกเก็ต"
 

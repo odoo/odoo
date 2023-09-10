@@ -7,6 +7,7 @@
 # Martin Trigaux, 2023
 # Niyas Raphy, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1123,7 +1124,7 @@ msgstr "بإمكانه النشر "
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Can not resequence a video at first position."
-msgstr ""
+msgstr "لا يمكن إعادة تسلسل فيديو في الوضع الأول. "
 
 #. module: website_sale
 #. odoo-python
@@ -1263,6 +1264,15 @@ msgstr ""
 "لإتمام هذه العملية."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Checkout Pages"
 msgstr "صفحات الدفع والخروج "
@@ -1355,7 +1365,10 @@ msgid "Companies"
 msgstr "الشركات"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "اسم الشركة "
 
@@ -3013,6 +3026,13 @@ msgstr "نظام يفتح عن طريق الدواسات "
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
 msgstr "رقم الهاتف"
 
 #. module: website_sale
@@ -4885,6 +4905,20 @@ msgid ""
 msgstr ""
 "سوف يتم عرض قصاصتك الحيوية هنا...\n"
 "                                يتم عرض هذه الرسالة لأنك لم تقم بتحديد التأثير الفني والقالب حتى يتم استخدامه. "
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "بريدك الإلكتروني "
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "اسمك"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

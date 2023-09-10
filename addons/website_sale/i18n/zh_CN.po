@@ -13,6 +13,7 @@
 # Martin Trigaux, 2023
 # Levi Siuzdak (sile), 2023
 # Chloe Wang, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1252,6 +1253,15 @@ msgid ""
 msgstr "为您的科目开具发票后，不能更改您的姓名。如需更改，请与我们联系。"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Checkout Pages"
 msgstr "结账网页"
@@ -1341,7 +1351,10 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "公司名称"
 
@@ -2976,6 +2989,13 @@ msgstr "基于踏板的开启系统"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "电话"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "电话号码"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4808,6 +4828,20 @@ msgid ""
 msgstr ""
 "您的动态代码段将显示在这里……\n"
 "                                显示此消息是因为您没有同时提供要使用的筛选器和模板。"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "您的电子邮件"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "您的姓名"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

@@ -16,7 +16,6 @@
 # José Vicente <txusev@gmail.com>, 2023
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2023
 # Mariana Torres <mt@adhoc.com.ar>, 2023
-# Rolando Duarte [Vauxoo], 2023
 # Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
@@ -35,6 +34,8 @@
 # Albert Parera, 2023
 # Martin Trigaux, 2023
 # Ana Sanjuán, 2023
+# andrzej pian, 2023
+# Rolando Duarte [Vauxoo], 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
@@ -12538,7 +12539,7 @@ msgstr "Cuenta transitoria"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
 msgid "Switch into invoice/credit note"
-msgstr ""
+msgstr "Cambiar a factura/factura rectificativa"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
@@ -12910,6 +12911,8 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
 msgstr ""
+"Impuestos, posiciones fiscales, plan de cuentas y declaraciones legales de "
+"su país"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -13849,6 +13852,7 @@ msgstr ""
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
+"El saldo en ejecución (%s) no coincide con el saldo final especificado."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13958,6 +13962,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"El saldo inicial no coincide con el saldo final del estado de cuenta "
+"bancario anterior, o falta un estado de cuenta anterior."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -16163,7 +16169,7 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"No puedes cambiar una cuenta para evitar la conciliación si todavía hay "
+"No puede cambiar una cuenta para evitar la conciliación si todavía hay "
 "pendientes algunas conciliaciones parciales."
 
 #. module: account
@@ -16171,7 +16177,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
-msgstr ""
+msgstr "No puede cambiar el tipo de un documento publicado."
 
 #. module: account
 #. odoo-python
