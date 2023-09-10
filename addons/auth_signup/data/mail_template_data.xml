@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Email template for reset password -->
         <record id="reset_password_email" model="mail.template">
             <field name="name">Settings: User Reset Password</field>
@@ -42,7 +42,7 @@
                         You may change your password by following this link which will remain valid during 24 hours:<br/>
                         <div style="margin: 16px 0px 16px 0px;">
                             <a t-att-href="object.signup_url"
-                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                style="background-color: #EC1C24; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Change password
                             </a>
                         </div>
