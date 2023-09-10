@@ -196,7 +196,7 @@ msgstr ""
 "            입니다.\n"
 "        </t>\n"
 "        <br><br>\n"
-"        믿고 맡겨주셔서 항상 감사드립니다!\n"
+"        보내주신 신뢰와 성원에 감사드립니다.\n"
 "        <br>\n"
 "        궁금한 점이 있으시면 언제든 문의주시기 바랍니다.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -400,19 +400,19 @@ msgstr ""
 "        안녕하세요,\n"
 "        <br><br>\n"
 "        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
-"        주문 번호 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> 및 해당 금액 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
-"            내용이 확인 완료되었습니다.<br>\n"
-"            믿고 맡겨주셔서 깊이 감사드립니다!\n"
+"        주문 번호 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>에 대한 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>의\n"
+"결제가        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
+"            확인되었습니다.<br>\n"
+"            보내주신 지지와 신뢰에 진심으로 감사드립니다.\n"
 "        </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
-"            대기 중입니다. 입금 내역이 확인되면 승인이 완료됩니다.\n"
+"            대기 중입니다. 결제가 확인되면 승인이 완료됩니다.\n"
 "            <t t-if=\"object.reference\">\n"
 "                결제 관련 참조는 다음과 같습니다. <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>\n"
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
-"        궁금한 점이 있으실 경우 언제든 문의주시기 바랍니다.\n"
+"        궁금한 점이 있으시면 언제든 문의주시기 바랍니다.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
 "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -446,10 +446,10 @@ msgstr ""
 "                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
 "                        <td colspan=\"4\">\n"
 "                            <t t-if=\"line.display_type == 'line_section'\">\n"
-"                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">Taking care of Trees Course</span>\n"
+"                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">나무 가꾸기 강좌</span>\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
-"                                <i t-out=\"line.name or ''\">Taking care of Trees Course</i>\n"
+"                                <i t-out=\"line.name or ''\">나무 가꾸기 강좌</i>\n"
 "                            </t>\n"
 "                        </td>\n"
 "                    </tr>\n"
@@ -463,7 +463,7 @@ msgstr ""
 "                        <td style=\"width: 150px;\">\n"
 "                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\">\n"
 "                        </td>\n"
-"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tTaking care of Trees Course</td>\n"
+"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\t나무 가꾸기 강좌</td>\n"
 "                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
 "                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
@@ -510,7 +510,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"></td>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">총계:</span></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">합계:</span></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -669,15 +669,15 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
-"        안녕하세요 <t t-out=\"object.partner_id.name or ''\">고객님</t>,\n"
+"        안녕하세요 <t t-out=\"object.partner_id.name or ''\">님</t>,\n"
 "        <br><br>\n"
-"        다음 내용을 안내드립니다.\n"
-"        <t t-out=\"doc_name or ''\">견적서</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        다음 견적서에 대한 발행이 취소되었음을 알려드립니다.\n"
+"        <t t-out=\"doc_name or ''\">견적서 번호</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (참조: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        발행이 취소되었습니다. 따라서 해당 주문에 대해서는 추가 요금이 부과되지 않습니다.\n"
-"        환불 절차에 대해서는, 고객님의 불편을 최소화할 수 있도록 처리할 예정입니다.\n"
+"        따라서 해당 주문에 대해서는 추가 요금이 부과되지 않습니다.\n"
+"        고객님의 불편을 최소화할 수 있도록 빠르게 환불 처리할 예정입니다.\n"
 "        <br><br>\n"
 "        궁금한 점이 있으시면 언제든지 문의주시기 바랍니다.\n"
 "        <br>\n"
@@ -784,7 +784,7 @@ msgstr ""
 "                새로운 품목 생성하기\n"
 "            </p><p>\n"
 "                판매 또는 구매용 품목 전체를 설정해야 합니다.\n"
-"                저장용이든 소모품이든, 또는 서비스든 무관합니다.\n"
+"                저장 가능 품목이나 소모품, 서비스 등 품목 유형과는 무관합니다.\n"
 "            </p>"
 
 #. module: sale
@@ -1042,9 +1042,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 제품은 재고를 관리하는 품목입니다. 창고 앱이 설치되어 있어야 합니다.\n"
-"소모품은 재고가 관리되지 않는 품목입니다.\n"
-"서비스는 귀하가 제공하는 비물질 품목입니다."
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 재고 관리 앱을 설치해야 사용하실 수 있습니다.\n"
+"소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
+"서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1566,7 +1566,7 @@ msgstr "설정 구성"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1645,7 +1645,7 @@ msgstr "신규 품목 만들기"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr "새로운 견적서를 생성하여, 신규 매출을 위한 첫 단계를 시작합니다!"
+msgstr "새로 견적서를 생성하세요. 신규 매출을 향한 첫 단계입니다!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -2176,7 +2176,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr "재정 상태는 특정 고객 또는 판매 주문 /송장에 대한 세금 및 계정을 조정하는 데 사용됩니다. 기본값은 고객이 제공합니다."
+msgstr ""
+"재정 상태는 특정 고객이나 판매주문서/청구서에 대한 세금 및 계정을 조정하는 데 사용됩니다. 고객이 입력한 내용을 기본값으로 합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2349,7 +2350,7 @@ msgstr "해당되는 경우, 판매 주문서에 포장 항목을사용할 수 �
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr "가격표를 변경하면 새로 추가된 내역만 영향을 받습니다."
+msgstr "가격표를 변경하면 새로 내용이 추가된 부분만 변경됩니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2848,7 +2849,7 @@ msgstr "업무 유형 유형"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
 msgid "No"
-msgstr "아니오"
+msgstr "없음"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__no-message
@@ -2967,7 +2968,7 @@ msgstr "온보딩 단계"
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
-msgstr "고객이 견적서 확정 시, 매출 항목으로 전환됩니다.<br> 청구서를 생성하여 수금 절차를 실행할 수 있습니다."
+msgstr "고객이 승인하면 견적서가 판매주문서로 변환됩니다.<br>청구서를 발행하여 수금 절차를 시작하세요."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3088,7 +3089,7 @@ msgstr "주문일: 최근 365일"
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
-msgstr "주문 명세"
+msgstr "주문 내용"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__name
@@ -3676,7 +3677,7 @@ msgstr "보고"
 msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
-msgstr "주문을 자동으로 확인하려면 고객에게 온라인으로 서명 및/또는 결제하도록 요청하시기 바랍니다."
+msgstr "자동 주문 확정을 하려면 전자 서명 및 온라인 결제를 고객에게 요청하세요. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3942,7 +3943,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
-msgstr "판매 가격"
+msgstr "판매 가격 기준"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
@@ -5086,12 +5087,12 @@ msgstr "웹사이트 대화 이력"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr "회사명을 입력하면 신규 자료를 생성하거나 기존 내용 확인이 가능합니다."
+msgstr "새로 만들거나 추천 내용을 보려면 회사 이름을 입력하세요."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr "배송 전에 청구서를 발행할 수 있습니다."
+msgstr "청구서는 배송 전에 발행할 수 있습니다."
 
 #. module: sale
 #. odoo-python
@@ -5128,8 +5129,7 @@ msgid ""
 "You can set here the communication type that will appear on sales orders.The"
 " communication will be given to the customer when they choose the payment "
 "method."
-msgstr ""
-"판매 주문에 표시될 커뮤니케이션 유형을 여기에서 설정할 수 있습니다. 고객이 결제 방법을 선택할 때 커뮤니케이션 유형이 제공됩니다."
+msgstr "커뮤니케이션 기준을 여기에서 지정하여 판매주문서에 표시합니다. 고객이 결제 방법을 선택하면 커뮤니케이션을 하게 됩니다."
 
 #. module: sale
 #. odoo-javascript
@@ -5177,7 +5177,9 @@ msgstr ""
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
-msgstr "판매 또는 구매하는 모든 품목을 정의해야 합니다. 저장 가능한 품목이든 소모품이든 서비스든 상관 없습니다."
+msgstr ""
+"판매 또는 구매하는 모든 품목을 정의해야 합니다.\n"
+"                저장 가능 품목이나 소모품, 서비스 등이 있습니다. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

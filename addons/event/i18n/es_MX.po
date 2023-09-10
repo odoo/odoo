@@ -282,11 +282,9 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Confirm Attendance\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Botón de confirmar\" "
-"title=\"Confirmar registro\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -309,21 +307,22 @@ msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Ubicación\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
+msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Botón de "
-"asistió \" title=\"Confirmar asistencia\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+"<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"Previous state "
+"button\" title=\"Previous state\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Botón de asistió \" "
-"title=\"Confirmar asistencia\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Previous state button\" "
+"title=\"Previous state\"/>"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -360,11 +359,9 @@ msgstr "<span class=\"text-bg-danger\">Archivado</span>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<span class=\"text-muted\" states=\"done\">Attended</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+"<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
-"<span class=\"text-muted\" states=\"done\">Asistió</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Cancelado</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -3154,6 +3151,11 @@ msgid "Please enter a valid base64 secret"
 msgstr "Introduzca una base64 secreta válida"
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "Previous state"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
 msgstr "Punto de Venta (PdV), Introducción a la personalización de reportes."
@@ -3173,7 +3175,7 @@ msgstr "Gestión de proyectos, recursos humanos, gestión de contratos."
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
 msgstr ""
-"Compras, ventas, gestión de compras y ventas, Contabilidad financiera."
+"Compras, ventas, gestión de compras y ventas, contabilidad financiera."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
@@ -3788,6 +3790,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_attendee_search
 msgid "Ticket"
 msgstr "Ticket"
 

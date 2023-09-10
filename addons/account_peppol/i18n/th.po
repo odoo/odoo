@@ -36,6 +36,9 @@ msgid ""
 "                        The invoice will be sent automatically to PEPPOL\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted mx-3\" attrs=\"{'invisible': [('peppol_move_state', '!=', 'to_send')]}\">\n"
+"                        ใบแจ้งหนี้จะถูกส่งไปยัง PEPPOL โดยอัตโนมัติ\n"
+"                    </span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -44,6 +47,9 @@ msgid ""
 "                                        I want to migrate my Peppol connection to Odoo (optional):\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        ฉันต้องการย้ายการเชื่อมต่อ Peppol ไปยัง Odoo (ไม่บังคับ):\n"
+"                                    </span>"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -63,7 +69,7 @@ msgstr "เปิดใช้งาน"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Application status:"
-msgstr ""
+msgstr "สถานะการสมัคร:"
 
 #. module: account_peppol
 #. odoo-python
@@ -71,38 +77,38 @@ msgstr ""
 #, python-format
 msgid ""
 "Can't cancel an active registration. Please request a migration instead."
-msgstr ""
+msgstr "ไม่สามารถยกเลิกการลงทะเบียนที่ใช้งานอยู่ได้ โปรดส่งคำขอการโยกย้ายแทน"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't cancel registration with this status: %s"
-msgstr ""
+msgstr "ไม่สามารถยกเลิกการลงทะเบียนด้วยสถานะนี้ได้: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't deregister with this status: %s"
-msgstr ""
+msgstr "ไม่สามารถยกเลิกการลงทะเบียนด้วยสถานะนี้ได้: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't migrate registration with this status: %s"
-msgstr ""
+msgstr "ไม่สามารถย้ายการลงทะเบียนด้วยสถานะนี้: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel PEPPOL"
-msgstr ""
+msgstr "ยกเลิก PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Cancel registration"
-msgstr ""
+msgstr "ยกเลิกการลงทะเบียน"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__canceled
@@ -115,20 +121,20 @@ msgstr "ถูกยกเลิก"
 #: code:addons/account_peppol/models/account_move.py:0
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
-msgstr ""
+msgstr "ไม่สามารถยกเลิกรายการที่ส่งไปยัง PEPPOL แล้ว"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Cannot register a user with a %s application"
-msgstr ""
+msgstr "ไม่สามารถลงทะเบียนผู้ใช้ด้วยแอปพลิเคชัน %s "
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Checked on"
-msgstr ""
+msgstr "ตรวจสอบแล้ว"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
@@ -167,21 +173,21 @@ msgstr "ติดต่อ"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid "Contact details were updated."
-msgstr ""
+msgstr "รายละเอียดการติดต่อได้รับการอัปเดตแล้ว"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Contact email and phone number are required."
-msgstr ""
+msgstr "จำเป็นต้องระบุอีเมลติดต่อและหมายเลขโทรศัพท์"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Deregister from Peppol"
-msgstr ""
+msgstr "ยกเลิกการลงทะเบียนจาก Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -191,7 +197,7 @@ msgstr "เสร็จสิ้น"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
-msgstr ""
+msgstr "ผู้ใช้ EDI"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -201,7 +207,7 @@ msgstr "บัตรประจำตัวของ Edi"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__enable_peppol
 msgid "Enable Peppol"
-msgstr ""
+msgstr "เปิดการใช้งาน Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__error
@@ -213,130 +219,130 @@ msgstr "ผิดพลาด"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Error when receiving via Peppol: %s"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดเมื่อรับผ่าน Peppol: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document."
-msgstr ""
+msgstr "ไม่สามารถนำเข้าเอกสาร Peppol ได้"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Failed to import a Peppol document. Sender endpoint: %s"
-msgstr ""
+msgstr "ไม่สามารถนำเข้าเอกสาร Peppol ได้ ผู้ส่งปลายทาง: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I accept that Odoo may process my e-invoices."
-msgstr ""
+msgstr "ฉันยอมรับว่า Odoo อาจประมวลผลใบแจ้งหนี้อิเล็กทรอนิกส์ของฉัน"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
-msgstr ""
+msgstr "สมุดรายวันใบแจ้งหนี้ขาเข้า"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move
 msgid "Journal Entry"
-msgstr "รายการบันทึกประจำวัน"
+msgstr "รายการสมุดรายวัน"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Last Peppol endpoint verification"
-msgstr ""
+msgstr "การตรวจสอบปลายทาง Peppol ครั้งล่าสุด"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Migrate registration to another service"
-msgstr ""
+msgstr "ย้ายการลงทะเบียนไปยังบริการอื่น"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_migration_key
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
-msgstr ""
+msgstr "รหัสการย้ายข้อมูล"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Migration key"
-msgstr ""
+msgstr "รหัสการย้ายข้อมูล"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
-msgstr ""
+msgstr "ยังไม่ได้ลงทะเบียน"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Not valid"
-msgstr ""
+msgstr "ไม่ถูกต้อง"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_verified
 msgid "Not verified"
-msgstr ""
+msgstr "ยังไม่ได้รับการยืนยัน"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Not verified yet"
-msgstr ""
+msgstr "ยังไม่ได้รับการยืนยัน"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Our staff members will first review your request within two working days."
-msgstr ""
+msgstr "เจ้าหน้าที่ของเราจะตรวจสอบคำขอของคุณภายในสองวันทำการ"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "PEPPOL"
-msgstr ""
+msgstr "PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "PEPPOL Electronic Document Invoicing"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้เอกสารอิเล็กทรอนิกส์ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__is_account_peppol_participant
 msgid "PEPPOL Participant"
-msgstr ""
+msgstr "ผู้เข้าร่วม PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "PEPPOL Purchase Journal"
-msgstr ""
+msgstr "สมุดรายวันการจัดซื้อ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_eligible
 msgid "PEPPOL eligible"
-msgstr ""
+msgstr "มีสิทธิ์ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "PEPPOL endpoint validity"
-msgstr ""
+msgstr "ความถูกต้องปลายทาง PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_payment__peppol_message_uuid
 msgid "PEPPOL message ID"
-msgstr ""
+msgstr "รหัสข้อความ PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "PEPPOL state"
-msgstr ""
+msgstr "สถานะ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
@@ -346,22 +352,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
 msgid "PEPPOL status"
-msgstr ""
+msgstr "สถานะ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "PEPPOL: retrieve new documents"
-msgstr ""
+msgstr "PEPPOL: ดึงเอกสารใหม่"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "PEPPOL: update message status"
-msgstr ""
+msgstr "PEPPOL: อัปเดตสถานะข้อความ"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
-msgstr ""
+msgstr "PEPPOL: อัปเดตสถานะผู้เข้าร่วม"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -371,7 +377,7 @@ msgstr "รอดำเนินการ"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol EAS"
-msgstr ""
+msgstr "Peppol EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
@@ -384,21 +390,21 @@ msgstr "จุดสิ้นสุดของ Peppol"
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_attachment_ids
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_attachment_ids
 msgid "Peppol Identification Documents"
-msgstr ""
+msgstr "เอกสารประจำตัวของ Peppol"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully"
-msgstr ""
+msgstr "ได้รับเอกสาร Peppol เรียบร้อยแล้ว"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr ""
+msgstr "ได้รับเอกสาร Peppol เรียบร้อยแล้ว ผู้ส่งปลายทาง: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -410,7 +416,7 @@ msgstr "Peppol e-address (EAS)"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 msgid "Peppol endpoint validity"
-msgstr ""
+msgstr "ความถูกต้องปลายทาง Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -418,14 +424,14 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol error: %s"
-msgstr ""
+msgstr "PEPPOL เกิดข้อผิดพลาด: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol status update: %s"
-msgstr ""
+msgstr "อัปเดตสถานะ Peppol: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -436,21 +442,21 @@ msgstr "หมายเลขโทรศัพท์"
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "Phone number (for validation)"
-msgstr ""
+msgstr "หมายเลขโทรศัพท์ (สำหรับการยืนยัน)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Please do not hesitate to contact our support if you need further "
 "assistance."
-msgstr ""
+msgstr "โปรดติดต่อฝ่ายช่วยเหลือของเรา หากคุณต้องการความช่วยเหลือเพิ่มเติม"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a phone number to verify your application."
-msgstr ""
+msgstr "กรุณากรอกหมายเลขโทรศัพท์เพื่อยืนยันการสมัครของคุณ"
 
 #. module: account_peppol
 #. odoo-python
@@ -461,38 +467,41 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"กรุณากรอกหมายเลขโทรศัพท์ในรูปแบบสากลที่ถูกต้อง\n"
+"เช่น +32123456789 โดยที่ +32 คือรหัสประเทศ\n"
+"ปัจจุบันมีการรองรับเฉพาะประเทศในยุโรปเท่านั้น"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Please fill in the EAS code and the Participant ID code."
-msgstr ""
+msgstr "กรุณากรอกรหัส EAS และรหัสประจำตัวผู้เข้าร่วม"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
-msgstr ""
+msgstr "โปรดตรวจสอบการกำหนดค่าพาร์ทเนอร์ ในการตั้งค่าพาร์ทเนอร์"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Primary contact email"
-msgstr ""
+msgstr "อีเมลสำหรับการติดต่อหลัก"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email for Peppol-related communication"
-msgstr ""
+msgstr "อีเมลสำหรับการติดต่อหลัก เพื่อการสื่อสารที่เกี่ยวข้องกับ Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
 msgid "Processing"
-msgstr ""
+msgstr "กำลังดำเนินการ"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -502,33 +511,33 @@ msgstr "ประเภทพร็อกซี"
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Register as a PEPPOL user"
-msgstr ""
+msgstr "ลงทะเบียนเป็นผู้ใช้ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
 msgid "Rejected"
-msgstr "ปฏิเสธแล้ว"
+msgstr "ถูกปฏิเสธแล้ว"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Retry registration"
-msgstr ""
+msgstr "ลองลงทะเบียนอีกครั้ง"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_verification_code
 msgid "SMS verification code"
-msgstr ""
+msgstr "รหัสยืนยันทาง SMS"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send the invoice via PEPPOL"
-msgstr ""
+msgstr "ส่งใบแจ้งหนี้ผ่าน PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__checkbox_send_peppol
 msgid "Send via PEPPOL"
-msgstr ""
+msgstr "ส่งผ่าน PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -536,20 +545,21 @@ msgid ""
 "Start sending and receiving documents via Peppol as soon as you receive our "
 "email notification."
 msgstr ""
+"เริ่มส่งและรับเอกสารผ่าน Peppol ทันทีที่คุณได้รับการแจ้งเตือนทางอีเมลของเรา"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
-msgstr ""
+msgstr "หมายเลขประจำตัวปลายทาง Peppol ไม่ถูกต้อง"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr ""
+msgstr "เอกสารได้ถูกส่งไปยัง Peppol Access Point เพื่อดำเนินการแล้ว"
 
 #. module: account_peppol
 #. odoo-python
@@ -559,6 +569,8 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
+"หมายเลขปลายทางอาจไม่ถูกต้อง "
+"โปรดตรวจสอบว่าคุณป้อนหมายเลขประจำตัวที่ถูกต้องหรือไม่"
 
 #. module: account_peppol
 #. odoo-python
@@ -569,24 +581,27 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
+"พาร์ทเนอร์ต่อไปนี้ไม่ได้รับการกำหนดค่าอย่างถูกต้องให้รับเอกสาร Peppol "
+"โปรดตรวจสอบและยืนยันปลายทางของ Peppol "
+"และรูปแบบการออกใบแจ้งหนี้อิเล็กทรอนิกส์: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
+msgstr "พาร์ทเนอร์ไม่มี Peppol EAS และ/หรือตัวระบุปลายทาง"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "The partner's EAS code and PEPPOL endpoint are valid"
-msgstr ""
+msgstr "รหัส EAS ของพาร์ทเนอร์และข้อมูลปลายทาง PEPPOL ถูกต้อง"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "The rejection reason has been sent to you via email."
-msgstr ""
+msgstr "เหตุผลในการปฏิเสธได้ถูกส่งถึงคุณทางอีเมลแล้ว"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -598,7 +613,7 @@ msgstr "รหัสเฉพาะที่ระบุผู้ใช้รา
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "The verification code should contain six digits."
-msgstr ""
+msgstr "รหัสยืนยันควรมีตัวเลขหกหลัก"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -620,17 +635,17 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Update contact details"
-msgstr ""
+msgstr "อัปเดตรายละเอียดการติดต่อ"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_participant
 msgid "Use PEPPOL"
-msgstr ""
+msgstr "การใช้งาน PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Use PEPPOL Invoicing"
-msgstr ""
+msgstr "ใช้การออกใบแจ้งหนี้ PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
@@ -642,27 +657,27 @@ msgstr "ถูกต้อง"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Validate registration"
-msgstr ""
+msgstr "ยืนยันการลงทะเบียน"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sent_verification
 msgid "Verification code sent"
-msgstr ""
+msgstr "ส่งรหัสยืนยันแล้ว"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
-msgstr "ตรวจสอบ"
+msgstr "ยืนยัน"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr ""
+msgstr "การยืนยันปลายทาง PEPPOL ของพาร์ทเนอร์"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Verify phone number"
-msgstr ""
+msgstr "ยืนยันหมายเลขโทรศัพท์"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -673,7 +688,7 @@ msgstr "คำเตือน"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "We sent a verification code to"
-msgstr ""
+msgstr "เราได้ส่งรหัสยืนยันไปที่"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -683,26 +698,28 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
+"คุณจะไม่สามารถส่งหรือรับเอกสาร Peppol ใน Odoo ได้อีกต่อไป "
+"คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this phone number"
-msgstr ""
+msgstr "คุณจะได้รับรหัสยืนยันไปยังหมายเลขโทรศัพท์นี้"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol identification is:"
-msgstr ""
+msgstr "ข้อมูลประจำตัว Peppol ของคุณคือ:"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Your confirmation code is"
-msgstr ""
+msgstr "รหัสยืนยันของคุณคือ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
-msgstr ""
+msgstr "รหัสการย้ายข้อมูลของคุณคือ:"

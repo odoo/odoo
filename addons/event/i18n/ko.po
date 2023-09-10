@@ -267,11 +267,9 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Confirm Attendance\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
-"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -292,21 +290,22 @@ msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
+msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
-"button\" title=\"Confirm Attendance\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+"<i class=\"fa fa-undo fa-3x\" role=\"img\" aria-label=\"Previous state "
+"button\" title=\"Previous state\"/>"
 msgstr ""
-"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
-"title=\"Confirm Attendance\"/>"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Previous state button\" "
+"title=\"Previous state\"/>"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -340,11 +339,9 @@ msgstr "<span class=\"text-bg-danger\">보관 처리됨</span>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
-"<span class=\"text-muted\" states=\"done\">Attended</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+"<span class=\"text-muted\" invisible=\"state != 'done'\">Attended</span>\n"
+"                                    <span class=\"text-muted\" invisible=\"state != 'cancel'\">Canceled</span>"
 msgstr ""
-"<span class=\"text-muted\" states=\"done\">참석</span>\n"
-"                                    <span class=\"text-muted\" states=\"cancel\">취소</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -600,18 +597,18 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        안녕하세요<t t-out=\"object.name or 'Guest'\"></t>님,<br>\n"
-"                        다음 행사에 대해 안내드립니다.\n"
+"                        다음 행사 일정에 대해 안내 드립니다.\n"
 "                        <t t-if=\"is_online\">\n"
-"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
+"                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood 컬렉션 온라인 공개</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>\n"
+"                            <strong t-out=\"object.event_id.name or ''\">OpenWood 컬렉션 온라인 공개</strong>\n"
 "                        </t>\n"
-"                        행사가 <strong t-out=\"object.get_date_range_str() or ''\">오늘</strong> 시작됩니다.\n"
+"                        행사가 <strong t-out=\"object.get_date_range_str() or ''\">오늘</strong>부터 시작될 예정입니다.\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br>\n"
-"                        <strong>캘린더에 일정을 추가하세요.</strong>\n"
+"                        <strong>캘린더에 일정을 추가해 주세요.</strong>\n"
 "                        <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"> iCal/Outlook</a>\n"
 "                        <a t-attf-href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss') }}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -620,14 +617,14 @@ msgstr ""
 "                        <br><br>\n"
 "                    </div>\n"
 "                    <div>\n"
-"                        고객님의 등록이 완료되었음을 확인드리며, 행사장에서 만나뵙겠습니다.<br>\n"
+"                        고객님의 등록이 완료되었으며, 곧 행사장에서 만나뵙겠습니다.<br>\n"
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br>\n"
 "                        <t t-if=\"event_organizer\">\n"
 "                            <t t-out=\"event_organizer.name or ''\">YourCompany</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            The <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> Team\n"
+"                            <t t-out=\"object.event_id.name or ''\">OpenWood 컬렉션 온라인 공개</t>팀\n"
 "                        </t>\n"
 "                        </span>\n"
 "                    </div>\n"
@@ -761,7 +758,7 @@ msgstr ""
 "        발신인 <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "        <t t-if=\"'website_url' in object.event_id and object.event_id.website_url\">\n"
 "            <br>\n"
-"            다음을 확인해보세요. <a href=\"/event\" style=\"color:#875A7B;\">전체 이벤트 보기</a>\n"
+"            다음 <a href=\"/event\" style=\"color:#875A7B;\">전체 이벤트 보기</a>를 눌러 자세한 내용을 확인해보세요.\n"
 "        </t>\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -1571,7 +1568,7 @@ msgstr "라이브로 만나 뵙기를 기대합니다!"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
-msgstr "연락"
+msgstr "커뮤니케이션"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -1627,7 +1624,7 @@ msgstr "설정 구성"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -3077,6 +3074,11 @@ msgid "Please enter a valid base64 secret"
 msgstr "유효한 base64 비밀번호를 입력하세요."
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "Previous state"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
 msgstr "POS(Point of Sale), 보고서 사용자 정의 소개."
@@ -3679,6 +3681,7 @@ msgstr "이 단계가 완료되었습니다. 차단하거나 설정하시려면 
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_attendee_search
 msgid "Ticket"
 msgstr "티켓"
 

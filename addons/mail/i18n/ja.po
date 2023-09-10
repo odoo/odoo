@@ -2511,6 +2511,13 @@ msgid "Do you really want to delete this preview?"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+#, python-format
+msgid "Don't show Original Email"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -4226,7 +4233,7 @@ msgstr "画面を共有している"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "many2oneフィールドのIDを滞在秒数にマッピングするJSON"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -4336,7 +4343,7 @@ msgstr "最終閲覧者"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "最終更新日:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__write_uid
@@ -7219,7 +7226,7 @@ msgstr "チャネルを削除せずに非表示にするには、activeをfalse�
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Settings"
-msgstr "設定"
+msgstr "管理設定"
 
 #. module: mail
 #. odoo-javascript
@@ -7272,6 +7279,13 @@ msgstr "フォロワーを表示"
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 #, python-format
 msgid "Show Member List"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+#, python-format
+msgid "Show Original Email"
 msgstr ""
 
 #. module: mail
@@ -7454,7 +7468,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "ステータス時間"
 
 #. module: mail
 #. odoo-javascript
@@ -8026,7 +8040,7 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"このオプションは、Odooデータベースのストレージスペースを維持するために、[設定]の[テクニカル]メニューを含め、送信後に電子メールのトラックを完全に削除します"
+"このオプションは、Odooデータベースのストレージスペースを維持するために、[管理設定]の[テクニカル]メニューを含め、送信後に電子メールのトラックを完全に削除します"
 
 #. module: mail
 #. odoo-javascript
@@ -9650,4 +9664,11 @@ msgstr "週"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
+#, python-format
+msgid "Delete all previews"
 msgstr ""

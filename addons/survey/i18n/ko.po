@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Sarah Park, 2023
 # Daye Jeong, 2023
 # 
 msgid ""
@@ -244,7 +245,7 @@ msgstr ""
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
 "                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    인증서: <t t-out=\"object.survey_id.display_name or ''\">의견서 양식</t>\n"
+"                    인증서: <t t-out=\"object.survey_id.display_name or ''\">피드백 양식</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -2355,7 +2356,7 @@ msgstr "맞다면, 빠진 부분을 설명하고 예를 들어 주십시오."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "If you wish, you can"
-msgstr "원한다면 할 수 있습니다."
+msgstr "답변 내용을 검토하시려면,"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_image
@@ -2709,7 +2710,7 @@ msgstr "방금 제출하신 설문조사를 열어봅시다."
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Likely"
-msgstr "거의"
+msgstr "그렇지 않다"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -4463,7 +4464,7 @@ msgstr "의견을 공유해주셔서 감사합니다. 여러분의 의견을 소
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Thank you!"
-msgstr "감사합니다!"
+msgstr "참여해 주셔서 감사합니다!"
 
 #. module: survey
 #. odoo-python
@@ -5473,7 +5474,7 @@ msgstr "예. 그 누구도 당신만큼 문제를 잘 해결할 수 없습니다
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. Problem Solver"
-msgstr "e.g. 문제 해결사"
+msgstr "예: 문제 해결사"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5534,7 +5535,7 @@ msgstr "페이지"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "review your answers"
-msgstr "귀하의 답변 검토"
+msgstr "여기를 눌러주세요."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired

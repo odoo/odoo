@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Sarah Park, 2023
 # Daye Jeong, 2023
 # 
 msgid ""
@@ -290,7 +291,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        안녕하세요,<br><br>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> 가 귀하에게 <strong t-out=\"object.name or ''\">문서</strong> 를 공유했습니다!\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t>님이 귀하에게 <strong t-out=\"object.name or ''\">문서</strong> 를 공유했습니다!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.website_url\">\n"
 "                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
@@ -2054,7 +2055,7 @@ msgstr "설정 구성"
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_configuration
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
@@ -4309,7 +4310,7 @@ msgstr "알림 없음"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "No Quiz data yet!"
-msgstr "아직 퀴즈 정보가 없습니다!"
+msgstr "아직 퀴즈 데이터가 없습니다!"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
@@ -4339,7 +4340,7 @@ msgstr "검색어와 일치하는 강좌가 없습니다."
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "No data yet!"
-msgstr "아직 정보가 없습니다!"
+msgstr "데이터가 아직 없습니다."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
@@ -5878,7 +5879,7 @@ msgstr "이론"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "There are no comments for now."
-msgstr "현재 의견이 없습니다."
+msgstr "현재 댓글이 없습니다."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -6919,7 +6920,7 @@ msgstr "직접 액세스"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "e.g \"https://drive.google.com/file/...\""
-msgstr "예 \"https://drive.google.com/file/...\""
+msgstr "예: https://drive.google.com/file/..."
 
 #. module: website_slides
 #. odoo-javascript

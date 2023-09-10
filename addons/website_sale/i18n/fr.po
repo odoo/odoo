@@ -3,9 +3,9 @@
 # 	* website_sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Gaetan Vanden Bergh, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1101,7 +1101,7 @@ msgstr "Peut publier"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Can not resequence a video at first position."
-msgstr ""
+msgstr "Impossible de reséquencer une vidéo en première position."
 
 #. module: website_sale
 #. odoo-python
@@ -1231,6 +1231,18 @@ msgstr ""
 "modification."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Il n'est pas autorisé de changer votre nom une fois que des documents ont "
+"été émis pour votre compte. Veuillez nous contacter directement pour "
+"effectuer ce changement."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Checkout Pages"
 msgstr "Pages de paiement"
@@ -1329,7 +1341,10 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "Nom de la société"
 
@@ -2379,7 +2394,7 @@ msgstr "Agencement"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Left"
-msgstr "Restant"
+msgstr "Gauche"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2946,6 +2961,13 @@ msgstr "Système d'ouverture avec une pédale"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Téléphone"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4748,6 +4770,20 @@ msgid ""
 msgstr ""
 "Votre snippet dynamique sera affiché ici...\n"
 "                                Ce message s'affiche parce que vous n'avez pas défini le filtre et le modèle à utiliser."
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Votre email"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Votre nom"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

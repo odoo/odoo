@@ -33,7 +33,7 @@ msgstr " すでに出荷"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -89,7 +89,7 @@ msgstr "活動種別アイコン"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr ""
+msgstr "追加コスト"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -188,12 +188,12 @@ msgstr "諸掛明細"
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
-msgstr "コストの調整項目が一致していません。あなたはおそらく輸送コストを再計算する必要があります。"
+msgstr "コストの調整明細が一致していません。あなたはおそらく輸送コストを再計算する必要があります。"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 msgid "Create Landed Costs"
-msgstr ""
+msgstr "仕入諸掛を作成"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -237,13 +237,13 @@ msgstr "デフォルト仕訳帳"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "デフォルトの分割方法"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "仕入諸掛用に使用される際のデフォルトの分割方法"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -285,6 +285,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"平等: 原価は均等に分配されます。\n"
+"数量ごと: 原価はプロダクトの数量に応じて分割されます。\n"
+"現在の原価ごと: 原価は製品の現在の原価に応じて分割されます。\n"
+"重量ごと: 原価はプロダクトの重量に応じて分割されます。\n"
+"体積ごと: 原価は体積に応じて分割されます。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -350,7 +355,7 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
-msgstr ""
+msgstr "そのプロダクトが仕入諸掛であるかどうかを示します。仕入先請求書を受け取る際、この原価を先行する領収書に割り当てることができます。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -360,7 +365,7 @@ msgstr "フォロー中　"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "仕入諸掛明細か"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -416,7 +421,7 @@ msgstr "仕入諸掛"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "仕入諸掛表示"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -428,7 +433,7 @@ msgstr "仕入諸掛検証済"
 msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
-msgstr ""
+msgstr "仕入諸掛によって追加原価(送料、保険料、関税など)をプロダクト原価に含めることができます。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -452,7 +457,7 @@ msgstr "遅れた活動"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "Lc 仕訳帳"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
@@ -487,7 +492,7 @@ msgstr "新規"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "新しい値"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
@@ -558,7 +563,7 @@ msgstr "製品：%s の在庫経費勘定を設定してください。"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "これらの追加原価が適用される%sを定義して下さい。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -643,7 +648,7 @@ msgstr "在庫仕入諸掛"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "在庫仕入諸掛明細"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -694,7 +699,7 @@ msgstr "一旦検証された仕入諸掛は取り消せません。必要に応
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "評価調整明細"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -734,7 +739,7 @@ msgstr "重量"
 msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
-msgstr ""
+msgstr "選択した%sに仕入諸掛を適用することはできません。仕入諸掛を適用できるのは、先入先出法または平均原価計算法のプロダクトのみです。"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -743,4 +748,4 @@ msgstr ""
 msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
-msgstr ""
+msgstr "そのプロダクトが会計仕訳明細で使用されているため、プロダクトタイプを変更したり、仕入諸掛オプションを無効にしたりすることはできません。"

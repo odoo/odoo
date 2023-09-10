@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,9 +259,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 제품은 재고를 관리하는 품목입니다. 창고 앱이 설치되어 있어야 합니다.\n"
-"소모품은 재고가 관리되지 않는 품목입니다.\n"
-"서비스는 귀하가 제공하는 비물질 품목입니다."
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 재고 관리 앱을 설치해야 사용하실 수 있습니다.\n"
+"소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
+"서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -676,12 +676,12 @@ msgstr "설정 구성"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Configure"
-msgstr "구성"
+msgstr "설정"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -701,7 +701,7 @@ msgstr "소모품"
 msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
-msgstr "소모품 항목은 재고 수준을 관리하지 않는 실제 품목으로서 언제나 사용이 가능한 항목입니다."
+msgstr "소모성 품목은 재고 수준을 관리하지 않는 실제 품목으로서 언제나 사용이 가능한 항목입니다."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1016,7 +1016,7 @@ msgstr "소요시간"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr "다이모"
+msgstr "Dymo 라벨"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1375,7 +1375,7 @@ msgstr "품목 식별을 위한 국제 아티클 번호"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "재고"
+msgstr "재고 관리"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__message_is_follower
@@ -2701,7 +2701,7 @@ msgstr "이것은 모든 속성의 추가 가격의 합입니다"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr "이 노트는 판매 주문 및 청구서에 추가됩니다."
+msgstr "이 내용은 판매주문서 및 청구서에 추가됩니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2817,7 +2817,7 @@ msgstr "단위"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr "상향판매 및 교차판매"
+msgstr "상향 판매 및 교차 판매"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -2867,9 +2867,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"품목 가치 (AVCO에서 자동 계산). \n"
-"          구매 비용을 알 수 없을 때 품목의 가치를 평가하는 데 사용됩니다 (예: 재고 조정). \n"
-"           판매 주문의 마진을 계산하는 데 사용됩니다."
+"상품 가치 (제품 가치)입니다 (AVCO에서 자동 계산). \n"
+"          매입가를 알 수 없을 때 품목에 대한 가치를 평가하기 위해 사용합니다 (예: 재고 조정). \n"
+"           판매주문서에서 마진 계산에 사용합니다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3264,7 +3264,9 @@ msgstr "값에서 관련 파생을 갱신할 수 없습니다. 파생에서 관�
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
-msgstr "판매 또는 구매하는 모든 품목을 정의해야 합니다. 저장 가능한 품목이든 소모품이든 서비스든 상관 없습니다."
+msgstr ""
+"판매 또는 구매하는 모든 품목을 정의해야 합니다.\n"
+"                저장 가능 품목이나 소모품, 서비스 등이 있습니다. "
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3315,12 +3317,12 @@ msgstr "일"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr "예: 치즈버거"
+msgstr "예: 치즈 버거"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr "예 : 등"
+msgstr "예: 전등"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view

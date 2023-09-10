@@ -210,7 +210,7 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
 "%s が関連する明細行が無効な状態に達しました。\n"
-"一貫性を保つために、仕訳項目には常に必ず1つの仮項目がある必要があります。"
+"一貫性を保つために、仕訳明細には常に必ず1つの仮明細がある必要があります。"
 
 #. module: account
 #. odoo-python
@@ -1412,7 +1412,7 @@ msgstr "セクションタイトル"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr "明細書には同一の仕訳帳からの項目のみ記載して下さい。"
+msgstr "明細書には同一の仕訳帳からの明細のみ記載して下さい。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -7279,7 +7279,7 @@ msgstr "貿易条件は、買い手と売り手の間で取引費用と責任を
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "このジャーナル項目は税ラインであることを示します"
+msgstr "このジャーナル明細は税ラインであることを示します"
 
 #. module: account
 #. odoo-javascript
@@ -8431,7 +8431,7 @@ msgstr "ライン"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr "項目 \"%s\"はその親同様にそれ自体を定義します。"
+msgstr "明細 \"%s\"はその親同様にそれ自体を定義します。"
 
 #. module: account
 #. odoo-python
@@ -8440,7 +8440,7 @@ msgstr "項目 \"%s\"はその親同様にそれ自体を定義します。"
 msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
-msgstr "項目 \"%s\" は項目\"%s\"をその親として定義していますが、レポートでは親より前に表示されています。必ず親が初めに来る必要があります。"
+msgstr "明細 \"%s\" は明細\"%s\"をその親として定義していますが、レポートでは親より前に表示されています。必ず親が初めに来る必要があります。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -8605,7 +8605,7 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "手動： Odoo以外の方法で支払を受けます。\n"
-"決済プロバイダー： 各決済プロバイダーにはそれぞれ独自の決済方法があります。オンラインで購入またはサブスクリプション利用する際にパートナーによって保存された決済トークンによって、カード上またはカード宛に取引を要求することができます。\n"
+"決済プロバイダ： 各決済プロバイダにはそれぞれ独自の決済方法があります。オンラインで購入またはサブスクリプション利用する際にパートナーによって保存された決済トークンによって、カード上またはカード宛に取引を要求することができます。\n"
 "バッチ入金： 複数の顧客の小切手を一度に収集し、銀行へのバッチ入金を生成して送信します。会計_バッチ_決済（account_batch_payment）モジュールが必要です。\n"
 "SEPAダイレクトデビット： パートナーから付与された権限により、SEPAゾーンで支払いを受けることができます。会計_SEPA（account_sepa）モジュールが必要です。\n"
 
@@ -11076,6 +11076,13 @@ msgid "Reload"
 msgstr "リロード"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
+" This action is irreversible."
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "仕訳の付番を作り直す"
@@ -11994,7 +12001,7 @@ msgstr "このフィールドを設定すると、行がリンクになり、ク
 #: model:ir.actions.act_window,name:account.action_open_settings
 #: model:ir.ui.menu,name:account.menu_account_config
 msgid "Settings"
-msgstr "設定"
+msgstr "管理設定"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
@@ -13350,7 +13357,7 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
 "ジャーナルエントリ%sがそれに関連する文の行について、無効な状態に達しました。\n"
-"一貫性を保つためには、ジャーナルエントリは常に銀行/現金勘定を含む、正確に1つのジャーナル項目を持っている必要があります。"
+"一貫性を保つためには、ジャーナルエントリは常に銀行/現金勘定を含む、正確に1つのジャーナル明細を持っている必要があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14056,7 +14063,7 @@ msgstr "この仕訳は次の金額を以下に転送します %(destination)s"
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr "この項目は買掛金と売掛金仕訳のために使用されます。この行の支払のための期限の日付を設定することができます。"
+msgstr "この明細は買掛金と売掛金仕訳のために使用されます。この行の支払のための期限の日付を設定することができます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

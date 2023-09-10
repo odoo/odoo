@@ -48,7 +48,7 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 msgid "Applicable Code"
-msgstr "Applicable Code"
+msgstr "รหัสที่ใช้งานได้"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -62,6 +62,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"คำนวณจำนวนภาษีโดยการตั้งค่าตัวแปร 'ผลลัพธ์'\n"
+"\n"
+":param base_amount: ลอยตัว จำนวนเงินจริงที่ใช้ภาษี\n"
+":param price_unit: ลอยตัว\n"
+":param quantity: ลอยตัว\n"
+":param company: res.company ชุดระเบียนซิงเกิลตัน\n"
+":param product: product.product ชุดระเบียนซิงเกิลตัน หรือ ไม่มี\n"
+":param Partner: res.partner ชุดระเบียนซิงเกิลตัน หรือ ไม่มี"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -74,6 +82,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"ตรวจสอบว่าภาษีจะถูกนำไปใช้โดยการตั้งค่าตัวแปร 'ผลลัพธ์' เป็น True หรือ False\n"
+"\n"
+":param price_unit: ลอยตัว\n"
+":param quantity: ลอยตัว\n"
+":param company: res.company ชุดระเบียนซิงเกิลตัน\n"
+":param product: product.product ชุดระเบียนซิงเกิลตัน หรือ ไม่มี\n"
+":param Partner: res.partner ชุดระเบียนซิงเกิลตัน หรือ ไม่มี"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
@@ -89,7 +104,7 @@ msgstr "ภาษี"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 msgid "Tax Computation"
-msgstr "การคำนวนวันครบกำหนด"
+msgstr "การคำนวณภาษี"
 
 #. module: account_tax_python
 #. odoo-python
@@ -101,3 +116,6 @@ msgid ""
 "\n"
 "Error : %s"
 msgstr ""
+"คุณป้อนรหัส %r ไม่ถูกต้องในภาษี %r\n"
+"\n"
+"เกิดข้อผิดพลาด : %s"

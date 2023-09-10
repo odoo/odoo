@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Sarah Park, 2023
 # Daye Jeong, 2023
 # 
 msgid ""
@@ -135,7 +136,7 @@ msgstr "새 장비 추가"
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
-msgstr "새 장비 범주 추가"
+msgstr "새 장비 카테고리 추가"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
@@ -306,7 +307,7 @@ msgstr "컴퓨터"
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__corrective
@@ -366,7 +367,7 @@ msgstr "현황판"
 msgid ""
 "Date at which the equipment became effective. This date will be used to "
 "compute the Mean Time Between Failure."
-msgstr "장비가 작동한 날짜입니다. 이 날짜는 실패 사이의 평균 시간을 계산하는 데 사용됩니다."
+msgstr "장비가 가동된 날짜입니다. 이 날짜는 평균 장애 간격 시간을 계산하는 데 사용됩니다."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
@@ -429,7 +430,7 @@ msgstr "완료"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__duration
 msgid "Duration"
-msgstr "소요시간"
+msgstr "소요 시간"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__duration
@@ -457,7 +458,7 @@ msgstr "이메일 별칭"
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
-msgstr "이 장비 범주의 이메일 별칭입니다. 새 이메일은 이 범주에서   자동으로 새 장비를 생성합니다."
+msgstr "이 장비 카테고리의 이메일 별칭입니다. 새 이메일은 해당 카테고리에서 자동으로 새 장비를 생성합니다."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -490,12 +491,12 @@ msgstr "장비 할당됨"
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr "장비 범주"
+msgstr "장비 카테고리"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__category_id
 msgid "Equipment Category"
-msgstr "장비 범주"
+msgstr "장비 카테고리"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
@@ -527,7 +528,7 @@ msgstr "유지보수 절차에서 접기"
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid ""
 "Follow the process of the request and communicate with the collaborator."
-msgstr "요청 절차를 따르고 공동 작업자와 의견을 교환하십시오."
+msgstr "유지보수 요청과 관련된 절차에 따르며 공동 작업자와 의견을 교환합니다."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
@@ -649,7 +650,7 @@ msgstr "진행 중"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
 msgid "Internal Maintenance"
-msgstr "자체 유지보수"
+msgstr "유지보수"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -720,7 +721,7 @@ msgstr "유지보수"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_request_calendar
 msgid "Maintenance Calendar"
-msgstr "유지보수 일정표"
+msgstr "유지보수 일정"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_count
@@ -747,7 +748,7 @@ msgstr "유지보수 장비"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
-msgstr "유지보수 장비 범주"
+msgstr "유지보수 장비 카테고리"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -1180,7 +1181,7 @@ msgstr "예약됨"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_date
 msgid "Scheduled Date"
-msgstr "계획된 날짜"
+msgstr "예정일"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -1359,7 +1360,7 @@ msgid ""
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
 "장비를 추적하고 직원 또는 부서에 연결합니다.\n"
-"                    장비의 할당, 문제 및 유지 관리를 할 수 있습니다."
+"                    장비의 할당, 관련 이슈 추적 및 유지보수 관리가 가능합니다."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration

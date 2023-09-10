@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "コンフィグ設定"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Online payment method"
-msgstr ""
+msgstr "オンライン決済方法"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -50,7 +51,7 @@ msgstr "お支払い"
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "レジで払う"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -70,7 +71,7 @@ msgstr "POSオーダ"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Select a payment method"
-msgstr ""
+msgstr "決済方法を選択"
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -79,28 +80,28 @@ msgstr ""
 msgid ""
 "The POS self-order mode with payment after each order requires an online "
 "payment method to be configured."
-msgstr ""
+msgstr "POSセルフオーダモードで、各オーダ後に支払いを行うには、オンライン決済方法を設定する必要があります。"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "現在のオーダは決済できません（既に支払済かもしれません）"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order is invalid."
-msgstr ""
+msgstr "現在のオーダは無効です"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
-msgstr ""
+msgstr "顧客がオンラインでセルフオーダを支払う際に使用するオンライン決済方法。"
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -111,15 +112,17 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"POSコンフィグでセルフオーダに使用されるオンライン決済方法には、そのPOSコンフィグの通貨をサポートする公開決済プロバイダーが少なくとも 1 "
+"つ必要です。"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The order could not be saved, therefore its payment is unavailable."
-msgstr ""
+msgstr "オーダが保存されなかったため、決済することができません。"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "セルフオーダオンライン支払を使用する"

@@ -3,7 +3,6 @@
 # 	* website_forum
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Tony Ng, 2023
 # 
@@ -26,7 +25,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flag"
-msgstr ""
+msgstr "標幟"
 
 #. module: website_forum
 #. odoo-javascript
@@ -34,29 +33,29 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flagged"
-msgstr ""
+msgstr "已標幟"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "# Answers"
-msgstr "# 答案"
+msgstr "回覆總數"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_favorites
 msgid "# Favorites"
-msgstr "# 最愛"
+msgstr "最愛總數"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
 msgid "# Posts"
-msgstr "# 貼文"
+msgstr "帖文總數"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "# Views"
-msgstr "#視圖"
+msgstr "瀏覽次數"
 
 #. module: website_forum
 #. odoo-python
@@ -126,7 +125,7 @@ msgstr "建立新問題需要 %d 活躍點數。"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to delete a comment."
-msgstr ""
+msgstr "刪除評論需要 %d 活躍點數。"
 
 #. module: website_forum
 #. odoo-python
@@ -140,7 +139,7 @@ msgstr "刪除或重新啟動貼文需要 %d 活躍點數。"
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to downvote."
-msgstr "需要有%d 活躍點才可拒絕投票。"
+msgstr "需要有%d 活躍點才可給予負評。"
 
 #. module: website_forum
 #. odoo-python
@@ -165,7 +164,7 @@ msgstr "舉報貼文需要 %d 活躍點數。"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to mark a post as offensive."
-msgstr "需要有%d 活躍點才可標記貼文為具攻擊性。"
+msgstr "需要有%d 活躍點數才可標記貼文為冒犯內容。"
 
 #. module: website_forum
 #. odoo-python
@@ -247,6 +246,8 @@ msgid ""
 "<b class=\"d-block \">This answer has been flagged</b>\n"
 "                            As a moderator, you can either validate or reject this answer."
 msgstr ""
+"<b class=\"d-block \">此回覆已被標幟</b>\n"
+"                            作為版主，你可以批准或拒絕此回覆。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -271,7 +272,7 @@ msgstr "<b>回答不應該添加或擴展問題。</b>而是應編輯問題或�
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead, either edit the "
 "question or add a comment."
-msgstr ""
+msgstr "<b>答案不應添加或擴展問題 </b>。 相反，可選擇編輯問題或添加評論。"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -370,27 +371,29 @@ msgid ""
 "<b>|</b>\n"
 "                    <span class=\"fa fa-trophy o-text-gold ms-2\" role=\"img\" aria-label=\"Gold badge\" title=\"Gold badge\"/>"
 msgstr ""
+"<b>|</b>\n"
+"                    <span class=\"fa fa-trophy o-text-gold ms-2\" role=\"img\" aria-label=\"金獎章\" title=\"金獎章\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<br/>by"
-msgstr "<br/>by"
+msgstr "<br/>由"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid ""
 "<font style=\"font-size: 62px; font-weight: bold;\">Community Forums</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px; font-weight: bold;\">社群討論主題</font>"
 
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "<font style=\"font-size: 62px; font-weight: bold;\">Welcome!</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px; font-weight: bold;\">歡迎！</font>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "<i class=\"fa fa-bug me-1\"/>Filter Tool"
-msgstr ""
+msgstr "<i class=\"fa fa-bug me-1\"/> 篩選工具"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
@@ -398,6 +401,8 @@ msgid ""
 "<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"Downvote\"/>"
 msgstr ""
+"<i class=\"fa fa-caret-down\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"負評\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
@@ -405,38 +410,40 @@ msgid ""
 "<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"Upvote\"/>"
 msgstr ""
+"<i class=\"fa fa-caret-up\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"正評\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/> 接納"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid ""
 "<i class=\"fa fa-check fa-fw me-1\"/>Be less specific in your wording for a "
 "wider search result."
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/> 為了獲得更廣泛的搜尋結果，搜尋關鍵字不用太過具體。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Check your spelling and try again."
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/> 請檢查拼寫，然後再試。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Try searching for one or two words."
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/> 嘗試只搜尋一兩個單詞。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "<i class=\"fa fa-check me-1\"/>Solved"
-msgstr ""
+msgstr "<i class=\"fa fa-check me-1\"/> 已解決"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "<i class=\"fa fa-check\"/> Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> 接納"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -447,12 +454,12 @@ msgstr "<i class=\"fa fa-check\"/>如何配置TPS和TVQ的加拿大稅？</i>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-check\"/><span class=\"ms-2\">Accept</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/><span class=\"ms-2\">接納</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments-o me-1\" title=\"討論\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
@@ -460,21 +467,23 @@ msgid ""
 "<i class=\"fa fa-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"More\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"更多⋯\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye me-1\" title=\"瀏覽次數\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-flag\"/> Country"
-msgstr "<i class=\"fa fa-flag\"/>國家"
+msgstr "<i class=\"fa fa-flag\"/> 國家/地區"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.follow
 msgid "<i class=\"fa fa-fw fa-check me-1\"/>Following"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check me-1\"/> 關注中"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
@@ -485,12 +494,12 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"網站\"/>"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_mobile
 msgid "<i class=\"fa fa-info-circle fa-fw\"/> About this forum"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle fa-fw\"/> 關於此討論區"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "<i class=\"fa fa-lightbulb-o\"/> Tip: consider adding an example."
-msgstr ""
+msgstr "<i class=\"fa fa-lightbulb-o\"/> 提示：考慮加入一個例子。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -507,12 +516,14 @@ msgid ""
 "<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
 "                0"
 msgstr ""
+"<i class=\"fa fa-reply me-1 d-lg-none\"/>\n"
+"                0"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "<i class=\"fa fa-reply me-1\"/>Answer"
-msgstr ""
+msgstr "<i class=\"fa fa-reply me-1\"/> 答案"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -520,11 +531,13 @@ msgid ""
 "<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"Share\"/>"
 msgstr ""
+"<i class=\"fa fa-share-alt\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"分享\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "<i class=\"fa fa-shield fa-fw opacity-50\"/> Badges"
-msgstr ""
+msgstr "<i class=\"fa fa-shield fa-fw opacity-50\"/> 獎章"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -532,6 +545,8 @@ msgid ""
 "<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
 "label=\"Negative votes\" title=\"Negative votes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
+"label=\"負評數目\" title=\"負評數目\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -539,13 +554,13 @@ msgid ""
 "<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
 " votes\" title=\"Positive votes\"/>"
 msgstr ""
-"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"Positive"
-" votes\" title=\"Positive votes\"/>"
+"<i class=\"fa fa-thumbs-up text-success\" role=\"img\" aria-label=\"正評數目\" "
+"title=\"正評數目\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times fa-fw me-1\"/> 拒絕"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -563,12 +578,12 @@ msgstr "<i class=\"fa fa-times\"/> 拒絕"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Offensive</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">冒犯言論</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-times\"/><span class=\"ms-2\">Reject</span>"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/><span class=\"ms-2\">拒絕</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -578,39 +593,39 @@ msgstr "<i class=\"fa fa-user\"/>用戶"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "<i class=\"fa fa-users fa-fw opacity-50\"/> People"
-msgstr ""
+msgstr "<i class=\"fa fa-users fa-fw opacity-50\"/> 人"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<i class=\"oi oi-arrow-right d-inline-block\"/> Go to Forums"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right d-inline-block\"/> 前往討論區"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
 msgid ""
 "<i class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
 "list"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right display-inline-block\"/> 返回問題列表"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to All Posts"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left me-2\"/> 返回所有帖文"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
 msgid "<i class=\"oi oi-chevron-left small\"/> Back"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left small\"/> 返回"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<small class=\"fw-bold\">Votes</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">正負評</small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "<small>View all</small>"
-msgstr ""
+msgstr "<small>查看所有</small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -618,6 +633,8 @@ msgid ""
 "<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-"
 "label=\"Bronze badge\" title=\"Bronze badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy o-text-bronze ms-2\" role=\"img\" aria-"
+"label=\"銅獎章\" title=\"銅獎章\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -625,6 +642,8 @@ msgid ""
 "<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-"
 "label=\"Silver badge\" title=\"Silver badge\"/>"
 msgstr ""
+"<span class=\"fa fa-trophy o-text-silver ms-2\" role=\"img\" aria-"
+"label=\"銀獎章\" title=\"銀獎章\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -632,6 +651,8 @@ msgid ""
 "<span class=\"form-text d-inline small text-muted\"><i class=\"fa fa-"
 "lightbulb-o\"/> Tip: consider adding an example. </span>"
 msgstr ""
+"<span class=\"form-text d-inline small text-muted\"><i class=\"fa fa-"
+"lightbulb-o\"/> 提示：考慮加入一個例子。 </span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -642,7 +663,7 @@ msgstr "<span class=\"o_stat_text\">最愛</span>"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "<span class=\"o_stat_text\">Go to <br/>Website</span>"
-msgstr "<span class=\"o_stat_text\">來去<br/>網站</span>"
+msgstr "<span class=\"o_stat_text\">前往<br/>網站</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -652,24 +673,24 @@ msgstr "<span class=\"o_stat_text\">貼文</span>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_activities
 msgid "<span class=\"text-muted\">There is no activity yet.</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">目前未有任何活動。</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>Be the first to answer this question</span>"
-msgstr ""
+msgstr "<span>搶先回答此問題</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<span>Please wait for a moderator to validate your previous post to be "
 "allowed to reply to questions.</span>"
-msgstr ""
+msgstr "<span>請等待版主批核你之前的帖子，之後你才可回覆問題。</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
 msgid "<span>You need to be registered to interact with the community.</span>"
-msgstr ""
+msgstr "<span>只限註冊用戶才可與社群互動。</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -702,7 +723,7 @@ msgstr "接受的答案"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Accepted answer removed"
-msgstr ""
+msgstr "獲接納答案已刪除"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accept
@@ -744,12 +765,12 @@ msgstr "活動"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Actually, there are no posts in this forum yet."
-msgstr ""
+msgstr "其實，討論區尚未有帖文。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Add a comment"
-msgstr ""
+msgstr "新增評論"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -776,7 +797,7 @@ msgstr "所有主題"
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "Answer %s"
-msgstr ""
+msgstr "答案 %s"
 
 #. module: website_forum
 #. odoo-python
@@ -800,7 +821,7 @@ msgstr "回答被15個以上的人接受"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
 msgid "Answer downvoted"
-msgstr "答案被投反對票"
+msgstr "被負評答案"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_flagged
@@ -840,7 +861,7 @@ msgstr "回答被3個或以上的人投票接受"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Answer:"
-msgstr ""
+msgstr "答案:"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__child_count_desc
@@ -860,7 +881,7 @@ msgstr "回答者"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid "Answered on"
-msgstr ""
+msgstr "回答時間"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_8
@@ -892,21 +913,21 @@ msgstr "已封存"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "As a moderator, you can either validate or reject this answer."
-msgstr ""
+msgstr "作為版主，你可批准或拒絕此答案。"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Ask a new question"
-msgstr ""
+msgstr "提問新問題"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Ask a question"
-msgstr ""
+msgstr "提問"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_ask
@@ -946,7 +967,7 @@ msgstr "提出一個問題並得到至少一個投票"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__create_date
 msgid "Asked on"
-msgstr "問"
+msgstr "提問時間"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_new
@@ -1002,14 +1023,14 @@ msgstr "回到問題"
 #: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Bad \"filters\" value \"%(filters)s\"."
-msgstr ""
+msgstr "filters 篩選值「%(filters)s」不當。"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Bad \"tag_char\" value \"%(tag_char)s\""
-msgstr ""
+msgstr "tag_char 的值「%(tag_char)s」不當。"
 
 #. module: website_forum
 #. odoo-python
@@ -1017,12 +1038,12 @@ msgstr ""
 #: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Bad Request"
-msgstr "壞的請求"
+msgstr "無效請求"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_badges
 msgid "Badges"
-msgstr "成就"
+msgstr "獎章"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__basic
@@ -1032,7 +1053,7 @@ msgstr "基礎的"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Best Answer"
-msgstr ""
+msgstr "最佳答案"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1079,7 +1100,7 @@ msgstr "可以轉變為評論"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_downvote
 msgid "Can Downvote"
-msgstr "可以反對"
+msgstr "可以負評"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_edit
@@ -1109,7 +1130,7 @@ msgstr "可以支援"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_use_full_editor
 msgid "Can Use Full Editor"
-msgstr ""
+msgstr "可使用全功能編輯工具"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
@@ -1124,7 +1145,7 @@ msgstr "改變問題標籤"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Checked boxes"
-msgstr ""
+msgstr "已選方格"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -1196,7 +1217,7 @@ msgstr "已關閉"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Closed Posts"
-msgstr ""
+msgstr "已關閉帖文"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
@@ -1236,14 +1257,14 @@ msgstr "評論自己的貼文"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Comment this post"
-msgstr ""
+msgstr "評論此帖文"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
 #: model:gamification.challenge,name:website_forum.challenge_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr "評論員"
+msgstr "評論者"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
@@ -1254,12 +1275,12 @@ msgstr "完成自己的傳記"
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 #: model_terms:gamification.badge,description:website_forum.badge_p_1
 msgid "Completed own biography"
-msgstr "完成自己的傳記"
+msgstr "已完成自己的傳記"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "Contains offensive or malicious remarks"
-msgstr "包含攻擊性或惡意的言論"
+msgstr "包含冒犯、攻擊性或惡意言論"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__content
@@ -1285,7 +1306,7 @@ msgstr "轉換自己的回答到評論，反之亦然"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Convert to answer"
-msgstr ""
+msgstr "轉換為答案"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_correct
@@ -1411,7 +1432,7 @@ msgstr "刪除自己的貼文"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Delete the accepted answer"
-msgstr ""
+msgstr "刪除已接納答案"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -1421,7 +1442,7 @@ msgstr "已刪除"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_23
 msgid "Deleted own post with 3 or more downvotes"
-msgstr "刪除自己的被投3次以上反對票的貼子"
+msgstr "已刪除自己被負評 3 次或以上帖文"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_6
@@ -1473,7 +1494,7 @@ msgstr "解除"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Dismiss message"
-msgstr ""
+msgstr "知道了"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
@@ -1493,14 +1514,14 @@ msgstr "顯示使用者詳細的自傳"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
 #: model_terms:ir.ui.view,arch_db:website_forum.vote
 msgid "Downvote"
-msgstr "反對"
+msgstr "負評"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Downvote for posting offensive contents"
-msgstr ""
+msgstr "對冒犯內容給予負評"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -1563,6 +1584,8 @@ msgid ""
 "Example\n"
 "                            <i class=\"fa fa-question-circle\"/>"
 msgstr ""
+"例子\n"
+"                            <i class=\"fa fa-question-circle\"/>"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1574,7 +1597,7 @@ msgstr "熱門問題"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__favourite_count
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Favorite"
-msgstr "喜好的"
+msgstr "最愛"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
@@ -1617,12 +1640,12 @@ msgstr "最愛"
 msgid ""
 "Field to keep track of a post's last activity. Updated whenever it is "
 "replied to, or when a comment is added on the post or one of its replies."
-msgstr ""
+msgstr "用於追蹤帖文最新活動的欄位。每當有新回覆，或對帖文或任何回覆加入評論，便會更新。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Filter by:"
-msgstr "篩選依："
+msgstr "篩選依據："
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_post_vote
@@ -1632,7 +1655,7 @@ msgstr "第一個相關參數"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_5
 msgid "First downvote"
-msgstr "第一個反對"
+msgstr "首個負評"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_7
@@ -1680,7 +1703,7 @@ msgstr "關注的問題"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Followed Tags"
-msgstr ""
+msgstr "關注的標籤"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_follower_ids
@@ -1707,6 +1730,8 @@ msgid ""
 "accumulated for a question or answer per day. The table given at the end "
 "explains reputation point requirements for each type of moderation task."
 msgstr ""
+"舉例，如果你提出一個有趣的問題，或提供了有用的答案，你發佈的內容會被正評。相反，若答案有誤導性，它將會被負評。每個正評當作 10 分計算，每個負評會扣 "
+"2 分。在同一天內，一個問題或答案最多可以累積 200 分。有關各類版主審批權限的最低信譽積分要求，請見文末列表。"
 
 #. module: website_forum
 #. odoo-python
@@ -1730,7 +1755,7 @@ msgstr "討論區"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_website__forum_count
 msgid "Forum Count"
-msgstr ""
+msgstr "討論區數目"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
@@ -1741,12 +1766,12 @@ msgstr "論壇模式"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "Forum Name"
-msgstr "論壇名字"
+msgstr "討論區名稱"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Forum Page"
-msgstr ""
+msgstr "討論區頁面"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -1757,7 +1782,7 @@ msgstr "論壇貼文"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action
 msgid "Forum Post Pages"
-msgstr ""
+msgstr "討論區帖文頁面"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_pages
@@ -1785,12 +1810,12 @@ msgstr "遊戲化挑戰"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.follow
 msgid "Get notified when there's activity on this post"
-msgstr ""
+msgstr "此帖文有活動時，接收通知"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.follow
 msgid "Get notified when this tag is used"
-msgstr ""
+msgstr "有人使用此標籤時，接收通知"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1802,12 +1827,12 @@ msgstr "給出你的貼文主題。"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Go back to the list of"
-msgstr ""
+msgstr "返回列表："
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Go enjoy a cup of coffee."
-msgstr ""
+msgstr "(沒有結果)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -1890,7 +1915,7 @@ msgstr "有訊息"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_pending_post
 msgid "Has pending post"
-msgstr ""
+msgstr "有帖文待處理"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
@@ -1933,7 +1958,7 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
 msgid ""
 "If the author has not enough karma, a nofollow attribute is added to links"
-msgstr "如果作者沒有足夠的貢獻點數，一個nofollow屬性添加到連結"
+msgstr "如果作者沒有足夠的貢獻點數，他的連結會加入 nofollow 屬性。"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1984,22 +2009,22 @@ msgstr "圖片"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_1024
 msgid "Image 1024"
-msgstr "畫素 1024"
+msgstr "圖像 1024"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_128
 msgid "Image 128"
-msgstr "畫素 128"
+msgstr "圖像 128"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_256
 msgid "Image 256"
-msgstr "畫素 256"
+msgstr "圖像 256"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__image_512
 msgid "Image 512"
-msgstr "畫素 512"
+msgstr "圖像 512"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
@@ -2033,7 +2058,7 @@ msgstr "是關注人"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_moderate
 msgid "Is a moderator"
-msgstr ""
+msgstr "是版主"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
@@ -2131,7 +2156,7 @@ msgstr "最後更新於"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__last_activity_date
 msgid "Last activity on"
-msgstr ""
+msgstr "最後活動於"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
@@ -2146,7 +2171,7 @@ msgstr "保留10個10分以上的回答"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_url
 msgid "Link to questions with the tag"
-msgstr ""
+msgstr "前往附有此標籤的其他問題的連結"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
@@ -2161,13 +2186,13 @@ msgstr "標記為最佳答案"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Mark as Offensive"
-msgstr ""
+msgstr "標記為冒犯內容"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as offensive"
-msgstr "標記為具有攻擊性"
+msgstr "標記為冒犯內容"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2177,12 +2202,12 @@ msgstr "標示為垃圾訊息"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid "Meet our community members"
-msgstr ""
+msgstr "認識我們的社群成員"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__menu_id
 msgid "Menu"
-msgstr "功能表"
+msgstr "選單"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -2227,7 +2252,7 @@ msgstr "此外："
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Most Used Tags"
-msgstr ""
+msgstr "最常用標籤"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__vote_count_desc
@@ -2237,12 +2262,12 @@ msgstr "最多投票的"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Most used Tags"
-msgstr ""
+msgstr "最常用標籤"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_most_used_ids
 msgid "Most used tags"
-msgstr ""
+msgstr "最常用標籤"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2273,7 +2298,7 @@ msgstr "名稱"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 msgid "Negative vote"
-msgstr "負數問卷調查"
+msgstr "負評"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
@@ -2329,12 +2354,12 @@ msgstr "還沒有可用的論壇。"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
 msgid "No posts yet"
-msgstr ""
+msgstr "未有帖文"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
 msgid "Nofollow links"
-msgstr "不能跟貼的連結"
+msgstr "「nofollow」連結"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
@@ -2407,19 +2432,19 @@ msgstr "離題或不相關"
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
-msgstr "攻擊性"
+msgstr "冒犯"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Offensive Post"
-msgstr "具有攻擊性的貼文"
+msgstr "冒犯帖文"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive Posts"
-msgstr ""
+msgstr "冒犯帖文"
 
 #. module: website_forum
 #. odoo-javascript
@@ -2431,7 +2456,7 @@ msgstr "平均,"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Oops!"
-msgstr ""
+msgstr "哎唷!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -2487,7 +2512,7 @@ msgstr "熱門問題(500)"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 msgid "Positive vote"
-msgstr "積極投票"
+msgstr "正評"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
@@ -2508,17 +2533,17 @@ msgstr "發佈回答"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reason_action
 msgid "Post Close Reason"
-msgstr ""
+msgstr "帖文關閉理由"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr "貼文關閉理由"
+msgstr "帖文關閉理由"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Post Count"
-msgstr ""
+msgstr "帖文數目"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -2535,19 +2560,19 @@ msgstr "提交您的問題"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Post is closed and marked as offensive content"
-msgstr ""
+msgstr "帖文已關閉，並標記為冒犯內容"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Post is closed and marked as spam"
-msgstr ""
+msgstr "帖文已關閉，並標記為垃圾內容"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Post:"
-msgstr "張貼："
+msgstr "有關帖文:"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_p_2
@@ -2628,7 +2653,7 @@ msgstr "提問"
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "Question %s"
-msgstr ""
+msgstr "問題 %s"
 
 #. module: website_forum
 #. odoo-python
@@ -2642,7 +2667,7 @@ msgstr "問題編輯"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
 msgid "Question downvoted"
-msgstr "反對的問題"
+msgstr "被負評問題"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2694,7 +2719,7 @@ msgstr "問題被支援6次"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Question:"
-msgstr ""
+msgstr "問題:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -2774,25 +2799,25 @@ msgstr "一個回答在第一次至少收到3個支援"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Refuse"
-msgstr "退回"
+msgstr "拒絕"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__relevancy_desc
 msgid "Relevance"
-msgstr "關聯"
+msgstr "相關度"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Relevance Computation"
-msgstr "相關計算"
+msgstr "相關度計算"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Remove validated answer"
-msgstr ""
+msgstr "移除已批准答案"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2806,7 +2831,7 @@ msgstr "重新打開"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Reopen a banned question"
-msgstr ""
+msgstr "重開已封禁問題"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2840,12 +2865,12 @@ msgstr "限制發佈到此網站."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the forum"
-msgstr ""
+msgstr "回到討論區"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__moderator_id
 msgid "Reviewed by"
-msgstr "被審閱"
+msgstr "審閱者"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__is_seo_optimized
@@ -2893,7 +2918,7 @@ msgstr "第二關聯參數"
 #: code:addons/website_forum/models/res_users.py:0
 #, python-format
 msgid "See our Forum"
-msgstr ""
+msgstr "看看我們的討論區"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -2937,7 +2962,7 @@ msgstr "序列號"
 msgid ""
 "Share and discuss the best content and new marketing ideas, build your "
 "professional profile and become a better marketer together."
-msgstr ""
+msgstr "分享和討論最好的內容及新的營銷理念，建立你的專業個人檔案，一起成為更好的營銷人員。"
 
 #. module: website_forum
 #. odoo-javascript
@@ -2953,17 +2978,17 @@ msgstr "分享此內容以增加您在頭版的機會，並且吸引更多的訪
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 #, python-format
 msgid "Share this post on social networks."
-msgstr ""
+msgstr "在社交網絡分享帖文。"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
 msgid "Sharing Options"
-msgstr "共享選項"
+msgstr "分享選項"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "Show Tags Starting with"
-msgstr ""
+msgstr "顯示以下字首的標籤："
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -3007,7 +3032,7 @@ msgstr "對不起，您必須登入後標記一個貼文"
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answers."
-msgstr ""
+msgstr "對不起，匿名用戶不可挑選和設定正確答案。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -3017,7 +3042,7 @@ msgstr "對不起，這個問題失效了。"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Sorry, we could not find any"
-msgstr ""
+msgstr "對不起，找不到任何"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3030,17 +3055,17 @@ msgstr "對不起，您不能給自己的貼文投票"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Spam all post"
-msgstr ""
+msgstr "標記所有帖文為垃圾內容"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "Spam or advertising"
-msgstr "垃圾郵件或廣告"
+msgstr "垃圾內容或廣告"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "Start by creating a post"
-msgstr ""
+msgstr "你可先建立一個帖文"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -3100,7 +3125,7 @@ msgstr "標籤"
 msgid ""
 "Tap into the collective knowledge of our community by asking your questions "
 "in our forums,<br/> where helpful members are ready to assist you."
-msgstr ""
+msgstr "在我們的討論區提問，發掘社群成員的集體知識。<br/>討論區內樂於助人的成員，隨時準備好為你提供協助。"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -3133,7 +3158,7 @@ msgstr "謝謝張貼！"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "The accepted answer is deleted"
-msgstr ""
+msgstr "獲採納答案已被刪除"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3152,22 +3177,22 @@ msgstr "問題已關閉"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "There are no answers yet"
-msgstr ""
+msgstr "未有任何答案"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "There are no tags being used in this forum."
-msgstr ""
+msgstr "此討論區目前未有使用任何標籤。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "There are no tags matching the selected filter"
-msgstr ""
+msgstr "找不到符合指定篩選條件的標籤。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "There are no tags matching the selected search."
-msgstr ""
+msgstr "找不到符合指定搜尋條件的標籤。"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3228,7 +3253,7 @@ msgstr "這個貼文已經被標示"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "This post is awaiting validation"
-msgstr ""
+msgstr "此帖文正待審批"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3236,21 +3261,23 @@ msgid ""
 "This post is currently awaiting moderation and is not published yet.<br/>\n"
 "                    As a moderator you can either <b>Accept</b> or <b>Reject</b> this post."
 msgstr ""
+"帖文目前正等待審批，尚未公開發佈。<br/>\n"
+"                    作為版主，你可選擇「<b>批准</b>」或「<b>拒絕</b>」此帖文。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "This question has been flagged"
-msgstr ""
+msgstr "此問題已被標幟"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "This user hasn't answered any questions yet. <br/>"
-msgstr ""
+msgstr "此用戶尚未回答任何問題。<br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "This user hasn't posted any questions yet.<br/>"
-msgstr ""
+msgstr "此用戶尚未提問任何問題。<br/>"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3262,7 +3289,7 @@ msgstr "威脅性語言"
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Title"
-msgstr "稱謂"
+msgstr "標題"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3314,18 +3341,18 @@ msgstr "帶有按鈕組的工具欄"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "Total Answers"
-msgstr "總答數"
+msgstr "答案總數"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
 msgid "Total Posts"
-msgstr ""
+msgstr "帖文總數"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "Total Views"
-msgstr "總瀏覽"
+msgstr "總瀏覽次數"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
@@ -3375,17 +3402,17 @@ msgstr "未解決"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
 msgid "Unused Tags"
-msgstr ""
+msgstr "未用的標籤"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__tag_unused_ids
 msgid "Unused tags"
-msgstr ""
+msgstr "未用的標籤"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
 msgid "Updated by"
-msgstr "更新"
+msgstr "更新者"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
@@ -3434,7 +3461,7 @@ msgstr "使用者"
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "User answer accepted"
-msgstr ""
+msgstr "用戶答案已獲採納"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action_favorites
@@ -3446,19 +3473,19 @@ msgstr "用戶最喜歡的貼文"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
-msgstr "核實"
+msgstr "批准"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Validate an answer"
-msgstr ""
+msgstr "批准答案"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr "驗證問題"
+msgstr "批准問題"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_stats
@@ -3468,14 +3495,14 @@ msgstr "檢視"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "View my answer <i class=\"oi oi-arrow-right ms-1\"/>"
-msgstr ""
+msgstr "查看我的答案 <i class=\"oi oi-arrow-right ms-1\"/>"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__views
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #: model_terms:ir.ui.view,arch_db:website_forum.post_stats
 msgid "Views"
-msgstr "視圖"
+msgstr "瀏覽次數"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_12
@@ -3490,7 +3517,7 @@ msgstr "投票"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists!"
-msgstr ""
+msgstr "投票已存在!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3513,7 +3540,7 @@ msgstr "網站"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__gamification_challenge__challenge_category__forum
 msgid "Website / Forum"
-msgstr "網站/論壇"
+msgstr "網站 / 討論區"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
@@ -3572,25 +3599,25 @@ msgstr "歡迎訊息"
 #: code:addons/website_forum/models/forum_forum.py:0
 #, python-format
 msgid "Welcome!"
-msgstr "歡迎!"
+msgstr "歡迎！"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "What kind of questions can I ask here?"
-msgstr ""
+msgstr "我在這裏可以提問甚麼類型的問題？"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "我的答案中應該避免甚麼？"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "What should I avoid in my questions?"
-msgstr ""
+msgstr "我的問題應該避免甚麼？"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3607,17 +3634,17 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "Why can other people edit my questions/answers?"
-msgstr ""
+msgstr "為甚麼其他人可以編輯我的問題 / 答案？"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Write a clear, explicit and concise title"
-msgstr ""
+msgstr "提供清晰、明確、簡要的標題"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
 msgid "XP"
-msgstr "XP"
+msgstr "經驗值"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -3627,7 +3654,7 @@ msgstr "你已經有一個待處理的貼文"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "You are only allowed one answer"
-msgstr ""
+msgstr "只可提供一個答案"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3639,7 +3666,7 @@ msgstr "當發問得到驗證，您就可以分享您的問題"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "You can't vote for your own post"
-msgstr ""
+msgstr "不可對自己帖文給予正負評"
 
 #. module: website_forum
 #. odoo-python
@@ -3656,27 +3683,27 @@ msgstr "您不能發表空的回答"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "You don't have enough karma"
-msgstr ""
+msgstr "您沒有足夠的活躍度"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "You have a pending post"
-msgstr ""
+msgstr "你有一則待處理帖文"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "You have not answered any questions yet. <br/>"
-msgstr ""
+msgstr "你尚未回答任何問題。<br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "You have not posted any questions yet. <br/>"
-msgstr ""
+msgstr "你尚未提問任何問題。<br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
 msgid "You haven't given any votes yet."
-msgstr ""
+msgstr "你尚未對任何帖文給予正負評。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3700,12 +3727,12 @@ msgstr "您應該只根據您面臨的實際問題提出務實的、可回答的
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "You're following this post"
-msgstr ""
+msgstr "你正在關注此帖文"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "You've Completely Caught&amp;nbsp;Up!"
-msgstr ""
+msgstr "沒有新資訊要追看了!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3726,17 +3753,17 @@ msgstr "接受任何回答"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "and join this Forum"
-msgstr ""
+msgstr "並參加此討論區"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
 msgid "and search"
-msgstr ""
+msgstr "並搜尋"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
 msgid "at"
-msgstr " "
+msgstr "在"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -3771,14 +3798,14 @@ msgstr "刪除自己的評論"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "downvote"
-msgstr "反對"
+msgstr "負評"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "downvoted"
-msgstr ""
+msgstr "已負評"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -3788,12 +3815,12 @@ msgstr "例如 幫助"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "e.g. Technical Assistance"
-msgstr ""
+msgstr "例：技術協助"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "e.g. When should I plant my tomatoes?"
-msgstr ""
+msgstr "例：番茄應該甚麼時候種植？"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3912,21 +3939,21 @@ msgstr "匹配中 #"
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "no changes"
-msgstr ""
+msgstr "沒有變更"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "no more downvoted"
-msgstr ""
+msgstr "沒有其他負評內容"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "no more upvoted"
-msgstr ""
+msgstr "沒有其他正評內容"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3956,7 +3983,7 @@ msgstr "貼文"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
 msgid "posts"
-msgstr ""
+msgstr "帖文"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -3997,7 +4024,7 @@ msgstr "支援，添加註釋"
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "upvoted"
-msgstr ""
+msgstr "已正評"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -4039,7 +4066,7 @@ msgstr "您的基礎資料可以被視為提示工具"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.follow
 msgid "your email..."
-msgstr "您的電子信件..."
+msgstr "你的電郵地址⋯"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue

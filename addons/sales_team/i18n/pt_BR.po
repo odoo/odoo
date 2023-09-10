@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,7 +85,7 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
-"A inclusão de %(user_name)snessa equipe o removeria da equipe atual "
+"A inclusão de %(user_name)s nessa equipe o removeria da equipe atual "
 "%(team_name)s."
 
 #. module: sales_team
@@ -144,14 +145,14 @@ msgstr "Botão grande e bonito :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr "Marcador CRM"
+msgstr "Marcador do CRM"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr "Não é possível apagar o time de vendas padrão \"%s\""
+msgstr "Não é possível apagar a equipe de vendas padrão \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -233,7 +234,7 @@ msgstr "Dados do gráfico do painel de controle"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
-msgstr "Defina um novo time de vendas"
+msgstr "Defina uma nova equipe de vendas"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor5
@@ -282,7 +283,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (parceiros)"
+msgstr "Seguidores (usuários)"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
@@ -327,7 +328,7 @@ msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Se marcado, algumas mensagens tem erro de entrega."
+msgstr "Se marcado, algumas mensagens têm um erro de entrega."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
@@ -337,7 +338,7 @@ msgid ""
 "this partner"
 msgstr ""
 "Se definido, esta equipe de vendas será usada para vendas e atribuições "
-"relacionadas a este parceiro"
+"relacionadas a este usuário"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -345,8 +346,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Se o campo ativo estiver definido como falso, será possível esconder o time "
-"de vendas sem removê-lo."
+"Se o campo ativo estiver definido como falso, será possível esconder a "
+"equipe de vendas sem removê-la."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -395,12 +396,12 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr "Empresa associada"
+msgstr "Empresa do membro"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr "Aviso aos membros"
+msgstr "Aviso do membro"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -410,7 +411,7 @@ msgstr "Membros"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr "Aviso de problema de associação"
+msgstr "Aviso de problema de membro"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -433,7 +434,7 @@ msgstr "Celular"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr "Permissão de várias associações"
+msgstr "Permitido várias associações"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -559,7 +560,7 @@ msgstr "Vendedores"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
-msgstr "Procurar equipe de vendas"
+msgstr "Buscar equipe de vendas"
 
 #. module: sales_team
 #. odoo-python
@@ -586,7 +587,7 @@ msgstr "Mostrar no painel"
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor2
 msgid "Software"
-msgstr "Aplicativos"
+msgstr "Software"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -596,7 +597,7 @@ msgstr "Nome do marcador"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr "Já existe um marcador com este nome!"
+msgstr "Já existe um marcador com este nome."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -648,7 +649,7 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
-"Elas representam as diferentes categorias de coisas que você precisa fazer "
+"Eles representam as diferentes categorias de coisas que você precisa fazer "
 "(ex.: \"Ligar\" ou \"Preparar reunião\")."
 
 #. module: sales_team
@@ -659,8 +660,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
-"Para adicionar um vendedor a várias equipes, ative a opção múltiplas equipes"
-" nas configurações."
+"Para adicionar um vendedor a várias equipes, ative a opção de múltiplas "
+"equipes nas configurações."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -672,14 +673,14 @@ msgstr "Treinamento"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
-"UX: Permita que os usuários não adicionem a equipe escolhida no momento para"
+"UX: permita que os usuários não adicionem à equipe escolhida no momento para"
 " evitar duplicatas"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr "UX: Limite à empresa da equipe ou a todas, se não houver empresa"
+msgstr "UX: limite à empresa da equipe ou a todas, se não houver empresa"
 
 #. module: sales_team
 #. odoo-python
@@ -687,7 +688,7 @@ msgstr "UX: Limite à empresa da equipe ou a todas, se não houver empresa"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr "Modelo de gráfico indefinido para o time de vendas: %s"
+msgstr "Modelo de gráfico indefinido para a equipe de vendas: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
@@ -705,7 +706,7 @@ msgid ""
 "                Each team will work with a separate pipeline."
 msgstr ""
 "Use equipes de vendas para organizar seus departamentos de vendas.\n"
-"                Cada time trabalhará com um pipeline separado."
+"                Cada equipe trabalhará com um funil separado."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -713,7 +714,7 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
-"Use etiquetas para gerenciar e rastrear suas oportunidades (estrutura do "
+"Use marcadores para gerenciar e rastrear suas oportunidades (estrutura do "
 "produto, tipo de venda...)"
 
 #. module: sales_team
@@ -734,12 +735,12 @@ msgstr "Usuário em equipes"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr "Equipe de vendas para usuários"
+msgstr "Equipe de vendas do usuário"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr "Usuário: Todos os documentos"
+msgstr "Usuário: todos os documentos"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
@@ -788,13 +789,13 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
-"o usuário terá acesso a todos os registros de todos os usuários no módulo de"
-" vendas."
+"o usuário terá acesso a todos os registros de todos os usuários no "
+"aplicativo de vendas."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "o usuário terá acesso a seus próprios dados na aplicação de vendas."
+msgstr "o usuário terá acesso a seus próprios dados no aplicativo de vendas."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager

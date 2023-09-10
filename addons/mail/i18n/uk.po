@@ -446,7 +446,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Заархівовано</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2577,6 +2577,13 @@ msgstr "Ви справді хочете видалити \"%s\"?"
 #, python-format
 msgid "Do you really want to delete this preview?"
 msgstr "Ви справді хочете видалити цей перегляд?"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+#, python-format
+msgid "Don't show Original Email"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
@@ -7453,6 +7460,13 @@ msgstr "Показати список членів"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.js:0
+#, python-format
+msgid "Show Original Email"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 #, python-format
 msgid "Show a helper message"
@@ -9909,3 +9923,10 @@ msgstr "тижні"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
+#, python-format
+msgid "Delete all previews"
+msgstr ""

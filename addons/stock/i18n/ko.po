@@ -493,7 +493,7 @@ msgstr "<span class=\"o_stat_text\">배정</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Forecasted</span>"
-msgstr "<span class=\"o_stat_text\">예상됨</span>"
+msgstr "<span class=\"o_stat_text\">예상 재고</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -814,9 +814,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 제품은 재고를 관리하는 품목입니다. 창고 앱이 설치되어 있어야 합니다.\n"
-"소모품은 재고가 관리되지 않는 품목입니다.\n"
-"서비스는 귀하가 제공하는 비물질 품목입니다."
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 재고 관리 앱을 설치해야 사용하실 수 있습니다.\n"
+"소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
+"서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1122,7 +1122,7 @@ msgstr "전체 적용"
 msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
-msgstr "품목의 기본 경로 대신 특정 작업 경로를 적용합니다."
+msgstr "품목 보충용으로 기본 경로 대신 특정 경로를 적용합니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -1272,39 +1272,39 @@ msgstr "유형을 변경하기 전에 사용 가능한 수량을 0으로 설정�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
-msgstr "밀린 주문 - "
+msgstr "이월 주문"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
-msgstr "밀린 주문"
+msgstr "이월 주문"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "밀린 주문 확인"
+msgstr "이월 주문 확인"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "잔여주문 승인 내역"
+msgstr "이월 주문 승인 내역"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "가용주문 승인 내역"
+msgstr "이월 주문 승인 내역"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "밀린 주문 생성"
+msgstr "이월 주문 생성"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "밀린 주문"
+msgstr "이월 주문"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -1718,13 +1718,13 @@ msgstr "이동 예약을 해야 하는 경우를 계산합니다"
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경설정"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
-msgstr "구성"
+msgstr "설정"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -1850,7 +1850,7 @@ msgstr "선별 수"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "밀린 주문 선별 수"
+msgstr "이월 주문 선별 수"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
@@ -1895,14 +1895,14 @@ msgstr "상대방 창고"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "밀린 주문 생성"
+msgstr "이월 주문 생성"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr "밀린 주문 생성?"
+msgstr "이월 주문 생성"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -2195,7 +2195,7 @@ msgstr "계획일자"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
 msgid "Date at which the replenishment should take place."
-msgstr "보충이 이루어지는 날짜."
+msgstr "보충이 완료되어야 하는 날짜입니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -2429,7 +2429,7 @@ msgstr "배송"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
-msgstr "배송을 통해 재고 상태에서 협력사로 품목을 보낼 수 있습니다."
+msgstr "재고 상태에 있는 품목을 배송을 통해 협력사로 보낼 수 있습니다."
 
 #. module: stock
 #. odoo-javascript
@@ -2541,7 +2541,7 @@ msgstr "내부 이송에 대한 설명"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr "인수에 대한 설명"
+msgstr "입고 내역"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
@@ -2903,9 +2903,9 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Odoo 바코드 앱을 통해 신속하게 업무가 진행되는 것을 경험해보시기 바랍니다. 아주 빠르게로 작동하며 인터넷 연결이 안정적이지 않은 "
-"상태에서도 가능합니다. 재고 조정이나 배치 픽업, 로트나 팔레트 이동, 재고 부족 확인과 같이 어떤 업무 흐름에서도 지원할 수 있습니다."
-" \"앱\" 메뉴로 이동하여 바코드 인터페이스를 활성화시키십시오."
+"Odoo 바코드 앱으로 빠른 속도를 경험해 보세요. 정말 빠르게 업무 처리가 가능하며 인터넷 연결이 안정적이지 않더라도 문제 없이 "
+"작동합니다. 워크 플로우 상의 어떤 업무에도 적용이 가능하며, 재고 조정, 일괄 픽업, 로트나 팔레트 이동, 재고 부족 알림 등 모든 "
+"업무에서 활용할 수 있습니다. 앱 메뉴로 이동하여 바코드 인터페이스를 활성화하세요."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2916,7 +2916,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_scrap__tracking
 #: model:ir.model.fields,help:stock.field_stock_track_line__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "창고에 보관 가능한 품목의 추적성을 확인하십시오."
+msgstr "창고에 저장 가능한 품목의 추적성을 확인하십시오."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -3068,7 +3068,7 @@ msgstr "부분 수량의 경우 완료 열을 입력합니다"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "강제 제거 전략"
+msgstr "재고 폐기 정책"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
@@ -3150,7 +3150,7 @@ msgstr "예측되는 예상일"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted Inventory"
-msgstr "예상 재고"
+msgstr "예측 재고량"
 
 #. module: stock
 #. odoo-python
@@ -3193,7 +3193,7 @@ msgstr "예상 무게"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted with Pending"
-msgstr "보류 중인 예측치"
+msgstr "보류 중인 예측 수량"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__print_format
@@ -3762,7 +3762,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Incoming"
-msgstr "수신"
+msgstr "입고"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__in_date
@@ -3929,7 +3929,7 @@ msgstr "재고 수량"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "재고"
+msgstr "재고 관리"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -4003,7 +4003,7 @@ msgstr "현재고"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr "재고 전체보기"
+msgstr "재고 관리 현황"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_set
@@ -4023,7 +4023,7 @@ msgstr "재고 경로"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Inventory Valuation"
-msgstr "재고자산 평가"
+msgstr "재고 자산 평가"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__inventory_datetime
@@ -4676,7 +4676,7 @@ msgstr "수동"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Manufacturing"
-msgstr "제조"
+msgstr "제조 관리"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__3
@@ -5030,7 +5030,7 @@ msgstr "%s 선택된 내용이 없거나 배송주문서를 선택하였습니�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "밀린 주문 없음"
+msgstr "이월 주문 없음"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -5060,12 +5060,12 @@ msgstr "배정할 내용 없음"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "No delivery found. Let's create one!"
-msgstr "배송 내용을 찾을 수 없습니다. 지금 생성합니다!"
+msgstr "배송 내역을 찾을 수 없습니다. 새로 작성해 주세요."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr "내부 이동을 찾을 수 없습니다. 지금 생성합니다!"
+msgstr "내부 이동을 찾을 수 없습니다. 새로 작성해 주세요."
 
 #. module: stock
 #. odoo-python
@@ -5089,7 +5089,7 @@ msgstr "작업을 찾을 수 없습니다. 전송 내역을 생성합니다!"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr "품목이 없습니다. 생성해봅시다!"
+msgstr "품목이 없습니다. 새로 작성해 주세요."
 
 #. module: stock
 #. odoo-python
@@ -5103,12 +5103,12 @@ msgstr "반품할 품목이 없습니다(완료 상태의 내역과 아직 완�
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid "No putaway rule found. Let's create one!"
-msgstr "보관규칙이 없습니다. 하나 만들어봅시다!"
+msgstr "보관규칙이 없습니다. 새로 작성해 주세요."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "No receipt found. Let's create one!"
-msgstr "수령한 내용이 없습니다. 지금 생성합니다!"
+msgstr "입고 내역이 없습니다. 새로 작성해 주세요."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -5153,7 +5153,7 @@ msgstr "표시할 재고 없음"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "No transfer found. Let's create one!"
-msgstr "재고 이동이 없습니다. 하나 만들어봅시다!"
+msgstr "재고 이동이 없습니다. 새로 작성해 주세요."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -5948,7 +5948,7 @@ msgstr "선행 작업"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
 msgid "Preferred Route"
-msgstr "선호하는 경로"
+msgstr "선호 경로"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
@@ -6392,7 +6392,7 @@ msgstr "포장에 넣기"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr "패키지(예 : 소포, 상자)에 품목을 넣고 추적합니다"
+msgstr "제품을 패키지(예. 소포, 박스)에 포장하고 추적합니다."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
@@ -6436,7 +6436,7 @@ msgstr "다수 수량은 0보다 크거나 같아야합니다."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control
 msgid "Quality"
-msgstr "품질"
+msgstr "품질 관리"
 
 #. module: stock
 #. odoo-python
@@ -6715,12 +6715,12 @@ msgstr "입고"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr "영수증을 사용하면 협력사로부터 품목을 받을 수 있습니다."
+msgstr "문서를 생성하여 공급업체로부터의 품목 입고를 관리할 수 있습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Receive From"
-msgstr "출고공간"
+msgstr "출고 업체"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -6809,7 +6809,7 @@ msgstr "회사마다 기준은 유일합니다!"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__origin
 msgid "Reference of the document"
-msgstr "문서 참조"
+msgstr "문서의 참조 번호입니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
@@ -7305,7 +7305,7 @@ msgstr "판매 이력"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "계획된 날짜"
+msgstr "예정일"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -7322,7 +7322,7 @@ msgstr "계획되거나 또는 처리중인 날짜"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr "발송물의 첫 번째 부분이 처리될 예정 시간. 여기서 수동으로 값을 설정하면 모든 재고 이동에 대해 예상 날짜로 설정됩니다."
+msgstr "첫 입고 품목이 처리되도록 예정된 날짜입니다. 여기에 수동으로 값을 설정하면 모든 재고 이동에 대한 예상 날짜로 설정됩니다."
 
 #. module: stock
 #. odoo-python
@@ -7369,7 +7369,7 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"품목을 폐기하면 재고에서 해당 품목이 제거됩니다. 이 품목은 보고 목적으로 \n"
+"품목을 폐기하면 재고에서 해당 품목이 제거됩니다. 폐기된 품목은 보고 목적으로 \n"
 "사용할 수 있는 폐기 공간으로 이동합니다."
 
 #. module: stock
@@ -7395,7 +7395,7 @@ msgstr "경로 선택"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr "이 경로를 선택할 수 있는 장소 선택"
+msgstr "이 경로를 적용할 수 있는 항목 선택"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__picking_warn
@@ -7589,8 +7589,7 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"이 품목 카테고리가 속한 원래의 위치와 별개로, 처분할 때 사용할 정책을 구체적으로 설정하십시오. \n"
-"\n"
+"품목 처분 방식을 구체적으로 설정하세요. 원래 속해 있던 품목 카테고리와는 무관합니다.\n"
 "FIFO: 먼저 입고된 품목이나 로트부터 먼저 출고됩니다.\n"
 "LIFO: 나중에 입고된 품목이나 로트부터 먼저 출고됩니다.\n"
 "Closet: 대상 장소에 가장 가까이에 위치한 품목이나 로트부터 먼저 출고됩니다.\n"
@@ -7880,18 +7879,18 @@ msgstr "원본 문서"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Source Location"
-msgstr "원래 위치"
+msgstr "기존 위치"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_usage
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_usage
 msgid "Source Location Type"
-msgstr "원래 위치 유형"
+msgstr "기존 위치 유형"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "원래 위치 :"
+msgstr "기존 위치 :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_id
@@ -8126,7 +8125,7 @@ msgstr "재고 창고 보충 옵션"
 #: model:ir.model.fields.selection,name:stock.selection__product_template__detailed_type__product
 #: model:ir.model.fields.selection,name:stock.selection__product_template__type__product
 msgid "Storable Product"
-msgstr "재고 관리 품목"
+msgstr "저장 가능 품목"
 
 #. module: stock
 #. odoo-python
@@ -8135,7 +8134,7 @@ msgstr "재고 관리 품목"
 msgid ""
 "Storable products are physical items for which you manage the inventory "
 "level."
-msgstr "재고 관리 품목이란 창고에 물리적으로 보관이 가능하여 재고 수준을 관리할 수 있는 항목입니다."
+msgstr "저장 가능 품목이란 물리적으로 보관이 가능하여 재고 수준을 관리할 수 있는 항목입니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -8608,7 +8607,7 @@ msgid ""
 "be done with care."
 msgstr ""
 "이것은 재고 관점에서 볼 때 품목의 수량입니다. '완료' 상태의 이동의 경우, 실제로 이동된 품목의 수량입니다. 다른 이동의 경우, 이 "
-"값은 이동할 계획인 품목의 양입니다. 이 수량을 낮추더라도 잔여주문은 생성되지 않습니다. 할당 된 이동에서, 이 수량을 변경하면 품목 "
+"값은 이동할 계획인 품목의 양입니다. 이 수량을 낮추더라도 이월 주문은 생성되지 않습니다. 할당 된 이동에서, 이 수량을 변경하면 품목 "
 "예약에 영향을 미치므로 주의해서 수행해야합니다."
 
 #. module: stock
@@ -8782,7 +8781,7 @@ msgstr ""
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr "팁: 바코드로 재고작업을 처리하세요"
+msgstr "팁: 바코드를 활용하면 재고 작업 속도가 빨라집니다."
 
 #. module: stock
 #. odoo-javascript
@@ -8805,7 +8804,7 @@ msgstr "적용하기"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "잔여주문으로"
+msgstr "이월 주문으로"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -8937,7 +8936,7 @@ msgstr "창고 내에서의 품목 공간 추적"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Track your stock quantities by creating storable products."
-msgstr "재고 관리품목을 생성하여 재고 수량을 추적할 수 있습니다."
+msgstr "저장 가능 품목을 생성하여 재고 수량을 추적합니다."
 
 #. module: stock
 #. odoo-python
@@ -9062,7 +9061,7 @@ msgstr "수동 작동"
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "입고 또는 출고 이동을 추가해보세요."
+msgstr "입고 또는 출고 이동을 추가해 보세요."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -9289,9 +9288,9 @@ msgid ""
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
-"재고를 보충하려면 이 보조 도구를 이용하세요.\n"
-"                  품목의 설정에 따라 보충을 시작하면 견적, 제조 주문 또는 \n"
-"                  재고이동 요청이 발생할 수 있습니다."
+"재고를 보충하려면 다음 내용을 입력해 주세요.\n"
+"                  보충 작업이 시작되면 품목 설정에 따라 견적서, 제조주문서 또는\n"
+"                  재고 이동이 요청될 수 있습니다."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_picking_wave
@@ -9373,7 +9372,7 @@ msgstr "화면"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "View Diagram"
-msgstr "다이어그램 보기"
+msgstr "도표 보기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -9653,12 +9652,12 @@ msgstr "모든 품목이 준비될 때"
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
-msgstr "이 옵션을 선택하면 품목 양식보기의 재고 탭에서 이동 경로를 선택할 수 있습니다."
+msgstr "선택 시, 품목 서식의 재고 탭에서 이동 경로를 설정할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr "선택하면 품목 카테고리에서  이동 경로를 선택할 수 있습니다."
+msgstr "선택 시 품목 카테고리에서 이동 경로를 선택할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
@@ -10212,7 +10211,7 @@ msgstr "%s 창고의 %s 픽업 유형에 대한 작업이 아직 진행 중입�
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr "이 품목에 대해 여전히 재주문 규칙이 있습니다. 먼저 보관 처리하거나 삭제하십시오."
+msgstr "이 품목에 대한 재주문 규칙이 여전히 존재합니다. 먼저 보관함으로 이동거나 삭제하십시오."
 
 #. module: stock
 #. odoo-python

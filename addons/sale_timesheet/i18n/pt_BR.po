@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Nenhuma atividade encontrada. Vamos iniciar uma!\n"
+"                </p><p>\n"
+"                    Rastreie suas horas de trabalho por projetos todos os dias e fature esse tempo aos clientes.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -51,10 +59,10 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Registre Planilhas de Horas\n"
+"                    Registre planilhas de horas\n"
 "                </p><p>\n"
 "                    Você pode registrar e rastrear suas horas de trabalhos para cada projeto todos os\n"
-"                    dias. Todo o tempo gasto em um projeto se tornará um custo e poderá ser re-faturado para\n"
+"                    dias. Todo o tempo gasto em um projeto se tornará um custo e poderá ser refaturado para\n"
 "                    clientes, se necessário.\n"
 "                </p>\n"
 "            "
@@ -78,7 +86,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr "%(amount)s %(label)s será adicionado ao novo pedido de vendas."
+msgstr "%(amount)s %(label)s será adicionado ao novo pedido de venda."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -93,7 +101,7 @@ msgstr ", levando a um"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "- Timesheet product"
-msgstr ""
+msgstr "- Produto de planilha de horas"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -161,7 +169,7 @@ msgstr ""
 "- Manual: a quantidade é definida manualmente na linha\n"
 "- Analítico das despesas: a quantidade é a soma da quantidade das despesas lançadas\n"
 "- Planilha de horas: a quantidade é a soma das horas registradas nas tarefas vinculadas a essa linha de venda\n"
-"- Movimentos de estoque: a quantidade vem de seleções confirmadas\n"
+"- Movimentações de estoque: a quantidade vem de separações confirmadas\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -177,7 +185,7 @@ msgstr "Horas alocadas"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr "Total para faturar"
+msgstr "Total a faturar"
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
@@ -187,7 +195,7 @@ msgid ""
 "duplicate(s) and try again."
 msgstr ""
 "Um funcionário não pode ser selecionado mais de uma vez no mapeamento. Por "
-"favor, remova os duplicado(s) e tente novamente."
+"favor, remova os duplicados e tente novamente."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -209,8 +217,8 @@ msgid ""
 "                                commitment we put on strong services."
 msgstr ""
 "Como empresa líder em serviços profissionais,\n"
-" sabemos que o sucesso tem tudo a ver com o \n"
-"comprometimento que colocamos em serviços sólidos."
+"                                sabemos que o sucesso tem tudo a ver com o\n"
+"                                comprometimento que colocamos em oferecer excelentes serviços."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -239,7 +247,7 @@ msgstr "Horas faturáveis"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
 msgid "Billable Percentage"
-msgstr "Percentagem faturável"
+msgstr "Porcentagem faturável"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -277,7 +285,7 @@ msgstr "Faturamento por etapas"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr "Faturável em horas"
+msgstr "Faturável em planilhas de horas"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -484,12 +492,12 @@ msgstr "Data final"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
 msgid "Existing Employee"
-msgstr ""
+msgstr "Funcionário existente"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Fixed price services"
-msgstr "Preço de serviços fixo"
+msgstr "Serviços a preço fixo"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
@@ -507,11 +515,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
-"Grandes modelos de cotação aumentarão significativamente \n"
-"<strong>sua taxa de sucesso</strong>. A \n"
-"primeira seção geralmente é sobre sua empresa, \n"
-"suas referências, sua metodologia ou \n"
-"garantias, sua equipe, SLA, termos e condições, etc."
+"Bons modelos de cotação aumentarão significativamente\n"
+"                                <strong>a sua taxa de sucesso</strong>. A\n"
+"                                primeira seção geralmente é sobre sua empresa,\n"
+"                                suas referências, sua metodologia ou\n"
+"                                garantias, sua equipe, SLA, termos e condições etc."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
@@ -521,7 +529,7 @@ msgstr "Exibiu aviso de upsell"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr "Possui múltiplas linhas de pedido de venda"
+msgstr "Tem múltiplas linhas de pedido de venda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
@@ -546,9 +554,9 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
-"Se você editar uma cotação a partir da 'Visualização' de uma cotação, \n"
-"atualizará somente essa cotação. Se você editar o modelo de cotação\n"
-" (no menu configuração), todas as cotações futuras usarão\n"
+"Se editar uma cotação a partir da 'pré-visualização' de uma cotação, \n"
+"você atualizará somente essa cotação. Se você editar o modelo de cotação\n"
+" (no menu Configuração), todas as cotações futuras usarão\n"
 " esse modelo modificado."
 
 #. module: sale_timesheet
@@ -796,7 +804,7 @@ msgstr "Horas não faturáveis "
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Não faturado"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -1019,7 +1027,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "S0001"
-msgstr ""
+msgstr "V0001"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1150,7 +1158,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Selecione a quem cobrar..."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1205,7 +1213,7 @@ msgstr "Serviços"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__show_hours_recorded_button
 msgid "Show Hours Recorded Button"
-msgstr ""
+msgstr "Exibir botão de horas registradas"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
