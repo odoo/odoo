@@ -80,8 +80,11 @@ QUnit.test("can switch spreadsheet", async (assert) => {
 QUnit.test("display no dashboard message", async (assert) => {
     await createSpreadsheetDashboard({
         mockRPC: function (route, { model, method, args }) {
-            if (method === "search_read" && model === "spreadsheet.dashboard.group") {
-                return [];
+            if (method === "web_search_read" && model === "spreadsheet.dashboard.group") {
+                return {
+                    records: [],
+                    length: 0,
+                };
             }
         },
     });
