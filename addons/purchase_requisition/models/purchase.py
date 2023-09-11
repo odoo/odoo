@@ -235,10 +235,10 @@ class PurchaseOrder(models.Model):
                 current_price_subtotal = product_to_best_price_line[line.product_id][0].price_subtotal
                 current_price_unit = product_to_best_price_unit[line.product_id][0].price_unit
                 if multiple_currencies:
-                    price_subtotal *= line.order_id.currency_rate
-                    price_unit *= line.order_id.currency_rate
-                    current_price_subtotal *= product_to_best_price_line[line.product_id][0].order_id.currency_rate
-                    current_price_unit *= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
+                    price_subtotal /= line.order_id.currency_rate
+                    price_unit /= line.order_id.currency_rate
+                    current_price_subtotal /= product_to_best_price_line[line.product_id][0].order_id.currency_rate
+                    current_price_unit /= product_to_best_price_unit[line.product_id][0].order_id.currency_rate
 
                 if current_price_subtotal > price_subtotal:
                     product_to_best_price_line[line.product_id] = line
