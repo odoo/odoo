@@ -1542,6 +1542,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
+        self.partner1.write({'parent_id': self.env['res.partner'].create({'name': 'Parent'}).id})
 
         #add customer account payment method to pos config
         self.pos_config.write({
@@ -1601,8 +1602,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         #check that both use the same account
         self.assertEqual(len(reverser_customer_payment_entry), 2)
-        self.assertEqual(reverser_customer_payment_entry.filtered(lambda l: l.partner_id).balance, -4.0)
-        self.assertEqual(reverser_customer_payment_entry.filtered(lambda l: not l.partner_id).balance, -2.0)
+        self.assertTrue(order.account_move.line_ids.partner_id == self.partner1.commercial_partner_id)
+        self.assertEqual(reverser_customer_payment_entry[0].balance, -2.0)
+        self.assertEqual(reverser_customer_payment_entry[1].balance, -4.0)
         self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
         self.assertEqual(reverser_customer_payment_entry.partner_id, original_customer_payment_entry.partner_id)
 
