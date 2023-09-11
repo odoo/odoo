@@ -28,7 +28,7 @@ class TestExpression(SavepointCaseWithUserDemo):
     def _search(self, model, domain, init_domain=None):
         sql = model.search(domain, order="id")
         fil = model.search(init_domain or [], order="id").filtered_domain(domain)
-        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
+        self.assertEqual(sql._ids, fil._ids, f"`filtered_domain` ({fil._ids}) result don't match `search` ({sql._ids}) for domain: {domain}")
         return sql
 
     def test_00_in_not_in_m2m(self):
@@ -956,6 +956,164 @@ class TestExpression(SavepointCaseWithUserDemo):
         other_partners = self._search(Partner, [('child_ids', 'not any', [('name', '=', one_child_partner.name)])])
         self.assertEqual(other_partners, all_partner - partner)
 
+    def test_filtered_domain_field_many2one_path(self):
+        Partner = self.env['res.partner'].with_context(active_test=False)
+
+        parents = Partner.create([
+            {'name': 'jean'},
+            {'name': 'christope'},
+            {'type': 'other'},
+            {'name': 'lala', 'active': False},
+        ])
+        childs = Partner.create([
+            {'name': 'child', 'parent_id': parents[0].id},
+            {'name': 'child', 'parent_id': parents[1].id},
+            {'name': 'child', 'parent_id': parents[2].id},
+            {'name': 'child', 'parent_id': parents[3].id},
+        ])
+
+        # Force the active test to ensure that filtered_domain doesn't take it in account.
+        records = (parents + childs).with_context(active_test=True)
+        init_leaf = ('id', 'in', records.ids)
+
+        result = self._search(Partner, [('parent_id.name', '=', 'christope'), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name == 'christope'),
+        )
+
+        # result = self._search(Partner, [('parent_id.name', '!=', 'christope'), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_id.name != 'christope'),
+        # )
+
+        # result = self._search(Partner, [('parent_id.name', '=', False), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: not r.parent_id.name),
+        # )
+
+        # result = self._search(Partner, [('parent_id.name', '!=', False), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_id.name),
+        # )
+
+        result = self._search(Partner, [('parent_id.name', 'in', ['christope', 'blu']), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name in ['christope', 'blu']),
+        )
+
+        # result = self._search(Partner, [('parent_id.name', 'not in', ['christope', 'blu']), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_id.name not in ['christope', 'blu']),
+        # )
+
+        # result = self._search(Partner, [('parent_id.name', 'in', ['christope', False]), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_id.name in ['christope', False]),
+        # )
+
+        # result = self._search(Partner, [('parent_id.name', 'not in', ['christope', False]), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_id.name not in ['christope', False]),
+        # )
+
+        result = self._search(Partner, [('parent_id', 'any', [('name', '=', 'christope')]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id and r.parent_id.name == 'christope'),
+        )
+
+        result = self._search(Partner, [('parent_id', 'any', [('name', '!=', 'christope')]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id and r.parent_id.name != 'christope'),
+        )
+
+        result = self._search(Partner, [('parent_id', 'not any', [('name', '=', 'christope')]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: not r.parent_id or r.parent_id.name != 'christope'),
+        )
+
+        result = self._search(Partner, [('parent_id', 'not any', [('name', '!=', 'christope')]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: not r.parent_id or r.parent_id.name == 'christope'),
+        )
+
+    def test_filtered_domain_related_field(self):
+        Partner = self.env['res.partner'].with_context(active_test=False)
+
+        parents = Partner.create([
+            {'name': 'jean'},
+            {'name': 'christope'},
+            {'type': 'other'},
+            {'name': 'lala', 'active': False},
+        ])
+        childs = Partner.create([
+            {'name': 'child', 'parent_id': parents[0].id},
+            {'name': 'child', 'parent_id': parents[1].id},
+            {'name': 'child', 'parent_id': parents[2].id},
+            {'name': 'child', 'parent_id': parents[3].id},
+        ])
+
+        records = (parents + childs).with_context(active_test=True)
+        init_leaf = ('id', 'in', records.ids)
+
+        result = self._search(Partner, [('parent_name', '=', 'christope'), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name == 'christope'),
+        )
+
+        # result = self._search(Partner, [('parent_name', '!=', 'christope'), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_name != 'christope'),
+        # )
+
+        # result = self._search(Partner, [('parent_name', '=', False), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: not r.parent_name),
+        # )
+
+        result = self._search(Partner, [('parent_name', '!=', False), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name),
+        )
+
+        result = self._search(Partner, [('parent_name', 'in', ['christope', 'blu']), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name in ['christope', 'blu']),
+        )
+
+        # result = self._search(Partner, [('parent_name', 'not in', ['christope', 'blu']), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_name not in ['christope', 'blu']),
+        # )
+
+        # result = self._search(Partner, [('parent_name', 'in', ['christope', False]), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: r.parent_name in ['christope', False]),
+        # )
+
+        result = self._search(Partner, [('parent_name', 'not in', ['christope', False]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name not in ['christope', False]),
+        )
 
 class TestExpression2(TransactionCase):
 
