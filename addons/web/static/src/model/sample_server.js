@@ -170,9 +170,11 @@ export class SampleServer {
      */
     _aggregateFields(measures, records) {
         const values = {};
-        for (const { fieldName, type } of measures) {
+        for (const { fieldName, type, aggregateFunction } of measures) {
             if (["float", "integer", "monetary"].includes(type)) {
-                if (records.length) {
+                if (aggregateFunction === "array_agg") {
+                    values[fieldName] = (records || []).map((r) => r[fieldName]);
+                } else if (records.length) {
                     let value = 0;
                     for (const record of records) {
                         value += record[fieldName];
@@ -479,7 +481,7 @@ export class SampleServer {
                 type &&
                 (type !== "many2one" || aggregateFunction !== "count_distinct")
             ) {
-                measures.push({ fieldName: fName, type });
+                measures.push({ fieldName: fName, type, aggregateFunction });
             }
         }
 
