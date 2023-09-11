@@ -1094,6 +1094,9 @@ class MailCommon(common.TransactionCase, MailCase):
         cls.user_root = cls.env.ref('base.user_root')
         cls.partner_root = cls.user_root.partner_id
 
+        # setup MC environment
+        cls._activate_multi_company()
+
         # give default values for all email aliases and domain
         cls._init_mail_gateway()
         cls._init_mail_servers()
@@ -1162,6 +1165,9 @@ class MailCommon(common.TransactionCase, MailCase):
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
             'name': 'Company 2',
+        })
+        cls.company_3 = cls.env['res.company'].create({
+            'name': 'ELIT',
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
 

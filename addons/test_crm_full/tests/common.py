@@ -13,7 +13,6 @@ class TestCrmFullCommon(TestCrmCommon, MockIAPReveal, MockVisitor):
     @classmethod
     def setUpClass(cls):
         super(TestCrmFullCommon, cls).setUpClass()
-        cls._init_mail_gateway()
         cls._activate_multi_company()
 
         # Context data: dates
