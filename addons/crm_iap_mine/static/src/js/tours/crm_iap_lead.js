@@ -13,7 +13,7 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
         const DragOppToWonStepIndex = originalSteps.findIndex(
             (step) => step.id === "drag_opportunity_to_won_step"
         );
-        return originalSteps.splice(
+        originalSteps.splice(
             DragOppToWonStepIndex + 1,
             0,
             {
@@ -45,5 +45,6 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
                 },
             }
         );
+        return originalSteps
     },
 });
