@@ -114,21 +114,22 @@ class AssetsBundle(object):
         :returns a list of tuple. a tuple can be (url, None) or (None, inlineContent)
         """
         response = []
+
         if self.has_css and self.stylesheets:
-            css_attachment = self.css(is_minified=not self.is_debug_assets)
-            if self.is_debug_assets:
-                response.append(self.get_debug_asset_url(extra=self.extra('css'), name=css_attachment.name, extension=''))
-            else:
-                response.append(css_attachment.url)
+            self.css(is_minified=not self.is_debug_assets)
+            response.append(self.get_link('css'))
 
         if self.has_js and self.javascripts:
-            js_attachment = self.js(is_minified=not self.is_debug_assets)
-            if self.is_debug_assets:
-                response.append(self.get_debug_asset_url(extra=self.extra('js'), name=js_attachment.name, extension=''))
-            else:
-                response.append(js_attachment.url)
+            self.js(is_minified=not self.is_debug_assets)
+            response.append(self.get_link('js'))
 
         return self.external_assets + response
+
+    def get_link(self, asset_type):
+        unique = self.get_version(asset_type) if not self.is_debug_assets else 'debug'
+        extra = self.extra(asset_type)
+        extension = asset_type if self.is_debug_assets else f'min.{asset_type}'
+        return self.get_asset_url(unique=unique, extra=extra, name=self.name, extension=extension)
 
     def get_version(self, asset_type):
         return self.get_checksum(asset_type)[0:7]
@@ -154,11 +155,6 @@ class AssetsBundle(object):
     def get_asset_url(self, unique='%', extra='-', name='%', sep=".", extension='%'):
         extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
         return f"/web/assets/{unique}/{extra}/{name}{sep}{extension}"
-
-    def get_debug_asset_url(self, extra='-', name='%', extension='%'):
-        extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
-
-        return f"/web/assets/debug/{extra}/{name}{extension}"
 
     def _unlink_attachments(self, attachments):
         """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
@@ -396,7 +392,7 @@ class AssetsBundle(object):
                         or self.save_attachment('js.map', '')
         generator = SourceMapGenerator(
             source_root="/".join(
-                [".." for i in range(0, len(self.get_debug_asset_url(name=self.name).split("/")) - 2)]
+                [".." for i in range(0, len(self.get_asset_url(name=self.name).split("/")) - 2)]
                 ) + "/",
         )
         content_bundle_list = []
@@ -614,8 +610,7 @@ css_error_message {
         """
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
-        debug_asset_url = self.get_debug_asset_url(name=self.name,
-                                                   extra=self.extra('css'))
+        debug_asset_url = self.get_asset_url(unique='debug', name=self.name, extra=self.extra('css'))
         generator = SourceMapGenerator(
             source_root="/".join(
                 [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]
