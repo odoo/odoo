@@ -84,13 +84,6 @@ export class Thread extends Record {
         return thread;
     }
 
-    setup() {}
-
-    constructor() {
-        super();
-        this.setup();
-    }
-
     /** @type {number} */
     id;
     /** @type {string} */
@@ -99,13 +92,11 @@ export class Thread extends Record {
     model;
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
-    attachments = [];
+    attachments = Record.List("Attachment");
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
-    /** @type {import("@mail/core/common/channel_member_model").ChannelMember[]} */
-    channelMembers = [];
+    channelMembers = Record.List("ChannelMember");
     /** @type {Object<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
     rtcSessions = {};
     rtcInvitingSession = Record.one("RtcSession");
@@ -118,8 +109,7 @@ export class Thread extends Record {
     customName;
     /** @type {string} */
     description;
-    /** @type {Set<import("@mail/core/common/follower_model").Follower>} */
-    followers = new Set();
+    followers = Record.Set("Follower");
     selfFollower = Record.one("Follower");
     /** @type {integer|undefined} */
     followersCount;
@@ -141,10 +131,8 @@ export class Thread extends Record {
      * unknown in-between messages.
      *
      * Content should be fetched and inserted in a controlled way.
-     *
-     * @type {import("@mail/core/common/message_model").Message[]}
      */
-    messages = [];
+    messages = Record.List("Message");
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -153,10 +141,8 @@ export class Thread extends Record {
      * Contains messages received from the bus that are not yet inserted in
      * `messages` list. This is a temporary storage to ensure nothing is lost
      * when fetching newer messages.
-     *
-     * @type {import("@mail/core/common/message_model").Message[]}
      */
-    pendingNewMessages = [];
+    pendingNewMessages = Record.List("Message");
     /**
      * Contains continuous sequence of needaction messages to show in messaging menu.
      * Messages are ordered from older to most recent.
@@ -168,7 +154,7 @@ export class Thread extends Record {
      *
      * @type {import("@mail/core/common/message_model").Message[]}
      */
-    needactionMessages = [];
+    needactionMessages = Record.List("Message");
     /** @type {string} */
     name;
     /** @type {number|false} */
@@ -195,6 +181,7 @@ export class Thread extends Record {
     lastServerMessage = Record.one("Message");
     /** @type {Boolean} */
     is_editable;
+    recipients = Record.Set("Follower");
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {

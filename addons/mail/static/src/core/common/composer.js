@@ -510,7 +510,7 @@ export class Composer extends Component {
                 attachments: this.props.composer.attachments,
                 isNote: this.props.type === "note",
                 rawMentions: this.props.composer.rawMentions,
-                cannedResponseIds: [...this.props.composer.cannedResponseIds],
+                cannedResponseIds: [...this.props.composer.cannedResponses].map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
             await this._sendMessage(value, postData);

@@ -40,8 +40,7 @@ export class Message extends Record {
         return message;
     }
 
-    /** @type {Object[]} */
-    attachments = [];
+    attachments = Record.List("Attachment");
     author = Record.one("Persona");
     /** @type {string} */
     body;
@@ -57,19 +56,15 @@ export class Message extends Record {
     isStarred;
     /** @type {boolean} */
     isTransient;
-    /** @type {LinkPreview[]} */
-    linkPreviews = [];
+    linkPreviews = Record.List("LinkPreview");
     /** @type {number[]} */
     needaction_partner_ids = [];
     /** @type {number[]} */
     history_partner_ids = [];
     parentMessage = Record.one("Message");
-    /** @type {MessageReactions[]} */
-    reactions = [];
-    /** @type {import("@mail/core/common/notification_model").Notification[]} */
-    notifications = [];
-    /** @type {import("@mail/core/common/persona_model").Persona[]} */
-    recipients = [];
+    reactions = Record.List("MessageReactions");
+    notifications = Record.List("Notification");
+    recipients = Record.List("Persona");
     /** @type {number|string} */
     resId;
     /** @type {string|undefined} */

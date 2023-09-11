@@ -34,7 +34,7 @@ export class MailCoreWeb {
                     })
                 );
                 this.store.NotificationGroup.records.sort(
-                    (n1, n2) => n2.lastMessage.id - n1.lastMessage.id
+                    (n1, n2) => n2.lastMessage?.id - n1.lastMessage?.id
                 );
             });
             this.busService.subscribe("mail.activity/updated", (payload) => {

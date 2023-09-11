@@ -9,10 +9,6 @@ patch(Thread.prototype, {
     recipientsCount: undefined,
     /** @type {Number} */
     mt_comment_id: undefined,
-    recipients: undefined,
-    setup() {
-        this.recipients = new Set();
-    },
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.size;
     },

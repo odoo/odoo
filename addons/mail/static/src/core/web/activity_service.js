@@ -108,6 +108,8 @@ export class ActivityService {
     _serialize(activity) {
         const data = { ...activity };
         delete data._store;
+        delete data.__rels__;
+        delete data.__invs__;
         delete data.Model;
         return JSON.parse(JSON.stringify(data));
     }
