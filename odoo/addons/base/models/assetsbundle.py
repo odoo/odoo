@@ -115,33 +115,18 @@ class AssetsBundle(object):
         """
         response = []
         if self.has_css and self.stylesheets:
-            css_attachments = self.css(is_minified=not self.is_debug_assets) or []
-            for attachment in css_attachments:
-                if self.is_debug_assets:
-                    href = self.get_debug_asset_url(extra=self.extra('css'),
-                                                    name=css_attachments.name,
-                                                    extension='')
-                else:
-                    href = attachment.url
-                response.append((href, None))
-            if self.css_errors:
-                msg = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\\n')
-                js_error = """
-                    window.__odooScssCompilationError = "%s";
-                    console.error("SCSS compilation failure:", window.__odooScssCompilationError);
-                    window.addEventListener("DOMContentLoaded", () => {
-                        if (!odoo || !odoo.define) {
-                            alert(window.__odooScssCompilationError);
-                        }
-                    });
-                """ % msg
-                response.append((None, js_error))
-                response.append(('/web/static/lib/bootstrap/dist/css/bootstrap.css', None))
+            css_attachment = self.css(is_minified=not self.is_debug_assets)
+            if self.is_debug_assets:
+                response.append((self.get_debug_asset_url(extra=self.extra('css'), name=css_attachment.name, extension=''), None))
+            else:
+                response.append((css_attachment.url, None))
 
         if self.has_js and self.javascripts:
             js_attachment = self.js(is_minified=not self.is_debug_assets)
-            src = self.get_debug_asset_url(name=js_attachment.name, extension='') if self.is_debug_assets else js_attachment[0].url
-            response.append((src, None))
+            if self.is_debug_assets:
+                response.append((self.get_debug_asset_url(extra=self.extra('js'), name=js_attachment.name, extension=''), None))
+            else:
+                response.append((js_attachment.url, None))
 
         return self.external_assets + response
 
@@ -578,25 +563,47 @@ class AssetsBundle(object):
     def css(self, is_minified=True):
         extension = 'min.css' if is_minified else 'css'
         attachments = self.get_attachments(extension)
-        if not attachments:
-            # get css content
-            css = self.preprocess_css()
-            if self.css_errors:
-                return self.get_attachments(extension, ignore_version=True)
+        if attachments:
+            return attachments
 
-            matches = []
-            css = re.sub(self.rx_css_import, lambda matchobj: matches.append(matchobj.group(0)) and '', css)
+        css = self.preprocess_css()
+        if self.css_errors:
+            error_message = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\A').replace('*', '\*')
+            previous_attachment = self.get_attachments(extension, ignore_version=True)
+            previous_css = previous_attachment.raw.decode() if previous_attachment else ''
+            css_error_message_header = '\n\n/* ## CSS error message ##*/'
+            previous_css = previous_css.split(css_error_message_header)[0]
+            css = css_error_message_header.join([
+                previous_css, """
+body::before {
+  font-weight: bold;
+  content: "A css error occured, using an old style to render this page";
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 100000000000;
+  background-color: #C00;
+  color: #DDD;
+}
 
-            if is_minified:
-                # move up all @import rules to the top
-                matches.append(css)
-                css = u'\n'.join(matches)
+css_error_message {
+  content: "%s";
+}
+""" % error_message
+            ])
+            return self.save_attachment(extension, css)
 
-                self.save_attachment(extension, css)
-                attachments = self.get_attachments(extension)
-            else:
-                return self.css_with_sourcemap(u'\n'.join(matches))
-        return attachments
+        matches = []
+        css = re.sub(self.rx_css_import, lambda matchobj: matches.append(matchobj.group(0)) and '', css)
+
+        if is_minified:
+            # move up all @import rules to the top
+            matches.append(css)
+            css = u'\n'.join(matches)
+
+            return self.save_attachment(extension, css)
+        else:
+            return self.css_with_sourcemap(u'\n'.join(matches))
 
     def css_with_sourcemap(self, content_import_rules):
         """Create the ir.attachment representing the not-minified content of the bundleCSS
