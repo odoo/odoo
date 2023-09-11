@@ -11,7 +11,9 @@ from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import (
     is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
-    email_split, email_domain_normalize,
+    email_domain_normalize, email_normalize, email_re,
+    email_split, email_split_and_format, email_split_tuples,
+    single_email_re,
     misc, formataddr,
     prepend_html_content,
 )
@@ -469,7 +471,122 @@ class TestHtmlTools(BaseCase):
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestEmailTools, cls).setUpClass()
+
+        cls.sources = [
+            # single email
+            'alfred.astaire@test.example.com',
+            ' alfred.astaire@test.example.com ',
+            'Fredo The Great <alfred.astaire@test.example.com>',
+            '"Fredo The Great" <alfred.astaire@test.example.com>',
+            'Fredo "The Great" <alfred.astaire@test.example.com>',
+            # multiple emails
+            'alfred.astaire@test.example.com, evelyne.gargouillis@test.example.com',
+            'Fredo The Great <alfred.astaire@test.example.com>, Evelyne The Goat <evelyne.gargouillis@test.example.com>',
+            '"Fredo The Great" <alfred.astaire@test.example.com>, evelyne.gargouillis@test.example.com',
+            '"Fredo The Great" <alfred.astaire@test.example.com>, <evelyne.gargouillis@test.example.com>',
+            # text containing email
+            'Hello alfred.astaire@test.example.com how are you ?',
+            '<p>Hello alfred.astaire@test.example.com</p>',
+            # text containing emails
+            'Hello "Fredo" <alfred.astaire@test.example.com>, evelyne.gargouillis@test.example.com',
+            'Hello "Fredo" <alfred.astaire@test.example.com> and evelyne.gargouillis@test.example.com',
+            # falsy
+            '<p>Hello Fredo</p>',
+            'j\'adore écrire des @gmail.com ou "@gmail.com" a bit randomly',
+            '',
+        ]
+
+    def test_email_normalize(self):
+        """ Test 'email_normalize'. Note that it is built on 'email_split' so
+        some use cases are already managed in 'test_email_split(_and_format)'
+        hence having more specific test cases here about normalization itself. """
+        format_name = 'My Super Prénom'
+        format_name_ascii = '=?utf-8?b?TXkgU3VwZXIgUHLDqW5vbQ==?='
+        sources = [
+            '"Super Déboulonneur" <deboulonneur@example.com>',  # formatted
+            'Déboulonneur deboulonneur@example.com',  # wrong formatting
+            'deboulonneur@example.com Déboulonneur',  # wrong formatting (happens, alas)
+            '"Super Déboulonneur" <DEBOULONNEUR@example.com>, "Super Déboulonneur 2" <deboulonneur2@EXAMPLE.com>',  # multi + case
+            ' Déboulonneur deboulonneur@example.com déboulonneur deboulonneur2@example.com',  # wrong formatting + wrong multi
+            '"Déboulonneur 😊" <deboulonneur.😊@example.com>',  # unicode in name and email left-part
+            '"Déboulonneur" <déboulonneur@examplé.com>',  # utf-8
+            '"Déboulonneur" <DéBoulonneur@Examplé.com>',  # utf-8
+        ]
+        expected_list = [
+            'deboulonneur@example.com',
+            'deboulonneur@example.com',
+            'deboulonneur@example.comdéboulonneur',
+            False,
+            '@example.com',  # funny
+            'deboulonneur.😊@example.com',
+            'déboulonneur@examplé.com',
+            'DéBoulonneur@examplé.com',
+        ]
+        expected_fmt_utf8_list = [
+            f'"{format_name}" <deboulonneur@example.com>',
+            f'"{format_name}" <deboulonneur@example.com>',
+            f'"{format_name}" <deboulonneur@example.comdéboulonneur>',
+            f'"{format_name}" <@>',
+            f'"{format_name}" <@example.com>',
+            f'"{format_name}" <deboulonneur.😊@example.com>',
+            f'"{format_name}" <déboulonneur@examplé.com>',
+            f'"{format_name}" <DéBoulonneur@examplé.com>',
+        ]
+        expected_fmt_ascii_list = [
+            f'{format_name_ascii} <deboulonneur@example.com>',
+            f'{format_name_ascii} <deboulonneur@example.com>',
+            f'{format_name_ascii} <deboulonneur@example.xn--comdboulonneur-ekb>',
+            f'{format_name_ascii} <@>',
+            f'{format_name_ascii} <@example.com>',
+            f'{format_name_ascii} <deboulonneur.😊@example.com>',
+            f'{format_name_ascii} <déboulonneur@xn--exampl-gva.com>',
+            f'{format_name_ascii} <DéBoulonneur@xn--exampl-gva.com>',
+        ]
+        for source, expected, expected_utf8_fmt, expected_ascii_fmt in zip(sources, expected_list, expected_fmt_utf8_list, expected_fmt_ascii_list):
+            with self.subTest(source=source):
+                self.assertEqual(email_normalize(source, strict=True), expected)
+                # standard usage of formataddr
+                self.assertEqual(formataddr((format_name, (expected or '')), charset='utf-8'), expected_utf8_fmt)
+                # check using INDA at format time, using ascii charset as done when
+                # sending emails (see extract_rfc2822_addresses)
+                self.assertEqual(formataddr((format_name, (expected or '')), charset='ascii'), expected_ascii_fmt)
+
+    def test_email_re(self):
+        """ Test 'email_re', finding emails in a given text """
+        expected = [
+            # single email
+            ['alfred.astaire@test.example.com'],
+            ['alfred.astaire@test.example.com'],
+            ['alfred.astaire@test.example.com'],
+            ['alfred.astaire@test.example.com'],
+            ['alfred.astaire@test.example.com'],
+            # multiple emails
+            ['alfred.astaire@test.example.com', 'evelyne.gargouillis@test.example.com'],
+            ['alfred.astaire@test.example.com', 'evelyne.gargouillis@test.example.com'],
+            ['alfred.astaire@test.example.com', 'evelyne.gargouillis@test.example.com'],
+            ['alfred.astaire@test.example.com', 'evelyne.gargouillis@test.example.com'],
+            # text containing email
+            ['alfred.astaire@test.example.com'],
+            ['alfred.astaire@test.example.com'],
+            # text containing emails
+            ['alfred.astaire@test.example.com', 'evelyne.gargouillis@test.example.com'],
+            ['alfred.astaire@test.example.com', 'evelyne.gargouillis@test.example.com'],
+            # falsy
+            [], [], [],
+        ]
+
+        for src, exp in zip(self.sources, expected):
+            res = email_re.findall(src)
+            self.assertEqual(
+                res, exp,
+                'Seems email_re is broken with %s (expected %r, received %r)' % (src, exp, res)
+            )
+
     def test_email_split(self):
+        """ Test 'email_split' """
         cases = [
             ("John <12345@gmail.com>", ['12345@gmail.com']),  # regular form
             ("d@x; 1@2", ['d@x', '1@2']),  # semi-colon + extra space
@@ -480,7 +597,85 @@ class TestEmailTools(BaseCase):
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
 
+    def test_email_split_and_format(self):
+        """ Test 'email_split_and_format', notably in case of multi encapsulation
+        or multi emails. """
+        sources = [
+            'deboulonneur@example.com',
+            '"Super Déboulonneur" <deboulonneur@example.com>',  # formatted
+            # wrong formatting
+            'Déboulonneur <deboulonneur@example.com',  # with a final typo
+            'Déboulonneur deboulonneur@example.com',  # wrong formatting
+            'deboulonneur@example.com Déboulonneur',  # wrong formatting (happens, alas)
+            # multi
+            'Déboulonneur, deboulonneur@example.com',  # multi-like with errors
+            'deboulonneur@example.com, deboulonneur2@example.com',  # multi
+            ' Déboulonneur deboulonneur@example.com déboulonneur deboulonneur2@example.com',  # wrong formatting + wrong multi
+            # format / misc
+            '"Déboulonneur" <"Déboulonneur Encapsulated" <deboulonneur@example.com>>',  # double formatting
+            '"Super Déboulonneur" <deboulonneur@example.com>, "Super Déboulonneur 2" <deboulonneur2@example.com>',
+            '"Super Déboulonneur" <deboulonneur@example.com>, wrong, ',
+            '"Déboulonneur 😊" <deboulonneur@example.com>',  # unicode in name
+            '"Déboulonneur 😊" <deboulonneur.😊@example.com>',  # unicode in name and email left-part
+            '"Déboulonneur" <déboulonneur@examplé.com>',  # utf-8
+        ]
+        expected_list = [
+            ['deboulonneur@example.com'],
+            ['"Super Déboulonneur" <deboulonneur@example.com>'],
+            # wrong formatting
+            ['"Déboulonneur" <deboulonneur@example.com>'],
+            ['"Déboulonneur" <deboulonneur@example.com>'],  # extra part correctly considered as a name
+            ['deboulonneur@example.comDéboulonneur'],  # concatenated, not sure why
+            # multi
+            ['deboulonneur@example.com'],
+            ['deboulonneur@example.com', 'deboulonneur2@example.com'],
+            ['@example.com'],  # funny one
+            # format / misc
+            ['deboulonneur@example.com'],
+            ['"Super Déboulonneur" <deboulonneur@example.com>', '"Super Déboulonneur 2" <deboulonneur2@example.com>'],
+            ['"Super Déboulonneur" <deboulonneur@example.com>'],
+            ['"Déboulonneur 😊" <deboulonneur@example.com>'],
+            ['"Déboulonneur 😊" <deboulonneur.😊@example.com>'],
+            ['"Déboulonneur" <déboulonneur@examplé.com>'],
+        ]
+        for source, expected in zip(sources, expected_list):
+            with self.subTest(source=source):
+                self.assertEqual(email_split_and_format(source), expected)
+
+    def test_email_split_tuples(self):
+        """ Test 'email_split_and_format' that returns (name, email) pairs
+        found in text input """
+        expected = [
+            # single email
+            [('', 'alfred.astaire@test.example.com')],
+            [('', 'alfred.astaire@test.example.com')],
+            [('Fredo The Great', 'alfred.astaire@test.example.com')],
+            [('Fredo The Great', 'alfred.astaire@test.example.com')],
+            [('Fredo The Great', 'alfred.astaire@test.example.com')],
+            # multiple emails
+            [('', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
+            [('Fredo The Great', 'alfred.astaire@test.example.com'), ('Evelyne The Goat', 'evelyne.gargouillis@test.example.com')],
+            [('Fredo The Great', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
+            [('Fredo The Great', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
+            # text containing email -> fallback on parsing to extract text from email
+            [('Hello', 'alfred.astaire@test.example.comhowareyou?')],
+            [('Hello', 'alfred.astaire@test.example.com')],
+            [('Hello Fredo', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
+            [('Hello Fredo', 'alfred.astaire@test.example.com'), ('and', 'evelyne.gargouillis@test.example.com')],
+            # falsy -> probably not designed for that
+            [],
+            [('j\'adore écrire', "des@gmail.comou"), ('', '@gmail.com')], [],
+        ]
+
+        for src, exp in zip(self.sources, expected):
+            res = email_split_tuples(src)
+            self.assertEqual(
+                res, exp,
+                'Seems email_split_tuples is broken with %s (expected %r, received %r)' % (src, exp, res)
+            )
+
     def test_email_formataddr(self):
+        """ Test custom 'formataddr', notably with IDNA support """
         email = 'joe@example.com'
         email_idna = 'joe@examplé.com'
         cases = [
@@ -520,3 +715,26 @@ class TestEmailTools(BaseCase):
         self.assertEqual(email_domain_normalize("Test.Com"), "test.com", "Should have normalized the domain")
         self.assertEqual(email_domain_normalize("email@test.com"), False, "The domain is not valid, should return False")
         self.assertEqual(email_domain_normalize(False), False, "The domain is not valid, should return False")
+
+    def test_single_email_re(self):
+        """ Test 'single_email_re', matching text input containing only one email """
+        expected = [
+            # single email
+            ['alfred.astaire@test.example.com'],
+            [], [], [], [], # formatting issue for single email re
+            # multiple emails -> couic
+            [], [], [], [],
+            # text containing email -> couic
+            [], [],
+            # text containing emails -> couic
+            [], [],
+            # falsy
+            [], [], [],
+        ]
+
+        for src, exp in zip(self.sources, expected):
+            res = single_email_re.findall(src)
+            self.assertEqual(
+                res, exp,
+                'Seems single_email_re is broken with %s (expected %r, received %r)' % (src, exp, res)
+            )
