@@ -1108,6 +1108,16 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_context(lang='fr_FR').arch_db, '<form string="X">Pain et fromage<div>Fourchette2</div></form>')
         self.assertEqual(view.with_context(lang='nl_NL').arch_db, view_nl)
 
+        # update translations for fallback values and en_US
+        self.env['res.lang']._activate_lang('es_ES')
+        self.assertEqual(view.with_context(lang='es_ES').arch_db, '<form string="X">Bread and cheese<div>Fork2</div></form>')
+        view.update_field_translations('arch_db', {
+            'en_US': {'Fork2': 'Fork3'},
+            'es_ES': {'Fork2': 'Tenedor3'}
+        })
+        self.assertEqual(view.with_context(lang='en_US').arch_db, '<form string="X">Bread and cheese<div>Fork3</div></form>')
+        self.assertEqual(view.with_context(lang='es_ES').arch_db, '<form string="X">Bread and cheese<div>Tenedor3</div></form>')
+
 
 class TestHTMLTranslation(TransactionCase):
     def test_write_non_existing(self):
