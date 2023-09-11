@@ -30,7 +30,7 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
-from odoo.tools.translate import TranslationImporter
+from odoo.tools.translate import TranslationImporter, get_po_paths
 from odoo.http import request
 from odoo.modules import get_module_path, get_module_resource
 
@@ -912,42 +912,12 @@ class Module(models.Model):
             if not modpath:
                 continue
             for lang in langs:
-                lang_code = tools.get_iso_codes(lang)
-                base_lang_code = None
-                if '_' in lang_code:
-                    base_lang_code = lang_code.split('_')[0]
-
-                # Step 1: for sub-languages, load base language first (e.g. es_CL.po is loaded over es.po)
-                if base_lang_code:
-                    base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
-                    if base_trans_file:
-                        _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
-                        translation_importer.load_file(base_trans_file, lang)
-
-                    if base_lang_code == "es" and lang != "es_MX":
-                        mx_trans_file = get_module_resource(module_name, 'i18n', 'es_MX.po')
-                        if mx_trans_file:
-                            _logger.info('module %s: loading translation file %s for language %s', module_name, "es_MX", lang)
-                            translation_importer.load_file(mx_trans_file, lang)
-
-                    # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
-                    base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
-                    if base_trans_extra_file:
-                        _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
-                        translation_importer.load_file(base_trans_extra_file, lang)
-
-                # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
-                trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
-                if trans_file:
-                    _logger.info('module %s: loading translation file %s for language %s', module_name, lang_code, lang)
-                    translation_importer.load_file(trans_file, lang)
-                elif lang_code != 'en_US':
-                    _logger.info('module %s: no translation for language %s', module_name, lang_code)
-
-                trans_extra_file = get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
-                if trans_extra_file:
-                    _logger.info('module %s: loading extra translation file %s for language %s', module_name, lang_code, lang)
-                    translation_importer.load_file(trans_extra_file, lang)
+                po_paths = get_po_paths(module_name, lang)
+                for po_path in po_paths:
+                    _logger.info('module %s: loading translation file %s for language %s', module_name, po_path, lang)
+                    translation_importer.load_file(po_path, lang)
+                if lang != 'en_US' and not po_paths:
+                    _logger.info('module %s: no translation for language %s', module_name, lang)
 
         translation_importer.save(overwrite=overwrite)
 
