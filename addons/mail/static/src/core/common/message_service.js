@@ -313,6 +313,9 @@ export class MessageService {
         this.env.bus.trigger("mail.message/onUpdate", { message, data });
     }
 
+    /**
+     * @param {import("models").Models["Message"]} message
+     */
     _updateReactions(message, reactionGroups) {
         const reactionContentToUnlink = new Set();
         const reactionsToInsert = [];

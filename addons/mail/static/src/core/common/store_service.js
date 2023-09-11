@@ -7,7 +7,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { modelRegistry, Record } from "./record";
+import { modelRegistry, Record, RecordInverses, RecordList, RecordSet } from "./record";
 
 export class Store {
     /** @type {typeof import("@mail/core/web/activity_model").Activity} */
@@ -40,6 +40,21 @@ export class Store {
     RtcSession;
     /** @type {typeof import("@mail/core/common/thread_model").Thread} */
     Thread;
+
+    /**
+     * @param {string} localId
+     * @returns {Record}
+     */
+    get(localId) {
+        if (typeof localId !== "string") {
+            return undefined;
+        }
+        const modelName = Record.modelFromLocalId(localId);
+        if (Array.isArray(this[modelName].records)) {
+            return this[modelName].records.find((r) => r.localId === localId);
+        }
+        return this[modelName].records[localId];
+    }
 
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -177,7 +192,9 @@ export const storeService = {
      */
     start(env, services) {
         const res = reactive(new Store(env, services));
-        for (const [name, Model] of modelRegistry.getEntries()) {
+        for (const [name, _Model] of modelRegistry.getEntries()) {
+            /** @type {typeof Record} */
+            const Model = _Model;
             if (res[name]) {
                 throw new Error(
                     `There must be no duplicated Model Names (duplicate found: ${name})`
@@ -197,9 +214,25 @@ export const storeService = {
                             // Relational fields contain symbols for detection in original class.
                             // This constructor is called on genuine records:
                             // - 'one' fields => undefined
-                            const newVal = undefined;
+                            // - 'many' fields => RecordList or RecordSet
+                            let newVal;
+                            if (this[name] === Record.one()) {
+                                newVal = undefined;
+                            }
+                            if (this[name] === Record.List()) {
+                                newVal = new RecordList();
+                            }
+                            if (this[name] === Record.Set()) {
+                                newVal = new RecordSet();
+                            }
+                            if ([Record.Set(), Record.List()].includes(this[name])) {
+                                newVal.__store__ = res;
+                                newVal.name = name;
+                                newVal.owner = this;
+                            }
                             this[name] = newVal;
                             this.__rels__.set(name, newVal);
+                            this.__invs__ = new RecordInverses();
                         }
                     }
                 },
@@ -210,19 +243,86 @@ export const storeService = {
             // Detect relational fields with a dummy record and setup getter/setters on them
             const obj = new Model();
             for (const [name, val] of Object.entries(obj)) {
-                if (val !== Record.one()) {
+                if (![Record.one(), Record.List(), Record.Set()].includes(val)) {
                     continue;
                 }
                 Class.__rels__.add(name);
-                Object.defineProperty(Class.prototype, name, {
-                    get() {
-                        const localId = this.__rels__.get(name);
-                        return res.get(localId);
-                    },
-                    set(record) {
-                        this.__rels__.set(name, record?.localId);
-                    },
-                });
+                if (val === Record.one()) {
+                    Object.defineProperty(Class.prototype, name, {
+                        /** @this {Record} */
+                        get() {
+                            return res.get(this.__rels__.get(name).value);
+                        },
+                        /**
+                         * @this {Record}
+                         * @param {Record} r3
+                         */
+                        set(r3) {
+                            const r1 = this;
+                            const l1 = r1.__rels__.get(name);
+                            const r2 = res.get(l1.value);
+                            if (r2 && r2.notEq(r3)) {
+                                r2.__invs__.delete(r1.localId, name);
+                            }
+                            l1.value = r3?.localId;
+                            if (r3) {
+                                r3.__invs__.add(r1.localId, name);
+                            }
+                        },
+                    });
+                }
+                if (val === Record.List()) {
+                    Object.defineProperty(Class.prototype, name, {
+                        /**
+                         * @this {Record}
+                         * @param {Record[]|Set<Record>|RecordList<Record>|RecordSet<Record>} collection
+                         */
+                        set(collection) {
+                            const r1 = this;
+                            /** @type {RecordList<Record>} */
+                            const l1 = r1.__rels__.get(name).value;
+                            const oldRecords = l1.slice();
+                            l1.__list__ = [];
+                            for (const r2 of oldRecords) {
+                                r2.__invs__.delete(r1.localId, name);
+                            }
+                            for (const r3 of collection) {
+                                l1.__list__.push(r3.localId);
+                                r3.__invs__.add(r1.localId, name);
+                            }
+                        },
+                    });
+                }
+                if (val === Record.Set()) {
+                    Object.defineProperty(Class.prototype, name, {
+                        /**
+                         * @this {Record}
+                         * @param {Record[]|Set<Record>|RecordList<Record>|RecordSet<Record>} collection
+                         */
+                        set(collection) {
+                            /** @type {RecordSet<Record>} */
+                            const l1 = this.__rels__.get(name).value;
+                            const oldRecords = new Set();
+                            const newRecords = new Set();
+                            for (const r of collection) {
+                                if (!l1.__set__.has(r?.localId)) {
+                                    newRecords.add(r);
+                                }
+                            }
+                            for (const r of this) {
+                                if (r.notIn(oldRecords)) {
+                                    oldRecords.add(r);
+                                }
+                            }
+                            for (const r of oldRecords) {
+                                this.delete(r);
+                            }
+                            for (const r of newRecords) {
+                                this.add(r);
+                            }
+                        },
+                    });
+                }
             }
         }
         onChange(res.Thread, "records", () => res.updateBusSubscription());

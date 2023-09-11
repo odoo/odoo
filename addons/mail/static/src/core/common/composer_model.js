@@ -55,16 +55,14 @@ export class Composer extends Record {
         return composer;
     }
 
-    /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
-    attachments = [];
+    attachments = Record.List("Attachment");
     message = Record.one("Message");
     /** @type {RawMentions} */
     rawMentions = {
         partnerIds: new Set(),
         threadIds: new Set(),
     };
-    /** @type {Set<number>} */
-    cannedResponseIds = new Set();
+    cannedResponses = Record.Set("CannedResponse");
     /** @type {string} */
     textInputContent;
     thread = Record.one("Thread");

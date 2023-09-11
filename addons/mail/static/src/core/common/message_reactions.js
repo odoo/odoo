@@ -16,6 +16,7 @@ export class MessageReactions extends Component {
         this.messageService = useState(useService("mail.message"));
     }
 
+    /** @param {import("models").Models["MessageReactions"]} reaction */
     getReactionSummary(reaction) {
         const [firstUserName, secondUserName, thirdUserName] = reaction.personas.map(
             ({ name, displayName }) => name || displayName
