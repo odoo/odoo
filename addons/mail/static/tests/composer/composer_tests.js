@@ -74,6 +74,45 @@ QUnit.test(
     }
 );
 
+QUnit.test("composer: rendering when thread is readOnly", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    await start({
+        async mockRPC(route, args, performRPC) {
+            const res = await performRPC(route, args);
+            if (route === "/mail/thread/data/access_rights") {
+                for (const data of res) {
+                    data.hasWriteAccess = false;
+                    data.hasReadAccess = false;
+                }
+            }
+            return res;
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.ok($(".o-mail-Composer-input")[0].attributes.disabled);
+    assert.ok(
+        $(".o-mail-Composer-input")[0].attributes.placeholder.value ===
+            "You don't have the rights to post on this Document..."
+    );
+    assert.containsNone($, ".o-mail-Composer-actions");
+});
+
 QUnit.test(
     "composer text input placeholder should contain channel name when thread does not have specific correspondent",
     async (assert) => {

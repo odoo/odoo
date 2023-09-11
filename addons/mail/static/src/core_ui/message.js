@@ -255,7 +255,11 @@ export class Message extends Component {
     }
 
     get canReplyTo() {
-        return this.message.originThread?.allowReplies && this.props.messageToReplyTo;
+        return (
+            this.message.originThread?.allowReplies &&
+            this.props.messageToReplyTo &&
+            !this.threadService.isReadonly(this.message.originThread)
+        );
     }
 
     /**

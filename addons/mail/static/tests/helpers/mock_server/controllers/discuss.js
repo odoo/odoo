@@ -160,6 +160,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             const { after, before, limit } = args;
             return this._mockRouteMailMessageStarredMessages(after, before, limit);
         }
+        if (route === "/mail/thread/data/access_rights") {
+            return this._mockRouteMailThreadDataAccessRights(args.thread_data);
+        }
         if (route === "/mail/thread/data") {
             return this._mockRouteMailThreadData(
                 args.thread_model,
@@ -517,6 +520,32 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         if (session && currentChannelMember.partner_id[0] === this.pyEnv.currentPartnerId) {
             this._mockDiscussChannelRtcSession__updateAndBroadcast(session.id, values);
         }
+    },
+    /**
+     * Simulates the `/mail/thread/data/access_rights` route.
+     *
+     * @param {Array<Array<string|number>>} threadData
+     * @param {string} threadData[].0
+     * @param {integer} threadData[].1
+     * @returns {Array<Object>}
+     */
+    async _mockRouteMailThreadDataAccessRights(threadData) {
+        const res = [];
+        for (const threadModel in threadData) {
+            const threads = this.pyEnv[threadModel].searchRead([
+                ["id", "in", threadData[threadModel]],
+            ]);
+            for (const threadId of threadData[threadModel]) {
+                res.push({
+                    id: threadId,
+                    model: threadModel,
+                    hasWriteAccess: true, // mimic user with write access by default
+                    hasReadAccess: threads.some((thread) => thread.id === threadId),
+                    canPostOnReadonly: threadModel === "discuss.channel", // model that have attr _mail_post_access='read'
+                });
+            }
+        }
+        return res;
     },
     /**
      * Simulates the `/mail/thread/data` route.

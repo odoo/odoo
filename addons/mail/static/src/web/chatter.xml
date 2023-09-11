@@ -10,23 +10,23 @@
                     'btn-secondary': state.composerType === 'note',
                     'active': state.composerType === 'message',
                     'my-2': !props.compactHeight
-                }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                }" t-att-disabled="isReadonly" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                     Send message
                 </button>
                 <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{
                     'btn-primary active': state.composerType === 'note',
                     'btn-secondary': state.composerType !== 'note',
                     'my-2': !props.compactHeight
-                }" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                }" t-att-disabled="isReadonly" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                     Log note
                 </button>
                 <div class="flex-grow-1 d-flex">
-                    <button t-if="props.hasActivities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
+                    <button t-if="props.hasActivities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" t-att-disabled="isReadonly" data-hotkey="shift+a" t-on-click="scheduleActivity">
                         <i class="fa fa-clock-o me-1"/>
                         <span>Activities</span>
                     </button>
                     <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
-                    <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                    <FileUploader t-if="attachments.length === 0 and state.thread.hasWriteAccess" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                         <t t-set-slot="toggler">
                             <t t-call="mail.Chatter.attachFiles"/>
                         </t>
@@ -153,7 +153,7 @@
 </t>
 
 <t t-name="mail.Chatter.attachFiles" owl="1">
-    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
+    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-att-disabled="!state.thread.hasWriteAccess and attachments.length === 0" t-on-click="onClickAddAttachments">
         <i class="fa fa-paperclip fa-lg me-1"/>
         <span t-if="attachments.length > 0" t-esc="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>

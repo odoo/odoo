@@ -220,6 +220,10 @@ export class Chatter extends Component {
         return !this.props.threadId || !this.state.thread.hasReadAccess;
     }
 
+    get isReadonly() {
+        return this.threadService.isReadonly(this.state.thread, false) && this.props.threadId;
+    }
+
     get attachments() {
         return this.state.thread?.attachments ?? [];
     }

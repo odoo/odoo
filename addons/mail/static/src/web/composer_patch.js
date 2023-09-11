@@ -7,7 +7,9 @@ import { patch } from "@web/core/utils/patch";
 patch(Composer.prototype, "web", {
     get placeholder() {
         if (this.thread && this.thread.model !== "discuss.channel") {
-            if (this.props.type === "message") {
+            if (this.threadService.isReadonly(this.thread)) {
+                return _t("You don't have the rights to post on this Document...");
+            } else if (this.props.type === "message") {
                 return _t("Send a message to followers...");
             } else {
                 return _t("Log an internal note...");

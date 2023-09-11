@@ -4151,24 +4151,33 @@ class MailThread(models.AbstractModel):
     # CONTROLLERS
     # ------------------------------------------------------
 
+    def _get_mail_thread_data_access_rights(self):
+        """ Return the access rights of the current user on threads in self.
+        The threads are expected to be of the same model.
+        """
+        readable_threads = self._filter_access_rules('read')
+        writable_threads = readable_threads._filter_access_rules('write')
+        has_write_access = self.check_access_rights('write', raise_exception=False)
+        return [
+            {
+                'hasReadAccess': thread in readable_threads,
+                'hasWriteAccess': thread in writable_threads and has_write_access,
+                'canPostOnReadonly': thread._mail_post_access == 'read',
+            }
+            for thread in self
+        ]
+
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
     def _get_mail_thread_data(self, request_list):
-        res = {'hasWriteAccess': False, 'hasReadAccess': True}
         if not self:
-            res['hasReadAccess'] = False
-            return res
-        res['canPostOnReadonly'] = self._mail_post_access == 'read'
+            return {'hasWriteAccess': False, 'hasReadAccess': False}
 
         self.ensure_one()
-        try:
-            self.check_access_rights("write")
-            self.check_access_rule("write")
-            res['hasWriteAccess'] = True
-        except AccessError:
-            pass
+        res = self._get_mail_thread_data_access_rights()[0]
+
         if 'activities' in request_list:
             res['activities'] = self.activity_ids.activity_format()
         if 'attachments' in request_list:

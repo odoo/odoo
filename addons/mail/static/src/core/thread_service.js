@@ -11,6 +11,7 @@ import {
 import { assignDefined, createLocalId, onChange } from "../utils/misc";
 import { Composer } from "../composer/composer_model";
 import { prettifyMessageContent } from "../utils/format";
+import { useSequential } from "../utils/hooks";
 import { registry } from "@web/core/registry";
 import { url } from "@web/core/utils/urls";
 import { memoize } from "@web/core/utils/functions";
@@ -51,6 +52,7 @@ export class ThreadService {
             const type = detail.type;
             this.insert({ model, id, type });
         });
+        this.sequential = useSequential();
     }
 
     /**
@@ -90,6 +92,49 @@ export class ThreadService {
                 this.channelMemberService.insert({ ...channelMember, threadId: thread.id });
             }
         }
+    }
+
+    isReadonly(thread, fetchAccessRights = true) {
+        if (thread?.type !== "chatter" || !thread.id) {
+            return false;
+        }
+        if (thread.hasWriteAccess === undefined && fetchAccessRights) {
+            this.sequential(async () => {
+                if (thread.hasWriteAccess !== undefined) {
+                    return;
+                }
+                const threadData = {};
+                const mailBoxThread = this.store.threads[this.store.discuss.threadLocalId];
+                if (this.store.discuss.isActive && mailBoxThread?.type === "mailbox") {
+                    for (const message of mailBoxThread.nonEmptyMessages) {
+                        if (
+                            message.originThread &&
+                            message.originThread.hasWriteAccess === undefined &&
+                            message.originThread.type === "chatter" &&
+                            message.originThread.id
+                        ) {
+                            if (!threadData[message.originThread.model]) {
+                                threadData[message.originThread.model] = new Set();
+                            }
+                            threadData[message.originThread.model].add(message.originThread.id);
+                        }
+                    }
+                    for (const model in threadData) {
+                        threadData[model] = Array.from(threadData[model]);
+                    }
+                } else {
+                    threadData[thread.model] = [thread.id];
+                }
+                if (Object.keys(threadData).length > 0) {
+                    const res = await this.rpc("/mail/thread/data/access_rights", {
+                        thread_data: threadData,
+                    });
+                    res.forEach((data) => this.insert(data));
+                }
+            });
+            return false;
+        }
+        return !thread.hasWriteAccess && !(thread.hasReadAccess && thread.canPostOnReadonly);
     }
 
     /**

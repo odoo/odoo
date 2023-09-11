@@ -8,6 +8,33 @@ from odoo.http import request
 
 
 class ThreadController(http.Controller):
+
+    @http.route("/mail/thread/data/access_rights", methods=["POST"], type="json", auth="user")
+    def mail_thread_data_access_rights(self, thread_data):
+        """ Returns the access rights of currentuser on the given threads.
+
+        :param thread_data: A dictionary where the key is a model name (string) and the value is a list of integers.
+                            Each integer represents the ID of a record with the same model name.
+                            Example: {'model_name1': [1, 2, 3], 'model_name2': [4, 5, 6]}
+        :type thread_data: dict
+
+        :return: A list of dictionaries. Each dictionary contains the keys 'id', 'model', 'hasReadAccess',
+             'hasWriteAccess', and 'canPostOnReadonly'.
+        :rtype: list
+        """
+        res = []
+        for thread_model in thread_data:
+            threads = request.env[thread_model].with_context(active_test=False).browse(thread_data[thread_model])
+            res += [
+                dict(id=thread.id, model=thread_model, **ar_data)
+                for thread, ar_data in zip(threads, getattr(
+                    threads,
+                    "_get_mail_thread_data_access_rights",
+                    lambda: [{'hasReadAccess': False, 'hasWriteAccess': False}] * len(threads)
+                )())
+            ]
+        return res
+
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
