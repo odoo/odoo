@@ -21,6 +21,19 @@ class AccountMove(models.Model):
         copy=False,
         readonly=True,
     )
+    ref = fields.Char(compute='_compute_payment_reference', readonly=False, store=True)
+
+    def _compute_payment_reference(self):
+        # EXTENDS account
+        super()._compute_payment_reference()
+        for move in self.filtered(lambda m: (
+            m.state != 'cancelled'
+            and m.move_type in ('out_invoice', 'out_refund')
+            and not m.ref
+        )):
+            company = move.company_id or move.journal_id.company_id
+            if company.is_account_peppol_participant:
+                move.ref = move.payment_reference
 
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done
