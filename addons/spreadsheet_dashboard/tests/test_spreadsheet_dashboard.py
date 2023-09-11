@@ -1,9 +1,11 @@
 import json
 
-from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
-class TestSpreadsheetDashboard(TransactionCase):
+from .common import DashboardTestCommon
+
+
+class TestSpreadsheetDashboard(DashboardTestCommon):
     def test_create_with_default_values(self):
         group = self.env["spreadsheet.dashboard.group"].create(
             {"name": "a group"}
@@ -32,3 +34,18 @@ class TestSpreadsheetDashboard(TransactionCase):
         })
         with self.assertRaises(UserError, msg="You cannot delete a_group as it is used in another module"):
             group.unlink()
+
+    def test_load_with_user_locale(self):
+        dashboard = self.create_dashboard().with_user(self.user)
+        self.user.lang = "en_US"
+        data = dashboard.get_readonly_dashboard()
+        locale = data["snapshot"]["settings"]["locale"]
+        self.assertEqual(locale["code"], "en_US")
+        self.assertEqual(len(data["revisions"]), 0)
+
+        self.env.ref("base.lang_fr").active = True
+        self.user.lang = "fr_FR"
+        data = dashboard.get_readonly_dashboard()
+        locale = data["snapshot"]["settings"]["locale"]
+        self.assertEqual(locale["code"], "fr_FR")
+        self.assertEqual(len(data["revisions"]), 0)

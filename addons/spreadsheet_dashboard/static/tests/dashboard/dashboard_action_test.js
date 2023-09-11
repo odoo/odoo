@@ -102,12 +102,8 @@ QUnit.test("display error message", async (assert) => {
         mockRPC: function (route, args) {
             if (
                 args.model === "spreadsheet.dashboard" &&
-                ((args.method === "read" &&
-                    args.args[0][0] === 2 &&
-                    args.args[1][0] === "spreadsheet_data") ||
-                    // this is not correct from a module dependency POV but it's required for the test
-                    // to pass when `spreadsheet_dashboard_edition` module is installed
-                    (args.method === "join_spreadsheet_session" && args.args[0] === 2))
+                args.method === "get_readonly_dashboard" &&
+                args.args[0] === 2
             ) {
                 throw new Error("Bip");
             }
