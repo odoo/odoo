@@ -299,7 +299,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         debug_bundle = self._get_asset(self.jsbundle_name)
         content = debug_bundle.get_links()
         # there should be a minified file
-        self.assertIn('test_assetsbundle.bundle1.min.js', content[0][0])
+        self.assertIn('test_assetsbundle.bundle1.min.js', content[0])
 
         # there should be one minified assets created in normal mode
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
@@ -316,7 +316,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         debug_bundle = self._get_asset(self.jsbundle_name, debug_assets=True)
         content = debug_bundle.get_links()
         # there should be a minified file
-        self.assertIn('test_assetsbundle.bundle1.js', content[0][0], "there should be one non-minified assets created in debug assets mode")
+        self.assertIn('test_assetsbundle.bundle1.js', content[0], "there should be one non-minified assets created in debug assets mode")
 
         # there shouldn't be any minified assets created in debug mode
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 0,
@@ -392,7 +392,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         debug_bundle = self._get_asset(self.cssbundle_name, debug_assets=True)
         content = debug_bundle.get_links()
         # there should be a minified file
-        self.assertEqual(content[0][0], '/web/assets/debug/ltr/test_assetsbundle.bundle2.css')
+        self.assertEqual(content[0], '/web/assets/debug/ltr/test_assetsbundle.bundle2.css')
 
         # there should be one css asset created in debug mode
         self.assertEqual(len(self._any_ira_for_bundle('css')), 1,
@@ -414,7 +414,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # the ir.attachment records should be deduplicated in the bundle's content
         content = bundle0.get_links()
-        self.assertIn('test_assetsbundle.bundle2.min.css', content[0][0])
+        self.assertIn('test_assetsbundle.bundle2.min.css', content[0])
 
     # Language direction specific tests
 
@@ -596,7 +596,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         content = debug_bundle.get_links()
 
         # there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets
-        self.assertEqual(f'/web/assets/debug/rtl/{self.cssbundle_name}.css', content[0][0],
+        self.assertEqual(f'/web/assets/debug/rtl/{self.cssbundle_name}.css', content[0],
                       "there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets")
 
         # there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets
