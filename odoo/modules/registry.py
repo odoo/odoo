@@ -20,8 +20,7 @@ import warnings
 import psycopg2
 
 import odoo
-from odoo.modules.db import FunctionStatus
-from odoo.osv.expression import get_unaccent_wrapper
+import odoo.index
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
@@ -580,7 +579,7 @@ class Registry(Mapping):
                 func = self._post_init_queue.popleft()
                 func()
 
-            self.check_indexes(cr, model_names)
+            self.check_indexes(env, models)
             self.check_foreign_keys(cr)
 
             env.flush_all()
@@ -593,60 +592,41 @@ class Registry(Mapping):
             del self._foreign_keys
             del self._is_install
 
-    def check_indexes(self, cr, model_names):
+    def check_indexes(self, env, models):
         """ Create or drop column indexes for the given models. """
 
+        models = {
+            model for model in models
+            if model._auto and not model._abstract
+        }
+        if not models:
+            return
+
         expected = [
-            (sql.make_index_name(Model._table, field.name), Model._table, field, getattr(field, 'unaccent', False))
-            for model_name in model_names
-            for Model in [self.models[model_name]]
-            if Model._auto and not Model._abstract
-            for field in Model._fields.values()
+            (model, field)
+            for model in models
+            for field in model._fields.values()
             if field.column_type and field.store
         ]
         if not expected:
             return
 
         # retrieve existing indexes with their corresponding table
-        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
-                   [tuple(row[0] for row in expected)])
-        existing = dict(cr.fetchall())
+        env.cr.execute("SELECT indexname, tablename, indexdef FROM pg_indexes WHERE tablename = any(%s)",
+                   [[model._table for model in models]])
+        existing = {
+            index: (tablename, definition)
+            for index, tablename, definition in env.cr.fetchall()
+        }
 
-        for indexname, tablename, field, unaccent in expected:
-            index = field.index
-            assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing and \
-                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
-                column_expression = f'"{field.name}"'
-                if index == 'trigram':
-                    if field.translate:
-                        column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
-                    # add `unaccent` to the trigram index only because the
-                    # trigram indexes are mainly used for (i/=)like search and
-                    # unaccent is added only in these cases when searching
-                    if unaccent and self.has_unaccent:
-                        if self.has_unaccent == FunctionStatus.INDEXABLE:
-                            column_expression = get_unaccent_wrapper(cr)(column_expression)
-                        else:
-                            warnings.warn(
-                                "PostgreSQL function 'unaccent' is present but not immutable, "
-                                "therefore trigram indexes may not be effective.",
-                            )
-                    expression = f'{column_expression} gin_trgm_ops'
-                    method = 'gin'
-                    where = ''
-                else:  # index in ['btree', 'btree_not_null'， True]
-                    expression = f'{column_expression}'
-                    method = 'btree'
-                    where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
+        for model, field in expected:
+            for indexname, index in field.get_indexes(model):
+                _, prev = existing.get(indexname) or (None, None)
+
                 try:
-                    with cr.savepoint(flush=False):
-                        sql.create_index(cr, indexname, tablename, [expression], method, where)
+                    odoo.index.install(model, field, index, existing=prev)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
-
-            elif not index and tablename == existing.get(indexname):
-                _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,
                         model, module, force=True):

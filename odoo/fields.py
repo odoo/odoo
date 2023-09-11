@@ -5,7 +5,6 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time
-from lxml import etree, html
 from operator import attrgetter
 from xmlrpc.client import MAXINT
 import ast
@@ -28,6 +27,7 @@ from psycopg2.sql import SQL, Identifier
 from difflib import get_close_matches, unified_diff
 from hashlib import sha256
 
+from . import index
 from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
@@ -1404,6 +1404,31 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return a domain representing a condition on ``self``. """
         return determine(self.search, records, operator, value)
 
+    def get_indexes(self, Model):
+        if not self.index:
+            return
+
+        if isinstance(self.index, index.Index):
+            idx = self.index
+        elif self.index == 1:
+            if self.index is not True:
+                warnings.warn(
+                    "Using an integer value as index is deprecated as of 17.0, "
+                    f"replace {self}.index={self.index} by a boolean or "
+                    "`odoo.index.index` value.",
+                    category=DeprecationWarning,
+                )
+            idx = index.trigram() if self.translate else index.btree()
+        else:
+            idx = index.STRING_TO_INDEX[self.index]
+
+        indexname = sql.make_index_name(Model._table, self.name)
+        if isinstance(idx, index.trigram):
+            if Model.env.registry.has_trigram:
+                yield indexname, idx
+            return
+
+        yield indexname, idx
 
 class Boolean(Field):
     """ Encapsulates a :class:`bool`. """
@@ -1418,6 +1443,18 @@ class Boolean(Field):
 
     def convert_to_export(self, value, record):
         return value
+
+    def get_indexes(self, Model):
+        if self.index is True:
+            _logger.warning("""\
+Indexing boolean field %s is likely sub-optimal: if the values are balanced \
+(true and false present in similar amounts) the index will not be used, if the \
+values are highly imbalanced (80+%% one or the other) the index will be used \
+but is bloated: a partial index for the *least present* value will most likely \
+be as good in a fraction the space.
+""", self
+            )
+        return super().get_indexes(Model)
 
 
 class Integer(Field):

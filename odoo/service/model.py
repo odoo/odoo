@@ -106,6 +106,12 @@ def _as_validation_error(env, exc):
         ))
 
     if exc.diag.constraint_name in env.registry._sql_constraints:
+        # diag attributes on UniqueViolation:
+        # - constraint_name
+        # - message_primary (duplicate key value violates constraint "$constraint_name")
+        # - message_detail (Key ... already exists)
+        # - sqlstate (error code)
+        # - table_name
         return ValidationError(_(
             "The operation cannot be completed: %s",
             translate_sql_constraint(env.cr, exc.diag.constraint_name, env.context.get('lang', 'en_US'))
