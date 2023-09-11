@@ -63,9 +63,7 @@ class WebsocketController(Controller):
         :param str v: Version of the worker, frontend only argument used to
             prevent new worker versions to be loaded from the browser cache.
         """
-        bundle = 'bus.websocket_worker_assets'
-        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
-        stream = request.env['ir.binary']._get_stream_from(asset.js(
-            is_minified="assets" not in request.session.debug
-        ))
+        bundle_name = 'bus.websocket_worker_assets'
+        bundle = request.env["ir.qweb"]._get_asset_bundle(bundle_name, debug_assets="assets" in request.session.debug)
+        stream = request.env['ir.binary']._get_stream_from(bundle.js())
         return stream.get_response()

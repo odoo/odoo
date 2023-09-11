@@ -8,6 +8,8 @@ import logging
 import os
 import unicodedata
 
+import werkzeug.exceptions
+
 try:
     from werkzeug.utils import send_file
 except ImportError:
@@ -15,13 +17,12 @@ except ImportError:
 
 import odoo
 import odoo.modules.registry
-from odoo import http, _
+from odoo import SUPERUSER_ID, _, http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
 from odoo.tools import file_open, file_path, replace_exceptions
-from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_guess_size_from_field_name
-
+from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
 
@@ -83,26 +84,60 @@ class Binary(http.Controller):
         res.headers['Content-Security-Policy'] = "default-src 'none'"
         return res
 
-    @http.route(['/web/assets/debug/<path:extra>/<string:filename>',
+    @http.route([
         '/web/assets/<path:extra>/<string:filename>',
         '/web/assets/<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
     def content_assets(self, filename=None, unique='%', extra='-', nocache=False):
-        url = f'/web/assets/{unique}/{extra}/{filename}'
-        domain = [
-            ('public', '=', True),
-            ('url', '!=', False),
-            ('url', '=like', url),
-            ('res_model', '=', 'ir.ui.view'),
-            ('res_id', '=', 0),
-        ]
-        attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
+        debug_assets = unique == 'debug'
+        attachment = None
+        if unique != 'debug':
+            url = f'/web/assets/{unique}/{extra}/{filename}'
+            domain = [
+                ('public', '=', True),
+                ('url', '!=', False),
+                ('url', '=like', url),
+                ('res_model', '=', 'ir.ui.view'),
+                ('res_id', '=', 0),
+                ('create_uid', '=', SUPERUSER_ID),
+            ]
+            attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
+        if not attachment:
+            # try to generate one
+            with replace_exceptions(ValueError, by=werkzeug.exceptions.BadRequest):
+                extra_parts = extra.split('+')
+                params = request.env['ir.asset']._parse_assets_extra(extra_parts)
+                if debug_assets:
+                    bundle_name, asset_type = filename.rsplit('.', 1)
+                else:
+                    bundle_name, min_, asset_type = filename.rsplit('.', 2)
+                    if min_ != 'min':
+                        _logger.error("'min' expected in extension in non debug mode")
+                        raise request.not_found()
+                css = asset_type == 'css'
+                js = asset_type == 'js'
+                if not js and not css:
+                    _logger.error('Only js and css assets bundle are supported for now')
+                    raise request.not_found()
+                bundle = request.env['ir.qweb']._get_asset_bundle(
+                    bundle_name,
+                    css=css,
+                    js=js,
+                    debug_assets=debug_assets,
+                    rtl='rtl' in extra_parts,
+                    assets_params=params,
+                )
+                # check if the version matches. If not, redirect to the last version
+                if not debug_assets and unique != '%' and unique != bundle.get_version(asset_type):
+                    return request.redirect(bundle.get_link(asset_type))
+                if css and bundle.stylesheets:
+                    attachment = bundle.css()
+                elif js and bundle.javascripts:
+                    attachment = bundle.js()
         if not attachment:
             raise request.not_found()
-        with replace_exceptions(UserError, by=request.not_found()):
-            stream = request.env['ir.binary']._get_stream_from(attachment, 'raw', filename)
-
+        stream = request.env['ir.binary']._get_stream_from(attachment, 'raw', filename)
         send_file_kwargs = {'as_attachment': False}
-        if unique:
+        if unique and unique != 'debug':
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:

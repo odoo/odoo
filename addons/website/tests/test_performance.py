@@ -278,8 +278,8 @@ class TestWebsitePerformancePost(UtilPerf):
     @mute_logger('odoo.http')
     def test_50_perf_sql_web_assets(self):
         # assets route /web/assets/..
-        self.env['ir.qweb']._generate_asset_links('web.assets_frontend_lazy', css=False, js=True)
-        assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_frontend_lazy%.js')], limit=1).url
+        assets_url = self.env['ir.qweb']._get_asset_bundle('web.assets_frontend_lazy', css=False, js=True).get_links()[0]
+        self.assertIn('web.assets_frontend_lazy.min.js', assets_url)
         select_tables_perf = {
             'base_registry_signaling': 1,
             'ir_attachment': 2,

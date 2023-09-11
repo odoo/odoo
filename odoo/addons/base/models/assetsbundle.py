@@ -116,11 +116,9 @@ class AssetsBundle(object):
         response = []
 
         if self.has_css and self.stylesheets:
-            self.css(is_minified=not self.is_debug_assets)
             response.append(self.get_link('css'))
 
         if self.has_js and self.javascripts:
-            self.js(is_minified=not self.is_debug_assets)
             response.append(self.get_link('js'))
 
         return self.external_assets + response
@@ -274,21 +272,10 @@ class AssetsBundle(object):
                     'raw': similar.raw,
                     'url': url,
                 }
-                self.add_post_rollback()
                 attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
                 attachment_id = attachment.id
-                if self.env.context.get('commit_assetsbundle') is True:
-                    self.env.cr.commit()
 
         return self.env['ir.attachment'].sudo().browse(attachment_id)
-
-    def add_post_rollback(self):
-        """
-            In some rare cases it is possible that an attachment is created during a transaction, added to the ormcache
-            but the transaction is rollbacked, leading to 404 when getting the attachments.
-            This postrollback hook will help fix this issue by clearing the cache if it isn't commited.
-        """
-        self.env.cr.postrollback.add(self.env.registry._Registry__caches['assets'].clear)
 
     def save_attachment(self, extension, content):
         """Record the given bundle in an ir.attachment and delete
@@ -331,11 +318,7 @@ class AssetsBundle(object):
             'raw': content.encode('utf8'),
             'url': url,
         }
-        self.add_post_rollback()
         attachment = ira.with_user(SUPERUSER_ID).create(values)
-
-        if self.env.context.get('commit_assetsbundle') is True:
-            self.env.cr.commit()
 
         self.clean_attachments(extension, url, extra)
 
@@ -349,7 +332,8 @@ class AssetsBundle(object):
 
         return attachment
 
-    def js(self, is_minified=True):
+    def js(self):
+        is_minified = not self.is_debug_assets
         extension = 'min.js' if is_minified else 'js'
         js_attachment = self.get_attachments(extension)
 
@@ -556,7 +540,8 @@ class AssetsBundle(object):
         # Returns the string by removing the <root> tag.
         return etree.tostring(root, encoding='unicode')[6:-7]
 
-    def css(self, is_minified=True):
+    def css(self):
+        is_minified = not self.is_debug_assets
         extension = 'min.css' if is_minified else 'css'
         attachments = self.get_attachments(extension)
         if attachments:
@@ -564,7 +549,7 @@ class AssetsBundle(object):
 
         css = self.preprocess_css()
         if self.css_errors:
-            error_message = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\A').replace('*', '\*')
+            error_message = '\n'.join(self.css_errors).replace('"', r'\\"').replace('\n', r'\A').replace('*', r'\*')
             previous_attachment = self.get_attachments(extension, ignore_version=True)
             previous_css = previous_attachment.raw.decode() if previous_attachment else ''
             css_error_message_header = '\n\n/* ## CSS error message ##*/'

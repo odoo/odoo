@@ -2625,11 +2625,11 @@ class IrQWeb(models.AbstractModel):
         links = []
         start = time.time()
         for bundle in sorted(js_bundles):
-            links += self._generate_asset_links(bundle, css=False, js=True)
+            links += self._get_asset_bundle(bundle, css=False, js=True).js()
         _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
         start = time.time()
         for bundle in sorted(css_bundles):
-            links += self._generate_asset_links(bundle, css=True, js=False)
+            links += self._get_asset_bundle(bundle, css=True, js=False).css()
         _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
         return links
 
@@ -2650,9 +2650,7 @@ class IrQWeb(models.AbstractModel):
                     js_bundles.add(asset)
                 if css:
                     css_bundles.add(asset)
-
         return (js_bundles, css_bundles)
-
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.
