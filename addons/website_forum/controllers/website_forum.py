@@ -73,31 +73,39 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-    def _get_forum_port_search_options(self, forum=None, tag=None, filters=None, my=None, **post):
+    def _get_forum_post_search_options(self, forum=None, tag=None, filters=None, my=None, create_uid=False, include_answers=False, **post):
         return {
+            'allowFuzzy': not post.get('noFuzzy'),
+            'create_uid': create_uid,
             'displayDescription': False,
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
             'displayImage': False,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'forum': str(forum.id) if forum else None,
-            'tag': str(tag.id) if tag else None,
             'filters': filters,
+            'forum': str(forum.id) if forum else None,
+            'include_answers': include_answers,
             'my': my,
+            'tag': str(tag.id) if tag else None,
         }
 
-    @http.route(['/forum/<model("forum.forum"):forum>',
+    @http.route(['/forum/all',
+                 '/forum/all/page/<int:page>',
+                 '/forum/<model("forum.forum"):forum>',
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
-    def questions(self, forum, tag=None, page=1, filters='all', my=None, sorting=None, search='', **post):
+    def questions(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False, include_answers=False, **post):
         Post = request.env['forum.post']
 
+        author = request.env['res.users'].browse(int(create_uid))
+
+        if author == request.env.user:
+            my = 'mine'
         if sorting:
             # check that sorting is valid
-            # retro-compatibily for V8 and google links
+            # retro-compatibility for V8 and google links
             try:
                 sorting = werkzeug.urls.url_unquote_plus(sorting)
                 Post._generate_order_by(sorting, None)
@@ -105,13 +113,16 @@ class WebsiteForum(WebsiteProfile):
                 sorting = False
 
         if not sorting:
-            sorting = forum.default_order
+            sorting = forum.default_order if forum else 'last_activity_date desc'
 
-        options = self._get_forum_port_search_options(
+        options = self._get_forum_post_search_options(
             forum=forum,
             tag=tag,
             filters=filters,
             my=my,
+            create_uid=author.id,
+            include_answers=include_answers,
+            my_profile=request.env.user == author,
             **post
         )
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
@@ -119,7 +130,11 @@ class WebsiteForum(WebsiteProfile):
         question_ids = details[0].get('results', Post)
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
-        url = f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}"
+        if not forum:
+            url = '/forum/all'
+        else:
+            url = f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}"
+
         url_args = {'sorting': sorting}
 
         for name, value in zip(['filters', 'search', 'my'], [filters, search, my]):
@@ -132,7 +147,7 @@ class WebsiteForum(WebsiteProfile):
 
         values = self._prepare_user_values(forum=forum, searches=post)
         values.update({
-            'main_object': tag or forum,
+            'author': author,
             'edit_in_backend': True,
             'question_ids': question_ids,
             'question_count': question_count,
@@ -145,6 +160,10 @@ class WebsiteForum(WebsiteProfile):
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
         })
+
+        if forum or tag:
+            values['main_object'] = tag or forum
+
         return request.render("website_forum.forum_index", values)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/faq'''], type='http', auth="public", website=True, sitemap=True)
@@ -602,9 +621,10 @@ class WebsiteForum(WebsiteProfile):
     # Profile
     # -----------------------------------
 
-    @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
-    def view_user_forum_profile(self, forum, user_id, forum_origin='/forum', **post):
-        return request.redirect(f'/profile/user/{user_id}?forum_id={forum.id}&forum_origin={forum_origin}')
+    @http.route(['/forum/user/<int:user_id>'], type='http', auth="public", website=True)
+    def view_user_forum_profile(self, user_id, forum_id='', forum_origin='/forum', **post):
+        forum_origin_query = f'?forum_origin={forum_origin}&forum_id={forum_id}' if forum_id else ''
+        return request.redirect(f'/profile/user/{user_id}{forum_origin_query}')
 
     def _prepare_user_profile_values(self, user, **post):
         values = super(WebsiteForum, self)._prepare_user_profile_values(user, **post)

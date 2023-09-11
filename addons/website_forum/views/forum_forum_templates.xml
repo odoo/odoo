@@ -23,17 +23,17 @@
                     <th class="o_wforum_table_title"></th>
                     <th class="o_wforum_table_posters"></th>
                     <th class="o_wforum_table_replies small fw-normal text-center">
-                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='child_count asc' if sorting == 'child_count desc' else 'child_count desc') }">
-                            Replies <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'child_count desc' else 'up' } #{ 'd-none ' if not sorting.startswith('child_count') else '' }"></i>
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='child_count asc' if sorting == 'child_count desc' else 'child_count desc') }">
+                            Replies <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'child_count desc' else 'up' } #{ not sorting.startswith('child_count') and 'd-none ' }"></i>
                         </a>
                     </th>
                     <th class="o_wforum_table_views small fw-normal text-center">
-                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='views asc' if sorting == 'views desc' else 'views desc') }">
-                            Views <i t-attf-class="fa fa-caret-#{'down' if sorting == 'views desc' else 'up'}  #{ 'd-none ' if not sorting.startswith('views') else '' }"></i>
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='views asc' if sorting == 'views desc' else 'views desc') }">
+                            Views <i t-attf-class="fa fa-caret-#{'down' if sorting == 'views desc' else 'up'}  #{ not sorting.startswith('views') and 'd-none ' }"></i>
                         </a>
                     </th>
                     <th class="o_wforum_table_activity small fw-normal text-center">
-                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='last_activity_date asc' if sorting == 'last_activity_date desc' else 'last_activity_date desc') }">
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='last_activity_date asc' if sorting == 'last_activity_date desc' else 'last_activity_date desc') }">
                             Activity <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'last_activity_date desc' else 'up'}  #{ 'd-none ' if not sorting.startswith('last_activity') else '' }"></i>
                         </a>
                     </th>
@@ -45,7 +45,8 @@
         </table>
         <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message">
             <t t-set="record_name_plural">posts</t>
-            <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/"/>
+            <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
+            <t t-set="go_back_url" t-valuef="/forum/#{_forum_slug}/"/>
         </t>
         <t t-call="website.pager"/>
     </t>
