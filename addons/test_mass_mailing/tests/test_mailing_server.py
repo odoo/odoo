@@ -14,7 +14,6 @@ class TestMassMailingServer(TestMassMailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMassMailingServer, cls).setUpClass()
-        cls._init_mail_servers()
         cls.recipients = cls._create_mailing_test_records(model='mailing.test.optout', count=8)
 
     def test_mass_mailing_server_archived_usage_protection(self):
