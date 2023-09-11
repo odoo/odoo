@@ -12,12 +12,21 @@ from collections import defaultdict
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import format_date
 
+class IrSequence(models.Model):
+    _inherit = "ir.sequence"
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        spt = self.env['stock.picking.type'].search([('sequence_id', '=', self.id.origin)])
+        for i in spt:
+            if i.company_id.id != self.company_id.id:
+                raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
 
 class PickingType(models.Model):
     _name = "stock.picking.type"
@@ -100,6 +109,12 @@ class PickingType(models.Model):
 
         picking_type = super(PickingType, self).create(vals)
         return picking_type
+
+    @api.constrains('sequence_id', 'company_id')
+    def _check_sequence_company(self):
+        for record in self:
+            if record.sequence_id and record.sequence_id.company_id != record.company_id:
+                raise ValidationError("The company of 'Reference Sequence' must match the company of this record.")
 
     def write(self, vals):
         if 'company_id' in vals:
