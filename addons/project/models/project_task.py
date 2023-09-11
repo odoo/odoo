@@ -845,6 +845,16 @@ class Task(models.Model):
 
         return tasks
 
+    @api.model
+    def _get_portal_sudo_context(self):
+        return {
+            key: value for key, value in self.env.context.items()
+            if key == 'default_project_id'
+            or key == 'default_user_ids' and value is False
+            or not key.startswith('default_')
+            or key[8:] in self.SELF_WRITABLE_FIELDS
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         new_context = dict(self.env.context)
@@ -917,14 +927,7 @@ class Task(models.Model):
         # in order to compute the field tracking
         was_in_sudo = self.env.su
         if is_portal_user:
-            ctx = {
-                key: value for key, value in self.env.context.items()
-                if key == 'default_project_id' \
-                    or key == 'default_user_ids' and value is False \
-                    or not key.startswith('default_') \
-                    or key[8:] in self.SELF_WRITABLE_FIELDS
-            }
-            self = self.with_context(ctx).sudo()
+            self = self.sudo().with_context(self._get_portal_sudo_context())
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
@@ -1069,7 +1072,7 @@ class Task(models.Model):
         # requires the write access on others models, as rating.rating
         # in order to keep the same name than the task.
         if portal_can_write:
-            self = self.sudo()
+            self = self.sudo().with_context(self._get_portal_sudo_context())
 
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self.sudo()}
