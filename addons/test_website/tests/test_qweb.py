@@ -35,22 +35,18 @@ class TestQweb(TransactionCaseWithUserDemo):
         html = demo_env['ir.qweb']._render('test_website.test_template', {"user": demo}, website_id=website.id)
         asset_bundle_xmlid = 'test_website.test_bundle'
         qweb = self.env['ir.qweb']
-        bundle = qweb._get_asset_bundle(asset_bundle_xmlid, css=True, js=True)
+        bundle = qweb._get_asset_bundle(asset_bundle_xmlid, css=True, js=True, assets_params={'website_id': website.id})
 
         asset_version_js = bundle.get_version('js')
         asset_version_css = bundle.get_version('css')
+        css_url, js_url = bundle.get_links()[-2:]
 
         html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
-        css_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/{asset_version_css}/w-{website.id}_ltr/test_website.test_bundle.%')])
-        js_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/{asset_version_js}/w-{website.id}_-/test_website.test_bundle.%')])
-        self.assertEqual(len(css_attachement), 1)
-        self.assertEqual(len(js_attachement), 1)
-
         format_data = {
-            "css": css_attachement.url,
-            "js": js_attachement.url,
+            "css": css_url,
+            "js": js_url,
             "user_id": demo.id,
             "filename": "Marc%20Demo",
             "alt": "Marc Demo",

@@ -105,6 +105,10 @@ class IrAsset(models.Model):
         """
         return extra
 
+
+    def _parse_assets_extra(self, extra_parts):
+        return {}
+
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
         tools.ormcache('bundle', 'tuple(sorted(assets_params.items()))', cache='assets'),
