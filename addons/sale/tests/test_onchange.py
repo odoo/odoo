@@ -474,3 +474,20 @@ class TestOnchangeProductId(TransactionCase):
         order_line.product_uom = new_uom
         order_line.product_uom_change()
         self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
+
+    def test_create_products_in_different_companies(self):
+        """ Ensures the product's constrain on `company_id` doesn't block the creation of multiple
+        products in different companies (see `product.template` `_check_sale_product_company`.)
+        """
+        company_a = self.env['res.company'].create({'name': 'Company A'})
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        products = self.env['product.template'].create([
+            {'name': "Product Test 1", 'company_id': company_a.id},
+            {'name': "Product Test 2", 'company_id': company_b.id},
+            {'name': "Product Test 3", 'company_id': False},
+        ])
+        self.assertRecordValues(products, [
+            {'company_id': company_a.id},
+            {'company_id': company_b.id},
+            {'company_id': False},
+        ])

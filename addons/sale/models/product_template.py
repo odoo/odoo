@@ -3,6 +3,7 @@
 
 import json
 import logging
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
@@ -62,17 +63,26 @@ class ProductTemplate(models.Model):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
 
-
     @api.constrains('company_id')
     def _check_sale_product_company(self):
         """Ensure the product is not being restricted to a single company while
         having been sold in another one in the past, as this could cause issues."""
-        target_company = self.company_id
-        if target_company:  # don't prevent writing `False`, should always work
-            product_data = self.env['product.product'].sudo().with_context(active_test=False).search_read([('product_tmpl_id', 'in', self.ids)], fields=['id'])
-            product_ids = list(map(lambda p: p['id'], product_data))
-            so_lines = self.env['sale.order.line'].sudo().search_read([('product_id', 'in', product_ids), ('company_id', '!=', target_company.id)], fields=['id', 'product_id'])
-            used_products = list(map(lambda sol: sol['product_id'][1], so_lines))
+        products_by_compagny = defaultdict(lambda: self.env['product.template'])
+        for product in self:
+            if not product.product_variant_ids:
+                continue  # Constrains not relevant in this case.
+            products_by_compagny[product.company_id] |= product
+        for target_company, products in products_by_compagny.items():
+            if not target_company:  # don't prevent writing `False`, should always work
+                continue
+            product_data = self.env['product.product'].sudo().with_context(active_test=False).search_read(
+                [('product_tmpl_id', 'in', products.ids)],
+                fields=['id'])
+            product_ids = [p['id'] for p in product_data]
+            so_lines = self.env['sale.order.line'].sudo().search_read(
+                [('product_id', 'in', product_ids), ('company_id', '!=', target_company.id)],
+                fields=['id', 'product_id'])
+            used_products = [sol['product_id'][1] for sol in so_lines]
             if so_lines:
                 raise ValidationError(_('The following products cannot be restricted to the company'
                                         ' %s because they have already been used in quotations or '
