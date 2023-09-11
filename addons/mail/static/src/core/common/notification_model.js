@@ -1,8 +1,9 @@
 /* @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
+import { Record } from "@mail/core/common/record";
 
-export class Notification {
+export class Notification extends Record {
     /** @type {number} */
     id;
     /** @type {number} */
@@ -19,6 +20,7 @@ export class Notification {
     _store;
 
     constructor(store, data) {
+        super();
         Object.assign(this, {
             id: data.id,
             _store: store,
