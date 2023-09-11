@@ -2,10 +2,10 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
+import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
-
-const { Component, useState, useEffect, onWillStart, useRef, onMounted } = owl;
+import { Component, useState, useEffect, onWillStart, useRef } from "@odoo/owl";
 
 const useControlledInput = (initialValue, validate) => {
     const input = useState({
@@ -122,25 +122,14 @@ export class EditMenuDialog extends Component {
             this.toDelete = [];
         });
 
-        onMounted(() => {
-            this.$sortables = $(this.menuEditor.el);
-            this.$sortables.nestedSortable({
-                listType: 'ul',
-                handle: 'div',
-                items: 'li',
-                maxLevels: 2,
-                toleranceElement: '> div',
-                forcePlaceholderSize: true,
-                opacity: 0.6,
-                placeholder: 'oe_menu_placeholder',
-                tolerance: 'pointer',
-                attribute: 'data-menu-id',
-                expression: '()(.+)', // nestedSortable takes the second match of an expression (*sigh*)
-                isAllowed: (placeholder, placeholderParent, currentItem) => {
-                    return !placeholderParent
-                        || !currentItem[0].dataset.isMegaMenu && !placeholderParent[0].dataset.isMegaMenu;
-                },
-            });
+        useNestedSortable({
+            ref: this.menuEditor,
+            handle: "div",
+            nest: true,
+            maxLevels: 2,
+            onDrop: this._moveMenu.bind(this),
+            isAllowed: this._isAllowedMove.bind(this),
+            useElementSize: true,
         });
     }
 
@@ -148,6 +137,45 @@ export class EditMenuDialog extends Component {
         map.set(menu.fields['id'], menu);
         for (const submenu of menu.children) {
             this.populate(map, submenu);
+        }
+    }
+
+    _isAllowedMove(current, elementSelector) {
+        const currentIsMegaMenu = current.element.dataset.isMegaMenu === "true";
+        if (!currentIsMegaMenu) {
+            return current.placeHolder.parentNode.closest(`${elementSelector}[data-is-mega-menu="true"]`) === null;
+        }
+        const isDropOnRoot = current.placeHolder.parentNode.closest(elementSelector) === null;
+        return currentIsMegaMenu && isDropOnRoot;
+    }
+
+    _getMenuIdForElement(element) {
+        const menuIdStr = element.dataset.menuId;
+        const menuId = parseInt(menuIdStr);
+        return isNaN(menuId) ? menuIdStr : menuId;
+    }
+
+    _moveMenu({ element, parent, previous }) {
+        const menuId = this._getMenuIdForElement(element);
+        const menu = this.map.get(menuId);
+
+        // Remove element from parent's children (since we are moving it, this is the mandatory first step)
+        const parentId = menu.fields['parent_id'] || this.state.rootMenu.fields['id'];
+        let parentMenu = this.map.get(parentId);
+        parentMenu.children = parentMenu.children.filter((m) => m.fields['id'] !== menuId);
+
+        // Determine next parent
+        const menuParentId = parent ? this._getMenuIdForElement(parent.closest("li")) : this.state.rootMenu.fields['id'];
+        parentMenu = this.map.get(menuParentId);
+        menu.fields['parent_id'] = parentMenu.fields['id'];
+
+        // Determine at which position we should place the element
+        if (previous) {
+            const previousMenu = this.map.get(this._getMenuIdForElement(previous));
+            const index = parentMenu.children.findIndex((menu) => menu === previousMenu);
+            parentMenu.children.splice(index + 1, 0, menu);
+        } else {
+            parentMenu.children.unshift(menu);
         }
     }
 
@@ -182,8 +210,6 @@ export class EditMenuDialog extends Component {
             save: (name, url) => {
                 menuToEdit.fields['name'] = name;
                 menuToEdit.fields['url'] = url;
-                // Forces a rerender
-                this.state.rootMenu.children = [...this.state.rootMenu.children];
             },
         });
     }
@@ -200,23 +226,17 @@ export class EditMenuDialog extends Component {
     }
 
     async onClickSave() {
-        const newMenus = this.$sortables.nestedSortable('toArray', {startDepthCount: 0});
-        const levels = [];
         const data = [];
-
-        // Resequence, re-tree and remove useless data
-        for (const menu of newMenus) {
-            if (menu.id) {
-                levels[menu.depth] = (levels[menu.depth] || 0) + 1;
-                const {fields: menuFields} = this.map.get(menu.id) || this.map.get(parseInt(menu.id, 10));
-                menuFields['sequence'] = levels[menu.depth];
-                // JQuery's nestedSortable() extracts parent_ids as string.
-                // They must be ints when they are actual existing ids but
-                // remain as strings when they represent a creation ("new-##").
-                menuFields['parent_id'] = parseInt(menu['parent_id']) || menu['parent_id'] || this.state.rootMenu.fields['id'];
+        this.map.forEach((menu, id) => {
+            if (this.state.rootMenu.fields['id'] !== id) {
+                const menuFields = menu.fields;
+                const parentId = menuFields.parent_id || this.state.rootMenu.fields['id'];
+                const parentMenu = this.map.get(parentId);
+                menuFields['sequence'] = parentMenu.children.findIndex(m => m.fields['id'] === id);
+                menuFields['parent_id'] = parentId;
                 data.push(menuFields);
             }
-        }
+        });
 
         await this.orm.call('website.menu', 'save', [
             this.website.currentWebsite.id,

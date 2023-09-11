@@ -165,10 +165,23 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
     },
     {
+        content: "Avoid flickering during DnD",
+        trigger: ".modal-dialog",
+        run: () => {
+            const modalDialog = document.querySelector(".modal .modal-dialog");
+            modalDialog.classList.remove("modal-dialog-centered");
+        },
+        debugHelp: "This is a hack/workaround for the next step",
+    },
+    {
         content: "Drag item into parent",
-        trigger: '.oe_menu_editor li:contains("Contact us") > .ui-sortable-handle',
-        // Menu rows are 38px tall.
-        run: "drag_move_and_drop [50,38]@.oe_menu_editor li:contains('Home') > .ui-sortable-handle => .oe_menu_editor li:contains('Home') .ui-sortable-placeholder",
+        trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Shop') .fa-bars",
+    },
+    {
+        content: "Drag item into parent",
+        trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
+        run: 'drag_and_drop_native .oe_menu_editor li:contains("Contact us") .form-control',
     },
     {
         content: "Wait for drop",
@@ -178,8 +191,8 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     // Drag the Mega menu to the first position.
     {
         content: "Drag Mega at the top",
-        trigger: '.oe_menu_editor li:contains("Megaaaaa!") > .ui-sortable-handle',
-        run: "drag_move_and_drop [0,0]@.oe_menu_editor li:contains('Home') > .ui-sortable-handle => .oe_menu_editor li",
+        trigger: '.oe_menu_editor li:contains("Megaaaaa!") .fa-bars',
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') .fa-bars",
     },
     {
         content: "Wait for drop",

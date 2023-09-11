@@ -309,7 +309,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Mega") .fa-bars',
-        run: "drag_move_and_drop [0,0]@.oe_menu_editor li:contains('Home') .fa-bars => .oe_menu_editor li",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') .fa-bars",
     },
     {
         content: "Wait for drop",
