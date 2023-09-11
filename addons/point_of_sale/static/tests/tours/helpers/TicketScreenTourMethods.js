@@ -32,7 +32,7 @@ class Do {
     selectOrder(orderName) {
         return [
             {
-                trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}")`,
+                trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
             },
         ];
     }
@@ -51,11 +51,11 @@ class Do {
     deleteOrder(orderName) {
         return [
             {
-                trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}")`,
+                trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
                 mobile: true,
             },
             {
-                trigger: `.ticket-screen .order-row:has(.col:nth-child(2):contains("${orderName}")) .delete-button`,
+                trigger: `.ticket-screen .order-row:has(.col:contains("${orderName}")) .delete-button`,
                 mobile: true,
             },
             {
@@ -168,12 +168,12 @@ class Check {
     checkStatus(orderName, status) {
         return [
             {
-                trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}") ~ .col:nth-child(6):contains(${status})`,
+                trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(6):contains(${status})`,
                 run: () => {},
                 mobile: false,
             },
             {
-                trigger: `.ticket-screen .order-row .col:nth-child(2) div:contains("${orderName}") ~ div:contains(${status})`,
+                trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(2):contains(${status})`,
                 run: () => {},
                 mobile: true,
             },
@@ -182,11 +182,13 @@ class Check {
     /**
      * Check if the nth row contains the given string.
      * Note that 1st row is the header-row.
+     * @param {boolean | undefined} viewMode true if in mobile view, false if in desktop, undefined if in both views.
      */
-    nthRowContains(n, string) {
+    nthRowContains(n, string, viewMode = undefined) {
         return [
             {
                 trigger: `.ticket-screen .orders > .order-row:nth-child(${n}):contains("${string}")`,
+                mobile: viewMode,
                 run: () => {},
             },
         ];
