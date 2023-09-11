@@ -2203,7 +2203,7 @@ class IrQWeb(models.AbstractModel):
         """.strip(), level))
 
         code.append(indent_code("""
-            for index, (tagName, asset_attrs, content) in enumerate(t_call_assets_nodes):
+            for index, (tagName, asset_attrs) in enumerate(t_call_assets_nodes):
                 if index:
                     yield '\\n        '
                 yield '<'
@@ -2214,12 +2214,10 @@ class IrQWeb(models.AbstractModel):
                     if value or isinstance(value, str):
                         yield f' {escape(str(name))}="{escape(str(value))}"'
 
-                if not content and tagName in VOID_ELEMENTS:
+                if tagName in VOID_ELEMENTS:
                     yield '/>'
                 else:
                     yield '>'
-                    if content:
-                      yield content
                     yield '</'
                     yield tagName
                     yield '>'
@@ -2544,7 +2542,7 @@ class IrQWeb(models.AbstractModel):
                     'last_modified': last_modified,
                 })
             else:
-                external_asset.append((path, None))
+                external_asset.append(path)
         return (files, external_asset)
 
     def _get_asset_bundle(self, bundle_name, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
@@ -2556,8 +2554,7 @@ class IrQWeb(models.AbstractModel):
     def _links_to_nodes(self, paths, defer_load=False, lazy_load=False, media=None):
         return [self._link_to_node(path, defer_load=defer_load, lazy_load=lazy_load, media=media) for path in paths]
 
-    def _link_to_node(self, descriptor, defer_load=False, lazy_load=False, media=None):
-        path, js_content = descriptor # small hack to manage css compilation error, to transform into a full css solution or saved js error
+    def _link_to_node(self, path, defer_load=False, lazy_load=False, media=None):
         ext = path.rsplit('.', maxsplit=1)[-1] if path else 'js'
         is_js = ext in SCRIPT_EXTENSIONS
         is_xml = ext in TEMPLATE_EXTENSIONS
@@ -2582,10 +2579,7 @@ class IrQWeb(models.AbstractModel):
             if is_asset_bundle:
                 attributes['onerror'] = "__odooAssetError=1"
 
-            if js_content:
-                attributes['charset'] = 'utf-8'
-
-            return ('script', attributes, js_content)
+            return ('script', attributes)
 
 
         if is_css:
@@ -2595,7 +2589,7 @@ class IrQWeb(models.AbstractModel):
                 'href': path,
                 'media': media,
             }
-            return ('link', attributes, None)
+            return ('link', attributes)
 
         if is_xml:
             attributes = {
@@ -2604,7 +2598,7 @@ class IrQWeb(models.AbstractModel):
                 'rel': 'prefetch',
                 'data-src': path,
                 }
-            return ('script', attributes, None)
+            return ('script', attributes)
 
     def _generate_asset_links(self, bundle, css=True, js=True, debug_assets=False, assets_params=None, rtl=False):
         asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)

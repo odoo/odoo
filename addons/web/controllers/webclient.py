@@ -144,7 +144,6 @@ class WebClient(http.Controller):
         data = [{
             "type": tag,
             "src": attrs.get("src") or attrs.get("data-src") or attrs.get('href'),
-            "content": content,
-        } for tag, attrs, content in files]
+        } for tag, attrs in files]
 
         return request.make_json_response(data)
