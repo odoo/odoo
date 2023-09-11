@@ -98,7 +98,7 @@ QUnit.test("load spreadsheet data", async (assert) => {
 QUnit.test("load spreadsheet data only once", async (assert) => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
-            if (args.method === "read") {
+            if (args.method === "read" && args.model === "spreadsheet.dashboard") {
                 assert.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
@@ -107,7 +107,7 @@ QUnit.test("load spreadsheet data only once", async (assert) => {
     let result = loader.getDashboard(3);
     await nextTick();
     assert.strictEqual(result.status, Status.Loaded);
-    assert.verifySteps(["spreadsheet 1,2,3 loaded", "spreadsheet 3 loaded"]);
+    assert.verifySteps(["spreadsheet 3 loaded"]);
     result = loader.getDashboard(3);
     await nextTick();
     assert.strictEqual(result.status, Status.Loaded);
@@ -117,19 +117,22 @@ QUnit.test("load spreadsheet data only once", async (assert) => {
 QUnit.test("don't return empty dashboard group", async (assert) => {
     const loader = await createDashboardLoader({
         mockRPC: async function (route, args) {
-            if (args.method === "search_read" && args.model === "spreadsheet.dashboard.group") {
-                return [
-                    {
-                        id: 45,
-                        name: "Group A",
-                        dashboard_ids: [1],
-                    },
-                    {
-                        id: 46,
-                        name: "Group B",
-                        dashboard_ids: [],
-                    },
-                ];
+            if (args.method === "web_search_read" && args.model === "spreadsheet.dashboard.group") {
+                return {
+                    length: 2,
+                    records: [
+                        {
+                            id: 45,
+                            name: "Group A",
+                            dashboard_ids: [{ id: 1, name: "Dashboard CRM 1" }],
+                        },
+                        {
+                            id: 46,
+                            name: "Group B",
+                            dashboard_ids: [],
+                        },
+                    ],
+                };
             }
         },
     });
@@ -152,13 +155,16 @@ QUnit.test("don't return empty dashboard group", async (assert) => {
 QUnit.test("load multiple spreadsheets", async (assert) => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
-            if (args.method === "read") {
+            if (args.method === "web_search_read" && args.model === "spreadsheet.dashboard.group") {
+                assert.step("load groups");
+            }
+            if (args.method === "read" && args.model === "spreadsheet.dashboard") {
                 assert.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
     });
     await loader.load();
-    assert.verifySteps(["spreadsheet 1,2,3 loaded"]);
+    assert.verifySteps(["load groups"]);
     loader.getDashboard(1);
     await nextTick();
     assert.verifySteps(["spreadsheet 1 loaded"]);
