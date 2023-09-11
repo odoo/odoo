@@ -12,6 +12,9 @@
     ],
 
     'assets': {
+        'web.assets_tests': [
+            'test_assetsbundle/static/tests/test_css_error.js',
+        ],
         'test_assetsbundle.bundle2': [
             'test_assetsbundle/static/src/css/test_cssfile1.css',
         ],
