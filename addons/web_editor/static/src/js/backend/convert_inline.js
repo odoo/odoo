@@ -544,30 +544,30 @@ function enforceTablesResponsivity(editable) {
         let index = 0;
         for (const td of tds) {
             const width = td.style.maxWidth;
-            const div = document.createElement('div');
-            div.style.display = 'inline-block';
-            div.style.verticalAlign = 'top';
-            div.classList.add('o_stacking_wrapper');
-            commonTd.appendChild(div);
-            const newTable = _createTable();
-            newTable.style.width = width;
-            newTable.classList.add('o_stacking_wrapper');
-            div.appendChild(newTable);
+            const wrapDiv = document.createElement('div');
+            wrapDiv.style.display = 'inline-block';
+            wrapDiv.style.verticalAlign = 'top';
+            wrapDiv.classList.add('o_stacking_wrapper');
+            commonTd.appendChild(wrapDiv);
+            const wrapTable = _createTable();
+            wrapTable.style.width = width;
+            wrapTable.classList.add('o_stacking_wrapper');
+            wrapDiv.appendChild(wrapTable);
             const newTr = document.createElement('tr');
-            newTable.appendChild(newTr);
+            wrapTable.appendChild(newTr);
             newTr.appendChild(td);
             td.style.width = '100%';
             td.removeAttribute('width');
             if (index === 0) {
-                div.before(_createMso(`
+                wrapDiv.before(_createMso(`
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
                         <tr>
-                            <td valign="top" style="width: ${width};">`));
+                            <td valign="top" style="width: ${width}; height: 0;">`)); // HERE! Now maybe I need an explicit height. But wrapDiv has height 100% so this needs a height.
             } else {
-                div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
+                wrapDiv.before(_createMso(`</td><td valign="top" style="width: ${width}; height: 0;">`));
             }
             if (index === tds.length - 1) {
-                div.after(_createMso(`</td></tr></table>`));
+                wrapDiv.after(_createMso(`</td></tr></table>`));
             }
             index++;
         }
@@ -1225,7 +1225,8 @@ function normalizeRem($editable, rootFontSize=16) {
  */
  function responsiveToStaticForOutlook(editable) {
     // Replace the responsive tables with static ones for Outlook
-    for (const td of editable.querySelectorAll('td.o_converted_col:not(.mso-hide)')) {
+    const tds = [...editable.querySelectorAll('td.o_converted_col:not(.mso-hide)')].reverse();
+    for (const td of tds) {
         const tdStyle = td.getAttribute('style') || '';
         const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
         const msoWidth = td.style.getPropertyValue('max-width');
