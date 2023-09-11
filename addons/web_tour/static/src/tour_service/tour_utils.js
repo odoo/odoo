@@ -217,9 +217,6 @@ export class RunningTourActionHelper {
         const to = getJQueryElementFromSelector(toSel)[0];
         this._drag_and_drop(this._get_action_values(element).$element[0], to);
     }
-    drag_move_and_drop(to, element) {
-        this._drag_move_and_drop(this._get_action_values(element), to);
-    }
     keydown(keyCodes, element) {
         this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
     }
@@ -396,39 +393,6 @@ export class RunningTourActionHelper {
         }
 
         triggerPointerEvent(target, "pointerup", true, targetPosition);
-    }
-    _drag_move_and_drop(values, params) {
-        // Extract parameters from string: '[deltaX,deltaY]@from => actualTo'.
-        const parts = /^\[(.+),(.+)\]@(.+) => (.+)/.exec(params);
-        const initialMoveOffset = [parseInt(parts[1]), parseInt(parts[2])];
-        const fromSelector = parts[3];
-        const toSelector = parts[4];
-        // Click on element.
-        values.$element.trigger($.Event("mouseenter"));
-        const elementCenter = this._calculateCenter(values.$element);
-        values.$element.trigger(
-            $.Event("mousedown", { which: 1, pageX: elementCenter.left, pageY: elementCenter.top })
-        );
-        // Drag through "from".
-        const fromCenter = this._calculateCenter(
-            getJQueryElementFromSelector(fromSelector),
-            fromSelector
-        );
-        values.$element.trigger(
-            $.Event("mousemove", {
-                which: 1,
-                pageX: fromCenter.left + initialMoveOffset[0],
-                pageY: fromCenter.top + initialMoveOffset[1],
-            })
-        );
-        // Drop into "to".
-        const toCenter = this._calculateCenter(
-            getJQueryElementFromSelector(toSelector),
-            toSelector
-        );
-        values.$element.trigger(
-            $.Event("mouseup", { which: 1, pageX: toCenter.left, pageY: toCenter.top })
-        );
     }
     _keydown(values, keyCodes) {
         while (keyCodes.length) {
