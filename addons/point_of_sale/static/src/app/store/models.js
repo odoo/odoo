@@ -1730,6 +1730,7 @@ export class Order extends PosModel {
                     changes[productKey] = {
                         name: orderline.get_full_product_name(),
                         product_id: product.id,
+                        uuid: orderline.uuid,
                         quantity: quantityDiff,
                         note: note,
                     };

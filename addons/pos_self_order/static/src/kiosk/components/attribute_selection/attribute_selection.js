@@ -5,7 +5,7 @@ import { useselfOrder } from "@pos_self_order/kiosk/self_order_kiosk_service";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
-    static props = ["product", "productState"];
+    static props = ["product", "state"];
 
     setup() {
         this.selfOrder = useselfOrder();
@@ -28,7 +28,7 @@ export class AttributeSelection extends Component {
             this.state.currentAttribute++;
         } else {
             this.state.showResume = true;
-            this.props.productState.showQtyButtons = true;
+            this.props.state.showQtyButtons = true;
         }
     }
 
@@ -38,29 +38,66 @@ export class AttributeSelection extends Component {
         }
     }
 
-    attributeClicked() {
-        if (this.state.editMode) {
+    attributeClicked(attrId) {
+        const curAttr = this.attribute;
+
+        if (curAttr && curAttr.display_type === "multi") {
+            if (!this.props.state.selectedVariants[curAttr.id]) {
+                this.props.state.selectedVariants[curAttr.id] = new Set();
+            }
+
+            if (this.props.state.selectedVariants[curAttr.id].has(attrId)) {
+                this.props.state.selectedVariants[curAttr.id].delete(attrId);
+            } else {
+                this.props.state.selectedVariants[curAttr.id].add(attrId);
+            }
+        }
+
+        if (this.state.editMode && curAttr.display_type !== "multi") {
             this.state.editMode = false;
             this.state.showResume = true;
-            this.props.productState.showQtyButtons = true;
+            this.props.state.showQtyButtons = true;
             return;
         }
-        this.next();
+
+        if (curAttr && curAttr.display_type !== "multi") {
+            this.next();
+        }
     }
 
-    editAttribute(attributeName) {
-        const index = this.props.product.attributes.findIndex((a) => a.name === attributeName);
+    isChecked(attribute, value) {
+        return (
+            this.props.state.selectedVariants[attribute.id] instanceof Set &&
+            this.props.state.selectedVariants[attribute.id].has(parseInt(value.id))
+        );
+    }
+
+    editAttribute(id) {
+        const index = this.props.product.attributes.findIndex((a) => a.id === id);
         this.state.showResume = false;
         this.state.editMode = true;
         this.state.currentAttribute = index;
-        this.props.productState.showQtyButtons = false;
+        this.props.state.showQtyButtons = false;
     }
 
     get attributeSelected() {
-        return Object.entries(this.props.productState.selectedVariants).map(([key, value]) => {
+        return Object.entries(this.props.state.selectedVariants).map(([key, value]) => {
+            const attribute = this.selfOrder.attributeById[parseInt(key)];
+            let valueName = "";
+
+            if (value instanceof Set) {
+                valueName = attribute.values
+                    .filter((v) => value.has(v.id))
+                    .map((v) => v.name)
+                    .join(", ");
+            } else {
+                valueName = attribute.values.find((v) => v.id === parseInt(value)).name;
+            }
+
             return {
-                name: key,
-                value: value,
+                id: attribute.id,
+                name: attribute.name,
+                value: valueName,
             };
         });
     }

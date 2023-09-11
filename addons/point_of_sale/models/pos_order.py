@@ -1162,6 +1162,9 @@ class PosOrderLine(models.Model):
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
 
+        if line and line[2].get('attribute_value_ids'):
+            line[2]['attribute_value_ids'] = [attr for row in line[2].get('attribute_value_ids') for attr in row]
+
         # Clean up fields sent by the JS
         line = [
             line[0], line[1], {k: v for k, v in line[2].items() if self._is_field_accepted(k)}

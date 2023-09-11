@@ -28,6 +28,8 @@ export class selfOrderCommon extends Reactive {
         this.priceLoading = false;
         this.productByIds = {};
         this.comboByIds = {};
+        this.attributeById = {};
+        this.attributeValueById = {};
         this.productsGroupedByCategory = {};
         this.currentProduct = 0;
         this.lastEditedProductId = null;
@@ -49,6 +51,16 @@ export class selfOrderCommon extends Reactive {
         this.products = this.products.map((p) => {
             const product = new Product(p, this.show_prices_with_tax_included);
             this.productByIds[product.id] = product;
+
+            if (product.attributes.length > 0) {
+                for (const atr of product.attributes) {
+                    this.attributeById[atr.id] = atr;
+                    for (const val of atr.values) {
+                        this.attributeValueById[val.id] = val;
+                    }
+                }
+            }
+
             return product;
         });
 

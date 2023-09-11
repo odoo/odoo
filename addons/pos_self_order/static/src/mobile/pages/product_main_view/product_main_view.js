@@ -39,7 +39,26 @@ export class ProductMainView extends Component {
             /** this will be an object that will have the attribute id as key and the value id as value
              *  ex: selectedVariants: {4: 9, 5: 11} */
             selectedVariants: Object.fromEntries(
-                this.product.attributes.map((att) => [att.id, att.values[0].id.toString()])
+                this.product.attributes.map((att) => {
+                    let selectedValue =
+                        att.display_type == "multi" ? new Set() : att.values[0].id.toString();
+
+                    if (this.selfOrder.editedLine) {
+                        selectedValue = att.values
+                            .filter((v) =>
+                                Object.values(
+                                    this.selfOrder.editedLine.selected_attributes
+                                ).includes(v.id)
+                            )
+                            .map((v) => v.id);
+                        selectedValue =
+                            att.display_type == "multi"
+                                ? new Set(selectedValue)
+                                : selectedValue[0].toString();
+                    }
+
+                    return [att.id, selectedValue];
+                })
             ),
         });
 
@@ -54,9 +73,21 @@ export class ProductMainView extends Component {
         }));
         return { ...attribute, values };
     }
+    updateMultipleAttribute(event, attributeId) {
+        const value = parseInt(event.target.id);
 
+        if (this.state.selectedVariants[attributeId].has(value)) {
+            this.state.selectedVariants[attributeId].delete(value);
+        } else {
+            this.state.selectedVariants[attributeId].add(value);
+        }
+    }
+    isChecked(attributeId, id) {
+        return this.state.selectedVariants[attributeId].has(parseInt(id));
+    }
     get disableAttributes() {
         const order = this.selfOrder.currentOrder;
+
         return (
             this.selfOrder.editedLine &&
             this.selfOrder.editedLine.uuid &&
@@ -64,18 +95,22 @@ export class ProductMainView extends Component {
         );
     }
 
+    get flattenSelectedAttribute() {
+        return Object.values(this.state.selectedVariants)
+            .map((value) => (value instanceof Set ? Array.from(value) : [parseInt(value)]))
+            .flat();
+    }
     get fullProductName() {
         if (!this.product.attributes.length) {
             return this.product.name;
         }
 
-        const findAttribute = (id) => this.product.attributes.find((attr) => attr.id == id);
-        const findValue = (attr, id) => attr.values.find((value) => value.id == id);
-        const productAttributeString = Object.entries(this.state.selectedVariants)
-            .map(([attrId, valueId]) => findValue(findAttribute(attrId), valueId).name)
+        const selectedAttributeString = this.flattenSelectedAttribute
+            .map((attributeId) => this.selfOrder.attributeValueById[attributeId].name)
+            .sort() // we need to keep same order each time to be able to compare
             .join(", ");
 
-        return `${this.product.name} (${productAttributeString})`;
+        return `${this.product.name} (${selectedAttributeString})`;
     }
 
     changeQuantity(increase) {
@@ -98,7 +133,7 @@ export class ProductMainView extends Component {
         return increase ? this.state.qty++ : this.state.qty--;
     }
 
-    orderlineCanBeMerged(newLine) {
+    orderlineCanBeMerged() {
         if (this.props.product.pos_combo_ids.length) {
             return false;
         }
@@ -126,7 +161,7 @@ export class ProductMainView extends Component {
             const editedLine = this.selfOrder.editedLine;
             const gap = editedLine ? -1 : 0;
 
-            lineToMerge.selected_attributes = this.state.selectedVariants;
+            lineToMerge.selected_attributes = this.flattenSelectedAttribute;
             lineToMerge.customer_note = this.state.customer_note;
             lineToMerge.full_product_name = this.fullProductName;
             lineToMerge.qty += this.state.qty + gap;
@@ -138,7 +173,7 @@ export class ProductMainView extends Component {
                 product_id: this.product.id,
                 full_product_name: this.fullProductName,
                 customer_note: this.state.customer_note,
-                selected_attributes: this.state.selectedVariants,
+                selected_attributes: this.flattenSelectedAttribute,
             });
             lines.push(mainLine);
             for (const [combo_id, combo_line_id] of Object.entries(this.state.selectedCombos)) {

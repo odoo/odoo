@@ -25,9 +25,19 @@ export class BaseProductAttribute extends Component {
 
         return {
             value,
-            valueId: selected_value.id,
+            valueIds: [selected_value.id],
             extra: selected_value.price_extra,
         };
+    }
+
+    updateMultipleAttribute(event) {
+        const value = parseInt(event.target.id);
+
+        if (this.state.checkbox_value.has(value)) {
+            this.state.checkbox_value.delete(value);
+        } else {
+            this.state.checkbox_value.add(value);
+        }
     }
 }
 
@@ -56,11 +66,36 @@ export class ColorProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ColorProductAttribute";
 }
 
+export class CheckboxProductAttribute extends BaseProductAttribute {
+    static template = "point_of_sale.CheckboxProductAttribute";
+
+    setup() {
+        super.setup();
+        this.state = useState({
+            checkbox_value: new Set(),
+        });
+    }
+
+    getValue() {
+        const selected_values = this.values.filter((val) => this.state.checkbox_value.has(val.id));
+        const extra = selected_values.reduce((acc, val) => acc + val.price_extra, 0);
+        const value = selected_values.map((val) => val.name).join(", ");
+        const valueIds = selected_values.map((val) => val.id);
+
+        return {
+            value,
+            valueIds,
+            extra,
+        };
+    }
+}
+
 export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.ProductConfiguratorPopup";
     static components = {
         RadioProductAttribute,
         SelectProductAttribute,
+        CheckboxProductAttribute,
         ColorProductAttribute,
     };
 
@@ -80,9 +115,9 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
         const quantity = this.state.quantity;
 
         this.env.attribute_components.forEach((attribute_component) => {
-            const { value, valueId, extra } = attribute_component.getValue();
+            const { value, valueIds, extra } = attribute_component.getValue();
             selected_attributes.push(value);
-            attribute_value_ids.push(valueId);
+            attribute_value_ids.push(valueIds);
             price_extra += extra;
         });
 

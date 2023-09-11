@@ -25,6 +25,24 @@
         </div>
     </t>
 
+    <t t-name="point_of_sale.CheckboxProductAttribute">
+        <div>
+            <div t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id" class="d-flex align-items-center my-2">
+                <input type="checkbox"
+                    t-att-id="value.id"
+                    t-att-name="value.name"
+                    t-att-checked="state.checkbox_value.has(value.id)"
+                    t-on-change="updateMultipleAttribute" />
+                <label t-att-for="value.id" class="ms-2" t-esc="value.name" />
+                <div t-if="value.price_extra" t-att-for="value.id" class="price-extra-cell d-inline-block ms-3">
+                    <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
+                        + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="point_of_sale.SelectProductAttribute">
         <div>
             <t t-set="is_custom" t-value="false"/>
@@ -74,6 +92,7 @@
                         <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
                         <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                        <CheckboxProductAttribute t-elif="attribute.display_type === 'multi'" attribute="attribute"/>
                     </div>
                 </main>
     

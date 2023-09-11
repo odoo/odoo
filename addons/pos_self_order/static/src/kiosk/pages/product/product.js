@@ -49,15 +49,24 @@ export class Product extends Component {
         return increase ? this.state.qty++ : this.state.qty--;
     }
 
-    get fullProductName() {
-        const productAttributeString = Object.values(this.state.selectedVariants).join(", ");
-        let name = `${this.product.name}`;
+    get flattenSelectedAttribute() {
+        return Object.values(this.state.selectedVariants)
+            .map((value) => (value instanceof Set ? Array.from(value) : [parseInt(value)]))
+            .flat();
+    }
 
-        if (productAttributeString) {
-            name += ` (${productAttributeString})`;
+    get fullProductName() {
+        if (!this.product.attributes.length) {
+            return this.product.name;
         }
 
-        return name;
+        const productAttribute = this.product.attributes.map((a) => a.values).flat();
+        const selectedAttributeString = this.flattenSelectedAttribute
+            .map((attributeId) => productAttribute.find((a) => a.id == attributeId).name)
+            .sort() // we need to keep same order each time to be able to compare
+            .join(", ");
+
+        return `${this.product.name} (${selectedAttributeString})`;
     }
 
     async addToCart() {
@@ -71,7 +80,7 @@ export class Product extends Component {
                 product_id: this.product.id,
                 full_product_name: this.fullProductName,
                 customer_note: this.state.customer_note,
-                selected_attributes: this.state.selectedVariants,
+                selected_attributes: this.flattenSelectedAttribute,
             })
         );
 

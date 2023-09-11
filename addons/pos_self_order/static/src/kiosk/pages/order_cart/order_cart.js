@@ -69,4 +69,26 @@ export class OrderCart extends Component {
         }
         return;
     }
+
+    getSelectedAttributes(attrs) {
+        const attrVals = Object.values(this.selfOrder.attributeValueById);
+        const selectedValue = attrVals
+            .filter((attr) => attrs.includes(attr.id))
+            .reduce((acc, val) => {
+                const attribute = this.selfOrder.attributeById[val.attribute_id[0]];
+
+                if (!acc[attribute.id]) {
+                    acc[attribute.id] = {
+                        name: attribute.name,
+                        value: val.name,
+                    };
+                } else {
+                    acc[attribute.id].value += `, ${val.name}`;
+                }
+
+                return acc;
+            }, {});
+
+        return Object.values(selectedValue);
+    }
 }

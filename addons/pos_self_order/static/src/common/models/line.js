@@ -49,12 +49,6 @@ export class Line extends Reactive {
         return false;
     }
 
-    get attributes() {
-        return Object.entries(this.selected_attributes).map(([key, value]) => {
-            return { name: key, value };
-        });
-    }
-
     get displayPrice() {
         // for the moment we use price with tax included but we should look at the config setup
         return this.price_subtotal_incl;

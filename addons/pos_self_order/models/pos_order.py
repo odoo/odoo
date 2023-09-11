@@ -109,7 +109,7 @@ class PosOrder(models.Model):
                     "price_subtotal": line.price_subtotal,
                     "price_subtotal_incl": line.price_subtotal_incl,
                     "product_id": line.product_id.id,
-                    "selected_attributes": line._get_selected_attributes(),
+                    "selected_attributes": line.attribute_value_ids.ids,
                     "uuid": line.uuid,
                     "qty": line.qty,
                     "customer_note": line.customer_note,
