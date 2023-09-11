@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/record";
+
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
  * @typedef Data
@@ -10,7 +12,7 @@
  * @property {ImStatus} im_status
  */
 
-export class Persona {
+export class Persona extends Record {
     /** @type {string} */
     localId;
     /** @type {number} */

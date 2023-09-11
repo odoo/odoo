@@ -2,9 +2,10 @@
 
 /** @typedef {{ thread?: import("@mail/core/thread_model").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
 
+import { Record } from "@mail/core/record";
 import { _t } from "@web/core/l10n/translation";
 
-export class ChatWindow {
+export class ChatWindow extends Record {
     /** @type {import("@mail/core/store_service").Store} */
     _store;
 
@@ -20,6 +21,7 @@ export class ChatWindow {
      * @returns {ChatWindow}
      */
     constructor(store, data) {
+        super();
         Object.assign(this, {
             thread: data.thread,
             _store: store,

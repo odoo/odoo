@@ -1,9 +1,10 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/record";
 import { assignDefined } from "@mail/utils/misc";
 import { url } from "@web/core/utils/urls";
 
-export class Attachment {
+export class Attachment extends Record {
     /** @type {import("@mail/core/store_service").Store} */
     _store;
     accessToken;

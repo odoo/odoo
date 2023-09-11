@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class Composer {
+import { Record } from "@mail/core/record";
+
+export class Composer extends Record {
     /** @type {import("@mail/attachments/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {import("@mail/core/message_model").Message} */
@@ -26,6 +28,7 @@ export class Composer {
     isFocused = false;
 
     constructor(store, data) {
+        super();
         const { message, thread } = data;
         if (thread) {
             this.thread = thread;

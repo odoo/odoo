@@ -1,9 +1,10 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
+import { Record } from "@mail/core/record";
 
 let nextId = 1;
-export class NotificationGroup {
+export class NotificationGroup extends Record {
     /** @type {import("@mail/core/notification_model").Notification[]} */
     notifications = [];
     /** @type {string} */
@@ -20,6 +21,7 @@ export class NotificationGroup {
     _store;
 
     constructor(store) {
+        super();
         this._store = store;
         this._store.notificationGroups.push(this);
         this.id = nextId++;

@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class CannedResponse {
+import { Record } from "@mail/core/record";
+
+export class CannedResponse extends Record {
     /** @type {number} */
     id;
     /** @type {string} */

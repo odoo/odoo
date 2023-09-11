@@ -7,6 +7,7 @@ import { ScrollPosition } from "@mail/core/scroll_position_model";
 import { createLocalId } from "../utils/misc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { Record } from "@mail/core/record";
 
 /**
  * @typedef SeenInfo
@@ -21,7 +22,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
  * @property {boolean} checked
  */
 
-export class Thread {
+export class Thread extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
@@ -134,6 +135,7 @@ export class Thread {
     is_editable;
 
     constructor(store, data) {
+        super();
         Object.assign(this, {
             id: data.id,
             model: data.model,
