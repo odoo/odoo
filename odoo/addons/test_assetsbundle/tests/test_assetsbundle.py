@@ -2028,3 +2028,26 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1, "lazy_load shouldn't create another entry")
         self.assertEqual(len(qweb_keys), 1, "lazy_load shouldn't create another entry")
+
+@tagged('-at_install', 'post_install')
+class TestErrorManagement(HttpCase):
+
+    def test_assets_bundle_css_error_backend(self):
+        self.env['ir.qweb']._get_asset_bundle('web.assets_backend', assets_params={'website_id': self.env['website'].search([], limit=1).id}).css() # force pregeneration so that we have the base style
+        self.env['ir.asset'].create({
+            'name': 'Css error',
+            'bundle': 'web.assets_backend',
+            'path': 'test_assetsbundle/static/src/css/test_error.scss',
+        })
+
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.start_tour('/web', 'css_error_tour', login='admin')
+
+    def test_assets_bundle_css_error_frontend(self):
+        self.env['ir.asset'].create({
+            'name': 'Css error',
+            'bundle': 'web.assets_frontend',
+            'path': 'test_assetsbundle/static/src/css/test_error.scss',
+        })
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.start_tour('/', 'css_error_tour_frontend', login='admin')

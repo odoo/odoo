@@ -26,13 +26,13 @@ export async function startWebClient(Webclient) {
     odoo.isReady = false;
 
     // setup environment
+    await whenReady();
     const env = makeEnv();
     await startServices(env);
 
     Component.env = env;
 
     // start web client
-    await whenReady();
     const app = new App(Webclient, {
         name: "Odoo Web Client",
         env,

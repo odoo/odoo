@@ -13,11 +13,16 @@ ScssErrorDialog.title = _t("Style error");
 const scssErrorDisplayService = {
     dependencies: ["dialog"],
     start(env, { dialog }) {
-        if (window.__odooScssCompilationError) {
-            dialog.add(ScssErrorDialog, {
-                message: window.__odooScssCompilationError,
-            });
+        const assets = [...document.styleSheets].filter((sheet) => sheet.href?.includes("/web/assets"));
+        for (const { cssRules } of assets) {
+            const lastRule = cssRules?.[cssRules?.length - 1];
+            if (lastRule?.selectorText === "css_error_message") {
+                dialog.add(ScssErrorDialog, {
+                    message: lastRule.style.content.replaceAll("\\a", "\n").replaceAll("\\*", "*").replaceAll(`\\"`, `"`),
+                });
+            }
         }
+
     },
 };
 
