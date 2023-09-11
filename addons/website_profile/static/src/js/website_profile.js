@@ -46,28 +46,36 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
         'change .o_forum_file_upload': '_onFileUploadChange',
         'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
+        'click .o_forum_profile_bio_edit': '_onProfileBioEditClick',
+        'click .o_forum_profile_bio_cancel_edit': '_onProfileBioCancelEditClick',
     },
 
     /**
      * @override
      */
     start: async function () {
-        var def = this._super.apply(this, arguments);
+        const def = this._super.apply(this, arguments);
         if (this.editableMode) {
             return def;
         }
 
-        var $textarea = this.$('textarea.o_wysiwyg_loader');
+        const $textarea = this.$("textarea.o_wysiwyg_loader");
 
-        this._wysiwyg = await loadWysiwygFromTextarea(this, $textarea[0], {
+        const options = {
             recordInfo: {
                 context: this._getContext(),
-                res_model: 'res.users',
-                res_id: parseInt(this.$('input[name=user_id]').val()),
+                res_model: "res.users",
+                res_id: parseInt(this.$("input[name=user_id]").val()),
             },
             resizable: true,
             userGeneratedContent: true,
-        });
+        };
+
+        if ($textarea[0].attributes.placeholder) {
+            options.placeholder = $textarea[0].attributes.placeholder.value;
+        }
+
+        this._wysiwyg = await loadWysiwygFromTextarea(this, $textarea[0], options);
 
         return Promise.all([def]);
     },
@@ -113,6 +121,30 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             type: 'hidden',
         }));
     },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfileBioEditClick: function (ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.add("d-none");
+        document.querySelector(".o_forum_profile_bio_cancel_edit").classList.remove("d-none");
+        document.querySelector(".o_forum_profile_bio").classList.add("d-none");
+        document.querySelector(".o_forum_profile_bio_form").classList.remove("d-none");
+    },
+
+     /**
+     * @private
+     * @param {Event} ev
+     */
+     _onProfileBioCancelEditClick: function (ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.add("d-none");
+        document.querySelector(".o_forum_profile_bio_edit").classList.remove("d-none");
+        document.querySelector(".o_forum_profile_bio_form").classList.add("d-none");
+        document.querySelector(".o_forum_profile_bio").classList.remove("d-none");
+     },
 });
 
 publicWidget.registry.websiteProfileNextRankCard = publicWidget.Widget.extend({

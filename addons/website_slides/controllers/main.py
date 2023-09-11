@@ -1574,6 +1574,7 @@ class WebsiteSlides(WebsiteProfile):
             'courses_ongoing': courses_ongoing,
             'is_profile_page': True,
             'badge_category': 'slides',
+            'my_profile': request.env.user.id == user.id,
         }
         return values
 
