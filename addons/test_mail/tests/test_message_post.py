@@ -1632,7 +1632,6 @@ class TestMessagePostLang(MailCommon, TestRecipients):
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
-        cls._activate_multi_company()
         cls._activate_multi_lang(test_record=cls.test_records[0], test_template=cls.test_template)
 
         cls.partner_2.write({'lang': 'es_ES'})

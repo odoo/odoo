@@ -17,7 +17,6 @@ class TestMailAliasCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._activate_multi_company()
 
         cls.test_alias_mc = cls.env['mail.alias'].create({
             'alias_model_id': cls.env['ir.model']._get('mail.test.container.mc').id,
