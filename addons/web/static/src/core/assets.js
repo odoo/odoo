@@ -104,7 +104,7 @@ assets.getBundle = memoize(async function getBundle(bundleName) {
     const json = await response.json();
     const assets = {
         cssLibs: [],
-        cssContents: [],
+        cssContents: [], //todo cleanup
         jsLibs: [],
         jsContents: [],
     };

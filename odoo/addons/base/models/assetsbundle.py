@@ -77,9 +77,9 @@ class AssetsBundle(object):
         self._checksum_cache = {}
         self.is_debug_assets = debug_assets
         self.external_assets = [
-            node
-            for node in external_assets
-            if (css and node[0].rpartition('.')[2] in STYLE_EXTENSIONS) or (js and node[0].rpartition('.')[2] in SCRIPT_EXTENSIONS)
+            url
+            for url in external_assets
+            if (css and url.rpartition('.')[2] in STYLE_EXTENSIONS) or (js and url.rpartition('.')[2] in SCRIPT_EXTENSIONS)
         ]
 
         # asset-wide html "media" attribute
@@ -117,16 +117,16 @@ class AssetsBundle(object):
         if self.has_css and self.stylesheets:
             css_attachment = self.css(is_minified=not self.is_debug_assets)
             if self.is_debug_assets:
-                response.append((self.get_debug_asset_url(extra=self.extra('css'), name=css_attachment.name, extension=''), None))
+                response.append(self.get_debug_asset_url(extra=self.extra('css'), name=css_attachment.name, extension=''))
             else:
-                response.append((css_attachment.url, None))
+                response.append(css_attachment.url)
 
         if self.has_js and self.javascripts:
             js_attachment = self.js(is_minified=not self.is_debug_assets)
             if self.is_debug_assets:
-                response.append((self.get_debug_asset_url(extra=self.extra('js'), name=js_attachment.name, extension=''), None))
+                response.append(self.get_debug_asset_url(extra=self.extra('js'), name=js_attachment.name, extension=''))
             else:
-                response.append((js_attachment.url, None))
+                response.append(js_attachment.url)
 
         return self.external_assets + response
 
