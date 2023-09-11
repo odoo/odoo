@@ -138,7 +138,7 @@ export class Product extends PosModel {
     }
     async getAddProductOptions(code) {
         let price_extra = 0.0;
-        let draftPackLotLines, weight, description, packLotLinesToEdit, attribute_value_ids;
+        let draftPackLotLines, description, packLotLinesToEdit, attribute_value_ids;
         let quantity = 1;
         let comboLines = [];
 
@@ -246,7 +246,7 @@ export class Product extends PosModel {
                     }
                 );
                 if (confirmed) {
-                    weight = payload.weight;
+                    quantity = payload.weight;
                 } else {
                     // do not add the product;
                     return;
@@ -259,7 +259,6 @@ export class Product extends PosModel {
         return {
             draftPackLotLines,
             quantity,
-            weight,
             description,
             price_extra,
             comboLines,
