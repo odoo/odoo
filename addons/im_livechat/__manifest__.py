@@ -100,6 +100,8 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/discuss/core/common/*',
             'mail/static/src/discuss/typing/**/*',
             'mail/static/src/utils/common/**/*',
+            'mail/static/src/discuss/voice_message/**/*',
+            ('remove', 'mail/static/src/**/worklets/**/*'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
 
             'im_livechat/static/src/embed/**/*',
@@ -122,6 +124,8 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/libs/pdfjs.js',
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
+            '/web/static/src/scss/mimetypes.scss',
+            '/web/static/src/scss/ui.scss',
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             ('remove', 'bus/static/src/services/legacy/**/*'),

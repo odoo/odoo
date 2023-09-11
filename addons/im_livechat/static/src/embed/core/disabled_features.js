@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { Composer } from "@mail/core/common/composer";
 import { Store } from "@mail/core/common/store_service";
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { Thread } from "@mail/core/common/thread_model";
@@ -8,12 +7,6 @@ import { ThreadService } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
 import { SESSION_STATE } from "./livechat_service";
-
-patch(Composer.prototype, {
-    get allowUpload() {
-        return false;
-    },
-});
 
 patch(Thread.prototype, {
     get hasMemberList() {

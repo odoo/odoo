@@ -47,7 +47,9 @@ export class FileUploader extends Component {
                 this.state.isUploading = false;
             }
         }
-        ev.target.value = null;
+        if (ev.target) {
+            ev.target.value = null;
+        }
         if (this.props.multiUpload && this.props.onUploadComplete) {
             this.props.onUploadComplete({});
         }

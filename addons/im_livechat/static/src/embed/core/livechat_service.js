@@ -149,6 +149,7 @@ export class LivechatService {
         }
         this.persistThreadPromise =
             this.persistThreadPromise ?? this.getOrCreateThread({ persist: true });
+        const temporaryThread = this.thread;
         try {
             await this.persistThreadPromise;
         } finally {
@@ -157,8 +158,8 @@ export class LivechatService {
         const chatWindow = this.store.ChatWindow.records.find(
             (c) => c.thread.id === this.TEMPORARY_ID
         );
+        temporaryThread?.delete();
         if (chatWindow) {
-            this.env.services["mail.thread"].remove(chatWindow.thread);
             if (!this.thread) {
                 this.chatWindowService.close(chatWindow);
                 return;
@@ -258,7 +259,9 @@ export class LivechatService {
      * @returns {import("@mail/core/common/thread_model").Thread|undefined}
      */
     get thread() {
-        return Object.values(this.store.Thread.records).find(({ type }) => type === "livechat");
+        return Object.values(this.store.Thread.records).find(
+            ({ type, id }) => type === "livechat" && id === this.sessionCookie.id
+        );
     }
 
     get visitorUid() {
