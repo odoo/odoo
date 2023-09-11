@@ -122,6 +122,7 @@ class WebsiteForum(WebsiteProfile):
             my=my,
             create_uid=author.id,
             include_answers=include_answers,
+            my_profile=request.env.user == author,
             **post
         )
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
