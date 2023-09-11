@@ -1814,3 +1814,25 @@ QUnit.test(
         assert.verifySteps(["Second RPC"]);
     }
 );
+
+QUnit.test("Escape key should close the channel selector and focus the composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("i[title='Add or join a channel']");
+    await contains(".o-discuss-ChannelSelector");
+    triggerHotkey("escape");
+    await contains(".o-discuss-ChannelSelector", { count: 0 });
+    await contains(".o-mail-Composer-input:focus");
+});
+
+QUnit.test("Escape key should focus the composer if it's not focused", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click("button[title='Pinned Messages']");
+    triggerHotkey("escape");
+    await contains(".o-mail-Composer-input:focus");
+});

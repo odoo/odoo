@@ -388,21 +388,16 @@ export function useScrollPosition(refName, model, clearOn) {
     return self;
 }
 
-/**
- * @typedef {Object} MessageEdition
- * @property {composerOfThread} composerOfThread
- * @property {editingMessage} editingMessage
- * @property {function} exitEditMode
- * @returns {MessageEdition}
- */
 export function useMessageEdition() {
     const state = useState({
+        /** @type {import('@mail/core/common/composer').Composer} */
         composerOfThread: null,
+        /** @type {import('@mail/core/common/message_model').Message} */
         editingMessage: null,
         exitEditMode() {
             state.editingMessage = null;
             if (state.composerOfThread) {
-                state.composerOfThread.state.autofocus++;
+                state.composerOfThread.props.composer.autofocus++;
             }
         },
     });

@@ -21,7 +21,9 @@ import {
     useRef,
     useState,
     useEffect,
+    useExternalListener,
 } from "@odoo/owl";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -60,6 +62,18 @@ export class Discuss extends Component {
         });
         this.notification = useService("notification");
         this.threadActions = useThreadActions();
+        useExternalListener(
+            window,
+            "keydown",
+            (ev) => {
+                if (getActiveHotkey(ev) === "escape" && !this.thread?.composer?.isFocused) {
+                    if (this.thread?.composer) {
+                        this.thread.composer.autofocus++;
+                    }
+                }
+            },
+            { capture: true }
+        );
         useEffect(
             () => {
                 if (

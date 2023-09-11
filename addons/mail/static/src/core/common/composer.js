@@ -96,7 +96,6 @@ export class Composer extends Component {
         this.fakeTextarea = useRef("fakeTextarea");
         this.emojiButton = useRef("emoji-button");
         this.state = useState({
-            autofocus: 0,
             active: true,
         });
         this.selection = useSelection({
@@ -135,12 +134,12 @@ export class Composer extends Component {
                     this.ref.el.focus();
                 }
             },
-            () => [this.props.autofocus + this.state.autofocus, this.props.placeholder]
+            () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
         );
         useEffect(
             (rThread, cThread) => {
                 if (cThread && cThread.eq(rThread)) {
-                    this.state.autofocus++;
+                    this.props.composer.autofocus++;
                 }
             },
             () => [this.props.messageToReplyTo?.thread, this.props.composer.thread]
@@ -172,7 +171,7 @@ export class Composer extends Component {
             buttons: [this.emojiButton],
             close: () => {
                 if (!this.ui.isSmall) {
-                    this.state.autofocus++;
+                    this.props.composer.autofocus++;
                 }
             },
             pickers: { emoji: (emoji) => this.addEmoji(emoji) },
@@ -392,7 +391,7 @@ export class Composer extends Component {
 
     onClickAddAttachment(ev) {
         markEventHandled(ev, "composer.clickOnAddAttachment");
-        this.state.autofocus++;
+        this.props.composer.autofocus++;
     }
 
     async onClickFullComposer(ev) {
@@ -571,7 +570,7 @@ export class Composer extends Component {
         this.props.composer.textInputContent = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
         if (!this.ui.isSmall) {
-            this.state.autofocus++;
+            this.props.composer.autofocus++;
         }
     }
 
