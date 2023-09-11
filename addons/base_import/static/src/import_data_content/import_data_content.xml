@@ -60,9 +60,9 @@
                             </td>
                             <td>
                                 <SelectMenu
-                                    value="column.fieldInfo and column.fieldInfo.id"
+                                    value="column.fieldInfo ? column.fieldInfo.fieldPath : undefined"
                                     groups="getGroups(column)"
-                                    onSelect="(fieldId) => this.props.onFieldChanged(column, fieldId)"
+                                    onSelect="(fieldPath) => this.onFieldChanged(column, fieldPath)"
                                     searchPlaceholder="searchPlaceholder"
                                     togglerClass="column.fieldInfo ? 'ps-1' : ''"
                                 >

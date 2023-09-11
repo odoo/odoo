@@ -46,7 +46,7 @@ export class ImportDataContent extends Component {
     makeChoices(fields) {
         return fields.map((field) => ({
             label: field.label,
-            value: field.id,
+            value: field.fieldPath,
         }));
     }
 
@@ -82,5 +82,16 @@ export class ImportDataContent extends Component {
 
     getCommentClass(column, comment, index) {
         return `alert-${comment.type} ${index < column.comments.length - 1 ? "mb-2" : "mb-0"}`;
+    }
+
+    onFieldChanged(column, fieldPath) {
+        const fields = [
+            ...column.fields.basic,
+            ...column.fields.suggested,
+            ...column.fields.additional,
+            ...column.fields.relational,
+        ];
+        const fieldInfo = fields.find((f) => f.fieldPath === fieldPath);
+        this.props.onFieldChanged(column, fieldInfo);
     }
 }
