@@ -152,7 +152,6 @@ class TestMailgateway(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailgateway, cls).setUpClass()
-        cls._activate_multi_company()
 
         cls.mail_test_gateway_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'

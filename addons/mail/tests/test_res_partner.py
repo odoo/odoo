@@ -19,7 +19,6 @@ class TestPartner(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._activate_multi_company()
 
         cls.samples = [
             ('"Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr> ', 'Raoul Grosbedon', 'raoul@chirurgiens-dentistes.fr'),
@@ -34,7 +33,6 @@ class TestPartner(MailCommon):
             # multi email
             ('"Multi Email" <multi.email@example.com>, multi.email.2@example.com', 'Multi Email', 'multi.email@example.com')
         ]
-
     @contextmanager
     def mockPartnerCalls(self):
         _original_create = Partner.create
