@@ -158,8 +158,8 @@ class TestPortalWizard(MailCommon):
             portal_user.action_revoke_access()
 
     def test_portal_wizard_multi_company(self):
-        company_1 = self.env['res.company'].search([], limit=1)
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_1 = self.company_admin
+        company_2 = self.company_2
 
         partner_company_2 = self.env['res.partner'].with_company(company_2).create({
             'name': 'Testing Partner',

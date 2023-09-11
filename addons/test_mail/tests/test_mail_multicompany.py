@@ -20,8 +20,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMultiCompanySetup, cls).setUpClass()
-        cls._activate_multi_company()
+        super().setUpClass()
 
         cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
@@ -37,7 +36,6 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
              'company_id': cls.user_employee_c2.company_id.id},
         ])
 
-        cls.company_3 = cls.env['res.company'].create({'name': 'ELIT'})
         cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
@@ -297,11 +295,6 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
 
 @tagged('-at_install', 'post_install', 'multi_company')
 class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestMultiCompanyRedirect, cls).setUpClass()
-        cls._activate_multi_company()
 
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being

@@ -20,7 +20,6 @@ class TestDigest(mail_test.MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestDigest, cls).setUpClass()
-        cls._activate_multi_company()
 
         # clean messages
         cls.env['mail.message'].search([

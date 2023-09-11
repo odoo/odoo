@@ -79,11 +79,6 @@ class TestMessagePostCommon(TestMailCommon, TestRecipients):
 @tagged('mail_post')
 class TestMailNotifyAPI(TestMessagePostCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls._activate_multi_company()
-
     @mute_logger('odoo.models.unlink')
     @users('employee')
     def test_email_notifiction_layouts(self):
@@ -589,11 +584,6 @@ class TestMessageLog(TestMessagePostCommon):
 
 @tagged('mail_post')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls._activate_multi_company()
 
     def test_assert_initial_values(self):
         """ Be sure of what we are testing """
@@ -1511,7 +1501,6 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
-        cls._activate_multi_company()
         cls._activate_multi_lang(test_record=cls.test_records[0], test_template=cls.test_template)
 
         cls.partner_2.write({'lang': 'es_ES'})

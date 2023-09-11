@@ -1150,9 +1150,7 @@ class MailCommon(common.TransactionCase, MailCase):
     @classmethod
     def setUpClass(cls):
         super(MailCommon, cls).setUpClass()
-        # give default values for all email aliases and domain
-        cls._init_mail_gateway()
-        cls._init_outgoing_gateway()
+
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.user_admin.write({
@@ -1167,6 +1165,14 @@ class MailCommon(common.TransactionCase, MailCase):
         cls.user_root = cls.env.ref('base.user_root')
         cls.partner_root = cls.user_root.partner_id
 
+        # setup MC environment
+        cls._activate_multi_company()
+
+        # give default values for all email aliases and domain
+        cls._init_mail_gateway()
+        cls._init_mail_servers()
+
+        # by default avoid rendering restriction complexity
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
 
         # test standard employee
