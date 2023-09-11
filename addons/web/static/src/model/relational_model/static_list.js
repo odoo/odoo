@@ -19,8 +19,11 @@ function compareFieldValues(v1, v2, fieldType) {
 
 function compareRecords(r1, r2, orderBy, fields) {
     const { name, asc } = orderBy[0];
-    const v1 = asc ? r1.data[name] : r2.data[name];
-    const v2 = asc ? r2.data[name] : r1.data[name];
+    function getValue(record, fieldName) {
+        return fieldName === "id" ? record.resId : record.data[fieldName];
+    }
+    const v1 = asc ? getValue(r1, name) : getValue(r2, name);
+    const v2 = asc ? getValue(r2, name) : getValue(r1, name);
     if (compareFieldValues(v1, v2, fields[name].type)) {
         return -1;
     }
@@ -783,6 +786,7 @@ export class StaticList extends DataPoint {
                 return true;
             }
             // record has already been loaded -> check if we already read all orderBy fields
+            fieldNames = fieldNames.filter((fieldName) => fieldName !== "id");
             return intersection(fieldNames, record.fieldNames).length !== fieldNames.length;
         });
     }

@@ -14125,4 +14125,50 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o-autocomplete--dropdown-menu li a"));
         }
     );
+
+    QUnit.test("one2many with default_order on id, but id not in view", async function (assert) {
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree editable="top" default_order="turtle_int,id">
+                            <field name="turtle_int" widget="handle"/>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_save") {
+                    assert.deepEqual(args.args[1].turtles, [
+                        [1, 3, { turtle_int: 0 }],
+                        [1, 1, { turtle_int: 1 }],
+                        [1, 2, { turtle_int: 2 }],
+                    ]);
+                }
+            },
+            resId: 1,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "yop",
+            "blip",
+            "kawa",
+        ]);
+
+        // drag the third record to top of the list
+        await dragAndDrop("tbody tr:nth-child(3) .o_handle_cell", "tbody tr", "top");
+        await clickSave(target);
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "kawa",
+            "yop",
+            "blip",
+        ]);
+        assert.verifySteps(["get_views", "web_read", "web_save"]);
+    });
 });
