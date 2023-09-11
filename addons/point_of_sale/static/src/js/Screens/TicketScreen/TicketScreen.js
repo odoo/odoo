@@ -514,6 +514,9 @@ export class TicketScreen extends IndependentToOrderScreen {
                     orderPartnerId,
                     tax_ids: orderline.get_taxes().map((tax) => tax.id),
                     discount: orderline.discount,
+                    pack_lot_lines: orderline.pack_lot_lines ? orderline.pack_lot_lines.map(lot => {
+                        return { lot_name: lot.lot_name };
+                    }) : false,
                 },
                 destinationOrderUid: false,
             };
@@ -547,6 +550,7 @@ export class TicketScreen extends IndependentToOrderScreen {
      */
     _prepareRefundOrderlineOptions(toRefundDetail) {
         const { qty, orderline } = toRefundDetail;
+        const draftPackLotLines = orderline.pack_lot_lines ? { modifiedPackLotLines: [], newPackLotLines: orderline.pack_lot_lines} : false;
         return {
             quantity: -qty,
             price: orderline.price,
@@ -555,6 +559,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             refunded_orderline_id: orderline.id,
             tax_ids: orderline.tax_ids,
             discount: orderline.discount,
+            draftPackLotLines: draftPackLotLines
         };
     }
     _setOrder(order) {
