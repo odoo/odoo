@@ -347,12 +347,12 @@ class AccountMoveLine(models.Model):
     )
 
     # === Invoice sync fields === #
-    term_key = fields.Binary(compute='_compute_term_key')
-    tax_key = fields.Binary(compute='_compute_tax_key')
-    compute_all_tax = fields.Binary(compute='_compute_all_tax')
+    term_key = fields.Binary(compute='_compute_term_key', exportable=False)
+    tax_key = fields.Binary(compute='_compute_tax_key', exportable=False)
+    compute_all_tax = fields.Binary(compute='_compute_all_tax', exportable=False)
     compute_all_tax_dirty = fields.Boolean(compute='_compute_all_tax')
-    epd_key = fields.Binary(compute='_compute_epd_key')
-    epd_needed = fields.Binary(compute='_compute_epd_needed')
+    epd_key = fields.Binary(compute='_compute_epd_key', exportable=False)
+    epd_needed = fields.Binary(compute='_compute_epd_needed', exportable=False)
     epd_dirty = fields.Boolean(compute='_compute_epd_needed')
 
     # === Analytic fields === #
@@ -920,7 +920,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.tax_key = frozendict({'id': line.id})
 
-    @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_distribution', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit')
+    @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_distribution', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit', 'quantity')
     def _compute_all_tax(self):
         for line in self:
             sign = line.move_id.direction_sign
@@ -1289,7 +1289,14 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # CRUD/ORM
     # -------------------------------------------------------------------------
-    def invalidate_model(self, fnames=None):
+    def check_field_access_rights(self, operation, field_names):
+        result = super().check_field_access_rights(operation, field_names)
+        if not field_names:
+            weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed']
+            result = [fname for fname in result if fname not in weirdos]
+        return result
+
+    def invalidate_model(self, fnames=None, flush=True):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
@@ -1297,16 +1304,16 @@ class AccountMoveLine(models.Model):
             move_ids = {id_ for id_ in self.env.cache.get_values(lines, field) if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
-        return super().invalidate_model(fnames)
+        return super().invalidate_model(fnames=fnames, flush=flush)
 
-    def invalidate_recordset(self, fnames=None):
+    def invalidate_recordset(self, fnames=None, flush=True):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
             move_ids = {id_ for id_ in self.env.cache.get_values(self, field) if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
-        return super().invalidate_recordset(fnames)
+        return super().invalidate_recordset(fnames=fnames, flush=flush)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
@@ -1721,7 +1728,6 @@ class AccountMoveLine(models.Model):
             if recon_currency.is_zero(recon_debit_amount) or recon_currency.is_zero(recon_credit_amount):
                 recon_currency = company_currency
                 debit_rate = 1
-                credit_rate = None
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
 
@@ -1742,7 +1748,6 @@ class AccountMoveLine(models.Model):
             # try to fallback on the company currency instead.
             if recon_currency.is_zero(recon_debit_amount) or recon_currency.is_zero(recon_credit_amount):
                 recon_currency = company_currency
-                debit_rate = None
                 credit_rate = 1
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
@@ -2406,7 +2411,7 @@ class AccountMoveLine(models.Model):
         # ==== Create entries for cash basis taxes ====
 
         is_cash_basis_needed = account.company_id.tax_exigibility and account.account_type in ('asset_receivable', 'liability_payable')
-        if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
+        if is_cash_basis_needed and not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             tax_cash_basis_moves = partials._create_tax_cash_basis_moves()
             results['tax_cash_basis_moves'] = tax_cash_basis_moves
 

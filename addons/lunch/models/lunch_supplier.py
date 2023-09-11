@@ -201,6 +201,9 @@ class LunchSupplier(models.Model):
             self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
         super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
+            # flush automatic_email_time field to call _sql_constraints
+            if 'automatic_email_time' in values:
+                self.flush_model(['automatic_email_time'])
             self._sync_cron()
 
     def unlink(self):

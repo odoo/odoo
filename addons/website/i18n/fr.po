@@ -10,13 +10,14 @@
 # Fabien Bourgeois <fabien@yaltik.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1776,7 +1777,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__
 msgid "All"
-msgstr "Tous"
+msgstr "Tout le monde"
 
 #. module: website
 #: model:ir.model,name:website.model_website_route
@@ -7161,7 +7162,7 @@ msgstr "Pas de support"
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid "No website domain configured for this website."
-msgstr ""
+msgstr "Aucun domaine de site web configuré pour ce site web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7734,6 +7735,13 @@ msgstr "Modèle"
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Pay"
 msgstr "Payer"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -8939,7 +8947,7 @@ msgstr "Se connecter"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__connected
 msgid "Signed In"
-msgstr "Connecté"
+msgstr "Personnes connectées"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_site
@@ -9279,6 +9287,13 @@ msgstr "Styling"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sub Menus"
 msgstr "Sous-menus"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Subject"
+msgstr "Sujet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -9910,13 +9925,15 @@ msgid ""
 "This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
 "To remove this message please set a domain in your website settings"
 msgstr ""
+"Aucun domaine n'est configuré pour ce site web. Pour éviter des comportements inattendus pendant l'édition du site web, nous conseillons de fermer (ou de rafraîchir) les autres onglets du navigateur.\n"
+"Pour supprimer ce message, définissez un domaine dans les paramètres de votre site web"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.xml:0
 #, python-format
 msgid "This website does not have a domain configured."
-msgstr ""
+msgstr "Aucun domaine n'est configuré pour ce site web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -10300,7 +10317,7 @@ msgstr "Customisation illimitée"
 #: code:addons/website/static/src/components/views/page_list.js:0
 #, python-format
 msgid "Unpublish"
-msgstr "Non publié"
+msgstr "Dépublier"
 
 #. module: website
 #. odoo-javascript
@@ -11186,7 +11203,7 @@ msgstr "Largeur"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
 msgid "With Password"
-msgstr "Avec le mot de passe"
+msgstr "Avec mot de passe"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -11356,7 +11373,7 @@ msgstr ""
 #: code:addons/website/models/mixins.py:0
 #, python-format
 msgid "You do not have the rights to publish/unpublish"
-msgstr "Vous n'avez pas le droit de publier / annuler la publication"
+msgstr "Vous n'avez pas le droit de publier/dépublier"
 
 #. module: website
 #. odoo-javascript
@@ -11416,6 +11433,13 @@ msgid "You'll be able to create your pages later on."
 msgstr "Vous pourrez créer vos pages plus tard."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Company"
+msgstr "Votre société"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
@@ -11423,6 +11447,27 @@ msgid ""
 msgstr ""
 "Votre snippet dynamique sera affiché ici... Ce message est affiché parce que"
 " vous n'avez pas défini le filtre et le modèle à utiliser.<br/>"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Votre email"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Votre nom"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Question"
+msgstr "Votre question"
 
 #. module: website
 #. odoo-javascript

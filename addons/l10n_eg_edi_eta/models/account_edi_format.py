@@ -8,6 +8,7 @@ import requests
 from werkzeug.urls import url_quote
 from base64 import b64encode
 from odoo.addons.account.tools import LegacyHTTPAdapter
+from json.decoder import JSONDecodeError
 
 from odoo import api, models, _
 from odoo.tools.float_utils import json_float_round
@@ -54,16 +55,18 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'warning'
             }
         if not request_response.ok:
-            response_data = request_response.json()
-            if isinstance(response_data, dict) and response_data.get('error'):
+            try:
+                response_data = request_response.json()
+            except JSONDecodeError as ex:
                 return {
-                    'error': response_data.get('error', _('Unknown error')),
+                    'error': str(ex),
                     'blocking_level': 'error'
                 }
-            return {
-                'error': request_response.reason,
-                'blocking_level': 'error'
-            }
+            if response_data and response_data.get('error'):
+                return {
+                    'error': response_data.get('error'),
+                    'blocking_level': 'error'
+                }
         return {'response': request_response}
 
     @api.model

@@ -250,7 +250,7 @@ class AccountPayment(models.Model):
     def action_unmark_sent(self):
         """ Unmarking as sent for electronic/deferred check would give the option to print and re-number check but
         it's not implemented yet for this kind of checks"""
-        if self.filtered('l10n_latam_manual_checks'):
+        if self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks):
             raise UserError(_('Unmark sent is not implemented for electronic or deferred checks'))
         return super().action_unmark_sent()
 
@@ -262,7 +262,7 @@ class AccountPayment(models.Model):
         res = super().action_post()
 
         # mark own checks that are not printed as sent
-        self.filtered('l10n_latam_manual_checks').write({'is_move_sent': True})
+        self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks).write({'is_move_sent': True})
         return res
 
     @api.model

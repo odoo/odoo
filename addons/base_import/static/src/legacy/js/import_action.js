@@ -903,21 +903,9 @@ var DataImport = AbstractAction.extend({
                 // prevent default handling (warning dialog)
                 if (event) { event.preventDefault(); }
 
-                var msg;
                 var errordata = error.data || {};
-                if (errordata.type === 'xhrerror') {
-                    var xhr = errordata.objects[0];
-                    switch (xhr.status) {
-                    case 504: // gateway timeout
-                        msg = _t("Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file).");
-                        break;
-                    default:
-                        msg = _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
-                    }
-                } else {
-                    msg = errordata.arguments && (errordata.arguments[1] || errordata.arguments[0])
-                        || error.message;
-                }
+                const msg = errordata.arguments && (errordata.arguments[1] || errordata.arguments[0])
+                    || error.message || _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
 
                 return Promise.resolve({'messages': [{
                     type: 'error',

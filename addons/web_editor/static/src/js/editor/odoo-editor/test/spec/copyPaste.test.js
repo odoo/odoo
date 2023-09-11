@@ -1546,6 +1546,15 @@ describe('Paste', () => {
                     contentAfter: `<p><a href="${url}">${url}</a> abc <a href="${videoUrl}">${videoUrl}</a> def <a href="${imgUrl}">${imgUrl}</a>[]</p>`,
                 });
             });
+            it('should paste plain text inside non empty link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">a[]b</a></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<span>123</span>');
+                    },
+                    contentAfter: '<p><a href="#">a123[]b</a></p>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste and transform an URL in a p', async () => {

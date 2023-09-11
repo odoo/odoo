@@ -89,7 +89,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'barcode': '2100002000003',
+            'barcode': '2100005000000',
         })
         cls.small_shelf = env['product.product'].create({
             'name': 'Small Shelf',
@@ -102,7 +102,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'barcode': '2301000000006',
+            'barcode': '2305000000004',
         })
         cls.monitor_stand = env['product.product'].create({
             'name': 'Monitor Stand',
@@ -130,7 +130,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 5.10,
             'taxes_id': False,
-            'barcode': '2300001000008',
+            'barcode': '2300002000007',
         })
         configurable_chair = env['product.product'].create({
             'name': 'Configurable Chair',
@@ -888,3 +888,37 @@ class TestUi(TestPointOfSaleHttpCommon):
         ]})
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'chrome_without_cash_move_permission', login="accountman")
+
+    def test_GS1_pos_barcodes_scan(self):
+        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        self.main_pos_config.company_id.write({
+            'nomenclature_id': barcodes_gs1_nomenclature.id
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '08431673020125',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product 2',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '08431673020126',
+        })
+
+        # 3760171283370 can be parsed with GS1 rules but it's not GS1
+        self.env['product.product'].create({
+            'name': 'Product 3',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '3760171283370',
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?debug=1&config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="accountman")

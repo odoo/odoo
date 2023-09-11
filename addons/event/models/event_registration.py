@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.tools import format_date
+from odoo.tools import format_date, email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
 
 # phone_validation is not officially in the depends of event, but we would like
@@ -326,24 +326,31 @@ class EventRegistration(models.Model):
     def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email,
-            'email_cc': False}
-            for r in self}
+        return {r.id:
+            {
+                'partner_ids': [],
+                'email_to': ','.join(email_normalize_all(r.email)) or r.email,
+                'email_cc': False,
+            } for r in self
+        }
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email)
+            email_normalized = email_normalize(self.email)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email or (email_normalized and partner.email_normalized == email_normalized)
+            )
             if new_partner:
+                if new_partner[0].email_normalized:
+                    email_domain = ('email', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = ('email', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('email', '=', new_partner.email),
-                    ('state', 'not in', ['cancel']),
-                ]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('state', 'not in', ['cancel']),
+                ]).write({'partner_id': new_partner[0].id})
         return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
 
     # ------------------------------------------------------------

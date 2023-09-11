@@ -3,7 +3,7 @@
 # 	* account_payment
 # 
 # Translators:
-# grazziano <gra.negocia@gmail.com>, 2022
+# grazziano <grazziano.do+transifex@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Layna Nascimento, 2023
 # 
@@ -118,13 +118,16 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Aviso:</strong> há um reembolso pendente para este pagamento.\n"
+"                        Aguarde um momento até que seja processado. Se o reembolso ainda estiver pendente em\n"
+"                        alguns minutos, verifique suas configurações de provedor de pagamentos."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Já existe uma transação de pagamento com a referência %s."
 
 #. module: account_payment
 #. odoo-python
@@ -136,14 +139,14 @@ msgstr "É necessário um token para criar uma nova transação de pagamento."
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Valor disponível para reembolso"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "Valor pago"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -219,7 +222,7 @@ msgstr "Gerar o link de Pagamento "
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Tem um reembolso pendente"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -251,7 +254,7 @@ msgstr "Faturas"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "Contagem de faturas"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -281,7 +284,7 @@ msgstr "Última atualização em"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Reembolso máximo permitido"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -289,6 +292,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Observe que somente os tokens de provedores que permitem capturar o valor "
+"estão disponíveis."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -296,6 +301,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Observe que os tokens de provedores definidos para apenas autorizar "
+"transações (em vez de capturar o valor) não estão disponíveis."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -353,7 +360,7 @@ msgstr "Provedores de serviços de pagamento"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Assistente de reembolso de pagamento"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -398,12 +405,12 @@ msgstr "Devolução"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Valor do reembolso"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Valor reembolsado"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -423,12 +430,12 @@ msgstr "Registrar Pagamento"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "CONFIGURAÇÃO"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Token de pagamento salvo"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -438,7 +445,7 @@ msgstr "Token de pagamento salvo"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Pagamento de origem"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -449,7 +456,7 @@ msgstr "Estado"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Token de pagamento adequado"
 
 #. module: account_payment
 #. odoo-python
@@ -465,11 +472,12 @@ msgstr "O token de acesso é inválido."
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
+"O valor a ser reembolsado deve ser positivo e não pode ser superior a %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "O diário no qual as transações bem-sucedidas são lançadas."
 
 #. module: account_payment
 #. odoo-python
@@ -479,6 +487,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"O pagamento relacionado à transação com a referência %(ref)s foi lançado: "
+"%(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -491,7 +501,7 @@ msgstr "Os parâmetros fornecidos são inválidos."
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "O pagamento de origem dos pagamentos de reembolso relacionados"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -536,7 +546,7 @@ msgstr "Tipo de reembolso possível"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Usar forma de pagamento eletrônico"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -554,9 +564,22 @@ msgstr ""
 
 #. module: account_payment
 #. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payment method transactions already "
+"exist."
+msgstr ""
+"Não é possível desinstalar esse módulo, pois já existem transações da forma "
+"de pagamento."
+
+#. module: account_payment
+#. odoo-python
 #: code:addons/account_payment/models/account_journal.py:0
 #, python-format
 msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Você deve primeiro desativar um provedor de pagamento antes de excluir seu diário.\n"
+"Provedores vinculados: %s"

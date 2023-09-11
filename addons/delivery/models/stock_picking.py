@@ -86,13 +86,17 @@ class StockPicking(models.Model):
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
-        for package in self:
-            packs = set()
-            if self.env['stock.move.line'].search_count([('picking_id', '=', package.id), ('result_package_id', '!=', False)]):
-                for move_line in package.move_line_ids:
-                    if move_line.result_package_id:
-                        packs.add(move_line.result_package_id.id)
-            package.package_ids = list(packs)
+        packages = {
+            res["picking_id"][0]: set(res["result_package_id"])
+            for res in self.env["stock.move.line"].read_group(
+                [("picking_id", "in", self.ids), ("result_package_id", "!=", False)],
+                ["result_package_id:array_agg"],
+                ["picking_id"],
+                lazy=False, orderby="picking_id asc",
+            )
+        }
+        for picking in self:
+            picking.package_ids = list(packages.get(picking.id, []))
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
@@ -234,14 +238,18 @@ class StockPicking(models.Model):
                 res['exact_price'] = 0.0
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
-            previous_pickings = self.env['stock.picking']
+            related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
             previous_moves = self.move_ids.move_orig_ids
             while previous_moves:
-                previous_pickings |= previous_moves.picking_id
+                related_pickings |= previous_moves.picking_id
                 previous_moves = previous_moves.move_orig_ids
-            without_tracking = previous_pickings.filtered(lambda p: not p.carrier_tracking_ref)
-            (self + without_tracking).carrier_tracking_ref = res['tracking_number']
-            for p in previous_pickings - without_tracking:
+            next_moves = self.move_ids.move_dest_ids
+            while next_moves:
+                related_pickings |= next_moves.picking_id
+                next_moves = next_moves.move_dest_ids
+            without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
+            without_tracking.carrier_tracking_ref = res['tracking_number']
+            for p in related_pickings - without_tracking:
                 p.carrier_tracking_ref += "," + res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _(

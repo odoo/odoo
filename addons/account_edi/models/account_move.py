@@ -352,6 +352,7 @@ class AccountMove(models.Model):
         res = super().button_draft()
 
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
+        self.edi_document_ids.filtered(lambda doc: doc.state == 'to_send').unlink()
 
         return res
 

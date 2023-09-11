@@ -537,9 +537,9 @@ class StockMove(models.Model):
     def _update_candidate_moves_list(self, candidate_moves_list):
         super()._update_candidate_moves_list(candidate_moves_list)
         for production in self.mapped('raw_material_production_id'):
-            candidate_moves_list.append(production.move_raw_ids)
+            candidate_moves_list.append(production.move_raw_ids.filtered(lambda m: m.product_id in self.product_id))
         for production in self.mapped('production_id'):
-            candidate_moves_list.append(production.move_finished_ids)
+            candidate_moves_list.append(production.move_finished_ids.filtered(lambda m: m.product_id in self.product_id))
 
     def _multi_line_quantity_done_set(self, quantity_done):
         if self.raw_material_production_id:

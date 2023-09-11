@@ -79,14 +79,12 @@ server {
 #
 server {
        listen 80;
-#       listen [::]:80;
-#
-#       server_name example.com;
-#
+       listen [::]:80;
+
        root /var/www/;
        index index.html;
-#
-       location /hw_drivers/ {
+
+       location / {
             proxy_pass http://127.0.0.1:8069;
        }
 }

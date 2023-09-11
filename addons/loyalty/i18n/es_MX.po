@@ -6,9 +6,9 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Lucia Pacheco, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
-# Martin Trigaux, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
+# Martin Trigaux, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -622,7 +622,7 @@ msgstr "Compre 3 gabinetes grandes, reciba uno gratis"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
 #, python-format
 msgid "Buy X Get Y"
-msgstr "Comprar X y obtener Y"
+msgstr "Comprar X y recibir Y"
 
 #. module: loyalty
 #. odoo-python
@@ -1314,7 +1314,7 @@ msgstr "Límite"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
 msgid "Limit Usage"
-msgstr "Uso de límite"
+msgstr "Límite de uso"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1537,6 +1537,12 @@ msgstr "Etiqueta del producto"
 #: model:ir.model,name:loyalty.model_product_product
 msgid "Product Variant"
 msgstr "Variante de producto"
+
+#. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+msgid "Product used in the sales order to apply the discount."
+msgstr ""
+"Producto que se utiliza en la orden de venta para aplicar el descuento."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id

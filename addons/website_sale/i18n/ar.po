@@ -6,6 +6,7 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
+# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -1066,6 +1067,13 @@ msgstr "بإمكانه النشر "
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid "Can not resequence a video at first position."
+msgstr "لا يمكن إعادة تسلسل فيديو في الوضع الأول. "
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "Can not resequence embedded image/video with a non compatible image."
 msgstr "لا يمكن إعادة تسلسل الصورة/الفيديو المضمن مع صورة غير متوافقة. "
 
@@ -1200,6 +1208,15 @@ msgstr ""
 "لإتمام هذه العملية."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Checkout Pages"
 msgstr "صفحات الدفع والخروج "
@@ -1287,7 +1304,10 @@ msgid "Companies"
 msgstr "الشركات "
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "اسم الشركة "
 
@@ -2725,6 +2745,13 @@ msgstr "نظام يفتح عن طريق الدواسات "
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
 msgstr "رقم الهاتف"
 
 #. module: website_sale
@@ -4408,6 +4435,20 @@ msgid ""
 msgstr ""
 "سوف يتم عرض قصاصتك الحيوية هنا...\n"
 "                                يتم عرض هذه الرسالة لأنك لم تقم بتحديد التأثير الفني والقالب حتى يتم استخدامه. "
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "بريدك الإلكتروني "
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "اسمك"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

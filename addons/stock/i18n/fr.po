@@ -569,7 +569,7 @@ msgstr "<span>Type de colis : </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr "<span>Produits sans emballage assigné</span>"
+msgstr "<span>Produits sans colis assigné</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -668,7 +668,7 @@ msgstr "<strong>Date d'emballage :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr "<strong>Type d'emballage :</strong>"
+msgstr "<strong>Type de colis :</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -992,7 +992,7 @@ msgstr "Toujours"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Day and Month"
-msgstr "Jour et mois d'inventaire annuel"
+msgstr "Jour et mois de l'inventaire annuel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
@@ -1066,7 +1066,7 @@ msgstr "Appliquer"
 #: code:addons/stock/static/src/views/list/inventory_report_list.xml:0
 #, python-format
 msgid "Apply All"
-msgstr "Appliquer à toutes"
+msgstr "Appliquer à tout"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__route_ids
@@ -1930,7 +1930,7 @@ msgstr "Créer un nouveau type d'opération"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
 msgid "Create a new package"
-msgstr "Créer un nouvel emballage"
+msgstr "Créer un nouveau colis"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2479,8 +2479,8 @@ msgid ""
 "replenished on order, etc."
 msgstr ""
 "En fonction des modules installés, ceci va vous permettre de définir la "
-"route pour le produit dans cet emballage en particulier: qu'il soit acheté, "
-"fabriqué, réapprovisionné sur commande, etc..."
+"route pour le produit dans ce conditionnement en particulier : qu'il soit "
+"acheté, fabriqué, réapprovisionné sur commande, etc..."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3621,7 +3621,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "Si coché, vous serez capable de sélectionner des paquets à déplacer."
+msgstr "Si coché, vous serez capable de sélectionner des colis à déplacer."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -3879,7 +3879,7 @@ msgstr "Nom de l'ajustement"
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 #: model:ir.model,name:stock.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
-msgstr "Référence/raison de l'ajustement"
+msgstr "Référence/motif de l'ajustement"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_warning
@@ -3947,7 +3947,7 @@ msgstr "Quantité comptée enregistrée"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Inventory Reference / Reason"
-msgstr "Référence/Raison d'Inventaire"
+msgstr "Référence/motif d'Inventaire"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -3978,7 +3978,7 @@ msgstr "Est un abonné"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__is_fresh_package
 msgid "Is Fresh Package"
-msgstr "Est un nouveau paquet"
+msgstr "Est un nouveau colis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_locked
@@ -4745,7 +4745,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr "Poids maximum pouvant être expédié dans cet emballage"
+msgstr "Poids maximum pouvant être expédié dans ce conditionnement"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__5
@@ -5621,17 +5621,17 @@ msgstr "Colis"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr "Code-barre du paquet (PDF)"
+msgstr "Code-barre du colis (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_template
 msgid "Package Barcode (ZPL)"
-msgstr "Code-barre du Paquet (ZPL)"
+msgstr "Code-barre du colis (ZPL)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr "Code-barre du paquet avec contenu"
+msgstr "Code-barre du colis avec contenu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
@@ -5734,28 +5734,28 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
 msgid "Packaging"
-msgstr "Emballage"
+msgstr "Conditionnement"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
 msgid "Packaging Height"
-msgstr "Hauteur de l'emballage"
+msgstr "Hauteur du conditionnement"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__packaging_length
 msgid "Packaging Length"
-msgstr "Longueur de l'emballage"
+msgstr "Longueur du conditionnement"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
 msgid "Packaging Width"
-msgstr "Largeur de l'emballage"
+msgstr "Largeur du conditionnement"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Packagings"
-msgstr "Emballages"
+msgstr "Conditionnements"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6929,7 +6929,7 @@ msgstr "Analyse"
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Request a Count"
-msgstr "Demander un comptage"
+msgstr "Demander un inventaire"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_sign_delivery
@@ -7484,6 +7484,13 @@ msgstr "Séquence de transfert"
 #, python-format
 msgid "Sequence return"
 msgstr "Séquence de retour"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr "Séquences %s existent déjà."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -9613,7 +9620,7 @@ msgstr "Poids"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr "Poids du type de conditionnement"
+msgstr "Poids du type de colis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
@@ -10059,8 +10066,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
-"Vous ne pouvez pas transférer le même contenu d'emballage plus d'une fois "
-"pour un même transfert ou diviser le même emballage sur deux emplacements."
+"Vous ne pouvez pas transférer le même contenu de colis plus d'une fois pour "
+"un même transfert ou diviser le même colis sur deux emplacements."
 
 #. module: stock
 #. odoo-python
@@ -10109,8 +10116,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Vous ne pouvez pas diviser un mouvement de stock fait."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Vous ne pouvez pas diviser un mouvement de stock qui est défini sur 'Fait' "
+"ou 'Annuler'."
 
 #. module: stock
 #. odoo-python

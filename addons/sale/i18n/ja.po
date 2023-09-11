@@ -8,8 +8,8 @@
 # Andy Yiu, 2023
 # Tatsuki Kanda, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Junko Augias, 2023
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +93,7 @@ msgstr "<b>おめでとうございます！</b>最初の見積書が送信さ�
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr "<b>見積もり</b>を自分に<b>送信し</b>、顧客が受け取るものを確認します。"
+msgstr "<b>見積</b>を自分に<b>送信し</b>、顧客が受け取るものを確認します。"
 
 #. module: sale
 #. odoo-javascript
@@ -1037,7 +1037,7 @@ msgstr "カテゴリ"
 msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
-msgstr "注文をすぐに確認するのではなく、顧客に見積もりを送信する場合は、このチェックボックスをオンにします。"
+msgstr "オーダをすぐに確認するのではなく、顧客に見積を送信する場合は、このチェックボックスをオンにします。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -1366,7 +1366,7 @@ msgstr "見積の外観をカスタマイズ"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr "見積もりと注文をカスタマイズします。"
+msgstr "見積とオーダをカスタマイズします。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -2210,7 +2210,7 @@ msgstr "顧客がログインして自分のドキュメントを参照できる
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr "見積もりを送ってみましょう。"
+msgstr "見積を送ってみましょう。"
 
 #. module: sale
 #. odoo-javascript
@@ -2297,7 +2297,7 @@ msgstr "マージン"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr "見積もりを送信済みとしてマーク"
+msgstr "見積を送信済とする"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2473,7 +2473,7 @@ msgstr "請求対象なし"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr "次に、サンプル見積もりを作成します。"
+msgstr "次に、サンプル見積を作成します。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2574,7 +2574,7 @@ msgstr "受注明細ごとの属性値ごとに許可されるカスタム値は
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
-msgstr "セールスアプリを開いて、数回クリックするだけで最初の見積もりを送信します。"
+msgstr "販売アプリを開いて数回のクリックで最初の見積を送信しましょう。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -3038,7 +3038,7 @@ msgstr "見積 / オーダ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "見積もり数"
+msgstr "見積数"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3068,7 +3068,7 @@ msgstr "見積提出済"
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 #, python-format
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr "見積もりの 有効性が必要であり、0より大きくなければなりません。"
+msgstr "見積の 有効性が必要であり、0より大きくなければなりません。"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3087,7 +3087,7 @@ msgstr "見積送信"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "顧客%sが表示した見積もり"
+msgstr "顧客%sが表示した見積"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3173,7 +3173,7 @@ msgstr "通常の請求書"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr "この見積もりを拒否する"
+msgstr "この見積を拒否する"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
@@ -3452,7 +3452,7 @@ msgstr "販売：注文確認"
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr "販売：見積もり送付"
+msgstr "販売: 見積送付"
 
 #. module: sale
 #. odoo-python
@@ -3655,7 +3655,7 @@ msgstr "オーダにマージンを表示"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr "見積もりを署名して支払"
+msgstr "見積を署名して支払う"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3743,7 +3743,7 @@ msgstr "オンボーディング確認注文ステップの状態"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr "オンボーディングサンプル見積もりステップの状態"
+msgstr "オンボーディングサンプル見積ステップの状態"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
@@ -4039,7 +4039,7 @@ msgstr "現在、あなたのアカウントの注文はありません。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr "現在、アカウントの見積もりはありません。"
+msgstr "現在表示対象の見積はありません。"
 
 #. module: sale
 #. odoo-python
@@ -4402,7 +4402,7 @@ msgstr "オーダー参照"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Quotation"
-msgstr "見積もりを見る"
+msgstr "見積を参照"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4564,8 +4564,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"見積もりには会社%(product_company)sの製品が含まれていますが、見積もりは会社%(quote_company)sに属しています。\n"
-"見積もりの 会社を変更するか、他の会社から製品を削除してください(%(bad_products)s)。"
+"見積には会社%(product_company)sのプロダクトが含まれていますが、見積は会社%(quote_company)sに属しています。\n"
+"見積の会社を変更するか、他の会社のプロダクトを削除してください(%(bad_products)s)。"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server

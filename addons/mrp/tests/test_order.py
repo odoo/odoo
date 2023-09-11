@@ -3298,3 +3298,93 @@ class TestMrpOrder(TestMrpCommon):
         consumption.action_set_qty()
         self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 30)
         self.assertEqual(mo.move_raw_ids[0].quantity_done, 30)
+
+    def test_validation_mo_with_tracked_component(self):
+        """
+        check that the verification of SN for tracked component is ignored when the quantity to consume is 0.
+        """
+        self.product_2.tracking = 'serial'
+        bom = self.env["mrp.bom"].create({
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_qty': 1.0,
+            }), (0, 0, {
+                'product_id': self.product_3.id,
+                'product_qty': 1.0,
+            })]
+        })
+        # create the MO and confirm it
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        # set the qty to consume of the tracked product to 0
+        mo.move_raw_ids[0].write({
+            'product_uom_qty': 0,
+            'quantity_done': 0,
+        })
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.state, 'to_close')
+        consumption_issues = mo._get_consumption_issues()
+        action = mo._action_generate_consumption_wizard(consumption_issues)
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
+        warning = warning.save()
+
+        self.assertEqual(len(warning.mrp_consumption_warning_line_ids), 1)
+        self.assertEqual(warning.mrp_consumption_warning_line_ids[0].product_consumed_qty_uom, 0)
+        self.assertEqual(warning.mrp_consumption_warning_line_ids[0].product_expected_qty_uom, 1)
+        # Force the warning
+        warning.action_confirm()
+        self.assertEqual(mo.state, 'done')
+
+    def test_exceeded_consumed_qty_and_duplicated_lines(self):
+        """
+        Two components C01, C02. C01 has the MTO route.
+        MO with 1 x C01, 1 x C02, 1 x C02.
+        Process the MO and set a high consumed qty for C01.
+        Ensure that the MO can still be processed and that the consumed quantities
+        are correct.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route.active = True
+
+        product01, product02, product03 = self.env['product.product'].create([{
+            'name': 'Product %s' % (i + 1),
+            'type': 'product',
+        } for i in range(3)])
+
+        product02.route_ids = [(6, 0, (mto_route | manufacture_route).ids)]
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product01
+        mo_form.product_qty = 1
+        for component in (product02, product03, product03):
+            with mo_form.move_raw_ids.new() as line:
+                line.product_id = component
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo = mo_form.save()
+
+        mo.move_raw_ids[0].move_line_ids.qty_done = 1.5
+        mo.button_mark_done()
+
+        self.assertEqual(mo.state, 'done')
+
+        p02_raws = mo.move_raw_ids.filtered(lambda m: m.product_id == product02)
+        p03_raws = mo.move_raw_ids.filtered(lambda m: m.product_id == product03)
+        self.assertEqual(sum(p02_raws.mapped('quantity_done')), 1.5)
+        self.assertEqual(sum(p03_raws.mapped('quantity_done')), 2)

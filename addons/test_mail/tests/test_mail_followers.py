@@ -42,6 +42,17 @@ class BaseFollowersTest(TestMailCommon):
         self.assertTrue(test_record.message_is_follower)
         self.assertEqual(followed_before | test_record, followed_after)
 
+    def test_field_message_partner_ids(self):
+        test_record = self.test_record.with_user(self.user_employee)
+        partner = self.user_employee.partner_id
+        followed_before = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
+        self.assertFalse(partner in test_record.message_partner_ids)
+        self.assertNotIn(test_record, followed_before)
+        test_record.message_subscribe(partner_ids=[partner.id])
+        followed_after = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
+        self.assertTrue(partner in test_record.message_partner_ids)
+        self.assertEqual(followed_before + test_record, followed_after)
+
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id])

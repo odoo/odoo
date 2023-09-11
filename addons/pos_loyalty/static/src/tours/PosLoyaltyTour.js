@@ -219,3 +219,15 @@ PosLoyalty.do.clickRewardButton();
 ProductScreen.check.totalAmountIs('138.50');
 
 Tour.register('PosLoyaltyTour6', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.exec.addOrderline('Test Product', '1');
+PosLoyalty.check.orderTotalIs('100');
+PosLoyalty.do.enterCode('abcda');
+PosLoyalty.check.orderTotalIs('90');
+
+Tour.register('PosLoyaltyTour7', { test: true, url: '/pos/web' }, getSteps());

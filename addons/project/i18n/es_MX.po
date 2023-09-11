@@ -482,13 +482,13 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Apreciable <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
-"    Tengo el placer de comunicarle que el proyecto \"<strong t-out=\"object.name or ''\">Renovaciones</strong>\" ha concluido con éxito .\n"
+"    Me complace comunicarle que el proyecto \"<strong t-out=\"object.name or ''\">Renovaciones</strong>\" ha concluido con éxito .\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
 "        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Está recibiendo este correo electrónico porque su proyecto ha pasado a la fase <b t-out=\"object.stage_id.name or ''\">Hecho</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Está recibiendo este correo electrónico porque su proyecto ha pasado a la etapa <b t-out=\"object.stage_id.name or ''\">Hecho</b></span>\n"
 "            "
 
 #. module: project
@@ -1496,7 +1496,7 @@ msgid ""
 msgstr ""
 "Recopile los comentarios de sus clientes mediante las solicitudes de calificación cuando una tarea pase a una etapa determinada. Para ello, defina una plantilla de correo electrónico de calificación en las etapas correspondientes.\n"
 "Calificación al cambiar de etapa: se enviará de forma automática un correo electrónico cuando la tarea alcance la etapa en la que se haya establecido la plantilla de correo electrónico de calificación.\n"
-"Calificación periódica: se enviará de forma automática un correo electrónico cada cierto tiempo mientras la tarea permanezca en la fase en la que está establecida la plantilla de correo electrónico de calificación."
+"Calificación periódica: se enviará de forma automática un correo electrónico cada cierto tiempo mientras la tarea permanezca en la etapa en la que está establecida la plantilla de correo electrónico de calificación."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -2099,7 +2099,7 @@ msgstr "Diseño"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr "Determinar el orden de ejecución de las tareas"
+msgstr "Determine el orden de ejecución de las tareas"
 
 #. module: project
 #. odoo-javascript
@@ -2693,8 +2693,8 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Si esta opción está activada, se enviará automáticamente una solicitud de calificación por correo electrónico al cliente cuando la tarea llegue a esta fase.\n"
-"Otra opción es que se envíe de manera periódica durante el tiempo que la tarea permanezca en esta fase, según la configuración de su proyecto.\n"
+"Si esta opción está activada, se enviará automáticamente una solicitud de calificación por correo electrónico al cliente cuando la tarea llegue a esta etapa.\n"
+"Otra opción es que se envíe de manera periódica durante el tiempo que la tarea permanezca en esa etapa, según la configuración de su proyecto.\n"
 "Para utilizar esta función, asegúrese de que la opción \"Calificaciones de los clientes\" está activada en su proyecto."
 
 #. module: project
@@ -2704,7 +2704,7 @@ msgid ""
 " reaches this stage."
 msgstr ""
 "Si esta opción está activada, se enviará automáticamente un correo "
-"electrónico al cliente cuando el proyecto llegue a esta fase."
+"electrónico al cliente cuando el proyecto llegue a esta etapa."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -3163,6 +3163,13 @@ msgstr "Escriba un comentario"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr "Creemos su primer <b>etapa</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
@@ -3174,6 +3181,13 @@ msgstr "Creemos su primer <b>proyecto</b>."
 #, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Creemos su primer <b>tarea</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr "Creemos su segunda <b>etapa</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3295,7 +3309,7 @@ msgid ""
 "tasks reach a certain stage."
 msgstr ""
 "Evalúe la satisfacción de sus clientes enviando solicitudes de calificación "
-"cuando sus tareas alcancen una determinada fase."
+"cuando sus tareas alcancen una etapa determinada."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3834,8 +3848,7 @@ msgstr "Mensualmente"
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
-"¡Uy! Algo salió mal. Intente recargar la pagina e ingresar nuevamente."
+msgstr "¡Uy! Ocurrió un error. Intente recargar la página e ingrese de nuevo."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -5838,16 +5851,15 @@ msgstr "Total"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
-"Realice un seguimiento de la satisfacción del cliente desde las tareas"
+msgstr "Lleve el seguimiento de la satisfacción del cliente en las tareas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
-"Haga un seguimiento de los principales puntos de progreso que se deben "
-"alcanzar para lograr el éxito."
+"Lleve el seguimiento de los principales avances que deben alcanzarse para "
+"lograr el éxito"
 
 #. module: project
 #. odoo-javascript
@@ -5855,8 +5867,8 @@ msgstr ""
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
-"Haga un seguimiento de los principales puntos de progreso que se deben "
-"alcanzar para lograr el éxito."
+"Lleve el seguimiento de los principales avances que deben alcanzarse para "
+"lograr el éxito."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5877,7 +5889,7 @@ msgstr "Siga el progreso de sus proyectos"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Realice un seguimiento del tiempo empleado en los proyectos y tareas"
+msgstr "Lleve el seguimiento del tiempo que se utiliza en proyectos y tareas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -6215,7 +6227,7 @@ msgstr "Horas laborables para terminar"
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr "¿Desea desarchivar también todas las tareas de estas etapas?"
+msgstr "¿También desea desarchivar todas las tareas de estas etapas?"
 
 #. module: project
 #. odoo-javascript

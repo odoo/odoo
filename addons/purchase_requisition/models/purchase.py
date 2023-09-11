@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
-from odoo.tools import get_lang
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 
 
 class PurchaseOrderGroup(models.Model):
@@ -286,6 +286,10 @@ class PurchaseOrderLine(models.Model):
                         date=pol.order_id.date_order and pol.order_id.date_order.date(),
                         uom_id=line.product_uom_id,
                         params=params)
+
+                    if not pol.date_planned:
+                        pol.date_planned = pol._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
                     product_ctx = {'seller_id': seller.id, 'lang': get_lang(pol.env, partner.lang).code}
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
                     if line.product_description_variants:

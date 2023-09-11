@@ -33,6 +33,7 @@ import {
     getCursorDirection,
     DIRECTIONS,
     isBlock,
+    isVisibleTextNode,
 } from '../../src/utils/utils.js';
 import {
     BasicEditor,
@@ -401,6 +402,11 @@ describe('Utils', () => {
             const p = div.firstChild.firstChild;
             const result = closestBlock(p);
             window.chai.expect(result).to.equal(p);
+        });
+        it('should return null if no block ancestor', () => {
+            const node = document.createTextNode('\n        ');
+            window.chai.expect(closestBlock(node)).to.equal(null);
+            window.chai.expect(isVisibleTextNode(node)).to.equal(false);
         });
     });
     describe('lastLeaf', () => {

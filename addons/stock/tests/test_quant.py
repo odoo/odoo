@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Form, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
@@ -826,3 +826,72 @@ class StockQuant(TransactionCase):
             ('package_id', '=', package.id),
             ('location_id', '=', self.stock_location.id),
         ]))
+
+    def test_serial_constraint_with_package_and_return(self):
+        """
+        Receive product with serial S
+        Return it in a package
+        Confirm a new receipt with S
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        receipt01 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_serial.uom_id.id,
+            })],
+        })
+        receipt01.action_confirm()
+        receipt01.move_line_ids.write({
+            'lot_name': 'Michel',
+            'qty_done': 1.0
+        })
+        receipt01.button_validate()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', stock_location.id)])
+
+        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.ids[0], active_model='stock.picking'))
+        wizard = wizard_form.save()
+        wizard.product_return_moves.quantity = 1.0
+        stock_return_picking_action = wizard.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_ids.move_line_ids.qty_done = 1.0
+        return_pick.action_put_in_pack()
+        return_pick._action_done()
+
+        self.assertEqual(return_pick.move_line_ids.lot_id, quant.lot_id)
+        self.assertTrue(return_pick.move_line_ids.result_package_id, quant.lot_id)
+
+        receipt02 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_ids': [(0, 0, {
+                'name': self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_serial.uom_id.id,
+            })],
+        })
+        receipt02.action_confirm()
+        receipt02.move_line_ids.write({
+            'lot_name': 'Michel',
+            'qty_done': 1.0
+        })
+        receipt02.button_validate()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', stock_location.id)])
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.lot_id.name, 'Michel')

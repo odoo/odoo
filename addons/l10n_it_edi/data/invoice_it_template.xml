@@ -148,9 +148,18 @@
                 </DatiBollo>
                 <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
-            <DatiOrdineAcquisto t-if="record.ref and not record.reversed_entry_id">
+            <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
+            </DatiOrdineAcquisto>
+            <DatiOrdineAcquisto t-elif="record.ref and not record.reversed_entry_id">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
             </DatiOrdineAcquisto>
+            <DatiContratto t-if="origin_document_type == 'contract'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
+            </DatiContratto>
+            <DatiConvenzione t-if="origin_document_type == 'agreement'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
+            </DatiConvenzione>
             <DatiFattureCollegate t-if="record.reversed_entry_id">
                 <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name[-20:])"/>
                 <Data t-out="format_date(record.reversed_entry_id.invoice_date)"/>
@@ -186,7 +195,7 @@
                         <ImponibileImporto t-esc="format_monetary(tax_line['base_amount'], currency)"/>
                         <Imposta t-esc="format_monetary(tax_line['tax_amount'], currency)"/>
                     </t>
-                    <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
+                    <EsigibilitaIVA t-esc="tax_line['exigibility_code']"/>
                     <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
             </t>
@@ -223,6 +232,13 @@
                 <Provincia t-if="partner.country_id.code == 'IT' and partner.state_id" t-esc="partner.state_id.code[:2]"/>
                 <Nazione t-esc="partner.country_id.code"/>
             </Sede>
+</template>
+
+<template id="account_invoice_FatturaPA_origin_document">
+                <IdDocumento t-if="origin_document_name" t-esc="format_alphanumeric(origin_document_name[:20])"/>
+                <Data t-if="origin_document_date" t-esc="format_date(origin_document_date)"/>
+                <CodiceCUP t-if="cup" t-esc="format_alphanumeric(cup)[-15:]"/>
+                <CodiceCIG t-if="cig" t-esc="format_alphanumeric(cig)[-15:]"/>
 </template>
 
     </data>

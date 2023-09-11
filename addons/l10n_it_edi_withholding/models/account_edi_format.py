@@ -25,13 +25,13 @@ class AccountEdiFormat(models.Model):
             Needs not to call super, because super checks for one tax only per line.
         """
         errors = []
-        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
-            vat_taxes, withholding_taxes, pension_fund_taxes = [invoice_line.tax_ids._l10n_it_filter_kind(kind) for kind in ('vat', 'withholding', 'pension_fund')]
-            if not invoice_line.display_type:
-                if len(vat_taxes) != 1:
-                    errors.append(_("Bad tax configuration for line %s, there must be one and only one VAT tax per line", invoice_line.name))
-                if len(pension_fund_taxes) > 1 or len(withholding_taxes) > 1:
-                    errors.append(_("Bad tax configuration for line %s, there must be one Withholding tax and one Pension Fund tax at max.", invoice_line.name))
+        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
+            all_taxes = invoice_line.tax_ids.flatten_taxes_hierarchy()
+            vat_taxes, withholding_taxes, pension_fund_taxes = (all_taxes._l10n_it_filter_kind(kind) for kind in ('vat', 'withholding', 'pension_fund'))
+            if len(vat_taxes.filtered(lambda x: x.amount >= 0)) != 1:
+                errors.append(_("Bad tax configuration for line %s, there must be one and only one VAT tax per line", invoice_line.name))
+            if len(pension_fund_taxes) > 1 or len(withholding_taxes) > 1:
+                errors.append(_("Bad tax configuration for line %s, there must be one Withholding tax and one Pension Fund tax at max.", invoice_line.name))
         return errors
 
     def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):

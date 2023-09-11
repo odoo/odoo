@@ -16,6 +16,7 @@
 # Rémi CAZENAVE, 2023
 # Martin Trigaux, 2023
 # Cécile Collart <cco@odoo.com>, 2023
+# Wil Odoo, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -3666,6 +3667,17 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Impossible de créer un code comptable non utilisé."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+"Impossible de générer un code de journal non utilisé. Veuillez modifier le "
+"nom du journal %s."
 
 #. module: account
 #. odoo-python
@@ -13326,8 +13338,8 @@ msgstr "Compte d'attente"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Transformer en remboursement/avoir"
+msgid "Switch into invoice/credit note"
+msgstr "Transformer en facture/avoir"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13971,14 +13983,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
-"Les lignes Mois et Jours des conditions de paiement doivent être positives."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #, python-format
 msgid "The Payment Term must have one Balance line."
@@ -14514,6 +14518,8 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
+"Impossible de comptabiliser cette écriture pour la raison suivante : "
+"%(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -17138,6 +17144,13 @@ msgid ""
 msgstr ""
 "Vous ne pouvez changer de compte pour empêcher la réconciliation dans le cas"
 " où des rapprochements partiels sont toujours en suspens. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Vous ne pouvez pas changer le type d'un document comptabilisé."
 
 #. module: account
 #. odoo-python

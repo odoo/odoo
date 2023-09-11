@@ -11069,6 +11069,16 @@ msgstr "הודעת שגיאה תוחזר כאשר האילוץ מופר."
 
 #. module: base
 #. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -11987,7 +11997,7 @@ msgstr "היסטוריה של הצי"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
-msgstr "צף"
+msgstr "מספר עשרוני"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -15562,7 +15572,7 @@ msgstr "תפריט"
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
-msgstr "תפריט פריטים"
+msgstr "תפריטים"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__name
@@ -21592,7 +21602,6 @@ msgstr "התחל הגדרת תצורה"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -21635,6 +21644,7 @@ msgstr "מדינות"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "סטטוס"
@@ -25276,6 +25286,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -25307,6 +25324,13 @@ msgid ""
 msgstr ""
 "לא ניתן לצמצם את מספר המקומות העשרוניים של מטבע שכבר נעשה בו שימוש ברישום "
 "חשבונאי."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -25691,7 +25715,7 @@ msgstr "לא נכון"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
 msgid "float"
-msgstr "צף"
+msgstr "מספר עשרוני"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form

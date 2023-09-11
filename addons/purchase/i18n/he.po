@@ -5,12 +5,12 @@
 # Translators:
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2022
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2022
 # Lilach Gilliam <lilach@apprcase.com>, 2022
 # Jonathan Spier, 2022
 # Netta Waizer, 2022
 # uriel ehrman <uriel@laylinetech.com>, 2022
 # Ofir Blum <ofir.blum@gmail.com>, 2022
+# Roy Sayag, 2022
 # Moshe Flam <pashute@gmail.com>, 2022
 # שהאב חוסיין <shhab89@gmail.com>, 2022
 # david danilov, 2022
@@ -24,8 +24,9 @@
 # NoaFarkash, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
-# Roy Sayag, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# hed shefer <hed@laylinetech.com>, 2023
+# yael terner, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
+"Last-Translator: yael terner, 2023\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -286,7 +287,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">מספר הזמנת רכש #</span>\n"
+"<span class=\"d-none d-md-inline\">הזמנת רכש מס'</span>\n"
 "                          <span class=\"d-block d-md-none\">מספר אסמכתא</span>"
 
 #. module: purchase
@@ -295,9 +296,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">בקשה להצעת מחיר #1</span>\n"
-"<span class=\"d-block d-md-none\">#.</span>\n"
-" "
+"<span class=\"d-none d-md-inline\">בקשה להצעת מחיר מס'</span>\n"
+"                        <span class=\"d-block d-md-none\">מזהה</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -990,7 +990,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "קוד מדינה"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2049,7 +2049,7 @@ msgstr "הזמנת רכש"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr " מספר הזמנת רכש "
+msgstr "הזמנת רכש מס'"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
@@ -2427,7 +2427,7 @@ msgstr "בקשה להצעת מחיר"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "מס' בקשות להצעת מחיר"
+msgstr "בקשה להצעת מחיר מס'"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2703,7 +2703,7 @@ msgstr "מס לפי ארץ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "סיכומי מס"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax

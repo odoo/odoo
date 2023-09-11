@@ -6,8 +6,8 @@
 # JackTheHunter <Maximilian.N98@gmail.com>, 2022
 # Chris Egal <sodaswed@web.de>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,8 +32,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Automatisch: Die Kunden erhalten automatisch eine Prämie in ihrem Warenkorb.\n"
-"Mit Code: Kunden haben Anspruch auf eine Prämie, wenn sie einen Code eingeben."
+"Automatisch: Die Kunden erhalten automatisch eine Belohnung in ihrem Warenkorb.\n"
+"Mit Code: Kunden haben Anspruch auf eine Belohnung, wenn sie einen Code eingeben."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
@@ -54,7 +54,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Zeigen Sie die Anzahl der verfügbaren und verbrauchten Prämienpunkte im Webportal, auf dem Kassenbon des Kunden und an der Kasse des E-Commerce an.\n"
+"        Zeigen Sie die Anzahl der verfügbaren und verbrauchten Belohnungspunkte im Webportal, auf dem Kassenbon des Kunden und an der Kasse des E-Commerce an.\n"
 "        "
 
 #. module: loyalty
@@ -434,11 +434,11 @@ msgstr ""
 "            Herzlichen Glückwusch <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
 "        </t>\n"
 "\n"
-"        hier ist Ihre Prämie von <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br>\n"
+"        hier ist Ihre Belohnung von <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
-"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">Beschreibung der Prämie</span>\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">Beschreibung der Belohnung</span>\n"
 "                <br>\n"
 "            </t>\n"
 "        </t>\n"
@@ -493,7 +493,7 @@ msgstr "Ein Gutschein/eine Treuekarte muss einen eindeutigen Code haben."
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "A program must have at least one reward."
-msgstr "Ein Programm muss mindestes eine Prämie haben."
+msgstr "Ein Programm muss mindestes eine Belohnung haben."
 
 #. module: loyalty
 #. odoo-python
@@ -528,7 +528,7 @@ msgstr "Hinzufügen"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr "Eine Prämie hinzufügen"
+msgstr "Eine Belohnung hinzufügen"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -979,8 +979,8 @@ msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
 msgstr ""
-"Jede Regel kann dem Kunden Punkte gewähren, die er gegen Prämien eintauschen"
-" kann."
+"Jede Regel kann dem Kunden Punkte gewähren, die er gegen Belohnungen "
+"eintauschen kann."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -1052,7 +1052,7 @@ msgstr "Gratisprodukt – %s"
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.3_cabinets_plus_1_free_reward
 msgid "Free Product - Large Cabinet"
-msgstr "Kostenloses Produkt - Großer Schrank"
+msgstr "Gratisprodukt - Großer Schrank"
 
 #. module: loyalty
 #. odoo-python
@@ -1088,9 +1088,9 @@ msgid ""
 "constraints on its usage through conditional rule."
 msgstr ""
 "Generieren &amp; teilen Sie Gutscheincodes manuell. Er kann im E-Commerce, "
-"im Kassensystem oder bei regulären Aufträgen verwendet werden, um die Prämie"
-" in Anspruch zu nehmen. Sie können Einschränkungen für seine Verwendung "
-"durch bedingte Regeln definieren."
+"im Kassensystem oder bei regulären Aufträgen verwendet werden, um die "
+"Belohnung in Anspruch zu nehmen. Sie können Einschränkungen für seine "
+"Verwendung durch bedingte Regeln definieren."
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -1201,7 +1201,7 @@ msgstr "Hier ist Ihre Geschenkkarte!"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Here is your reward from"
-msgstr "Hier ist Ihre Prämie von"
+msgstr "Hier ist Ihre Belohnung von"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__id
@@ -1542,13 +1542,18 @@ msgid "Product Variant"
 msgstr "Produktvariante"
 
 #. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+msgid "Product used in the sales order to apply the discount."
+msgstr "Produkt in diesem Verkaufsauftrag, um den Rabatt anzuwenden."
+
+#. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id
 msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
 msgstr ""
 "Produkt, das im Verkaufsauftrag verwendet wird, um den Rabatt anzuwenden. "
-"Jede Prämie hat ihr eigenes Produkt für Berichtszwecke"
+"Jede Belohnung hat ihr eigenes Produkt für Berichtszwecke"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -1638,37 +1643,37 @@ msgstr "Zu generierende Menge"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Reward"
-msgstr "Prämie"
+msgstr "Belohnung"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
 msgid "Reward Point Mode"
-msgstr "Modus für Prämienpunkte"
+msgstr "Modus für Belohnungspunkte"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr "Bereich für Prämienprodukt"
+msgstr "Bereich für Belohnungsprodukt"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr "Prämienproduktmenge"
+msgstr "Belohnungsproduktmenge"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
 msgid "Reward Product Uom"
-msgstr "Maßeinheit des Prämienprodukts"
+msgstr "Maßeinheit des Belohnungsprodukts"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
 msgid "Reward Products"
-msgstr "Prämienprodukte"
+msgstr "Belohnungsprodukte"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_type
 msgid "Reward Type"
-msgstr "Prämientyp"
+msgstr "Belohnungstyp"
 
 #. module: loyalty
 #. odoo-python
@@ -1684,17 +1689,17 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 msgid "Rewards"
-msgstr "Prämien"
+msgstr "Belohnungen"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_rule_reward_point_amount_positive
 msgid "Rule points reward must be strictly positive."
-msgstr "Die Regel für die Punkteprämie muss unbedingt positiv sein."
+msgstr "Die Regel für die Punktebelohnung muss unbedingt positiv sein."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
-msgstr "Regeln & Prämien"
+msgstr "Regeln & Belohnungen"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
@@ -1735,7 +1740,8 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr ""
-"Stellen Sie bedingte Regeln für den Auftrag ein, die Kunden Prämien gewähren"
+"Stellen Sie bedingte Regeln für den Auftrag ein, die Kunden Belohnungen "
+"gewähren"
 
 #. module: loyalty
 #. odoo-python
@@ -1797,12 +1803,12 @@ msgstr "Der Aktionscode muss einzigartig sein."
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
 msgstr ""
-"Die für eine Prämie erforderlichen Punkte müssen unbedingt positiv sein."
+"Die für eine Belohnung erforderlichen Punkte müssen unbedingt positiv sein."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
-msgstr "Die Menge des Prämienprodukts muss unbedingt positiv sein."
+msgstr "Die Menge des Belohnungsprodukts muss unbedingt positiv sein."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1820,8 +1826,8 @@ msgstr ""
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
 msgstr ""
-"Dies ist der maximale Betrag, der bei dieser Prämie rabattiert werden kann; "
-"lassen Sie den Wert 0 stehen, wenn Sie keine Begrenzung wünschen."
+"Dies ist der maximale Betrag, der bei dieser Belohnung rabattiert werden "
+"kann; lassen Sie den Wert 0 stehen, wenn Sie keine Begrenzung wünschen."
 
 #. module: loyalty
 #. odoo-python
@@ -1902,7 +1908,8 @@ msgid ""
 "rewards on the current order or on a future one."
 msgstr ""
 "Wenn Kunden einen Auftrag aufgeben, sammeln sie Punkte, die sie gegen "
-"Prämien für den aktuellen oder eine zukünftigen Auftrag eintauschen können."
+"Belohnungen für den aktuellen oder eine zukünftigen Auftrag eintauschen "
+"können."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1911,7 +1918,7 @@ msgid ""
 "exchanged for rewards."
 msgstr ""
 "Bei der Erstellung von Gutscheinen können Sie einen bestimmten Punktewert "
-"festlegen, der gegen Prämien eingetauscht werden kann."
+"festlegen, der gegen Belohnungen eingetauscht werden kann."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -1919,9 +1926,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"Ob Prämiengutscheine pro abgeglichener Einheit getrennt werden sollen, gilt "
-"nur für „zukünftige“ Programme und Auslösemodus je ausgegebenem Geld oder "
-"bezahlter Einheit."
+"Ob Belohnungsgutscheine pro abgeglichener Einheit getrennt werden sollen, "
+"gilt nur für „zukünftige“ Programme und Auslösemodus je ausgegebenem Geld "
+"oder bezahlter Einheit."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -1979,7 +1986,7 @@ msgstr "Ihre Geschenkkarte für {{ object.company_id.name }}"
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "Ihr Prämiengutschein von {{ object.program_id.company_id.name }} "
+msgstr "Ihr Belohnungsgutschein von {{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2015,7 +2022,7 @@ msgstr "E-Geldbörse-Produkte"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr "E-Geldbörse-Wert"
+msgstr "E-Geldbörsenwert"
 
 #. module: loyalty
 #. odoo-python
@@ -2031,7 +2038,7 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
-"E-Geldbörsen werden manuell erstellt oder automatisch erstellt, wenn der Kunde ein E-Geldbörse-Produkt bestellt.\n"
+"E-Geldbörsen werden manuell erstellt oder automatisch erstellt, wenn der Kunde ein E-Geldbörsenprodukt bestellt.\n"
 "                                    <br/>\n"
 "                                    Dann werden die E-Geldbörsen während des Kassiervorgangs angeboten, um Bestellungen zu bezahlen."
 
@@ -2060,7 +2067,7 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
-"auf Ihren Auftrag\n"
+"auf Ihre Bestellung\n"
 "                                        <br/>"
 
 #. module: loyalty
@@ -2068,7 +2075,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per %s spent"
-msgstr "pro ausgegebene %s"
+msgstr "je Ausgabe von %s"
 
 #. module: loyalty
 #. odoo-python

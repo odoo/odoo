@@ -28,12 +28,12 @@ msgstr "Tanggal Diambil"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Jumlah:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Referensi:</b>"
 
 #. module: payment
 #. odoo-python
@@ -43,6 +43,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>Mohon buat pembayaran ke: </h3><ul><li>Bank: %s</li><li>Nomor Akun: "
+"%s</li><li>Pemilik Akun: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -52,17 +54,17 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Kembali ke Akun Saya"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
 msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Hapus"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Metode Pembayaran Tersimpan</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -94,6 +96,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment provider could be found.</strong>"
 msgstr ""
+"<strong>Tidak ada penyedia pembayaran yang cocok yang dapat "
+"ditemukan.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -101,6 +105,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Peringatan</strong> Membuat penyedia pembayaran dari tombol <em>BUAT</em> tidak dapat dilakukan.\n"
+"                        Mohon alih-alih gunakan action <em>Duplikat</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -108,6 +114,8 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
+"<strong>Peringatan</strong> Pastikan Anda sudah log in sebagai mitra yang "
+"tepat sebelum melakukan pembayaran ini."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -117,7 +125,7 @@ msgstr "<strong>Peringatan</strong> Mata uang ini hilang atau tidak benar."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
+msgstr "<strong>Peringatan</strong> Anda harus log in untuk membayar."
 
 #. module: payment
 #. odoo-python
@@ -127,13 +135,15 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
+"Permintaan refund sejumlah %(amount)s telah dikirim. Pembayaran akan dibuat "
+"sebentar lagi. Referensi transaksi refund: %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "A token cannot be unarchived once it has been archived."
-msgstr ""
+msgstr "Token tidak dapat diarsip setelah diarsip."
 
 #. module: payment
 #. odoo-python
@@ -141,7 +151,7 @@ msgstr ""
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
-msgstr ""
+msgstr "Transaksi dengan referensi %(ref)s telah dimulai (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -151,6 +161,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
 msgstr ""
+"Transaksi dengan referensi %(ref)s telah dimulai untuk menyimpan metode "
+"pembayaran baru (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -160,6 +172,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
+"Transaksi dengan referensi %(ref)s telah dimulai menggunakan metode "
+"pembayaran %(token)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -197,28 +211,28 @@ msgstr "Alamat"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_adyen
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
 msgid "Allow Express Checkout"
-msgstr ""
+msgstr "Izinkan Express Checkout"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
 msgid "Allow Payment Provider"
-msgstr ""
+msgstr "Izinkan Penyedia Pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr ""
+msgstr "Izinkan Menyimpan Metode Pembayaran"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_aps
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr ""
+msgstr "Layanan Amazon Payment"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -230,19 +244,19 @@ msgstr "Jumlah"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
-msgstr ""
+msgstr "Jumlah Maksimum"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "An error occurred during the processing of this payment."
-msgstr ""
+msgstr "Error terjadi saat memproses pembayaran ini."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "An error occurred during the processing of your payment."
-msgstr ""
+msgstr "Error terjadi saat memproses pembayaran Anda."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -260,7 +274,7 @@ msgstr "Diarsipkan"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Are you sure you want to delete this payment method?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin menghapus metode pembayaran ini?"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -274,22 +288,22 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
 msgid "Asiapay"
-msgstr ""
+msgstr "Asiapay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
 msgid "Authorize Message"
-msgstr ""
+msgstr "Otorisasikan Pesan"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_authorize
 msgid "Authorize.net"
-msgstr ""
+msgstr "Authorize.net"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
 msgid "Authorized"
-msgstr ""
+msgstr "Diotorisasi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -316,32 +330,32 @@ msgstr "Nama Bank"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Callback Document Model"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
 msgid "Callback Done"
-msgstr ""
+msgstr "Callback Done"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Callback Hash"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "Callback Method"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr ""
+msgstr "Callback Record ID"
 
 #. module: payment
 #. odoo-javascript
@@ -359,19 +373,19 @@ msgstr "Dibatalkan"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
 msgid "Canceled Message"
-msgstr ""
+msgstr "Pesan yang Dibatalkan"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Canceled operations"
-msgstr ""
+msgstr "Operasi yang dibatalka"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Capture Jumlah secara Manual"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -385,16 +399,19 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
+"Capture jumlah dari Odoo, saat pengiriman selesai.\n"
+"Gunakan ini bila Anda hanya ingin menagih kartu pelanggan Anda saat\n"
+"Anda yakin Anda dapat mengirim barang ke mereka."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr ""
+msgstr "Child Transactions"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Pilih metode pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -409,7 +426,7 @@ msgstr "Kota"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Klik di sini untuk dialihkan ke halaman konfirmasi."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -459,7 +476,7 @@ msgstr "Konfigurasi"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Konfirmasi Penghapusan"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
@@ -474,7 +491,7 @@ msgstr "Kontak"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Modul Terkait"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_country_ids
@@ -490,12 +507,12 @@ msgstr "Negara"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
 msgid "Create Token"
-msgstr ""
+msgstr "Buat Token"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
-msgstr ""
+msgstr "Buat penyedia pembayaran baru"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -532,7 +549,7 @@ msgstr "Dibuat pada"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Creating a transaction from an archived token is forbidden."
-msgstr ""
+msgstr "Dilarang membuat transaksi dari token yang diarsip."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -542,12 +559,12 @@ msgstr "Kredensial"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "Kartu Kredit & Debit"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_razorpay
 msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
-msgstr ""
+msgstr "Kartu Kredit & Debit, UPI (Powered by Razorpay)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
@@ -557,32 +574,32 @@ msgstr "Kartu Kredit & Debit (via Stripe)"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_adyen
 msgid "Credit Card (powered by Adyen)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Adyen)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_asiapay
 msgid "Credit Card (powered by Asiapay)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Asiapay)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_authorize
 msgid "Credit Card (powered by Authorize)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Authorize)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_buckaroo
 msgid "Credit Card (powered by Buckaroo)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Buckaroo)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_mercado_pago
 msgid "Credit Card (powered by Mercado Pago)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Mercado Pago)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_sips
 msgid "Credit Card (powered by Sips)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Sips)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
@@ -604,7 +621,7 @@ msgstr "Pelanggan"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "Tentukan urutan tampilan"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_demo
@@ -614,7 +631,7 @@ msgstr "Demo"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__display_as
 msgid "Description of the provider for customers"
-msgstr ""
+msgstr "Keterangan provider untuk pelanggan"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
@@ -668,7 +685,7 @@ msgstr "Email"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__enabled
 msgid "Enabled"
-msgstr ""
+msgstr "Diaktifkan"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -687,24 +704,24 @@ msgstr "Eror!"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Error: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr ""
+msgstr "Templat Formulir Express Checkout"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout Supported"
-msgstr ""
+msgstr "Mendukung Express Checkout"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Failed operations"
-msgstr ""
+msgstr "Operasi yang gagal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -716,7 +733,7 @@ msgstr "Biaya"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
 msgid "Fees Supported"
-msgstr ""
+msgstr "Biaya yang Didukung"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
@@ -731,7 +748,7 @@ msgstr "Biaya tetap internasional"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
 msgid "Flutterwave"
-msgstr ""
+msgstr "Flutterwave"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -741,12 +758,12 @@ msgstr "Dari"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Hanya Penuh"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "Buat Link Pembayaran"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
@@ -768,12 +785,12 @@ msgstr "HTTP routing"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
 msgid "Has Multiple Providers"
-msgstr ""
+msgstr "Memiliki Lebih Dari Satu Provider"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr ""
+msgstr "Apakah pembayaran sudah di post-process"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
@@ -807,18 +824,21 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
 msgstr ""
+"Bila provider pembayaran spesifik dipilih, pelanggan hanya diizinkan untuk "
+"membayar menggunakan provider tersebut. Bila 'Semua' dipilih, pelanggan "
+"dapat membayar menggunakan provider pembayaran apapun yang tersedia."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "If not defined, the provider name will be used."
-msgstr ""
+msgstr "Bila tidak didefinisikan, nama provider akan digunakan."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Bila pembayaran belum dikonfirmasi Anda dapat menghubungi kami."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -836,7 +856,7 @@ msgstr "Gambar"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "Gambar yang ditampilkan pada formulir pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__state
@@ -850,7 +870,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
 msgid "Inline Form Template"
-msgstr ""
+msgstr "Templat Form Inline"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -861,7 +881,7 @@ msgstr "Pasang"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "Status Penginstalan"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -873,19 +893,19 @@ msgstr "Terpasang"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Error server internal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr ""
+msgstr "Apakah di Post-Process"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr ""
+msgstr "Saat ini di-link ke dokumen-dokumen berikut:"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__just_done
@@ -895,7 +915,7 @@ msgstr "Just done"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "Landing Route"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -915,7 +935,7 @@ msgstr "Terakhir diubah pada"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Tanggal Perubahan Status Terakhir"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
@@ -945,11 +965,13 @@ msgid ""
 "Making a request to the provider is not possible because the provider is "
 "disabled."
 msgstr ""
+"Membuat permintaan ke provider tidak dapat dilakukan karena provider "
+"dinonaktifkan."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr ""
+msgstr "Kelola metode pembayaran"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -959,17 +981,17 @@ msgstr "Manual"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr ""
+msgstr "Manual Capture Didukung"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
 msgid "Maximum Amount"
-msgstr ""
+msgstr "Jumlah Maksimum"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
 msgid "Mercado Pago"
-msgstr ""
+msgstr "Mercado Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_seller_account
@@ -995,14 +1017,14 @@ msgstr "Metode"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
 msgid "Mollie"
-msgstr ""
+msgstr "Mollie"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr ""
+msgstr "Lebih dari satu opsi pembayaran dipilih"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__name
@@ -1015,7 +1037,7 @@ msgstr "Nama"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "Tidak Ada Provider yang Ditetapkan"
 
 #. module: payment
 #. odoo-python
@@ -1025,20 +1047,22 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
 msgstr ""
+"Tidak ada metode pembayaran manual yang dapat ditemukan untuk perusahaan "
+"ini. Mohon buat satu metode dari menu Penyedia Pembayaran."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Tidak ada pembayaran yang telah diproses."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "No payment option selected"
-msgstr ""
+msgstr "Tidak ada opsi pembayaran yang dipilih"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
@@ -1048,17 +1072,17 @@ msgstr "Not done"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
-msgstr ""
+msgstr "Tidak diverifikasi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
 msgid "Odoo Enterprise Module"
-msgstr ""
+msgstr "Modul Odoo Enterprise"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "Pembayaran offline menggunakan toke"
 
 #. module: payment
 #. odoo-javascript
@@ -1071,24 +1095,24 @@ msgstr "Ok"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "Pembayaran langsung online"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "Pembayaran online menggunakan token"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "Pembayaran online dengan pengalihan"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "Hanya administrator yang dapat mengakses data ini."
 
 #. module: payment
 #. odoo-python
@@ -1102,14 +1126,14 @@ msgstr ""
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
-msgstr ""
+msgstr "Hanya transaksi yang diotorisasi yang dapat dibatalkan."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Hanya transaksi yang dikonfirmasi yang dapat di-refund."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1121,7 +1145,7 @@ msgstr "Operasi"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Operations in progress"
-msgstr ""
+msgstr "Operasi sedang berlangsung"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1171,12 +1195,12 @@ msgstr "Detail Pembayaran"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Followup Pembayaran"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Form"
-msgstr ""
+msgstr "Formulir Pembayaran"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -1197,7 +1221,7 @@ msgstr "Instruksi Pembayaran"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "Link Pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
@@ -1218,12 +1242,12 @@ msgstr "Penyedia Pembayaran"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
 msgid "Payment Providers Available"
-msgstr ""
+msgstr "Penyedia Pembayaran Tersedia"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
 msgid "Payment Ref"
-msgstr ""
+msgstr "Referensi Pembayaran"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1235,7 +1259,7 @@ msgstr "Token Pembayaran"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "Jumlah Token Pembayaran"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1263,24 +1287,24 @@ msgstr "Transaksi Tagihan"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "Transaksi Pembayaran yang di-Link ke Token"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr ""
+msgstr "Detail pembayaran disimpan pada %(date)s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment provider"
-msgstr ""
+msgstr "Penyedia pembayaran"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
 msgid "Payment provider onboarding wizard"
-msgstr ""
+msgstr "Wizard onboarding penyedia pembayaran"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1312,14 +1336,14 @@ msgstr "Telepon"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr ""
+msgstr "Mohon pilih opsi pembayaran."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr ""
+msgstr "Mohon pilih hanya satu opsi pembayaran."
 
 #. module: payment
 #. odoo-python
@@ -1343,12 +1367,12 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Mohon tunggu ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Diproses oleh"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
@@ -1363,7 +1387,7 @@ msgstr "Pemberi"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
 msgid "Provider Reference"
-msgstr ""
+msgstr "Referensi Provider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__provider_ids
@@ -1373,7 +1397,7 @@ msgstr "Penyedia"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
 msgid "Providers list"
-msgstr ""
+msgstr "Daftar provider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
@@ -1384,7 +1408,7 @@ msgstr "Terpublikasi"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
-msgstr ""
+msgstr "Razorpay"
 
 #. module: payment
 #. odoo-javascript
@@ -1398,12 +1422,12 @@ msgstr "Alasan"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "Alasan: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Templat Formulir Pengalihan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1414,7 +1438,7 @@ msgstr "Referensi"
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Referensi harus unik!"
 
 #. module: payment
 #. odoo-python
@@ -1452,29 +1476,31 @@ msgstr "SEPA Direct Debit"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Save Payment Method"
-msgstr ""
+msgstr "Simpan Metode Pembayaran"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
-msgstr ""
+msgstr "Simpan detail pembayaran saya"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Saving your payment method, please wait..."
-msgstr ""
+msgstr "Menyimpan metode pembayaran Anda, mohon tunggu..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
+"Pilih negara. Biarkan kosong untuk membuatnya tersedia untuk diseluruh "
+"dunia."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Metode pembayaran onboarding terpilih"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__sequence
@@ -1497,37 +1523,37 @@ msgstr "Kesalahan Server"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Error server:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
 msgid "Show Allow Express Checkout"
-msgstr ""
+msgstr "Tunjukkan Izinkan Express Checkout"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
 msgid "Show Allow Tokenization"
-msgstr ""
+msgstr "Tunjukkan Izinkan Tokenisasi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_auth_msg
 msgid "Show Auth Msg"
-msgstr ""
+msgstr "Tunjukkan Pesan Autentikasi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_cancel_msg
 msgid "Show Cancel Msg"
-msgstr ""
+msgstr "Tunjukkan Batalkan Pesan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_credentials_page
 msgid "Show Credentials Page"
-msgstr ""
+msgstr "Tunjukkan Halaman Credential"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_done_msg
 msgid "Show Done Msg"
-msgstr ""
+msgstr "Tunjukkan Pesan Selesai"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_icon_ids
@@ -1537,22 +1563,22 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
 msgid "Show Pending Msg"
-msgstr ""
+msgstr "Tunjukkan Pesan Pending"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pre_msg
 msgid "Show Pre Msg"
-msgstr ""
+msgstr "Tunjukkan Pra Pesan"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sips
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "Sumber Transaksi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__state
@@ -1590,7 +1616,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.manage
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
-msgstr ""
+msgstr "Mode Testing"
 
 #. module: payment
 #. odoo-python
@@ -1607,17 +1633,17 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
 msgid "The clear part of the payment method's payment details."
-msgstr ""
+msgstr "Bagian jelas dari detail pembayaran metode pembayaran."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__color
 msgid "The color of the card in kanban view"
-msgstr ""
+msgstr "Warna kartu di tampilan kanban"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "The complementary information message about the state"
-msgstr ""
+msgstr "Pesan informasi pelengkap mengenai status"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_country_ids
@@ -1625,23 +1651,25 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
+"Negara-negara di mana penyedia pembayaran ini tersedia. Biarkan kosong untuk"
+" membuatnya tersedia di semua negara."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the provider"
-msgstr ""
+msgstr "Jumlah biaya; ditetapkan oleh sistem karena bergantung pada provider"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "Field-field berikut harus diisi: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "The internal reference of the transaction"
-msgstr ""
+msgstr "Referensi internal transaksi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__provider_ids
@@ -1652,6 +1680,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
 msgstr ""
+"Mata uang utama perusahaan ini, digunakan untuk menampilkan field moneter."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
@@ -1659,17 +1688,19 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"Jumlah pembayaran maksimum yang provider pembayaran ini dapat berikan. "
+"BIarkan kosong untuk jumlah maksimum yang tidak terhingga."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
 msgid "The message displayed if payment is authorized"
-msgstr ""
+msgstr "Pesan yang ditampilkan bila pembayaran diotorisasi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is canceled during the payment process"
-msgstr ""
+msgstr "Pesan yang ditampilkan bila order dibatalkan pada proses pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -1677,16 +1708,18 @@ msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
 msgstr ""
+"Pesan yang ditampilkan bila order sukses dilakukan setelah proses pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
 msgid "The message displayed if the order pending after the payment process"
-msgstr ""
+msgstr "Pesan yang ditampilkan bila order pending setelah proses pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
 msgid "The message displayed to explain and help the payment process"
 msgstr ""
+"Pesan yang ditampilkan untuk menjelaskan dan membantu proses pembayaran"
 
 #. module: payment
 #. odoo-python
@@ -1694,22 +1727,22 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
+msgstr "Pembayaran harus langsung, dengan pengalihan, atau dibuat oleh token."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction"
-msgstr ""
+msgstr "Referensi provider dari token transaksi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
 msgid "The provider reference of the transaction"
-msgstr ""
+msgstr "Referensi provider transaksi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
 msgid "The route the user is redirected to after the transaction"
-msgstr ""
+msgstr "Rute yang user akan dialihkan ke setelah transaksi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -1721,7 +1754,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Kode teknis penyedia pembayaran ini."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -1729,17 +1762,21 @@ msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
 msgstr ""
+"Templat yang merender formulir yang dikirim untuk mengalihkan user saat "
+"membuat pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
-msgstr ""
+msgstr "Tempalt yang merender formulir metode pembayaran express."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
 msgstr ""
+"Templat yang merender formulir pembayaran inlien saat membuat pembayaran "
+"langsung"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__token_inline_form_view_id
@@ -1747,6 +1784,8 @@ msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
 msgstr ""
+"Templat yang merender formulir pembayaran inline saat membuat pembayaran "
+"dengan token."
 
 #. module: payment
 #. odoo-python
@@ -1756,6 +1795,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
+"Transaksi dengan referensi %(ref)s untuk %(amount)s menemukan error "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1765,6 +1806,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
+"Transaksi dengan referensi %(ref)s untuk %(amount)s telah diotorisasi "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1774,6 +1817,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
+"Transaksi dengan referensi %(ref)s untuk %(amount)s telah dikonfirmasi "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1785,7 +1830,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr ""
+msgstr "Tidak ada transaksi untuk ditunjukkan"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1800,6 +1845,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
+"Action ini akan juga mengarsip %s token yang terdaftar dengan penyedia ini. "
+"Pengarsipan token tidak dapat dibatalkan."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1808,6 +1855,9 @@ msgid ""
 "A payment token is an anonymous link to the payment method details saved in the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Ini menentukan apakah pelanggan dapat menyimpan metode pembayaran sebagai token pembayaran.\n"
+"Token pembayaran adalah link anonim ke detail metode pembayaran yang disimpan di\n"
+"database penyedia, mengizinkan pelanggan untuk menggunakan ulang di pembelian berikutnya."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -1816,6 +1866,9 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
+"Ini menentukan apakah pelanggan dapat menggunakan metode pembayaran express."
+" Express checkout memungkinkan pelanggan untuk membayar dengan Google Pay "
+"dan Apple Pay dari mana informasi alamat dikumpulkan pada pembayaran."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1830,33 +1883,35 @@ msgid ""
 "This partner has no email, which may cause issues with some payment providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
+"Mitra ini tidak memiliki email, yang mungkin bermasalah untuk beberapa penyedia pembayaran.\n"
+"                     Disarankan untuk menetapkan email untuk mitra ini."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "This payment has been canceled."
-msgstr ""
+msgstr "Pembayaran ini telah dibatalkan."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
-msgstr ""
+msgstr "Metode pembayaran ini telah diverifikasi sistem kami."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
-msgstr ""
+msgstr "Metode pembayaran ini belum diverifikasi oleh sistem kami."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
 msgid "Token Inline Form Template"
-msgstr ""
+msgstr "Templat Formulir Inline Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
 msgid "Tokenization Supported"
-msgstr ""
+msgstr "Mendukung Tokenisasi"
 
 #. module: payment
 #. odoo-python
@@ -1866,6 +1921,7 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "providers: %s"
 msgstr ""
+"Otorisasi transaksi tidak didukung oleh penyedia pembayaran berikut: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
@@ -1877,7 +1933,7 @@ msgstr "Tipe Refund yang Didukung"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Tidak dapat mengontak server Odoo."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
@@ -1890,12 +1946,12 @@ msgstr "Belum dipublikasikan"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Upgrade"
-msgstr ""
+msgstr "Upgrade"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
-msgstr ""
+msgstr "Validasi metode pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
@@ -1907,7 +1963,7 @@ msgstr "Biaya variabel domestik (dalam persen)"
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "Variable fees must always be positive and below 100%."
-msgstr ""
+msgstr "Variabel biaya harus selalu positif dan di bawah 100%."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
@@ -1917,7 +1973,7 @@ msgstr "Biaya variabel internasional (dalam persen)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
 msgid "Verified"
-msgstr ""
+msgstr "Diverifikasi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1929,7 +1985,7 @@ msgstr "Batalkan Transaksi"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for operations to process"
-msgstr ""
+msgstr "Menunggu operasi untuk memproses"
 
 #. module: payment
 #. odoo-python
@@ -1951,35 +2007,35 @@ msgstr "Peringatan!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr ""
+msgstr "Kita tidak dapat menghapus metode pembayaran Anda."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Kita tidak dapat menemukan pembayaran Anda, tapi jangan khawatir."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "Kita tidak dapat memproses pembayaran Anda."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
-msgstr ""
+msgstr "Kita tidak dapat menyimpan metode pembayaran Anda."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "Kita sedang memproses pembayaran Anda, mohon tunggu ..."
 
 #. module: payment
 #. odoo-javascript
@@ -1987,18 +2043,19 @@ msgstr ""
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
 msgstr ""
+"Kita sedang menunggu penyedia pembayaran untuk mengonfirmasi pembayaran."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
 msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
-msgstr ""
+msgstr "Apakah token pembayaran akan dibuat pada saat post-process transaksi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
 msgid "Whether the callback has already been executed"
-msgstr ""
+msgstr "Apakah callback sudah dilakukan"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__is_published
@@ -2006,6 +2063,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
+"Apakah penyedia terlihat pada website atau tidak. Token akan tetap berfungsi"
+" tapi hanya terlihat pada kelola formulir."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -2018,20 +2077,21 @@ msgstr "Transfer rekening"
 #, python-format
 msgid "You cannot delete the payment provider %s; archive it instead."
 msgstr ""
+"Anda tidak dapat menghapus penyedia pembayaran %s; alih-alih, arsipkan."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "You cannot publish a disabled provider."
-msgstr ""
+msgstr "Anda tidak dapat menerbitkan penyedia yang dinonaktifkan."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "Anda tidak dapat mengakses token pembayaran ini."
 
 #. module: payment
 #. odoo-javascript
@@ -2039,20 +2099,22 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Anda harusnya menerima email yang mengonfirmasi pembayaran Anda dalam "
+"beberapa menit."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Anda akan dinotifikasi saat pembayaran dikonfirmasi."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Anda akan dinotifikasi saat pembayaran sepenuhnya dikonfirmasi."
 
 #. module: payment
 #. odoo-python
@@ -2103,14 +2165,14 @@ msgstr "Pembayaran Anda telah dibatalkan."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "Pembayaran Anda sudah diproses."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "Pembayaran Anda sudah diterima tapi membutuhkan konfirmasi manual."
 
 #. module: payment
 #. odoo-python
@@ -2133,6 +2195,7 @@ msgstr ""
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
 msgstr ""
+"Pembayaran Anda sudah sukses diproses tapi sedang menunggu persetujuan."
 
 #. module: payment
 #. odoo-python
@@ -2159,28 +2222,28 @@ msgstr "Pembayaran Anda telah berhasil diproses. Terima kasih!"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
-msgstr ""
+msgstr "Pembayaran Anda belum diproses."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is being processed, please wait..."
-msgstr ""
+msgstr "Pembayaran Anda sedang diproses, mohon tunggu..."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Pembayaran Anda dalam status pending."
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment method has been saved."
-msgstr ""
+msgstr "Metode pembayaran Anda sudah disimpan."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2195,41 +2258,41 @@ msgstr "Kode Pos"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "danger"
-msgstr ""
+msgstr "bahaya"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "info"
-msgstr ""
+msgstr "info"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr ""
+msgstr "pembayaran: transaksi post-process"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
-msgstr ""
+msgstr "penyedia"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show less"
-msgstr ""
+msgstr "tunjukkan lebih sedikit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
-msgstr ""
+msgstr "tunjukkan lebih"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "success"
-msgstr ""
+msgstr "sukses"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "warning"
-msgstr ""
+msgstr "peringatan"

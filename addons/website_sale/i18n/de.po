@@ -10,6 +10,7 @@
 # Kimlong Mai, 2023
 # Christoph M., 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -250,7 +251,7 @@ msgstr "<option value=\"\">Land ...</option>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Bundesland/Region/Provinz ...</option>"
+msgstr "<option value=\"\">Bundesland ...</option>"
 
 #. module: website_sale
 #. odoo-python
@@ -280,8 +281,8 @@ msgid ""
 "contact us directly for this operation.</small>"
 msgstr ""
 "<small class=\"form-text text-muted\">Eine Änderung des Unternehmensnamens "
-"oder der MwSt-Nr. ist nicht mehr möglich, sobald Dokumente für Ihr Konto "
-"ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an "
+"oder der MwSt.-Nummer ist nicht mehr möglich, sobald Dokumente für Ihr Konto"
+" ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an "
 "uns.</small>"
 
 #. module: website_sale
@@ -1086,6 +1087,13 @@ msgstr "Kann veröffentlichen"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid "Can not resequence a video at first position."
+msgstr "An der ersten Stelle kann ein Video nicht neu geordnet werden."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "Can not resequence embedded image/video with a non compatible image."
 msgstr ""
 "Das eingebettete Bild/Video kann nicht mit einem nicht kompatiblen Bild "
@@ -1198,9 +1206,9 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Das Ändern der Umsatzsteuer-Identifikationsnummer ist nicht zulässig, sobald"
-" Dokumente für Ihr Konto ausgestellt wurden. Bitte kontaktieren Sie uns "
-"direkt für diesen Vorgang."
+"Das Ändern der MwSt.-Nummer ist nicht zulässig, sobald Dokumente für Ihr "
+"Konto ausgestellt wurden. Bitte kontaktieren Sie uns direkt für diesen "
+"Vorgang."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1208,7 +1216,7 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Eine Änderung des Namen des Unternehmens ist nicht mehr möglich, sobald "
+"Eine Änderung des Unternehmensnamens ist nicht mehr möglich, sobald "
 "Dokumente für Ihr Konto ausgestellt wurden. Bitte wenden Sie sich für diesen"
 " Vorgang direkt an uns."
 
@@ -1222,6 +1230,18 @@ msgid ""
 msgstr ""
 "Der Name darf nicht geändert werden, sobald eine Rechnung für Sie erzeugt "
 "wurde. Bitte wenden Sie sich direkt an uns."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Eine Änderung Ihres Namen ist nicht mehr möglich, sobald Dokumente für Ihr "
+"Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an"
+" uns."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1313,7 +1333,10 @@ msgid "Companies"
 msgstr "Unternehmen"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "Unternehmensname"
 
@@ -1659,7 +1682,7 @@ msgstr "Legt die Reihenfolge auf der E-Commerce-Website fest"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
 msgid "Digest"
-msgstr "Zusammenfassung"
+msgstr "Übersicht"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
@@ -2777,9 +2800,16 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Pills"
-msgstr "Pillen"
+msgstr "Viereck"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3334,7 +3364,7 @@ msgstr "Beschränken Sie die Veröffentlichung auf dieser Website."
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
-msgstr "Bestellung zusammenfassen"
+msgstr "Bestellung fortsetzen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -3740,7 +3770,7 @@ msgstr "Einheit bestimmen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
-msgstr "Bundesland / Region"
+msgstr "Bundesland"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_provider_state
@@ -3842,7 +3872,7 @@ msgstr "Text, der statt eines Preises angezeigt wird"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "Vielen Dank für Ihre Bestellung"
+msgstr "Vielen Dank für Ihre Bestellung!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -4477,6 +4507,20 @@ msgid ""
 msgstr ""
 "Ihr dynamisches Snippet wird hier angezeigt ...\n"
 "                                Diese Meldung wird angezeigt, weil Sie weder einen Filter noch eine Vorlage zur Verwendung bereitgestellt haben."
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Ihre E-Mail"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Ihr Name"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

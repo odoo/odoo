@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.modules import get_resource_path
-from odoo.tools import html2plaintext
+from odoo.tools import html2plaintext, is_html_empty
 
 try:
     import sass as libsass
@@ -133,7 +133,11 @@ class BaseDocumentLayout(models.TransientModel):
                     wizard_with_logo = wizard
                 preview_css = markupsafe.Markup(self._get_css_for_preview(styles, wizard_with_logo.id))
                 ir_ui_view = wizard_with_logo.env['ir.ui.view']
-                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {'company': wizard_with_logo, 'preview_css': preview_css})
+                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {
+                    'company': wizard_with_logo,
+                    'preview_css': preview_css,
+                    'is_html_empty': is_html_empty,
+                })
             else:
                 wizard.preview = False
 

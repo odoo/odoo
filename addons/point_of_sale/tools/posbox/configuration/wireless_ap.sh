@@ -1,10 +1,24 @@
 #!/usr/bin/env bash
 
 FORCE_HOST_AP="${1}"
-WIRED_IP=$(python3 -c "import netifaces as ni; print(ni.ifaddresses('eth0').get(ni.AF_INET) and ni.ifaddresses('eth0')[ni.AF_INET][0]['addr'] or '')")
 WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
+COUNTER=0
 
+# we need to wait to receive an ip address from the dhcp before enable the access point.
+# only if only if no configuration file for the wifi networks is recorded
+if ! [ -f "${WIFI_NETWORK_FILE}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
+	while [ "$(hostname -I)" = '' ] && [ "$COUNTER" -le 10 ]; do sleep 2;((COUNTER++)); done
+fi
 
+WIRED_IP=$(hostname -I)
+
+if [ "$WIRED_IP" ]; then
+  printf "My IP address is %s\n" "$WIRED_IP"
+fi
+
+# by default wlan0 is soft blocked.
+# we need unblock all radio devices
+rfkill unblock all
 ifconfig wlan0 down
 ifconfig wlan0 up
 
@@ -36,11 +50,6 @@ if [ -z "${WIRED_IP}" ] ; then
 		ip addr add 10.11.12.1/24 dev wlan0
 
 		service dnsmasq restart
-
-		service nginx stop
-		# We start nginx in another configuration than the default one with https
-		# as it needs to do redirect instead in case the IoT Box acts as an ap
-		nginx -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/nginx_ap.conf
 
 		service odoo restart
 	fi

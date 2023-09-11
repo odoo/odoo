@@ -9,7 +9,6 @@
 # Topi Aura <topi@aurat.fi>, 2022
 # Sanna Edelman <direct@generare.com>, 2022
 # Pekka Ikonen, 2022
-# Teija Hölttä <teija.holtta@gmail.com>, 2022
 # Teemu Tiitinen, 2022
 # Jussi Lehto <jussi@gulfeo.com>, 2022
 # Kari Lindgren <karisatu@gmail.com>, 2022
@@ -32,16 +31,17 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Richard Mouthier <rmo@odoo.com>, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Martin Trigaux, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Teija Hölttä <teija.holtta@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Teija Hölttä <teija.holtta@gmail.com>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7145,6 +7145,13 @@ msgid "No support"
 msgstr "Ei tukea"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid "No website domain configured for this website."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -7716,6 +7723,13 @@ msgstr "Kuvio"
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Pay"
 msgstr "Maksa"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Puhelinnumero"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -9261,6 +9275,13 @@ msgid "Sub Menus"
 msgstr "Alivalikot"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Subject"
+msgstr "Aihe"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
 msgid "Submit"
@@ -9876,6 +9897,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "Tätä näkymä-archia on muutettu"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid ""
+"This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
+"To remove this message please set a domain in your website settings"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11360,6 +11397,13 @@ msgid "You'll be able to create your pages later on."
 msgstr "Voit luoda sivut myöhemmin."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Company"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
@@ -11367,6 +11411,27 @@ msgid ""
 msgstr ""
 "Dynaaminen pätkäsi näytetään tässä... Tämä viesti näytetään, koska et ole "
 "antanut sekä suodatinta että mallia käytettäväksi.<br/>"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Sähköpostisi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Nimesi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Question"
+msgstr ""
 
 #. module: website
 #. odoo-javascript

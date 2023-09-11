@@ -91,6 +91,11 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         this._pendingCommitChanges = (async () => {
+            const codeViewEl = this._getCodeViewEl();
+            if (codeViewEl) {
+                this.wysiwyg.setValue(codeViewEl.value);
+            }
+
             if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
                 this.wysiwyg.$iframeBody.find('*').css('font-family', '');
             }

@@ -4,9 +4,39 @@
 from odoo import api, fields, models
 
 
+class MailingCustomer(models.Model):
+    """ A model inheriting from mail.thread with a partner field, to test
+    mass mailing flows involving checking partner email. """
+    _description = 'Mailing with partner'
+    _name = 'mailing.test.customer'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    email_from = fields.Char(compute='_compute_email_from', readonly=False, store=True)
+    customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
+
+    @api.depends('customer_id')
+    def _compute_email_from(self):
+        for mailing in self.filtered(lambda rec: not rec.email_from and rec.customer_id):
+            mailing.email_from = mailing.customer_id.email
+
+    def _message_get_default_recipients(self):
+        """ Default recipient checks for 'partner_id', here the field is named
+        'customer_id'. """
+        default_recipients = super()._message_get_default_recipients()
+        for record in self:
+            if record.customer_id:
+                default_recipients[record.id] = {
+                    'email_cc': False,
+                    'email_to': False,
+                    'partner_ids': record.customer_id.ids,
+                }
+        return default_recipients
+
+
 class MailingSimple(models.Model):
-    """ A very simple model only inheriting from mail.thread to test pure mass
-    mailing features and base performances. """
+    """ Model only inheriting from mail.thread to test base mailing features and
+    performances. """
     _description = 'Simple Mailing'
     _name = 'mailing.test.simple'
     _inherit = ['mail.thread']
@@ -17,7 +47,8 @@ class MailingSimple(models.Model):
 
 
 class MailingUTM(models.Model):
-    """ Model inheriting from mail.thread and utm.mixin for checking utm of mailing is caught and set on reply """
+    """ Model inheriting from mail.thread and utm.mixin for checking utm of mailing
+    is caught and set on reply """
     _description = 'Mailing: UTM enabled to test UTM sync with mailing'
     _name = 'mailing.test.utm'
     _inherit = ['mail.thread', 'utm.mixin']
@@ -36,6 +67,19 @@ class MailingBLacklist(models.Model):
     email_from = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
+
+    def _message_get_default_recipients(self):
+        """ Default recipient checks for 'partner_id', here the field is named
+        'customer_id'. """
+        default_recipients = super()._message_get_default_recipients()
+        for record in self:
+            if record.customer_id:
+                default_recipients[record.id] = {
+                    'email_cc': False,
+                    'email_to': False,
+                    'partner_ids': record.customer_id.ids,
+                }
+        return default_recipients
 
 
 class MailingOptOut(models.Model):
@@ -59,6 +103,19 @@ class MailingOptOut(models.Model):
             ('opt_out', '=', True)
         ]).mapped('email_normalized'))
         return opt_out_contacts
+
+    def _message_get_default_recipients(self):
+        """ Default recipient checks for 'partner_id', here the field is named
+        'customer_id'. """
+        default_recipients = super()._message_get_default_recipients()
+        for record in self:
+            if record.customer_id:
+                default_recipients[record.id] = {
+                    'email_cc': False,
+                    'email_to': False,
+                    'partner_ids': record.customer_id.ids,
+                }
+        return default_recipients
 
 
 class MailingPerformance(models.Model):

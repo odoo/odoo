@@ -383,7 +383,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
-msgstr ""
+msgstr "同じコードのクーポンが見つかりました。"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
@@ -1217,7 +1217,7 @@ msgstr "ロイヤルティカード"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr ""
+msgstr "ロイヤリティコミュニケーション"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
@@ -1421,6 +1421,11 @@ msgid "Product Variant"
 msgstr "プロダクトバリアント"
 
 #. module: loyalty
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+msgid "Product used in the sales order to apply the discount."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id
 msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
@@ -1440,7 +1445,7 @@ msgstr "プロダクト"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__program_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__program_id
 msgid "Program"
-msgstr ""
+msgstr "プログラム"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__name
@@ -1660,7 +1665,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "The promo code must be unique."
-msgstr ""
+msgstr "プロモコードは一意にして下さい。"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
@@ -1857,7 +1862,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 #, python-format
 msgid "eWallet"
-msgstr ""
+msgstr "eWallet"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form

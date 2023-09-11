@@ -27,7 +27,7 @@ apt-get update && apt-get -y upgrade
 
 # At the first start it is necessary to configure a password
 # This will be modified by a unique password on the first start of Odoo
-password="$(openssl rand -base64 32)"
+password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
 
 PKGS_TO_INSTALL="
@@ -142,7 +142,6 @@ echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 update-rc.d -f hostapd remove
 update-rc.d -f nginx remove
 update-rc.d -f dnsmasq remove
-update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
 systemctl enable led-status.service
@@ -150,7 +149,7 @@ systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target
 systemctl disable getty@tty1.service
-systemctl disable systemd-timesyncd.service
+systemctl enable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
@@ -177,3 +176,6 @@ create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
 mkdir -v /root_bypass_ramdisks
+
+echo "password"
+echo ${password}

@@ -819,7 +819,7 @@ class Meeting(models.Model):
         self.ensure_one()
         if recurrence_update_setting == 'all_events':
             self.recurrence_id.calendar_event_ids.write({'active': False})
-        elif recurrence_update_setting == 'future_events':
+        elif recurrence_update_setting == 'future_events' and self.recurrence_id:
             detached_events = self.recurrence_id._stop_at(self)
             detached_events.write({'active': False})
         elif recurrence_update_setting == 'self_only':
