@@ -3,6 +3,8 @@
 
 from types import SimpleNamespace
 from unittest.mock import patch
+
+from odoo import SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.exceptions import UserError
 from odoo.tests.common import Form, TransactionCase, new_test_user, tagged
@@ -543,3 +545,12 @@ class TestUsersGroupWarning(TransactionCase):
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.field_service_categ_field] = self.group_field_service_user.id
             self.assertFalse(UserForm.user_group_warning)
+
+
+class TestUsersTweaks(TransactionCase):
+    def test_superuser(self):
+        """ The superuser is inactive and must remain as such. """
+        user = self.env['res.users'].browse(SUPERUSER_ID)
+        self.assertFalse(user.active)
+        with self.assertRaises(UserError):
+            user.write({'active': True})
