@@ -14,7 +14,7 @@ import { useSequential } from "@mail/utils/common/hooks";
 
 export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
-    static props = ["category", "onValidate?", "autofocus?", "multiple?"];
+    static props = ["category", "onValidate?", "autofocus?", "multiple?", "close?"];
     static defaultProps = { multiple: true };
     static template = "discuss.ChannelSelector";
 
@@ -206,6 +206,9 @@ export class ChannelSelector extends Component {
                 if (this.state.selectedPartners.length > 0 && this.state.value === "") {
                     this.state.selectedPartners.pop();
                 }
+                return;
+            case "escape":
+                this.props.close?.();
                 return;
             default:
                 return;

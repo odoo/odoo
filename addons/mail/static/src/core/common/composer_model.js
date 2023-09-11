@@ -47,6 +47,7 @@ export class Composer extends Record {
     /** @type {boolean} */
     forceCursorMove;
     isFocused = false;
+    autofocus = 0;
 }
 
 Composer.register();
