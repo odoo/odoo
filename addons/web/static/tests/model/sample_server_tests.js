@@ -534,6 +534,21 @@ QUnit.module(
             assert.strictEqual(result.length, MAIN_RECORDSET_SIZE);
         });
 
+        QUnit.test("partial support of array_agg", async function (assert) {
+            fields["res.users"].id = { type: "integer", name: "ID" };
+            const server = new DeterministicSampleServer("res.users", fields["res.users"]);
+            const result = await server.mockRpc({
+                method: "read_group",
+                model: "res.users",
+                fields: ["unused_label:array_agg(id)"],
+                groupBy: [],
+                lazy: false,
+            });
+            assert.strictEqual(result.length, 1);
+            const ids = new Array(16).fill(0).map((_, index) => index + 1);
+            assert.deepEqual(result[0].id, ids);
+        });
+
         // To be implemented if needed
         // QUnit.test("Send 'read_progress_bar' RPC", async function (assert) { ... });
     }
