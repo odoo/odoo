@@ -9,10 +9,11 @@ import { url } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { createLocalId } from "../utils/misc";
 import { omit } from "@web/core/utils/objects";
+import { Record } from "@mail/core/record";
 
 const { DateTime } = luxon;
 
-export class Message {
+export class Message extends Record {
     /** @type {Object[]} */
     attachments = [];
     /** @type {import("@mail/core/persona_model").Persona} */

@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/record";
+
 /**
  * @typedef Data
  * @property {import("@mail/core/thread_model").Thread} followedThread
@@ -8,7 +10,7 @@
  * @property {import("@mail/core/partner_model").Data} partner
  */
 
-export class Follower {
+export class Follower extends Record {
     /** @type {import("@mail/core/thread_model").Thread} */
     followedThread;
     /** @type {number} */
