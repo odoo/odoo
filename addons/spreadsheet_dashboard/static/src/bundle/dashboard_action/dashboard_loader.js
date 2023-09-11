@@ -37,8 +37,6 @@ export const Status = {
  * @property {string} name
  * @property {Array<Dashboard>} dashboards
  *
- * @typedef {(dashboardId: number) => Promise<{ data: string, revisions: object[] }>} FetchDashboardData
- *
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
  * @typedef {import("@web/core/orm_service").ORM} ORM
@@ -48,9 +46,8 @@ export class DashboardLoader {
     /**
      * @param {OdooEnv} env
      * @param {ORM} orm
-     * @param {FetchDashboardData} fetchDashboardData
      */
-    constructor(env, orm, fetchDashboardData) {
+    constructor(env, orm) {
         /** @private */
         this.env = env;
         /** @private */
@@ -59,8 +56,6 @@ export class DashboardLoader {
         this.groups = [];
         /** @private @type {Object<number, Dashboard>} */
         this.dashboards = {};
-        /** @private */
-        this.fetchDashboardData = fetchDashboardData;
     }
 
     /**
@@ -166,8 +161,12 @@ export class DashboardLoader {
         const dashboard = this._getDashboard(dashboardId);
         dashboard.status = Status.Loading;
         try {
-            const { data, revisions } = await this.fetchDashboardData(dashboardId);
-            dashboard.model = this._createSpreadsheetModel(data, revisions);
+            const { snapshot, revisions } = await this.orm.call(
+                "spreadsheet.dashboard",
+                "get_readonly_dashboard",
+                [dashboardId]
+            );
+            dashboard.model = this._createSpreadsheetModel(snapshot, revisions);
             dashboard.status = Status.Loaded;
         } catch (error) {
             dashboard.error = error;
@@ -193,14 +192,14 @@ export class DashboardLoader {
 
     /**
      * @private
-     * @param {string} data
+     * @param {object} snapshot
      * @param {object[]} revisions
      * @returns {Model}
      */
-    _createSpreadsheetModel(data, revisions = []) {
+    _createSpreadsheetModel(snapshot, revisions = []) {
         const dataSources = new DataSources(this.env);
         const model = new Model(
-            migrate(data),
+            migrate(snapshot),
             {
                 custom: { env: this.env, orm: this.orm, dataSources },
                 mode: "dashboard",

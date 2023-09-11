@@ -98,7 +98,14 @@ QUnit.test("load spreadsheet data", async (assert) => {
 QUnit.test("load spreadsheet data only once", async (assert) => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
-            if (args.method === "read" && args.model === "spreadsheet.dashboard") {
+            if (args.model === "spreadsheet.dashboard" && args.method === "read") {
+                // read names
+                assert.step(`spreadsheet ${args.args[0]} loaded`);
+            }
+            if (
+                args.model === "spreadsheet.dashboard" &&
+                args.method === "get_readonly_dashboard"
+            ) {
                 assert.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
@@ -159,6 +166,13 @@ QUnit.test("load multiple spreadsheets", async (assert) => {
                 assert.step("load groups");
             }
             if (args.method === "read" && args.model === "spreadsheet.dashboard") {
+                // read names
+                assert.step(`spreadsheet ${args.args[0]} loaded`);
+            }
+            if (
+                args.model === "spreadsheet.dashboard" &&
+                args.method === "get_readonly_dashboard"
+            ) {
                 assert.step(`spreadsheet ${args.args[0]} loaded`);
             }
         },
@@ -180,9 +194,8 @@ QUnit.test("load spreadsheet data with error", async (assert) => {
     const loader = await createDashboardLoader({
         mockRPC: function (route, args) {
             if (
-                args.method === "read" &&
-                args.model === "spreadsheet.dashboard" &&
-                args.args[1][0] === "spreadsheet_data"
+                args.method === "get_readonly_dashboard" &&
+                args.model === "spreadsheet.dashboard"
             ) {
                 throw new Error("Bip");
             }

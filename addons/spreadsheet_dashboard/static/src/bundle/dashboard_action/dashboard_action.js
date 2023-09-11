@@ -25,9 +25,7 @@ export class SpreadsheetDashboardAction extends Component {
         // with the breadcrumb
         // TODO write a test
         /** @type {DashboardLoader}*/
-        this.loader = useState(
-            new DashboardLoader(this.env, this.env.services.orm, this._fetchDashboardData)
-        );
+        this.loader = useState(new DashboardLoader(this.env, this.env.services.orm));
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
                 const { groups, dashboards } = this.props.state.dashboardLoader;
@@ -115,20 +113,6 @@ export class SpreadsheetDashboardAction extends Component {
      */
     openDashboard(dashboardId) {
         this.state.activeDashboard = this.loader.getDashboard(dashboardId);
-    }
-
-    /**
-     * @private
-     * @param {number} dashboardId
-     * @returns {Promise<{ data: string, revisions: object[] }>}
-     */
-    async _fetchDashboardData(dashboardId) {
-        const [record] = await this.orm.read(
-            "spreadsheet.dashboard",
-            [dashboardId],
-            ["spreadsheet_data"]
-        );
-        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
     }
 
     async shareSpreadsheet(data, excelExport) {

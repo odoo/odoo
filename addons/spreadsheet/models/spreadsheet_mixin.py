@@ -68,7 +68,8 @@ class SpreadsheetMixin(models.AbstractModel):
             ],
             "settings": {
                 "locale": locale,
-            }
+            },
+            "revisionId": "START_REVISION",
         }
 
     def _zip_xslx_files(self, files):
