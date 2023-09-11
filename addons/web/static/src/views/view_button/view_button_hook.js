@@ -101,7 +101,7 @@ export function useViewButtons(model, ref, options = {}) {
                 }
                 await afterExecuteAction(clickParams);
                 if (closeDialog) {
-                    closeDialog();
+                    closeDialog({ special: clickParams.special });
                 }
                 enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                 if (error) {
