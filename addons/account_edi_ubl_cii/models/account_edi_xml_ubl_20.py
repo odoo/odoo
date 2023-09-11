@@ -491,7 +491,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
                          and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
         # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
-        order_reference = invoice.ref or invoice.name if sales_order_id else invoice.ref
+        order_reference = invoice.ref or invoice.name
 
         vals = {
             'builder': self,
