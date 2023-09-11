@@ -387,8 +387,8 @@ class Website(Home):
         request.session[f'website_{view_id}_layout_mode'] = layout_mode
 
     @http.route('/website/snippet/filters', type='json', auth='public', website=True)
-    def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False):
-        dynamic_filter = request.env['website.snippet.filter'].sudo().search(
+    def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False, context=None):
+        dynamic_filter = request.env['website.snippet.filter'].sudo().with_context(context or {}).search(
             [('id', '=', filter_id)] + request.website.website_domain()
         )
         return dynamic_filter and dynamic_filter._render(template_key, limit, search_domain, with_sample) or []

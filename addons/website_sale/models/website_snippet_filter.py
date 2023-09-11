@@ -53,6 +53,9 @@ class WebsiteSnippetFilter(models.Model):
         return samples
 
     def _filter_records_to_values(self, records, is_sample=False):
+        if self.model_name == 'product.product':
+            if not self.env.context.get('show_variants') and not is_sample:
+                records = records and records.product_tmpl_id.product_variant_id
         res_products = super()._filter_records_to_values(records, is_sample)
         if self.model_name == 'product.product':
             for res_product in res_products:
@@ -61,6 +64,8 @@ class WebsiteSnippetFilter(models.Model):
                     res_product.update(product._get_combination_info_variant())
                     if records.env.context.get('add2cart_rerender'):
                         res_product['_add2cart_rerender'] = True
+                    if not self.env.context.get('show_variants'):
+                        product.display_name = product.name
         return res_products
 
     @api.model
