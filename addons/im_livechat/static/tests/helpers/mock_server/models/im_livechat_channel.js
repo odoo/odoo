@@ -29,15 +29,7 @@ patch(MockServer.prototype, {
         previous_operator_id,
         country_id
     ) {
-        let operator;
-        if (previous_operator_id) {
-            const availableOperators = this._mockImLivechatChannel__computeAvailableOperatorIds(id);
-            operator = availableOperators.find(
-                (operator) => operator.partner_id === previous_operator_id
-            );
-        } else {
-            operator = this._mockImLivechatChannel_getRandomOperator(id);
-        }
+        const operator = this._mockImLivechatChannel_getOperator(id, previous_operator_id);
         if (!operator) {
             return false;
         }
@@ -69,15 +61,19 @@ patch(MockServer.prototype, {
         };
     },
     /**
-     * Simulates `_get_random_operator` on `im_livechat.channel`.
-     * Simplified mock implementation: returns the first available operator.
+     * Simulates `_get_operator` on `im_livechat.channel`. Simplified mock
+     * implementation: returns  the previous operator if he is still available
+     * or the first available operator.
      *
      * @private
      * @param {integer} id
      * @returns {Object}
      */
-    _mockImLivechatChannel_getRandomOperator(id) {
+    _mockImLivechatChannel_getOperator(id, previous_operator_id) {
         const availableUsers = this._mockImLivechatChannel__computeAvailableOperatorIds(id);
-        return availableUsers[0];
+        return (
+            availableUsers.find((operator) => operator.partner_id === previous_operator_id) ??
+            availableUsers[0]
+        );
     },
 });

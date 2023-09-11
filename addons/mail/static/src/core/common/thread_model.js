@@ -249,10 +249,7 @@ export class Thread extends Record {
     }
 
     get allowCalls() {
-        return (
-            ["chat", "channel", "group"].includes(this.type) &&
-            !this.correspondent?.eq(this._store.odoobot)
-        );
+        return this.isChannel && !this.correspondent?.eq(this._store.odoobot);
     }
 
     get hasMemberList() {

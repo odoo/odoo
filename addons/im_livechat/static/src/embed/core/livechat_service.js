@@ -127,14 +127,13 @@ export class LivechatService {
      */
     async leaveSession({ notifyServer = true } = {}) {
         const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
+        if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
+            this.busService.deleteChannel(session.uuid);
+            await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
+        }
         this.cookie.deleteCookie(this.SESSION_COOKIE);
         this.state = SESSION_STATE.NONE;
         this.sessionInitialized = false;
-        if (!session?.uuid || !notifyServer) {
-            return;
-        }
-        this.busService.deleteChannel(session.uuid);
-        await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
     }
 
     /**
