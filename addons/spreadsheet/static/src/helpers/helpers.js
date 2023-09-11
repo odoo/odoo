@@ -94,3 +94,10 @@ export function isEmpty(item) {
     }
     return false;
 }
+
+export function containsReferences(cell) {
+    if (!cell.isFormula) {
+        return false;
+    }
+    return cell.compiledFormula.tokens.some((token) => token.type === "REFERENCE");
+}
