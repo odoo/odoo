@@ -130,9 +130,11 @@ export class DatePicker extends Component {
     onWillUpdateProps(nextProps) {
         this.ignorePickerEvents = true;
         this.setDateAndFormat(nextProps);
-        const shouldUpdate = Object.entries(pick(nextProps, "date", "format")).some(
-            ([key, val]) => !areEqual(this.props[key], val)
-        );
+        const shouldUpdate =
+            this.props.revId !== nextProps.revId ||
+            Object.entries(pick(nextProps, "date", "format")).some(
+                ([key, val]) => !areEqual(this.props[key], val)
+            );
         if (shouldUpdate) {
             this.updateInput(this.date);
         }
@@ -349,6 +351,7 @@ DatePicker.defaultProps = {
     widgetParent: "body",
     onInput: () => {},
     onUpdateInput: () => {},
+    revId: 0,
 };
 DatePicker.props = {
     // Components props
@@ -394,6 +397,7 @@ DatePicker.props = {
     placeholder: { type: String, optional: true },
     onInput: { type: Function, optional: true },
     onUpdateInput: { type: Function, optional: true },
+    revId: { type: Number, optional: true },
 };
 DatePicker.template = "web.DatePicker";
 

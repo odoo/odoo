@@ -28,6 +28,7 @@ export class DateTimeField extends Component {
          * Not changed in case of invalid field value.
          */
         this.lastSetValue = null;
+        this.revId = 0;
     }
 
     get formattedValue() {
@@ -36,6 +37,7 @@ export class DateTimeField extends Component {
 
     onDateTimeChanged(date) {
         if (!areDateEquals(this.props.record.data[this.props.name] || "", date)) {
+            this.revId++;
             this.props.record.update({ [this.props.name]: date });
         }
     }
