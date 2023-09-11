@@ -7,6 +7,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { sprintf } from "@web/core/utils/strings";
+import { Record } from "@mail/core/common/record";
 
 /**
  * @typedef SeenInfo
@@ -21,7 +22,7 @@ import { sprintf } from "@web/core/utils/strings";
  * @property {boolean} checked
  */
 
-export class Thread {
+export class Thread extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
@@ -134,6 +135,7 @@ export class Thread {
     is_editable;
 
     constructor(store, data) {
+        super();
         this.setup();
         Object.assign(this, {
             id: data.id,

@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class LinkPreview {
+import { Record } from "@mail/core/common/record";
+
+export class LinkPreview extends Record {
     /** @type {number} */
     id;
     /** @type {Object} */
@@ -25,6 +27,7 @@ export class LinkPreview {
      * @returns {LinkPreview}
      */
     constructor(data) {
+        super();
         Object.assign(this, data);
     }
 

@@ -215,3 +215,37 @@ QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (
     await insertText(".o-mail-Composer-input", "#");
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(General)");
 });
+
+QUnit.test("Internal user should be displayed first", async (assert) => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ share: true });
+    const partnerIds = pyEnv["res.partner"].create([
+        { email: "a@test.com", name: "Person A" },
+        { email: "b@test.com", name: "Person B" },
+        { email: "c@test.com", name: "Person C", user_ids: [userId] },
+        { email: "d@test.com", name: "Person D", user_ids: [userId] },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: partnerIds[1], // B
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerIds[3], // D
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const { openFormView } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await click("button:contains(Send message)");
+    await insertText(".o-mail-Composer-input", "@Person ");
+    const suggestions = document.querySelectorAll(".o-mail-Composer-suggestion");
+    assert.strictEqual(suggestions[0].textContent, "Person D(d@test.com)");
+    assert.strictEqual(suggestions[1].textContent, "Person C(c@test.com)");
+    assert.strictEqual(suggestions[2].textContent, "Person B(b@test.com)");
+    assert.strictEqual(suggestions[3].textContent, "Person A(a@test.com)");
+});
