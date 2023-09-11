@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import HttpCase
-from odoo.tests.common import tagged, users
+from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
