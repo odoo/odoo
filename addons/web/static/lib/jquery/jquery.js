@@ -10070,9 +10070,9 @@ jQuery.expr.pseudos.hidden = function( elem ) {
 jQuery.expr.pseudos.visible = function( elem ) {
 	return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
 };
-
-
-
+jQuery.expr.pseudos.propValue = function (element, index, matches) {
+	return element.value === matches[3];
+},
 
 jQuery.ajaxSettings.xhr = function() {
 	try {
