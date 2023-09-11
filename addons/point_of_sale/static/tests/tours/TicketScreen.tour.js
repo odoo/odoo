@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         ProductScreen.do.clickCustomer("Nicole Ford");
         Chrome.do.clickMenuButton();
         Chrome.do.clickTicketButton();
-        TicketScreen.check.nthRowContains(2, "Nicole Ford");
+        TicketScreen.check.nthRowContains(2, "Nicole Ford", false);
         TicketScreen.do.clickNewTicket();
         ProductScreen.exec.addOrderline("Desk Pad", "1", "3");
         ProductScreen.do.clickPartnerButton();
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         PaymentScreen.check.isShown();
         Chrome.do.clickMenuButton();
         Chrome.do.clickTicketButton();
-        TicketScreen.check.nthRowContains(3, "Brandon Freeman");
+        TicketScreen.check.nthRowContains(3, "Brandon Freeman", false);
         TicketScreen.do.clickNewTicket();
         ProductScreen.exec.addOrderline("Desk Pad", "2", "4");
         ProductScreen.do.clickPayButton();
@@ -70,9 +70,9 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         TicketScreen.do.selectFilter("All active orders");
         TicketScreen.check.nthRowContains(4, "Receipt");
         TicketScreen.do.search("Customer", "Nicole");
-        TicketScreen.check.nthRowContains(2, "Nicole");
+        TicketScreen.check.nthRowContains(2, "Nicole", false);
         TicketScreen.do.search("Customer", "Brandon");
-        TicketScreen.check.nthRowContains(2, "Brandon");
+        TicketScreen.check.nthRowContains(2, "Brandon", false);
         TicketScreen.do.search("Receipt Number", "-0005");
         TicketScreen.check.nthRowContains(2, "Receipt");
         // Close the TicketScreen to see the current order which is in ReceiptScreen.
@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         Chrome.do.clickMenuButton();
         Chrome.do.clickTicketButton();
         TicketScreen.do.selectFilter("Paid");
-        TicketScreen.check.nthRowContains(2, "Brandon Freeman");
+        TicketScreen.check.nthRowContains(2, "Brandon Freeman", false);
         TicketScreen.check.nthRowContains(3, "-0005");
         // Invoice order
         TicketScreen.do.selectOrder("-0005");

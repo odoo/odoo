@@ -18,6 +18,11 @@
                 <div><TipCell order="order" /></div>
             </div>
         </xpath>
+        <xpath expr="//div[hasclass('mobileOrderList')]//div[hasclass('orderStatus')]" position="before">
+            <t t-if="order.tableId">
+                <div><t t-esc="getTable(order)"></t></div>
+            </t>
+        </xpath>
         <xpath expr="//div[hasclass('buttons')]" position="inside">
             <button class="settle-tips btn btn-lg btn-primary" t-if="_state.ui.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
         </xpath>
