@@ -30,7 +30,7 @@ export const Status = {
  * @typedef DashboardGroupData
  * @property {number} id
  * @property {string} name
- * @property {Array<number>} dashboardIds
+ * @property {Array<{id: number, name: string}>} dashboards
  *
  * @typedef DashboardGroup
  * @property {number} id
@@ -89,9 +89,9 @@ export class DashboardLoader {
             .map((group) => ({
                 id: group.id,
                 name: group.name,
-                dashboardIds: group.dashboard_ids,
+                dashboards: group.dashboard_ids,
             }));
-        const dashboards = await this._fetchDashboardNames(this.groups);
+        const dashboards = this.groups.map((group) => group.dashboards).flat();
         for (const dashboard of dashboards) {
             this.dashboards[dashboard.id] = {
                 id: dashboard.id,
@@ -120,10 +120,10 @@ export class DashboardLoader {
         return this.groups.map((section) => ({
             id: section.id,
             name: section.name,
-            dashboards: section.dashboardIds.map((dashboardId) => ({
-                id: dashboardId,
-                displayName: this._getDashboard(dashboardId).displayName,
-                status: this._getDashboard(dashboardId).status,
+            dashboards: section.dashboards.map((dashboard) => ({
+                id: dashboard.id,
+                displayName: dashboard.name,
+                status: this._getDashboard(dashboard.id).status,
             })),
         }));
     }
@@ -132,25 +132,18 @@ export class DashboardLoader {
      * @private
      * @returns {Promise<{id: number, name: string, dashboard_ids: number[]}[]>}
      */
-    _fetchGroups() {
-        return this.orm.searchRead(
+    async _fetchGroups() {
+        const groups = await this.orm.webSearchRead(
             "spreadsheet.dashboard.group",
             [["dashboard_ids", "!=", false]],
-            ["id", "name", "dashboard_ids"]
+            {
+                specification: {
+                    name: {},
+                    dashboard_ids: { fields: { name: {} } },
+                },
+            }
         );
-    }
-
-    /**
-     * @private
-     * @param {Array<DashboardGroupData>} groups
-     * @returns {Promise}
-     */
-    _fetchDashboardNames(groups) {
-        return this.orm.read(
-            "spreadsheet.dashboard",
-            groups.map((group) => group.dashboardIds).flat(),
-            ["name"]
-        );
+        return groups.records;
     }
 
     /**
