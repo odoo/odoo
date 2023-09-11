@@ -45,8 +45,7 @@ export class NotificationGroup extends Record {
         return group;
     }
 
-    /** @type {import("@mail/core/common/notification_model").Notification[]} */
-    notifications = [];
+    notifications = Record.List("Notification");
     /** @type {string} */
     modelName;
     /** @type {string} */

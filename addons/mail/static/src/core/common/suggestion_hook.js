@@ -8,15 +8,15 @@ import { useService } from "@web/core/utils/hooks";
 export function useSuggestion() {
     const comp = useComponent();
     const sequential = useSequential();
-    /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
+    const store = useState(useService("mail.store"));
     const self = {
         clearRawMentions() {
             comp.props.composer.rawMentions.partnerIds.length = 0;
             comp.props.composer.rawMentions.threadIds.length = 0;
         },
         clearCannedReponses() {
-            comp.props.composer.cannedResponseIds.clear();
+            comp.props.composer.cannedResponses.clear();
         },
         clearSearch() {
             Object.assign(self.search, {
@@ -104,7 +104,9 @@ export function useSuggestion() {
                 comp.props.composer.rawMentions.threadIds.add(option.thread.id);
             }
             if (option.cannedResponse) {
-                comp.props.composer.cannedResponseIds.add(option.cannedResponse.id);
+                comp.props.composer.cannedResponses.add(
+                    store.CannedResponse.insert(option.cannedResponse)
+                );
             }
             self.clearSearch();
             comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;
