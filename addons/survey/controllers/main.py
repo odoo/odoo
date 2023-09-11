@@ -786,7 +786,7 @@ class Survey(http.Controller):
 
         # Get the matching user input lines
         user_inputs_query = request.env['survey.user_input'].sudo()._search(user_input_domain)
-        user_input_lines = request.env['survey.user_input.line'].search([('user_input_id', 'in', user_inputs_query)])
+        user_input_lines = request.env['survey.user_input.line'].sudo().search([('user_input_id', 'in', user_inputs_query)])
 
         return user_input_lines, search_filters
 
