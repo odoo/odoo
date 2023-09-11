@@ -15,7 +15,6 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
     @classmethod
     def setUpClass(cls):
         super(TestEventFullCommon, cls).setUpClass()
-        cls._init_mail_gateway()
 
         # Context data: dates
         # ------------------------------------------------------------
