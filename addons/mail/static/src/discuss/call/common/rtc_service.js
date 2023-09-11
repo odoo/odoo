@@ -214,7 +214,7 @@ export class Rtc {
                 if (
                     !this.state.channel ||
                     !this.userSettingsService.usePushToTalk ||
-                    !this.userSettingsService.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
+                    !this.userSettingsService.isPushToTalkKey(ev) ||
                     !this.state.selfSession.isTalking
                 ) {
                     return;

@@ -39,7 +39,10 @@ export class CallSettings extends Component {
     get pushToTalkKeyText() {
         const { shiftKey, ctrlKey, altKey, key } = this.userSettings.pushToTalkKeyFormat();
         const f = (k, name) => (k ? name : "");
-        return `${f(ctrlKey, "Ctrl + ")}${f(altKey, "Alt + ")}${f(shiftKey, "Shift + ")}${key}`;
+        const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
+            Boolean
+        );
+        return keys.join(" + ");
     }
 
     _onKeyDown(ev) {
