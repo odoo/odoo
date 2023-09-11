@@ -207,3 +207,33 @@ registry
             return getSteps();
         }
     });
+
+registry
+    .category("web_tour.tours")
+    .add("LotRefundTour", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => {
+            startSteps();
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickDisplayedProduct('Product A');
+            ProductScreen.do.enterLotNumber('123456789');
+            ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
+            ProductScreen.do.clickPayButton();
+            PaymentScreen.do.clickPaymentMethod('Bank');
+            PaymentScreen.do.clickValidate();
+            ReceiptScreen.check.isShown();
+            ReceiptScreen.do.clickNextOrder();
+            ProductScreen.do.clickRefund();
+            TicketScreen.do.selectOrder('-0001');
+            TicketScreen.do.clickOrderline('Product A');
+            TicketScreen.do.pressNumpad('1');
+            TicketScreen.check.toRefundTextContains('To Refund: 1.00');
+            TicketScreen.do.confirmRefund();
+            ProductScreen.check.isShown();
+            ProductScreen.do.clickLotIcon();
+            ProductScreen.check.checkFirstLotNumber('123456789');
+            return getSteps();
+        }
+    });

@@ -309,6 +309,27 @@ class Do {
             },
         ]
     }
+    clickLotIcon() {
+        return [
+            {
+                content: 'click lot icon',
+                trigger: '.line-lot-icon',
+            },
+        ];
+    }
+    enterLotNumber(number) {
+        return [
+            {
+                content: 'enter lot number',
+                trigger: '.list-line-input:first()',
+                run: 'text ' + number,
+            },
+            {
+                content: 'click validate lot number',
+                trigger: '.popup .button.confirm',
+            }
+        ];
+    }
 }
 
 class Check {
@@ -515,6 +536,15 @@ class Check {
             {
                 trigger: `[name=last_session_closing_cash]:contains(${val})`,
                 isCheck: true,
+            },
+        ];
+    }
+    checkFirstLotNumber(number) {
+        return [
+            {
+                content: 'Check lot number',
+                trigger: `.popup-input:propValue(${number})`,
+                run: () => {}, // it's a check
             },
         ];
     }
