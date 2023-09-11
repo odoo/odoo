@@ -3,11 +3,11 @@
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
         <xpath expr="//*[@name='content']" position="before">
             <div t-if="props.thread?.livechatWelcomeMessage" class="bg-100 py-3">
-                <Message message="props.thread.livechatWelcomeMessage" thread="props.thread"/>
+                <Message message="props.thread.livechatWelcomeMessage" hasActions="false" thread="props.thread"/>
             </div>
         </xpath>
         <xpath expr="//*[@name='content']" position="after">
-            <Message t-if="chatbotService.isTyping" message="props.thread.chatbotTypingMessage" isInChatWindow="env.inChatWindow" isTypingMessage="true"  thread="props.thread"/>
+            <Message t-if="chatbotService.isTyping" message="props.thread.chatbotTypingMessage" hasActions="false" isInChatWindow="env.inChatWindow" isTypingMessage="true"  thread="props.thread"/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-empty')]" position="replace">
             <t t-if="props.thread.type !== 'livechat'">$0</t>
