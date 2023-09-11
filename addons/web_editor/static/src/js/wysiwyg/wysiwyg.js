@@ -919,6 +919,7 @@ const Wysiwyg = Widget.extend({
                         name: (el.dataset.fileName ? el.dataset.fileName : null),
                     },
                 });
+                this.odooEditor.observerUnactive('saveModifiedImages');
                 if (isBackground) {
                     const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
                     parts.url = `url('${newAttachmentSrc}')`;
@@ -928,6 +929,7 @@ const Wysiwyg = Widget.extend({
                 } else {
                     el.setAttribute('src', newAttachmentSrc);
                 }
+                this.odooEditor.observerActive('saveModifiedImages');
             });
             return Promise.all(proms);
         });
