@@ -1022,6 +1022,12 @@ export class Record extends DataPoint {
                 changes: localChanges,
                 fieldNames: onChangeFields,
                 evalContext: this.evalContext,
+                onError: (e) => {
+                    for (const fieldName in localChanges) {
+                        this._setInvalidField(fieldName);
+                    }
+                    throw e;
+                },
             });
             Object.assign(changes, this._parseServerValues(otherChanges, this.data));
         }

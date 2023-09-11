@@ -6284,6 +6284,58 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(document.body, ".o_notification");
     });
 
+    QUnit.test("onchange returns an error", async function (assert) {
+        registry.category("services").add("error", errorService);
+        registry.category("error_dialogs").add("odoo.exceptions.UserError", WarningDialog);
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        serverData.models.partner.onchanges = { int_field: () => {} };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="int_field"/></form>`,
+            resId: 2,
+            mockRPC(route, args) {
+                if (args.method === "onchange" && args.args[1].int_field === 64) {
+                    throw makeServerError({ message: "Some business message" });
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=int_field] input").value,
+            "9"
+        );
+
+        await editInput(target, ".o_field_widget[name=int_field] input", 64);
+
+        assert.containsOnce(document.body, ".modal");
+        assert.strictEqual(
+            document.body.querySelector(".modal-body").textContent,
+            "Some business message"
+        );
+        assert.hasClass(
+            target.querySelector('.o_field_widget[name="int_field"]'),
+            "o_field_invalid"
+        );
+
+        await click(target.querySelector(".modal .btn-close"));
+
+        assert.containsNone(document.body, ".modal");
+
+        await editInput(target, ".o_field_widget[name=int_field] input", 32);
+
+        assert.containsNone(document.body, ".modal");
+        assert.containsNone(target, ".o_field_invalid");
+    });
+
     QUnit.test("button box is rendered in create mode", async function (assert) {
         await makeView({
             type: "form",
