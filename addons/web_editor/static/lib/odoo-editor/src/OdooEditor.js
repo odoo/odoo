@@ -169,7 +169,7 @@ function getImageFiles(dataTransfer) {
         .filter(item => item.kind === 'file' && item.type.includes('image/'))
         .map((item) => item.getAsFile());
 }
-function getImageUrl (file) {
+function getImageUrl(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
@@ -208,11 +208,11 @@ export class OdooEditor extends EventTarget {
                         return closestElement(selection.anchorNode, 'P, DIV');
                     }
                 },
-                preHistoryUndo: () => {},
-                onChange: () => {},
+                preHistoryUndo: () => { },
+                onChange: () => { },
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
-                onPostSanitize: () => {},
+                onPostSanitize: () => { },
                 direction: 'ltr',
                 _t: string => string,
                 allowCommandVideo: true,
@@ -438,7 +438,7 @@ export class OdooEditor extends EventTarget {
 
     _generateId() {
         // No need for secure random number.
-        return Math.floor(Math.random() * Math.pow(2,52)).toString();
+        return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     }
 
     // Assign IDs to src, and dest if defined
@@ -742,7 +742,7 @@ export class OdooEditor extends EventTarget {
         this.multiselectionRefresh();
         this.observerActive();
     }
-    historyGetMissingSteps({fromStepId, toStepId}) {
+    historyGetMissingSteps({ fromStepId, toStepId }) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
         const toIndex = this._historySteps.findIndex(x => x.id === toStepId);
         if (fromIndex === -1 || toIndex === -1) {
@@ -853,7 +853,7 @@ export class OdooEditor extends EventTarget {
      */
     historyRevertCurrentStep() {
         this.observerFlush();
-        this.historyRevert(this._currentStep, {sideEffect: false});
+        this.historyRevert(this._currentStep, { sideEffect: false });
         this.observerFlush();
         // Clear current step from all previous changes.
         this._currentStep.mutations = [];
@@ -933,7 +933,7 @@ export class OdooEditor extends EventTarget {
         return this._historySteps.length;
     }
 
-    historyRevert(step, { until = 0, sideEffect = true } = {} ) {
+    historyRevert(step, { until = 0, sideEffect = true } = {}) {
         // apply dom changes by reverting history steps
         for (let i = step.mutations.length - 1; i >= until; i--) {
             const mutation = step.mutations[i];
@@ -1155,7 +1155,7 @@ export class OdooEditor extends EventTarget {
                 // Get the last known step that we are sure the missing step
                 // client has. It could either be a step that has the same
                 // clientId or the first step.
-                while(index !== 0) {
+                while (index !== 0) {
                     if (historySteps[index].clientId === newStep.clientId) {
                         break;
                     }
@@ -1435,7 +1435,7 @@ export class OdooEditor extends EventTarget {
         // Let the DOM split and delete the range.
         const doJoin =
             (closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
-            closestBlock(end) !== closestBlock(range.commonAncestorContainer))
+                closestBlock(end) !== closestBlock(range.commonAncestorContainer))
             && (closestBlock(start).tagName !== 'TD' && closestBlock(end).tagName !== 'TD');
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
@@ -1647,7 +1647,7 @@ export class OdooEditor extends EventTarget {
             return false;
         }
         if (!sel.isCollapsed && BACKSPACE_FIRST_COMMANDS.includes(method)) {
-            let range = getDeepRange(this.editable, {sel, splitText: true, select: true, correctTripleClick: true});
+            let range = getDeepRange(this.editable, { sel, splitText: true, select: true, correctTripleClick: true });
             if (range &&
                 range.startContainer === range.endContainer &&
                 range.endContainer.nodeType === Node.TEXT_NODE &&
@@ -1823,7 +1823,7 @@ export class OdooEditor extends EventTarget {
         }
         const anchorNode = this._latestComputedSelection.anchorNode;
         const focusNode = this._latestComputedSelection.focusNode;
-        const parentTextContent = anchorNode.parentElement? anchorNode.parentElement.textContent : null;
+        const parentTextContent = anchorNode.parentElement ? anchorNode.parentElement.textContent : null;
         return anchorNode === focusNode && (parentTextContent === '' || parentTextContent === '\u200B')
     }
     /**
@@ -1989,7 +1989,7 @@ export class OdooEditor extends EventTarget {
                 },
             },
         ];
-        if (this.options.commands && !this.options.commands.find(c =>  c.title === this.options._t('Separator'))) {
+        if (this.options.commands && !this.options.commands.find(c => c.title === this.options._t('Separator'))) {
             mainCommands.push({
                 groupName: this.options._t('Basic blocks'),
                 title: this.options._t('Separator'),
@@ -2027,7 +2027,7 @@ export class OdooEditor extends EventTarget {
         });
     }
 
-    historyRevertUntil (toStepIndex) {
+    historyRevertUntil(toStepIndex) {
         const lastStep = this._currentStep;
         this.historyRevert(lastStep);
         let stepIndex = this._historySteps.length - 1;
@@ -2036,7 +2036,7 @@ export class OdooEditor extends EventTarget {
             const stepState = this._historyStepsStates.get(step.id);
             if (step.clientId === this._collabClientId && stepState !== 'consumed') {
                 this.historyRevert(this._historySteps[stepIndex]);
-                this._historyStepsStates.set(''+step.id, 'consumed');
+                this._historyStepsStates.set('' + step.id, 'consumed');
             }
             stepIndex--;
         }
@@ -2130,7 +2130,7 @@ export class OdooEditor extends EventTarget {
             }
         }
         this.updateColorpickerLabels();
-        const listUIClasses = {UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks'};
+        const listUIClasses = { UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks' };
         const block = closestBlock(sel.anchorNode);
         let activeLabel = undefined;
         for (const [style, tag, isList] of [
@@ -2223,7 +2223,7 @@ export class OdooEditor extends EventTarget {
         // wrongly defined and result with all the values for x, y, width, and
         // height to be 0. In that case, use the rect of the startContainer if
         // possible.
-        const isSelectionPotentiallyBugged = [selRect.x, selRect.y, selRect.width, selRect.height].every( x => x === 0 );
+        const isSelectionPotentiallyBugged = [selRect.x, selRect.y, selRect.width, selRect.height].every(x => x === 0);
         const correctedSelectionRect = isSelectionPotentiallyBugged && startRect ? startRect : selRect;
         const toolbarWidth = this.toolbar.offsetWidth;
         const toolbarHeight = this.toolbar.offsetHeight;
@@ -2268,12 +2268,12 @@ export class OdooEditor extends EventTarget {
         this.toolbar.style.setProperty('--arrow-top-pos', arrowTopPos + 'px');
 
         // Calculate toolbar dimensions including the arrow.
-        const toolbarTop = Math.min(top , top + arrowTopPos);
+        const toolbarTop = Math.min(top, top + arrowTopPos);
         const toolbarBottom = Math.max(top + toolbarHeight, top + arrowTopPos + 20);
 
         // Hide toolbar if it overflows the scroll container.
         const distToScrollContainer = Math.min(toolbarTop - scrollContainerRect.top,
-                                                scrollContainerRect.bottom - toolbarBottom);
+            scrollContainerRect.bottom - toolbarBottom);
         this.toolbar.classList.toggle('d-none', distToScrollContainer < OFFSET / 2);
     }
 
@@ -2638,6 +2638,7 @@ export class OdooEditor extends EventTarget {
         if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey && (isMacOS() || !ev.altKey)) {
             const selection = this.document.getSelection();
             if (selection && !selection.isCollapsed) {
+                this.commandBar._lastKeydownSelectionWasNotCollapsed = true;
                 this.deleteRange(selection);
             }
         }
@@ -2809,7 +2810,7 @@ export class OdooEditor extends EventTarget {
             !currentNode.classList.contains('o_editable') &&
             !currentNode.classList.contains('odoo-editor-editable') &&
             !selectionInBlockRoot
-            ) {
+        ) {
             selectionInBlockRoot = isBlock(currentNode);
             currentNode = currentNode.parentElement;
         }
@@ -3007,7 +3008,7 @@ export class OdooEditor extends EventTarget {
 
         // placeholder hint
         const sel = this.document.getSelection();
-        if (this.editable.textContent.trim() === '' && this.options.placeholder && !this.editable.contains(sel.focusNode) ) {
+        if (this.editable.textContent.trim() === '' && this.options.placeholder && !this.editable.contains(sel.focusNode)) {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
         }
     }
@@ -3293,7 +3294,7 @@ export class OdooEditor extends EventTarget {
             if (files.length && !clipboardElem.content.querySelector('table')) {
                 this.addImagesFiles(files).then(html => this._applyCommand('insertHTML', this._prepareClipboardData(html)));
             } else {
-                if(closestElement(sel.anchorNode, 'a')) {
+                if (closestElement(sel.anchorNode, 'a')) {
                     this._applyCommand('insertText', clipboardElem.content.textContent);
                 }
                 else {
@@ -3307,7 +3308,7 @@ export class OdooEditor extends EventTarget {
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
                 // Pasted content is a single URL.
                 const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
-                const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                const youtubeUrl = this.options.allowCommandVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
                 // A url cannot be transformed inside an existing link.
@@ -3356,7 +3357,7 @@ export class OdooEditor extends EventTarget {
                         };
                         commands = [embedImageCommand, pasteAsURLCommand];
                     } else {
-                         // URL is a YouTube video.
+                        // URL is a YouTube video.
                         const embedVideoCommand = {
                             title: this.options._t('Embed Youtube Video'),
                             description: this.options._t('Embed the youtube video in the document.'),
