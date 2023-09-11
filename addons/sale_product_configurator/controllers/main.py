@@ -282,7 +282,7 @@ class ProductConfiguratorController(Controller):
                             datetime.fromisoformat(so_date).date(),
                         ),
                     ) for ptav in ptal.product_template_value_ids
-                    if ptav.ptav_active
+                    if ptav.ptav_active and not ptav.is_not_available
                 ],
                 selected_attribute_value_ids=combination.filtered(
                     lambda c: ptal in c.attribute_line_id
