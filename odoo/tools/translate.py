@@ -1472,27 +1472,27 @@ def load_language(cr, lang):
     installer.lang_install()
 
 
+def get_po_paths(module_name: str, lang: str):
+    lang_base = lang.split('_')[0]
+    langs = [lang_base, lang]  # the latter will overwrite the former
+    if lang_base == "es" and lang != "es_MX":
+        # force es_MX as fallback language for the different spanish
+        # es_MX is more actively translated and closer to many languages
+        langs = [lang_base, "es_MX", lang]
+    return [
+        path
+        for lang_ in langs
+        for dir_ in ('i18n', 'i18n_extra')
+        if (path := get_resource_path(module_name, dir_, lang_ + '.po'))
+    ]
+
+
 class CodeTranslations:
     def __init__(self):
         # {(module_name, lang): {src: value}}
         self.python_translations = {}
         # {(module_name, lang): {'message': [{'id': src, 'string': value}]}
         self.web_translations = {}
-
-    @staticmethod
-    def _get_po_paths(mod, lang):
-        lang_base = lang.split('_')[0]
-        po_paths = [get_resource_path(mod, 'i18n', lang_base + '.po'),
-                    get_resource_path(mod, 'i18n', lang + '.po'),
-                    get_resource_path(mod, 'i18n_extra', lang_base + '.po'),
-                    get_resource_path(mod, 'i18n_extra', lang + '.po')]
-        if lang_base == "es" and lang != "es_MX":
-            # force es_MX as fallback language for the different spanish
-            # es_MX is more actively translated and closer to many languages
-            po_paths = [po_paths[0]] + [get_resource_path(mod, 'i18n', 'es_MX.po')] + \
-                po_paths[1:3] + [get_resource_path(mod, 'i18n_extra', 'es_MX.po')] + \
-                [po_paths[3]]
-        return [path for path in po_paths if path]
 
     @staticmethod
     def _read_code_translations_file(fileobj, filter_func):
@@ -1512,7 +1512,7 @@ class CodeTranslations:
 
     @staticmethod
     def _get_code_translations(module_name, lang, filter_func):
-        po_paths = CodeTranslations._get_po_paths(module_name, lang)
+        po_paths = get_po_paths(module_name, lang)
         translations = {}
         for po_path in po_paths:
             try:
