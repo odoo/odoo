@@ -114,9 +114,10 @@ class AccountReport(models.Model):
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
         compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
-    filter_account_type = fields.Boolean(
+    filter_account_type = fields.Selection(
         string="Account Types",
-        compute=lambda x: x._compute_report_option_filter('filter_account_type'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        selection=[('both', "Payable and receivable"), ('payable', "Payable"), ('receivable', "Receivable"), ('disabled', 'Disabled')],
+        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False, store=True, depends=['root_report_id'],
     )
     filter_partner = fields.Boolean(
         string="Partners",
