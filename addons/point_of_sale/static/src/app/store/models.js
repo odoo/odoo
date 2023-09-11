@@ -114,7 +114,7 @@ export class Product extends PosModel {
     }
     async getAddProductOptions(code) {
         let price_extra = 0.0;
-        let draftPackLotLines, weight, description, packLotLinesToEdit;
+        let draftPackLotLines, description, packLotLinesToEdit;
         let quantity = 1;
 
         if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
@@ -210,7 +210,7 @@ export class Product extends PosModel {
                     }
                 );
                 if (confirmed) {
-                    weight = payload.weight;
+                    quantity = payload.weight;
                 } else {
                     // do not add the product;
                     return;
@@ -220,7 +220,7 @@ export class Product extends PosModel {
             }
         }
 
-        return { draftPackLotLines, quantity, weight, description, price_extra };
+        return { draftPackLotLines, quantity, description, price_extra };
     }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);
