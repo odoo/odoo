@@ -276,10 +276,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "label:contains(Foo)");
         assert.containsOnce(target, ".o_field_char input");
         assert.strictEqual(target.querySelector(".o_field_char input").value, "blip");
-        assert.hasAttrValue(
+        assert.hasStyleValue(
             target.querySelector(".o_group .o_inner_group"),
-            "style",
-            "background-color: red",
+            "background-color",
+            "red",
             "should apply style attribute on groups"
         );
         assert.hasAttrValue(
@@ -13243,7 +13243,9 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
         serverData.models.partner_type.records.push({
-            id: 3, display_name: 'very'.repeat(30) + '_long_name', color: 10,
+            id: 3,
+            display_name: "very".repeat(30) + "_long_name",
+            color: 10,
         });
 
         const record = serverData.models.partner.records[0];
@@ -13272,11 +13274,42 @@ QUnit.module("Views", (hooks) => {
             </form>`,
         });
 
-        const table = target.querySelector('table');
-        const group = target.querySelector('.o_inner_group:last-child');
+        const table = target.querySelector("table");
+        const group = target.querySelector(".o_inner_group:last-child");
 
         assert.equal(group.clientWidth, group.scrollWidth);
-        table.style.tableLayout = 'auto';
+        table.style.tableLayout = "auto";
         assert.ok(group.clientWidth < group.scrollWidth);
+    });
+
+    QUnit.test("group with a col attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group col="4">
+                            <!-- InnerGroup -->
+                            <field name="foo"/>
+                            <field name="bar"/>
+                            <field name="qux"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        const foo = target.querySelector("label[for=foo]").getBoundingClientRect();
+        const bar = target.querySelector("label[for=bar]").getBoundingClientRect();
+        const qux = target.querySelector("label[for=qux]").getBoundingClientRect();
+
+        // Check that bar is positioned to the right of foo
+        assert.ok(foo.x < bar.x);
+        assert.strictEqual(foo.y, bar.y);
+        // Check that qux is postioned under foo
+        assert.strictEqual(foo.x, qux.x);
+        assert.ok(foo.y < qux.y);
     });
 });
