@@ -575,7 +575,10 @@ export class RelationalModel extends Model {
      * @param {Object} [param.evalContext=config.context]
      * @returns Promise<Object>
      */
-    async _onchange(config, { changes = {}, fieldNames = [], evalContext = config.context }) {
+    async _onchange(
+        config,
+        { changes = {}, fieldNames = [], evalContext = config.context, onError }
+    ) {
         const { fields, activeFields, resModel, resId } = config;
         let context = config.context;
         if (fieldNames.length === 1) {
@@ -584,7 +587,15 @@ export class RelationalModel extends Model {
         }
         const spec = getFieldsSpec(activeFields, fields, evalContext, { withInvisible: true });
         const args = [resId ? [resId] : [], changes, fieldNames, spec];
-        const response = await this.orm.call(resModel, "onchange", args, { context });
+        let response;
+        try {
+            response = await this.orm.call(resModel, "onchange", args, { context });
+        } catch (e) {
+            if (onError) {
+                return onError(e);
+            }
+            throw e;
+        }
         if (response.warning) {
             const { type, title, message, className, sticky } = response.warning;
             if (type === "dialog") {
