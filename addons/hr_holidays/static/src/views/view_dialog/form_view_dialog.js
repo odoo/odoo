@@ -40,7 +40,7 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     deleteRecord() {
-        this.props.onRecordDeleted(this.record.data)
+        this.props.onRecordDeleted(this.record);
         this.props.onCancelLeave();
         if (this.record.data.can_cancel) {
             this.leaveCancelWizard(this.record.resId, () => {
