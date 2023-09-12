@@ -2269,10 +2269,6 @@ options.registry.WebsiteLevelColor = options.Class.extend({
     },
 });
 
-options.registry.HeaderLayout = options.registry.WebsiteLevelColor.extend({
-    // TODO: to remove in master, it is only kept for the stable versions.
-});
-
 options.registry.HeaderElements = options.Class.extend({
     /**
      * @constructor
