@@ -16,20 +16,6 @@
                                 invisible="state != 'new'"/>
                     <field name="state" widget="statusbar"/>
                 </xpath>
-
-                <xpath expr="//sheet" position="before">
-                    <div class="alert alert-success text-center o_form_header alert-dismissible" invisible="not signup_valid" role="status">
-                        <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
-                        <div invisible="state != 'active'">
-                            <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
-                        </div>
-                        <div invisible="state != 'new'">
-                            <strong>An invitation email containing the following subscription link has been sent:</strong>
-                        </div>
-                        <div><field name="signup_url" widget="url"/></div>
-                         <field name="signup_valid" invisible="1"/>
-                     </div>
-                 </xpath>
             </field>
         </record>
 

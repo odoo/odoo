@@ -68,8 +68,7 @@ class ResUsers(models.Model):
             # signup with a token: find the corresponding partner id
             partner = self.env['res.partner']._signup_retrieve_partner(token, check_validity=True, raise_exception=True)
             # invalidate signup token
-            partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
-
+            partner.write({'signup_type': False})
             partner_user = partner.user_ids and partner.user_ids[0] or False
 
             # avoid overwriting existing (presumably correct) values with geolocation data
@@ -177,14 +176,17 @@ class ResUsers(models.Model):
 
     def action_reset_password(self):
         try:
-            return self._action_reset_password()
+            if self.env.context.get('create_user') == 1:
+                return self._action_reset_password(signup_type="signup")
+            else:
+                return self._action_reset_password(signup_type="reset")
         except MailDeliveryException as mde:
             if len(mde.args) == 2 and isinstance(mde.args[1], ConnectionRefusedError):
                 raise UserError(_("Could not contact the mail server, please check your outgoing email server configuration")) from mde
             else:
                 raise UserError(_("There was an error when trying to deliver your Email, please check your configuration")) from mde
 
-    def _action_reset_password(self):
+    def _action_reset_password(self, signup_type="reset"):
         """ create signup token for each user, and send their signup url by email """
         if self.env.context.get('install_mode') or self.env.context.get('import_file'):
             return
@@ -193,10 +195,7 @@ class ResUsers(models.Model):
         # prepare reset password signup
         create_mode = bool(self.env.context.get('create_user'))
 
-        # no time limit for initial invitation, only for reset password
-        expiration = False if create_mode else now(days=+1)
-
-        self.mapped('partner_id').signup_prepare(signup_type="reset", expiration=expiration)
+        self.mapped('partner_id').signup_prepare(signup_type=signup_type)
 
         # send email to users with their signup url
         account_created_template = None
@@ -236,7 +235,21 @@ class ResUsers(models.Model):
                         **email_values,
                     })
                     mail.send()
-            _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+            if signup_type == 'reset':
+                _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+                message = _('A reset password was send by email')
+            else:
+                _logger.info("Signup email sent for user <%s> to <%s>", user.login, user.email)
+                message = _('A signup link link was send by email')
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Notification',
+                'message': message,
+                'sticky': False
+            }
+        }
 
     def send_unregistered_user_reminder(self, after_days=5, batch_size=100):
         email_template = self.env.ref('auth_signup.mail_template_data_unregistered_users', raise_if_not_found=False)
@@ -346,7 +359,7 @@ class ResUsers(models.Model):
             users_with_email = users.filtered('email')
             if users_with_email:
                 try:
-                    users_with_email.with_context(create_user=True)._action_reset_password()
+                    users_with_email.with_context(create_user=True)._action_reset_password(signup_type='signup')
                 except MailDeliveryException:
                     users_with_email.partner_id.with_context(create_user=True).signup_cancel()
         return users

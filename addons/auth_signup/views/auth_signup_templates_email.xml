@@ -30,9 +30,9 @@
                             <div>
                                 Dear <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
                                 A password reset was requested for the Odoo account linked to this email.
-                                You may change your password by following this link which will remain valid during 24 hours:<br/>
+                                You may change your password by following this link which will remain valid during <t t-out="user.env['ir.config_parameter'].sudo().get_param('auth_signup.reset_password.validity.hours',4)"></t> hours:<br/>
                                 <div style="margin: 16px 0px 16px 0px;">
-                                    <a t-att-href="object.signup_url"
+                                    <a t-att-href="object.partner_id._get_signup_url()"
                                         style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                         Change password
                                     </a>

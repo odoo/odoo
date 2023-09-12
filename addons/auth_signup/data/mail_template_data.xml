@@ -40,11 +40,12 @@
                         Dear <t t-out="object.name or ''">Marc Demo</t>,<br /><br />
                         You have been invited by <t t-out="object.create_uid.name or ''">OdooBot</t> of <t t-out="object.company_id.name or ''">YourCompany</t> to connect on Odoo.
                         <div style="margin: 16px 0px 16px 0px;">
-                            <a t-att-href="object.signup_url"
+                            <a t-att-href="object.partner_id._get_signup_url()"
                                 t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Accept invitation
                             </a>
                         </div>
+                        <b>  This link will remain valid during <t t-out="int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/24)"></t> days </b> <br/>
                         <t t-set="website_url" t-value="object.get_base_url()"></t>
                         Your Odoo domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></b><br />
                         Your sign in email is: <b><a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></b><br /><br />
