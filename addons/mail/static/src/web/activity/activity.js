@@ -6,6 +6,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { browser } from "@web/core/browser/browser";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { ActivityMailTemplate } from "@mail/web/activity/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/web/activity/activity_markasdone_popover";
@@ -51,6 +52,12 @@ export class Activity extends Component {
             return sprintf(_t("“%s”"), this.props.data.summary);
         }
         return this.props.data.display_name;
+    }
+
+    get displayCreateDate() {
+        return deserializeDateTime(this.props.data.create_date).toLocaleString(
+            luxon.DateTime.DATETIME_SHORT_WITH_SECONDS
+        );
     }
 
     updateDelayAtNight() {
