@@ -111,3 +111,13 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
 
 registry.category("web_tour.tours").add('PosSettleOrder3', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.selectFirstOrder();
+ProductScreen.check.totalAmountIs(34.5);
+ProductScreen.check.checkOrderlinesNumber(3);
+
+registry.category("web_tour.tours").add('PosSettleOrderNotGroupable', { test: true, url: '/pos/ui', steps: getSteps() });
