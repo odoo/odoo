@@ -2444,7 +2444,7 @@ class BaseModel(metaclass=MetaModel):
                 additional_domain = [(field_name, '=', value)]
 
                 if field.type in ('date', 'datetime'):
-                    if value:
+                    if value and isinstance(value, (datetime.date, datetime.datetime)):
                         range_start = value
                         range_end = value + interval
                         if field.type == 'datetime':
@@ -2474,7 +2474,7 @@ class BaseModel(metaclass=MetaModel):
                                 (field_name, '>=', range_start),
                                 (field_name, '<', range_end),
                         ]
-                    else:
+                    elif not value:
                         # Set the __range of the group containing records with an unset
                         # date/datetime field value to False.
                         row.setdefault('__range', {})[group] = False
