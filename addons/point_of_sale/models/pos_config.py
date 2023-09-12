@@ -684,10 +684,18 @@ class PosConfig(models.Model):
                       COALESCE(pm.date, product_product.write_date) DESC
                 LIMIT %s
         """
-        self.env.cr.execute(query, params + [20000])
+        self.env.cr.execute(query, params + [self.get_limited_product_count()])
         product_ids = self.env.cr.fetchall()
         products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
         return products
+
+    def get_limited_product_count(self):
+        default_limit = 20000
+        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', default_limit)
+        try:
+            return int(config_param)
+        except (TypeError, ValueError, OverflowError):
+            return default_limit
 
     def get_limited_partners_loading(self):
         self.env.cr.execute("""
