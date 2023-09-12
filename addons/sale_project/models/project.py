@@ -763,6 +763,7 @@ class ProjectTask(models.Model):
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
     allow_billable = fields.Boolean(related="project_id.allow_billable")
+    partner_id = fields.Many2one(inverse='_inverse_partner_id')
 
     # Project sharing  fields
     display_sale_order_button = fields.Boolean(string='Display Sales Order', compute='_compute_display_sale_order_button')
@@ -782,7 +783,7 @@ class ProjectTask(models.Model):
             return search_on_comodel
         return sales_orders
 
-    @api.depends('sale_line_id', 'project_id', 'partner_id.commercial_partner_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
             if not task.allow_billable:
@@ -793,8 +794,9 @@ class ProjectTask(models.Model):
                 sale_order_id = task.sale_line_id.sudo().order_id
             elif task.project_id.sale_order_id:
                 sale_order_id = task.project_id.sale_order_id
-            if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
-                sale_order_id = False
+                consistent_partners = [sale_order_id.partner_id.commercial_partner_id, sale_order_id.partner_shipping_id.commercial_partner_id]
+                if task.partner_id and task.partner_id not in consistent_partners:
+                    sale_order_id = self.env["sale.order"]
             if sale_order_id and not task.partner_id:
                 task.partner_id = sale_order_id.partner_id
             task.sale_order_id = sale_order_id
@@ -805,7 +807,14 @@ class ProjectTask(models.Model):
         (self - billable_task).partner_id = False
         super(ProjectTask, billable_task)._compute_partner_id()
 
-    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
+    def _inverse_partner_id(self):
+        for task in self:
+            # check that sale_line_id/sale_order_id and customer are consistent
+            consistent_partners = [task.sale_order_id.partner_id.commercial_partner_id, task.sale_order_id.partner_shipping_id.commercial_partner_id]
+            if task.sale_order_id and task.partner_id.commercial_partner_id not in consistent_partners:
+                task.sale_order_id = task.sale_line_id = False
+
+    @api.depends('sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
             if not (task.allow_billable or task.parent_id.allow_billable):
@@ -821,9 +830,6 @@ class ProjectTask(models.Model):
                 elif task.project_id.sale_line_id and task.project_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
                     sale_line = task.project_id.sale_line_id
                 task.sale_line_id = sale_line or task.milestone_id.sale_line_id
-            # check sale_line_id and customer are coherent
-            if task.sale_line_id.order_partner_id.commercial_partner_id != task.partner_id.commercial_partner_id:
-                task.sale_line_id = False
 
     @api.depends('sale_order_id')
     def _compute_display_sale_order_button(self):

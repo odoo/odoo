@@ -114,6 +114,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
         }
     },
 }, {
+    trigger: 'button.o_form_button_save i',
+    content: 'Manually save the records (sale order should be filled based on the partner picked for this task',
+}, {
     trigger: 'button[name="action_view_so"]',
     content: 'Click on this stat button to see the SO linked to the SOL of the task.',
 }, {
