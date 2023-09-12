@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web._DomainSelector">
-        <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-att-class="className" t-ref="root">
+        <div class="o_domain_node o_domain_tree o_domain_selector w-100" aria-atomic="true" t-att-class="className" t-ref="root">
             <t t-if="tree">
                 <t t-set="node" t-value="tree" />
                 <t t-if="node.children.length === 0">
