@@ -76,7 +76,7 @@
                                 <td>
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
                                     <div t-if="assignees" class="row flex-nowrap">
-                                        <span t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees[1:].mapped('name'))"/>
+                                        <span t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees.mapped('name'))"/>
                                     </div>
                                 </td>
                                 <td t-if="groupby != 'milestone' and allow_milestone" name="project_portal_milestones">
