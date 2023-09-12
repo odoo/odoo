@@ -97,6 +97,99 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <!-- Email template for reset password after admin revoked user's sessions-->
+        <record id="admin_revoke_sessions_email" model="mail.template">
+            <field name="name">Settings: Revoked sessions by admin email</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">Password reset</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="description">Sent to user whose sessions have been revoked by an admin</field>
+            <field name="body_html" type="html">
+            <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+            <tbody>
+                <!-- HEADER -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                            <tr><td valign="middle">
+                                <span style="font-size: 10px;">Your Account</span><br/>
+                                <span style="font-size: 20px; font-weight: bold;">
+                                    <t t-out="object.name or ''">Marc Demo</t>
+                                </span>
+                            </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
+                                <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
+                            </td></tr>
+                            <tr><td colspan="2" style="text-align:center;">
+                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- CONTENT -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                            <tr><td valign="top" style="font-size: 13px;">
+                                <div>
+                                    Dear <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
+                                    An admin decided to shut all your active sessions and needs you to reset your password.
+                                    To do so, please use this link:<br/>
+                                    <div style="margin: 16px 0px 16px 0px;">
+                                        <a href="/web/reset_password?" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                            Change password
+                                        </a>
+                                    </div>
+                                    <t t-if="user.signature">
+                                        <br/>
+                                        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                                    </t>
+                                </div>
+                            </td></tr>
+                            <tr><td style="text-align:center;">
+                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- FOOTER -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                            <tr><td valign="middle" align="left">
+                                <t t-out="object.company_id.name or ''">YourCompany</t>
+                            </td></tr>
+                            <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+
+                                <t t-if="object.company_id.email">
+                                    | <a t-att-href="'mailto:%s' % object.company_id.email" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                                </t>
+                                <t t-if="object.company_id.website">
+                                    | <a t-att-href="'%s' % object.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                                </t>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+            </td></tr>
+            <!-- POWERED BY -->
+            <tr><td align="center" style="min-width: 590px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                <tr><td style="text-align: center; font-size: 13px;">
+                    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo</a>
+                </td></tr>
+                </table>
+            </td></tr>
+            </table>
+            </field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
         <!-- Email template for new users -->
         <record id="set_password_email" model="mail.template">
             <field name="name">Settings: New Portal Signup</field>
