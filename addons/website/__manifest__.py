@@ -188,7 +188,7 @@
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/client_actions/*/*.dark.scss'),
         ],
-        "web.dark_mode_assets_backend": [
+        "web.assets_web_dark": [
             'website/static/src/components/dialog/*.dark.scss',
             'website/static/src/scss/website.backend.dark.scss',
             'website/static/src/client_actions/*/*.dark.scss',

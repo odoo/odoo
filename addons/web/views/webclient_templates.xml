@@ -217,8 +217,6 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Tests</t>
             <t t-set="head">
-                <t t-call-assets="web.assets_backend"/>
-
                 <t t-call="web.test_helpers"/>
 
                 <t t-call-assets="web.qunit_suite_tests" t-js="false"/>
@@ -235,8 +233,6 @@
             <t t-set="title">Web Mobile Tests</t>
             <t t-set="head">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-
-                <t t-call-assets="web.assets_backend"/>
 
                 <t t-call="web.test_helpers"/>
 
@@ -274,12 +270,11 @@
                     }
                 </script>
                 <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
-                    <t t-call-assets="web.dark_mode_assets_backend"/>
+                    <t t-call-assets="web.assets_web_dark"/>
                 </t>
                 <t t-else="">
-                    <t t-call-assets="web.assets_backend"/>
+                    <t t-call-assets="web.assets_web"/>
                 </t>
-                <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>
                 <t t-call="web.conditional_assets_tests"/>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>

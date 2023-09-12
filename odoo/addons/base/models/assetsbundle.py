@@ -55,7 +55,7 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    TRACKED_BUNDLES = ['web.assets_backend']
+    TRACKED_BUNDLES = ['web.assets_web']
 
     def __init__(self, name, files, external_assets=(), env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
         """

@@ -199,7 +199,7 @@ Odoo Web Editor widget.
 
             ('include', 'web_editor.assets_wysiwyg'),
         ],
-        "web.dark_mode_assets_backend": [
+        "web.assets_web_dark": [
             'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
             'web_editor/static/src/scss/odoo-editor/tablepicker.dark.scss',
             'web_editor/static/src/scss/odoo-editor/tableui.dark.scss',
