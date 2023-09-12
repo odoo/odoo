@@ -700,6 +700,11 @@ class TestStockFlow(TestStockCommon):
         # Check back order created or not.
         bo_in_B = self.PickingObj.search([('backorder_id', '=', picking_in_B.id)])
         self.assertEqual(len(bo_in_B), 1, 'Back order should be created.')
+
+        # Assigned user should not be copied
+        self.assertTrue(picking_in_B.user_id)
+        self.assertFalse(bo_in_B.user_id)
+
         # Check total move lines of back order.
         self.assertEqual(len(bo_in_B.move_ids), 1, 'Wrong number of move lines')
         # Check back order created with correct quantity and uom or not.
