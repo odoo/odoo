@@ -40,6 +40,7 @@ export const TABLE_STYLES = {
     'text-align': 'inherit',
     'font-size': 'unset',
     'line-height': 'inherit',
+    'table-layout': 'fixed',
 };
 
 //--------------------------------------------------------------------------
@@ -343,6 +344,17 @@ function cardToTable(editable) {
     // card-body is flex 1 1 auto and that makes it fill its parent vertically.
     // Just like card-img-top actually...
     for (const card of editable.querySelectorAll('.card')) {
+        /*
+        Replace card with:
+        <table class="card">     // table
+            for each child:
+            <tr>                    // superRow
+                <td>                // superCol
+                    <table>         // subTable
+                        <tr>        // row
+                            <td>    // col (take child attributes if child is block)
+                                child (or child's children if child is block)
+        */
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
         for (const child of [...card.childNodes]) {
@@ -379,6 +391,13 @@ function cardToTable(editable) {
                 ));
                 if (hasImgTop) {
                     superRow.style.height = 0;
+                    // Wrap the image in a div with its dimensions to make sure the
+                    // td is the right size (can't set the height on a td).
+                    const div = document.createElement('div');
+                    div.style.height = child.style.height;
+                    div.style.width = child.style.width;
+                    child.before(div);
+                    div.append(child);
                 }
                 const hasCardBody = [child, ...child.querySelectorAll('.card-body')].some(node => (
                     node.classList && node.classList.contains('card-body') && node.closest && node.closest('.card') === table
@@ -533,6 +552,21 @@ function enforceTablesResponsivity(editable) {
     const trs = [...editable.querySelectorAll('.o_mail_wrapper tr')]
         .filter(tr => [...tr.children].some(td => td.classList.contains('o_converted_col')))
         .reverse();
+    /*
+    Replace <tr><td> with:
+    <tr>                                                            tr
+        <td>                                                        topTd
+            <table>                                                 commonTable
+                <tr>                                                commonTr
+                    <td>                                            commonTd
+                        [mso: <table><tr>]
+                        FOR EACH CHILD:
+                        [mso: <td>]
+                        <div class="o_stacking_wrapper">            wrapDiv
+                            <table>                                 wrapTable
+                                <tr>                                newTr
+                                    <td>                            td
+    */
     for (const tr of trs) {
         const commonTable = _createTable();
         commonTable.style.height = '100%';
@@ -562,9 +596,9 @@ function enforceTablesResponsivity(editable) {
                 wrapDiv.before(_createMso(`
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
                         <tr>
-                            <td valign="top" style="width: ${width}; height: 0;">`)); // HERE! Now maybe I need an explicit height. But wrapDiv has height 100% so this needs a height.
+                            <td valign="top" style="width: ${width};">`));
             } else {
-                wrapDiv.before(_createMso(`</td><td valign="top" style="width: ${width}; height: 0;">`));
+                wrapDiv.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
             }
             if (index === tds.length - 1) {
                 wrapDiv.after(_createMso(`</td></tr></table>`));
@@ -730,8 +764,7 @@ async function toInline($editable, cssRules, $iframe) {
         clone.setAttribute('width', width);
         clone.style.setProperty('width', width + 'px');
         clone.style.removeProperty('max-width');
-        image.before(_createMso(clone.outerHTML));
-        _hideForOutlook(image);
+        image.setAttribute('data-img-mso', clone.outerHTML);
     }
 
     classToStyle($editable, cssRules);
@@ -749,6 +782,11 @@ async function toInline($editable, cssRules, $iframe) {
     formatTables($editable);
     normalizeColors($editable);
     responsiveToStaticForOutlook(editable);
+    for (const image of editable.querySelectorAll('img[data-img-mso]')) {
+        image.before(_createMso(image.getAttribute('data-img-mso')));
+        image.removeAttribute('data-img-mso');
+        _hideForOutlook(image);
+    }
     // Fix Outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
@@ -1021,6 +1059,7 @@ function formatTables($editable) {
         // IT WORKS :-)
         // Then check the height 0 for Firefox.
         if (alignItems in alignment) {
+            const cardContainers = new Set();
             const wrappers = [...row.querySelectorAll('div.o_stacking_wrapper')];
             for (const wrapper of wrappers) {
                 const parentWrapper = wrapper.parentElement && wrapper.parentElement.closest('div.o_stacking_wrapper');
@@ -1049,8 +1088,25 @@ function formatTables($editable) {
                         }
                     }
                 }
+                if (alignItems === 'stretch' && wrapper.querySelector('table.card td.card-body')) {
+                    cardContainers.add(wrapper.closest('td'));
+                }
             }
             row.style.alignItems = '';
+            // Fix the heights of the card bodies for Outlook.
+            for (const cardContainer of cardContainers) {
+                for (const card of cardContainer.querySelectorAll('table.card')) {
+                    const cardBody = card.querySelector('td.card-body');
+                    card.classList.remove('card'); // Remove the flexbox.
+                    const outlookCardBody = cardBody.cloneNode();
+                    outlookCardBody.style.height = _getHeight(cardBody) + 'px';
+                    outlookCardBody.setAttribute('valign', 'top');
+                    // The opening tag of `outlookTd` is for Outlook.
+                    cardBody.before(_createMso(outlookCardBody.outerHTML.replace('</td>', '')));
+                    // The opening tag of `td` is for the others.
+                    _hideForOutlook(cardBody, 'opening');
+                }
+            }
         }
     }
     // Tables don't properly inherit certain styles from their ancestors in Outlook.
@@ -1225,8 +1281,7 @@ function normalizeRem($editable, rootFontSize=16) {
  */
  function responsiveToStaticForOutlook(editable) {
     // Replace the responsive tables with static ones for Outlook
-    const tds = [...editable.querySelectorAll('td.o_converted_col:not(.mso-hide)')].reverse();
-    for (const td of tds) {
+    for (const td of editable.querySelectorAll('td.o_converted_col:not(.mso-hide)')) {
         const tdStyle = td.getAttribute('style') || '';
         const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
         const msoWidth = td.style.getPropertyValue('max-width');
