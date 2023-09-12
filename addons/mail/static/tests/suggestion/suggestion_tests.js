@@ -249,3 +249,36 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
     await contains(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-suggestion strong", { text: "My Test Partner" });
 });
+
+QUnit.test("Internal user should be displayed first", async () => {
+    const pyEnv = await startServer();
+    const [user1Id, user2Id] = pyEnv["res.users"].create([{ share: true }, { share: true }]);
+    const partnerIds = pyEnv["res.partner"].create([
+        { name: "Person A" },
+        { name: "Person B" },
+        { name: "Person C", user_ids: [user1Id] },
+        { name: "Person D", user_ids: [user2Id] },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: partnerIds[1], // B
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerIds[3], // D
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const { openFormView } = await start();
+    openFormView("res.partner", pyEnv.currentPartnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "@Person ");
+    await contains(":nth-child(1 of .o-mail-Composer-suggestion) strong", { text: "Person D" });
+    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "Person C" });
+    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "Person B" });
+    await contains(":nth-child(4 of .o-mail-Composer-suggestion) strong", { text: "Person A" });
+});
