@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+    	<!--编写视图,命名规范模型+view+视图名称-->
+        <record id="my_cats_view_form" model="ir.ui.view">
+            <field name="name">TMS</field><!--视图的名称-->
+            <field name="model">crm.aaa.aaa</field><!--视图所用的模板-->
+            <field name="arch" type="xml"><!--在此标签内,添加视图-->
+                <form><!--form视图,内容写在此标签里-->
+                    <header><!--标题-->
+                    </header>
+                    <sheet><!--页标签,可以不加,此是为了美观-->
+                        <group><!--将我们所呈现的数据放入此标签内-->
+                            <field name="name"/><!--在模行中定义的两个字段-->
+                            <field name="code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+		<!--我们发现,tree视图前面三行于from视图差别不大,
+		直到tree标签才开始有所变化,
+		相比之下的search视图也仅仅是标签的变动,
+		来告诉odoo,你需要的是那一个视图-->
+        <record id="my_cats_view_tree" model="ir.ui.view">
+            <field name="name">TMS</field><!--视图的名称-->
+            <field name="model">crm.aaa.aaa</field><!--视图所用的模板-->
+            <field name="arch" type="xml"><!--在此标签内,添加视图-->
+                <tree>
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+		<!--from/tree/search是最普通,也是最常见的视图-->
+        <record id="my_cats_view_search" model="ir.ui.view">
+            <field name="name">TMS</field><!--视图的名称-->
+            <field name="model">crm.aaa.aaa</field><!--视图所用的模板-->
+            <field name="arch" type="xml"><!--在此标签内,添加视图-->
+                <search>
+                    <field name="name"/>
+                    <field name="code"/>
+                </search>
+            </field>
+        </record>
+
+		<!---在创建完视图后,我们开始创建动作,
+		命名规范: 模型+action-->
+        <record id="my_cats_action" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field><!--固定写法-->
+            <field name="res_model">crm.aaa.aaa</field><!--使用模型-->
+            <field name="name">TMS</field><!--视图的名称-->
+
+            <field name="view_mode">tree,form</field><!--使用的视图-->
+            <field name="domain">[]</field><!--一些限制-->
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="my_cats_view_search"/>
+            <!--以上代码调用刚刚定义的search视图,
+            name值为固定写法,
+            ref值填写我们定义的search视图的ID-->
+        </record>
+
+		<!--当我们写完视图和动作后,就开始写主(父级)菜单,写法如下
+		命名规范:模型+menu_root,
+		web_icon:图标
+		sequence为菜单排序的优先级,可以改着试试效果
+		其他参数暂时不变动
+		在odoo中,代表应用菜单中的名称,可以在主菜单中找到该名称命名的模块
+		-->
+        <menuitem name="TMS" id="my_cats_menu_root" sequence="50" groups="base.group_user"
+                  web_icon="aaa,static/description/icon.png"
+        />
+
+		<!--我们在父级菜单下挂一个子级菜单
+		action为动作ID
+		name为动作名称
+		parent为挂靠的父级菜单ID
+		sequence为排序的优先级
+		在odoo中,代表应用菜单下的子菜单名称,一个主菜单可以挂多个子菜单,子菜单同样也可以继续再挂其他菜单
+		-->
+        <menuitem action="my_cats_action"
+                  id="menu_my_cats"
+                  name="物流管理系统"
+                  parent="my_cats_menu_root"
+                  sequence="21"
+        />
+        <menuitem action="my_cats_action"
+                  id="menu_my_cats2"
+                  name="物流管理系统2"
+                  parent="my_cats_menu_root"
+                  sequence="22"
+        />
+    </data>
+</odoo>
