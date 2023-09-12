@@ -925,9 +925,8 @@
 
   <t t-name="o-spreadsheet-Grid">
     <div
-      class="o-grid"
+      class="o-grid w-100 h-100"
       tabindex="-1"
-      t-att-class="{'o-two-columns': !props.sidePanelIsOpen}"
       t-on-click="focus"
       t-on-keydown="onKeydown"
       t-on-wheel="onMouseWheel"
@@ -1030,6 +1029,98 @@
         t-props="{...cellPopover.props, onClosed : () => props.onClosePopover()}"
       />
     </Popover>
+  </t>
+
+  <t t-name="o-spreadsheet-HeaderGroup">
+    <div
+      class="o-header-group position-absolute"
+      t-att-style="groupBoxStyle"
+      t-att-data-id="props.group.start + '-' + props.group.end"
+      t-on-click="toggleGroup"
+      t-on-contextmenu.stop.prevent="onContextMenu">
+      <div
+        class="o-header-group-header position-absolute d-flex align-items-center justify-content-center overflow-hidden"
+        t-att-style="groupHeaderStyle">
+        <div
+          class="o-group-fold-button user-select-none rounded d-flex align-items-center justify-content-center"
+          t-att-style="groupButtonStyle">
+          <t t-call="{{groupButtonIcon}}"/>
+        </div>
+      </div>
+      <div
+        class="o-group-border position-absolute"
+        t-if="!isGroupFolded"
+        t-att-style="groupBorderStyle"
+      />
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-HeaderGroupContainer">
+    <div
+      class="o-header-group-container d-flex w-100 h-100 overflow-hidden"
+      t-att-class="{
+        'flex-column': props.dimension === 'ROW',
+        'flex-row': props.dimension === 'COL',
+      }"
+      t-if="props.layers.length"
+      t-on-contextmenu.prevent="onContextMenu">
+      <div
+        class="o-header-group-frozen-pane flex-shrink-0 overflow-hidden position-relative"
+        t-att-class="{
+          'o-group-rows': props.dimension === 'ROW',
+          'o-group-columns': props.dimension === 'COL',
+        }"
+        t-if="hasFrozenPane"
+        t-att-style="frozenPaneContainerStyle">
+        <t t-foreach="props.layers" t-as="layer" t-key="layer_index">
+          <t t-foreach="layer" t-as="group" t-key="group.start + '-' + group.end">
+            <t
+              t-component="groupComponent"
+              group=" group"
+              layerOffset="getLayerOffset(layer_index)"
+              openContextMenu.bind="openContextMenu"
+            />
+          </t>
+        </t>
+      </div>
+      <div
+        class="o-header-group-frozen-pane-border"
+        t-att-class="{
+          'o-group-rows': props.dimension === 'ROW',
+          'o-group-columns': props.dimension === 'COL',
+        }"
+        t-if="hasFrozenPane"
+      />
+
+      <div
+        class="o-header-group-main-pane flex-shrink-0 position-relative h-100 w-100 overflow-hidden"
+        t-att-class="{
+          'o-group-rows': hasFrozenPane and props.dimension === 'ROW',
+          'o-group-columns': hasFrozenPane and props.dimension === 'COL',
+        }">
+        <div
+          class="o-header-group-scroll-container position-relative"
+          t-att-style="scrollContainerStyle">
+          <t t-foreach="props.layers" t-as="layer" t-key="layer_index">
+            <t t-foreach="layer" t-as="group" t-key="group.start + '-' + group.end">
+              <t
+                t-component="groupComponent"
+                group="group"
+                layerOffset="getLayerOffset(layer_index)"
+                openContextMenu.bind="openContextMenu"
+              />
+            </t>
+          </t>
+        </div>
+      </div>
+
+      <Menu
+        t-if="menu.isOpen"
+        menuItems="menu.menuItems"
+        position="menu.position"
+        onClose.bind="this.closeMenu"
+      />
+    </div>
   </t>
 
   <t t-name="o-spreadsheet-HeadersOverlay">
@@ -1776,8 +1867,13 @@
   </t>
 
   <t t-name="o-spreadsheet-Icon.PLUS">
-    <svg class="o-icon" viewBox="0 0 18 18">
+    <svg class="o-icon plus" viewBox="0 0 18 18">
       <path fill="currentColor" d="M8 0h2v8h8v2h-8v8H8v-8H0V8h8"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.MINUS">
+    <svg class="o-icon minus" viewBox="0 0 18 18">
+      <path fill="currentColor" d="M0 8h18v2H0z"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.LIST">
@@ -1969,6 +2065,13 @@
       <text x="9" y="15.9" class="small-text">A</text>
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.DATA_CLEANUP">
+    <svg class="o-icon" fill="currentColor">
+      <path
+        d="m13.6 6.4-2.1-2.1c-.4-.4-1-.4-1.4 0l-8.8 8.9c-.4.4-.4 1 0 1.4l2.1 2.1c.4.4 1 .4 1.4 0l8.8-8.9c.4-.4.4-1 0-1.4M8 8.5 10.5 6l1.4 1.4-2.5 2.5m3-7 1.8.8.8 1.8.8-1.8 1.8-.8-1.8-.8L14.9.4l-.8 1.8M3.5 4l1.7.7.8 1.8.8-1.8 1.8-.8-1.8-.8-.8-1.8-.8 1.8zm13.5 7.7-1.8-.8-.8-1.8-.8 1.8-1.8.8 1.8.8.8 1.8.7-1.8"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.FILTER_ICON">
     <svg
       class="o-cf-icon filter-icon"
@@ -2093,6 +2196,47 @@
       />
       <path
         d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.PLUS_IN_BOX">
+    <svg
+      class="o-icon"
+      width="18"
+      height="18"
+      style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5">
+      <path stroke="currentColor" d="M1.5,1.5h15v15h-15v-15M9,5v8M5,9h8"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.GROUP_ROWS">
+    <svg class="o-icon" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M6 2.5A1.5 1.5 0 0 1 7.5 1H16a1.5 1.5 0 0 1 1.5 1.5V15a1.5 1.5 0 0 1-1.5 1.5H7.5A1.5 1.5 0 0 1 6 15M7.5 2.5v2H16v-2M7.5 6v2H16V6M7.5 9.5v2H16v-2M7.5 13v2H16v-2M2 5.75V13h3v-1.5H3.5V5.75h1.25V3l-1 1v.75H3M.25 1.25v4.5h4.5v-4.5m-3.5 1h2.5v2.5h-2.5"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.UNGROUP_ROWS">
+    <svg class="o-icon" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M6 2.5A1.5 1.5 0 0 1 7.5 1H16a1.5 1.5 0 0 1 1.5 1.5V15a1.5 1.5 0 0 1-1.5 1.5H7.5A1.5 1.5 0 0 1 6 15M7.5 2.5v2H16v-2M7.5 6v2H16V6M7.5 9.5v2H16v-2M7.5 13v2H16v-2M2 5.75V13h3v-1.5H3.5V5.75M0 5.25.75 6l2-2 2 2 .75-.75-2-2 2-2L4.75.5l-2 2-2-2-.75.75 2 2"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.GROUP_COLUMNS">
+    <svg class="o-icon" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M2.75 6a1.5 1.5 0 0 0-1.5 1.5V16a1.5 1.5 0 0 0 1.5 1.5h12.5a1.5 1.5 0 0 0 1.5-1.5V7.5a1.5 1.5 0 0 0-1.5-1.5M2.75 7.5h2V16h-2m3.5-8.5h2V16h-2m3.5-8.5h2V16h-2m3.5-8.5h2V16h-2M6 2h7.25v3h-1.5V3.5H6v1.25H3.25l1-1H5V3M1.5.25H6v4.5H1.5m1-3.5v2.5H5v-2.5"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.UNGROUP_COLUMNS">
+    <svg class="o-icon" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M2.75 6a1.5 1.5 0 0 0-1.5 1.5V16a1.5 1.5 0 0 0 1.5 1.5h12.5a1.5 1.5 0 0 0 1.5-1.5V7.5a1.5 1.5 0 0 0-1.5-1.5M2.75 7.5h2V16h-2m3.5-8.5h2V16h-2m3.5-8.5h2V16h-2m3.5-8.5h2V16h-2M6 2h7.25v3h-1.5V3.5H6M5.5 0l.75.75-2 2 2 2-.75.75-2-2-2 2-.75-.75 2-2-2-2L1.5 0l2 2"
       />
     </svg>
   </t>
@@ -2733,6 +2877,16 @@
             class="align-middle"
           />
           Stacked linechart
+        </label>
+        <label class="o-checkbox">
+          <input
+            type="checkbox"
+            name="cumulative"
+            t-att-checked="props.definition.cumulative"
+            t-on-change="onUpdateCumulative"
+            class="align-middle"
+          />
+          Cumulative data
         </label>
       </div>
       <div class="o-section o-data-series">
@@ -3543,12 +3697,13 @@
   </t>
 
   <t t-name="o-spreadsheet-FindAndReplacePanel">
-    <div class="o-find-and-replace" tabindex="0" t-ref="findAndReplace">
+    <div class="o-find-and-replace">
       <div class="o-section">
         <div class="o-section-title">Search</div>
         <div class="o-input-search-container">
           <input
             type="text"
+            t-ref="searchInput"
             class="o-input o-input-with-count"
             t-on-input="onInput"
             t-on-keydown="onKeydownSearch"
@@ -3631,6 +3786,56 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-RemoveDuplicatesPanel">
+    <div class="o-remove-duplicates">
+      <div class="o-section">
+        <div class="o-section-subtitle" t-esc="selectionStatisticalInformation"/>
+        <label class="o-checkbox">
+          <input type="checkbox" t-att-checked="state.hasHeader" t-on-change="toggleHasHeader"/>
+          Data has header row
+        </label>
+      </div>
+
+      <div class="o-section">
+        <div class="o-section-title">Columns to analyze</div>
+        <div class="o-checkbox-selection overflow-auto p-3 vh-50 border rounded">
+          <label class="o-checkbox">
+            <input
+              t-att-checked="isEveryColumnSelected"
+              t-on-change="toggleAllColumns"
+              type="checkbox"
+            />
+            Select all
+          </label>
+
+          <t t-foreach="Object.keys(state.columns)" t-as="colIndex" t-key="colIndex">
+            <label class="o-checkbox">
+              <input
+                type="checkbox"
+                t-att-checked="state.columns[colIndex]"
+                t-on-change="() => this.toggleColumn(colIndex)"
+              />
+              <t t-esc="getColLabel(colIndex)"/>
+            </label>
+          </t>
+        </div>
+      </div>
+
+      <div class="o-sidePanelButtons">
+        <button
+          class="o-sidePanelButton"
+          t-att-class="{'o-disabled': !canConfirm}"
+          t-on-click="onRemoveDuplicates">
+          Remove duplicates
+        </button>
+      </div>
+
+      <div class="o-section" t-if="errorMessages.length">
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
+      </div>
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-SettingsPanel">
     <div class="o-settings-panel">
       <div class="o-section">
@@ -3691,7 +3896,7 @@
 
   <t t-name="o-spreadsheet-SidePanelErrors">
     <t t-foreach="props.messages" t-as="msg" t-key="msg">
-      <div class="d-flex align-items-center" t-att-class="divClasses">
+      <div class="d-flex align-items-center o-side-panel-error" t-att-class="divClasses">
         <t t-call="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION"/>
         <span t-esc="msg"/>
       </div>
@@ -3764,13 +3969,28 @@
           focusComposer="focusTopBarComposer"
           dropdownMaxHeight="gridHeight"
         />
-        <Grid
-          sidePanelIsOpen="sidePanel.isOpen"
-          focusComposer="focusGridComposer"
-          exposeFocus="(focus) => this._focusGrid = focus"
-          onComposerContentFocused="() => this.onGridComposerContentFocused()"
-          onGridComposerCellFocused="(content, selection) => this.onGridComposerCellFocused(content, selection)"
-        />
+        <div
+          class="o-grid-container"
+          t-att-class="{'o-two-columns': !sidePanel.isOpen}"
+          t-att-style="gridContainerStyle"
+          t-on-click="this.focusGrid">
+          <div class="o-top-left"/>
+          <div class="o-column-groups">
+            <HeaderGroupContainer layers="colLayers" dimension="'COL'"/>
+          </div>
+          <div class="o-row-groups">
+            <HeaderGroupContainer layers="rowLayers" dimension="'ROW'"/>
+          </div>
+          <div class="o-group-grid overflow-hidden">
+            <Grid
+              sidePanelIsOpen="sidePanel.isOpen"
+              focusComposer="focusGridComposer"
+              exposeFocus="(focus) => this._focusGrid = focus"
+              onComposerContentFocused="() => this.onGridComposerContentFocused()"
+              onGridComposerCellFocused="(content, selection) => this.onGridComposerCellFocused(content, selection)"
+            />
+          </div>
+        </div>
         <SidePanel
           t-if="sidePanel.isOpen"
           onCloseSidePanel="() => this.closeSidePanel()"
@@ -3966,7 +4186,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.5.0-alpha.6';
-  __info__.date = '2023-08-30T08:46:09.342Z';
-  __info__.hash = '7be8418';
+  __info__.version = '16.5.0-alpha.7';
+  __info__.date = '2023-09-12T12:16:14.354Z';
+  __info__.hash = '5dfa942';
 -->
