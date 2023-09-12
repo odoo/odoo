@@ -859,7 +859,7 @@
                                         </t>
                                     </select>
                                 </t>
-                                <t t-if="a.display_type == 'radio' or a.display_type == 'pills'">
+                                <t t-if="a.display_type in ('radio', 'pills', 'multi')">
                                     <div class="flex-column mb-3">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <div class="form-check mb-1">
@@ -1033,12 +1033,9 @@
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
                                         <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
-                                        <t t-if="combination" t-call="website_sale.variants">
+                                        <t t-call="website_sale.variants">
                                             <t t-set="ul_class" t-valuef="flex-column" />
                                             <t t-set="parent_combination" t-value="None" />
-                                        </t>
-                                        <t t-else="">
-                                            <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
                                         </t>
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>

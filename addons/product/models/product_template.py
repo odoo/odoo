@@ -953,12 +953,17 @@ class ProductTemplate(models.Model):
         if ignore_no_variant:
             attribute_lines = attribute_lines._without_no_variant_attributes()
 
-        if len(combination) != len(attribute_lines):
+        attribute_lines_without_multi = attribute_lines.filtered(
+            lambda l: l.attribute_id.display_type != 'multi')
+        combination_without_multi = combination.filtered(
+            lambda l: l.attribute_line_id.attribute_id.display_type != 'multi')
+
+        if len(combination_without_multi) != len(attribute_lines_without_multi):
             # number of attribute values passed is different than the
             # configuration of attributes on the template
             return False
 
-        if attribute_lines != combination.attribute_line_id:
+        if attribute_lines_without_multi != combination_without_multi.attribute_line_id:
             # combination has different attributes than the ones configured on the template
             return False
 
@@ -1189,6 +1194,16 @@ class ProductTemplate(models.Model):
         while True:
             current_line_values = product_template_attribute_values_per_line[line_index]
             current_ptav_index = value_index_per_line[line_index]
+
+            # For multi-checkbox attribute, the list is empty as we want to start without any selected value
+            if not current_line_values:
+                if line_index == len(product_template_attribute_values_per_line) - 1:
+                    # submit combination if we're on the last line
+                    yield partial_combination
+                else:
+                    line_index += 1
+                    continue
+
             current_ptav = current_line_values[current_ptav_index]
 
             # removing exclusions from current_ptav as we're removing it from partial_combination
@@ -1258,16 +1273,18 @@ class ProductTemplate(models.Model):
         necessary_values = necessary_values or self.env['product.template.attribute.value']
         necessary_attribute_lines = necessary_values.mapped('attribute_line_id')
         attribute_lines = self.valid_product_template_attribute_line_ids.filtered(
-            lambda ptal: ptal not in necessary_attribute_lines and (
-                ptal.attribute_id.display_type != 'multi'))
+            lambda ptal: ptal not in necessary_attribute_lines)
 
         if not attribute_lines and self._is_combination_possible(necessary_values, parent_combination):
             yield necessary_values
 
-        product_template_attribute_values_per_line = [
-            ptal.product_template_value_ids._only_active()
-            for ptal in attribute_lines
-        ]
+        product_template_attribute_values_per_line = []
+        for ptal in attribute_lines:
+            if ptal.attribute_id.display_type != 'multi':
+                values_to_add = ptal.product_template_value_ids._only_active()
+            else:
+                values_to_add = self.env['product.template.attribute.value']
+            product_template_attribute_values_per_line.append(values_to_add)
 
         for partial_combination in self._cartesian_product(product_template_attribute_values_per_line, parent_combination):
             combination = partial_combination + necessary_values
