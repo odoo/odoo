@@ -1286,7 +1286,7 @@ class AccountMoveLine(models.Model):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
         # Make an explicit order because we will need to reverse it
-        order = (order or self._order) + ', id'
+        order = order + ', id' if order else self._order
         # Add the domain and order by in order to compute the cumulated balance in _compute_cumulated_balance
         contextualized = self.with_context(
             domain_cumulated_balance=to_tuple(domain or []),
@@ -1301,6 +1301,8 @@ class AccountMoveLine(models.Model):
         """
         create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
         create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
+        create_index(self._cr, 'account_move_line__unreconciled_index', 'account_move_line', ['account_id', 'partner_id'],
+                     where="(reconciled IS NULL OR reconciled = false OR reconciled IS NOT true) AND parent_state = 'posted'")
         super().init()
 
     def default_get(self, fields_list):
