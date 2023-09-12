@@ -307,7 +307,7 @@
                                     <field name="reserved_availability" string="Reserved"
                                         column_invisible="parent.state in ['draft', 'done'] or parent.picking_type_code in ['incoming', 'outgoing'] or parent.immediate_transfer"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
-                                    <field name="quantity_done" string="Done" column_invisible="parent.state == 'draft' and not parent.immediate_transfer" readonly="not product_id"
+                                    <field name="quantity_done" string="Done" column_invisible="parent.state == 'draft' and not parent.immediate_transfer" readonly="not is_quantity_done_editable"
                                         decoration-danger="quantity_done > product_uom_qty"/>
                                     <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
                                     <field name="lot_ids" widget="many2many_tags"
