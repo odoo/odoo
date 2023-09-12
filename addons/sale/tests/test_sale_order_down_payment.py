@@ -501,11 +501,11 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # keys
             ['account_id',               'tax_ids',               'balance', 'price_total'],
             # base lines
-            [self.revenue_account.id,    tax_21_a.ids,            -82.64,     100.01      ],
-            [self.revenue_account.id,    tax_21_b.ids,            -82.64,     99.99       ],
+            [self.revenue_account.id,    tax_21_a.ids,            -82.64,     100.0       ],
+            [self.revenue_account.id,    tax_21_b.ids,            -82.64,     100.0       ],
             # taxes
-            [self.tax_account.id,        self.env['account.tax'], -17.37,     0.0         ],
-            [self.tax_account.id,        self.env['account.tax'], -17.35,     0.0         ],
+            [self.tax_account.id,        self.env['account.tax'], -17.36,     0.0         ],
+            [self.tax_account.id,        self.env['account.tax'], -17.36,     0.0         ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'], 200.0,      0.0         ],
         ]
@@ -532,19 +532,19 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # line section
             [self.env['account.account'], self.env['account.tax'], 0.0,      0.0          ],
             # down payment
-            [self.revenue_account.id,     tax_21_a.ids,            82.64,    -100.01      ],
-            [self.revenue_account.id,     tax_21_b.ids,            82.64,    -99.99       ],
+            [self.revenue_account.id,     tax_21_a.ids,            82.64,    -100.0       ],
+            [self.revenue_account.id,     tax_21_b.ids,            82.64,    -100.0       ],
             # taxes
-            [self.tax_account.id,         self.env['account.tax'], -192.63,  0.0          ],
-            [self.tax_account.id,         self.env['account.tax'], -192.65,  0.0          ],
+            [self.tax_account.id,         self.env['account.tax'], -192.64,  0.0          ],
+            [self.tax_account.id,         self.env['account.tax'], -192.64,  0.0          ],
             # receivable
             [self.receivable_account.id,  self.env['account.tax'], 2220.0,   0.0          ],
             # down payment
-            [self.revenue_account.id,     tax_21_a.ids,            -82.64,   100.01       ],
-            [self.revenue_account.id,     tax_21_b.ids,            -82.64,   99.99        ],
+            [self.revenue_account.id,     tax_21_a.ids,            -82.64,   100.0        ],
+            [self.revenue_account.id,     tax_21_b.ids,            -82.64,   100.0        ],
             # taxes
-            [self.tax_account.id,         self.env['account.tax'], -17.37,   0.0          ],
-            [self.tax_account.id,         self.env['account.tax'], -17.35,   0.0          ],
+            [self.tax_account.id,         self.env['account.tax'], -17.36,   0.0          ],
+            [self.tax_account.id,         self.env['account.tax'], -17.36,   0.0          ],
             # receivable
             [self.receivable_account.id,  self.env['account.tax'], 200.0,    0.0          ],
         ]
