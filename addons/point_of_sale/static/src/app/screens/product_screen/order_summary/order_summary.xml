@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderSummary">
-        <div class="summary clearfix sticky-top w-100 py-2 px-3 bg-200 bg-opacity-50 text-end fw-bolder">
+        <div class="summary clearfix w-100 py-2 px-3 bg-200 bg-opacity-50 text-end fw-bolder">
             <t t-set="_total" t-value="getTotal()" />
             <t t-set="_tax" t-value="getTax()" />
             <div class="line">
