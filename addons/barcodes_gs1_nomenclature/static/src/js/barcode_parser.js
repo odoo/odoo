@@ -22,6 +22,13 @@ patch(BarcodeParser, "barcodes_gs1_nomenclature.BarcodeParser static", {
 });
 
 patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
+    setup: function(attributes) {
+        this._super(...arguments);
+        // Use the nomenclature's separaor regex, else use an impossible one.
+        const nomenclatureSeparator = this.nomenclature && this.nomenclature.gs1_separator_fnc1;
+        this.gs1SeparatorRegex = new RegExp(nomenclatureSeparator || '.^', 'g');
+    },
+
     /**
      * Convert YYMMDD GS1 date into a Date object
      *
@@ -107,6 +114,7 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
         const results = [];
         const rules = this.nomenclature.rules.filter(rule => rule.encoding === 'gs1-128');
         const separatorReg = FNC1_CHAR + "?";
+        barcode = this._convertGS1Separators(barcode);
 
         while (barcode.length > 0) {
             const barcodeLength = barcode.length;
@@ -142,5 +150,18 @@ patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
             return this.gs1_decompose_extanded(barcode);
         }
         return this._super(...arguments);
+    },
+
+    /**
+     * The FNC1 is the default GS1 separator character, but through the field `gs1_separator_fnc1`,
+     * the user has the possibility to define one or multiple characters to use as separator as
+     * a regex. This method replaces all of the matches in the given barcode by the FNC1.
+     *
+     * @param {string} barcode
+     * @returns {string}
+     */
+    _convertGS1Separators: function (barcode) {
+        barcode = barcode.replace(this.gs1SeparatorRegex, FNC1_CHAR);
+        return barcode;
     },
 });
