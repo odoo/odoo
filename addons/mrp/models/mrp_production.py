@@ -814,6 +814,8 @@ class MrpProduction(models.Model):
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
+            if self.env.user.has_group('base.group_user') and 'check_ids' in self.workorder_ids and 'lot_producing_id' in vals:
+                self.workorder_ids.check_ids.filtered(lambda c: c.test_type_id.technical_name == 'register_production').write({'lot_id': vals['lot_producing_id']})
         if 'move_raw_ids' in vals and self.state not in ['draft', 'cancel', 'done']:
             # When adding a move raw, it should have the source location's `warehouse_id`.
             # Before, it was handle by an onchange, now it's forced if not already in vals.
