@@ -43,6 +43,5 @@ You need to configure your certificate and the tax agency.
     'external_dependencies': {
         'python': ['pyOpenSSL'],
     },
-    'post_init_hook': '_l10n_es_edi_post_init',
     'license': 'LGPL-3',
 }

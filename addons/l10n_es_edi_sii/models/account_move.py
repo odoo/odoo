@@ -22,15 +22,25 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_type', 'company_id')
+    @api.depends('move_type', 'company_id', 'invoice_line_ids.tax_ids')
     def _compute_l10n_es_edi_is_required(self):
         for move in self:
+            has_tax = True
+            # Check it is not an importation invoice (which will be report through the DUA invoice)
+            if move.is_purchase_document():
+                taxes = move.invoice_line_ids.tax_ids
+                has_tax = any(t.l10n_es_type and t.l10n_es_type != 'ignore' for t in taxes)
             move.l10n_es_edi_is_required = move.is_invoice() \
                                            and move.country_code == 'ES' \
-                                           and move.company_id.l10n_es_edi_tax_agency
+                                           and move.company_id.l10n_es_edi_tax_agency \
+                                           and has_tax
 
     @api.depends('l10n_es_edi_is_required')
     def _compute_edi_show_cancel_button(self):
         super()._compute_edi_show_cancel_button()
         for move in self.filtered('l10n_es_edi_is_required'):
             move.edi_show_cancel_button = False
+
+    def _l10n_es_is_dua(self):
+        self.ensure_one()
+        return any(t.l10n_es_type == 'dua' for t in self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy())

@@ -78,10 +78,12 @@ class AccountEdiFormat(models.Model):
 
         def filter_to_apply(base_line, tax_values):
             # For intra-community, we do not take into account the negative repartition line
-            return tax_values['tax_repartition_line'].factor_percent > 0.0
+            return (tax_values['tax_repartition_line'].factor_percent > 0.0
+                    and tax_values['tax_repartition_line'].tax_id.amount != -100.0
+                    and tax_values['tax_repartition_line'].tax_id.l10n_es_type != 'ignore')
 
         def full_filter_invl_to_apply(invoice_line):
-            if 'ignore' in invoice_line.tax_ids.flatten_taxes_hierarchy().mapped('l10n_es_type'):
+            if all(t == 'ignore' for t in invoice_line.tax_ids.flatten_taxes_hierarchy().mapped('l10n_es_type')):
                 return False
             return filter_invl_to_apply(invoice_line) if filter_invl_to_apply else True
 
@@ -119,7 +121,6 @@ class AccountEdiFormat(models.Model):
         tax_subject_info_list = []
         tax_subject_isp_info_list = []
         for tax_values in tax_details['tax_details'].values():
-
             if invoice.is_sale_document():
                 # Customer invoices
 
@@ -160,7 +161,7 @@ class AccountEdiFormat(models.Model):
 
             else:
                 # Vendor bills
-                if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc'):
+                if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc', 'dua'):
                     tax_amount_deductible += tax_values['tax_amount']
                 elif tax_values['l10n_es_type'] == 'retencion':
                     tax_amount_retention += tax_values['tax_amount']
@@ -287,6 +288,8 @@ class AccountEdiFormat(models.Model):
                 export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
                 invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02' if export_exempts else '01'
             else:
+                if invoice._l10n_es_is_dua():
+                    partner_info = self._l10n_es_edi_get_partner_info(invoice.company_id.partner_id)
                 info['IDFactura']['IDEmisorFactura'] = partner_info
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
                 if not is_simplified:
@@ -313,6 +316,8 @@ class AccountEdiFormat(models.Model):
                 invoice_node['TipoRectificativa'] = 'I'
             elif invoice.move_type == 'in_invoice':
                 invoice_node['TipoFactura'] = 'F1'
+                if invoice._l10n_es_is_dua():
+                    invoice_node['TipoFactura'] = 'F5'
             elif invoice.move_type == 'in_refund':
                 invoice_node['TipoFactura'] = 'R4'
                 invoice_node['TipoRectificativa'] = 'I'
@@ -392,7 +397,6 @@ class AccountEdiFormat(models.Model):
                     + tax_details_info_other_vals['tax_details']['tax_amount']
                     - tax_details_info_other_vals['tax_amount_retention']
                 ), 2)
-
                 invoice_node['CuotaDeducible'] = round(sign * (
                     tax_details_info_isp_vals['tax_amount_deductible']
                     + tax_details_info_other_vals['tax_amount_deductible']
@@ -530,11 +534,14 @@ class AccountEdiFormat(models.Model):
             else:
                 # 'ref' can be the same for different partners.
                 candidates = invoices.filtered(lambda x: x.ref[:60] == invoice_number)
-                if len(candidates) >= 1:
+                if len(candidates) > 1:
                     respl_partner_info = respl.IDFactura.IDEmisorFactura
                     inv = None
                     for candidate in candidates:
-                        partner_info = self._l10n_es_edi_get_partner_info(candidate.commercial_partner_id)
+                        partner = candidate.commercial_partner_id
+                        if candidate._l10n_es_is_dua():
+                            partner = candidate.company_id.partner_id
+                        partner_info = self._l10n_es_edi_get_partner_info(partner)
                         if partner_info.get('NIF') and partner_info['NIF'] == respl_partner_info.NIF:
                             inv = candidate
                             break

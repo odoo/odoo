@@ -1056,3 +1056,48 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
                 'PeriodoLiquidacion': {'Periodo': '01', 'Ejercicio': '2019'},
             })
+
+    def test_170_in_invoice_dua(self):
+        with freeze_time(self.frozen_today), patch(
+                'odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
+                new=mocked_l10n_es_edi_call_web_service_sign
+        ):
+            invoice = self.create_invoice(
+                move_type='in_invoice',
+                ref='fakedua',
+                partner_id=self.partner_b.id,
+                currency_id=self.currency_data['currency'].id,
+                l10n_es_registration_date='2019-01-02',
+                invoice_line_ids=[
+                    {
+                        'tax_ids': [(6, 0, (self._get_tax_by_xml_id('p_iva21_ibc_group').ids))],
+                    },
+                ],
+            )
+            invoice.action_post()
+
+            generated_files = self._process_documents_web_services(invoice, {'es_sii'})
+            self.assertTrue(generated_files)
+
+            json_file = json.loads(generated_files[0].decode())[0]
+            self.assertEqual(json_file, {
+                'PeriodoLiquidacion': {'Ejercicio': '2019', 'Periodo': '01'},
+                'IDFactura': {
+                    'FechaExpedicionFacturaEmisor': '01-01-2019',
+                    'IDEmisorFactura': {'NIF': '59962470K'},
+                    'NumSerieFacturaEmisor': 'fakedua'
+                },
+                'FacturaRecibida': {
+                    'DescripcionOperacion': 'manual',
+                    'Contraparte': {'NIF': '59962470K', 'NombreRazon': 'partner_b'},
+                    'FechaRegContable': '02-01-2019',
+                    'ClaveRegimenEspecialOTrascendencia': '01',
+                    'TipoFactura': 'F5',
+                    'DesgloseFactura': {
+                        'DesgloseIVA': {
+                            'DetalleIVA': [{'BaseImponible': 500.0, 'TipoImpositivo': 21.0, 'CuotaSoportada': 105.0}]
+                        }
+                    },
+                    'ImporteTotal': 605.0,
+                    'CuotaDeducible': 105.0
+                }})

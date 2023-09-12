@@ -28,6 +28,7 @@ class AccountTax(models.Model):
             ('no_deducible', 'No Deducible'),
             ('retencion', 'Retencion'),
             ('recargo', 'Recargo de Equivalencia'),
+            ('dua', 'DUA'),
             ('ignore', 'Ignore even the base amount'),
         ],
         string="Tax Type (Spain)", default='sujeto'
