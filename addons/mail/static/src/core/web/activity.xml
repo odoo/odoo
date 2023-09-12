@@ -32,7 +32,7 @@
                 <table class="o-mail-Activity-details table table-sm mt-2">
                     <tbody>
                         <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="activity.activity_type_id[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="activity.create_date"/> by <t t-esc="activity.create_uid[1]"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="displayCreateDate"/> by <t t-esc="activity.create_uid[1]"/></td></tr>
                         <tr><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="activity.user_id[1]"/></td></tr>
                         <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="activity.date_deadline"/></td></tr>
                     </tbody>

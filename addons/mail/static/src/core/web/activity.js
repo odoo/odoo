@@ -9,6 +9,7 @@ import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_pop
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -48,6 +49,12 @@ export class Activity extends Component {
             return _t("“%s”", this.props.data.summary);
         }
         return this.props.data.display_name;
+    }
+
+    get displayCreateDate() {
+        return deserializeDateTime(this.props.data.create_date).toLocaleString(
+            luxon.DateTime.DATETIME_SHORT_WITH_SECONDS
+        );
     }
 
     updateDelayAtNight() {
