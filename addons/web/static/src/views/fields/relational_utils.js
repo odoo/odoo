@@ -301,7 +301,7 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (!this.props.noSearchMore &&  records.length > 0) {
+        if (!this.props.noSearchMore && records.length > 0) {
             options.push({
                 label: _t("Search More..."),
                 action: this.onSearchMore.bind(this, request),
@@ -508,7 +508,7 @@ export class X2ManyFieldDialog extends Component {
         this.title = this.props.title;
         this.contentClass = computeViewClassName("form", this.archInfo.xmlDoc);
         useSubEnv({ config: this.props.config });
-        this.env.dialogData.close = () => this.discard();
+        this.env.dialogData.dismiss = () => this.discard();
 
         useBus(this.record.model.bus, "update", () => this.render(true));
 
@@ -633,7 +633,7 @@ X2ManyFieldDialog.props = {
     save: Function,
     title: String,
     delete: { optional: true },
-    deleteButtonLabel: {optional: true},
+    deleteButtonLabel: { optional: true },
     config: Object,
 };
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
