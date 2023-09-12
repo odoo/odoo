@@ -144,7 +144,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': billed, 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
         )
 
         self.assertDictEqual(
@@ -192,7 +192,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': billed, 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
         )
 
         expense_sheet._do_refuse('Test Cancel Expense')

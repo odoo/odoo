@@ -45,34 +45,42 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
-                    <field name="company_id" column_invisible="True" readonly="state not in ['draft', 'refused']"/>
+                    <field name="company_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="attachment_number" column_invisible="True"/>
+                    <field name="is_editable" column_invisible="True"/>
+                    <field name="sheet_is_editable" column_invisible="True"/>
                     <field name="date" optional="show" readonly="state == 'done'"/>
-                    <field name="product_id" optional="hide" readonly="state == 'done'"/>
-                    <field name="name" readonly="state == 'done'"/>
-                    <field name="employee_id" widget="many2one_avatar_user" readonly="state in ['approved', 'done']"/>
+                    <field name="product_id" optional="hide" readonly="not sheet_is_editable"/>
+                    <field name="name" readonly="not sheet_is_editable"/>
+                    <field name="employee_id" widget="many2one_avatar_user" readonly="not sheet_is_editable"/>
                     <field name="sheet_id" optional="show" readonly="1" column_invisible="not context.get('show_report', False)"/>
-                    <field name="payment_mode" optional="show" readonly="state in ['approved', 'done', 'reported']"/>
+                    <field name="payment_mode" optional="show" readonly="not sheet_is_editable"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
-                    <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly" readonly="0"/>
-                    <field name="reference" optional="hide" groups="account.group_account_readonly"/>
+                    <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"
+                           readonly="not sheet_is_editable"/>
+                    <field name="reference" optional="hide" groups="account.group_account_readonly" readonly="not sheet_is_editable"/>
                     <field name="analytic_distribution" widget="analytic_distribution"
                            optional="show"
                            groups="analytic.group_analytic_accounting"
+                           readonly="not sheet_is_editable"
                            options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
-                    <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
+                    <field name="account_id" optional="hide" groups="account.group_account_readonly"
+                           readonly="not sheet_is_editable"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="1"/>
-                    <field name="unit_amount_display" string="Unit Price" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
-                    <field name="quantity" optional="hide" readonly="state == 'done'"/>
-                    <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field name="unit_amount" string="Unit Price" optional="hide" widget="monetary" readonly="True"
+                           options="{'currency_field': 'company_currency_id'}"/>
+                    <field name="quantity" optional="hide" readonly="not sheet_is_editable"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tags"
+                           groups="account.group_account_invoice,account.group_account_readonly"
+                           readonly="not sheet_is_editable"/>
                     <field name="amount_tax_company" sum="Total Taxes"
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="attachment_number" widget="attachment_number" nolabel="1"/>
-                    <field name="total_amount_company" sum="Total Amount" widget='monetary'
+                    <field name="total_amount_company" sum="Total Amount" widget='monetary' readonly="not sheet_is_editable"
                            options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
-                    <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1" groups="base.group_multi_currency"/>
-                    <field name="currency_id" optional="hide" groups="base.group_multi_currency" readonly="state in ['approved', 'done', 'reported']"/>
+                    <field name="total_amount" widget='monetary' readonly="not sheet_is_editable" options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1" groups="base.group_multi_currency"/>
+                    <field name="currency_id" optional="hide" readonly="True" groups="base.group_multi_currency"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state in ['draft', 'reported']" decoration-success="state in ['approved', 'done']"
                            decoration-warning="state == 'submitted'" decoration-danger="state == 'refused'" widget="badge"/>
                 </tree>
@@ -163,21 +171,24 @@
                             <div invisible="not product_has_cost">
                                 <div class="o_row">
                                     <field name="quantity" class="oe_inline" readonly="not sheet_is_editable"/>
-                                    <field name="product_uom_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    <field name="product_uom_id" required="1" force_save="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"
+                                           readonly="not sheet_is_editable"/>
                                 </div>
                             </div>
 
                             <!-- CASE: product has no cost defined -> user input amount (in other currency if multi-currency) -->
                             <label for="total_amount" string="Total" invisible="product_has_cost"/>
                             <div class="o_row" invisible="product_has_cost">
-                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="not sheet_is_editable" class="oe_inline"/>
-                                <field name="currency_id" style="max-width: 25%;" groups="base.group_multi_currency" options="{'no_create': True}" readonly="state in ['approved', 'done', 'reported']"/>
+                                <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="not sheet_is_editable" class="oe_inline mw-50 me-0"/>
+                                <field name="currency_id" class="mw-25 ms-0"  groups="base.group_multi_currency" options="{'no_create': True}"
+                                       readonly="not sheet_is_editable"/>
                             </div>
 
                             <!-- CASE: converter when currency is different than the company one -->
                             <label for="total_amount_company" string="" invisible="same_currency and not product_has_cost"/>
                             <div class="o_row" invisible="same_currency and not product_has_cost">
-                                <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" class="oe_inline"/>
+                                <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}"
+                                       readonly="not sheet_is_editable" class="oe_inline"/>
                                 <field name="label_convert_rate" class="ps-0"/>
                             </div>
 
@@ -186,30 +197,32 @@
                                 <field name="tax_ids"
                                        force_save="1"
                                        widget="many2many_tags"
-                                       readonly="not is_editable"
+                                       readonly="not sheet_is_editable"
                                        options="{'no_create': True}"/>
                                 <field name="amount_tax"/>
                             </div>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_user" options="{'no_create': True}"  readonly="state in ['approved', 'done']"/>
+                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"
+                                   context="{'default_company_id': company_id}" widget="many2one_avatar_user"
+                                   options="{'no_create': True}" readonly="not sheet_is_editable"/>
                             <label id="lo" for="payment_mode" invisible="product_has_cost"/>
                             <div id="payment_mode" invisible="product_has_cost">
-                                <field name="payment_mode" widget="radio" readonly="state in ['approved', 'done', 'reported']"/>
+                                <field name="payment_mode" widget="radio" readonly="sheet_id"/>
                             </div>
                         </group><group>
                             <field name="reference" groups="account.group_account_readonly" invisible="product_has_cost" readonly="not is_ref_editable"/>
                             <field name="date" readonly="not sheet_is_editable"/>
-                            <field name="accounting_date" invisible="not accounting_date or state not in ['approved', 'done']" />
-                            <field name="account_id" options="{'no_create': True}" domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]" groups="account.group_account_readonly" readonly="not is_editable or not sheet_is_editable" context="{'default_company_id': company_id}"/>
+                            <field name="accounting_date" invisible="not accounting_date or state not in ['approved', 'done']" readonly=" not sheet_is_editable"/>
+                            <field name="account_id" options="{'no_create': True}" domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]" groups="account.group_account_readonly" readonly="not sheet_is_editable" context="{'default_company_id': company_id}"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 groups="analytic.group_analytic_accounting"
                                 options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"
-                                readonly="not is_editable"/>
-                            <field name="company_id" groups="base.group_multi_company" readonly="state not in ['draft', 'refused']"/>
+                                readonly="not sheet_is_editable"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="not sheet_is_editable"/>
                         </group>
                     </group>
                     <div>
-                        <field name="description" placeholder="Notes..." readonly="state not in ['draft', 'refused', 'reported']"/>
+                        <field name="description" placeholder="Notes..." readonly="not sheet_is_editable"/>
                     </div>
                 </sheet>
                 <div class="o_attachment_preview o_center_attachment"/>
