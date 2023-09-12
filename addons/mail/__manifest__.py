@@ -143,7 +143,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             'mail/static/src/views/fields/**/*',
         ],
-        "web.dark_mode_assets_backend": [
+        "web.assets_web_dark": [
             'mail/static/src/**/*.dark.scss',
         ],
         'mail.assets_discuss_public_test_tours': [

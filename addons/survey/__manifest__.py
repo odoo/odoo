@@ -100,7 +100,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/js/tours/survey_tour.js',
         ],
-        "web.dark_mode_assets_backend": [
+        "web.assets_web_dark": [
             'survey/static/src/scss/*.dark.scss',
         ],
         'web.assets_tests': [

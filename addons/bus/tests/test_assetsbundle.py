@@ -16,7 +16,7 @@ class BusWebTests(odoo.tests.HttpCase):
         """
         db_name = self.env.registry.db_name
         # start from a clean slate
-        self.env['ir.attachment'].search([('name', 'ilike', 'web.assets_backend%')]).unlink()
+        self.env['ir.attachment'].search([('name', 'ilike', 'web.assets_web%')]).unlink()
         self.env.registry.clear_cache()
 
         sendones = []

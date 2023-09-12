@@ -154,6 +154,12 @@ This module provides the core of the Odoo Web Client.
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.scss'),
         ],
+        'web.assets_web': [
+            ('include', 'web.assets_backend'),
+            'web/static/src/main.js',
+            'web/static/src/legacy/legacy_setup.js',
+            'web/static/src/start.js',
+        ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
@@ -280,11 +286,6 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
-        'web.assets_backend_prod_only': [
-            'web/static/src/main.js',
-            'web/static/src/start.js',
-            'web/static/src/legacy/legacy_setup.js',
-        ],
         # Optional Bundle for PDFJS lib
         # Since PDFJS is quite huge (80000≈ lines), please only load it when it is necessary.
         # For now, it is only use to display the PDF slide Viewer during an embed.
@@ -351,8 +352,8 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
         # COLOR SCHEME BUNDLES
         # ---------------------------------------------------------------------
-        "web.dark_mode_assets_backend": [
-            ('include', 'web.assets_backend'),
+        "web.assets_web_dark": [
+            ('include', 'web.assets_web'),
             'web/static/src/**/*.dark.scss',
         ],
 
@@ -439,6 +440,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/ignore_missing_deps_stop.js',
         ],
         'web.tests_assets': [
+            ('include', 'web.assets_backend'),
+
             'web/static/tests/patch_translations.js',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
