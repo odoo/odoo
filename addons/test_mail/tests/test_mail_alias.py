@@ -90,6 +90,64 @@ class TestMailAlias(TestMailAliasCommon):
             self.assertEqual(ICP.get_param('mail.bounce.alias'), 'bounce+double.test')
             self.assertEqual(ICP.get_param('mail.catchall.alias'), 'catchall+double.test')
 
+    @users('erp_manager')
+    def test_alias_domain_company_check(self):
+        """ Check constraint trying to avoid ill-defined company setup aka
+        having an alias domain on parent record / record to update that does
+        not match the alias domain. """
+        misc_alias_domain = self.env['mail.alias.domain'].create({'name': 'misc.com'})
+        record_mc_c1, record_mc_c2 = self.env['mail.test.container.mc'].create([
+            {
+                'alias_name': 'Test1',
+                'company_id': self.company_admin.id,
+            }, {
+                'alias_name': 'Test2',
+                'company_id': self.company_2.id,
+            }
+        ])
+        alias_mc_c1, alias_mc_c2 = record_mc_c1.alias_id, record_mc_c2.alias_id
+        self.assertEqual(
+            (alias_mc_c1 + alias_mc_c2).alias_parent_model_id,
+            self.env['ir.model']._get('mail.test.container.mc'))
+        self.assertEqual(
+            (alias_mc_c1 + alias_mc_c2).mapped('alias_parent_thread_id'),
+            (record_mc_c1 + record_mc_c2).ids)
+        self.assertEqual(alias_mc_c1.alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(alias_mc_c2.alias_domain_id, self.mail_alias_domain_c2)
+
+        # mail_alias_domain_c2 is linked to a conflicting company
+        with self.assertRaises(exceptions.ValidationError):
+            record_mc_c1.alias_domain_id = self.mail_alias_domain_c2
+        with self.assertRaises(exceptions.ValidationError):
+            alias_mc_c1.sudo().alias_domain_id = self.mail_alias_domain_c2
+        # misc_alias_domain is not linked to any company, therefore ok
+        record_mc_c1.alias_domain_id = misc_alias_domain
+
+        # alias updating records
+        record_upd_c1, record_upd_c2 = self.env['mail.test.alias.optional'].sudo().create([
+            {
+                'alias_name': 'Update C1',
+                'company_id': self.company_admin.id,
+            }, {
+                'alias_name': 'Update C2',
+                'company_id': self.company_2.id,
+            }
+        ])
+        alias_update_c1, alias_update_c2 = record_upd_c1.alias_id, record_upd_c2.alias_id
+        self.assertEqual(
+            (alias_update_c1 + alias_update_c2).mapped('alias_force_thread_id'),
+            (record_upd_c1 + record_upd_c2).ids)
+        self.assertEqual(alias_update_c1.alias_domain_id, self.mail_alias_domain)
+        self.assertEqual(alias_update_c2.alias_domain_id, self.mail_alias_domain_c2)
+
+        # mail_alias_domain_c2 is linked to a conflicting company
+        with self.assertRaises(exceptions.ValidationError):
+            record_upd_c1.alias_domain_id = self.mail_alias_domain_c2
+        with self.assertRaises(exceptions.ValidationError):
+            alias_update_c1.sudo().alias_domain_id = self.mail_alias_domain_c2
+        # misc_alias_domain is not linked to any company, therefore ok
+        record_upd_c1.alias_domain_id = misc_alias_domain
+
     @users('admin')
     def test_alias_name_unique(self):
         """ Check uniqueness constraint on alias names, at create and update.
