@@ -5,19 +5,21 @@ import odoo
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase
+from odoo.tools.misc import mute_logger
 
 
 class Feedback(TransactionCase):
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.group0 = self.env['res.groups'].create({'name': "Group 0"})
-        self.group1 = self.env['res.groups'].create({'name': "Group 1"})
-        self.group2 = self.env['res.groups'].create({'name': "Group 2"})
-        self.user = self.env['res.users'].create({
+        cls.group0 = cls.env['res.groups'].create({'name': "Group 0"})
+        cls.group1 = cls.env['res.groups'].create({'name': "Group 1"})
+        cls.group2 = cls.env['res.groups'].create({'name': "Group 2"})
+        cls.user = cls.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'groups_id': [Command.set([self.group2.id, self.env.ref('base.group_user').id])],
+            'groups_id': [Command.set([cls.group2.id, cls.env.ref('base.group_user').id])],
         })
 
 
@@ -90,28 +92,30 @@ class TestSudo(Feedback):
 class TestACLFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.model.access errors
     """
-    def setUp(self):
-        super().setUp()
-        ACL = self.env['ir.model.access']
-        m = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        ACL = cls.env['ir.model.access']
+        m = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
         ACL.search([('model_id', '=', m.id)]).unlink()
         ACL.create({
             'name': "read",
             'model_id': m.id,
-            'group_id': self.group1.id,
+            'group_id': cls.group1.id,
             'perm_read': True,
         })
         ACL.create({
             'name':  "create-and-read",
             'model_id': m.id,
-            'group_id': self.group0.id,
+            'group_id': cls.group0.id,
             'perm_read': True,
             'perm_create': True,
         })
-        self.record = self.env['test_access_right.some_obj'].create({'val': 5})
+        cls.record = cls.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
-        self.env.flush_all()
-        self.env.invalidate_all()
+        cls.env.flush_all()
+        cls.env.invalidate_all()
 
     def test_no_groups(self):
         """ Operation is never allowed
@@ -159,21 +163,20 @@ Contact your administrator to request access if necessary."""
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
-    def setUp(self):
-        super().setUp()
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
-        self.model = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
-        self.record = self.env['test_access_right.some_obj'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'users': [Command.link(cls.user.id)]})
+        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+        cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).with_user(self.user)
-
+        }).with_user(cls.user)
 
     def debug_mode(self):
         odoo.http._request_stack.push(Mock(db=self.env.cr.dbname, env=self.env, debug=True))
         self.addCleanup(odoo.http._request_stack.pop)
         self.env.flush_all()
         self.env.invalidate_all()
-
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
         res = self.env['ir.rule'].create({
@@ -410,13 +413,17 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
 
 class TestFieldGroupFeedback(Feedback):
 
-    def setUp(self):
-        super().setUp()
-        self.record = self.env['test_access_right.some_obj'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).with_user(self.user)
+        }).with_user(cls.user)
+        cls.inherits_record = cls.env['test_access_right.inherits'].create({
+            'some_id': cls.record.id,
+        }).with_user(cls.user)
 
-
+    @mute_logger('odoo.models')
     def test_read(self):
         self.env.ref('base.group_no_one').write(
             {'users': [Command.link(self.user.id)]})
@@ -449,6 +456,7 @@ Fields:
 - forbidden3 (always forbidden)""" % self.user.id
         )
 
+    @mute_logger('odoo.models')
     def test_write(self):
         self.env.ref('base.group_no_one').write(
             {'users': [Command.link(self.user.id)]})
@@ -468,3 +476,46 @@ Fields:
 - forbidden2 (allowed for groups 'Test Group')"""
     % self.user.id
         )
+
+    @mute_logger('odoo.models')
+    def test_check_field_access_rights_domain(self):
+        with self.assertRaises(AccessError):
+            self.record.search([('forbidden3', '=like', 'blu%')])
+
+        with self.assertRaises(AccessError):
+            self.record.search([('parent_id.forbidden3', '=like', 'blu%')])
+
+        with self.assertRaises(AccessError):
+            self.record.search([('parent_id', 'any', [('forbidden3', '=like', 'blu%')])])
+
+        with self.assertRaises(AccessError):
+            self.inherits_record.search([('forbidden3', '=like', 'blu%')])
+
+    @mute_logger('odoo.models')
+    def test_check_field_access_rights_order(self):
+        self.record.search([], order='val')
+
+        with self.assertRaises(AccessError):
+            self.record.search([], order='forbidden3 DESC')
+
+        with self.assertRaises(AccessError):
+            self.record.search([], order='forbidden3')
+
+        with self.assertRaises(AccessError):
+            self.record.search([], order='val DESC,    forbidden3       DESC')
+
+    @mute_logger('odoo.models')
+    def test_check_field_access_rights_read_group(self):
+        self.record._read_group([], ['val'], [])
+
+        with self.assertRaises(AccessError):
+            self.record._read_group([('forbidden3', '=like', 'blu%')], ['val'])
+
+        with self.assertRaises(AccessError):
+            self.record._read_group([('parent_id.forbidden3', '=like', 'blu%')], ['val'])
+
+        with self.assertRaises(AccessError):
+            self.record._read_group([], ['forbidden3'])
+
+        with self.assertRaises(AccessError):
+            self.record._read_group([], [], ['forbidden3:array_agg'])

@@ -9,6 +9,7 @@ class SomeObj(models.Model):
 
     val = fields.Integer()
     categ_id = fields.Many2one('test_access_right.obj_categ')
+    parent_id = fields.Many2one('test_access_right.some_obj')
     company_id = fields.Many2one('res.company')
     forbidden = fields.Integer(
         groups='test_access_rights.test_group,!base.group_no_one,!base.group_public',
