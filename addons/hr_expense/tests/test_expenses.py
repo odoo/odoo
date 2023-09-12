@@ -25,15 +25,15 @@ class TestExpenses(TestExpenseCommon):
         expense1 = self.env['hr.expense'].create({
             'name': 'Dinner with client - Expenses',
             'employee_id': self.expense_employee.id,
-            'product_id': self.product_a.id,
-            'unit_amount': 350.00,
+            'product_id': self.product_c.id,
+            'total_amount': 350.00,
         })
 
         expense2 = self.env['hr.expense'].create({
             'name': 'Team building at Huy',
             'employee_id': employee.id,
-            'product_id': self.product_a.id,
-            'unit_amount': 2500.00,
+            'product_id': self.product_c.id,
+            'total_amount': 2500.00,
         })
 
         expense_sheet = self.env['hr.expense.sheet'].create({
@@ -68,8 +68,9 @@ class TestExpenses(TestExpenseCommon):
             'expense_line_ids': [(0, 0, {
                 'name': 'Car Travel Expenses',
                 'employee_id': self.expense_employee.id,
-                'product_id': self.product_a.id,
-                'unit_amount': 350.00,
+                'product_id': self.product_c.id,
+                'total_amount': 350.00,
+                'tax_ids': [Command.set(self.tax_purchase_a.ids)],
             })]
         })
 
@@ -148,8 +149,8 @@ class TestExpenses(TestExpenseCommon):
             'expense_line_ids': [(0, 0, {
                 'name': 'Car Travel Expenses',
                 'employee_id': self.expense_employee.id,
-                'product_id': self.product_a.id,
-                'unit_amount': 350.00,
+                'product_id': self.product_c.id,
+                'total_amount': 350.00,
                 'payment_mode': 'company_account',
             })]
         })
@@ -182,7 +183,7 @@ class TestExpenses(TestExpenseCommon):
                     'name': 'expense_company_currency',
                     'date': '2016-01-01',
                     'product_id': self.product_a.id,
-                    'unit_amount': 1000.0,
+                    'quantity': 1.25,
                     'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)],
                     'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
@@ -255,7 +256,7 @@ class TestExpenses(TestExpenseCommon):
             },
             # Product line (company currency):
             {
-                'debit': 869.57, # 1000 * 1:1 (rate) / 1.15 (incl. tax)
+                'debit': 869.57, # 1000 / 1.15 (incl. tax)
                 'credit': 0.0,
                 'amount_currency': 869.57,
                 'account_id': self.company_data['default_account_expense'].id,
@@ -602,8 +603,8 @@ class TestExpenses(TestExpenseCommon):
             self.env['hr.expense'].create({
                 'name': 'Car Travel Expenses',
                 'employee_id': self.expense_employee.id,
-                'product_id': self.product_a.id,
-                'unit_amount': 350.00,
+                'product_id': self.product_c.id,
+                'total_amount': 350.00,
                 'tax_ids': [(6, 0, [self.tax_purchase_a.id])],
                 'sheet_id': expense.id,
                 'analytic_distribution': {str(self.analytic_account_1.id): 100},
@@ -642,16 +643,16 @@ class TestExpenses(TestExpenseCommon):
                 (0, 0, {
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'employee_id': self.expense_employee.id,
                     'tax_ids': tax
                 }),
                 (0, 0, {
                     'name': 'expense_2',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 1.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 1.0,
                     'employee_id': self.expense_employee.id,
                     'tax_ids': tax
                 }),
@@ -677,8 +678,8 @@ class TestExpenses(TestExpenseCommon):
                 (0, 0, {
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'employee_id': self.expense_employee.id
                 }),
             ],
@@ -744,8 +745,9 @@ class TestExpenses(TestExpenseCommon):
                     'name': 'expense_1',
                     'date': '2022-01-05',
                     'account_id': account_expense_1.id,
-                    'product_id': self.product_a.id,
-                    'unit_amount': 115.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 115.0,
+                    'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                     'employee_id': self.expense_employee.id,
                 }),
                 Command.create({
@@ -753,8 +755,9 @@ class TestExpenses(TestExpenseCommon):
                     'name': 'expense_2',
                     'date': '2022-01-08',
                     'account_id': account_expense_2.id,
-                    'product_id': self.product_a.id,
-                    'unit_amount': 230.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 230.0,
+                    'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                     'employee_id': self.expense_employee.id,
                 }),
             ],
@@ -807,16 +810,16 @@ class TestExpenses(TestExpenseCommon):
                     # Expense on Expense Account 1
                     'name': 'expense_1',
                     'date': '2022-01-05',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 115.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 115.0,
                     'employee_id': self.expense_employee.id,
                 }),
                 Command.create({
                     # Expense on Expense Account 2
                     'name': 'expense_2',
                     'date': '2022-01-08',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 230.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 230.0,
                     'employee_id': self.expense_employee.id,
                 }),
             ],
@@ -844,15 +847,15 @@ class TestExpenses(TestExpenseCommon):
                 (0, 0, {
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'employee_id': self.expense_employee.id,
                 }),
                 (0, 0, {
                     'name': 'expense_2',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 1.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 1.0,
                     'employee_id': self.expense_employee.id,
                 }),
             ],
@@ -1008,8 +1011,8 @@ class TestExpenses(TestExpenseCommon):
         expense = self.env['hr.expense'].create({
             'name': 'Choucroute Saucisse',
             'employee_id': self.expense_employee.id,
-            'product_id': self.product_a.id,
-            'unit_amount': 700.00,
+            'product_id': self.product_c.id,
+            'total_amount': 700.00,
             'sheet_id': expense.id,
             'analytic_distribution': {
                 self.analytic_account_1.id: 50,
@@ -1034,8 +1037,8 @@ class TestExpenses(TestExpenseCommon):
                 'expense_line_ids': [Command.create({
                     'name': 'Car Travel Expenses',
                     'employee_id': self.expense_employee.id,
-                    'product_id': self.product_a.id,
-                    'unit_amount': 350.00,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
                     'date': '2021-01-01',
                 })],
             })
@@ -1054,7 +1057,6 @@ class TestExpenses(TestExpenseCommon):
             'employee_id': self.expense_employee.id,
             'product_id': self.product_c.id,
             'total_amount': 60,
-            'unit_amount': 0,
             'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
             'analytic_distribution': {
                 self.analytic_account_1.id: 50,
@@ -1095,16 +1097,16 @@ class TestExpenses(TestExpenseCommon):
                 Command.create({
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'payment_mode': 'company_account',
                     'employee_id': self.expense_employee.id
                 }),
                 Command.create({
                     'name': 'expense_2',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'payment_mode': 'company_account',
                     'employee_id': self.expense_employee.id
                 }),
@@ -1119,16 +1121,16 @@ class TestExpenses(TestExpenseCommon):
                 Command.create({
                     'name': 'expense_3',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 4.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 4.0,
                     'payment_mode': 'own_account',
                     'employee_id': self.expense_employee.id
                 }),
                 Command.create({
                     'name': 'expense_4',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 8.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 8.0,
                     'payment_mode': 'own_account',
                     'employee_id': self.expense_employee.id
                 }),
@@ -1174,16 +1176,16 @@ class TestExpenses(TestExpenseCommon):
                 Command.create({
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'payment_mode': 'company_account',
                     'employee_id': self.expense_employee.id
                 }),
                 Command.create({
                     'name': 'expense_2',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'payment_mode': 'company_account',
                     'employee_id': self.expense_employee.id
                 }),
@@ -1198,16 +1200,16 @@ class TestExpenses(TestExpenseCommon):
                 Command.create({
                     'name': 'expense_3',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 4.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 4.0,
                     'payment_mode': 'own_account',
                     'employee_id': self.expense_employee.id
                 }),
                 Command.create({
                     'name': 'expense_4',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 8.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 8.0,
                     'payment_mode': 'own_account',
                     'employee_id': self.expense_employee.id
                 }),
@@ -1230,16 +1232,16 @@ class TestExpenses(TestExpenseCommon):
                 Command.create({
                     'name': 'expense_1',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'payment_mode': 'company_account',
                     'employee_id': self.expense_employee.id
                 }),
                 Command.create({
                     'name': 'expense_2',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 10.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 10.0,
                     'payment_mode': 'company_account',
                     'employee_id': self.expense_employee.id
                 }),
@@ -1254,16 +1256,16 @@ class TestExpenses(TestExpenseCommon):
                 Command.create({
                     'name': 'expense_3',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 4.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 4.0,
                     'payment_mode': 'own_account',
                     'employee_id': self.expense_employee.id
                 }),
                 Command.create({
                     'name': 'expense_4',
                     'date': '2016-01-01',
-                    'product_id': self.product_a.id,
-                    'unit_amount': 8.0,
+                    'product_id': self.product_c.id,
+                    'total_amount': 8.0,
                     'payment_mode': 'own_account',
                     'employee_id': self.expense_employee.id
                 }),

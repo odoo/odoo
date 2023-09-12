@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import fields, models, api, Command
 from odoo.tools import float_compare
 
 
@@ -74,11 +74,11 @@ class HrExpenseSplit(models.TransientModel):
             'name': self.name,
             'product_id': self.product_id.id,
             'total_amount': self.total_amount,
-            'tax_ids': [(6, 0, self.tax_ids.ids)],
+            'total_amount_company': self.expense_id.currency_id.round(self.expense_id.currency_rate * self.total_amount),
+            'tax_ids': [Command.set(self.tax_ids.ids)],
             'analytic_distribution': self.analytic_distribution,
             'employee_id': self.employee_id.id,
             'product_uom_id': self.product_id.uom_id.id,
-            'unit_amount': self.product_id._price_compute('standard_price', currency=self.currency_id)[self.product_id.id]
         }
 
         account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
