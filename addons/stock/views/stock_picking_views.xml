@@ -289,7 +289,7 @@
                                     <field name="reserved_availability" string="Reserved"
                                         attrs="{'column_invisible': ['|', '|', ('parent.state', 'in', ['draft', 'done']), ('parent.picking_type_code', 'in', ['incoming', 'outgoing']), ('parent.immediate_transfer', '=', True)]}"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
-                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('product_id', '=', False)], 'column_invisible':[('parent.state', '=', 'draft'), ('parent.immediate_transfer', '=', False)]}"/>
+                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)], 'column_invisible':[('parent.state', '=', 'draft'), ('parent.immediate_transfer', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         groups="stock.group_production_lot"
