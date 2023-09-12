@@ -102,6 +102,10 @@ class TestReturnPicking(TestStockCommon):
         res = return_wizard.create_returns()
         picking2 = self.PickingObj.browse(res["res_id"])
 
+        # Assigned user should not be copied
+        self.assertTrue(picking.user_id)
+        self.assertFalse(picking2.user_id)
+
         picking2.action_confirm()
         picking2.move_ids.move_line_ids.quantity = 1
         picking2.move_ids.picked = True

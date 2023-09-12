@@ -459,7 +459,8 @@ class Picking(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Responsible', tracking=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
-        default=lambda self: self.env.user)
+        default=lambda self: self.env.user, copy=False
+    )
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     move_line_exist = fields.Boolean(
@@ -1257,6 +1258,7 @@ class Picking(models.Model):
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
+                backorder_picking.user_id = False
                 picking.message_post(
                     body=_('The backorder %s has been created.', backorder_picking._get_html_link())
                 )
