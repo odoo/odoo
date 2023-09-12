@@ -348,6 +348,20 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        checkOrderlinesNumber(number) {
+            return [
+                {
+                    content: `check orderlines number`,
+                    trigger: `.order .orderlines .orderline`,
+                    run: () => {
+                        const orderline_amount = $('.order .orderlines .orderline').length;
+                        if (orderline_amount !== number) {
+                            throw new Error(`Expected ${number} orderlines, got ${orderline_amount}`);
+                        }
+                    },
+                },
+            ];
+        }
     }
 
     class Execute {
