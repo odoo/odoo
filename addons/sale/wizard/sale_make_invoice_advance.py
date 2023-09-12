@@ -229,24 +229,25 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if self.advance_payment_method == 'fixed':
                 delta_amount = (invoice.amount_total - self.fixed_amount) * (1 if invoice.is_inbound() else -1)
                 if not order.currency_id.is_zero(delta_amount):
-                    product_line = invoice.line_ids\
-                        .filtered(lambda aml: aml.display_type == 'product')[:1]
-                    tax_line = invoice.line_ids\
-                        .filtered(lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))[:1]
                     receivable_line = invoice.line_ids\
                         .filtered(lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
-                    if product_line and tax_line and receivable_line:
-                        invoice.line_ids = [
-                            Command.update(product_line.id, {
-                                'price_total': product_line.price_total - delta_amount,
-                            }),
-                            Command.update(tax_line.id, {
-                                'amount_currency': tax_line.amount_currency + delta_amount,
-                            }),
-                            Command.update(receivable_line.id, {
-                                'amount_currency': receivable_line.amount_currency + delta_amount,
-                            }),
-                        ]
+                    product_lines = invoice.line_ids\
+                        .filtered(lambda aml: aml.display_type == 'product')
+                    tax_lines = invoice.line_ids\
+                        .filtered(lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
+
+                    if product_lines and tax_lines and receivable_line:
+                        line_commands = [Command.update(receivable_line.id, {
+                            'amount_currency': receivable_line.amount_currency + delta_amount,
+                        })]
+                        for lines, attr, sign in (
+                            (product_lines, 'price_total', -1),
+                            (tax_lines, 'amount_currency', 1),
+                        ):
+                            amt = delta_amount / len(lines)
+                            for line in lines:
+                                line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
+                        invoice.line_ids = line_commands
 
             poster = self.env.user._is_internal() and self.env.user.id or SUPERUSER_ID
             invoice.with_user(poster).message_post_with_source(
