@@ -1045,6 +1045,53 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps(["start", "allowed_check", "allowed_check", "end"]);
     });
 
+    QUnit.test("placeholder and drag element have same size", async (assert) => {
+        assert.expect(5);
+        target.style.top = "1px";
+        class NestedSortable extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li class="item" id="target">
+                            <span>parent</span>
+                        </li>
+                        <li class="item" id="dragged">
+                            <span>dragged</span>
+                        </li>
+                    </ul>
+                </div>
+            `;
+
+            setup() {
+                useNestedSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    useElementSize: true,
+                    onDrop({ element, placeholder }) {
+                        assert.strictEqual(element.id, "dragged");
+                        assert.strictEqual(placeholder.id, "dragged");
+                        assert.ok(
+                            placeholder.classList.contains("o_nested_sortable_placeholder_realsize")
+                        );
+                        assert.notOk(
+                            placeholder.classList.contains("o_nested_sortable_placeholder")
+                        );
+                        assert.strictEqual(
+                            element.getBoundingClientRect().height,
+                            placeholder.getBoundingClientRect().height
+                        );
+                    },
+                });
+            }
+        }
+
+        await mount(NestedSortable, target);
+        const draggedNode = target.querySelector(".item#dragged");
+        const { drop, moveTo } = await drag(draggedNode);
+        await moveTo("#target", "right");
+        await drop();
+    });
+
     QUnit.test("Ignore specified elements", async (assert) => {
         assert.expect(6);
 
