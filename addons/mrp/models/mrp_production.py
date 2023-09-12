@@ -232,7 +232,8 @@ class MrpProduction(models.Model):
     components_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
-        ('late', 'Late')], compute='_compute_components_availability')
+        ('late', 'Late'),
+        ('unavailable', 'Not Available')], compute='_compute_components_availability', search='_search_components_availability_state')
     production_capacity = fields.Float(compute='_compute_production_capacity', help="Quantity that can be produced with the current stock of components")
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
@@ -309,6 +310,49 @@ class MrpProduction(models.Model):
             production.location_src_id = production.picking_type_id.default_location_src_id.id or fallback_loc.id
             production.location_dest_id = production.picking_type_id.default_location_dest_id.id or fallback_loc.id
 
+    def _search_components_availability_state(self, operator, value):
+        def get_stock_moves(moves, state):
+            if state == 'available':
+                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and not m.forecast_expected_date)
+            elif state == 'expected':
+                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date <= m.raw_material_production_id.date_start)
+            elif state == 'late':
+                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date > m.raw_material_production_id.date_start)
+            elif state == 'unavailable':
+                return moves.filtered(lambda m: m.forecast_availability < m.product_qty)
+            else:
+                raise UserError(_('Selection not supported.'))
+
+
+        if operator == '!=' and not value:
+            raise UserError(_('Operator not supported without a value.'))
+        elif operator == '=' and not value:
+            raw_stock_moves = self.env['stock.move'].search([
+                ('raw_material_production_id', '!=', False),
+                ('raw_material_production_id.state', 'in', ('cancel', 'done', 'draft'))])
+            return [('move_raw_ids', 'in', raw_stock_moves.ids)]
+
+        raw_stock_moves = self.env['stock.move'].search([
+            ('raw_material_production_id', '!=', False),
+            ('raw_material_production_id.state', 'not in', ('cancel', 'done', 'draft'))])
+        if operator == '=':
+            raw_stock_moves = get_stock_moves(raw_stock_moves, value)
+        elif operator == '!=':
+            raw_stock_moves = raw_stock_moves - get_stock_moves(raw_stock_moves, value)
+        elif operator == 'in':
+            search_raw_moves = self.env['stock.move']
+            for state in value:
+                search_raw_moves |= get_stock_moves(raw_stock_moves, state)
+            raw_stock_moves = search_raw_moves
+        elif operator == 'not in':
+            search_raw_moves = self.env['stock.move']
+            for state in value:
+                search_raw_moves |= raw_stock_moves - get_stock_moves(raw_stock_moves, state)
+            raw_stock_moves = search_raw_moves
+        else:
+            raise UserError(_('Operation not supported'))
+        return [('move_raw_ids', 'in', raw_stock_moves.ids)]
+
     @api.depends('state', 'reservation_state', 'date_start', 'move_raw_ids', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
         productions = self.filtered(lambda mo: mo.state not in ('cancel', 'done', 'draft'))
@@ -325,7 +369,7 @@ class MrpProduction(models.Model):
         for production in productions:
             if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
-                production.components_availability_state = 'late'
+                production.components_availability_state = 'unavailable'
             else:
                 forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
                 if forecast_date:
@@ -2203,11 +2247,11 @@ class MrpProduction(models.Model):
         for production in self.filtered(lambda p: p.state in ('draft', 'confirmed')):
             if production.state == 'draft':
                 production.action_confirm()
-            expected_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
-            if expected_date:
+            move_expected_date = production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date')
+            expected_date = max(move_expected_date, default=False)
+            if expected_date and production.components_availability_state != 'unavailable':
                 production.date_start = expected_date
-        self.button_plan()
-
+        self.filtered(lambda p: p.state == 'confirmed').button_plan()
 
     def _has_workorders(self):
         return self.workorder_ids
