@@ -161,3 +161,21 @@ registry
             return getSteps();
         }
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PosSettleOrderNotGroupable', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickQuotationButton();
+            ProductScreen.do.selectFirstOrder();
+            ProductScreen.check.totalAmountIs(34.5);
+            ProductScreen.check.checkOrderlinesNumber(3);
+
+            return getSteps();
+        }
+    });
