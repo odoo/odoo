@@ -1319,28 +1319,34 @@ class SaleOrder(models.Model):
         if final:
             moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
         for move in moves:
-            # Downpayment might have been determined by a fixed amount set by the user.
-            # This amount is tax included. This can lead to rounding issues.
-            # E.g. a user wants a 100€ DP on a product with 21% tax.
-            # 100 / 1.21 = 82.64, 82.64 * 1,21 = 99.99
-            # This is already corrected by adding/removing the missing cents on the DP invoice,
-            # but must also be accounted for on the final invoice.
+            if final:
+                # Downpayment might have been determined by a fixed amount set by the user.
+                # This amount is tax included. This can lead to rounding issues.
+                # E.g. a user wants a 100€ DP on a product with 21% tax.
+                # 100 / 1.21 = 82.64, 82.64 * 1,21 = 99.99
+                # This is already corrected by adding/removing the missing cents on the DP invoice,
+                # but must also be accounted for on the final invoice.
 
-            # only check for invoiced dp lines
-            dp_invoice_lines = self.order_line.filtered('is_downpayment').invoice_lines\
-                .filtered(lambda il: il.move_id != move and il.move_id.state != 'cancel')
-            dp_lines = move.line_ids.filtered(lambda l: l.sale_line_ids.invoice_lines & dp_invoice_lines)
-            if final and dp_lines:
-                delta_amount = sum(dp_invoice_lines.mapped('price_total')) +\
-                    (sum(dp_lines.mapped('price_total')) * (1 if move.is_inbound() else -1))
-                if not self.currency_id.is_zero(delta_amount):
-                    product_line = move.line_ids\
-                        .filtered(lambda aml: aml.display_type == 'product' and aml.is_downpayment)[:1]
-                    tax_line = move.line_ids\
-                        .filtered(lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))[:1]
-                    if tax_line and product_line:
-                        tax_line.amount_currency += delta_amount
-                        product_line.price_total -= delta_amount
+                # only check for invoiced dp lines
+                dp_invoice_lines = self.order_line.filtered('is_downpayment').invoice_lines\
+                    .filtered(lambda il: il.move_id != move and il.move_id.state != 'cancel')
+                dp_lines = move.line_ids.filtered(lambda l: l.sale_line_ids.invoice_lines & dp_invoice_lines)
+                if dp_lines:
+                    delta_amount = sum(dp_invoice_lines.mapped('price_total')) +\
+                        (sum(dp_lines.mapped('price_total')) * (1 if move.is_inbound() else -1))
+                    if not self.currency_id.is_zero(delta_amount):
+                        product_lines = move.line_ids\
+                            .filtered(lambda aml: aml.display_type == 'product' and aml.is_downpayment)
+                        tax_lines = move.line_ids\
+                            .filtered(lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
+                        if tax_lines and product_lines:
+                            for lines, attr, sign in (
+                                (product_lines, 'price_total', -1),
+                                (tax_lines, 'amount_currency', 1),
+                            ):
+                                amt = delta_amount / len(lines)
+                                for line in lines:
+                                    line[attr] = line[attr] + amt * sign
             move.message_post_with_source(
                 'mail.message_origin_link',
                 render_values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
