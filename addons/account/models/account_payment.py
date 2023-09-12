@@ -334,7 +334,7 @@ class AccountPayment(models.Model):
                 'account_id': self.destination_account_id.id,
             },
         ]
-        return line_vals_list + write_off_line_vals_list
+        return [line_val for line_val in line_vals_list + write_off_line_vals_list if line_val['amount_currency'] != 0]
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
