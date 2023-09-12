@@ -169,6 +169,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
                 // This is a trick to get the date without the local formatting.
                 // We can't simply do .locale("en") because some Odoo languages
                 // are not supported by moment.js (eg: Arabic Syria).
+                // FIXME this now uses luxon, check if this is still needed? Probably can be replaced by deserializeDate
                 const date = DateTime.fromFormat(
                     _clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
                         .split(" ")[0], "yyyy-MM-dd"

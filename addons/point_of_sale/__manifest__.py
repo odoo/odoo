@@ -111,7 +111,6 @@
             'web_editor/static/lib/html2canvas.js',
             'web/static/lib/zxing-library/zxing-library.js',
             # FIXME POSREF legacy dependencies to remove
-            'web/static/lib/moment/moment.js',
             'web/static/src/legacy/js/promise_extension.js',
             # JS framework
             ('include', 'web._assets_core'),
@@ -196,7 +195,6 @@
             'web/static/lib/fullcalendar/timegrid/main.css',
             'web/static/lib/fullcalendar/list/main.css',
             'web/static/lib/fullcalendar/core/main.js',
-            'web/static/lib/fullcalendar/moment/main.js',
             'web/static/lib/fullcalendar/interaction/main.js',
             'web/static/lib/fullcalendar/daygrid/main.js',
             'web/static/lib/fullcalendar/timegrid/main.js',

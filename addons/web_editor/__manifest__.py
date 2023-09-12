@@ -53,7 +53,6 @@ Odoo Web Editor widget.
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
 
-            'web/static/lib/moment/moment.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
@@ -85,7 +84,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            'web/static/src/legacy/js/libs/moment.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',

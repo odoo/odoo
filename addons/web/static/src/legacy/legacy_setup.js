@@ -4,7 +4,6 @@ import { registry } from "../core/registry";
 import {
     makeLegacyNotificationService,
     makeLegacyDialogMappingService,
-    makeMomentLoaderService,
     makeLegacyRPCService,
 } from "./utils";
 import { makeLegacyActionManagerService } from "./backend_utils";
@@ -31,7 +30,6 @@ export const legacySetupProm = new Promise((resolve) => {
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     const legacyDialogMappingService = makeLegacyDialogMappingService(legacyEnv);
     serviceRegistry.add("legacy_dialog_mapping", legacyDialogMappingService);
-    serviceRegistry.add("moment", makeMomentLoaderService());
     const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
