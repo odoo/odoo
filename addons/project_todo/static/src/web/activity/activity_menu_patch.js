@@ -42,4 +42,33 @@ patch(ActivityMenu.prototype, {
             size: "md",
         });
     },
+
+    availableViews(group) {
+        if (group.is_todo) {
+            return this.todoViews;
+        }
+        return super.availableViews(group);
+    },
+
+    async loadTodoViews() {
+        this.todoViews = await this.orm.call(
+            "project.task",
+            "get_todo_views_id",
+            [],
+        );
+    },
+
+    async onClickAction(action, group) {
+        if (group.is_todo) {
+            await this.loadTodoViews();
+        }
+        return super.onClickAction(...arguments);
+    },
+
+    async openActivityGroup(group, filter = "all") {
+        if (group.is_todo) {
+            await this.loadTodoViews();
+        }
+        return super.openActivityGroup(...arguments);
+    },
 });
