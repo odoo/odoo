@@ -111,6 +111,25 @@ export function formatAST(ast, lbp = 0) {
             const argStr = args.concat(kwargs).join(", ");
             return `${formatAST(ast.fn)}(${argStr})`;
         }
+        case 16 /* List/Dict/Set comprehension */: {
+            const value = formatAST(ast.value);
+            const keys = ast.keys.join();
+            const iterator = formatAST(ast.iterator);
+            let str;
+            if (ast.condition) {
+                const condition = formatAST(ast.condition);
+                str = `${value} for ${keys} in ${iterator} if ${condition}`;
+            } else {
+                str = `${value} for ${keys} in ${iterator}`;
+            }
+            const DELIM = {
+                list: ["[", "]"],
+                dict: ["{", "}"],
+                // check/rewrite. What about generator case?
+            };
+            const delim = DELIM[ast.subtype];
+            return `${delim[0]}${str}${delim[1]}`;
+        }
     }
     throw new Error("invalid expression: " + ast);
 }

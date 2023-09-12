@@ -75,7 +75,7 @@ QUnit.module("py", {}, () => {
             patchDate(2021, 9, 17, 10, 0, 0);
             patchWithCleanup(Date.prototype, {
                 getTimezoneOffset() {
-                    const month = this.getMonth() // starts at 0;
+                    const month = this.getMonth(); // starts at 0;
                     if (10 <= month || month <= 2) {
                         //rough approximation
                         return -60;
@@ -84,8 +84,7 @@ QUnit.module("py", {}, () => {
                     }
                 },
             });
-            const expr =
-                "datetime.datetime(2022, 10, 17).to_utc()";
+            const expr = "datetime.datetime(2022, 10, 17).to_utc()";
             assert.strictEqual(JSON.stringify(evaluateExpr(expr)), `"2022-10-16 22:00:00"`);
         });
 
@@ -248,16 +247,16 @@ QUnit.module("py", {}, () => {
         QUnit.module("datetime.time");
 
         QUnit.test("various operations", (assert) => {
-            const expr1 = "datetime.time(hour=3,minute=2. second=1).strftime('%H:%M:%S')";
+            const expr1 = "datetime.time(hour=3,minute=2,second=1).strftime('%H:%M:%S')";
             assert.strictEqual(evaluateExpr(expr1), "03:02:01");
         });
 
         QUnit.test("attributes", (assert) => {
-            const expr1 = "datetime.time(hour=3,minute=2. second=1).hour";
+            const expr1 = "datetime.time(hour=3,minute=2,second=1).hour";
             assert.strictEqual(evaluateExpr(expr1), 3);
-            const expr2 = "datetime.time(hour=3,minute=2. second=1).minute";
+            const expr2 = "datetime.time(hour=3,minute=2,second=1).minute";
             assert.strictEqual(evaluateExpr(expr2), 2);
-            const expr3 = "datetime.time(hour=3,minute=2. second=1).second";
+            const expr3 = "datetime.time(hour=3,minute=2,second=1).second";
             assert.strictEqual(evaluateExpr(expr3), 1);
         });
 

@@ -20,7 +20,7 @@ import { parseArgs } from "./py_parser";
  * @typedef { import("./py_parser").AST } AST
  */
 
-export class EvaluationError extends Error {}
+export class EvaluationError extends Error { }
 
 // -----------------------------------------------------------------------------
 // Constants and helpers
@@ -385,6 +385,24 @@ export function evaluate(ast, context = {}) {
                 const result = left[ast.key];
                 if (typeof result === "function" && !isConstructor(result)) {
                     return result.bind(left);
+                }
+                return result;
+            }
+            case 16 /* List/Dict comprehension */: {
+                const result = ast.subtype === "dict" ? {} : [];
+                const iterator = _evaluate(ast.iterator);
+                for (const index in iterator) {
+                    const copyContext = Object.create(evalContext);
+                    for (const keyIndex in ast.keys) {
+                        copyContext[ast.keys[keyIndex]] = ast.keys.length > 1 ? iterator[index][keyIndex] : iterator[index];
+                    }
+                    if (!ast.condition || evaluate(ast.condition, copyContext)) {
+                        if (ast.subtype === "dict") {
+                            result[evaluate(ast.value[0], copyContext)] = evaluate(ast.value[1], copyContext);
+                        } else {
+                            result.push(evaluate(ast.value, copyContext));
+                        }
+                    }
                 }
                 return result;
             }

@@ -61,6 +61,25 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr('"foo" + "bar"'), "foobar");
         });
 
+        QUnit.test("wrong syntax", (assert) => {
+            const wrong = [
+                "1 5",
+                "True 5",
+                "not",
+                "is",
+                "not is",
+                "True not is True",
+                "True is",
+                "True in",
+                "is True",
+                "in []",
+                "bool 5",
+            ];
+            for (const expr of wrong) {
+                assert.throws(() => evaluateExpr(expr), expr);
+            }
+        });
+
         QUnit.module("number properties");
 
         QUnit.test("number arithmetic", (assert) => {
@@ -371,6 +390,76 @@ QUnit.module("py", {}, () => {
             assert.deepEqual(evaluateExpr("[(1 + 2,'foo', True)]"), [[3, "foo", true]]);
         });
 
+        QUnit.module("generator");
+
+        QUnit.test("list comprehension", (assert) => {
+            assert.deepEqual(evaluateExpr("[a for a in [1,2,3] if (a in [2,4])]"), [2]);
+            assert.deepEqual(
+                evaluateExpr("[a for a in records if (a in [2,4])]", { records: [1, 2, 3] }),
+                [2]
+            );
+        });
+
+        QUnit.test("dict comprehension", (assert) => {
+            assert.deepEqual(evaluateExpr("{a: 1 for a in ['a','b','c'] if (a in ['b','d'])}"), {
+                b: 1,
+            });
+            assert.deepEqual(
+                evaluateExpr("{a: 1 for a in records if (a in ['b','d'])}", {
+                    records: ["a", "b", "c"],
+                }),
+                { b: 1 }
+            );
+            assert.throws(() => evaluateExpr("{a: 1 : 2 for a in [1, 2, 3]}"));
+        });
+
+        QUnit.test("generator", (assert) => {
+            assert.deepEqual(
+                evaluateExpr("foo(a == 2 for a in [1,2,3] if (a in [2,4]))", {
+                    foo: (items) => items,
+                }),
+                [true]
+            );
+            assert.deepEqual(
+                evaluateExpr("foo(a == 2 for a in [1, 2, 3, 2] if a in [2,4])", {
+                    foo: (items) => items,
+                }),
+                [true, true]
+            );
+            assert.deepEqual(
+                evaluateExpr("foo(a == 2 for a in [1,2,3,2] if (a in [1, 2]))", {
+                    foo: (items) => items,
+                }),
+                [false, true, true]
+            );
+            assert.deepEqual(
+                evaluateExpr("foo(a == 4 for a in [1,2,3] if (a in [2,4]))", {
+                    foo: (items) => items,
+                }),
+                [false]
+            );
+            assert.deepEqual(
+                evaluateExpr("foo(a for a in [1,2,3,2] if (a in [1, 2]))", {
+                    foo: (items) => items,
+                }),
+                [1, 2, 2]
+            );
+
+            const records = [
+                { id: 1, e: false },
+                { id: 2, e: true },
+                { id: 3, e: true },
+                { id: 2, e: false },
+            ];
+            assert.deepEqual(
+                evaluateExpr("foo(a.e for a in records if (a.id in [1, 2]))", {
+                    records,
+                    foo: (items) => items,
+                }),
+                [false, true, false]
+            );
+        });
+
         QUnit.module("evaluate to boolean");
 
         QUnit.test("simple expression", (assert) => {
@@ -384,28 +473,28 @@ QUnit.module("py", {}, () => {
         });
 
         QUnit.test("use contextual values", (assert) => {
-            assert.strictEqual(evaluateBooleanExpr("a", {a: 12}), true);
-            assert.strictEqual(evaluateBooleanExpr("a", {a: 0}), false);
-            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a", {a: 1}), true);
-            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - 2", {a: 1}), false);
-            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - b", {a: 1, b: 2}), false);
-            assert.strictEqual(evaluateBooleanExpr('a', {a: "foo"}), true);
-            assert.strictEqual(evaluateBooleanExpr("a", {a: [1]}), true);
-            assert.strictEqual(evaluateBooleanExpr("a", {a: []}), false);
+            assert.strictEqual(evaluateBooleanExpr("a", { a: 12 }), true);
+            assert.strictEqual(evaluateBooleanExpr("a", { a: 0 }), false);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a", { a: 1 }), true);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - 2", { a: 1 }), false);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - b", { a: 1, b: 2 }), false);
+            assert.strictEqual(evaluateBooleanExpr("a", { a: "foo" }), true);
+            assert.strictEqual(evaluateBooleanExpr("a", { a: [1] }), true);
+            assert.strictEqual(evaluateBooleanExpr("a", { a: [] }), false);
         });
 
         QUnit.test("throw if has missing value", (assert) => {
-            assert.throws(() => evaluateBooleanExpr("a", {b: 0}));
-            assert.strictEqual(evaluateBooleanExpr("1 or a"), true);  // do not throw (lazy value)
+            assert.throws(() => evaluateBooleanExpr("a", { b: 0 }));
+            assert.strictEqual(evaluateBooleanExpr("1 or a"), true); // do not throw (lazy value)
             assert.throws(() => evaluateBooleanExpr("0 or a"));
-            assert.throws(() => evaluateBooleanExpr("a or b", {b: true}));
-            assert.throws(() => evaluateBooleanExpr("a and b", {b: true}));
+            assert.throws(() => evaluateBooleanExpr("a or b", { b: true }));
+            assert.throws(() => evaluateBooleanExpr("a and b", { b: true }));
             assert.throws(() => evaluateBooleanExpr("a()"));
             assert.throws(() => evaluateBooleanExpr("a[0]"));
             assert.throws(() => evaluateBooleanExpr("a.b"));
-            assert.throws(() => evaluateBooleanExpr("0 + 3 - a", {b: 1}));
-            assert.throws(() => evaluateBooleanExpr("0 + 3 - a - 2", {b: 1}));
-            assert.throws(() => evaluateBooleanExpr("0 + 3 - a - b", {b: 2}));
+            assert.throws(() => evaluateBooleanExpr("0 + 3 - a", { b: 1 }));
+            assert.throws(() => evaluateBooleanExpr("0 + 3 - a - 2", { b: 1 }));
+            assert.throws(() => evaluateBooleanExpr("0 + 3 - a - b", { b: 2 }));
         });
     });
 });
