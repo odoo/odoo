@@ -455,6 +455,11 @@ class AccountBankStatementLine(models.Model):
         return bank_account.filtered(lambda x: x.company_id in (False, self.company_id))
 
     def _get_default_amls_matching_domain(self):
+        self.ensure_one()
+        all_reconcilable_account_ids = self.env['account.account'].search([
+            ("company_id", "child_of", self.company_id.root_id.id),
+            ('reconcile', '=', True),
+        ]).ids
         return [
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
@@ -462,7 +467,8 @@ class AccountBankStatementLine(models.Model):
             ('company_id', 'child_of', self.company_id.root_id.id),
             # Reconciliation domain.
             ('reconciled', '=', False),
-            ('account_id.reconcile', '=', True),
+            # Domain to use the account_move_line__unreconciled_index
+            ('account_id', 'in', all_reconcilable_account_ids),
             # Special domain for payments.
             '|',
             ('account_id.account_type', 'not in', ('asset_receivable', 'liability_payable')),

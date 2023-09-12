@@ -1355,6 +1355,9 @@ class AccountMoveLine(models.Model):
         """
         create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
         create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
+        # Match exactly how the ORM converts domains to ensure the query planner uses it
+        create_index(self._cr, 'account_move_line__unreconciled_index', 'account_move_line', ['account_id', 'partner_id'],
+                     where="(reconciled IS NULL OR reconciled = false OR reconciled IS NOT true) AND parent_state = 'posted'")
         super().init()
 
     def default_get(self, fields_list):
