@@ -111,11 +111,13 @@ export default class OdooChartCorePlugin extends CorePlugin {
      * @returns {string}
      */
     getOdooChartDisplayName(chartId) {
-        return this.getters.getChart(chartId).title;
+        return `(#${this.getOdooChartIds().indexOf(chartId) + 1}) ${
+            this.getters.getChart(chartId).title
+        }`;
     }
 
     /**
-     * Import the pivots
+     * Import the charts
      *
      * @param {Object} data
      */
@@ -131,7 +133,7 @@ export default class OdooChartCorePlugin extends CorePlugin {
         }
     }
     /**
-     * Export the pivots
+     * Export the chart
      *
      * @param {Object} data
      */
@@ -154,7 +156,7 @@ export default class OdooChartCorePlugin extends CorePlugin {
     // -------------------------------------------------------------------------
 
     /**
-     * Get the current pivotFieldMatching of a chart
+     * Get the current odooChartFieldMatching of a chart
      *
      * @param {string} chartId
      * @param {string} filterId
@@ -164,7 +166,7 @@ export default class OdooChartCorePlugin extends CorePlugin {
     }
 
     /**
-     * Sets the current pivotFieldMatching of a chart
+     * Sets the current odooChartFieldMatching of a chart
      *
      * @param {string} filterId
      * @param {Record<string,FieldMatching>} chartFieldMatches

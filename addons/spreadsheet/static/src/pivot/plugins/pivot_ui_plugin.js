@@ -410,11 +410,10 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
 
     /**
      * @param {string} pisvotId
-     * @param {PivotDefinition=} definition
      */
-    _setupPivotDataSource(pivotId, definition) {
+    _setupPivotDataSource(pivotId) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
-        definition = definition || this.getters.getPivotModelDefinition(pivotId);
+        const definition = this.getters.getPivotModelDefinition(pivotId);
         if (!this.dataSources.contains(dataSourceId)) {
             this.dataSources.add(dataSourceId, PivotDataSource, definition);
         }
