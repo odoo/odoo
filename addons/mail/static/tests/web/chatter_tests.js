@@ -810,3 +810,37 @@ QUnit.test("Follower count of draft record is set to 0", async (assert) => {
     await openView({ res_model: "res.partner", views: [[false, "form"]] });
     await contains(".o-mail-Followers", { text: "0" });
 });
+
+QUnit.test("Mentions in composer should still work when using pager", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "Partner 1" },
+        { display_name: "Partner 2" },
+    ]);
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+    patchUiSize({ size: SIZES.LG });
+    const { openView } = await start({ serverData: { views } });
+    await openView(
+        {
+            res_model: "res.partner",
+            res_id: partnerId_1,
+            views: [[false, "form"]],
+        },
+        { resIds: [partnerId_1, partnerId_2] }
+    );
+
+    await click("button:contains(Log note)");
+    await click(".o_pager_next");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion");
+});
