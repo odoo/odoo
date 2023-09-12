@@ -38,6 +38,8 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  * the list can accept. If set to '0' the levels are unlimited. Default: 0
  * @property {(DraggableHookContext) => boolean}) [isAllowed] You can specify a custom function
  * to verify if a drop location is allowed. return True by default
+ * @property {boolean} [useElementSize] The placeholder use the dragged element size instead
+ * of the small 8px lines. Default:false
  *
  * HANDLERS (also optional)
  *
@@ -84,6 +86,7 @@ export const useNestedSortable = makeDraggableHook({
         nestInterval: [Number],
         maxLevels: [Number],
         isAllowed: [Function],
+        useElementSize: [Boolean],
     },
     defaultParams: {
         connectGroups: false,
@@ -97,6 +100,7 @@ export const useNestedSortable = makeDraggableHook({
         nestInterval: 15,
         maxLevels: 0,
         isAllowed: (ctx) => true,
+        useElementSize: false,
     },
 
     // Set the parameters.
@@ -118,6 +122,7 @@ export const useNestedSortable = makeDraggableHook({
         ctx.isRTL = localization.direction === "rtl";
         ctx.maxLevels = params.maxLevels || 0;
         ctx.isAllowed = params.isAllowed ?? (() => true);
+        ctx.useElementSize = params.useElementSize;
     },
 
     // Set the current group and create the placeholder row that will take the
@@ -134,12 +139,13 @@ export const useNestedSortable = makeDraggableHook({
             ctx.prevNestX = ctx.pointer.x;
         }
         ctx.current.placeHolder = ctx.current.element.cloneNode(false);
-        ctx.current.placeHolder.classList.add(
-            "o_nested_sortable_placeholder",
-            "w-100",
-            "d-block",
-            "py-0"
-        );
+        ctx.current.placeHolder.classList.add("w-100", "d-block", "py-0");
+        if (ctx.useElementSize) {
+            ctx.current.placeHolder.style.height = getComputedStyle(ctx.current.element).height;
+            ctx.current.placeHolder.classList.add("o_nested_sortable_placeholder_realsize");
+        } else {
+            ctx.current.placeHolder.classList.add("o_nested_sortable_placeholder");
+        }
         addCleanup(() => ctx.current.placeHolder.remove());
     },
 
