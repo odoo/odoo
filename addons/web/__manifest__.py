@@ -69,7 +69,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
 
-            'web/static/lib/moment/moment.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js',
@@ -97,7 +96,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            'web/static/src/legacy/js/libs/moment.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',
@@ -199,7 +197,6 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web.assets_frontend_minimal'),
 
-            'web/static/lib/moment/moment.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/src/libs/owl.js',
@@ -230,7 +227,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            'web/static/src/legacy/js/libs/moment.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',
@@ -451,7 +447,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/fullcalendar/timegrid/main.css',
             'web/static/lib/fullcalendar/list/main.css',
             'web/static/lib/fullcalendar/core/main.js',
-            'web/static/lib/fullcalendar/moment/main.js',
             'web/static/lib/fullcalendar/interaction/main.js',
             'web/static/lib/fullcalendar/daygrid/main.js',
             'web/static/lib/fullcalendar/timegrid/main.js',

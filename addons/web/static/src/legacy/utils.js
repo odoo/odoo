@@ -14,7 +14,7 @@ import {
     useState,
     xml,
 } from "@odoo/owl";
-import { loadJS, templates } from "@web/core/assets";
+import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import {
     ConnectionAbortedError,
@@ -161,33 +161,6 @@ export function makeLegacyNotificationService(legacyEnv) {
             }
 
             legacyEnv.services.notification = { notify, close };
-        },
-    };
-}
-
-export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
-    return promise.then(on_success || (() => {})).catch((reason) => {
-        let alreadyThrown = false;
-        if (on_fail) {
-            alreadyThrown = on_fail(reason) === "alreadyThrown";
-        }
-        const error = reason instanceof Error && "cause" in reason ? reason.cause : reason;
-        if (error instanceof Error && !alreadyThrown) {
-            throw reason;
-        }
-    });
-}
-
-export function makeMomentLoaderService() {
-    return {
-        dependencies: ["localization"],
-        async start(_, { localization }) {
-            await loadJS(`/web/webclient/locale/${localization.code}`);
-            const dow = (localization.weekStart || 0) % 7;
-            moment.updateLocale(moment.locale(), {
-                dow,
-                doy: 7 + dow - 4, // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
-            });
         },
     };
 }
