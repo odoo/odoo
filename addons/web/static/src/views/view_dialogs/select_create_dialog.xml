@@ -5,7 +5,7 @@
         <Dialog title="props.title" withBodyPadding="false">
             <t t-set-slot="header" t-slot-scope="scope">
                 <t t-call="web.Dialog.header">
-                    <t t-set="close" t-value="scope.close"/>
+                    <t t-set="dismiss" t-value="scope.close"/>
                     <t t-set="fullscreen" t-value="scope.isFullscreen"/>
                 </t>
                 <button t-if="this.canUnselect" class="btn o_clear_button" t-on-click="() => this.unselect()">Clear</button>

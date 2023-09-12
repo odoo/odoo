@@ -14,6 +14,7 @@ import {
     triggerEvent,
     triggerHotkey,
     dragAndDrop,
+    nextTick,
 } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
@@ -81,6 +82,7 @@ QUnit.module("Components", (hooks) => {
 
         const env = await makeDialogTestEnv();
         env.dialogData.close = () => assert.step("close");
+        env.dialogData.dismiss = () => assert.step("dismiss");
         parent = await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector("header .modal-title").textContent,
@@ -89,7 +91,8 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(target.querySelector("footer button").textContent, "Ok");
         // Same effect as clicking on the x button
         triggerHotkey("escape");
-        assert.verifySteps(["close"]);
+        await nextTick();
+        assert.verifySteps(["dismiss", "close"]);
         // Same effect as clicking on the Ok button
         triggerHotkey("control+enter");
         assert.verifySteps(["close"]);
@@ -123,9 +126,10 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("click on the button x triggers the service close", async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
         const env = await makeDialogTestEnv();
         env.dialogData.close = () => assert.step("close");
+        env.dialogData.dismiss = () => assert.step("dismiss");
 
         class Parent extends Component {}
         Parent.template = xml`
@@ -137,19 +141,20 @@ QUnit.module("Components", (hooks) => {
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
         await click(target, ".o_dialog header button.btn-close");
-        assert.verifySteps(["close"]);
+        assert.verifySteps(["dismiss", "close"]);
     });
 
     QUnit.test(
-        "click on the button x triggers the close defined by a Child component",
+        "click on the button x triggers the close and dismiss defined by a Child component",
         async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
             const env = await makeDialogTestEnv();
             class Child extends Component {
                 static template = xml`<div>Hello</div>`;
 
                 setup() {
                     this.env.dialogData.close = () => assert.step("close");
+                    this.env.dialogData.dismiss = () => assert.step("dismiss");
                 }
             }
             class Parent extends Component {}
@@ -163,7 +168,7 @@ QUnit.module("Components", (hooks) => {
             assert.containsOnce(target, ".o_dialog");
 
             await click(target, ".o_dialog header button.btn-close");
-            assert.verifySteps(["close"]);
+            assert.verifySteps(["dismiss", "close"]);
         }
     );
 
@@ -172,6 +177,7 @@ QUnit.module("Components", (hooks) => {
         async function (assert) {
             const env = await makeDialogTestEnv();
             env.dialogData.close = () => assert.step("close");
+            env.dialogData.dismiss = () => assert.step("dismiss");
             assert.expect(3);
             class Parent extends Component {}
 

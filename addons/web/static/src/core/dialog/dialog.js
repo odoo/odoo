@@ -90,7 +90,14 @@ export class Dialog extends Component {
     }
 
     onEscape() {
-        this.data.close();
+        return this.dismiss();
+    }
+
+    async dismiss() {
+        if (this.data.dismiss) {
+            await this.data.dismiss();
+        }
+        return this.data.close();
     }
 }
 Dialog.template = "web.Dialog";

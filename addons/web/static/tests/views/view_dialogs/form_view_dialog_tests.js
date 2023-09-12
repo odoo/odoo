@@ -386,4 +386,36 @@ QUnit.module("ViewDialogs", (hooks) => {
         await nextTick();
         assert.containsNone(target, ".o_dialog .o_form_view");
     });
+
+    QUnit.test("FormViewDialog with discard button", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+            onRecordDiscarded: () => assert.step("discard"),
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.containsOnce(target, ".o_dialog .modal-footer .o_form_button_cancel");
+        await click(target.querySelector(".o_dialog .modal-footer .o_form_button_cancel"));
+        assert.verifySteps(["discard"]);
+        assert.containsNone(target, ".o_dialog .o_form_view");
+
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+            onRecordDiscarded: () => assert.step("discard"),
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        await click(target.querySelector(".o_dialog .btn-close"));
+        assert.verifySteps(["discard"]);
+        assert.containsNone(target, ".o_dialog .o_form_view");
+    });
 });
