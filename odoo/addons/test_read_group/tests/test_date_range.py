@@ -112,3 +112,17 @@ class TestDateRange(common.TransactionCase):
 
         groups = self.Model.read_group([], fields=['date', 'value'], groupby=['date:quarter', 'date:day'], lazy=False)
         self.assertEqual(groups, expected)
+
+    def test_duplicate_month(self):
+        records = self.Model.create([
+            {'date': '2022-01-29', 'value': 1}])
+        expected = [{
+            '__domain': ['&', '&', ('id', 'in', records.ids), '&', ('date', '>=', '2022-01-01'), ('date', '<', '2022-02-01'), ('date', '=', 'January 2022')],
+            '__count': 1,
+            '__range': {'date:month': {'from': '2022-01-01', 'to': '2022-02-01'}},
+            'value': 1,
+            'date:month': 'January 2022'
+        }]
+        groups = self.Model.read_group(
+            [('id', 'in', records.ids)], fields=['date', 'value'], groupby=['date:month', 'date:month'], lazy=False)
+        self.assertEqual(groups, expected)
