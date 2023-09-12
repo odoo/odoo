@@ -183,3 +183,22 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("limitedProductPricelistLoading", { 
+    test: true, 
+    url: "/pos/ui", 
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+
+            ProductScreen.scan_barcode("0100100"),
+            ProductScreen.selectedOrderlineHas('Test Product 1', '1.0', '80.0'),
+
+            ProductScreen.scan_barcode("0100200"),
+            ProductScreen.selectedOrderlineHas('Test Product 2', '1.0', '100.0'),
+
+            ProductScreen.scan_barcode("0100300"),
+            ProductScreen.selectedOrderlineHas('Test Product 3', '1.0', '50.0'),
+            Chrome.endTour(),
+        ].flat(),
+});
