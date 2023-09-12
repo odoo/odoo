@@ -98,6 +98,7 @@ export class Chatter extends Component {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
+            scrollToAttachments: 0,
             showActivities: true,
             showAttachmentLoading: false,
             /** @type {import("@mail/core/thread_model").Thread} */
@@ -172,12 +173,12 @@ export class Chatter extends Component {
             () => [this.attachments]
         );
         useEffect(
-            (opened) => {
-                if (opened) {
+            () => {
+                if (this.state.scrollToAttachments > 0) {
                     this.attachmentBox.el.scrollIntoView({ block: "center" });
                 }
             },
-            () => [this.state.isAttachmentBoxOpened]
+            () => [this.state.scrollToAttachments]
         );
         useEffect(
             () => {
@@ -437,6 +438,9 @@ export class Chatter extends Component {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
+        if (this.state.isAttachmentBoxOpened) {
+            this.state.scrollToAttachments++;
+        }
     }
 
     async onClickAttachFile(ev) {
