@@ -78,6 +78,8 @@ __all__ = [
     'get_lang',
     'groupby',
     'hmac',
+    'hash_sign',
+    'verify_hash_signed',
     'html_escape',
     'human_size',
     'is_list_of',
