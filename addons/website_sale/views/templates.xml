@@ -509,7 +509,7 @@
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
                 <div class="d-block d-lg-none accordion-item" t-if="hasPricelistDropdown">
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#o_wsale_offcanvas_pricelist"
@@ -548,7 +548,7 @@
                     <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
                     <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_orderby"
@@ -584,7 +584,7 @@
                 <div t-if="opt_wsale_categories"
                      class="accordion-item">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_categories"
@@ -617,9 +617,9 @@
                         <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
 
                         <div t-if="a.value_ids and len(a.value_ids) &gt; 1"
-                             t-attf-class="accordion-item {{(_status == 'active') and 'order-1' or 'order-2'}}">
+                             t-attf-class="accordion-item border-top-0 {{(_status == 'active') and 'order-1' or 'order-2'}}">
                             <h2 class="accordion-header mb-0" t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header">
-                                <button t-attf-class="o_wsale_offcanvas_title accordion-button border-top rounded-0 {{ not attrib_values and 'collapsed'}}"
+                                <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{ not attrib_values and 'collapsed'}}"
                                         type="button"
                                         t-att-data-status="_status"
                                         data-bs-toggle="collapse"
@@ -846,7 +846,7 @@
                         <i class="oi oi-close"/>
                     </a>
                     <t t-foreach="attributes" t-as="a">
-                        <div class="accordion-item nav-item mb-1" t-if="a.value_ids and len(a.value_ids) &gt; 1">
+                        <div class="accordion-item nav-item mb-1 border-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
                             <h6 class="mb-3">
                                 <b class="o_products_attributes_title d-none d-lg-block" t-field="a.name"/>
                             </h6>
