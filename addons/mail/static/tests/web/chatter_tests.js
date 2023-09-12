@@ -770,3 +770,37 @@ QUnit.test("upload attachment on draft record", async (assert) => {
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], [file]));
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
+
+QUnit.test("Mentions in composer should still work when using pager", async (assert) => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "Partner 1" },
+        { display_name: "Partner 2" },
+    ]);
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+    patchUiSize({ size: SIZES.LG });
+    const { openView } = await start({ serverData: { views } });
+    await openView(
+        {
+            res_model: "res.partner",
+            res_id: partnerId_1,
+            views: [[false, "form"]],
+        },
+        { resIds: [partnerId_1, partnerId_2] }
+    );
+
+    await click("button:contains(Log note)");
+    await click(".o_pager_next");
+    await insertText(".o-mail-Composer-input", "@");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+});
