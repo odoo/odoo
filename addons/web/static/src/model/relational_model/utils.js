@@ -264,10 +264,18 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                             fieldNode.views.default,
                             fieldNode.views.default.fields
                         );
-                        activeField.related.activeFields = {
-                            ...defaultArchInfo.activeFields,
-                            ...activeField.related.activeFields,
-                        };
+                        for (const fieldName in defaultArchInfo.activeFields) {
+                            if (fieldName in activeField.related.activeFields) {
+                                patchActiveFields(
+                                    activeField.related.activeFields[fieldName],
+                                    defaultArchInfo.activeFields[fieldName]
+                                );
+                            } else {
+                                activeField.related.activeFields[fieldName] = {
+                                    ...defaultArchInfo.activeFields[fieldName],
+                                };
+                            }
+                        }
                         activeField.related.fields = Object.assign(
                             {},
                             defaultArchInfo.fields,
