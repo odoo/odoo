@@ -246,6 +246,7 @@ class MrpProduction(models.Model):
     show_produce = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce button can be shown')
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
+    is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -800,6 +801,28 @@ class MrpProduction(models.Model):
             qty_none_or_all = production.qty_producing in (0, production.product_qty)
             production.show_produce_all = state_ok and qty_none_or_all
             production.show_produce = state_ok and not qty_none_or_all
+
+    def _search_is_delayed(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        if operator != '=':
+            value = not value
+        sub_query = self._search([
+            ('state', 'in', ['confirmed', 'progress', 'to_close']),
+            ('date_deadline', '!=', False),
+            '|',
+                ('date_deadline', '<', self._field_to_sql('mrp_production', 'date_finished')),
+                ('date_deadline', '<', fields.Datetime.now())
+        ])
+        return [('id', 'in' if value else 'not in', sub_query)]
+
+    @api.depends('delay_alert_date', 'state', 'date_deadline', 'date_finished')
+    def _compute_is_delayed(self):
+        for record in self:
+            record.is_delayed = bool(
+                record.state in ['confirmed', 'progress', 'to_close'] and (
+                    record.date_deadline and (record.date_deadline < datetime.datetime.now() or record.date_deadline < record.date_finished))
+            )
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
