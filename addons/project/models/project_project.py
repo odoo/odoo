@@ -758,14 +758,16 @@ class Project(models.Model):
         self.ensure_one()
         if not self.user_has_groups('project.group_project_user'):
             return {}
+        show_profitability = self._show_profitability()
         panel_data = {
             'user': self._get_user_values(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
             'currency_id': self.currency_id.id,
+            'show_project_profitability_helper': show_profitability and self._show_profitability_helper(),
         }
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
-        if self._show_profitability():
+        if show_profitability:
             profitability_items = self._get_profitability_items()
             if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
                 profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
@@ -798,6 +800,9 @@ class Project(models.Model):
     def _show_profitability(self):
         self.ensure_one()
         return True
+
+    def _show_profitability_helper(self):
+        return self.user_has_groups('analytic.group_analytic_accounting')
 
     def _get_profitability_aal_domain(self):
         return [('account_id', 'in', self.analytic_account_id.ids)]

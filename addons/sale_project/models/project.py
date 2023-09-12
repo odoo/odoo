@@ -392,6 +392,9 @@ class Project(models.Model):
         self.ensure_one()
         return self.allow_billable and super()._show_profitability()
 
+    def _show_profitability_helper(self):
+        return True
+
     def _get_profitability_labels(self):
         return {
             **super()._get_profitability_labels(),
