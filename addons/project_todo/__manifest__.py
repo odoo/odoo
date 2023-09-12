@@ -30,6 +30,12 @@
             'project_todo/static/src/views/**/*',
             'project_todo/static/src/web/**/*',
         ],
+        'web.assets_tests': [
+            'project_todo/static/tests/tours/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'project_todo/static/tests/helpers/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
