@@ -79,6 +79,7 @@ class StockWarehouseOrderpoint(models.Model):
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False, digits='Product Unit of Measure')
 
+    #TODO: remove this field in master
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(
         compute='_compute_visibility_days', inverse='_set_visibility_days', readonly=False,
@@ -113,7 +114,7 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             values = orderpoint._get_lead_days_values()
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
-            lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days)
+            lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
             orderpoint.lead_days_date = lead_days_date
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
@@ -352,7 +353,7 @@ class StockWarehouseOrderpoint(models.Model):
                 # group product by lead_days and location in order to read virtual_available
                 # in batch
                 rules = product._get_rules_from_location(loc)
-                lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
+                lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]['total_delay']
                 ploc_per_day[(lead_days, loc)].add(product.id)
 
         # recompute virtual_available with lead days
@@ -481,11 +482,12 @@ class StockWarehouseOrderpoint(models.Model):
         comming from an orderpoint. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
-        date_planned = date or fields.Date.today()
-        date_planned = self.product_id._get_date_with_security_lead_days(date_planned, self.location_id, route_ids=self.route_id)
+        date_deadline = date or fields.Date.today()
+        dates_info = self.product_id._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
         return {
             'route_ids': self.route_id,
-            'date_planned': date_planned,
+            'date_planned': dates_info['date_planned'],
+            'date_order': dates_info['date_order'],
             'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,

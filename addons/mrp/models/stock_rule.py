@@ -190,25 +190,29 @@ class StockRule(models.Model):
         """Add the product and company manufacture delay to the cumulative delay
         and cumulative description.
         """
-        delay, delay_description = super()._get_lead_days(product, **values)
+        delays, delay_description = super()._get_lead_days(product, **values)
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
         if not manufacture_rule:
-            return delay, delay_description
+            return delays, delay_description
         manufacture_rule.ensure_one()
         bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
         manufacture_delay = bom.produce_delay
-        delay += manufacture_delay
+        delays['total_delay'] += manufacture_delay
+        delays['manufacture_delay'] += manufacture_delay
         if not bypass_delay_description:
             delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
-        security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
-        delay += security_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
+        if bom.type == 'normal':
+            security_delay = self.picking_type_id.company_id.manufacturing_lead
+            delays['total_delay'] += security_delay
+            delays['security_lead_days'] += security_delay
+            if not bypass_delay_description:
+                delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
         days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
+        delays['total_delay'] += days_to_order
         if not bypass_delay_description:
             delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
-        return delay + days_to_order, delay_description
+        return delays, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)

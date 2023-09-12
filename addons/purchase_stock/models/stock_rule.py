@@ -161,23 +161,29 @@ class StockRule(models.Model):
         and cumulative description. The company lead time is always displayed for onboarding
         purpose in order to indicate that those options are available.
         """
-        delay, delay_description = super()._get_lead_days(product, **values)
+        delays, delay_description = super()._get_lead_days(product, **values)
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
         seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule or not seller:
-            return delay, delay_description
+            return delays, delay_description
         buy_rule.ensure_one()
-        supplier_delay = seller[0].delay
-        if supplier_delay and not bypass_delay_description:
-            delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
+        if not self.env.context.get('ignore_vendor_lead_time'):
+            supplier_delay = seller[0].delay
+            delays['total_delay'] += supplier_delay
+            delays['purchase_delay'] += supplier_delay
+            if not bypass_delay_description:
+                delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
         security_delay = buy_rule.picking_type_id.company_id.po_lead
+        delays['total_delay'] += security_delay
+        delays['security_lead_days'] += security_delay
         if not bypass_delay_description:
             delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
-        days_to_order = values.get('days_to_order', buy_rule.company_id.days_to_purchase)
+        days_to_order = buy_rule.company_id.days_to_purchase
+        delays['total_delay'] += days_to_order
         if not bypass_delay_description:
             delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
-        return delay + supplier_delay + security_delay + days_to_order, delay_description
+        return delays, delay_description
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):
@@ -266,7 +272,7 @@ class StockRule(models.Model):
         params values: values of procurements
         params origins: procuremets origins to write on the PO
         """
-        purchase_date = min([fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
+        purchase_date = min([value.get('date_order') or fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from

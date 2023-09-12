@@ -359,12 +359,14 @@ class StockRule(models.Model):
         :param product: the product of the procurement
         :type product: :class:`~odoo.addons.product.models.product.ProductProduct`
         :return: the cumulative delay and cumulative delay's description
-        :rtype: tuple[int, list[str, str]]
+        :rtype: tuple[defaultdict(float), list[str, str]]
         """
+        delays = defaultdict(float)
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
+        delays['total_delay'] += delay
         global_visibility_days = self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days')
         if global_visibility_days:
-            delay += int(global_visibility_days)
+            delays['total_delay'] += int(global_visibility_days)
         if self.env.context.get('bypass_delay_description'):
             delay_description = []
         else:
@@ -375,7 +377,7 @@ class StockRule(models.Model):
             ]
         if global_visibility_days:
             delay_description.append((_('Global Visibility Days'), _('+ %d day(s)', int(global_visibility_days))))
-        return delay, delay_description
+        return delays, delay_description
 
 
 class ProcurementGroup(models.Model):

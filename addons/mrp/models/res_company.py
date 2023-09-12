@@ -36,8 +36,3 @@ class Company(models.Model):
     def _create_per_company_sequences(self):
         super(Company, self)._create_per_company_sequences()
         self._create_unbuild_sequence()
-
-    def _get_security_by_rule_action(self):
-        res = super()._get_security_by_rule_action()
-        res['manufacture'] = self.manufacturing_lead
-        return res

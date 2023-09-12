@@ -72,15 +72,16 @@ class ReportBomStructure(models.AbstractModel):
         subcontract_rules = [rule for rule in rules if rule.action == 'buy' and bom and bom.type == 'subcontract']
         if subcontract_rules:
             supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+            # for subcontracting, we can't decide the lead time without component's resupply availability
+            # we only return necessary info and calculate the lead time late when we have component's data
             if supplier:
                 return {
                     'route_type': 'subcontract',
                     'route_name': subcontract_rules[0].route_id.display_name,
                     'route_detail': supplier.display_name,
-                    'lead_time': supplier.delay + rules_delay,
-                    'supplier_delay': supplier.delay + rules_delay,
-                    'manufacture_delay': bom.produce_delay,
+                    'lead_time': rules_delay,
                     'supplier': supplier,
+                    'bom': bom,
                 }
 
         return res
@@ -106,11 +107,16 @@ class ReportBomStructure(models.AbstractModel):
 
     @api.model
     def _get_resupply_availability(self, route_info, components):
+        resupply_state, resupply_delay = super()._get_resupply_availability(route_info, components)
         if route_info.get('route_type') == 'subcontract':
             max_component_delay = self._get_max_component_delay(components)
             if max_component_delay is False:
                 return ('unavailable', False)
-            produce_delay = route_info.get('manufacture_delay', 0) + max_component_delay
-            supplier_delay = route_info.get('supplier_delay', 0)
-            return ('estimated', max(produce_delay, supplier_delay))
-        return super()._get_resupply_availability(route_info, components)
+            # Calculate the lead time for subcontracting, keep same as `_get_lead_days`
+            vendor_lead_time = route_info['supplier'].delay
+            manufacture_lead_time = route_info['bom'].produce_delay
+            subcontract_delay = resupply_delay if resupply_delay else 0
+            subcontract_delay += max(vendor_lead_time, manufacture_lead_time + max_component_delay)
+            route_info['lead_time'] += max(vendor_lead_time, manufacture_lead_time + route_info['bom'].days_to_prepare_mo)
+            return ('estimated', subcontract_delay)
+        return (resupply_state, resupply_delay)
