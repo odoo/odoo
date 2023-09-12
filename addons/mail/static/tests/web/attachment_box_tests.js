@@ -155,6 +155,38 @@ QUnit.test("scroll to attachment box when toggling on", async (assert) => {
     assert.isVisible($(".o-mail-AttachmentBox"));
 });
 
+QUnit.test("do not auto-scroll to attachment box when initially open", async (assert) => {
+    patchUiSize({ size: SIZES.LG });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "Blah.txt",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const views = {
+        "res.partner,false,form": `
+            <form>
+                ${`<sheet><field name="name"/></sheet>`.repeat(100)}
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>
+        `,
+    };
+    const { openFormView } = await start({ serverData: { views } });
+    openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message");
+    // weak test, no guarantee that we waited long enough for the potential scroll to happen
+    await contains(".o_content", { scroll: 0 });
+});
+
 QUnit.test("attachment box should order attachments from newest to oldest", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
