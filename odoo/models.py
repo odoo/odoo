@@ -2808,7 +2808,7 @@ class BaseModel(metaclass=MetaModel):
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_sql = f""""{alias}"."{fname}" -> '{property_name}'"""
         property_type = definition.get('type')
-        property_alias = tools._generate_table_alias(alias, f'{fname}_{property_name}')
+        property_alias = query.make_alias(alias, f'{fname}_{property_name}')
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
@@ -2819,37 +2819,46 @@ class BaseModel(metaclass=MetaModel):
                      ELSE '[]'::jsonb
                  END
             '''
-            join_property = f'LEFT JOIN jsonb_array_elements({property_sql}) {property_alias}'
             if property_type == 'tags':
                 # ignore invalid tags
                 tags = [tag[0] for tag in definition.get('tags') or []]
                 # `->>0 : convert "JSON string" into string
-                expr = f'{join_property} ON {property_alias}->>0 = ANY(%s::text[])'
-                query._raw_joins[expr] = [tags]
-
-            elif property_type == 'many2many':
+                condition = SQL(
+                    "%s->>0 = ANY(%s::text[])",
+                    SQL.identifier(property_alias), tags,
+                )
+            else:
                 comodel = self.env.get(definition.get('comodel'))
                 if comodel is None or comodel._transient or comodel._abstract:
                     # all value are false, because the model does not exist anymore
                     # (or is a transient model e.g.)
-                    query._raw_joins[f'{join_property} ON FALSE'] = []
+                    condition = SQL("FALSE")
                 else:
                     # check the existences of the many2many
-                    expr = f'{join_property} ON {property_alias}::int IN (SELECT id FROM {comodel._table})'
-                    query._raw_joins[expr] = []
+                    condition = SQL(
+                        "%s::int IN (SELECT id FROM %s)",
+                        SQL.identifier(property_alias), SQL.identifier(comodel._table),
+                    )
+
+            query.add_join(
+                "LEFT JOIN",
+                property_alias,
+                SQL(f"jsonb_array_elements({property_sql})"),
+                condition,
+            )
 
             return property_alias
 
         elif property_type == 'selection':
-            options = definition.get('selection') or []
-            options = [option[0] for option in options]
+            options = [option[0] for option in definition.get('selection') or ()]
 
             # check the existence of the option
-            expr = f'''
-                LEFT JOIN (SELECT unnest(%s::text[]) {property_alias}) {property_alias}
-                       ON {property_sql}->>0 = {property_alias}
-            '''
-            query._raw_joins[expr] = [options]
+            query.add_join(
+                "LEFT JOIN",
+                property_alias,
+                SQL("(SELECT unnest(%s::text[]) %s)", options, SQL.identifier(property_alias)),
+                SQL(f"{property_sql}->>0 = %s", SQL.identifier(property_alias)),
+            )
 
             return property_alias
 

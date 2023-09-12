@@ -70,7 +70,6 @@ class Query(object):
 
         # joins {alias: (kind(SQL), table(SQL|None), condition(SQL))}
         self._joins = {}
-        self._raw_joins = {}  # {query: params}
 
         # holds the list of WHERE conditions (to be joined with 'AND')
         self._where_clauses = []
@@ -83,11 +82,28 @@ class Query(object):
         # memoized result
         self._ids = None
 
+    def make_alias(self, alias: str, link: str) -> str:
+        """ Return an alias based on ``alias`` and ``link``. """
+        return _generate_table_alias(alias, link)
+
     def add_table(self, alias: str, table: Union[str, SQL, None] = None):
         """ Add a table with a given alias to the from clause. """
         assert alias not in self._tables and alias not in self._joins, f"Alias {alias!r} already in {self}"
         self._tables[alias] = _sql_table(table)
         self._ids = None
+
+    def add_join(self, kind: str, alias: str, table: Union[str, SQL, None], condition: SQL):
+        """ Add a join clause with the given alias, table and condition. """
+        sql_kind = _SQL_JOINS.get(kind.upper())
+        assert sql_kind is not None, f"Invalid JOIN type {kind!r}"
+        assert alias not in self._tables, f"Alias {alias!r} already used"
+        table = _sql_table(table)
+
+        if alias in self._joins:
+            assert self._joins[alias] == (sql_kind, table, condition)
+        else:
+            self._joins[alias] = (sql_kind, table, condition)
+            self._ids = None
 
     def add_where(self, where_clause: Union[str, SQL], where_params=()):
         """ Add a condition to the where clause. """
@@ -150,23 +166,14 @@ class Query(object):
         return self._join('LEFT JOIN', lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
 
     def _join(self, kind, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra=None, extra_params=()):
-        sql_kind = _SQL_JOINS.get(kind.upper())
-        assert sql_kind is not None, f"Invalid JOIN type {kind!r}"
-
         assert lhs_alias in self._tables or lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
-
-        rhs_alias = _generate_table_alias(lhs_alias, link)
-        assert rhs_alias not in self._tables, "Alias %r already in %s" % (rhs_alias, str(self))
-
-        if rhs_alias not in self._joins:
-            condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
-            if extra:
-                extra = SQL(extra, *extra_params)
-                extra = SQL(extra.code.format(lhs=lhs_alias, rhs=rhs_alias), *extra.params)
-                condition = SQL("%s AND %s", condition, extra)
-            self._joins[rhs_alias] = (sql_kind, _sql_table(rhs_table), condition)
-            self._ids = None
-
+        rhs_alias = self.make_alias(lhs_alias, link)
+        condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
+        if extra:
+            extra = SQL(extra, *extra_params)
+            extra = SQL(extra.code.format(lhs=lhs_alias, rhs=rhs_alias), *extra.params)
+            condition = SQL("%s AND %s", condition, extra)
+        self.add_join(kind, rhs_alias, rhs_table, condition)
         return rhs_alias
 
     @property
@@ -181,13 +188,11 @@ class Query(object):
             _sql_from_table(alias, table)
             for alias, table in self._tables.items()
         )
-        if not (self._joins or self._raw_joins):
+        if not self._joins:
             return tables
         items = [tables]
         for alias, (kind, table, condition) in self._joins.items():
             items.append(_sql_from_join(kind, alias, table, condition))
-        for join_query, join_params in self._raw_joins.items():
-            items.append(SQL(join_query, *join_params))
         return SQL(" ").join(items)
 
     @property
