@@ -52,3 +52,18 @@ class Task(models.Model):
             'res_id': self.id,
             'type': 'ir.actions.act_window',
         }
+
+    @api.model
+    def get_todo_views_id(self):
+        """ Returns the ids of the main views used in the To-Do app.
+
+        :return: a list of views id and views type
+                 e.g. [(kanban_view_id, "kanban"), (list_view_id, "list"), ...]
+        :rtype: list(tuple())
+        """
+        return [
+            (self.env['ir.model.data']._xmlid_to_res_id("project_todo.project_task_view_todo_kanban"), "kanban"),
+            (self.env['ir.model.data']._xmlid_to_res_id("project_todo.project_task_view_todo_tree"), "list"),
+            (self.env['ir.model.data']._xmlid_to_res_id("project_todo.project_task_view_todo_form"), "form"),
+            (self.env['ir.model.data']._xmlid_to_res_id("project_todo.project_task_view_todo_activity"), "activity"),
+        ]
