@@ -248,9 +248,13 @@ export class Thread extends Record {
         return ["chat", "channel", "group"].includes(this.type);
     }
 
+    get typesAllowingCalls() {
+        return ["chat", "channel", "group"];
+    }
+
     get allowCalls() {
         return (
-            ["chat", "channel", "group"].includes(this.type) &&
+            this.typesAllowingCalls.includes(this.type) &&
             !this.correspondent?.eq(this._store.odoobot)
         );
     }

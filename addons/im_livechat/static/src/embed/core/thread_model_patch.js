@@ -56,6 +56,10 @@ patch(Thread.prototype, {
         return this.type === "livechat" || super.isChatChannel;
     },
 
+    get typesAllowingCalls() {
+        return super.typesAllowingCalls.concat(["livechat"]);
+    },
+
     get isLastMessageFromCustomer() {
         if (this.type !== "livechat") {
             return super.isLastMessageFromCustomer;

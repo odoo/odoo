@@ -31,6 +31,10 @@ patch(Thread, {
 });
 
 patch(Thread.prototype, {
+    get typesAllowingCalls() {
+        return super.typesAllowingCalls.concat(["livechat"]);
+    },
+
     get isChannel() {
         return this.type === "livechat" || super.isChannel;
     },
