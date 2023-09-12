@@ -1585,7 +1585,7 @@ QUnit.module("Search", (hooks) => {
                 "Add Custom Filter"
             );
             assert.containsOnce(target, ".modal .o_domain_selector");
-            assert.containsOnce(target, ".modal .o_domain_selector .o_domain_selector_condition");
+            assert.containsOnce(target, ".modal .o_domain_selector .o_tree_editor_condition");
             assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal footer button")), [
                 "Add",
                 "Cancel",
@@ -1603,13 +1603,10 @@ QUnit.module("Search", (hooks) => {
                 });
                 await toggleSearchBarMenu(target);
                 await openAddCustomFilterDialog(target);
+                assert.containsOnce(target, ".modal .o_domain_selector .o_tree_editor_condition");
                 assert.containsOnce(
                     target,
-                    ".modal .o_domain_selector .o_domain_selector_condition"
-                );
-                assert.containsOnce(
-                    target,
-                    ".o_domain_selector_condition .o_model_field_selector_chain_part"
+                    ".o_tree_editor_condition .o_model_field_selector_chain_part"
                 );
                 assert.strictEqual(dsHelpers.getCurrentPath(target), "ID");
             }
@@ -1631,13 +1628,10 @@ QUnit.module("Search", (hooks) => {
                 });
                 await toggleSearchBarMenu(target);
                 await openAddCustomFilterDialog(target);
+                assert.containsOnce(target, ".modal .o_domain_selector .o_tree_editor_condition");
                 assert.containsOnce(
                     target,
-                    ".modal .o_domain_selector .o_domain_selector_condition"
-                );
-                assert.containsOnce(
-                    target,
-                    ".o_domain_selector_condition .o_model_field_selector_chain_part"
+                    ".o_tree_editor_condition .o_model_field_selector_chain_part"
                 );
                 assert.strictEqual(dsHelpers.getCurrentPath(target), "Country");
             }
@@ -1652,13 +1646,13 @@ QUnit.module("Search", (hooks) => {
             });
             await toggleSearchBarMenu(target);
             await openAddCustomFilterDialog(target);
-            assert.containsOnce(target, ".modal .o_domain_selector .o_domain_selector_condition");
+            assert.containsOnce(target, ".modal .o_domain_selector .o_tree_editor_condition");
             assert.containsOnce(
                 target,
-                ".o_domain_selector_condition .o_model_field_selector_chain_part"
+                ".o_tree_editor_condition .o_model_field_selector_chain_part"
             );
             assert.strictEqual(dsHelpers.getCurrentPath(target), "ID");
-            assert.containsOnce(target, ".o_domain_selector .o_domain_selector_connector");
+            assert.containsOnce(target, ".o_domain_selector .o_tree_editor_connector");
 
             await dsHelpers.clickOnButtonAddNewRule(target);
             assert.containsOnce(target, ".o_domain_selector .dropdown-toggle");
@@ -1666,7 +1660,7 @@ QUnit.module("Search", (hooks) => {
                 target.querySelector(".o_domain_selector .dropdown-toggle").innerText,
                 "any"
             );
-            assert.containsN(target, ".modal .o_domain_selector .o_domain_selector_condition", 2);
+            assert.containsN(target, ".modal .o_domain_selector .o_tree_editor_condition", 2);
         });
 
         QUnit.test("Add a custom filter", async function (assert) {
@@ -1819,7 +1813,7 @@ QUnit.module("Search", (hooks) => {
                 `["!", "|", ("foo", "=", 1 ), ("id", "=", 2)]`
             );
             assert.strictEqual(
-                target.querySelector(".o_domain_selector_row .dropdown-toggle").textContent,
+                target.querySelector(".o_tree_editor_row .dropdown-toggle").textContent,
                 "none"
             );
 

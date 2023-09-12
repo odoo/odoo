@@ -1,114 +1,29 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { disambiguate, getDefaultValue } from "./domain_selector_value_editors";
-import { getDefaultOperator, getOperatorLabel } from "./domain_selector_operator_editor";
+import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
+import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { unique, zip } from "@web/core/utils/arrays";
 import {
-    Expression,
     toValue,
-    toDomain,
-    toTree,
+    domainFromTree,
     normalizeValue,
-    formatValue as toSring,
-} from "@web/core/domain_tree";
+    formatValue as toString,
+    createVirtualOperators,
+} from "@web/core/tree_editor/condition_tree";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
-
-/**
- * @param {import("@web/core/domain_tree").Tree} tree
- * @param {Function} getFieldDef
- * @returns {import("@web/core/domain_tree").Tree}
- */
-export function createVirtualOperators(tree, getFieldDef) {
-    if (tree.type === "condition") {
-        const { path, operator, value } = tree;
-        if (["=", "!="].includes(operator)) {
-            const fieldDef = getFieldDef(path);
-            if (fieldDef?.type === "boolean") {
-                return { ...tree, operator: operator === "=" ? "is" : "is_not" };
-            } else if (
-                !["many2one", "date", "datetime"].includes(fieldDef?.type) &&
-                value === false
-            ) {
-                return { ...tree, operator: operator === "=" ? "not_set" : "set" };
-            }
-        }
-        return tree;
-    }
-    const processedChildren = tree.children.map((c) => createVirtualOperators(c, getFieldDef));
-    return { ...tree, children: processedChildren };
-}
-
-/**
- * @param {import("@web/core/domain_tree").Tree} tree
- * @returns {import("@web/core/domain_tree").Tree}
- */
-function removeVirtualOperators(tree) {
-    if (tree.type === "condition") {
-        const { operator } = tree;
-        if (["is", "is_not"].includes(operator)) {
-            return { ...tree, operator: operator === "is" ? "=" : "!=" };
-        }
-        if (["set", "not_set"].includes(operator)) {
-            return { ...tree, operator: operator === "set" ? "!=" : "=" };
-        }
-        return tree;
-    }
-    const processedChildren = tree.children.map((c) => removeVirtualOperators(c));
-    return { ...tree, children: processedChildren };
-}
-
-/**
- * @param {import("@web/core/domain_tree").Tree} domainSelectorTree
- * @returns {string}
- */
-export function buildDomain(domainSelectorTree) {
-    const tree = removeVirtualOperators(domainSelectorTree);
-    return toDomain(tree);
-}
+import {
+    extractIdsFromTree,
+    getDefaultPath,
+    getPathsInTree,
+    leafToString,
+    useLoadDisplayNames,
+} from "@web/core/tree_editor/utils";
 
 /**
  * @param {import("@web/core/domain").DomainRepr} domain
- * @param {Function} getFieldDef
- * @param {Object} [options={}]
- * @returns {import("@web/core/domain_tree").Tree}
- */
-export function buildDomainSelectorTree(domain, getFieldDef, options = {}) {
-    const tree = toTree(domain, options);
-    return createVirtualOperators(tree, getFieldDef);
-}
-
-/**
- * @param {import("@web/core/domain_tree").Value} value
- * @returns {import("@web/core/domain_tree").Value}
- */
-function cloneValue(value) {
-    if (value instanceof Expression) {
-        return new Expression(value.toAST());
-    }
-    if (Array.isArray(value)) {
-        return value.map((val) => cloneValue(val));
-    }
-    return value;
-}
-
-/**
- * @param {import("@web/core/domain_tree").Tree} tree
- * @returns {import("@web/core/domain_tree").Tree}
- */
-export function cloneTree(tree) {
-    const clone = {};
-    for (const key in tree) {
-        clone[key] = cloneValue(tree[key]);
-    }
-    return clone;
-}
-
-/**
- * @param {import("@web/core/domain").DomainRepr} domain
- * @returns {import("@web/core/domain_tree").Value[]}
+ * @returns {import("@web/core/tree_editor/condition_tree").Value[]}
  */
 export function extractPathsFromDomain(domain) {
     domain = new Domain(domain);
@@ -121,147 +36,30 @@ export function extractPathsFromDomain(domain) {
     return [...paths];
 }
 
-function isId(val) {
-    return Number.isInteger(val) && val >= 1;
-}
-
-/**
- * @param {import("@web/core/domain").DomainRepr} domain
- * @param {Function} getFieldDef
- * @returns {Object}
- */
-export function extractIdsFromDomain(domain, getFieldDef) {
-    domain = new Domain(domain);
-    const idsByModel = {};
-    for (const node of domain.ast.value) {
-        if ([4, 10].includes(node.type)) {
-            const path = toValue(node.value[0]);
-            const fieldDef = getFieldDef(path);
-            if (["many2one", "many2many", "one2many"].includes(fieldDef?.type)) {
-                const value = toValue(node.value[2]);
-                const values = Array.isArray(value) ? value : [value];
-                const ids = values.filter((val) => isId(val));
-                const resModel = fieldDef.is_property ? fieldDef.comodel : fieldDef.relation;
-                if (ids.length) {
-                    if (!idsByModel[resModel]) {
-                        idsByModel[resModel] = [];
-                    }
-                    idsByModel[resModel].push(...ids);
-                }
-            }
-        }
-    }
-    for (const resModel in idsByModel) {
-        idsByModel[resModel] = unique(idsByModel[resModel]);
-    }
-    return idsByModel;
-}
-
-export function useLoadDisplayNames(nameService) {
-    nameService ||= useService("name");
-    return async (resIdsByModel) => {
-        const proms = [];
-        const resModels = [];
-        for (const [resModel, resIds] of Object.entries(resIdsByModel)) {
-            resModels.push(resModel);
-            proms.push(nameService.loadDisplayNames(resModel, resIds));
-        }
-        return Object.fromEntries(zip(resModels, await Promise.all(proms)));
+function getDefaultCondition(fieldDefs) {
+    const defaultPath = getDefaultPath(fieldDefs);
+    const fieldDef = fieldDefs[defaultPath];
+    const operator = getDomainDisplayedOperators(fieldDef)[0];
+    const value = getDefaultValue(fieldDef, operator);
+    return {
+        type: "condition",
+        negate: false,
+        path: fieldDef.name,
+        operator,
+        value,
     };
 }
-
-/**
- * @param {import("@web/core/domain_tree").Value} val
- * @param {boolean} disambiguate
- * @param {Object|null} fieldDef
- * @param {Object} displayNames
- * @returns
- */
-function formatValue(val, disambiguate, fieldDef, displayNames) {
-    if (val instanceof Expression) {
-        return val.toString();
-    }
-    if (displayNames && isId(val)) {
-        if (typeof displayNames[val] === "string") {
-            val = displayNames[val];
-        } else {
-            return _t("Inaccessible/missing record ID: %s", val);
-        }
-    }
-    if (fieldDef?.type === "selection") {
-        const [, label] = (fieldDef.selection || []).find(([v]) => v === val) || [];
-        if (label !== undefined) {
-            val = label;
-        }
-    }
-    if (disambiguate && typeof val === "string") {
-        return JSON.stringify(val);
-    }
-    return val;
-}
-
-export function leafToString(tree, fieldDef, displayNames) {
-    const { operator, negate, value } = tree;
-    const operatorLabel = getOperatorLabel(operator, negate);
-
-    const description = {
-        operatorDescription: `${operatorLabel}`,
-        valueDescription: null,
-    };
-
-    if (["set", "not_set"].includes(operator)) {
-        return description;
-    }
-    if (["is", "is_not"].includes(operator)) {
-        description.valueDescription = {
-            values: [value ? _t("set") : _t("not set")],
-            join: "",
-            addParenthesis: false,
-        };
-        return description;
-    }
-
-    const dis = disambiguate(value, displayNames);
-    const values = (Array.isArray(value) ? value : [value]).map((val) =>
-        formatValue(val, dis, fieldDef, displayNames)
-    );
-    let join;
-    let addParenthesis = Array.isArray(value);
-    switch (operator) {
-        case "between":
-            join = _t("and");
-            addParenthesis = false;
-            break;
-        case "in":
-        case "not in":
-            join = ",";
-            break;
-        default:
-            join = _t("or");
-    }
-    description.valueDescription = { values, join, addParenthesis };
-    return description;
-}
-
-const SPECIAL_FIELDS = ["country_id", "user_id", "partner_id", "stage_id"];
 
 function getDefaultDomain(fieldDefs) {
-    let fieldDef = null;
-    for (const name of SPECIAL_FIELDS) {
-        fieldDef = fieldDefs[name];
-        if (fieldDef) {
-            const operator = getDefaultOperator(fieldDef);
-            const value = getDefaultValue(fieldDef, operator);
-            return buildDomain({
-                type: "condition",
-                negate: false,
-                path: fieldDef.name,
-                operator,
-                value,
-            });
-        }
-    }
-    return new Domain([["id", "=", 1]]).toString();
+    return domainFromTree(getDefaultCondition(fieldDefs));
+}
+
+export function useGetDefaultCondition() {
+    const fieldService = useService("field");
+    return async (resModel) => {
+        const fieldDefs = await fieldService.loadFields(resModel);
+        return getDefaultCondition(fieldDefs);
+    };
 }
 
 export function useGetDefaultLeafDomain() {
@@ -276,11 +74,11 @@ export function useGetDefaultLeafDomain() {
  * @param {Tree} tree
  * @returns {tree}
  */
-export function simplifyTree(tree, isRoot = true) {
+function simplifyTree(tree) {
     if (tree.type === "condition") {
         return tree;
     }
-    const processedChildren = tree.children.map((c) => simplifyTree(c, false));
+    const processedChildren = tree.children.map(simplifyTree);
     if (tree.value === "&") {
         return { ...tree, children: processedChildren };
     }
@@ -321,7 +119,7 @@ export function simplifyTree(tree, isRoot = true) {
             value: normalizeValue(value),
         });
     }
-    if (children.length === 1 && !isRoot) {
+    if (children.length === 1) {
         return { ...children[0] };
     }
     return { ...tree, children };
@@ -379,26 +177,25 @@ export function useGetDomainTreeDescription(fieldService, nameService) {
     const loadDisplayNames = useLoadDisplayNames(nameService);
     return async (resModel, tree) => {
         tree = simplifyTree(tree);
-        const domain = toDomain(tree);
-        const paths = extractPathsFromDomain(domain);
+        const paths = getPathsInTree(tree);
         const promises = [];
         const pathFieldDefs = {};
         const pathDescriptions = {};
         for (const path of paths) {
             promises.push(
                 loadPathDescription(resModel, path).then(({ displayNames }) => {
-                    pathDescriptions[toSring(path)] = displayNames.join(" 🠒 ");
+                    pathDescriptions[toString(path)] = displayNames.join(" 🠒 ");
                 }),
                 loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                    pathFieldDefs[toSring(path)] = fieldDef;
+                    pathFieldDefs[toString(path)] = fieldDef;
                 })
             );
         }
         await Promise.all(promises);
-        const getFieldDef = (path) => pathFieldDefs[toSring(path)];
-        const getDescription = (path) => pathDescriptions[toSring(path)];
-        const idsByModel = extractIdsFromDomain(domain, getFieldDef);
-        const treeWithVirtualOperators = createVirtualOperators(tree, getFieldDef);
+        const getFieldDef = (path) => pathFieldDefs[toString(path)];
+        const getDescription = (path) => pathDescriptions[toString(path)];
+        const idsByModel = extractIdsFromTree(tree, getFieldDef);
+        const treeWithVirtualOperators = createVirtualOperators(tree, { getFieldDef });
         const displayNames = await loadDisplayNames(idsByModel);
         return getDomainTreeDescription(
             treeWithVirtualOperators,

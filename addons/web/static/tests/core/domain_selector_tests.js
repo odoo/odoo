@@ -3,7 +3,6 @@
 import {
     click,
     editInput,
-    editSelect,
     getFixture,
     getNodesTextContent,
     mount,
@@ -24,14 +23,58 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
-import {
-    getModelFieldSelectorValues,
-    openModelFieldSelectorPopover,
-} from "./model_field_selector_tests";
+import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 import { nameService } from "@web/core/name_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { browser } from "@web/core/browser/browser";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+import {
+    SELECTORS as treeEditorSELECTORS,
+    addNewRule,
+    clearNotSupported,
+    clickOnButtonAddBranch,
+    clickOnButtonAddNewRule,
+    clickOnButtonDeleteNode,
+    editValue,
+    getConditionText,
+    getCurrentOperator,
+    getCurrentPath,
+    getCurrentValue,
+    getOperatorOptions,
+    isNotSupportedOperator,
+    isNotSupportedPath,
+    isNotSupportedValue,
+    selectOperator,
+    selectValue,
+    toggleArchive,
+    getValueOptions,
+} from "./condition_tree_editor_helpers";
+
+export {
+    addNewRule,
+    clearNotSupported,
+    clickOnButtonAddBranch,
+    clickOnButtonAddNewRule,
+    clickOnButtonDeleteNode,
+    editValue,
+    getConditionText,
+    getCurrentOperator,
+    getCurrentPath,
+    getCurrentValue,
+    getOperatorOptions,
+    isNotSupportedOperator,
+    isNotSupportedPath,
+    isNotSupportedValue,
+    selectOperator,
+    selectValue,
+    toggleArchive,
+} from "./condition_tree_editor_helpers";
+
+export const SELECTORS = {
+    ...treeEditorSELECTORS,
+    debugArea: ".o_domain_selector_debug_container textarea",
+    resetButton: ".o_domain_selector_row > button",
+};
 
 let serverData;
 let target;
@@ -43,138 +86,6 @@ function addProductIds() {
         relation: "product",
         searchable: true,
     };
-}
-
-export const SELECTORS = {
-    debugArea: ".o_domain_selector_debug_container textarea",
-    condition: ".o_domain_selector_condition",
-    addNewRule: ".o_domain_selector_row > a",
-    resetButton: ".o_domain_selector_row > button",
-    buttonAddNewRule: ".o_domain_selector_node_control_panel > button:nth-child(1)",
-    buttonAddBranch: ".o_domain_selector_node_control_panel > button:nth-child(2)",
-    buttonDeleteNode: ".o_domain_selector_node_control_panel > button:nth-child(3)",
-    pathEditor: ".o_domain_selector_condition > .o_domain_selector_editor:nth-child(1)",
-    operatorEditor: ".o_domain_selector_condition > .o_domain_selector_editor:nth-child(2)",
-    valueEditor: ".o_domain_selector_condition > .o_domain_selector_editor:nth-child(3)",
-    editor: ".o_domain_selector_editor",
-    clearNotSupported: ".o_input .fa-times",
-    tag: ".o_input .o_tag",
-    toggleArchive: ".form-switch",
-};
-
-////////////////////////////////////////////////////////////////////////////////
-
-function get(target, selector, index = 0) {
-    if (index) {
-        return [...target.querySelectorAll(selector)].at(index);
-    }
-    return target.querySelector(selector);
-}
-
-function getValue(target) {
-    const el = target.querySelector("input,select,span:not(.o_tag)");
-    switch (el.tagName) {
-        case "INPUT":
-            return el.value;
-        case "SELECT":
-            return el.options[el.selectedIndex].label;
-        case "SPAN":
-            return el.innerText;
-    }
-}
-
-export function getConditionText(target, index = 0) {
-    const condition = get(target, SELECTORS.condition, index);
-    const texts = [];
-    for (const t of getNodesTextContent(condition.childNodes)) {
-        const t2 = t.trim();
-        if (t2) {
-            texts.push(t2);
-        }
-    }
-    return texts.join(" ");
-}
-
-function getOperatorOptions(target, index = 0) {
-    const el = get(target, SELECTORS.operatorEditor, index);
-    const select = el.querySelector("select");
-    return [...select.options].map((o) => o.label);
-}
-
-export function getCurrentPath(target, index = 0) {
-    const pathEditor = get(target, SELECTORS.pathEditor, index);
-    if (pathEditor.querySelector(".o_model_field_selector")) {
-        return getModelFieldSelectorValues(pathEditor).join(" > ");
-    }
-    return pathEditor.textContent;
-}
-
-export function getCurrentOperator(target, index = 0) {
-    const operatorEditor = get(target, SELECTORS.operatorEditor, index);
-    return getValue(operatorEditor);
-}
-
-export function getCurrentValue(target, index) {
-    const valueEditor = get(target, SELECTORS.valueEditor, index);
-    return getValue(valueEditor);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-function isNotSupportedPath(target, index = 0) {
-    const pathEditor = get(target, SELECTORS.pathEditor, index);
-    return Boolean(pathEditor.querySelector(SELECTORS.clearNotSupported));
-}
-
-function isNotSupportedOperator(target, index = 0) {
-    const operatorEditor = get(target, SELECTORS.operatorEditor, index);
-    return Boolean(operatorEditor.querySelector(SELECTORS.clearNotSupported));
-}
-
-function isNotSupportedValue(target, index = 0) {
-    const valueEditor = get(target, SELECTORS.valueEditor, index);
-    return Boolean(valueEditor.querySelector(SELECTORS.clearNotSupported));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export async function selectOperator(target, operator, index = 0) {
-    const el = get(target, SELECTORS.operatorEditor, index);
-    await editSelect(el, "select", JSON.stringify(operator));
-}
-
-export async function selectValue(target, value, index = 0) {
-    const el = get(target, SELECTORS.valueEditor, index);
-    await editSelect(el, "select", JSON.stringify(value));
-}
-
-export async function editValue(target, value, index = 0) {
-    const el = get(target, SELECTORS.valueEditor, index);
-    await editInput(el, "input", value);
-}
-
-export async function clickOnButtonAddNewRule(target, index = 0) {
-    await click(get(target, SELECTORS.buttonAddNewRule, index));
-}
-
-export async function clickOnButtonAddBranch(target, index = 0) {
-    await click(get(target, SELECTORS.buttonAddBranch, index));
-}
-
-export async function clickOnButtonDeleteNode(target, index = 0) {
-    await click(get(target, SELECTORS.buttonDeleteNode, index));
-}
-
-export async function clearNotSupported(target, index = 0) {
-    await click(get(target, SELECTORS.clearNotSupported, index));
-}
-
-export async function addNewRule(target) {
-    await click(target, SELECTORS.addNewRule);
-}
-
-async function toggleArchive(target) {
-    await click(target, SELECTORS.toggleArchive);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -502,26 +413,6 @@ QUnit.module("Components", (hooks) => {
         assert.ok(isNotSupportedValue(target));
     });
 
-    QUnit.test("creating a domain with a default option", async (assert) => {
-        assert.expect(1);
-        // Create the domain selector and its mock environment
-        await makeDomainSelector({
-            isDebugMode: true,
-            defaultLeafValue: ["foo", "=", "kikou"],
-            update: (domain) => {
-                assert.strictEqual(
-                    domain,
-                    `[("foo", "=", "kikou")]`,
-                    "the domain input should contain the default domain"
-                );
-            },
-        });
-
-        // Clicking on the button should add a visible field selector in the
-        // widget so that the user can change the field chain
-        await addNewRule(target);
-    });
-
     QUnit.test("edit a domain with the debug textarea", async (assert) => {
         assert.expect(5);
 
@@ -554,7 +445,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test(
         "set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea",
         async (assert) => {
-            assert.expect(15);
+            assert.expect(11);
 
             let newDomain;
             await makeDomainSelector({
@@ -574,10 +465,6 @@ QUnit.module("Components", (hooks) => {
                 newDomain,
                 "the domain should not have been formatted"
             );
-            assert.containsOnce(target, SELECTORS.condition);
-            assert.strictEqual(getCurrentPath(target), "1");
-            assert.strictEqual(getCurrentOperator(target), "=");
-            assert.strictEqual(getCurrentValue(target), "1");
 
             newDomain = `[(0, "=", 1)]`;
             await editInput(target, SELECTORS.debugArea, newDomain);
@@ -749,13 +636,9 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("domain not supported (mode edit + mode debug)", async (assert) => {
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                domain: `[`,
-                readonly: false,
-                isDebugMode: true,
-            },
+        await makeDomainSelector({
+            domain: `[`,
+            isDebugMode: true,
         });
         assert.containsOnce(target, SELECTORS.resetButton);
         assert.containsOnce(target, SELECTORS.debugArea);
@@ -763,26 +646,12 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("reset domain", async (assert) => {
-        class Parent extends Component {
-            setup() {
-                this.domain = `[`;
-            }
-            onUpdate(domain) {
+        await makeDomainSelector({
+            domain: `[`,
+            update(domain) {
                 assert.step(domain);
-                this.domain = domain;
-                this.render();
-            }
-        }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                domain="domain"
-                readonly="false"
-                update="(domain) => this.onUpdate(domain)"
-            />
-        `;
-        await mountComponent(Parent);
+            },
+        });
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText.toLowerCase(),
             "this domain is not supported.\nreset domain"
@@ -798,6 +667,25 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, SELECTORS.resetButton);
         assert.containsOnce(target, SELECTORS.addNewRule);
         assert.verifySteps(["[]"]);
+    });
+
+    QUnit.test("default condition depends on available fields", async (assert) => {
+        serverData.models.partner.fields = {
+            ...serverData.models.partner.fields,
+            user_id: { string: "User", type: "many2one", relation: "user" },
+        };
+        await makeDomainSelector({
+            domain: `[]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(
+            target.querySelector(".o_domain_selector").innerText.toLowerCase(),
+            "match all records\nnew rule"
+        );
+        await addNewRule(target);
+        assert.verifySteps(['[("user_id", "in", [])]']);
     });
 
     QUnit.test("debug input in model field selector popover", async (assert) => {
@@ -825,13 +713,13 @@ QUnit.module("Components", (hooks) => {
         await openModelFieldSelectorPopover(target);
         await editInput(target, ".o_model_field_selector_debug", "a");
         await click(target, ".o_model_field_selector_popover_close");
-        assert.verifySteps([`[("a", "=", "")]`]);
+        assert.verifySteps([`[("a", "=", 1)]`]);
         assert.strictEqual(getCurrentPath(target), "a");
         assert.containsOnce(target, ".o_model_field_selector_warning");
         assert.strictEqual(getOperatorOptions(target).length, 1);
         assert.strictEqual(getCurrentOperator(target), "=");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.strictEqual(target.querySelector(SELECTORS.debugArea).value, `[("a", "=", "")]`);
+        assert.strictEqual(getCurrentValue(target), "1");
+        assert.strictEqual(target.querySelector(SELECTORS.debugArea).value, `[("a", "=", 1)]`);
     });
 
     QUnit.test("between operator", async (assert) => {
@@ -1250,7 +1138,6 @@ QUnit.module("Components", (hooks) => {
             ".o_model_field_selector_popover_item[data-name='properties'] .o_model_field_selector_popover_relation_icon"
         );
         assert.strictEqual(getCurrentPath(target), "Properties");
-
         expectedDomain = `[("properties.xpad_prop_1", "=", False)]`;
         await click(
             target.querySelector(
@@ -1917,8 +1804,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
         assert.strictEqual(getCurrentOperator(target), "is in");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xphone"]);
-        assert.strictEqual(getCurrentValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "xphone");
         assert.verifySteps([]);
         assert.containsNone(target, ".dropdown-menu");
 
@@ -1930,25 +1816,16 @@ QUnit.module("Components", (hooks) => {
 
         await click(target, ".dropdown-menu li");
         assert.verifySteps([`[("product_id", "in", [37, 41])]`]);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
-            "xphone",
-            "xpad",
-        ]);
-        assert.strictEqual(getCurrentValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "xphone xpad");
 
         await selectOperator(target, "not in");
         assert.strictEqual(getCurrentOperator(target), "is not in");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
-            "xphone",
-            "xpad",
-        ]);
+        assert.strictEqual(getCurrentValue(target), "xphone xpad");
         assert.verifySteps([`[("product_id", "not in", [37, 41])]`]);
 
         await click(target.querySelector(".o_tag .o_delete"));
         assert.strictEqual(getCurrentOperator(target), "is not in");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
+        assert.strictEqual(getCurrentValue(target), "xpad");
         assert.verifySteps([`[("product_id", "not in", [41])]`]);
     });
 
@@ -2105,8 +1982,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
         assert.strictEqual(getCurrentOperator(target), "is in");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xphone"]);
-        assert.strictEqual(getCurrentValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "xphone");
         assert.verifySteps([]);
         assert.containsNone(target, ".dropdown-menu");
 
@@ -2118,38 +1994,27 @@ QUnit.module("Components", (hooks) => {
 
         await click(target, ".dropdown-menu li");
         assert.verifySteps([`[("product_ids", "in", [37, 41])]`]);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
-            "xphone",
-            "xpad",
-        ]);
-        assert.strictEqual(getCurrentValue(target), "");
+        assert.strictEqual(getCurrentValue(target), "xphone xpad");
 
         await selectOperator(target, "not in");
         assert.strictEqual(getCurrentOperator(target), "is not in");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), [
-            "xphone",
-            "xpad",
-        ]);
+        assert.strictEqual(getCurrentValue(target), "xphone xpad");
         assert.verifySteps([`[("product_ids", "not in", [37, 41])]`]);
 
         await click(target.querySelector(".o_tag .o_delete"));
 
         assert.strictEqual(getCurrentOperator(target), "is not in");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
+        assert.strictEqual(getCurrentValue(target), "xpad");
         assert.verifySteps([`[("product_ids", "not in", [41])]`]);
 
         await selectOperator(target, "=");
         assert.strictEqual(getCurrentOperator(target), "=");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
+        assert.strictEqual(getCurrentValue(target), "xpad");
         assert.verifySteps([`[("product_ids", "=", [41])]`]);
 
         await selectOperator(target, "!=");
         assert.strictEqual(getCurrentOperator(target), "!=");
-        assert.strictEqual(getCurrentValue(target), "");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(SELECTORS.tag)), ["xpad"]);
+        assert.strictEqual(getCurrentValue(target), "xpad");
         assert.verifySteps([`[("product_ids", "!=", [41])]`]);
     });
 
@@ -2307,5 +2172,13 @@ QUnit.module("Components", (hooks) => {
         assert.containsOnce(target, ".o_datetime_input");
         assert.strictEqual(getCurrentValue(target), "");
         assert.verifySteps([`[("date", "!=", False)]`]);
+    });
+
+    QUnit.test("render false and true leaves", async (assert) => {
+        await makeDomainSelector({ domain: `[(0, "=", 1), (1, "=", 1)]` });
+        assert.deepEqual(getOperatorOptions(target), ["="]);
+        assert.deepEqual(getValueOptions(target), ["1"]);
+        assert.deepEqual(getOperatorOptions(target, -1), ["="]);
+        assert.deepEqual(getValueOptions(target, -1), ["1"]);
     });
 });
