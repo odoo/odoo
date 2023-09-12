@@ -1,6 +1,45 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
+        <record id="discuss_channel_ir_attachment_view_kanban" model="ir.ui.view">
+            <field name="name">discuss.channel.ir.attachment.kanban</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <kanban string="Attachments" js_class="im_livechat.discuss_channel_attachment_kanban" create="0">
+                    <field name="id"/>
+                    <field name="mimetype"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_image me-1">
+                                    <t t-set="is_image" t-value="record.mimetype.raw_value.startsWith('image/')"/>
+                                    <img t-if="is_image" t-att-src="kanban_image('ir.attachment', 'raw', record.id.raw_value)" class="img-fluid" alt="Attachment image"/>
+                                    <div t-else="" class="o_image" role="menuitem" aria-label="Preview" t-attf-data-mimetype="{{record.mimetype.raw_value}}"></div>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top mb-0">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <field name="create_date" widget="date"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="discuss_channel_action_view_attachments" model="ir.actions.act_window">
+            <field name="name">Attachments</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="discuss_channel_ir_attachment_view_kanban"/>
+            <field name="domain">[('res_model', '=', 'discuss.channel'), ('res_id', '=', active_id)]</field>
+        </record>
 
         <record id="discuss_channel_view_search" model="ir.ui.view">
             <field name="name">discuss.channel.search</field>
@@ -46,6 +85,11 @@
             <field name="arch" type="xml">
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
+                        <div name="button_box" position="inside">
+                            <button class="oe_stat_button" type="action" name="%(discuss_channel_action_view_attachments)d" icon="fa-paperclip">
+                                <field string="Attachments" name="message_attachment_count" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div style="width:50%" class="float-end">
                             <field name="rating_last_image" widget="image" class="float-end bg-view" readonly="1" nolabel="1"/>
                             <field name="rating_last_feedback" nolabel="1"/>
@@ -154,7 +198,6 @@
             <field name="view_id" ref="im_livechat.discuss_channel_view_form"/>
             <field name="act_window_id" ref="im_livechat.discuss_channel_action"/>
         </record>
-
 
         <record id="discuss_channel_action_from_livechat_channel" model="ir.actions.act_window">
             <field name="name">Sessions</field>
