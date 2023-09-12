@@ -2,12 +2,39 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Component, useRef, useState } from "@odoo/owl";
-import { Dialog } from "../dialog/dialog";
+import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
-import { DomainSelector } from "../domain_selector/domain_selector";
-import { useService } from "../utils/hooks";
+import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { useService } from "@web/core/utils/hooks";
 
 export class DomainSelectorDialog extends Component {
+    static template = "web.DomainSelectorDialog";
+    static components = {
+        Dialog,
+        DomainSelector,
+    };
+    static props = {
+        close: Function,
+        onConfirm: Function,
+        resModel: String,
+        className: { type: String, optional: true },
+        defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
+        domain: String,
+        isDebugMode: { type: Boolean, optional: true },
+        readonly: { type: Boolean, optional: true },
+        text: { type: String, optional: true },
+        confirmButtonText: { type: String, optional: true },
+        disableConfirmButton: { type: Function, optional: true },
+        discardButtonText: { type: String, optional: true },
+        title: { type: String, optional: true },
+        context: { type: Object, optional: true },
+    };
+    static defaultProps = {
+        isDebugMode: false,
+        readonly: false,
+        context: {},
+    };
+
     setup() {
         this.notification = useService("notification");
         this.rpc = useService("rpc");
@@ -43,7 +70,6 @@ export class DomainSelectorDialog extends Component {
             readonly: this.props.readonly,
             isDebugMode: this.props.isDebugMode,
             defaultConnector: this.props.defaultConnector,
-            defaultLeafValue: this.props.defaultLeafValue,
             domain: this.state.domain,
             update: (domain) => {
                 this.state.domain = domain;
@@ -84,30 +110,3 @@ export class DomainSelectorDialog extends Component {
         this.props.close();
     }
 }
-DomainSelectorDialog.template = "web.DomainSelectorDialog";
-DomainSelectorDialog.components = {
-    Dialog,
-    DomainSelector,
-};
-DomainSelectorDialog.props = {
-    close: Function,
-    onConfirm: Function,
-    resModel: String,
-    className: { type: String, optional: true },
-    defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
-    defaultLeafValue: { type: Array, optional: true },
-    domain: String,
-    isDebugMode: { type: Boolean, optional: true },
-    readonly: { type: Boolean, optional: true },
-    text: { type: String, optional: true },
-    confirmButtonText: { type: String, optional: true },
-    disableConfirmButton: { type: Function, optional: true },
-    discardButtonText: { type: String, optional: true },
-    title: { type: String, optional: true },
-    context: { type: Object, optional: true },
-};
-DomainSelectorDialog.defaultProps = {
-    isDebugMode: false,
-    readonly: false,
-    context: {},
-};
