@@ -28,6 +28,19 @@
     .o_progressbar {
         // Force progress bars to respect table's layout
         display: table-row;
+        justify-content: flex-end;
+        .o_rtl & {
+            justify-content: flex-start;
+            text-align: right;
+        }
+        .o_progressbar_value {
+            span {
+                min-width: 1.5rem;
+            }
+            span:last-child{
+                text-align: left;
+            }
+        }
     }
 }
 
