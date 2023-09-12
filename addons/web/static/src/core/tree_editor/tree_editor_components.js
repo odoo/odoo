@@ -5,12 +5,12 @@ import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class Input extends Component {
     static props = ["value", "update", "startEmpty?"];
-    static template = "web.DomainSelector.Input";
+    static template = "web.TreeEditor.Input";
 }
 
 export class Select extends Component {
     static props = ["value", "update", "options", "addBlankOption?"];
-    static template = "web.DomainSelector.Select";
+    static template = "web.TreeEditor.Select";
 
     deserialize(value) {
         return JSON.parse(value);
@@ -23,7 +23,7 @@ export class Select extends Component {
 
 export class Range extends Component {
     static props = ["value", "update", "editorInfo"];
-    static template = "web.DomainSelector.Range";
+    static template = "web.TreeEditor.Range";
 
     update(index, newValue) {
         const result = [...this.props.value];
@@ -35,7 +35,7 @@ export class Range extends Component {
 export class List extends Component {
     static components = { TagsList };
     static props = ["value", "update", "editorInfo"];
-    static template = "web.DomainSelector.List";
+    static template = "web.TreeEditor.List";
 
     get tags() {
         const { isSupported, stringify } = this.props.editorInfo;

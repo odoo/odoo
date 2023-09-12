@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { MultiRecordSelector } from "../record_selectors/multi_record_selector";
+import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { _t } from "@web/core/l10n/translation";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
-import { Expression } from "@web/core/domain_tree";
-import { RecordSelector } from "../record_selectors/record_selector";
+import { Expression } from "@web/core/tree_editor/condition_tree";
+import { RecordSelector } from "@web/core/record_selectors/record_selector";
 
 export const isId = (val) => Number.isInteger(val) && val >= 1;
 

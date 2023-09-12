@@ -10,11 +10,11 @@ import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import { toTree } from "@web/core/domain_tree";
 import {
     useGetDomainTreeDescription,
     useGetDefaultLeafDomain,
 } from "@web/core/domain_selector/utils";
+import { treeFromDomain } from "@web/core/tree_editor/condition_tree";
 
 export class DomainField extends Component {
     static template = "web.DomainField";
@@ -138,7 +138,7 @@ export class DomainField extends Component {
         let promises;
         const domain = this.getDomain(props);
         try {
-            const tree = toTree(domain, { distributeNot: !this.env.debug });
+            const tree = treeFromDomain(domain, { distributeNot: !this.env.debug });
             const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
             promises = trees.map(async (tree) => {
                 const description = await this.getDomainTreeDescription(resModel, tree);

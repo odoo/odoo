@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="web.DomainSelector.Editor">
-        <t t-if="!info.isSupported(value)">
-            <div t-attf-class="o_domain_selector_editor #{_classes}">
-                <div class="o_input d-flex align-items-center">
-                    <span class="flex-grow-1 text-truncate" t-esc="info.stringify(value)" />
-                    <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-title="(typeof info.message === 'function') ? info.message(value) : info.message" />
-                    <i class="fa fa-times" title="Clear" t-on-click="() => update(info.defaultValue())" />
-                </div>
-            </div>
-        </t>
-        <t t-elif="info.component">
-            <div t-attf-class="o_domain_selector_editor #{_classes}">
-                <t t-component="info.component" t-props="info.extractProps({ update, value })" />
-            </div>
-        </t>
-    </t>
-
-    <t t-name="web.DomainSelector.Input">
+    <t t-name="web.TreeEditor.Input">
         <input type="text" class="o_input" t-att-value="props.startEmpty ? '' : props.value" t-on-change="(ev) => props.update(ev.target.value)" />
     </t>
 
-    <t t-name="web.DomainSelector.Select">
-        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => props.update(deserialize(ev.target.value))" >
+    <t t-name="web.TreeEditor.Select">
+        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
             <option t-if="props.addBlankOption" hidden="true" />
             <t t-foreach="props.options" t-as="option" t-key="serialize(option[0])">
                 <option t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-esc="option[1]" />
@@ -31,16 +14,16 @@
         </select>
     </t>
 
-    <t t-name="web.DomainSelector.Range">
+    <t t-name="web.TreeEditor.Range">
         <div class="d-flex align-items-center">
-            <t t-call="web.DomainSelector.Editor">
+            <t t-call="web.TreeEditor.Editor">
                 <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
                 <t t-set="info" t-value="props.editorInfo" />
                 <t t-set="value" t-value="props.value[0]" />
                 <t t-set="update" t-value="(val) => this.update(0, val)" />
             </t>
             <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
-            <t t-call="web.DomainSelector.Editor">
+            <t t-call="web.TreeEditor.Editor">
                 <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
                 <t t-set="info" t-value="props.editorInfo" />
                 <t t-set="value" t-value="props.value[1]" />
@@ -49,11 +32,11 @@
         </div>
     </t>
 
-    <t t-name="web.DomainSelector.List">
+    <t t-name="web.TreeEditor.List">
         <div class="o_input d-flex flex-wrap gap-1">
             <TagsList tags="tags"/>
             <div class="flex-grow-1">
-                <t t-call="web.DomainSelector.Editor">
+                <t t-call="web.TreeEditor.Editor">
                     <t t-set="info" t-value="props.editorInfo" />
                     <t t-set="value" t-value="props.editorInfo.defaultValue()" />
                     <t t-set="update" t-value="(val) => this.update(val)" />

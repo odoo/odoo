@@ -2,45 +2,29 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainSelector">
-        <div class="o_domain_selector w-100" aria-atomic="true" t-att-class="className">
+        <div class="o_domain_selector w-100" aria-atomic="true" t-att-class="props.className">
             <t t-if="tree">
-                <div t-attf-class="o_domain_selector_node d-flex flex-column #{props.readonly ? 'gap-2' : 'gap-1'}">
-                    <t t-set="node" t-value="tree" />
-                    <div class="o_domain_selector_row d-flex align-items-center">
-                        <div class="o_domain_selector_connector d-flex flex-grow-1 align-items-center">
-                            <t t-if="node.children.length">
-                                <span>Match</span>
-                                <t t-if="node.children.length > 1">
-                                    <t t-call="web.DomainSelector.connector.dropdown" />
-                                </t>
-                                <t t-else="">
-                                    <span class="px-1">
-                                        <t t-call="web.DomainSelector.connector.title" />
-                                    </span>
-                                </t>
-                                <span>of the following rules:</span>
-                            </t>
-                            <t t-else="">
-                                <span>Match <strong>all records</strong></span>
-                            </t>
-                        </div>
-                        <CheckBox
-                            t-if="showArchivedCheckbox"
-                            value="includeArchived"
-                            disabled="props.readonly"
-                            className="'form-switch'"
-                            onChange.bind="toggleIncludeArchived"
-                        >
-                            Include archived
-                        </CheckBox>
-                    </div>
-                    <t t-if="node.children.length" t-call="web.DomainSelector.connector.children" />
-                    <t t-if="!props.readonly">
-                        <div class="o_domain_selector_row d-flex align-items-center">
-                            <a href="#" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
-                        </div>
-                    </t>
-                </div>
+                <TreeEditor resModel="props.resModel"
+                    tree="tree" 
+                    update.bind="update"
+                    readonly="props.readonly"
+                    isDebugMode="props.isDebugMode"
+                    defaultCondition="defaultCondition"
+                    defaultConnector="props.defaultConnector"
+                    getOperatorEditorInfo.bind="getOperatorEditorInfo"
+                    getDefaultOperator.bind="getDefaultOperator"
+                    getPathEditorInfo.bind="getPathEditorInfo"
+                >
+                    <CheckBox
+                        t-if="showArchivedCheckbox"
+                        value="includeArchived"
+                        disabled="props.readonly"
+                        className="'form-switch'"
+                        onChange.bind="toggleIncludeArchived"
+                    >
+                        Include archived
+                    </CheckBox>
+                </TreeEditor>
             </t>
             <t t-else="">
                 <div class="o_domain_selector_row d-flex align-items-center">
@@ -53,159 +37,8 @@
             <t t-if="props.isDebugMode and (!tree or !props.readonly)">
                 <label class="o_domain_selector_debug_container d-block mt-3 border rounded p-3 bg-100 text-muted font-monospace">
                     <span class="small"># Code editor</span>
-                    <textarea class="pt-2 border-0 bg-transparent text-body" type="text" t-att-readonly="props.readonly" spellcheck="false" t-att-value="props.domain" t-on-change="(ev) => this.onDebugValueChange(ev.target.value)" />
+                    <textarea class="pt-2 border-0 bg-transparent text-body" type="text" t-att-readonly="props.readonly" spellcheck="false" t-att-value="props.domain" t-on-change="(ev) => this.onDomainChange(ev.target.value)" />
                 </label>
-            </t>
-        </div>
-    </t>
-
-    <t t-name="web.DomainSelector.controls">
-        <div class="o_domain_selector_node_control_panel d-flex" role="toolbar" aria-label="Domain node">
-            <button
-                class="btn px-2 fs-4"
-                role="button"
-                title="Add New Rule"
-                aria-label="Add New Rule"
-                t-on-click="() => this.insertLeaf(parent, node)"
-                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
-                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
-            >
-                <i class="fa fa-plus" />
-            </button>
-            <button
-                class="btn px-2 fs-4"
-                role="button"
-                title="Add branch"
-                aria-label="Add branch"
-                t-on-click="() => this.insertBranch(parent, node)"
-                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
-                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
-            >
-                <i class="fa fa-sitemap" />
-            </button>
-            <button
-                class="btn btn-link px-2 text-danger fs-4"
-                role="button"
-                title="Delete node"
-                aria-label="Delete node"
-                t-on-click="() => this.delete(parent, node)"
-                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
-                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
-            >
-                <i class="fa fa-trash" />
-            </button>
-        </div>
-    </t>
-
-    <t t-name="web.DomainSelector.connector.title">
-        <t t-set="title">
-            <t t-if="node.value === '|'">
-                <t t-if="node.negate">none</t>
-                <t t-else="">any</t>
-            </t>
-            <t t-else="">
-                <t t-if="node.negate">not all</t>
-                <t t-else="">all</t>
-            </t>
-        </t>
-        <t t-esc="title" />
-    </t>
-
-    <t t-name="web.DomainSelector.connector.dropdown">
-        <t t-if="props.readonly">
-            <strong class="px-1">
-                <t t-call="web.DomainSelector.connector.title" />
-            </strong>
-        </t>
-        <t t-else="">
-            <div aria-atomic="true">
-                <Dropdown togglerClass="'btn btn-link btn-primary py-0 px-1'" showCaret="true">
-                    <t t-set-slot="toggler">
-                        <t t-call="web.DomainSelector.connector.title" />
-                    </t>
-                    <DropdownItem onSelected="() => this.updateBranchConnector(node, '&amp;')">all</DropdownItem>
-                    <DropdownItem onSelected="() => this.updateBranchConnector(node, '|')">any</DropdownItem>
-                </Dropdown>
-            </div>
-        </t>
-    </t>
-
-    <t t-name="web.DomainSelector.connector.children">
-        <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
-            <div class="o_domain_selector_node" t-att-class="{ 'ps-4': addPadding }">
-                <t t-call="web.DomainSelector.{{ child.type }}">
-                    <t t-set="parent" t-value="node" />
-                    <t t-set="node" t-value="child" />
-                </t>
-            </div>
-        </t>
-    </t>
-
-    <t t-name="web.DomainSelector.connector">
-        <div class="o_domain_selector_row d-flex align-items-center">
-            <div class="o_domain_selector_connector d-flex flex-grow-1">
-                <t t-call="web.DomainSelector.connector.dropdown" />
-                <span>of:</span>
-            </div>
-            <t t-if="!props.readonly">
-                <t t-call="web.DomainSelector.controls" />
-            </t>
-        </div>
-        <t t-call="web.DomainSelector.connector.children">
-            <t t-set="addPadding" t-value="true" />
-        </t>
-    </t>
-
-    <t t-name="web.DomainSelector.condition">
-        <div class="o_domain_selector_row d-flex align-items-center">
-            <t t-if="props.readonly">
-                <t t-call="web.DomainSelector.condition:readonly" />
-            </t>
-            <t t-else="">
-                <t t-call="web.DomainSelector.condition:editable" />
-                <t t-call="web.DomainSelector.controls" />
-            </t>
-        </div>
-    </t>
-
-    <t t-name="web.DomainSelector.condition:readonly">
-        <t t-set="description" t-value="getDescription(node)" />
-        <div class="o_domain_selector_condition d-flex gap-1 px-2 border bg-100">
-            <ModelFieldSelector path="node.path" resModel="props.resModel" readonly="true" />
-            <span class="fst-italic" t-esc="description.operatorDescription" />
-            <t t-if="description.valueDescription">
-                <t t-set="values" t-value="description.valueDescription.values" />
-                <t t-set="join" t-value="description.valueDescription.join" />
-                <t t-set="addParenthesis" t-value="description.valueDescription.addParenthesis" />
-                <t t-if="addParenthesis">( </t>
-                <t t-foreach="values" t-as="val" t-key="val_index">
-                    <span class="text-primary fw-bolder"><t t-esc="val" /></span>
-                    <t t-if="!val_last"> <t t-esc="join" /> </t>
-                </t>
-                <t t-if="addParenthesis"> )</t>
-            </t>
-        </div>
-    </t>
-
-    <t t-name="web.DomainSelector.condition:editable">
-        <div class="o_domain_selector_condition row flex-nowrap align-items-end flex-grow-1">
-            <t t-call="web.DomainSelector.Editor">
-                <t t-set="_classes" t-value="'col col-md-4 pe-0'" />
-                <t t-set="info" t-value="getPathEditorInfo(node)" />
-                <t t-set="value" t-value="node.path" />
-                <t t-set="update" t-value="(path) => this.updatePath(node, path)" />
-            </t>
-            <t t-call="web.DomainSelector.Editor">
-                <t t-set="_classes" t-value="'col col-md-2 px-3'" />
-                <t t-set="info" t-value="getOperatorEditorInfo(node)" />
-                <t t-set="value" t-value="[node.operator, node.negate]" />
-                <t t-set="update" t-value="(operator, negate) => this.updateLeafOperator(node, operator, negate)" />
-            </t>
-            <t t-call="web.DomainSelector.Editor">
-                <t t-set="_classes" t-value="'col ps-0 overflow-hidden'" />
-                <t t-set="info" t-value="getValueEditorInfo(node)" />
-                <t t-set="value" t-value="node.value" />
-                <t t-set="update" t-value="(value) => this.updateLeafValue(node, value)" />
             </t>
         </div>
     </t>

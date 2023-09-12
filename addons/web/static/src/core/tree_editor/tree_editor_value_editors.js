@@ -12,10 +12,11 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import {
     DomainSelectorAutocomplete,
     DomainSelectorSingleAutocomplete,
-} from "./domain_selector_autocomplete";
+} from "@web/core/tree_editor/tree_editor_autocomplete";
 import { unique } from "@web/core/utils/arrays";
-import { Input, Select, List, Range } from "./domain_selector_components";
-import { formatValue } from "@web/core/domain_tree";
+import { Input, Select, List, Range } from "@web/core/tree_editor/tree_editor_components";
+import { formatValue } from "@web/core/tree_editor/condition_tree";
+import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
 
 const { DateTime } = luxon;
 
@@ -51,29 +52,6 @@ function genericDeserializeDate(type, value) {
     return type === "date" ? deserializeDate(value) : deserializeDateTime(value);
 }
 
-function isId(value) {
-    return Number.isInteger(value) && value >= 1;
-}
-
-export function disambiguate(value, displayNames) {
-    if (!Array.isArray(value)) {
-        return value === "";
-    }
-    let hasSomeString = false;
-    let hasSomethingElse = false;
-    for (const val of value) {
-        if (val === "") {
-            return true;
-        }
-        if (typeof val === "string" || (displayNames && isId(val))) {
-            hasSomeString = true;
-        } else {
-            hasSomethingElse = true;
-        }
-    }
-    return hasSomeString && hasSomethingElse;
-}
-
 const STRING_EDITOR = {
     component: Input,
     extractProps: ({ value, update }) => ({ value, update }),
@@ -106,7 +84,7 @@ function makeAutoCompleteEditor(fieldDef) {
         component: DomainSelectorAutocomplete,
         extractProps: ({ value, update }) => {
             return {
-                resModel: fieldDef.is_property ? fieldDef.comodel : fieldDef.relation,
+                resModel: getResModel(fieldDef),
                 fieldString: fieldDef.string,
                 update: (value) => update(unique(value)),
                 resIds: unique(value),
@@ -260,7 +238,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     component: DomainSelectorSingleAutocomplete,
                     extractProps: ({ value, update }) => {
                         return {
-                            resModel: fieldDef.is_property ? fieldDef.comodel : fieldDef.relation,
+                            resModel: getResModel(fieldDef),
                             fieldString: fieldDef.string,
                             update,
                             resId: value,
@@ -281,6 +259,10 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             break;
         case "selection": {
             const options = fieldDef.selection || [];
+            return makeSelectEditor(options, params);
+        }
+        case undefined: {
+            const options = [[1, "1"]];
             return makeSelectEditor(options, params);
         }
     }
