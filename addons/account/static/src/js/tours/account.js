@@ -75,8 +75,7 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "button[name=action_post]",
         extra_trigger: "button.o_form_button_create",
-        content: _t("Once your invoice is ready, confirm it."),
-        position: "bottom",
+        content: _t("After the data extraction, check and validate the bill. If no vendor has been found, add one before validating."),
     }, {
         trigger: "button[name=action_invoice_sent]",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",

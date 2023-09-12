@@ -28,13 +28,17 @@
             <field name="model">account.tour.upload.bill.email.confirm</field>
             <field name="arch" type="xml">
                 <form>
+                    <field name="email_alias" invisible="1"/>
                     <sheet>
-                        <p>Send your email to <field name="email_alias" class="oe_inline"/> with a pdf of an invoice as attachment.</p>
-                        <p>Once done, press continue.</p>
+                        <p invisible="not email_alias">Send your email to <field name="email_alias" class="oe_inline" widget="email"/> with a pdf of an invoice as attachment.</p>
+                        <p invisible="not email_alias">Once done, press continue.</p>
+                        <p invisible="email_alias">Configure your email server first and send your bill by email.</p>
+                        <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button" invisible="email_alias"><i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Email Servers</a>
                     </sheet>
                     <footer>
-                        <button string="Continue" type="object" name="apply" class="btn-primary" data-hotkey="q"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                        <button string="Continue" type="object" name="apply" class="btn-primary" data-hotkey="q" invisible="not email_alias"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" invisible="not email_alias"/>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x" invisible="email_alias"/>
                     </footer>
                </form>
             </field>
