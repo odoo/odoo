@@ -72,13 +72,6 @@ $link-hover-color: auto-contrast(darken($link-color, 15%), $body-bg, 'o-cc1-link
 $link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
 $link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
 
-// Table
-$table-striped-bg-factor: .01 !default;
-$table-cell-padding-x: .75rem !default;
-$table-cell-padding-y: .75rem !default;
-$table-cell-padding-x-sm: .3rem !default;
-$table-cell-padding-y-sm: .3rem !default;
-
 // Grid
 $grid-gutter-width: 30px !default;
 
@@ -144,6 +137,10 @@ $h6-margin-bottom: o-website-value('h6-margin-bottom') or $headings-margin-botto
 $headings-color: o-color('o-cc1-headings') !default;
 
 $lead-font-size: 1.125rem !default;
+// Note that we currently load only 700 for Google fonts, we may consider trying
+// to load more or this one only instead. Meanwhile, this fallbacks on 700
+// if 600 is not available anyway.
+$font-weight-bold: 600 !default;
 
 $text-muted: mute-color($body-color) !default;
 
@@ -151,6 +148,11 @@ $text-muted: mute-color($body-color) !default;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
+$table-striped-bg-factor: .01 !default;
+$table-cell-padding-x: .75rem !default;
+$table-cell-padding-y: .75rem !default;
+$table-cell-padding-x-sm: .3rem !default;
+$table-cell-padding-y-sm: .3rem !default;
 $table-border-color: $border-color !default;
 $table-group-separator-color: $table-border-color !default;
 
@@ -240,17 +242,41 @@ $o-btn-outline-border-width-defaults: () !default;
 $o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 'pills', 1rem * 1.5, null) !default;
 $o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;
 
+// Borders
+$border-radius-sm: .3rem !default;
+$border-radius: .4rem !default;
+$border-radius-lg: .6rem !default;
+$border-radius-pill: 50rem !default; // BS Default
+
 // Accordion
 $accordion-color: inherit !default;
 $accordion-bg: inherit !default;
+$accordion-padding-x: 1.5rem !default;
+$accordion-border-width: 1px !default;
 $accordion-border-color: $border-color !default;
+$accordion-button-active-bg: $light !default;
+$accordion-button-active-color: color-contrast($light) !default;
+$accordion-button-focus-box-shadow: none !default;
+$accordion-icon-color: $body-color !default;
+$accordion-icon-active-color: $accordion-button-active-color !default;
 
 // Popovers
+$popover-bg: $body-bg !default;
 $popover-border-color: $border-color !default;
+$popover-arrow-color: $body-bg !default;
 $popover-arrow-outer-color: $border-color !default;
+
+// Shadows
+$box-shadow: 0px 4px 16px rgba($black, 0.12) !default;
+$box-shadow-sm: 0px 1px 3px rgba($black, .1) !default;
+$box-shadow-lg: 0px 12px 32px rgba($black, .175) !default;
 
 // Cards
 $card-border-color: $border-color !default;
+
+// Modals
+$modal-header-border-width: 0 !default;
+$modal-footer-border-width: 0 !default;
 
 // HR Separator
 $hr-color: $border-color !default;
