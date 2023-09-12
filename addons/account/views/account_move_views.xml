@@ -1246,8 +1246,8 @@
                                         <field name="to_check"/>
                                         <field name="system_exchange_rate" invisible="True"/>
                                         <field name="exchange_rate" invisible="True"/>
-                                        <label for="display_rate" invisible="currency_id == company_currency_id or (state != 'draft' and not exchange_rate)"/>
-                                        <div class="d-flex" invisible="currency_id == company_currency_id or (state != 'draft' and not exchange_rate)">
+                                        <label for="display_rate" invisible="currency_id == company_currency_id or state != 'draft'"/>
+                                        <div class="d-flex" invisible="currency_id == company_currency_id or state != 'draft'">
                                             <span class="me-1">1</span>
                                             <field name="company_currency_id"
                                                    class="w-auto"

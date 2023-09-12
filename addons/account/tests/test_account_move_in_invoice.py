@@ -1159,7 +1159,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 move_form.invoice_date = fields.Date.from_string('2019-01-01')
 
         self.invoice.action_post()
-        self.assertFalse(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
+        self.assertTrue(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.3 }
             for _ in self.invoice.line_ids
