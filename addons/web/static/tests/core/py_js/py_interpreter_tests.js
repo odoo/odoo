@@ -371,6 +371,36 @@ QUnit.module("py", {}, () => {
             assert.deepEqual(evaluateExpr("[(1 + 2,'foo', True)]"), [[3, "foo", true]]);
         });
 
+        QUnit.module("generator");
+
+        QUnit.test("list comprehension", (assert) => {
+            assert.deepEqual(evaluateExpr("[a for a in [1,2,3] if (a in [2,4])]"), [2]);
+            assert.deepEqual(evaluateExpr("[a for a in records if (a in [2,4])]", {records: [1,2,3]}), [2]);
+        });
+
+        QUnit.test("dict comprehension", (assert) => {
+            assert.deepEqual(evaluateExpr("{a: 1 for a in ['a','b','c'] if (a in ['b','d'])}"), {'b': 1});
+            assert.deepEqual(evaluateExpr("{a: 1 for a in records if (a in ['b','d'])}", {records: ['a','b','c']}), {'b': 1});
+            assert.throws(() => evaluateExpr("{a: 1 : 2 for a in [1, 2, 3]}"));
+        });
+
+        QUnit.test("generator", (assert) => {
+            assert.deepEqual(evaluateExpr("foo(a == 2 for a in [1,2,3] if (a in [2,4]))", {foo: items => items}), [true]);
+            assert.deepEqual(evaluateExpr("foo(a == 2 for a in [1, 2, 3, 2] if a in [2,4])", {foo: items => items}), [true, true]);
+            assert.deepEqual(evaluateExpr("foo(a == 2 for a in [1,2,3,2] if (a in [1, 2]))", {foo: items => items}), [false, true, true]);
+            assert.deepEqual(evaluateExpr("foo(a == 4 for a in [1,2,3] if (a in [2,4]))", {foo: items => items}), [false]);
+            assert.deepEqual(evaluateExpr("foo(a for a in [1,2,3,2] if (a in [1, 2]))", {foo: items => items}), [1, 2, 2]);
+
+            const records = [
+                {id: 1, e: false},
+                {id: 2, e: true},
+                {id: 3, e: true},
+                {id: 2, e: false},
+            ];
+            assert.deepEqual(evaluateExpr("foo(a.e for a in records if (a.id in [1, 2]))", {records, foo: items => items}), [false, true, false]);
+        });
+        });
+
         QUnit.module("evaluate to boolean");
 
         QUnit.test("simple expression", (assert) => {
