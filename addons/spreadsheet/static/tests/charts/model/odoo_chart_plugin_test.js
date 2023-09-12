@@ -148,7 +148,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.verifySteps(["web_read_group"], "it should have loaded the data");
     });
 
-    QUnit.test("Changing the chart type does not reload the data", async (assert) => {
+    QUnit.test("Data reloaded strictly upon domain update", async (assert) => {
         const { model } = await createSpreadsheetWithChart({
             type: "odoo_line",
             mockRPC: async function (route, args) {
@@ -164,20 +164,37 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         // force runtime computation
         model.getters.getChartRuntime(chartId);
         await nextTick();
-
         assert.verifySteps(["web_read_group"], "it should have loaded the data");
+
         model.dispatch("UPDATE_CHART", {
             definition: {
                 ...definition,
+                searchParams: { ...definition.searchParams, domain: [["1", "=", "1"]] },
+            },
+            id: chartId,
+            sheetId,
+        });
+        // force runtime computation
+        model.getters.getChartRuntime(chartId);
+        await nextTick();
+        assert.verifySteps(["web_read_group"], "it should have loaded the data with a new domain");
+
+        const newDefinition = model.getters.getChartDefinition(chartId);
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...newDefinition,
                 type: "odoo_bar",
             },
             id: chartId,
             sheetId,
         });
-        await nextTick();
         // force runtime computation
         model.getters.getChartRuntime(chartId);
-        assert.verifySteps([], "it should have not have loaded the data a second time");
+        await nextTick();
+        assert.verifySteps(
+            [],
+            "it should have not have loaded the data since the domain was unchanged"
+        );
     });
 
     QUnit.test("Can import/export an Odoo chart", async (assert) => {
