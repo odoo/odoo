@@ -144,7 +144,7 @@ $h6-margin-bottom: o-website-value('h6-margin-bottom') or $headings-margin-botto
 
 $headings-color: o-color('o-cc1-headings') !default;
 
-$lead-font-size: 1.125rem !default;
+$lead-font-size: $font-size-base * $o-lead-ratio !default;
 // Note that we currently load only 700 for Google fonts, we may consider trying
 // to load more or this one only instead. Meanwhile, this fallbacks on 700
 // if 600 is not available anyway.
