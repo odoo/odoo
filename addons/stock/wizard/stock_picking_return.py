@@ -135,6 +135,7 @@ class ReturnPicking(models.TransientModel):
 
         # create new picking for returned products
         new_picking = self.picking_id.copy(self._prepare_picking_default_values())
+        new_picking.user_id = False
         picking_type_id = new_picking.picking_type_id.id
         new_picking.message_post_with_source(
             'mail.message_origin_link',
