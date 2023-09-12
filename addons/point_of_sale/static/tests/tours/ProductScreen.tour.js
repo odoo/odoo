@@ -172,3 +172,18 @@ ProductScreen.check.selectedOrderlineHas('Test Product', '1.0', '100.0');
 ProductScreen.check.totalAmountIs('110.0');
 
 registry.category("web_tour.tours").add('ShowTaxExcludedTour', { test: true, url: "/pos/ui", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.scan_barcode("0100100");
+ProductScreen.check.selectedOrderlineHas('Test Product 1', '1.0', '80.0');
+
+ProductScreen.do.scan_barcode("0100200");
+ProductScreen.check.selectedOrderlineHas('Test Product 2', '1.0', '100.0');
+
+ProductScreen.do.scan_barcode("0100300");
+ProductScreen.check.selectedOrderlineHas('Test Product 3', '1.0', '50.0');
+
+registry.category("web_tour.tours").add('limitedProductPricelistLoading', { test: true, url: "/pos/ui", steps: getSteps() });

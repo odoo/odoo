@@ -1007,6 +1007,50 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="accountman")
 
+    def test_limited_product_pricelist_loading(self):
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
+
+        product_1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'list_price': 100,
+            'barcode': '0100100',
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        product_2 = self.env['product.product'].create({
+            'name': 'Test Product 2',
+            'list_price': 200,
+            'barcode': '0100200',
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Test Product 3',
+            'list_price': 300,
+            'barcode': '0100300',
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        pricelist_item = self.env['product.pricelist.item'].create([{
+            'applied_on': '3_global',
+            'fixed_price': 50,
+        }, {
+            'applied_on': '1_product',
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'fixed_price': 100,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 80,
+        }])
+        self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="accountman")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
