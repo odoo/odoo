@@ -60,9 +60,17 @@ export default class OdooChartUIPlugin extends UIPlugin {
                 switch (cmd.definition.type) {
                     case "odoo_pie":
                     case "odoo_bar":
-                    case "odoo_line":
+                    case "odoo_line": {
+                        const dataSource = this.getChartDataSource(cmd.id);
+                        if (
+                            dataSource.getInitialDomainString() !==
+                            new Domain(cmd.definition.searchParams.domain).toString()
+                        ) {
+                            this._resetChartDataSource(cmd.id);
+                        }
                         this._setChartDataSource(cmd.id);
                         break;
+                    }
                 }
                 break;
             }
@@ -74,7 +82,7 @@ export default class OdooChartUIPlugin extends UIPlugin {
                 this._addDomains();
                 break;
             case "UNDO":
-            case "REDO":
+            case "REDO": {
                 if (
                     cmd.commands.find((command) =>
                         [
@@ -86,6 +94,29 @@ export default class OdooChartUIPlugin extends UIPlugin {
                 ) {
                     this._addDomains();
                 }
+
+                const domainEditionCommands = cmd.commands.filter(
+                    (cmd) => cmd.type === "UPDATE_CHART" || cmd.type === "CREATE_CHART"
+                );
+                for (const cmd of domainEditionCommands) {
+                    if (!this.getters.getOdooChartIds().includes(cmd.id)) {
+                        continue;
+                    }
+                    const dataSource = this.getChartDataSource(cmd.id);
+                    if (
+                        dataSource.getInitialDomainString() !==
+                        new Domain(cmd.definition.searchParams.domain).toString()
+                    ) {
+                        this._resetChartDataSource(cmd.id);
+                    }
+                }
+                break;
+            }
+            case "REFRESH_ODOO_CHART":
+                this._refreshOdooChart(cmd.chartId);
+                break;
+            case "REFRESH_ALL_DATA_SOURCES":
+                this._refreshOdooCharts();
                 break;
         }
     }
@@ -118,7 +149,7 @@ export default class OdooChartUIPlugin extends UIPlugin {
             domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
         }
         const domain = Domain.combine(domainList, "AND").toString();
-        this.getters.getChartDataSource(chartId).addDomain(domain);
+        this.getChartDataSource(chartId).addDomain(domain);
     }
 
     /**
@@ -139,15 +170,24 @@ export default class OdooChartUIPlugin extends UIPlugin {
      */
     _setupChartDataSource(chartId) {
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
-        const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         if (!this.dataSources.contains(dataSourceId)) {
-            this.dataSources.add(dataSourceId, ChartDataSource, definition);
+            this._resetChartDataSource(chartId);
         }
         this._setChartDataSource(chartId);
     }
 
     /**
-     * Sets the catasource on the corresponding chart
+     * Sets the datasource on the corresponding chart
+     * @param {string} chartId
+     */
+    _resetChartDataSource(chartId) {
+        const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
+        const dataSourceId = this._getOdooChartDataSourceId(chartId);
+        this.dataSources.add(dataSourceId, ChartDataSource, definition);
+    }
+
+    /**
+     * Sets the datasource on the corresponding chart
      * @param {string} chartId
      */
     _setChartDataSource(chartId) {
@@ -167,6 +207,23 @@ export default class OdooChartUIPlugin extends UIPlugin {
 
     _getOdooChartDataSourceId(chartId) {
         return `chart-${chartId}`;
+    }
+
+    /**
+     * Refresh the cache of a chart
+     * @param {string} chartId Id of the chart
+     */
+    _refreshOdooChart(chartId) {
+        this.getChartDataSource(chartId).load({ reload: true });
+    }
+
+    /**
+     * Refresh the cache of all the charts
+     */
+    _refreshOdooCharts() {
+        for (const chartId of this.getters.getOdooChartIds()) {
+            this._refreshOdooChart(chartId);
+        }
     }
 }
 

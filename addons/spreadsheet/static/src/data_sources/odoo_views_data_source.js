@@ -98,6 +98,14 @@ export class OdooViewsDataSource extends LoadableDataSource {
     }
 
     /**
+     * Get the current domain as a string
+     * @returns { string }
+     */
+    getInitialDomainString() {
+        return new Domain(this._initialSearchParams.domain).toString();
+    }
+
+    /**
      *
      * @param {string} domain
      */
