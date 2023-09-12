@@ -49,7 +49,7 @@
                         optional="show"
                         decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                         decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
-                        decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
+                        decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
@@ -288,7 +288,7 @@
                             <field name="components_availability" invisible="state not in ['confirmed', 'progress']"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
-                                decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
+                                decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar" readonly="state in ['cancel', 'done']"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
@@ -588,6 +588,7 @@
                     <separator/>
                     <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
+                    <filter string="Late Components" name="late" domain="[('components_availability_state', '=', 'late')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
