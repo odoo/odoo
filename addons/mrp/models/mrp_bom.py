@@ -297,8 +297,7 @@ class MrpBom(models.Model):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
         for bom in self:
             bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
-            availability_delay = bom_data.get('resupply_avail_delay')
-            bom.days_to_prepare_mo = availability_delay - bom_data.get('lead_time', 0) if availability_delay else 0
+            bom.days_to_prepare_mo = self.env['report.mrp.report_bom_structure']._get_max_component_delay(bom_data['components'])
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')
     def check_kit_has_not_orderpoint(self):
