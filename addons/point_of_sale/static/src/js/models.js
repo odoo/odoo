@@ -592,12 +592,39 @@ export class PosGlobalState extends PosModel {
                 }
             }
         }
+        if(!missingProductIds.size) return;
         const products = await this.orm.call(
             "pos.session",
             "get_pos_ui_product_product_by_params",
             [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
         );
+        await this._loadMissingPricelistItems(products);
         this._loadProductProduct(products);
+    }
+    async _loadMissingPricelistItems(products) {
+        if(!products.length) return;
+        const product_tmpl_ids = products.map(product => product.product_tmpl_id[0]);
+        const product_ids = products.map(product => product.id);
+
+        const pricelistItems = await this.orm.call(
+            'pos.session',
+            'get_pos_ui_product_pricelist_item_by_product',
+            [odoo.pos_session_id, product_tmpl_ids, product_ids]
+        );
+
+        // Merge the loaded pricelist items with the existing pricelists
+        // Prioritizing the addition of newly loaded pricelist items to the start of the existing pricelists.
+        // This ensures that the order reflects the desired priority of items in the pricelistItems array.
+        // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
+        // for reference check order of the Product Pricelist Item model
+        for (const pricelist of this.pricelists) {
+            const itemIds = new Set(pricelist.items.map(item => item.id));
+
+            const _pricelistItems = pricelistItems.filter(item => {
+                return item.pricelist_id[0] === pricelist.id && !itemIds.has(item.id);
+            });
+            pricelist.items = [..._pricelistItems, ...pricelist.items];
+        }
     }
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
@@ -1623,6 +1650,7 @@ export class PosGlobalState extends PosModel {
             odoo.pos_session_id,
             { domain: [["id", "in", ids]] },
         ]);
+        await this._loadMissingPricelistItems(product);
         this._loadProductProduct(product);
     }
     isOpenOrderShareable() {
