@@ -16,6 +16,7 @@
                 <field name="result_package_id" optional="hide" groups="stock.group_tracking_lot"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
+                <field name="picking_partner_id" optional="hide"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" force_save="1"/>
                 <field name="quantity" string="Quantity"
                     decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
