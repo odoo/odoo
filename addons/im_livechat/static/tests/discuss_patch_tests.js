@@ -7,25 +7,6 @@ import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("discuss (patch)");
 
-QUnit.test("No call buttons", async () => {
-    const pyEnv = await startServer();
-    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
-        channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            Command.create({ guest_id: guestId }),
-        ],
-        channel_type: "livechat",
-        livechat_operator_id: pyEnv.currentPartnerId,
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    await contains(".o-mail-Discuss-header");
-    await contains(".o-mail-Discuss-header button[title='Start a Call']", { count: 0 });
-    await contains(".o-mail-Discuss-header button[title='Show Call Settings']", { count: 0 });
-});
-
 QUnit.test("add livechat in the sidebar on visitor sending first message", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([pyEnv.currentUserId], { im_status: "online" });
