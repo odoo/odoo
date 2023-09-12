@@ -305,7 +305,6 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         decoded_url = url_decode(res.url)
         self.assertEqual(res.status_code, 200)
         self.assertTrue('/signup' in res.url, "Should redirect to signup page if not logged in and without user.")
-        self.assertEqual(self.partner_no_user.signup_token, decoded_url['token'], "Signup should correspond to the invited partner.")
         self.assertEqual(f'/slides/{self.channel.id}', decoded_url['redirect'], "Signup should redirect to the course.")
 
         # Logged user is an attendee of the course

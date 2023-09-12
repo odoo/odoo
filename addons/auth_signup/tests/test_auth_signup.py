@@ -63,4 +63,4 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         partner.signup_prepare()
 
         with self.assertRaises(AccessError):
-            partner.with_user(user.id).signup_url
+            partner.with_user(user.id)._get_signup_url()

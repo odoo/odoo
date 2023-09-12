@@ -135,7 +135,7 @@ class AuthSignupHome(Home):
         if qcontext.get('token'):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
-                token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qcontext.get('token'))
+                token_infos = request.env['res.partner'].sudo()._signup_retrieve_info(qcontext.get('token'))
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except:
