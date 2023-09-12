@@ -36,13 +36,13 @@
                         </select>
                     </t>
 
-                    <t t-if="ptal.attribute_id.display_type == 'radio'">
+                    <t t-elif="ptal.attribute_id.display_type in ('radio', 'multi')">
                         <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline list-unstyled o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
                                 <li class="list-inline-item mb-3 js_attribute_value" style="margin: 0;">
                                     <label class="col-form-label">
                                         <div class="form-check">
-                                            <input type="radio"
+                                            <input t-att-type="'radio' if ptal.attribute_id.display_type == 'radio' else 'checkbox'"
                                                 t-attf-class="form-check-input js_variant_change #{ptal.attribute_id.create_variant}"
                                                 t-att-checked="ptav in combination"
                                                 t-att-name="'ptal-%s' % ptal.id"
@@ -52,7 +52,7 @@
                                                 t-att-data-attribute_name="ptav.attribute_id.name"
                                                 t-att-data-is_custom="ptav.is_custom"
                                                 t-att-data-is_single="single"
-                                                t-att-data-is_single_and_custom="single_and_custom" />
+                                                t-att-data-is_single_and_custom="single_and_custom"/>
                                             <div class="radio_input_value form-check-label">
                                                 <span t-field="ptav.name"/>
                                                 <t t-call="website_sale.badge_extra_price"/>
@@ -64,7 +64,7 @@
                         </ul>
                     </t>
 
-                    <t t-if="ptal.attribute_id.display_type == 'pills'">
+                    <t t-elif="ptal.attribute_id.display_type == 'pills'">
                         <ul t-att-data-attribute_id="ptal.attribute_id.id"
                             t-attf-class="btn-group-toggle list-inline list-unstyled o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
                             data-bs-toggle="buttons">
@@ -92,7 +92,7 @@
                         </ul>
                     </t>
 
-                    <t t-if="ptal.attribute_id.display_type == 'color'">
+                    <t t-elif="ptal.attribute_id.display_type == 'color'">
                         <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <li t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav" class="list-inline-item me-1">
                                 <label t-attf-style="background-color:#{ptav.html_color or ptav.product_attribute_value_id.name if not ptav.is_custom else ''}"

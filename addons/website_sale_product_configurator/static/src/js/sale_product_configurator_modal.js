@@ -257,9 +257,15 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
 
             $.each(this.rootProduct.no_variant_attribute_values, function () {
                 if (this.is_custom !== 'True') {
-                    $updatedDescription.append($('<div>', {
-                        text: this.attribute_name + ': ' + this.attribute_value_name
-                    }));
+                    var $currentDescription = $updatedDescription.find(`div[name=ptal-${this.id}]`);
+                    if ($currentDescription?.length > 0) { // one row per multicheckbox
+                        $currentDescription.text($currentDescription.text() + ', ' + this.attribute_value_name);
+                    } else {
+                        $updatedDescription.append($('<div>', {
+                            text: this.attribute_name + ': ' + this.attribute_value_name,
+                            name: `ptal-${this.id}`,
+                        }));
+                    }
                 }
             });
 
@@ -356,9 +362,15 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
 
             $.each(noVariantAttributeValues, function (){
                 if (this.is_custom !== 'True'){
-                    $customAttributeValuesDescription.append($('<div>', {
-                        text: this.attribute_name + ': ' + this.attribute_value_name
-                    }));
+                    var $currentDescription = $customAttributeValuesDescription.find(`div[name=ptal-${this.id}]`);
+                    if ($currentDescription?.length > 0) { // one row per multicheckbox
+                        $currentDescription.text($currentDescription.text() + ', ' + this.attribute_value_name);
+                    } else {
+                        $customAttributeValuesDescription.append($('<div>', {
+                            text: this.attribute_name + ': ' + this.attribute_value_name,
+                            name: `ptal-${this.id}`,
+                        }));
+                    }
                 }
             });
 
