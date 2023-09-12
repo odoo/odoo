@@ -472,12 +472,36 @@ class PosGlobalState extends PosModel {
                 }
             }
         }
+        if(!missingProductIds.length) return;
         const products = await this.env.services.rpc({
             model: 'pos.session',
             method: 'get_pos_ui_product_product_by_params',
             args: [odoo.pos_session_id, {domain: [['id', 'in', [...missingProductIds]]]}],
         });
+        await this._loadMissingPricelistItems(products);
         this._loadProductProduct(products);
+    }
+    async _loadMissingPricelistItems(products) {
+        if(!products.length) return;
+        const product_tmpl_ids = products.map(product => product.product_tmpl_id[0]);
+        const product_ids = products.map(product => product.id);
+
+        const pricelistItems = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_pos_ui_product_pricelist_item_by_product',
+            args: [odoo.pos_session_id, product_tmpl_ids, product_ids],
+        });
+
+        // Merge the loaded pricelist items with the existing pricelists
+        // Looping in the reversed order of the loaded items because we want to create the pricelist items based on priority.
+        // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
+        // for reference check order of the Product Pricelist Item model
+        for (const pricelistItem of pricelistItems.reverse()) {
+            const pricelist = this.pricelists.find(pricelist => pricelist.id === pricelistItem.pricelist_id[0]);
+            if (!pricelist.items.some(item => item.id === pricelistItem.id)) {
+                pricelist.items.unshift(pricelistItem);
+            }
+        }
     }
     // load the partners based on the ids
     async _loadPartners(partnerIds) {
@@ -517,6 +541,7 @@ class PosGlobalState extends PosModel {
                     limit: this.config.limited_products_amount,
                 }],
             }, { shadow: true });
+            await this._loadMissingPricelistItems(products);
             this._loadProductProduct(products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
@@ -1387,6 +1412,7 @@ class PosGlobalState extends PosModel {
             method: 'get_pos_ui_product_product_by_params',
             args: [odoo.pos_session_id, {domain: [['id', 'in', ids]]}],
         });
+        await this._loadMissingPricelistItems(product);
         this._loadProductProduct(product);
     }
     doNotAllowRefundAndSales() {

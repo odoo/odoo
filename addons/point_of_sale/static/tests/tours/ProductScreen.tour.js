@@ -233,3 +233,26 @@ odoo.define('point_of_sale.tour.ShowTaxExcludedTour', function (require) {
 
     Tour.register('ShowTaxExcludedTour', { test: true, url: '/pos/ui' }, getSteps());
 });
+
+odoo.define('point_of_sale.tour.limitedProductPricelistLoading', function (require) {
+    'use strict';
+
+    const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
+    const { getSteps, startSteps } = require('point_of_sale.tour.utils');
+    var Tour = require('web_tour.tour');
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+
+    ProductScreen.do.scan_barcode("0100100");
+    ProductScreen.check.selectedOrderlineHas('Test Product 1', '1.0', '80.0');
+
+    ProductScreen.do.scan_barcode("0100200");
+    ProductScreen.check.selectedOrderlineHas('Test Product 2', '1.0', '100.0');
+
+    ProductScreen.do.scan_barcode("0100300");
+    ProductScreen.check.selectedOrderlineHas('Test Product 3', '1.0', '50.0');
+
+    Tour.register('limitedProductPricelistLoading', { test: true, url: '/pos/ui' }, getSteps());
+});
