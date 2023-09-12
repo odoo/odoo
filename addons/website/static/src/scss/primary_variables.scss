@@ -1983,7 +1983,7 @@ $o-base-website-values-palette: (
     'btn-padding-x': null, // Default to BS
     'btn-font-size': null, // Default to BS
     'btn-padding-y-sm': null, // Default to portal value
-    'btn-padding-x-sm': null, // Default to portal value
+    'btn-padding-x-sm': null, // Default to BS
     'btn-font-size-sm': null, // Default to BS
     'btn-padding-y-lg': null, // Default to BS
     'btn-padding-x-lg': null, // Default to BS
@@ -2054,6 +2054,12 @@ $o-website-values-palettes: (
         // define in $o-theme-font-configs (for the base one). For the default
         // website, we want to specifically use the system fonts.
         'font': 'SYSTEM_FONTS',
+
+        'btn-padding-x': 1rem,
+        'btn-padding-x-sm': .5rem,
+        'btn-padding-y-lg': 1rem,
+        'btn-padding-x-lg': 2.5rem,
+        'btn-border-radius-lg': 2rem,
     ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
@@ -2066,11 +2072,11 @@ $o-user-website-values: () !default;
 // Fonts
 //------------------------------------------------------------------------------
 
-// Those are BS values, except BS hardcodes them inside the $hx-font-size
-// variables directly and don't make them customizable.
-$o-theme-h1-font-size-multiplier: 2.5 !default;
-$o-theme-h2-font-size-multiplier: 2 !default;
-$o-theme-h3-font-size-multiplier: 1.75 !default;
+// These variables mirror BS multipliers behavior, except that in BS those are
+// hardcoded in '$h[x]-font-size' declarations and are not customizable.
+$o-theme-h1-font-size-multiplier: 3 !default;
+$o-theme-h2-font-size-multiplier: 2.5 !default;
+$o-theme-h3-font-size-multiplier: 2 !default;
 $o-theme-h4-font-size-multiplier: 1.5 !default;
 $o-theme-h5-font-size-multiplier: 1.25 !default;
 $o-theme-h6-font-size-multiplier: 1 !default;
