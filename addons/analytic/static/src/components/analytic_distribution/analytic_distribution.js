@@ -64,10 +64,14 @@ export class AnalyticDistribution extends Component {
             },
             isToMany: false,
             onRecordSaved: async (record) => {
-                this.mainRef.el.focus();
+                if (!this.props.record.model.multiEdit) {
+                    this.mainRef.el.focus();
+                }
             },
             onClose: () => {
-                this.mainRef.el.focus();
+                if (!this.props.record.model.multiEdit) {
+                    this.mainRef.el.focus();
+                }
             },
             fieldString: _t("Analytic Distribution Template"),
         });
