@@ -14,7 +14,15 @@ function dataUrlToBlob(data, type) {
 export class AttachmentUploader {
     constructor(thread, { composer, onFileUploaded } = {}) {
         this.attachmentUploadService = useService("mail.attachment_upload");
-        Object.assign(this, { thread, composer, onFileUploaded });
+        Object.assign(this, { thread, composer });
+        this.attachmentUploadService.bus.addEventListener("FILE_UPLOADED", ({ detail: upload }) => {
+            if (
+                thread.model === upload.data.get("thread_model") &&
+                thread.id === upload.data.get("thread_id")
+            ) {
+                onFileUploaded?.();
+            }
+        });
     }
 
     uploadData({ data, name, type }) {
@@ -23,7 +31,7 @@ export class AttachmentUploader {
     }
 
     async uploadFile(file, options) {
-        return this.attachmentUploadService.uploadFile(this, file, options);
+        return this.attachmentUploadService.uploadFile(this.thread, this.composer, file, options);
     }
 
     async unlink(attachment) {

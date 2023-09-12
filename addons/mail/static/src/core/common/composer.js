@@ -81,12 +81,10 @@ export class Composer extends Component {
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
         this.store = useState(useService("mail.store"));
-        if (this.allowUpload) {
-            this.attachmentUploader = useAttachmentUploader(
-                this.thread ?? this.props.composer.message.originThread,
-                { composer: this.props.composer }
-            );
-        }
+        this.attachmentUploader = useAttachmentUploader(
+            this.thread ?? this.props.composer.message.originThread,
+            { composer: this.props.composer }
+        );
         this.messageService = useState(useService("mail.message"));
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
@@ -118,7 +116,7 @@ export class Composer extends Component {
         this.suggestion = this.store.user ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
-        if (this.props.dropzoneRef && this.allowUpload) {
+        if (this.props.dropzoneRef) {
             useDropzone(this.props.dropzoneRef, this.onDropFile, "o-mail-Composer-dropzone");
         }
         if (this.props.messageEdition) {
@@ -230,10 +228,6 @@ export class Composer extends Component {
         );
     }
 
-    get allowUpload() {
-        return true;
-    }
-
     get message() {
         return this.props.composer.message ?? null;
     }
@@ -336,9 +330,6 @@ export class Composer extends Component {
      * This doesn't work on firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1699743
      */
     onPaste(ev) {
-        if (!this.allowUpload) {
-            return;
-        }
         if (!ev.clipboardData?.items) {
             return;
         }
