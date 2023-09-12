@@ -46,6 +46,18 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "click to make the datepicker disappear",
         run: "click"
     }, {
+        trigger: '.o_control_panel_breadcrumbs_actions button',
+        content: 'Open actions',
+        run: "click"
+    }, {
+        trigger: '.dropdown-item:contains("Duplicate")',
+        content: 'Duplicate',
+        run: "click"
+    }, {
+        trigger: 'div[name="name"] textarea',
+        content: 'Edit duplicate name',
+        run: "text Test Opportunity 2"
+    }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
         position: "bottom",
@@ -58,6 +70,25 @@ registry.category("web_tour.tours").add('crm_forecast', {
             actions.drag_and_drop_native(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
         },
     }, {
+        trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 2')",
+        content: "edit duplicate lead",
+        run: "click"
+    }, {
+        trigger: ".o_field_widget[name=date_deadline] input",
+        content: "set expected closing to end of year",
+        run: function (actions) {
+            // The leads are displayed up to the end of the 'cycle' where the last forced group is
+            // The default is 3 groups being displayed even if they are empty + 1 'add month' group
+            // 01/10/2023 + 3 months = 01/01/2024 so in that case we go to the end of the next year
+            actions.text(`text ${today.plus({'months': 3}).endOf('year').toFormat("MM/dd/yyyy")}`, this.$anchor);
+            this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
+        },
+    }, {
+        trigger: '.o_back_button',
+        content: 'navigate back to the kanban view',
+        position: "bottom",
+        run: "click"
+    }, {
         trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
         content: "edit lead",
         run: "click"
@@ -67,8 +98,8 @@ registry.category("web_tour.tours").add('crm_forecast', {
         run: function (actions) {
             actions.text(
                 `text ${today
-                    .plus({ months: 5 })
-                    .startOf("month")
+                    .plus({ months: 3, years: 1 })
+                    .startOf("year")
                     .minus({ days: 1 })
                     .toFormat("MM/dd/yyyy")}`
             );
@@ -86,12 +117,36 @@ registry.category("web_tour.tours").add('crm_forecast', {
         position: "bottom",
         run: "click"
     }, {
+        trigger: ".o_kanban_group:contains('December')",
+        content: "Check last month is listed and unfold folded months",
+        run: function () {
+            $('.o_column_folded').each(function () {
+                $(this).click();
+            });
+        },
+    }, {
+        trigger: ".o_kanban_group:not('.o_column_folded'):contains('December')",
+        content: "Check that the lead outside the cycle is not listed",
+        run: function () {
+            if ($(".o_kanban_record:contains('Test Opportunity 1')").length) {
+                console.error('should not show leads from next year by default');
+            }
+        },
+    }, {
         trigger: '.o_kanban_add_column',
         content: "add next month",
         run: "click"
     }, {
+        trigger: ".o_kanban_group:not('.o_kanban_no_records'):contains('January')",
+        content: "Check first month of next cycle is listed and unfold folded months",
+        run: function () {
+            $('.o_column_folded').each(function () {
+                $(this).click();
+            });
+        },
+    }, {
         trigger: ".o_kanban_record:contains('Test Opportunity 1'):contains('Won')",
         content: "assert that the opportunity has the Won banner",
-        run: function () {},
+        run: "click",
     }
 ]});
