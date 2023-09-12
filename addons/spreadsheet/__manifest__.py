@@ -75,7 +75,7 @@
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*.scss'),
             ('remove', 'spreadsheet/static/src/**/*.dark.scss'),
         ],
-        "web.dark_mode_assets_backend": [
+        "web.assets_web_dark": [
             'spreadsheet/static/src/**/*.dark.scss',
         ],
         'web.qunit_suite_tests': [
