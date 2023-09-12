@@ -8,17 +8,17 @@ import { Component } from "@odoo/owl";
 
 export class ConfirmationDialog extends Component {
     setup() {
-        this.env.dialogData.close = () => this._cancel();
+        this.env.dialogData.dismiss = () => this._cancel();
         this.modalRef = useChildRef();
         this.isProcess = false;
     }
 
     async _cancel() {
-        this.execButton(this.props.cancel);
+        return this.execButton(this.props.cancel);
     }
 
     async _confirm() {
-        this.execButton(this.props.confirm);
+        return this.execButton(this.props.confirm);
     }
 
     setButtonsDisabled(disabled) {
