@@ -388,6 +388,25 @@ export function evaluate(ast, context = {}) {
                 }
                 return result;
             }
+            case 16 /* List/Dict comprehension */: {
+                const isDict = ast.symbol === "{";
+                const result = isDict ? {} : [];
+                const iterator = _evaluate(ast.iterator);
+                for (const index in iterator) {
+                    const copyContext = {...evalContext}
+                    for (const keyIndex in ast.keys) {
+                        copyContext[ast.keys[keyIndex]] = ast.keys.length > 1 ? iterator[index][keyIndex] : iterator[index];
+                    }
+                    if (!ast.condition || evaluate(ast.condition, copyContext)) {
+                        if (isDict) {
+                            result[evaluate(ast.value[0], copyContext)] = evaluate(ast.value[1], copyContext);
+                        } else {
+                            result.push(evaluate(ast.value, copyContext));
+                        }
+                    }
+                }
+                return result;
+            }
         }
         throw new EvaluationError(`AST of type ${ast.type} cannot be evaluated`);
     }
