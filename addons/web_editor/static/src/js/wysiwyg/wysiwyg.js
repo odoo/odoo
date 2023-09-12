@@ -1279,13 +1279,17 @@ const Wysiwyg = Widget.extend({
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
         const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable') || this.odooEditor.editable);
-        const model = $editable.data('oe-model');
+        let model = $editable.data('oe-model');
+        let resId = $editable.data('oe-id');
+        if (!model) {
+            ({ res_model: model, res_id: resId } = this.options.recordInfo);
+        }
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
 
         this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
             resModel: model,
-            resId: $editable.data('oe-id'),
+            resId: resId,
             domain: $editable.data('oe-media-domain'),
             useMediaLibrary: !!(field && (model === 'ir.ui.view' && field === 'arch' || type === 'html')),
             media: params.node,
