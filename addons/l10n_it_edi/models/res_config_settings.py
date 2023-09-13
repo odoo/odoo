@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
                 ('company_id', '=', config.company_id.id),
                 ('proxy_type', '=', 'l10n_it_edi'),
             ], limit=1)
-            config.l10n_it_edi_demo_mode = edi_user.edi_mode
+            config.l10n_it_edi_demo_mode = edi_user.edi_mode or 'demo'
 
     def _set_l10n_it_edi_demo_mode(self):
         for config in self:
