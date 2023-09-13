@@ -5,11 +5,11 @@ from odoo.exceptions import UserError
 
 class AccountPaymentRegisterWithholding(models.TransientModel):
     _name = 'account.payment.register.withholding'
-    _description = 'Payment register withholding lines  '
+    _description = 'Payment register withholding lines'
 
     payment_register_id = fields.Many2one('account.payment.register', required=True, ondelete='cascade',)
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
-    name = fields.Char(string='Number', required=False)
+    name = fields.Char(string='Number', required=False, default='/')
     tax_id = fields.Many2one('account.tax', required=True,)
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
@@ -120,7 +120,7 @@ class AccountPaymentRegister(models.TransientModel):
             sign = -1
         for line in self.withholding_ids:
             if not line.name:
-                if line.tax_id.l10n_ar_withholding_sequence_id:
+                if line.tax_id.l10n_ar_withholding_sequence_id and line.name == '/':
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
                     raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
