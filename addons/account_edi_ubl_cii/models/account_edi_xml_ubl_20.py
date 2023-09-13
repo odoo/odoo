@@ -388,11 +388,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
-        for line_id, line in enumerate(invoice_lines):
+        for line_id, line in enumerate(invoice_lines, start=1):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
             line_vals = self._get_invoice_line_vals(line, line_taxes_vals)
-            if not line_vals.get('id'):
-                line_vals['id'] = line_id + 1
+            if line_vals.get('id') is None:
+                line_vals['id'] = line_id
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
