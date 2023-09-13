@@ -27,10 +27,6 @@ Technical
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [
-        'demo/account_tax_demo.xml',
-        'demo/product_product_demo.xml',
-    ],
     'installable': True,
     'post_init_hook': '_l10n_ar_withholding_post_init',
     'license': 'LGPL-3',

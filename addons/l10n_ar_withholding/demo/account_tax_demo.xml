@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <function model="account.tax" name="write">
-        <function eval="[[('l10n_ar_withholding', '!=', False)]]" model="account.tax" name="search"/>
-        <value eval="{'amount_type': 'percent', 'amount' : 1}"/>
-    </function>
-</odoo>
