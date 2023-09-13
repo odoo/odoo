@@ -21,30 +21,18 @@ class TeamMember(models.Model):
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
         help='Lead assigned to this member those last 30 days')
-    lead_day_count = fields.Integer(
-        'Leads (1 day)', compute='_compute_lead_day_count',
-        help='Lead assigned to this member over last 24 hours')
 
     @api.depends('user_id', 'crm_team_id')
     def _compute_lead_month_count(self):
-        gd = self._compute_lead_count(30)
-        for member in self:
-            member.lead_month_count = gd.get((member.user_id.id, member.crm_team_id.id), 0)
-
-    @api.depends('user_id', 'crm_team_id')
-    def _compute_lead_day_count(self):
-        gd = self._compute_lead_count(1)
-        for member in self:
-            member.lead_day_count = gd.get((member.user_id.id, member.crm_team_id.id), 0)
-
-    def _compute_lead_count(self, days=30):
-        limit_date = fields.Datetime.now() - datetime.timedelta(days=days)
+        limit_date = fields.Datetime.now() - datetime.timedelta(days=30)
         groups = self.env['crm.lead'].with_context(active_test=False)._read_group(
             [('date_open', '>=', limit_date), ('team_id', 'in', list(set(self.mapped('crm_team_id.id'))))],
             ['user_id', 'team_id'],
             ['__count']
         )
-        return {(x[0].id, x[1].id): x[2] for x in groups}
+        gd = {(x[0].id, x[1].id): x[2] for x in groups}
+        for member in self:
+            member.lead_month_count = gd.get((member.user_id.id, member.crm_team_id.id), 0)
 
     @api.constrains('assignment_domain')
     def _constrains_assignment_domain(self):
@@ -83,7 +71,7 @@ class TeamMember(models.Model):
             return False
 
         result = defaultdict(list)
-        toassign = {m.id: m.assignment_max - m.lead_month_count for m in members}
+        toassign = {m.id: min(m.assignment_max - m.lead_month_count, m.assignment_max // 3 + 1) for m in members}
         leads = self.env["crm.lead"].search([
                 ('user_id', '=', False), ('date_open', '=', False),
                 ('team_id', 'in', list(set(members.mapped('crm_team_id.id'))))
@@ -101,8 +89,6 @@ class TeamMember(models.Model):
                     continue
 
                 toassign[member.id] -= 1
-                if len(result[member.id]) + member.lead_day_count > member.assignment_max // 6:
-                    toassign[member.id] = 0
                 result[member.id].append(lead.id)
 
                 lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
@@ -115,5 +101,4 @@ class TeamMember(models.Model):
 
         if auto_commit:
             self._cr.commit()
-        print('*** ', result)
         return result
