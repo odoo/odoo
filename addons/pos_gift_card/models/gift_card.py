@@ -17,13 +17,17 @@ class GiftCard(models.Model):
         "pos.order.line", "gift_card_id", string="Pos Redeems"
     )
 
+    def _get_confirmed_redeem_pos_order_lines(self):
+        self.ensure_one()
+        return self.redeem_pos_order_line_ids.sudo().filtered(
+                lambda l: l.order_id.state in ('paid', 'done', 'invoiced')
+            )
+
     @api.depends("redeem_pos_order_line_ids")
     def _compute_balance(self):
         super()._compute_balance()
         for record in self:
-            confirmed_line = record.redeem_pos_order_line_ids.sudo().filtered(
-                lambda l: l.order_id.state in ('paid', 'done', 'invoiced')
-            )
+            confirmed_line = record._get_confirmed_redeem_pos_order_lines()
             balance = record.balance
             if confirmed_line:
                 balance -= sum(
