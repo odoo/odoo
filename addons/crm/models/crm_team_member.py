@@ -9,6 +9,17 @@ from collections import defaultdict
 from ast import literal_eval
 
 from odoo import api, exceptions, fields, models, _
+import logging
+
+_logger = logging.getLogger(__name__)
+
+def shuffle(population, weights):
+    index = list(range(len(weights)))
+    while weights:
+        pos = random.choices(range(len(index)), weights=weights, k=1)[0]
+        yield population[index[pos]]
+        del weights[pos]
+        del index[pos]
 
 class TeamMember(models.Model):
     _inherit = 'crm.team.member'
@@ -82,7 +93,8 @@ class TeamMember(models.Model):
         for lead in leads:
             if sum(toassign.values()) < 1:
                 break
-            for member in random.choices(members, weights=toassign.values(), k=len(members)):
+
+            for member in shuffle(members, list(toassign.values())):
                 if lead.team_id.id != member.crm_team_id.id:
                     continue
                 if not lead.filtered_domain(members_dom[member.id]):
@@ -101,4 +113,8 @@ class TeamMember(models.Model):
 
         if auto_commit:
             self._cr.commit()
+
+        _logger.info('Assigned %s leads to %s salesmen', sum([len(lid) for lid in result.values()]), len(members))
+        for member, member_info in result.items():
+            _logger.info('-> member %s: assigned %d leads (%s)', member, len(member_info), member_info)
         return result
