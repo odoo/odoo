@@ -35,11 +35,6 @@ import { session } from "@web/session";
                     if (!route.match(/^(?:https?:)?\/\//)) {
                         route = session.origin + route;
                     }
-                    const routeURL = new URL(route);
-                    const moduleName = routeURL.pathname.split("/").slice(1)[0];
-                    if (["discuss", "im_livechat", "mail"].includes(moduleName)) {
-                        params.guest_token = env.services["im_livechat.livechat"]?.guestToken;
-                    }
                     return jsonrpc(env, rpcId++, route, params, settings);
                 };
             },

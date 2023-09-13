@@ -11,8 +11,3 @@ class WebClient(WebclientController):
         return request.render("im_livechat.qunit_embed_suite", {
             "server_url": request.env["ir.config_parameter"].get_base_url(),
         })
-
-    @route("/mail/init_messaging", cors="*")
-    @add_guest_to_context
-    def mail_init_messaging(self):
-        return super().mail_init_messaging()
