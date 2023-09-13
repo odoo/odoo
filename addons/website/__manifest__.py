@@ -345,6 +345,7 @@
             'website/static/src/xml/website.cookies_bar.xml',
             'website/static/src/js/editor/commands_overridden.js',
             'website/static/src/js/editor/odoo_editor.js',
+            'website/static/src/js/editor/drag_and_drop.js',
         ],
         'website.assets_all_wysiwyg': [
             ('include', 'web_editor.assets_wysiwyg'),

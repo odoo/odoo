@@ -11,6 +11,7 @@ import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { applyTextHighlight, switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
+import { dragAndDropHelperWebsite } from "@website/js/editor/drag_and_drop";
 
 const snippetsEditorRegistry = registry.category("snippets_editor");
 snippetsEditorRegistry.add("no_parent_editor_snippets", ["s_popup", "o_mega_menu"]);
@@ -737,27 +738,13 @@ weSnippetEditor.SnippetEditor.include({
         return this._super(...arguments);
     },
     /**
-     * Changes some behaviors before the drag and drop.
+     * Returns the drag and drop helper.
      *
      * @private
-     * @override
-     * @returns {Function} a function that restores what was changed when the
-     *  drag and drop is over.
+     * @returns {Object} the drag and drop helper.
      */
-    _prepareDrag() {
-        const restore = this._super(...arguments);
-        // Remove the footer scroll effect if it has one (because the footer
-        // dropzone flickers otherwise when it is in grid mode).
-        const wrapwrapEl = this.$body[0].ownerDocument.defaultView.document.body.querySelector('#wrapwrap');
-        const hasFooterScrollEffect = wrapwrapEl && wrapwrapEl.classList.contains('o_footer_effect_enable');
-        if (hasFooterScrollEffect) {
-            wrapwrapEl.classList.remove('o_footer_effect_enable');
-            return () => {
-                wrapwrapEl.classList.add('o_footer_effect_enable');
-                restore();
-            };
-        }
-        return restore;
+    _getDragAndDropHelper() {
+        return new dragAndDropHelperWebsite(this.options.wysiwyg.odooEditor, this.$target[0], this.$body[0]);
     },
 });
 
