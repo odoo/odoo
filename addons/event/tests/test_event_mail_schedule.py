@@ -286,6 +286,30 @@ class TestMailSchedule(EventCase, MockEmail):
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
 
+        # create a new event mail, check that the emails for the old registrations
+        # are sent in the CRON, and not during the next registration confirmation
+        self.env['event.mail'].search([]).unlink()
+        with self._freeze_time(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
+            self.env['event.mail'].create({
+                'event_id': test_event.id,
+                'interval_unit': 'now',
+                'interval_type': 'after_sub',
+                'template_ref': f'mail.template,{self.env["ir.model.data"]._xmlid_to_res_id("event.event_subscription")}',
+            })
+        self.assertFalse(self._new_mails)
+
+        with self._freeze_time(now_start + relativedelta(hours=2)), self.mock_mail_gateway():
+            self.env['event.registration'].create({
+                'event_id': test_event.id,
+                'name': 'Reg4',
+                'email': 'reg4@example.com',
+            }).action_confirm()
+        self.assertEqual(len(self._new_mails), 1, "Should have send the mail only to the new registration")
+
+        with self._freeze_time(now_start + relativedelta(hours=2)), self.mock_mail_gateway():
+            event_cron_id.method_direct_trigger()
+        self.assertEqual(len(self._new_mails), 3, "Should have send the mails to the old registrations")
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_unique_event_mail_ids(self):
         # create event with default event_mail_ids lines

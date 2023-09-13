@@ -11,6 +11,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools
+from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 from odoo.exceptions import MissingError, ValidationError
@@ -164,8 +165,18 @@ class EventMailScheduler(models.Model):
         for scheduler in self:
             now = fields.Datetime.now()
             if scheduler.interval_type == 'after_sub':
+
+                registration_domain = [('state', 'not in', ('cancel', 'draft'))]
+                if not self.env.context.get('from_event_mail_cron'):
+                    # do not send the mail to the old registrations, created before
+                    # the event mail, they will be sent in a CRON instead
+                    registration_domain = expression.AND([
+                        registration_domain,
+                        [('create_date', '>=', scheduler.create_date)],
+                    ])
+
                 new_registrations = scheduler.event_id.registration_ids.filtered_domain(
-                    [('state', 'not in', ('cancel', 'draft'))]
+                    registration_domain
                 ) - scheduler.mail_registration_ids.registration_id
                 scheduler._create_missing_mail_registrations(new_registrations)
 
@@ -268,7 +279,7 @@ You receive this email because you are:
         for scheduler in schedulers:
             try:
                 # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
-                self.browse(scheduler.id).execute()
+                self.browse(scheduler.id).with_context(from_event_mail_cron=True).execute()
             except Exception as e:
                 _logger.exception(e)
                 self.env.invalidate_all()
