@@ -24,16 +24,12 @@ def add_guest_to_context(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         req = request or wsrequest
-        guest = req.env["mail.guest"]._get_guest_from_context()
-        guest_token = kwargs.pop("guest_token", None)
-        if guest:
-            return func(self, *args, **kwargs)
         token = (
-            guest_token
-            or req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name)
+            req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name)
             or req.env.context.get("guest_token", "")
         )
         parts = token.split(req.env["mail.guest"]._cookie_separator)
+        guest = req.env["mail.guest"]
         if len(parts) == 2:
             guest_id, guest_access_token = parts
             guest = req.env["mail.guest"].browse(int(guest_id)).sudo().exists()
@@ -49,18 +45,6 @@ def add_guest_to_context(func):
             self.env.context = {**self.env.context, "guest": guest}
         return func(self, *args, **kwargs)
 
-    # Add the guest_token parameter to the wrapper signature
-    # so that it is not marked as being ignored. It will be
-    # popped before calling the wrapped function.
-    old_sig = signature(wrapper)
-    params = list(old_sig.parameters.values())
-    new_param_index = next((
-        index for index, param in enumerate(params)
-        if param.kind in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]
-    ), len(params))
-    new_param = Parameter("guest_token", Parameter.POSITIONAL_OR_KEYWORD, default=None)
-    params.insert(new_param_index, new_param)
-    wrapper.__signature__ = old_sig.replace(parameters=params)
     return wrapper
 
 
