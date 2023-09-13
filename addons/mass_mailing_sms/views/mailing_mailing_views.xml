@@ -95,6 +95,12 @@
                 <attribute name="attrs">{'invisible': ['|',('mailing_type', '!=', 'mail'),('state', 'in', ('draft','test'))]}</attribute>
             </xpath>
             <!-- Form -->
+            <xpath expr="//label[@for='subject']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='subject']" position="after">
+                <label for="sms_subject" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}" />
+            </xpath>
             <xpath expr="//field[@name='subject']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'mail')]}</attribute>
                 <!-- overrided in xml view to prevent remaining helper changes (on mass_mailing module) when mass_mailing_sms uninstalled-->
