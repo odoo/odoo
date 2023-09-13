@@ -292,8 +292,6 @@ class Team(models.Model):
 
         See sub methods for more details about assign process.
 
-        :param float work_days: see ``CrmTeam.action_assign_leads()``;
-
         :return teams_data, members_data: structure-based result of assignment
           process. For more details about data see ``CrmTeam._allocate_leads()``
           and ``CrmTeamMember._assign_and_convert_leads``;
@@ -304,7 +302,7 @@ class Team(models.Model):
         _logger.info('### START Lead Assignment (%d teams, %d sales persons, %.2f work_days)', len(self), len(self.crm_team_member_ids), work_days)
         teams_data = self._allocate_leads(work_days=work_days)
         _logger.info('### Team repartition done. Starting salesmen assignment.')
-        members_data = self.crm_team_member_ids._assign_and_convert_leads(work_days=work_days)
+        members_data = self.crm_team_member_ids._assign_and_convert_leads()
         _logger.info('### END Lead Assignment')
         return teams_data, members_data
 
@@ -321,7 +319,7 @@ class Team(models.Model):
         assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in teams_data)
         duplicates = sum(len(teams_data[team]['duplicates']) for team in teams_data)
         members = len(members_data)
-        members_assigned = sum(len(member_data['assigned']) for member_data in members_data.values())
+        members_assigned = sum(len(member_data) for member_data in members_data.values())
 
         # format user notification
         message_parts = []
