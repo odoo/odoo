@@ -1127,7 +1127,8 @@ class Meeting(models.Model):
             events = self
         attendee = events.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
         if status == 'accepted':
-            return attendee.do_accept()
+            all_events = recurrence_update_setting == 'all_events'
+            return attendee.with_context(all_events=all_events).do_accept()
         if status == 'declined':
             return attendee.do_decline()
         return attendee.do_tentative()
