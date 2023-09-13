@@ -13,8 +13,8 @@ describe('urlRegex', () => {
         const match = text.match(URL_REGEX);
         chai.expect(match).to.be.equal(null);
     });
-    it('should match abc.abc.abc', () => {
-        const url = 'abc.abc.abc';
+    it('should match www.abc.abc', () => {
+        const url = 'www.abc.abc';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX);
         chai.expect(match[0]).to.be.equal(url);
@@ -58,8 +58,8 @@ describe('urlRegex with infos', () => {
         const match = text.match(URL_REGEX_WITH_INFOS);
         chai.expect(match).to.be.equal(null);
     });
-    it('should match abc.abc.abc', () => {
-        const url = 'abc.abc.abc';
+    it('should match www.abc.abc', () => {
+        const url = 'www.abc.abc';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX_WITH_INFOS);
         chai.expect(match[0]).to.be.equal(url);
