@@ -1165,6 +1165,40 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("many2many field with unlink option to false (kanban)", async function (assert) {
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.views = {
+            "partner_type,false,form": '<form><field name="display_name"/></form>',
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="color"/>
+                    <field name="timmy" options="{'unlink': 0}">
+                        <kanban>
+                        <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click"><field name="display_name"/></div>
+                        </t>
+                    </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
+
+        await click(target.querySelector(".o_kanban_record"));
+
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsNone(target, ".modal .o_btn_remove");
+    });
+
     QUnit.test("many2many field with link/unlink options (list)", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.views = {
