@@ -16,9 +16,10 @@
                     debounceMillis="100" />
             </div>
             <div class="product-list-container flex-grow-1 overflow-y-auto">
-                <div t-if="productsToDisplay.length != 0 and posHasValidProduct" t-attf-class="{{this.pos.productListViewMode}} product-list d-grid gap-1 p-1">
+                <div t-if="productsToDisplay.length != 0 and posHasValidProduct" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                         <ProductCard
+                            class="pos.productViewMode"
                             name="product.display_name"
                             productId="product.id"
                             price="product.getFormattedUnitPrice()"
