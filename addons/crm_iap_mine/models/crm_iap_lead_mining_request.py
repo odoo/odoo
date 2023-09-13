@@ -251,7 +251,7 @@ class CRMLeadMiningRequest(models.Model):
             raise UserError(_("Your request could not be executed: %s", e))
 
     def _iap_contact_mining(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/api/directory/2/lead/mining_request'
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/api/clearbit/2/lead_mining_request'
         return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
 
     def _create_leads_from_response(self, result):
