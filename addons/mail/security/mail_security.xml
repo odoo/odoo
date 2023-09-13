@@ -273,4 +273,23 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
         </record>
+
+        <record id="mail_canned_response_user_rule" model="ir.rule">
+            <field name="name">mail.canned_response: User access</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="mail_canned_response_user_rule_user_id" model="ir.rule">
+            <field name="name">mail.canned_response: User access</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('group_ids', 'in', user.groups_id.ids)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
 </odoo>

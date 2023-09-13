@@ -129,6 +129,11 @@ export class DiscussCoreCommon {
                     }
                 }
             });
+            this.busService.subscribe("mail.cannedReponse/delete", (datas) => {
+                for (const data of datas) {
+                    this.store.CannedResponse.get(data).delete();
+                }
+            });
         });
     }
 

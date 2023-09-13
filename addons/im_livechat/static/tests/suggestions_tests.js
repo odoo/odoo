@@ -11,7 +11,7 @@ QUnit.module("suggestion");
 
 QUnit.test("Suggestions are shown after delimiter was used in text (:)", async () => {
     const pyEnv = await startServer();
-    pyEnv["mail.shortcode"].create({
+    pyEnv["mail.canned_response"].create({
         source: "hello",
         substitution: "Hello dear customer, how may I help you?",
     });

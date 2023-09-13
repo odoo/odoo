@@ -20,7 +20,7 @@ import { MailMessage } from "./mock_server/mock_models/mail_message";
 import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
 import { MailNotification } from "./mock_server/mock_models/mail_notification";
-import { MailShortcode } from "./mock_server/mock_models/mail_shortcode";
+import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
 import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
 import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
@@ -57,7 +57,7 @@ export const mailModels = {
     MailMessageReaction,
     MailMessageSubtype,
     MailNotification,
-    MailShortcode,
+    MailCannedResponse,
     MailTemplate,
     MailThread,
     MailTrackingValue,

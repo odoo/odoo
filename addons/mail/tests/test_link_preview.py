@@ -111,6 +111,7 @@ class TestLinkPreview(MailCommon):
                 self.assertEqual(preview, expected)
 
     def test_link_preview(self):
+        self._reset_bus()
         with patch.object(requests.Session, 'get', self._patch_with_og_properties), patch.object(requests.Session, 'head', self._patch_head_html):
             throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
             self.env['mail.link.preview'].create([

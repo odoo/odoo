@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_canned_response_view_search" model="ir.ui.view">
+            <field name="name">mail.canned_response.search</field>
+            <field name="model">mail.canned_response</field>
+            <field name="arch" type="xml">
+                <search string="Canned Responses Search">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_canned_response_action" model="ir.actions.act_window">
+            <field name="name">Canned Responses</field>
+            <field name="res_model">mail.canned_response</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail_canned_response_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new canned response
+              </p><p>
+                Canned responses allow you to insert prewritten responses in
+                your messages by typing <i>:shortcut</i>. The shortcut is
+                replaced directly in your message, so that you can still edit
+                it before sending.
+              </p>
+            </field>
+        </record>
+
+        <record id="mail_canned_response_view_tree" model="ir.ui.view">
+            <field name="name">mail.canned_response.tree</field>
+            <field name="model">mail.canned_response</field>
+            <field name="arch" type="xml">
+                <tree string="Canned responses" editable="bottom" default_order="is_shared" sample="1">
+                    <field name="source" readonly="not is_editable"/>
+                    <field name="substitution" readonly="not is_editable"/>
+                    <field name="description" readonly="not is_editable"/>
+                    <field name="create_uid" widget="many2one_avatar_user"/>
+                    <field name="group_ids" widget="many2many_tags"/>
+                    <field name="user_ids" widget="many2many_avatar_user"/>
+                    <field name="last_used" readonly="1"/>
+                    <field name="is_editable" column_invisible="True"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_canned_response_view_form" model="ir.ui.view">
+            <field name="name">mail.canned_response.form</field>
+            <field name="model">mail.canned_response</field>
+            <field name="arch" type="xml">
+                <form string="Canned response">
+                    <sheet>
+                        <group>
+                            <field name="source"/>
+                            <field name="substitution"/>
+                            <field name="description"/>
+                            <field name="create_uid" widget="many2one_avatar_user"/>
+                            <field name="group_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

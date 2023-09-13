@@ -73,9 +73,6 @@ export class ResUsers extends webModels.ResUsers {
         ]);
 
         return {
-            CannedResponse: this.env["mail.shortcode"].search_read([], {
-                fields: ["source", "substitution"],
-            }),
             Store: {
                 current_user_id: this.env.uid,
                 discuss: {

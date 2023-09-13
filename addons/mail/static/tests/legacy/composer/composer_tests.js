@@ -908,3 +908,132 @@ QUnit.test("Message is sent only once when pressing enter twice in a row", async
     // weak test, no guarantee that we waited long enough for the potential second message to be posted
     await contains(".o-mail-Message-content", { text: "Hello World!" });
 });
+
+QUnit.test('display canned response suggestions on typing ":"', async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    pyEnv["mail.canned_response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await insertText(".o-mail-Composer-input", ":");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
+});
+
+QUnit.test("select a canned response suggestion", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    pyEnv["mail.canned_response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", ":");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
+});
+
+QUnit.test("select a canned response suggestion with some text", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    pyEnv["mail.canned_response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "bluhbluh ");
+    await contains(".o-mail-Composer-input", { value: "bluhbluh " });
+    await insertText(".o-mail-Composer-input", ":");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
+});
+
+QUnit.test("Canned response can be inserted from the bus", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        CannedResponse: {
+            id: 1,
+            source: "hello",
+            substitution: "Hello! How are you?",
+        },
+    });
+    await contains(".o-mail-Composer-input");
+    await insertText(".o-mail-Composer-input", ":");
+    await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        CannedResponse: {
+            id: 1,
+            source: "test",
+            substitution: "test",
+        },
+    });
+    await contains(".o-mail-NavigableList-item", { text: "testtest" });
+});
+
+QUnit.test("Canned response can be deleted from the bus", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    const cannedResponseId = pyEnv["mail.canned_response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.canned_response/delete", [
+        { id: cannedResponseId },
+    ]);
+    await contains(".o-mail-Composer-input");
+    await insertText(".o-mail-Composer-input", ":");
+    await contains(".o-mail-Composer-input", { value: ":" });
+    await contains(".o-mail-NavigableList-item", { count: 0 });
+});
