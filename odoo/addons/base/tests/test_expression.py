@@ -730,6 +730,25 @@ class TestExpression(SavepointCaseWithUserDemo):
         countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
+    def test_like_escape(self):
+        # check that =like/=ilike expressions are working on an untranslated field
+        Partner = self.env['res.partner']
+        Partner.create([
+            {'name': 'test_like_escape'},
+            {'name': 'test_like_escape\\'},
+            {'name': 'test_like_escape%'},
+            {'name': 'test_like_escape2'},
+            {'name': 'test_like_escape%2'}
+        ])
+        # the trailing escape character '\' should be ignored
+        partner = Partner.search([('name', '=ilike', 'Test_Like_Escape\\')])
+        self.assertEqual(partner.name, 'test_like_escape', "Must match only 'test_like_escape'")
+        partner = Partner.search([('name', '=ilike', 'Test_Like_Escape\\\\')])
+        self.assertEqual(partner.name, 'test_like_escape\\', "Must match only 'test_like_escape\\'")
+        # the trailing escape character '\' should be ignored
+        partners = Partner.search([('name', 'ilike', 'Test_Like_Escape\\')])
+        self.assertEqual(len(partners), 5, "Must match all test_like_escape partners'")
+
     def test_translate_search(self):
         Country = self.env['res.country']
         belgium = self.env.ref('base.be')

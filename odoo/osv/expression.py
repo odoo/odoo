@@ -943,6 +943,9 @@ class expression(object):
 
                 elif field.translate is True and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    if operator.endswith('like') and isinstance(right, str) and (len(right) - len(right.rstrip('\\'))) % 2:
+                        # PostgreSQL LIKE pattern must not end with escape character
+                        right = right[:-1]
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
@@ -1063,6 +1066,9 @@ class expression(object):
 
         else:
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+            if operator.endswith('like') and isinstance(right, str) and (len(right) - len(right.rstrip('\\'))) % 2:
+                # PostgreSQL LIKE pattern must not end with escape character
+                right = right[:-1]
             sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
             cast = '::text' if  sql_operator.endswith('like') else ''
 
