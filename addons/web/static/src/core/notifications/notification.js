@@ -28,6 +28,7 @@ Notification.props = {
                 name: { type: String },
                 icon: { type: String, optional: true },
                 primary: { type: Boolean, optional: true },
+                link: { type: Boolean, optional: true },
                 onClick: Function,
             },
         },

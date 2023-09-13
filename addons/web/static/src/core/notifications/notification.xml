@@ -12,7 +12,7 @@
                 <div t-if="props.message" class="me-auto o_notification_content" t-out="props.message"/>
                 <div t-if="props.buttons.length" class="o_notification_buttons d-flex gap-2 mt-2">
                     <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index"
-                    t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-secondary'}}" t-on-click="button.onClick">
+                    t-attf-class="btn {{button.link ? 'btn-link' : button.primary ? 'btn-primary' : 'btn-secondary'}}" t-on-click="button.onClick">
                     <t t-if="button.icon">
                         <i t-if="button.icon.indexOf('fa-') === 0" role="img"
                         t-att-aria-label="button.name" t-att-title="button.name"
