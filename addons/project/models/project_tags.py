@@ -61,61 +61,30 @@ class ProjectTags(models.Model):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if self.env.context.get('project_id') and operator == 'ilike':
-            # `domain` has the form of the default filter ['!', ['id', 'in', <ids>]]
-            # passed to exclude already selected tags -> exclude them in our query too
-            excluded_ids = list(domain[1][2]) \
-                if domain and len(domain) == 2 and domain[0] == '!' and len(domain[1]) == 3 and domain[1][:2] == ["id", "in"] \
-                else []
-            # UNION ALL is lazy evaluated, if the first query has enough results,
-            # the second is not executed (just planned).
-            query = """
-                WITH query_tags_in_tasks AS (
-                    SELECT tags.id, COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') AS name, 1 AS sequence
-                    FROM project_tags AS tags
-                    JOIN (
-                        SELECT project_tags_id
-                        FROM project_tags_project_task_rel AS rel
-                        JOIN project_task AS task
-                            ON task.project_id = %(project_id)s
-                            AND task.id = rel.project_task_id
-                        ORDER BY task.id DESC
-                        LIMIT 1000 -- arbitrary limit to speed up lookup on huge projects (fallback below on global scope)
-                    ) AS tags__tasks_ids
-                        ON tags__tasks_ids.project_tags_id = tags.id
-                    WHERE tags.id != ALL(%(excluded_ids)s)
-                    AND COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') ILIKE %(search_term)s
-                    GROUP BY 1, 2, 3  -- faster than a distinct
-                    LIMIT %(limit)s
-                ), query_all_tags AS (
-                    SELECT tags.id, COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') AS name, 2 AS sequence
-                    FROM project_tags AS tags
-                    WHERE tags.id != ALL(%(excluded_ids)s)
-                    AND tags.id NOT IN (SELECT id FROM query_tags_in_tasks)
-                    AND COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') ILIKE %(search_term)s
-                    LIMIT %(limit)s
-                )
-                SELECT id FROM (
-                    SELECT id, name, sequence
-                    FROM query_tags_in_tasks
-                    UNION ALL
-                    SELECT id, name, sequence
-                    FROM query_all_tags
-                    LIMIT %(limit)s
-                ) AS tags
-                ORDER BY sequence, name
-            """
-            params = {
-                'project_id': self.env.context.get('project_id'),
-                'excluded_ids': excluded_ids,
-                'limit': limit,
-                'lang': self.env.context.get('lang', 'en_US'),
-                'search_term': '%' + name + '%',
-            }
-            self.env.cr.execute(query, params)
-            return [row[0] for row in self.env.cr.fetchall()]
-        else:
-            return super()._name_search(name, domain, operator, limit, order)
+        ids = []
+        if not (name == '' and operator in ('like', 'ilike')):
+            domain += [('name', operator, name)]
+        if self.env.context.get('project_id'):
+            # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.
+            # when not enough results are found, we complete them with a fallback on a regular search
+            self.env.cr.execute("""
+                SELECT DISTINCT project_tasks_tags.id
+                FROM (
+                    SELECT rel.project_tags_id AS id
+                    FROM project_tags_project_task_rel AS rel
+                    JOIN project_task AS task
+                        ON task.id=rel.project_task_id
+                        AND task.project_id=%(project_id)s
+                    ORDER BY task.id DESC
+                    LIMIT 1000
+                ) AS project_tasks_tags
+            """, {'project_id': self.env.context['project_id']})
+            project_tasks_tags_domain = [('id', 'in', [row[0] for row in self.env.cr.fetchall()])]
+            # we apply the domain and limit to the ids we've already found
+            ids += self.env['project.tags'].search(expression.AND([domain, project_tasks_tags_domain]), limit=limit, order=order).ids
+        if len(ids) < limit:
+            ids += self.env['project.tags'].search(expression.AND([domain, [('id', 'not in', ids)]]), limit=limit - len(ids), order=order).ids
+        return ids
 
     @api.model
     def name_create(self, name):
