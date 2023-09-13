@@ -52,12 +52,15 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
      * @private
      */
     _updateFilterIcons() {
-        const el = document.querySelector('.o_mass_mailing_filter_container');
-        if (!el || this.props.readonly) {
+        const filterEl = document.querySelector(
+            `div [name="${this.props.name}"] > .o_field_many2one_selection`
+        );
+        const filterContainerEl = filterEl.querySelector(".o_mass_mailing_filter_container");
+        if (!filterContainerEl || this.props.readonly) {
             return;
         }
         const filterCount = this.props.record.data.mailing_filter_count;
-        const dropdown = document.querySelectorAll('.o_field_many2one_selection > .o_input_dropdown')[1]
+        const dropdown = filterEl.querySelector(".o_input_dropdown");
         if (dropdown) {
             dropdown.classList.toggle('d-none', !filterCount);
         }
@@ -76,7 +79,7 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
             value = modelFieldElement.value;
         }
 
-        el.classList.toggle('d-none', recordDomain === '[]');
+        filterContainerEl.classList.toggle("d-none", recordDomain === "[]");
         this.filter.canSaveFilter = !this.props.record.data.mailing_filter_id
             || value.length
             || this.state.isFloating
