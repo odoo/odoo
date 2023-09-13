@@ -746,7 +746,7 @@ Model({
                         channel: this.composer.thread,
                         body: this.composer.textInputContent,
                     });
-                    if (this.composer.exists()) {
+                    if (this.exists() && this.composer) {
                         this.composer._reset();
                     }
                     return;
