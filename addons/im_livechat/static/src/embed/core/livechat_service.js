@@ -257,7 +257,9 @@ export class LivechatService {
      * @returns {import("@mail/core/common/thread_model").Thread|undefined}
      */
     get thread() {
-        return Object.values(this.store.Thread.records).find(({ type }) => type === "livechat");
+        return Object.values(this.store.Thread.records).find(
+            ({ id, type }) => type === "livechat" && id === this.sessionCookie?.id
+        );
     }
 
     get visitorUid() {
