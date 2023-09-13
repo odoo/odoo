@@ -1356,6 +1356,7 @@ class TestBoM(TestMrpCommon):
         Checks the BoM will be marked as updated in the right situation, and checks the "Update BoM"
         action update the MO accordingly to the changes done in the BoM.
         """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
         # Creates a BoM.
         common_vals = {'type': "product"}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
@@ -1448,6 +1449,17 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_1.is_outdated_bom, False,
             "There should be no difference between the MO and BoM")
         self.assertEqual(len(mo_1.move_raw_ids), 1)
+
+        # Updates the BoM again (increase by-product qty).
+        with bom_form.byproduct_ids.edit(0) as byproduct_line:
+            byproduct_line.product_qty += 1
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "BoM byproduct's quantity was update, BoM should be marked as updated")
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "There should be no difference between the MO and BoM")
+        self.assertEqual(mo_1.move_byproduct_ids.product_uom_qty, bom.byproduct_ids.product_qty * 10)
 
         # Updates the BoM by multiplying all its quantities by 3.
         bom.product_qty *= 3
