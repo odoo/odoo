@@ -24,7 +24,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                 Command.link(cls.partner_portal.id),
             ],
         })
-        project_share_wizard.action_send_mail()
+        project_share_wizard.action_share_record()
 
         Task = cls.env['project.task']
         cls.read_protected_fields_task = OrderedDict([
@@ -76,3 +76,31 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         for field in self.other_fields_task:
             with self.assertRaises(AccessError):
                 self.task_portal.with_user(self.user_portal).write({field: 'dummy'})
+
+    def test_wizard_confirm(self):
+        partner_portal_no_user = self.env['res.partner'].create({
+            'name': 'NoUser portal',
+            'email': 'no@user.portal',
+            'company_id': False,
+            'user_ids': [],
+        })
+
+        project_share_wizard_no_user = self.env['project.share.wizard'].create({
+            'access_mode': 'edit',
+            'res_model': 'project.project',
+            'res_id': self.project_portal.id,
+            'partner_ids': [
+                Command.link(partner_portal_no_user.id),
+            ],
+        })
+        self.env["res.config.settings"].create({"auth_signup_uninvited": 'b2b'}).execute()
+
+        project_share_wizard_no_user_action = project_share_wizard_no_user.action_share_record()
+        self.assertEqual(project_share_wizard_no_user_action['type'], 'ir.actions.act_window', 'Sharing a project with partner without user should display a confimation dialog')
+        project_share_wizard_confirmation = self.env['project.share.wizard'].browse(project_share_wizard_no_user_action['res_id'])
+
+        project_share_wizard_confirmation.action_send_mail()
+        mail_partner = self.env['mail.message'].search([('partner_ids', '=', partner_portal_no_user.id)], limit=1)
+        self.assertTrue(mail_partner, 'A mail should have been sent to the non portal user')
+        self.assertIn('href="http://localhost:8069/web/signup', str(mail_partner.body), 'The message link should contain the url to register to the portal')
+        self.assertIn('token=', str(mail_partner.body), 'The message link should contain a personalized token to register to the portal')
