@@ -314,13 +314,13 @@
         <field name="name">survey.question.answer.view.form</field>
         <field name="model">survey.question.answer</field>
         <field name="arch" type="xml">
-            <form string="Question Answer Form">
+            <form string="Question Answer Form" create="false">
                 <sheet>
                     <field name="question_type" invisible="1"/>
                     <group>
                         <group>
                             <field name="scoring_type" invisible="1"/>
-                            <field name="question_id"/>
+                            <field name="question_id" required="1"/>
                             <field name="is_correct" invisible="scoring_type == 'no_scoring'"/>
                             <field name="answer_score" invisible="scoring_type == 'no_scoring' or question_type == 'matrix'"/>
                             <field name="value_image"/>
