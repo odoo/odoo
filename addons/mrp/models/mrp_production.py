@@ -2339,7 +2339,7 @@ class MrpProduction(models.Model):
         # For each remaining BoM's by-product, creates a move finished.
         byproduct_values = []
         for bom_byproduct in bom_byproducts_by_id.values():
-            qty = bom_byproduct.product_qty * ratio
+            qty = bom_byproduct.product_qty / ratio
             move_byproduct_vals = self._get_move_finished_values(
                 bom_byproduct.product_id.id, qty, bom_byproduct.product_uom_id.id,
                 bom_byproduct.operation_id.id, bom_byproduct.id, bom_byproduct.cost_share
