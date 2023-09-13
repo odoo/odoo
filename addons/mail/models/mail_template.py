@@ -569,12 +569,13 @@ class MailTemplate(models.Model):
         records.check_access_rights('read')
         records.check_access_rule('read')
 
-    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
+    @api.returns('mail.mail', lambda value: value.ids)
+    def send_mail(self, res_ids, force_send=False, raise_exception=False, email_values=None,
                   email_layout_xmlid=False):
         """ Generates a new mail.mail. Template is rendered on record given by
-        res_id and model coming from template.
+        res_ids and model coming from template.
 
-        :param int res_id: id of the record to render the template
+        :param int | list res_ids: ids of the records to render the template
         :param bool force_send: send email immediately; otherwise use the mail
             queue (recommended);
         :param dict email_values: update generated mail with those values to further
@@ -585,13 +586,14 @@ class MailTemplate(models.Model):
 
         # Grant access to send_mail only if access to related document
         self.ensure_one()
-        self._send_check_access([res_id])
+        if isinstance(res_ids, int):
+            res_ids = [res_ids]
 
-        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
+        self._send_check_access(res_ids)
 
         # create a mail_mail based on values, without attachments
-        values = self._generate_template(
-            [res_id],
+        values_list = self._generate_template(
+            res_ids,
             ('attachment_ids',
              'auto_delete',
              'body_html',
@@ -607,31 +609,48 @@ class MailTemplate(models.Model):
              'scheduled_date',
              'subject',
             )
-        )[res_id]
-        values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
-        values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
-        values.update(email_values or {})
-        attachment_ids = values.pop('attachment_ids', [])
-        attachments = values.pop('attachments', [])
-        # add a protection against void email_from
-        if 'email_from' in values and not values.get('email_from'):
-            values.pop('email_from')
-        # encapsulate body
-        email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
-        if email_layout_xmlid and values['body_html']:
-            record = self.env[self.model].browse(res_id)
-            model = self.env['ir.model']._get(record._name)
+        )
+        values_list = [
+            values for res_id in res_ids
+            if (values := values_list[res_id])['body_html']
+        ]
 
-            if self.lang:
-                lang = self._render_lang([res_id])[res_id]
-                model = model.with_context(lang=lang)
+        # get record in batch to use the prefetch
+        records = self.env[self.model].browse(res_ids)
+        model = self.env['ir.model']._get(self.model)
+        attachments_list = []
+        attachments_ids_list = []
+
+        langs = [False] * len(res_ids)
+        if self.lang:
+            langs = self._render_lang(res_ids)
+            langs = [langs[res_id] for res_id in res_ids]
+
+        for values, record, lang in zip(values_list, records, langs):
+            values['recipient_ids'] = list(map(Command.link, values.get('partner_ids', [])))
+            values['attachment_ids'] = list(map(Command.link, values.get('attachment_ids', [])))
+            values.update(email_values or {})
+
+            attachments_ids_list.append(values.pop('attachment_ids', []))
+            attachments_list.append(values.pop('attachments', []))
+            # add a protection against valuesoid email_from
+            if 'email_from' in values and not values.get('email_from'):
+                values.pop('email_from')
+
+            # encapsulate body
+            email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
+            if not email_layout_xmlid:
+                continue
+
+            model_lang = model.with_context(lang=lang) if lang else model
 
             template_ctx = {
                 # message
-                'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                'message': self.env['mail.message'].sudo().new(
+                    dict(body=values['body_html'], record_name=record.display_name)),
                 'subtype': self.env['mail.message.subtype'].sudo(),
                 # record
-                'model_description': model.display_name,
+                'model_description': model_lang.display_name,
                 'record': record,
                 'record_name': False,
                 'subtitles': False,
@@ -643,31 +662,31 @@ class MailTemplate(models.Model):
                 # tools
                 'is_html_empty': is_html_empty,
             }
-            body = model.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
+            body = model_lang.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
             if not body:
                 _logger.warning(
                     'QWeb template %s not found when sending template %s. Sending without layout.',
                     email_layout_xmlid,
-                    self.name
+                    self.name,
                 )
 
             values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
-        mail = self.env['mail.mail'].sudo().create(values)
+        mails = self.env['mail.mail'].sudo().create(values_list)
 
-        # manage attachments
-        for attachment in attachments:
-            attachment_data = {
+        for attachments, attachment_ids, mail in zip(attachments_list, attachments_ids_list, mails):
+            # manage attachments
+            attachment_ids.extend([Command.create({
                 'name': attachment[0],
                 'datas': attachment[1],
                 'type': 'binary',
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
-            }
-            attachment_ids.append((4, Attachment.create(attachment_data).id))
-        if attachment_ids:
-            mail.write({'attachment_ids': attachment_ids})
+            }) for attachment in attachments])
+
+            if attachment_ids:
+                mail.with_context(default_type=None).write({'attachment_ids': attachment_ids})
 
         if force_send:
-            mail.send(raise_exception=raise_exception)
-        return mail.id  # TDE CLEANME: return mail + api.returns ?
+            mails.send(raise_exception=raise_exception)
+        return mails
