@@ -255,3 +255,46 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(task.subtask_count, 1, "Parent task should have 1 children")
         task_2 = task.copy()
         self.assertEqual(task_2.subtask_count, 1, "If the parent task is duplicated then the sub task should be copied")
+
+    def test_get_all_subtasks(self):
+        task = self.env['project.task'].create({
+            'name': 'Task 1',
+            'project_id': self.project_goats.id,
+            'child_ids': [
+                Command.create({
+                    'name': 'Subtask 1',
+                    'project_id': self.project_pigs.id,
+                    'child_ids': [
+                        Command.create({
+                            'name': 'Subsubtask 1',
+                            'project_id': False,
+                        }),
+                        Command.create({
+                            'name': 'Subsubtask 2',
+                            'project_id': self.project_goats.id,
+                        }),
+                    ],
+                }),
+                Command.create({
+                    'name': 'Subtask 2',
+                    'project_id': False,
+                    'child_ids': [
+                        Command.create({
+                            'name': 'Subsubtask 3',
+                            'project_id': False,
+                        }),
+                    ],
+                }),
+            ],
+        })
+        subtasks = task.child_ids
+        subsubtasks = subtasks.child_ids
+        self.assertTrue(bool(subtasks))
+        self.assertTrue(bool(subsubtasks))
+
+        all_subtasks = task._get_all_subtasks()
+        self.assertEqual(len(all_subtasks), 5)
+        self.assertEqual(all_subtasks, subtasks | subsubtasks)
+
+        all_subtasks_by_task_id = task._get_subtask_ids_per_task_id()
+        self.assertEqual(all_subtasks_by_task_id, {task.id: all_subtasks.ids})
