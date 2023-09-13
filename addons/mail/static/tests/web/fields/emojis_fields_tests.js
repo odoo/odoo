@@ -1,10 +1,12 @@
 /* @odoo-module */
 
 import { addFakeModel } from "@bus/../tests/helpers/model_definitions_helpers";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { click } from "@web/../tests/helpers/utils";
+import { contains } from "@web/../tests/utils";
 
 /**
  * Check that the emoji button is visible

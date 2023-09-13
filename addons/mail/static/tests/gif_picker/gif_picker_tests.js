@@ -1,7 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 const rpc = {
     search: {
@@ -111,7 +115,7 @@ QUnit.test("Searching for a GIF", async () => {
     });
     openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    insertText((await contains("input[placeholder='Search for a GIF']"))[0], "search");
+    await insertText("input[placeholder='Search for a GIF']", "search");
     await contains("i[aria-label='back']");
     await contains(".o-discuss-Gif", { count: 2 });
 });
@@ -172,7 +176,7 @@ QUnit.test("Add GIF to favorite", async () => {
     openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await click(".o-discuss-Gif .fa-star-o:eq(0)");
+    await click(":nth-child(1 of div) > .o-discuss-Gif .fa-star-o");
     await contains(".o-discuss-Gif .fa-star");
     await click("i[aria-label='back']");
     await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });

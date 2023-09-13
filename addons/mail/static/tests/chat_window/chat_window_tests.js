@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -7,20 +9,18 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { triggerHotkey } from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
     createFile,
+    focus,
+    inputFiles,
     insertText,
     scroll,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
-
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
-
-const { inputFiles } = file;
+} from "@web/../tests/utils";
 
 QUnit.module("chat window");
 
@@ -97,14 +97,24 @@ QUnit.test("Message post in chat window of chatter should log a note", async () 
     await contains(".o-mail-Message-content", {
         text: "A needaction message to have it in messaging menu",
     });
-    await contains(
-        ".o-mail-Message:contains(A needaction message to have it in messaging menu) .o-mail-Message-bubble.border"
-    ); // bordered bubble = "Send message" mode
+    await contains(".o-mail-Message", {
+        containsMulti: [
+            [
+                ".o-mail-Message-content",
+                { text: "A needaction message to have it in messaging menu" },
+            ],
+            [".o-mail-Message-bubble.border"], // bordered bubble = "Send message" mode
+        ],
+    });
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
-    await contains(".o-mail-Message-content", { text: "Test" });
-    await contains(".o-mail-Message:contains(Test) .o-mail-Message-bubble.border", { count: 0 }); // non-bordered bubble = "Log note" mode
+    await contains(".o-mail-Message", {
+        containsMulti: [
+            [".o-mail-Message-content", { text: "Test" }],
+            [".o-mail-Message-bubble:not(.border)"], // non-bordered bubble = "Log note" mode
+        ],
+    });
 });
 
 QUnit.test("load messages from opening chat window from messaging menu", async () => {
@@ -299,8 +309,7 @@ QUnit.test("chat window: close on ESCAPE", async (assert) => {
         },
     });
     await contains(".o-mail-ChatWindow");
-
-    $(".o-mail-Composer-input")[0].focus();
+    await focus(".o-mail-Composer-input");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 0 });
     assert.verifySteps(["rpc:channel_fold/closed"]);
@@ -359,26 +368,22 @@ QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
     await start();
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "Channel_1" });
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-name", { text: "Channel_1" });
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(Channel_1)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
-
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "Channel_1" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "Channel_2" });
     await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow-name", { text: "Channel_2" });
     await contains(".o-mail-ChatWindow-name", { text: "Channel_1" });
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(Channel_2)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "Channel_2" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
 });
 
 QUnit.test("open 3 different chat windows: not enough screen width", async (assert) => {
@@ -399,30 +404,26 @@ QUnit.test("open 3 different chat windows: not enough screen width", async (asse
         "should not have enough space to open 3 chat windows simultaneously"
     );
     await start();
-
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "Channel_1" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindowHiddenToggler", { count: 0 });
-
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "Channel_2" });
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler", { count: 0 });
-
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "Channel_3" });
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
     await contains(".o-mail-ChatWindow-name", { text: "Channel_1" });
-    await contains(".o-mail-ChatWindow-name", { text: "Channel_3" });
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(Channel_3)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "Channel_3" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
 });
 
 QUnit.test("closing hidden chat window", async (assert) => {
@@ -465,12 +466,13 @@ QUnit.test("closing hidden chat window", async (assert) => {
     await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", {
         text: "Ch_4",
     });
-    await click(".o-mail-ChatWindow:contains(Ch_2) [title='Close Chat Window']");
+    await click(".o-mail-ChatWindow-command[title='Close Chat Window']", {
+        parent: [".o-mail-ChatWindow-header", { text: "Ch_2" }],
+    });
     await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", {
         text: "Ch_1",
     });
     await contains(".o-mail-ChatWindow-name", { count: 0, text: "Ch_2" });
-
     await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow-name", { text: "Ch_3" });
     await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", {
         text: "Ch_4",
@@ -559,19 +561,20 @@ QUnit.test(
         );
         await start();
         await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 2 });
-
-        $(".o-mail-ChatWindow-name:contains(MyTeam)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-            .focus();
+        await focus(".o-mail-Composer-input", {
+            parent: [
+                ".o-mail-ChatWindow",
+                { contains: [".o-mail-ChatWindow-name", { text: "MyTeam" }] },
+            ],
+        });
         triggerHotkey("Escape");
         await contains(".o-mail-ChatWindow");
-        assert.strictEqual(
-            document.activeElement,
-            $(".o-mail-ChatWindow-name:contains(General)")
-                .closest(".o-mail-ChatWindow")
-                .find(".o-mail-Composer-input")[0]
-        );
+        await contains(".o-mail-ChatWindow", {
+            containsMulti: [
+                [".o-mail-ChatWindow-name", { text: "General" }],
+                [".o-mail-Composer-input:focus"],
+            ],
+        });
     }
 );
 
@@ -587,18 +590,35 @@ QUnit.test("chat window: switch on TAB [REQUIRE FOCUS]", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "channel1" });
     await contains(".o-mail-ChatWindow", { count: 1 });
-    await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
-
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "channel1" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
-
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "channel1" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "channel2" });
     await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow:contains(channel2) .o-mail-Composer-input:focus");
-
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "channel2" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "channel1" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
 });
 
 QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async (assert) => {
@@ -656,16 +676,33 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
     await start();
     // FIXME: assumes ordering: MyProject, MyTeam, General
     await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 3 });
-    (await contains(".o-mail-ChatWindow:contains(MyProject) .o-mail-Composer-input"))[0].focus();
-
+    await focus(".o-mail-Composer-input", {
+        parent: [
+            ".o-mail-ChatWindow",
+            { contains: [".o-mail-ChatWindow-name", { text: "MyProject" }] },
+        ],
+    });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:contains(MyTeam) .o-mail-Composer-input:focus");
-
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "MyTeam" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:contains(General) .o-mail-Composer-input:focus");
-
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "General" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:contains(MyProject) .o-mail-Composer-input:focus");
+    await contains(".o-mail-ChatWindow", {
+        containsMulti: [
+            [".o-mail-ChatWindow-name", { text: "MyProject" }],
+            [".o-mail-Composer-input:focus"],
+        ],
+    });
 });
 
 QUnit.test(
@@ -907,7 +944,7 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
         count: 0,
     });
     // Set attachments of the composer
-    const files = [
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
         await createFile({
             name: "text state conservation on toggle home menu.txt",
             content: "hello, world",
@@ -918,13 +955,10 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
             content: "hello, xdu is da best man",
             contentType: "text/plain",
         }),
-    ];
-    inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], files);
+    ]);
     await contains(".o-mail-AttachmentCard .fa-check", { count: 2 });
-
     openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
-
     openView({
         res_id: channelId,
         res_model: "discuss.channel",
@@ -984,7 +1018,7 @@ QUnit.test(
             })
         );
         await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
-        $(".o-mail-Composer-input")[0].focus();
+        await focus(".o-mail-Composer-input");
         await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
     }
 );
@@ -1163,9 +1197,9 @@ QUnit.test("Open chat window of new inviter", async () => {
         partnerId,
     });
     await contains(".o-mail-ChatWindow-name", { text: "Newbie" });
-    await contains(
-        ".o_notification:contains(Newbie connected. This is their first connection. Wish them luck.)"
-    );
+    await contains(".o_notification_content", {
+        text: "Newbie connected. This is their first connection. Wish them luck.",
+    });
 });
 
 QUnit.test(
@@ -1185,13 +1219,11 @@ QUnit.test(
         await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
         await click(".o-mail-Message [title='Expand']");
         await contains(".o-mail-Message-moreMenu.dropdown-menu");
-        document.querySelector(".o-mail-Message [title='Expand']").focus(); // necessary otherwise focus is in composer input
-
+        await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
         triggerHotkey("ArrowDown");
-        await contains(".o-mail-Message-moreMenu .dropdown-item:eq(0).focus");
-
+        await contains(".o-mail-Message-moreMenu :nth-child(1 of .dropdown-item).focus");
         triggerHotkey("ArrowDown");
-        await contains(".o-mail-Message-moreMenu .dropdown-item:eq(1).focus");
+        await contains(".o-mail-Message-moreMenu :nth-child(2 of .dropdown-item).focus");
     }
 );
 
@@ -1211,7 +1243,7 @@ QUnit.test(
         await click(".o-mail-NotificationItem");
         await click(".o-mail-Message [title='Expand']");
         await contains(".o-mail-Message-moreMenu.dropdown-menu");
-        document.querySelector(".o-mail-Message [title='Expand']").focus(); // necessary otherwise focus is in composer input
+        await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
         triggerHotkey("Escape");
         await contains(".o-mail-Message-moreMenu.dropdown-menu", { count: 0 });
         await contains(".o-mail-ChatWindow");

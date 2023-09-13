@@ -1,12 +1,15 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
 
@@ -285,8 +288,12 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await contains(".o-mail-NotificationItem", { count: 2 });
-        await contains(".o-mail-NotificationItem-name:eq(0)", { text: "Company" });
-        await contains(".o-mail-NotificationItem-name:eq(1)", { text: "Partner" });
+        await contains(":nth-child(1 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
+            text: "Company",
+        });
+        await contains(":nth-child(2 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
+            text: "Partner",
+        });
     }
 );
 
@@ -334,13 +341,11 @@ QUnit.test("mark unread channel as read", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    await triggerEvent((await contains(".o-mail-NotificationItem"))[0], null, "mouseenter");
-    await contains(".o-mail-NotificationItem [title='Mark As Read']");
-
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     assert.verifySteps(["set_last_seen_message"]);
     await contains(".o-mail-NotificationItem.o-muted");
-    await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
@@ -364,16 +369,19 @@ QUnit.test("mark failure as read", async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name", { text: "Channel" });
-    await contains(".o-mail-NotificationItem-text", {
-        text: "An error occurred when sending an email",
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], {
+        containsMulti: [
+            [".o-mail-NotificationItem-name", { text: "Channel" }],
+            [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
+        ],
     });
-    await triggerEvent($(".o-mail-NotificationItem:contains(Channel)")[0], null, "mouseenter");
-    await contains(".o-mail-NotificationItem:contains(Channel) [title='Mark As Read']");
-
-    await click(".o-mail-NotificationItem [title='Mark As Read']");
+    await click("[title='Mark As Read']", {
+        parent: [
+            ".o-mail-NotificationItem",
+            { contains: [".o-mail-NotificationItem-name", { text: "Channel" }] },
+        ],
+    });
     await contains(".o-mail-NotificationItem-name", { count: 0, text: "Channel" });
-
     await contains("o-mail-NotificationItem-text", {
         count: 0,
         text: "An error occurred when sending an email",
@@ -674,33 +682,27 @@ QUnit.test("<br/> tags in message body preview are transformed in spaces", async
     await contains(".o-mail-NotificationItem-text", { text: "You: a b c d" });
 });
 
-QUnit.test(
-    "Messaging menu notification body of chat should show author name once",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-        const channelId = pyEnv["discuss.channel"].create({
-            channel_type: "chat",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-        });
-        pyEnv["mail.message"].create({
-            author_id: partnerId,
-            body: "<p>Hey!</p>",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        assert.strictEqual(
-            (await contains(".o-mail-NotificationItem"))[0].textContent.split("Demo User").length -
-                1,
-            1
-        );
-    }
-);
+QUnit.test("Messaging menu notification body of chat should show author name once", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Hey!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem-name", { text: "Demo User" });
+    await contains(".o-mail-NotificationItem-text", { text: "Hey!" });
+});
 
 QUnit.test(
     "Group chat should be displayed inside the chat section of the messaging menu",

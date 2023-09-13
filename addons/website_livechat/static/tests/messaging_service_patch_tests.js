@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { contains, startServer, start } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("messaging service (patch)");
 

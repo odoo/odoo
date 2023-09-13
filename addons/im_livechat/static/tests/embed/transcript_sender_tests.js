@@ -4,9 +4,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
-import { click, contains, insertText } from "@mail/../tests/helpers/test_utils";
-
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("transcript sender");
 
@@ -28,7 +27,7 @@ QUnit.test("send", async (assert) => {
     await contains(".form-text", { text: "Receive a copy of this conversation." });
     await contains("button[data-action='sendTranscript']:disabled");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
-    await click("button[data-action='sendTranscript']:not(:disabled)");
+    await click("button[data-action='sendTranscript']:enabled");
     await contains(".form-text", { text: "The conversation was sent." });
     assert.verifySteps(["send_transcript - odoobot@odoo.com"]);
 });
@@ -49,6 +48,6 @@ QUnit.test("send failed", async () => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click(".o-mail-ChatWindow-command[title*='Close']");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
-    await click("button[data-action='sendTranscript']:not(:disabled)");
+    await click("button[data-action='sendTranscript']:enabled");
     await contains(".form-text", { text: "An error occurred. Please try again." });
 });

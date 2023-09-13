@@ -95,7 +95,7 @@ QUnit.test("click on the sms button while creating a new record in a FormView", 
     });
     await editInput(document.body, "[name='foo'] input", "John");
     await editInput(document.body, "[name='mobile'] input", "+32494444411");
-    await click(document.body, ".o_field_phone_sms", true);
+    await click(document.body, ".o_field_phone_sms", { skipVisibilityCheck: true });
     assert.strictEqual($("[name='foo'] input").val(), "John");
     assert.strictEqual($("[name='mobile'] input").val(), "+32494444411");
 });
@@ -144,7 +144,7 @@ QUnit.test(
 
         await editInput($(".modal")[0], "[name='foo'] input", "Max");
         await editInput($(".modal")[0], "[name='mobile'] input", "+324955555");
-        await click($(".modal")[0], ".o_field_phone_sms", true);
+        await click($(".modal")[0], ".o_field_phone_sms", { skipVisibilityCheck: true });
         assert.strictEqual($(".modal [name='foo'] input").val(), "Max");
         assert.strictEqual($(".modal [name='mobile'] input").val(), "+324955555");
 

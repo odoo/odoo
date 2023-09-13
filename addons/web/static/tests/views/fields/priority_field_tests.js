@@ -339,7 +339,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
         assert.containsNone(target, ".o_kanban_record .fa-star");
-        await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"), null, true);
+        await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"));
         assert.verifySteps(['web_save [[1],{"selection":"1"}]']);
         assert.containsOnce(target, ".o_kanban_record .fa-star");
 
@@ -348,7 +348,7 @@ QUnit.module("Fields", (hooks) => {
             ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o-kanban-button-new"
         );
         await click(target, ".o_kanban_quick_create .o_kanban_add");
-        await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"), null, true);
+        await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"));
         assert.verifySteps(['web_save [[6],{"selection":"1"}]']);
         assert.containsN(target, ".o_kanban_record .fa-star", 2);
     });

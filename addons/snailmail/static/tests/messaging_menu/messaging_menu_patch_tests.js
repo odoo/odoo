@@ -1,8 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("messaging menu (patch)");
 
@@ -74,15 +77,22 @@ QUnit.test("notifications grouped by notification_type", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem-name:eq(0)", { text: "Partner" });
-    await contains(".o-mail-NotificationItem-counter:eq(0)", { text: "2" });
-    await contains(".o-mail-NotificationItem-text:eq(0)", {
-        text: "An error occurred when sending an email",
+    await contains(":nth-child(1 of .o-mail-NotificationItem)", {
+        containsMulti: [
+            [".o-mail-NotificationItem-name", { text: "Partner" }],
+            [".o-mail-NotificationItem-counter", { text: "2" }],
+            [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
+        ],
     });
-    await contains(".o-mail-NotificationItem-name:eq(1)", { text: "Partner" });
-    await contains(".o-mail-NotificationItem-counter:eq(1)", { text: "2" });
-    await contains(".o-mail-NotificationItem-text:eq(1)", {
-        text: "An error occurred when sending a letter with Snailmail.",
+    await contains(":nth-child(2 of .o-mail-NotificationItem)", {
+        containsMulti: [
+            [".o-mail-NotificationItem-name", { text: "Partner" }],
+            [".o-mail-NotificationItem-counter", { text: "2" }],
+            [
+                ".o-mail-NotificationItem-text",
+                { text: "An error occurred when sending a letter with Snailmail." },
+            ],
+        ],
     });
 });
 

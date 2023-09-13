@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("attachment panel");
 
@@ -10,9 +14,9 @@ QUnit.test("Empty attachment panel", async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(
-        ".o-mail-Discuss-inspector:contains(This channel doesn't have any attachments.)"
-    );
+    await contains(".o-mail-Discuss-inspector p", {
+        text: "This channel doesn't have any attachments.",
+    });
 });
 
 QUnit.test("Attachment panel sort by date", async () => {
@@ -35,10 +39,13 @@ QUnit.test("Attachment panel sort by date", async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(
-        ".o-mail-DateSection:contains(August, 2023) + .o-mail-AttachmentList:contains(file1.pdf)"
-    );
-    await contains(
-        ".o-mail-DateSection:contains(September, 2023) + .o-mail-AttachmentList:contains(file2.pdf)"
-    );
+    await contains(".o-mail-AttachmentList div", {
+        text: "file2.pdf",
+        after: [".o-mail-DateSection span", { text: "September, 2023" }],
+        before: [".o-mail-DateSection span", { text: "August, 2023" }],
+    });
+    await contains(".o-mail-AttachmentList div", {
+        text: "file1.pdf",
+        after: [".o-mail-DateSection span", { text: "August, 2023" }],
+    });
 });

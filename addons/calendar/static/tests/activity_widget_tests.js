@@ -1,10 +1,13 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { ListController } from "@web/views/list/list_controller";
+import { start } from "@mail/../tests/helpers/test_utils";
+
 import { serializeDate } from "@web/core/l10n/dates";
+import { ListController } from "@web/views/list/list_controller";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 const { DateTime } = luxon;
 
@@ -17,12 +20,12 @@ QUnit.test("list activity widget: reschedule button in dropdown", async (assert)
         icon: "fa-calendar",
         name: "Meeting",
     });
-    const tomorrow = serializeDate(DateTime.now().plus({days:1}));
+    const tomorrow = serializeDate(DateTime.now().plus({ days: 1 }));
     const attendeeId = pyEnv["calendar.attendee"].create({ partner_id: resPartnerId });
     const meetingId = pyEnv["calendar.event"].create({
         res_model: "calendar.event",
         name: "meeting1",
-        start: tomorrow, 
+        start: tomorrow,
         attendee_ids: [attendeeId],
     });
     const activityId_1 = pyEnv["mail.activity"].create({

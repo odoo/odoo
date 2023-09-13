@@ -53,7 +53,9 @@ QUnit.module("Components", ({ beforeEach }) => {
                     Object.assign(xhr, {
                         upload: new window.EventTarget(),
                         open() {},
-                        send(data) { customSend && customSend(data); },
+                        send(data) {
+                            customSend && customSend(data);
+                        },
                     });
                     return xhr;
                 },
@@ -132,7 +134,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 fileUploadService.uploads[1].xhr.dispatchEvent(new Event("abort"));
             },
         });
-        await click(target, ".o-file-upload-progress-bar-abort", true);
+        await click(target, ".o-file-upload-progress-bar-abort", { skipVisibilityCheck: true });
         assert.containsNone(target, ".file_upload");
     });
 
@@ -149,10 +151,16 @@ QUnit.module("Components", ({ beforeEach }) => {
         progressEvent.total = 500000000;
         fileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
         await nextTick();
-        assert.strictEqual(target.querySelector(".file_upload_progress_text_left").textContent, "Uploading... (50%)");
+        assert.strictEqual(
+            target.querySelector(".file_upload_progress_text_left").textContent,
+            "Uploading... (50%)"
+        );
         progressEvent.loaded = 350000000;
         fileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
         await nextTick();
-        assert.strictEqual(target.querySelector(".file_upload_progress_text_right").textContent, "(350/500MB)");
+        assert.strictEqual(
+            target.querySelector(".file_upload_progress_text_right").textContent,
+            "(350/500MB)"
+        );
     });
 });

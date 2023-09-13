@@ -1,23 +1,22 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { config as transitionConfig } from "@web/core/transition";
+import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
+    createFile,
     dragenterFiles,
+    focus,
     insertText,
     scroll,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
-
-import { config as transitionConfig } from "@web/core/transition";
-import {
-    makeDeferred,
-    nextTick,
-    patchWithCleanup,
     triggerEvents,
-} from "@web/../tests/helpers/utils";
+} from "@web/../tests/utils";
 
 QUnit.module("thread");
 
@@ -30,7 +29,14 @@ QUnit.test("dragover files on thread with composer", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    dragenterFiles((await contains(".o-mail-Thread"))[0]);
+    const files = [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text3.txt",
+        }),
+    ];
+    await dragenterFiles(".o-mail-Thread", files);
     await contains(".o-mail-Dropzone");
 });
 
@@ -206,7 +212,7 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
     await scroll(".o-mail-Thread", $(".o-mail-Thread")[0].scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
     await insertText(".o-mail-Composer-input", "123");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 21 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -219,7 +225,7 @@ QUnit.test("mention a channel with space in the name", async () => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General good boy " });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General good boy" });
 });
 
@@ -231,7 +237,7 @@ QUnit.test('mention a channel with "&" in the name', async () => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General & good " });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General & good" });
 });
 
@@ -275,7 +281,7 @@ QUnit.test(
         await contains(".o-mail-Message");
         assert.verifySteps(["rpc:channel_fetch"]);
         await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
-        $(".o-mail-Composer-input")[0].focus();
+        await focus(".o-mail-Composer-input");
         await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 
         assert.verifySteps(["rpc:set_last_seen_message"]);
@@ -308,7 +314,7 @@ QUnit.test(
             },
         });
         openDiscuss(channelId);
-        (await contains(".o-mail-Composer-input"))[0].focus();
+        await focus(".o-mail-Composer-input");
         // simulate receiving a message
         await pyEnv.withUser(userId, () =>
             env.services.rpc("/mail/message/post", {
@@ -470,11 +476,8 @@ QUnit.test("no new messages separator on posting message (some message history)"
     openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-
     await insertText(".o-mail-Composer-input", "hey!");
-    // need to remove focus from text area to avoid set_last_seen_message
-    (await contains(".o-mail-Composer-send:not(:disabled)"))[0].focus();
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
@@ -524,8 +527,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message .o-mail-Message-content", {
         text: "hu",
     });
-
-    $(".o-mail-Composer-input")[0].focus();
+    await focus(".o-mail-Composer-input");
     await nextTick();
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
@@ -546,7 +548,7 @@ QUnit.test("no new messages separator on posting message (no message history)", 
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 
     await insertText(".o-mail-Composer-input", "hey!");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
@@ -570,7 +572,7 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     await insertText(".o-mail-Composer-input", "Pyn");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`
     );
@@ -599,12 +601,12 @@ QUnit.test("mention 2 different partners that have the same name", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(".o-mail-Composer-suggestion:eq(0)");
+    await click(":nth-child(1 of .o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@TestPartner " });
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(".o-mail-Composer-suggestion:eq(1)");
+    await click(":nth-child(2 of .o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
     );
@@ -621,7 +623,7 @@ QUnit.test("mention a channel on a second line when the first line contains #", 
     await insertText(".o-mail-Composer-input", "#blabla\n#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#blabla\n#General good " });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General good" });
 });
 
@@ -638,7 +640,7 @@ QUnit.test(
         const text = $(".o-mail-Composer-input").val();
         $(".o-mail-Composer-input").val(text.slice(0, -1));
         await insertText(".o-mail-Composer-input", ", test");
-        await click(".o-mail-Composer-send:not(:disabled)");
+        await click(".o-mail-Composer-send:enabled");
         await contains(".o-mail-Message-body .o_channel_redirect", { text: "#General good" });
     }
 );
@@ -659,12 +661,12 @@ QUnit.test("mention 2 different channels that have the same name", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId_1);
     await insertText(".o-mail-Composer-input", "#m");
-    await click(".o-mail-Composer-suggestion:eq(0)");
+    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-input", { value: "#my channel " });
     await insertText(".o-mail-Composer-input", "#m");
-    await click(".o-mail-Composer-suggestion:eq(1)");
+    await click(":nth-child(2 of .o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(
         `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:contains("#my channel")`
     );
@@ -693,7 +695,7 @@ QUnit.test(
         await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
         await click(".o-mail-Composer-suggestion");
         await contains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
-        await click(".o-mail-Composer-send:not(:disabled)");
+        await click(".o-mail-Composer-send:enabled");
         await contains(
             `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@TestPartner")`
         );
@@ -760,7 +762,7 @@ QUnit.test(
         openDiscuss(channelId);
         // send a command that leads to receiving a transient message
         await insertText(".o-mail-Composer-input", "/who");
-        await click(".o-mail-Composer-send:not(:disabled)");
+        await click(".o-mail-Composer-send:enabled");
         await contains(".o-mail-Message", { count: 2 });
         // composer is focused by default, we remove that focus
         $(".o-mail-Composer-input")[0].blur();
@@ -786,7 +788,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "Dummy Message");
-        await click(".o-mail-Composer-send:not(:disabled)");
+        await click(".o-mail-Composer-send:enabled");
         await contains(".o-mail-Composer-input:focus");
     }
 );
@@ -879,11 +881,11 @@ QUnit.test("Thread messages are only loaded once", async (assert) => {
         },
     ]);
     openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:eq(0)");
+    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
-    await click(".o-mail-DiscussSidebarChannel:eq(1)");
+    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
     await contains(".o-mail-Message-content", { text: "Message on channel2" });
-    await click(".o-mail-DiscussSidebarChannel:eq(0)");
+    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
     assert.verifySteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
@@ -906,8 +908,8 @@ QUnit.test(
             },
         });
         openDiscuss(channelId);
-        // ensure focusout is triggered on composers' textarea
-        triggerEvents((await contains(".o-mail-Composer-input"))[0], null, ["blur", "focusout"]);
+        await contains(".o-mail-Composer-input");
+        await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
         await click("button div", { text: "Inbox" });
         await contains("h4", { text: "Congratulations, your inbox is empty" });
         const messageId = pyEnv["mail.message"].create({
@@ -1024,11 +1026,13 @@ QUnit.test("Transient messages are added at the end of the thread", async () => 
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "/help");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Message-author:eq(0)", { text: "Mitchell Admin" });
-    await contains(".o-mail-Message-author:eq(1)", { text: "OdooBot" });
+    await contains(":nth-child(1 of .o-mail-Message) .o-mail-Message-author", {
+        text: "Mitchell Admin",
+    });
+    await contains(":nth-child(2 of .o-mail-Message) .o-mail-Message-author", { text: "OdooBot" });
 });

@@ -2,9 +2,12 @@
 
 import { accountMove as accountMoveService } from "@account/components/account_move_service/account_move_service";
 
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, insertText } from "@web/../tests/utils";
 
 QUnit.module("Views", {}, function () {
     QUnit.module("MoveFormView");

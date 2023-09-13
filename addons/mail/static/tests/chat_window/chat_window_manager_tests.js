@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -7,7 +9,9 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("chat window manager");
 
@@ -175,12 +179,20 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name", { text: "channel-D" });
         await contains(".o-mail-ChatWindowHiddenToggler", { text: "2" });
-        await contains(".o-mail-ChatWindow-name:eq(0)", { text: "channel-A" });
-        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "channel-D" });
-        await click(
-            ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
-        );
-        await contains(".o-mail-ChatWindow-name:eq(0)", { text: "channel-A" });
-        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "channel-C" });
+        await contains(":nth-child(1 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "channel-A",
+        });
+        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "channel-D",
+        });
+        await click(".o-mail-ChatWindow-command[title='Close Chat Window']", {
+            parent: [".o-mail-ChatWindow-header", { text: "channel-D" }],
+        });
+        await contains(":nth-child(1 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "channel-A",
+        });
+        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "channel-C",
+        });
     }
 );

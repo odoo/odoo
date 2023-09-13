@@ -1,16 +1,18 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
-import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
 import { serializeDate } from "@web/core/l10n/dates";
-
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
-
-import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
-import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
+import { contains } from "@web/../tests/utils";
+import { doAction } from "@web/../tests/webclient/helpers";
 const { DateTime } = luxon;
 
 let serverData;
@@ -690,7 +692,7 @@ QUnit.module("test_mail", {}, function () {
         await testUtils.dom.click(
             document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
         );
-        await contains(".modal.o_technical_modal", "Activity Modal should be opened");
+        await contains(".modal.o_technical_modal");
 
         await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
         await contains(".modal.o_technical_modal", { count: 0 });

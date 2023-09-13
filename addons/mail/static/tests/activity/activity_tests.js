@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-import { click, contains, createFile, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { date_to_str } from "@web/legacy/js/core/time";
 import {
@@ -9,9 +11,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
-
-const { inputFiles } = file;
+import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 
 const views = {
     "res.fake,false,form": `
@@ -57,13 +57,14 @@ QUnit.test("activity can upload a document", async () => {
     });
     const { openFormView } = await start({ serverData: { views } });
     openFormView("res.partner", fakeId);
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
     await contains(".o-mail-Activity-info span", { text: "Upload Document" });
-    inputFiles($(".o-mail-Activity .o_input_file")[0], [file]);
+    await inputFiles(".o-mail-Activity .o_input_file", [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
     await contains(".o-mail-Activity-info span", { count: 0, text: "Upload Document" });
     await contains("button[aria-label='Attach files']", { text: "1" });
 });
@@ -518,7 +519,7 @@ QUnit.test("Activity are sorted by deadline", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity:eq(0) span", { text: "5 days overdue:" });
-    await contains(".o-mail-Activity:eq(1) span", { text: "Today:" });
-    await contains(".o-mail-Activity:eq(2) span", { text: "Due in 4 days:" });
+    await contains(":nth-child(1 of .o-mail-Activity) span", { text: "5 days overdue:" });
+    await contains(":nth-child(2 of .o-mail-Activity) span", { text: "Today:" });
+    await contains(":nth-child(3 of .o-mail-Activity) span", { text: "Due in 4 days:" });
 });

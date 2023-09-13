@@ -5,11 +5,11 @@ import { busParametersService } from "@bus/bus_parameters_service";
 import { multiTabService } from "@bus/multi_tab_service";
 import { simpleNotificationService } from "@bus/simple_notification_service";
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
-import { contains } from "@bus/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { contains } from "@web/../tests/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
 const serviceRegistry = registry.category("services");

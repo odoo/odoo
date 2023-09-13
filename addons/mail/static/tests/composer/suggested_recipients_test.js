@@ -1,7 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 const views = {
     "res.fake,false,form": `
@@ -229,7 +233,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("display reason for suggested recipient on mouse over", async (assert) => {
+QUnit.test("display reason for suggested recipient on mouse over", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -239,10 +243,9 @@ QUnit.test("display reason for suggested recipient on mouse over", async (assert
     const { openFormView } = await start({ serverData: { views } });
     openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
-    const partnerTitle = (
-        await contains(`.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"]`)
-    )[0].getAttribute("title");
-    assert.strictEqual(partnerTitle, "Add as recipient and follower (reason: Email partner)");
+    await contains(
+        `.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"][title="Add as recipient and follower (reason: Email partner)"]`
+    );
 });
 
 QUnit.test(
@@ -265,28 +268,25 @@ QUnit.test(
         openFormView("res.fake", fakeId);
         await click("button", { text: "Log note" });
         await insertText(".o-mail-Composer-input", "Dummy Message");
-        await click(".o-mail-Composer-send:not(:disabled)");
+        await click(".o-mail-Composer-send:enabled");
         await contains(".o-mail-Message");
     }
 );
 
-QUnit.test(
-    "suggested recipients should be added as follower when posting a message",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({
-            display_name: "John Jane",
-            email: "john@jane.be",
-        });
-        const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
-        const { openFormView } = await start({
-            serverData: { views },
-        });
-        openFormView("res.fake", fakeId);
-        await click("button", { text: "Send message" });
-        await insertText(".o-mail-Composer-input", "Dummy Message");
-        await click(".o-mail-Composer-send:not(:disabled)");
-        await contains(".o-mail-Message");
-        assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
-    }
-);
+QUnit.test("suggested recipients should be added as follower when posting a message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        display_name: "John Jane",
+        email: "john@jane.be",
+    });
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
+    const { openFormView } = await start({
+        serverData: { views },
+    });
+    openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Followers-counter", { text: "1" });
+});
