@@ -1454,6 +1454,7 @@
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
             <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
+<<<<<<< HEAD
             <div t-foreach="website_sale_order.website_order_line"
                  t-as="line"
                  t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
@@ -1469,6 +1470,23 @@
                     <div class="flex-grow-1">
                         <t t-call="website_sale.cart_line_product_link">
                             <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
+||||||| parent of dac46961f1d (temp)
+            <thead>
+                <tr>
+                    <th class="td-img">Product</th>
+                    <th></th>
+                    <th class="text-center td-qty">
+                        <t t-if="show_qty">
+                            Quantity
+=======
+            <thead>
+                <tr>
+                    <th class="td-img">Product</th>
+                    <th></th>
+                    <th class="text-center td-qty">
+                        <t t-if="show_qty">
+                            <span>Quantity</span>
+>>>>>>> dac46961f1d (temp)
                         </t>
                         <t t-call="website_sale.cart_line_description_following_lines">
                             <t t-set="div_class" t-valuef="d-none d-md-block"/>
