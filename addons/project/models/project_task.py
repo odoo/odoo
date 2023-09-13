@@ -1441,6 +1441,7 @@ class Task(models.Model):
                            JOIN task_tree tree
                              ON tree.id = t.parent_id
                             AND t.active in (TRUE, %(active)s)
+                          WHERE t.parent_id IS NOT NULL
                ) SELECT supertask_id, ARRAY_AGG(id)
                    FROM task_tree
                   WHERE id != supertask_id
