@@ -78,6 +78,11 @@ function registerView(name, LegacyView) {
                 },
             });
 
+            //Added domain to viewParams
+            if (this.props.domain && this.props.domain.length) {
+                this.viewParams.domain = this.props.domain;
+            }
+
             // To open a new empty form view
             // Legacy demands undefined ids, not False
             if (this.viewParams.currentId === false) {
