@@ -307,3 +307,39 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(len(project_copy.task_ids.child_ids), 4)
         subtask_not_display_in_project_copy = project_copy.task_ids.child_ids.filtered(lambda t: not t.display_in_project)
         self.assertEqual(len(subtask_not_display_in_project_copy), 4, "No subtask should be displayed in the duplicate project")
+
+    def test_get_all_subtasks(self):
+        subsubtasks = self.env['project.task'].create([{
+            'name': 'Subsubtask 1',
+            'project_id': self.project_pigs.id,
+        }, {
+            'name': 'Subsubtask 2',
+            'project_id': self.project_goats.id,
+        }, {
+            'name': 'Subsubtask 3',
+            'project_id': self.project_pigs.id,
+        }])
+        subtasks = self.env['project.task'].create([{
+            'name': 'Subtask 1',
+            'project_id': self.project_pigs.id,
+            'child_ids': subsubtasks[:2],
+        }, {
+            'name': 'Subtask 2',
+            'project_id': self.project_goats.id,
+            'child_ids': subsubtasks[2],
+        }])
+        task = self.env['project.task'].create({
+            'name': 'Task 1',
+            'project_id': self.project_goats.id,
+            'child_ids': subtasks,
+        })
+
+        all_subtasks = task._get_all_subtasks()
+        self.assertEqual(all_subtasks, subtasks | subsubtasks)
+
+        all_subtasks_by_task_id = task._get_subtask_ids_per_task_id()
+        self.assertEqual(len(all_subtasks_by_task_id), 1, "The result should only contain one item: the common ancestor")
+        for parent_id, subtask_ids in all_subtasks_by_task_id.items():
+            self.assertEqual(parent_id, task.id, "The key should be the common ancestor")
+            self.assertEqual(set(subtask_ids), set(all_subtasks.ids),
+                             "All subtasks linked to the common ancestor should be returned by _get_subtask_ids_per_task_id method")
