@@ -779,8 +779,8 @@ class PosOrder(models.Model):
                     'name': f"{reversed_move_receivable_account_id.code} {reversed_move_receivable_account_id.code}",
                     'account_id': reversed_move_receivable_account_id.id,
                     'currency_id': self.currency_id.id,
-                    'amount_currency': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
-                    'balance': payment_id.amount,
+                    'amount_currency': payment_id.amount,
+                    'balance': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
                 })
 
         return aml_vals_list_per_nature
