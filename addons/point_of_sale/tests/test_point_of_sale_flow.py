@@ -3,6 +3,7 @@
 
 import time
 from freezegun import freeze_time
+from datetime import datetime
 
 import odoo
 from odoo import fields, tools
@@ -1555,6 +1556,24 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.pos_config.write({
             'payment_method_ids': [(4, self.customer_account_payment_method.id, 0)],
         })
+        # change the currency of PoS config
+        (self.currency_data['currency'].rate_ids | self.company.currency_id.rate_ids).unlink()
+        self.env['res.currency.rate'].create({
+            'rate': 0.5,
+            'currency_id': self.currency_data['currency'].id,
+            'name': datetime.today().date(),
+        })
+        self.pos_config.journal_id.write({
+            'currency_id': self.currency_data['currency'].id
+        })
+        other_pricelist = self.env['product.pricelist'].create({
+            'name': 'Public Pricelist Other',
+            'currency_id': self.currency_data['currency'].id,
+        })
+        self.pos_config.write({
+            'pricelist_id': other_pricelist.id,
+            'available_pricelist_ids': [(6, 0, other_pricelist.ids)],
+        })
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
 
@@ -1609,8 +1628,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         #check that both use the same account
         self.assertEqual(len(reverser_customer_payment_entry), 2)
         self.assertTrue(order.account_move.line_ids.partner_id == self.partner1.commercial_partner_id)
-        self.assertEqual(reverser_customer_payment_entry[0].balance, -2.0)
-        self.assertEqual(reverser_customer_payment_entry[1].balance, -4.0)
+        self.assertEqual(reverser_customer_payment_entry[0].balance, -4.0)
+        self.assertEqual(reverser_customer_payment_entry[1].balance, -8.0)
+        self.assertEqual(reverser_customer_payment_entry[0].amount_currency, -2.0)
+        self.assertEqual(reverser_customer_payment_entry[1].amount_currency, -4.0)
         self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
         self.assertEqual(reverser_customer_payment_entry.partner_id, original_customer_payment_entry.partner_id)
 
