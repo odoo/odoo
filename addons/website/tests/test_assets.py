@@ -99,3 +99,84 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
 
         new_public_assets_links = re.findall(r'(/web/assets/.+/web.assets_frontend\..+)"/>', page)
         self.assertEqual(new_admin_assets_links, new_public_assets_links, "t-cache should have been invalidated for public user too")
+
+@odoo.tests.tagged('-at_install', 'post_install')
+class TestWebAssets(odoo.tests.HttpCase):
+    def test_assets_url_validation(self):
+        website_id = self.env['website'].search([], limit=1, order='id desc').id
+        # valid urls
+        self.assertEqual(
+            self.url_open(f'/web/assets/debug/website-{website_id}+ltr/web.assets_frontend.css').status_code,
+            200,
+        )
+        self.assertEqual(
+            self.url_open(f'/web/assets/debug/website-{website_id}+rtl/web.assets_frontend.css').status_code,
+            200,
+        )
+        self.assertEqual(
+            self.url_open(f'/web/assets/debug/website-{website_id}+-/web.assets_frontend.js').status_code,
+            200,
+        )
+
+        # invalid urls
+        with odoo.tools.mute_logger('odoo.addons.web.controllers.binary'):
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+hello/web.assets_frontend.css').status_code,
+                404,
+                "unexpected direction extra",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+-/web.assets_f_ontend.js').status_code,
+                404,
+                "bundle name contains `_` and should be escaped wildcard",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+ltr/web.assets_frontend.js').status_code,
+                404,
+                "js cannot have `ltr` has extra",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+rtl/web.assets_frontend.js').status_code,
+                404,
+                "js cannot have `rtl` has extra",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+-/web.assets_frontend.css').status_code,
+                404,
+                "css cannot have `-` has extra",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id+1}+ltr/web.assets_frontend.css').status_code,
+                404,
+                "website_id does not exist",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+aa+ltr/web.assets_frontend.css').status_code,
+                404,
+                "only two extra expected, website and direction",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/website-{website_id}+website-{website_id}+ltr/web.assets_frontend.css').status_code,
+                404,
+                "website defined twice",
+            )
+            self.assertEqual(
+                self.url_open(f'/web/assets/debug/ltr+website-{website_id}/web.assets_frontend.css').status_code,
+                404,
+                "website and direction inverted",
+            )
+
+        # redirect urls
+        self.assertEqual(
+            self.url_open(f'/web/assets/invalid_version/website-{website_id}+ltr/web.assets_frontend.min.css', allow_redirects=False).status_code,
+            303
+        )
+        self.assertEqual(
+            self.url_open(f'/web/assets/invalid_version/website-{website_id}+ltr/web.assets_frontend.min.css', allow_redirects=False).headers['location'].split('/web/assets/')[1],
+            self.env['ir.qweb']._get_asset_bundle('web.assets_frontend', assets_params={'website_id': website_id}).get_link('css').split('/web/assets/')[1],
+        )
+
+        self.assertEqual(
+            self.url_open('/web/assets///').status_code,
+            404,
+        )
