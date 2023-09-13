@@ -1973,6 +1973,18 @@
             Stacked linechart
           </label>
         </div>
+        <div class="o-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              name="cumulative"
+              t-att-checked="props.definition.cumulative"
+              t-on-change="onUpdateCumulative"
+              class="align-middle"
+            />
+            Cumulative data
+          </label>
+        </div>
       </div>
       <div class="o-section o-data-series">
         <div class="o-section-title">Data Series</div>
@@ -3245,7 +3257,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.16';
-  __info__.date = '2023-08-09T11:56:20.442Z';
-  __info__.hash = 'd5d9d12';
+  __info__.version = '16.0.18';
+  __info__.date = '2023-09-12T12:01:57.000Z';
+  __info__.hash = '41fd4fa';
 -->

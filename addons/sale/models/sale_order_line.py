@@ -724,7 +724,7 @@ class SaleOrderLine(models.Model):
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
         data = self.env['account.analytic.line'].read_group(
             domain,
-            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
+            ['so_line', 'unit_amount', 'product_uom_id', 'move_line_id:count_distinct'], ['product_uom_id', 'so_line'], lazy=False
         )
 
         # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
@@ -740,10 +740,13 @@ class SaleOrderLine(models.Model):
             so_line = lines_map[so_line_id]
             result.setdefault(so_line_id, 0.0)
             uom = product_uom_map.get(item['product_uom_id'][0])
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom, rounding_method='HALF-UP')
+            # avoid counting unit_amount twice when dealing with multiple analytic lines on the same move line
+            if item['move_line_id'] == 1 and item['__count'] > 1:
+                qty = item['unit_amount'] / item['__count']
             else:
                 qty = item['unit_amount']
+            if so_line.product_uom.category_id == uom.category_id:
+                qty = uom._compute_quantity(qty, so_line.product_uom, rounding_method='HALF-UP')
             result[so_line_id] += qty
 
         return result
