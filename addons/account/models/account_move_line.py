@@ -2367,7 +2367,7 @@ class AccountMoveLine(models.Model):
         exchange_diff_values_list = []
         exchange_diff_full_batch_index = []
         if not self._context.get('no_exchange_difference'):
-            for fulL_batch_index, full_batch in enumerate(full_batches):
+            for full_batch_index, full_batch in enumerate(full_batches):
                 involved_amls = full_batch['amls']
                 if not full_batch['is_fully_reconciled']:
                     continue
@@ -2403,13 +2403,13 @@ class AccountMoveLine(models.Model):
 
                 # Prepare the exchange difference.
                 if exchange_diff_values['move_values']['line_ids']:
-                    exchange_diff_full_batch_index.append(fulL_batch_index)
+                    exchange_diff_full_batch_index.append(full_batch_index)
                     exchange_diff_values_list.append(exchange_diff_values)
                     full_batch['caba_lines_to_reconcile'] = caba_lines_to_reconcile
 
         # ==== Create the full exchange journal entries ====
         exchange_moves = self._create_exchange_difference_moves(exchange_diff_values_list)
-        for fulL_batch_index, exchange_move in zip(exchange_diff_full_batch_index, exchange_moves):
+        for full_batch_index, exchange_move in zip(exchange_diff_full_batch_index, exchange_moves):
             full_batch = full_batches[full_batch_index]
             amls = full_batch['amls']
             full_batch['exchange_move'] = exchange_move
@@ -2420,8 +2420,8 @@ class AccountMoveLine(models.Model):
         # Note we are using Command.link and not Command.set because Command.set is triggering an unlink that is
         # slowing down the assignation of the co-fields. Indeed, unlink is forcing a flush.
         full_reconcile_values_list = []
-        full_reconcile_fulL_batch_index = []
-        for fulL_batch_index, full_batch in enumerate(full_batches):
+        full_reconcile_full_batch_index = []
+        for full_batch_index, full_batch in enumerate(full_batches):
             amls = full_batch['amls']
             involved_partials = amls.matched_debit_ids + amls.matched_credit_ids
             if full_batch['is_fully_reconciled']:
@@ -2430,7 +2430,7 @@ class AccountMoveLine(models.Model):
                     'partial_reconcile_ids': [Command.link(partial.id) for partial in involved_partials],
                     'reconciled_line_ids': [Command.link(aml.id) for aml in amls],
                 })
-                full_reconcile_fulL_batch_index.append(fulL_batch_index)
+                full_reconcile_full_batch_index.append(full_batch_index)
 
         self.env['account.full.reconcile']\
             .with_context(
@@ -2444,7 +2444,7 @@ class AccountMoveLine(models.Model):
         # === Cash basis rounding autoreconciliation ===
         # In case a cash basis rounding difference line got created for the transition account, we reconcile it with the corresponding lines
         # on the cash basis moves (so that it reaches full reconciliation and creates an exchange difference entry for this account as well)
-        for fulL_batch_index, full_batch in enumerate(full_batches):
+        for full_batch in full_batches:
             if not full_batch.get('caba_lines_to_reconcile'):
                 continue
 
