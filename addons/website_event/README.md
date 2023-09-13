@@ -105,7 +105,7 @@ Fully Integrated With Others Apps
 Promote products, sell online, optimize visitors' shopping experiences.
 
 
-### Blogs
+### Blog
 
 Write news, attract new visitors, build customer loyalty.
 

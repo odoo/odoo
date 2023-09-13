@@ -102,7 +102,7 @@ Integrated With Odoo Apps
 Promote products, sell online, optimize visitors' shopping experience.
 
 
-### Blogs
+### Blog
 
 Write news, attract new visitors, build customer loyalty.
 
