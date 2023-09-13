@@ -565,7 +565,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="color"/>
-                    <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
+                    <field name="timmy" options="{'create': [('color', '=', 'red')], 'unlink': [('color', '=', 'red')]}">
                         <kanban>
                             <field name="display_name"/>
                             <templates>

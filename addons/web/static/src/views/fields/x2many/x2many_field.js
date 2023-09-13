@@ -64,9 +64,7 @@ export class X2ManyField extends Component {
         }
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
-            crudOptions: Object.assign({}, this.props.crudOptions, {
-                onDelete: removeRecord,
-            }),
+            crudOptions: this.props.crudOptions,
             fieldType: this.isMany2Many ? "many2many" : "one2many",
             subViewActiveActions,
             getEvalParams: (props) => {
@@ -88,6 +86,12 @@ export class X2ManyField extends Component {
         });
         this._openRecord = (params) => {
             const activeElement = document.activeElement;
+            let onDeleteRecord;
+            if (this.props.viewMode === "kanban") {
+                if (this.isMany2Many ? this.activeActions.unlink : this.activeActions.delete) {
+                    onDeleteRecord = removeRecord;
+                }
+            }
             openRecord({
                 ...params,
                 onClose: () => {
@@ -95,6 +99,7 @@ export class X2ManyField extends Component {
                         activeElement.focus();
                     }
                 },
+                onDeleteRecord,
             });
         };
         this.canOpenRecord =
@@ -187,6 +192,12 @@ export class X2ManyField extends Component {
         const props = {
             archInfo,
             list: this.list,
+            deleteRecord: (record) => {
+                if (this.isMany2Many) {
+                    return this.list.forget(record);
+                }
+                return this.list.delete(record);
+            },
             openRecord: this.openRecord.bind(this),
             evalViewModifier: (modifier) => {
                 return evaluateBooleanExpr(modifier, this.list.evalContext);
@@ -197,13 +208,6 @@ export class X2ManyField extends Component {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
             props.readonly = this.props.readonly;
-            // TODO: apply same logic in the list case
-            props.deleteRecord = (record) => {
-                if (this.isMany2Many) {
-                    return this.list.forget(record);
-                }
-                return this.list.delete(record);
-            };
             return props;
         }
 

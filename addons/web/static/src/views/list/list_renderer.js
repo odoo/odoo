@@ -448,7 +448,7 @@ export class ListRenderer extends Component {
         if (this.hasSelectors) {
             nbCols++;
         }
-        if (this.activeActions.onDelete || this.displayOptionalFields) {
+        if (this.props.deleteRecord || this.displayOptionalFields) {
             nbCols++;
         }
         if (this.props.onOpenFormView) {
@@ -1143,8 +1143,8 @@ export class ListRenderer extends Component {
                 return;
             }
         }
-        if (this.activeActions.onDelete) {
-            this.activeActions.onDelete(record);
+        if (this.props.deleteRecord) {
+            this.props.deleteRecord(record);
         }
     }
 
@@ -2142,6 +2142,7 @@ ListRenderer.props = [
     "activeActions?",
     "list",
     "archInfo",
+    "deleteRecord?",
     "openRecord",
     "evalViewModifier",
     "onAdd?",

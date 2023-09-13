@@ -34,7 +34,6 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {boolean} [link]
  * @property {boolean} [unlink]
  * @property {boolean} [write]
- * @property {Function | null} onDelete
  *
  * @typedef {import("services").Services} Services
  */
@@ -93,7 +92,7 @@ export function useActiveActions({
 }) {
     const compute = ({ evalContext = {}, readonly = true }) => {
         /** @type {RelationalActiveActions} */
-        const result = { type: fieldType, onDelete: null };
+        const result = { type: fieldType };
         const evalAction = (actionName) => evals[actionName](evalContext);
 
         // We need to take care of tags "control" and "create" to set create stuff
@@ -105,10 +104,6 @@ export function useActiveActions({
             result.link = !readonly && evalAction("link");
             result.unlink = !readonly && evalAction("unlink");
             result.write = evalAction("write");
-        }
-
-        if (result.unlink || (!isMany2Many && result.delete)) {
-            result.onDelete = crudOptions.onDelete;
         }
 
         return result;
@@ -620,7 +615,7 @@ export class X2ManyFieldDialog extends Component {
     }
 
     async remove() {
-        await this.props.delete();
+        await this.props.delete(this.record);
         this.props.close();
     }
 
@@ -684,7 +679,6 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
 }
 
 export function useOpenX2ManyRecord({
-    resModel,
     activeField, // TODO: this should be renamed (object with keys "viewMode", "views" and "string")
     activeActions,
     getList,
@@ -697,9 +691,8 @@ export function useOpenX2ManyRecord({
     const env = useEnv();
 
     const addDialog = useOwnedDialogs();
-    const viewMode = activeField.viewMode;
 
-    async function openRecord({ record, mode, context, title, onClose }) {
+    async function openRecord({ record, mode, context, title, onDeleteRecord, onClose }) {
         if (!title) {
             title = record
                 ? _t("Open: %s", activeField.string)
@@ -716,14 +709,11 @@ export function useOpenX2ManyRecord({
 
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, _fields);
 
-        let deleteRecord;
         let deleteButtonLabel = undefined;
         const isDuplicate = !!record;
 
         const params = { activeFields, fields, mode };
         if (record) {
-            const { delete: canDelete, onDelete } = activeActions;
-            deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(record) : null;
             deleteButtonLabel = activeActions.type === "one2many" ? _t("Delete") : _t("Remove");
         } else {
             params.context = makeContext([list.context, context]);
@@ -753,7 +743,7 @@ export function useOpenX2ManyRecord({
                     }
                 },
                 title,
-                delete: deleteRecord,
+                delete: onDeleteRecord,
                 deleteButtonLabel: deleteButtonLabel,
             },
             { onClose: _onClose }
