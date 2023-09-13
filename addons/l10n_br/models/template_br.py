@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, api
 from odoo.addons.account.models.chart_template import template
 
 
@@ -35,3 +35,22 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_template_in_icms_interno17',
             },
         }
+
+    @template('br', 'account.journal')
+    def _get_br_account_journal(self):
+        return {
+            'sale': {'l10n_br_invoice_serial': '1'},
+        }
+
+    @api.model
+    def _get_demo_data_move(self, company=False):
+        move_data = super()._get_demo_data_move(company)
+        if company.account_fiscal_country_id.code == 'BR':
+            number = 0
+            for move in move_data.values():
+                # vendor bills must be manually numbered (l10n_br uses the standard AccountMove._is_manual_document_number())
+                if move['move_type'] == 'in_invoice':
+                    move['l10n_latam_document_number'] = f'{number:08d}'
+                    number += 1
+
+        return move_data
