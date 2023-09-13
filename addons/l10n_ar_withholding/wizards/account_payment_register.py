@@ -119,8 +119,8 @@ class AccountPaymentRegister(models.TransientModel):
         if self.partner_type == 'supplier':
             sign = -1
         for line in self.withholding_ids:
-            if not line.name:
-                if line.tax_id.l10n_ar_withholding_sequence_id and line.name == '/':
+            if not line.name or line.name == '/':
+                if line.tax_id.l10n_ar_withholding_sequence_id:
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
                     raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
