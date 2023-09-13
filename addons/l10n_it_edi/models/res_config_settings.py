@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
                 ('company_id', '=', config.company_id.id),
                 ('proxy_type', '=', 'l10n_it_edi'),
             ], limit=1)
-            config.l10n_it_edi_sdicoop_demo_mode = edi_user.edi_mode
+            config.l10n_it_edi_sdicoop_demo_mode = edi_user.edi_mode or 'demo'
 
     @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
     def _compute_is_edi_proxy_active(self):
