@@ -104,6 +104,8 @@ export class ListRenderer extends Component {
         this.resizing = false;
         this.preventReorder = false;
 
+        this.creating = false;
+
         this.creates = this.props.archInfo.creates.length
             ? this.props.archInfo.creates
             : [{ type: "create", string: _t("Add a line") }];
@@ -242,9 +244,14 @@ export class ListRenderer extends Component {
         return this.props.allowSelectors && !this.env.isSmall;
     }
 
-    add(params) {
-        if (this.canCreate) {
-            this.props.onAdd(params);
+    async add(params) {
+        if (this.canCreate && !this.creating) {
+            this.creating = true;
+            try {
+                await this.props.onAdd(params);
+            } finally {
+                this.creating = false;
+            }
         }
     }
 

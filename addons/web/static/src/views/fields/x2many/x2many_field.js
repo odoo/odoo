@@ -7,7 +7,6 @@ import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
 import {
     useActiveActions,
-    useAddInlineRecord,
     useOpenX2ManyRecord,
     useSelectCreate,
     useX2ManyCrud,
@@ -76,10 +75,6 @@ export class X2ManyField extends Component {
                     readonly: props.readonly,
                 };
             },
-        });
-
-        this.addInLine = useAddInlineRecord({
-            addNew: (...args) => this.list.addNewRecord(...args),
         });
 
         const openRecord = useOpenX2ManyRecord({
@@ -218,11 +213,13 @@ export class X2ManyField extends Component {
         props.cycleOnTab = false;
         props.editable = !this.props.readonly && editable;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
+
         props.onAdd = (params) => {
             params.editable =
                 !this.props.readonly && ("editable" in params ? params.editable : editable);
-            this.onAdd(params);
+            return this.onAdd(params);
         };
+
         const openFormView = props.editable ? archInfo.openFormView : false;
         props.onOpenFormView = openFormView ? this.switchToForm.bind(this) : undefined;
         return props;
@@ -242,6 +239,10 @@ export class X2ManyField extends Component {
         );
     }
 
+    addInlineRecord({ context, position }) {
+        return this.list.addNewRecord({ context, position });
+    }
+
     async onAdd({ context, editable } = {}) {
         const domain =
             typeof this.props.domain === "function" ? this.props.domain() : this.props.domain;
@@ -259,7 +260,7 @@ export class X2ManyField extends Component {
                 await this.list.leaveEditMode({ canAbandon: false });
             }
             if (!this.list.editedRecord) {
-                return this.addInLine({ context, editable });
+                return this.addInlineRecord({ context, position: editable });
             }
             return;
         }

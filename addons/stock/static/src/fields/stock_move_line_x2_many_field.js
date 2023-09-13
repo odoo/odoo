@@ -50,15 +50,14 @@ export class SMLX2ManyField extends X2ManyField {
         return this.selectCreate({ domain, context, title });
     }
 
-    selectRecord(res_ids) {
+    async selectRecord(res_ids) {
         const params = {
             context: { default_quant_id: res_ids[0] },
         };
-        this.list.addNewRecord(params).then((record) => {
-            // Make it dirty to force the save of the record. addNewRecord make
-            // the new record dirty === False by default to remove them at unfocus event
-            record.dirty = true;
-        });
+        const record = await this.addInlineRecord(params);
+        // Make it dirty to force the save of the record. addNewRecord make
+        // the new record dirty === False by default to remove them at unfocus event
+        record.dirty = true;
     }
 
     createOpenRecord() {

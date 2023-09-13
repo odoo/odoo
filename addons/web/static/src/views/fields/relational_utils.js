@@ -683,22 +683,6 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
     return { archInfo: formArchInfo, fields };
 }
 
-export function useAddInlineRecord({ addNew }) {
-    let creatingRecord = false;
-
-    async function addInlineRecord({ context, editable }) {
-        if (!creatingRecord) {
-            creatingRecord = true;
-            try {
-                await addNew({ context, mode: "edit", position: editable });
-            } finally {
-                creatingRecord = false;
-            }
-        }
-    }
-    return addInlineRecord;
-}
-
 export function useOpenX2ManyRecord({
     resModel,
     activeField, // TODO: this should be renamed (object with keys "viewMode", "views" and "string")
