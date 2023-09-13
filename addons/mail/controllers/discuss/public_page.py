@@ -7,7 +7,7 @@ from werkzeug.exceptions import NotFound
 from odoo import _, http
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.guard_discuss_access import add_guest_to_context
 
 
 class PublicPageController(http.Controller):

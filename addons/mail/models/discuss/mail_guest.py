@@ -2,6 +2,7 @@
 
 import pytz
 import uuid
+from urllib.parse import urlsplit
 from datetime import datetime, timedelta
 from functools import wraps
 from inspect import Parameter, signature
@@ -14,54 +15,6 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 from odoo.addons.bus.websocket import wsrequest
-
-
-def add_guest_to_context(func):
-    """ Decorate a function to extract the guest from the request.
-    The guest is then available on the context of the current
-    request.
-    """
-    @wraps(func)
-    def wrapper(self, *args, **kwargs):
-        req = request or wsrequest
-        guest = req.env["mail.guest"]._get_guest_from_context()
-        guest_token = kwargs.pop("guest_token", None)
-        if guest:
-            return func(self, *args, **kwargs)
-        token = (
-            guest_token
-            or req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name)
-            or req.env.context.get("guest_token", "")
-        )
-        parts = token.split(req.env["mail.guest"]._cookie_separator)
-        if len(parts) == 2:
-            guest_id, guest_access_token = parts
-            guest = req.env["mail.guest"].browse(int(guest_id)).sudo().exists()
-            if not guest or not guest.access_token or not consteq(guest.access_token, guest_access_token):
-                guest = req.env["mail.guest"]
-            elif not guest.timezone:
-                timezone = req.env["mail.guest"]._get_timezone_from_request(req)
-                if timezone:
-                    guest._update_timezone(timezone)
-        guest = guest.sudo(False)
-        req.update_context(guest=guest)
-        if hasattr(self, "env"):
-            self.env.context = {**self.env.context, "guest": guest}
-        return func(self, *args, **kwargs)
-
-    # Add the guest_token parameter to the wrapper signature
-    # so that it is not marked as being ignored. It will be
-    # popped before calling the wrapped function.
-    old_sig = signature(wrapper)
-    params = list(old_sig.parameters.values())
-    new_param_index = next((
-        index for index, param in enumerate(params)
-        if param.kind in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]
-    ), len(params))
-    new_param = Parameter("guest_token", Parameter.POSITIONAL_OR_KEYWORD, default=None)
-    params.insert(new_param_index, new_param)
-    wrapper.__signature__ = old_sig.replace(parameters=params)
-    return wrapper
 
 
 class MailGuest(models.Model):

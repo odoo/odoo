@@ -83,6 +83,7 @@ class WebsiteVisitor(models.Model):
             for channel in discuss_channels:
                 if not channel.livechat_visitor_id.partner_id:
                     self.env['mail.guest']._find_or_create_for_channel(
+                        request,
                         channel,
                         country_id=country.id,
                         name=_("Visitor #%d") % channel.livechat_visitor_id.id,

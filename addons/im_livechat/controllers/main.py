@@ -7,7 +7,6 @@ from werkzeug.exceptions import NotFound
 from odoo import http, tools, _, release
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class LivechatController(http.Controller):
@@ -144,7 +143,6 @@ class LivechatController(http.Controller):
         return _("Visitor")
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public', cors="*")
-    @add_guest_to_context
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         user_id = None
         country_id = None

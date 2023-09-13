@@ -4,12 +4,12 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.guard_discuss_access import guard_discuss_access
 
 
 class GuestController(http.Controller):
     @http.route("/mail/guest/update_name", methods=["POST"], type="json", auth="public")
-    @add_guest_to_context
+    @guard_discuss_access
     def mail_guest_update_name(self, guest_id, name):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest_to_rename_sudo = guest.env["mail.guest"].browse(guest_id).sudo().exists()

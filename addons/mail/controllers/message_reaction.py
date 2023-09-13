@@ -4,12 +4,12 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.guard_discuss_access import guard_discuss_access
 
 
 class MessageReactionController(http.Controller):
-    @http.route("/mail/message/reaction", methods=["POST"], type="json", auth="public")
-    @add_guest_to_context
+    @http.route("/mail/message/reaction", methods=["POST"], type="json", auth="public", cors="*")
+    @guard_discuss_access
     def mail_message_add_reaction(self, message_id, content, action):
         guest_sudo = request.env["mail.guest"]._get_guest_from_context().sudo()
         message_sudo = guest_sudo.env["mail.message"].browse(int(message_id)).exists()

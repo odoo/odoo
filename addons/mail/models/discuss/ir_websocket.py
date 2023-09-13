@@ -1,5 +1,5 @@
 from odoo import models
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.guard_discuss_access import add_guest_to_context
 
 
 class IrWebsocket(models.AbstractModel):
