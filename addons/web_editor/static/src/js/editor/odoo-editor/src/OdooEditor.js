@@ -4902,7 +4902,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     _onTableMenuTogglerClick(ev) {
-        const uiWrapper = closestElement(ev.target, '.o_table_ui');
+        const uiWrapper = ev.target.closest('.o_table_ui');
         uiWrapper.classList.toggle('o_open');
         if (uiWrapper.classList.contains('o_column_ui')) {
             const columnIndex = getColumnIndex(this._columnUiTarget);
