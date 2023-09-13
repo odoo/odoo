@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import logging
 import random
 import threading
@@ -291,15 +292,28 @@ class EventMailRegistration(models.Model):
 
     def execute(self):
         now = fields.Datetime.now()
-        todo = self.filtered(lambda reg_mail:
-            not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
-            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
-            reg_mail.scheduler_id.notification_type == 'mail'
+        todo = self.filtered(
+            lambda reg_mail:
+            not reg_mail.mail_sent
+            and reg_mail.registration_id.state in ('open', 'done')
+            and reg_mail.scheduled_date
+            and reg_mail.scheduled_date <= now
+            and reg_mail.scheduler_id.notification_type == 'mail'
         )
         done = self.browse()
-        for reg_mail in todo:
-            organizer = reg_mail.scheduler_id.event_id.organizer_id
+
+        for scheduler_id, reg_mails in todo.grouped('scheduler_id').items():
+            template = None
+            with contextlib.suppress(MissingError):
+                template = scheduler_id.template_ref.exists()
+
+            if not template:
+                _logger.warning(
+                    "Cannot process tickets %s, because Mail Scheduler %s has reference to non-existent template",
+                    ", ".join(reg_mails.registration_id.mapped('display_name')), scheduler_id)
+                continue
+
+            organizer = scheduler_id.event_id.organizer_id
             company = self.env.company
             author = self.env.ref('base.user_root')
             if organizer.email:
@@ -312,20 +326,11 @@ class EventMailRegistration(models.Model):
             email_values = {
                 'author_id': author.id,
             }
-            template = None
-            try:
-                template = reg_mail.scheduler_id.template_ref.exists()
-            except MissingError:
-                pass
-
-            if not template:
-                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
-                continue
 
             if not template.email_from:
                 email_values['email_from'] = author.email_formatted
-            template.send_mail(reg_mail.registration_id.id, email_values=email_values)
-            done |= reg_mail
+            template.send_mail(reg_mails.registration_id.ids, email_values=email_values)
+            done |= reg_mails
         done.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
