@@ -128,7 +128,7 @@ QUnit.module("Components", (hooks) => {
 
         // Click on label
         assert.verifySteps([]);
-        await click(target, ".o-checkbox > .form-check-label", true);
+        await click(target, ".o-checkbox > .form-check-label", { skipVisibilityCheck: true });
         assert.notOk(target.querySelector(".o-checkbox input").checked);
         assert.verifySteps(["false"]);
 

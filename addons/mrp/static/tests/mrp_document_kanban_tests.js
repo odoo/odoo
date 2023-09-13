@@ -1,13 +1,15 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_helpers";
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { registry } from "@web/core/registry";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 addModelNamesToFetch(["mrp.document"]);

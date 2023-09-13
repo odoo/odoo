@@ -1,9 +1,12 @@
 /* @odoo-module */
 
-import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("emoji");
 
@@ -126,7 +129,7 @@ QUnit.test("posting :wink: in message should impact recent", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":wink:");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await click("button[aria-label='Emojis']");
     await contains(
         "span:contains(Frequently used) ~ .o-Emoji:contains(😉) ~ span:contains(Smileys & Emotion)"
@@ -140,7 +143,7 @@ QUnit.test("posting :snowman: in message should impact recent", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":snowman:");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await click("button[aria-label='Emojis']");
     await contains(
         "span:contains(Frequently used) ~ .o-Emoji:contains(☃️) ~ span:contains(Smileys & Emotion)"
@@ -153,7 +156,7 @@ QUnit.test("first category should be highlighted by default", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-navbar .o-Emoji:eq(0).o-active");
+    await contains(".o-EmojiPicker-navbar :nth-child(1 of .o-Emoji).o-active");
 });
 
 QUnit.test(
@@ -164,9 +167,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
-        (await contains(".o-EmojiPicker-content .o-Emoji:contains(👺)"))[0].dispatchEvent(
-            new MouseEvent("click", { bubbles: true, shiftKey: true })
-        );
+        await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
         await contains(".o-EmojiPicker-navbar [title='Frequently used']");
         await contains(".o-EmojiPicker");
         await contains(".o-mail-Composer-input", { value: "👺" });

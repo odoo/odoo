@@ -3,7 +3,9 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("Channel invite");
 
@@ -29,7 +31,7 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
     openDiscuss(channelId);
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
-    await click("button:contains(Invite):not(:disabled)");
+    await click("button:contains(Invite):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "James" });
@@ -64,8 +66,8 @@ QUnit.test("Available operators come first", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
-    await contains(".o-discuss-ChannelInvitation-selectable:eq(0)", { text: "Ron" });
-    await contains(".o-discuss-ChannelInvitation-selectable:eq(1)", { text: "Harry" });
+    await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "Ron" });
+    await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
 });
 
 QUnit.test("Partners invited most frequently by the current user come first", async () => {
@@ -106,10 +108,10 @@ QUnit.test("Partners invited most frequently by the current user come first", as
     await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #1" });
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(John) input");
-    await click("button:contains(Invite):not(:disabled)");
+    await click("button:contains(Invite):enabled");
     await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #2" });
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
-    await contains(".o-discuss-ChannelInvitation-selectable:eq(0)", { text: "John" });
-    await contains(".o-discuss-ChannelInvitation-selectable:eq(1)", { text: "Albert" });
+    await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
+    await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });
 });

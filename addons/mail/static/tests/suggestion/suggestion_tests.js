@@ -1,10 +1,13 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("suggestion", {
     async beforeEach() {
@@ -67,7 +70,7 @@ QUnit.test(
         openDiscuss(channelId);
         await contains(".o-mail-Composer-input");
         await insertText(".o-mail-Composer-input", "first message");
-        await click("button:contains(Send):not(:disabled)");
+        await click("button:enabled", { text: "Send" });
         await contains(".o-mail-Message");
         await insertText(".o-mail-Composer-input", "@");
         await contains(".o-mail-Composer-suggestion strong", { count: 3 });

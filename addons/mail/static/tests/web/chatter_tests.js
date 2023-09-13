@@ -1,6 +1,13 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { file } from "@web/../tests/legacy/helpers/test_utils";
 import {
     click,
     contains,
@@ -8,13 +15,7 @@ import {
     dropFiles,
     insertText,
     scroll,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
-import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
-
-import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
+} from "@web/../tests/utils";
 
 const { createFile } = file;
 
@@ -76,7 +77,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
 
-    await click(".o-mail-Composer button:contains(Send):not(:disabled)");
+    await click(".o-mail-Composer button:enabled", { text: "Send" });
     await contains(".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
 });
@@ -117,7 +118,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
 
-    await click(".o-mail-Composer button:contains(Log):not(:disabled)");
+    await click(".o-mail-Composer button:enabled", { text: "Log" });
     await contains(".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
 });
@@ -145,7 +146,7 @@ QUnit.test(
         await contains("button[aria-label='Attach files']");
         await advanceTime(DELAY_FOR_SPINNER);
         await contains("button[aria-label='Attach files'] .fa-spin");
-        await click(".o_form_button_create:eq(0)");
+        await click(".o_control_panel_collapsed_create .o_form_button_create");
         await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
     }
 );
@@ -202,7 +203,7 @@ QUnit.test("chatter: drop attachments", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    let files = [
+    const files = [
         await createFile({
             content: "hello, world",
             contentType: "text/plain",
@@ -214,20 +215,20 @@ QUnit.test("chatter: drop attachments", async () => {
             name: "text2.txt",
         }),
     ];
-    await dragenterFiles($(".o-mail-Chatter")[0]);
+    await dragenterFiles(".o-mail-Chatter", files);
     await contains(".o-mail-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
-    await dropFiles($(".o-mail-Dropzone")[0], files);
+    await dropFiles(".o-mail-Dropzone", files);
     await contains(".o-mail-AttachmentCard", { count: 2 });
-    await dragenterFiles($(".o-mail-Chatter")[0]);
-    files = [
+    const extraFiles = [
         await createFile({
             content: "hello, world",
             contentType: "text/plain",
             name: "text3.txt",
         }),
     ];
-    await dropFiles($(".o-mail-Dropzone")[0], files);
+    await dragenterFiles(".o-mail-Chatter", extraFiles);
+    await dropFiles(".o-mail-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
@@ -567,7 +568,7 @@ QUnit.test(
             res_id: partnerId,
             views: [[false, "form"]],
         });
-        await click(".o_form_button_create:eq(0)");
+        await click(".o_control_panel_collapsed_create .o_form_button_create");
         await contains(".o-mail-Message");
         await contains(".o-mail-Message-body", { text: "Creating a new record..." });
     }
@@ -747,7 +748,7 @@ QUnit.test("post message on draft record", async () => {
     });
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer button:contains(Send):not(:disabled)");
+    await click(".o-mail-Composer button:enabled", { text: "Send" });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "Test" });
 });
@@ -790,22 +791,21 @@ QUnit.test("upload attachment on draft record", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    const [chatter, file] = await Promise.all([
-        contains(".o-mail-Chatter"),
-        createFile({
+    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']", { count: 0, text: "1" });
+    const files = [
+        await createFile({
             content: "hello, world",
             contentType: "text/plain",
             name: "text.txt",
         }),
-    ]);
-    await contains(".button[aria-label='Attach files']", { count: 0, text: "1" });
-
-    dragenterFiles(chatter[0]);
-    dropFiles((await contains(".o-mail-Dropzone"))[0], [file]);
+    ];
+    await dragenterFiles(".o-mail-Chatter", files);
+    await dropFiles(".o-mail-Dropzone", files);
     await contains("button[aria-label='Attach files']", { text: "1" });
 });
 
-QUnit.test("Follower count of draft record is set to 0", async (assert) => {
+QUnit.test("Follower count of draft record is set to 0", async () => {
     const { openView } = await start();
     await openView({ res_model: "res.partner", views: [[false, "form"]] });
     await contains(".o-mail-Followers", { text: "0" });

@@ -2,7 +2,9 @@
 
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
-import { contains, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("out of focus");
 

@@ -1,12 +1,15 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey, makeDeferred } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("discuss inbox");
 
-QUnit.test("reply: discard on reply button toggle", async (assert) => {
+QUnit.test("reply: discard on reply button toggle", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -113,7 +116,7 @@ QUnit.test(
         await click("[title='Reply']");
         await contains(".o-mail-Composer [placeholder='Log an internal note…']");
         await insertText(".o-mail-Composer-input", "Test");
-        await click(".o-mail-Composer-send:not(:disabled)", { text: "Log" });
+        await click(".o-mail-Composer-send:enabled", { text: "Log" });
         await contains(".o-mail-Composer", { count: 0 });
         assert.verifySteps(["/mail/message/post"]);
     }
@@ -153,7 +156,7 @@ QUnit.test(
         await click("[title='Reply']");
         await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
         await insertText(".o-mail-Composer-input", "Test");
-        await click(".o-mail-Composer-send:not(:disabled)", { text: "Send" });
+        await click(".o-mail-Composer-send:enabled", { text: "Send" });
         await contains(".o-mail-Composer-send", { count: 0 });
         assert.verifySteps(["/mail/message/post"]);
     }

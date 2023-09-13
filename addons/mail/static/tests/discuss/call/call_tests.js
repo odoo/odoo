@@ -1,16 +1,13 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    click,
-    contains,
-    mockGetMedia,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("call");
 

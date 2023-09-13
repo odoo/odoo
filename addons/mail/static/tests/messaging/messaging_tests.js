@@ -1,7 +1,11 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("messaging");
 
@@ -72,7 +76,7 @@ QUnit.test(
         const { openDiscuss, openFormView } = await start();
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
-        await click(".o-mail-Composer-send:not(:disabled)");
+        await click(".o-mail-Composer-send:enabled");
         // leaving discuss.
         await openFormView("res.partner", partnerId);
         // weak test, no guarantee that we waited long enough for the potential chat window to open

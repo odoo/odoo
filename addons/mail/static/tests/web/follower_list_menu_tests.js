@@ -1,8 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("follower list menu");
 
@@ -107,8 +110,8 @@ QUnit.test('click on "add followers" button', async (assert) => {
     await contains(".o-mail-Followers-counter", { text: "2" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });
-    await contains(".o-mail-Follower:eq(0)", { text: "François Perusse" });
-    await contains(".o-mail-Follower:eq(1)", { text: "Partner3" });
+    await contains(":nth-child(1 of .o-mail-Follower)", { text: "François Perusse" });
+    await contains(":nth-child(2 of .o-mail-Follower)", { text: "Partner3" });
 });
 
 QUnit.test("click on remove follower", async (assert) => {
@@ -191,14 +194,20 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-
         await click(".o-mail-Followers-button");
         await contains("a", { count: 0, text: "Add Followers" });
-
-        await contains(".o-mail-Follower:eq(0) button[title='Edit subscription']");
-        await contains(".o-mail-Follower:eq(0) button[title='Remove this follower']");
-        await contains(".o-mail-Follower:eq(1):not(:has(button[title='Edit subscription']))");
-        await contains(".o-mail-Follower:eq(1):not(:has(button[title='Remove this follower']))");
+        await contains(":nth-child(1 of .o-mail-Follower)", {
+            containsMulti: [
+                ["button[title='Edit subscription']"],
+                ["button[title='Remove this follower']"],
+            ],
+        });
+        await contains(":nth-child(2 of .o-mail-Follower)", {
+            containsMulti: [
+                ["button[title='Edit subscription']", { count: 0 }],
+                ["button[title='Remove this follower']", { count: 0 }],
+            ],
+        });
     }
 );
 
@@ -310,10 +319,18 @@ QUnit.test(
 
         await click(".o-mail-Followers-button");
         await contains("a", { text: "Add Followers" });
-        await contains(".o-mail-Follower:eq(0) button[title='Edit subscription']");
-        await contains(".o-mail-Follower:eq(0) button[title='Remove this follower']");
-        await contains(".o-mail-Follower:eq(1) button[title='Edit subscription']");
-        await contains(".o-mail-Follower:eq(1) button[title='Remove this follower']");
+        await contains(":nth-child(1 of .o-mail-Follower)", {
+            containsMulti: [
+                ["button[title='Edit subscription']"],
+                ["button[title='Remove this follower']"],
+            ],
+        });
+        await contains(":nth-child(2 of .o-mail-Follower)", {
+            containsMulti: [
+                ["button[title='Edit subscription']"],
+                ["button[title='Remove this follower']"],
+            ],
+        });
     }
 );
 

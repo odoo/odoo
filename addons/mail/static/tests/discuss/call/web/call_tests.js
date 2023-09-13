@@ -1,8 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("call");
 

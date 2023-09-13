@@ -1,9 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, insertText } from "@bus/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("discuss (patch)");
 
@@ -45,7 +47,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     );
 });
 
-QUnit.test("invite button should be present on livechat", async (assert) => {
+QUnit.test("invite button should be present on livechat", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -104,14 +106,18 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        await contains(".o-mail-DiscussSidebarChannel:eq(0)", { text: "Visitor 12" });
-        await contains(".o-mail-DiscussSidebarChannel:eq(1)", { text: "Visitor 11" });
-        // post a new message on the last channel
-        await click(".o-mail-DiscussSidebarChannel:eq(1)");
-        await insertText(".o-mail-Composer-input", "Blabla");
-        await click(".o-mail-Composer-send:not(:disabled)");
         await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-        await contains(".o-mail-DiscussSidebarChannel:eq(0) span", { text: "Visitor 11" });
-        await contains(".o-mail-DiscussSidebarChannel:eq(1) span", { text: "Visitor 12" });
+        await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel) span", {
+            text: "Visitor 12",
+        });
+        await click(":nth-child(2 of .o-mail-DiscussSidebarChannel) span", { text: "Visitor 11" });
+        await insertText(".o-mail-Composer-input", "Blabla");
+        await click(".o-mail-Composer-send:enabled");
+        await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel) span", {
+            text: "Visitor 11",
+        });
+        await contains(":nth-child(2 of .o-mail-DiscussSidebarChannel) span", {
+            text: "Visitor 12",
+        });
     }
 );

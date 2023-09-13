@@ -1,9 +1,12 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("discuss sidebar (patch)");
 

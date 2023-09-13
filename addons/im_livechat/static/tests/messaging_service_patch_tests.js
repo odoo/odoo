@@ -4,7 +4,9 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { contains, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("messaging service (patch)");
 

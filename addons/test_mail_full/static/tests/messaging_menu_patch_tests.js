@@ -1,6 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 import { triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging menu (patch)");

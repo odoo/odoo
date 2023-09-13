@@ -4,14 +4,14 @@ import { busService } from "@bus/services/bus_service";
 import { busParametersService } from "@bus/bus_parameters_service";
 import { presenceService } from "@bus/services/presence_service";
 import { multiTabService } from "@bus/multi_tab_service";
-import { click, contains } from "@bus/../tests/helpers/test_utils";
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
-import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { createWebClient } from "@web/../tests/webclient/helpers";
+import { click, contains } from "@web/../tests/utils";
 
 const serviceRegistry = registry.category("services");
 

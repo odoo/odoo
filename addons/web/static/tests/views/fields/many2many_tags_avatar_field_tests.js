@@ -408,7 +408,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_field_many2many_tags_avatar .o_field_many2many_selection");
 
         const o_kanban_record = target.querySelector(".o_kanban_record:nth-child(2)");
-        await click(o_kanban_record, ".o_field_tags > .o_m2m_avatar_empty", true);
+        await click(o_kanban_record, ".o_field_tags > .o_m2m_avatar_empty");
         const popover = document.querySelector(".o-overlay-container");
         assert.strictEqual(
             document.activeElement,
@@ -484,7 +484,7 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
-            await click(target, ".o_kanban_record:first-child .o_quick_assign", true);
+            await click(target, ".o_kanban_record:first-child .o_quick_assign");
             // add and directly remove an item
             await click(target, ".o_popover .o-autocomplete--dropdown-item:first-child");
             await click(target, ".o_popover .o_tag .o_delete");
@@ -555,7 +555,7 @@ QUnit.module("Fields", (hooks) => {
                     </templates>
                 </kanban>`,
             });
-            await click(target, ".o_kanban_record:first-child .o_quick_assign", true);
+            await click(target, ".o_kanban_record:first-child .o_quick_assign");
             // add and directly close the dropdown
             await triggerEvent(target, null, "keydown", { key: "Tab" });
             await triggerEvent(document.activeElement, null, "keydown", { key: "Enter" });

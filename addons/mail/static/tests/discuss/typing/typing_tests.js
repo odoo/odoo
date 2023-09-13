@@ -1,9 +1,13 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("typing");
 

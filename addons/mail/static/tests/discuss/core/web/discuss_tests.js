@@ -1,8 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("discuss");
 
@@ -184,7 +187,7 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     await click(".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add", {
         target: tab1.target,
     });
-    await tab1.insertText(".o-discuss-ChannelSelector input", "Jer");
+    await insertText(".o-discuss-ChannelSelector input", "Jer", { target: tab1.target });
     await click(".o-discuss-ChannelSelector-suggestion", { target: tab1.target });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", {

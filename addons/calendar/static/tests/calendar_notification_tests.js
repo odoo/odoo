@@ -1,11 +1,15 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 const serviceRegistry = registry.category("services");
 

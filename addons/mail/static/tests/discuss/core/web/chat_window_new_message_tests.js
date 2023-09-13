@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -7,7 +9,9 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("chat window: new message");
 
@@ -91,18 +95,24 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button", { text: "New Message" });
         await contains(".o-mail-ChatWindow", { count: 2 });
-        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "New message" });
+        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "New message",
+        });
         await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector");
         // open channel-2
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name", { text: "channel-2" });
         await contains(".o-mail-ChatWindow", { count: 3 });
-        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "New message" });
+        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "New message",
+        });
         // search for a user in "new message" autocomplete
         await insertText(".o-discuss-ChannelSelector input", "131");
         await click(".o-discuss-ChannelSelector-suggestion a", { text: "Partner 131" });
         await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
-        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "Partner 131" });
+        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
+            text: "Partner 131",
+        });
     }
 );
 

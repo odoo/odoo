@@ -4,9 +4,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
-import { click, contains, insertText } from "@mail/../tests/helpers/test_utils";
-
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.test("open/close temporary channel", async () => {
     await startServer();

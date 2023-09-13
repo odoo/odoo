@@ -5,9 +5,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { RATING } from "@im_livechat/embed/core/livechat_service";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
-import { click, contains, insertText } from "@mail/../tests/helpers/test_utils";
-
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("feedback panel");
 
@@ -69,7 +68,7 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
-    await click("button:contains(Send):not(:disabled)");
+    await click("button:contains(Send):enabled");
     await contains("p", { text: "Thank you for your feedback" });
     assert.verifySteps(["/im_livechat/feedback"]);
 });

@@ -445,14 +445,18 @@ export async function triggerScroll(
     await nextTick();
 }
 
-export function click(el, selector, skipVisibilityCheck = false) {
-    if (el.disabled) {
+export function click(
+    el,
+    selector,
+    { mouseEventInit = {}, skipDisabledCheck = false, skipVisibilityCheck = false } = {}
+) {
+    if (!skipDisabledCheck && el.disabled) {
         throw new Error("Can't click on a disabled button");
     }
     return triggerEvents(
         el,
         selector,
-        ["pointerdown", "mousedown", "focus", "pointerup", "mouseup", "click"],
+        ["pointerdown", "mousedown", "focus", "pointerup", "mouseup", ["click", mouseEventInit]],
         { skipVisibilityCheck }
     );
 }
@@ -987,7 +991,7 @@ export async function clickOpenedDropdownItem(target, fieldName, itemContent) {
     if (indexToClick === -1) {
         throw new Error(`The element '${itemContent}' does not exist in the dropdown`);
     }
-    await click(dropdownItems[indexToClick], null, "click");
+    await click(dropdownItems[indexToClick]);
 }
 
 export async function selectDropdownItem(target, fieldName, itemContent) {

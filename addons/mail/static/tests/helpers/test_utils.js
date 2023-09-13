@@ -1,7 +1,6 @@
 /* @odoo-module */
 
-import { click, contains, insertText, scroll } from "@bus/../tests/helpers/test_utils";
-import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -27,27 +26,6 @@ import { doAction, getActionManagerServerData } from "@web/../tests/webclient/he
 QUnit.begin(loadEmoji);
 QUnit.begin(loadLamejs);
 registryNamesToCloneWithCleanup.push("mock_server_callbacks");
-
-//------------------------------------------------------------------------------
-// Private
-//------------------------------------------------------------------------------
-
-/**
- * Create a fake object 'dataTransfer', linked to some files,
- * which is passed to drag and drop events.
- *
- * @param {Object[]} files
- * @returns {Object}
- */
-function _createFakeDataTransfer(files) {
-    return {
-        dropEffect: "all",
-        effectAllowed: "all",
-        files,
-        items: [],
-        types: ["Files"],
-    };
-}
 
 //------------------------------------------------------------------------------
 // Public: test lifecycle
@@ -179,7 +157,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @param {integer} [param0.loadingBaseDelayDuration=0]
  * @returns {Object}
  */
-async function start(param0 = {}) {
+export async function start(param0 = {}) {
     const { discuss = {}, hasTimeControl } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
     let target = param0["target"] || getFixture();
@@ -235,7 +213,6 @@ async function start(param0 = {}) {
     return {
         advanceTime,
         env: webClient.env,
-        insertText,
         openDiscuss: getOpenDiscuss(webClient, discuss),
         openView,
         openFormView: getOpenFormView(openView),
@@ -243,88 +220,6 @@ async function start(param0 = {}) {
         target,
         webClient,
     };
-}
-
-//------------------------------------------------------------------------------
-// Public: file utilities
-//------------------------------------------------------------------------------
-
-/**
- * Create a file object, which can be used for drag-and-drop.
- *
- * @param {Object} data
- * @param {string} data.name
- * @param {string} data.content
- * @param {string} data.contentType
- * @returns {Promise<Object>} resolved with file created
- */
-export function createFile(data) {
-    // Note: this is only supported by Chrome, and does not work in Incognito mode
-    return new Promise(function (resolve, reject) {
-        const requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-        if (!requestFileSystem) {
-            throw new Error("FileSystem API is not supported");
-        }
-        requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
-            fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
-                fileEntry.createWriter(function (fileWriter) {
-                    fileWriter.onwriteend = function (e) {
-                        fileSystem.root.getFile(data.name, {}, function (fileEntry) {
-                            fileEntry.file(function (file) {
-                                resolve(file);
-                            });
-                        });
-                    };
-                    fileWriter.write(new Blob([data.content], { type: data.contentType }));
-                });
-            });
-        });
-    });
-}
-
-/**
- * Drag some files over a DOM element
- *
- * @param {DOM.Element} el
- * @param {Object[]} file must have been create beforehand
- *   @see testUtils.file.createFile
- */
-function dragenterFiles(el, files) {
-    const ev = new Event("dragenter", { bubbles: true });
-    Object.defineProperty(ev, "dataTransfer", {
-        value: _createFakeDataTransfer(files),
-    });
-    el.dispatchEvent(ev);
-}
-
-/**
- * Drop some files on a DOM element
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-function dropFiles(el, files) {
-    const ev = new Event("drop", { bubbles: true });
-    Object.defineProperty(ev, "dataTransfer", {
-        value: _createFakeDataTransfer(files),
-    });
-    el.dispatchEvent(ev);
-}
-
-/**
- * Paste some files on a DOM element
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-function pasteFiles(el, files) {
-    const ev = new Event("paste", { bubbles: true });
-    Object.defineProperty(ev, "clipboardData", {
-        value: _createFakeDataTransfer(files),
-    });
-    el.dispatchEvent(ev);
 }
 
 //------------------------------------------------------------------------------
@@ -398,18 +293,3 @@ export function mockGetMedia() {
         });
     });
 }
-//------------------------------------------------------------------------------
-// Export
-//------------------------------------------------------------------------------
-
-export {
-    click,
-    contains,
-    dragenterFiles,
-    dropFiles,
-    insertText,
-    pasteFiles,
-    scroll,
-    start,
-    startServer,
-};

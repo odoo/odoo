@@ -1,7 +1,11 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
-import { contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("suggestion");
 

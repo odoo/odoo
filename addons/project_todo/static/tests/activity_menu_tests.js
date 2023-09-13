@@ -1,8 +1,9 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { editInput, patchDate } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.test("create todo from activity menu without date", async function () {
     await start();

@@ -1,7 +1,11 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { addLink, parseAndTransform } from "@mail/utils/common/format";
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("Mail utils");
 
@@ -102,23 +106,23 @@ QUnit.test("addLink: linkify inside text node (2 occurrences)", function (assert
 QUnit.test("url", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { insertText, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     // see: https://www.ietf.org/rfc/rfc1738.txt
     const messageBody = "https://odoo.com?test=~^|`{}[]#";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button:not(:disabled)", { text: "Send" });
+    await click("button:enabled", { text: "Send" });
     await contains(".o-mail-Message a", { text: messageBody });
 });
 
 QUnit.test("url with comma at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { insertText, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com, it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button:not(:disabled)", { text: "Send" });
+    await click("button:enabled", { text: "Send" });
     await contains(".o-mail-Message a", { text: "https://odoo.com" });
     await contains(".o-mail-Message-content", { text: messageBody });
 });
@@ -126,11 +130,11 @@ QUnit.test("url with comma at the end", async () => {
 QUnit.test("url with dot at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { insertText, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com. It's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button:not(:disabled)", { text: "Send" });
+    await click("button:enabled", { text: "Send" });
     await contains(".o-mail-Message a", { text: "https://odoo.com" });
     await contains(".o-mail-Message-content", { text: messageBody });
 });
@@ -138,11 +142,11 @@ QUnit.test("url with dot at the end", async () => {
 QUnit.test("url with semicolon at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { insertText, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com; it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button:not(:disabled)", { text: "Send" });
+    await click("button:enabled", { text: "Send" });
     await contains(".o-mail-Message a", { text: "https://odoo.com" });
     await contains(".o-mail-Message-content", { text: messageBody });
 });
@@ -150,11 +154,11 @@ QUnit.test("url with semicolon at the end", async () => {
 QUnit.test("url with ellipsis at the end", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { insertText, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const messageBody = "Go to https://odoo.com... it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button:not(:disabled)", { text: "Send" });
+    await click("button:enabled", { text: "Send" });
     await contains(".o-mail-Message a", { text: "https://odoo.com" });
     await contains(".o-mail-Message-content", { text: messageBody });
 });
@@ -162,11 +166,11 @@ QUnit.test("url with ellipsis at the end", async () => {
 QUnit.test("url with number in subdomain", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { insertText, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/web";
     await insertText(".o-mail-Composer-input", messageBody);
-    await click("button:not(:disabled)", { text: "Send" });
+    await click("button:enabled", { text: "Send" });
     await contains(".o-mail-Message a", {
         text: "https://www.45017478-master-all.runbot134.odoo.com/web",
     });

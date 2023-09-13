@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("properties field");
 
@@ -62,10 +66,7 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
         propertyType === "many2one" ? ".o_field_property_many2one_value img" : ".o_m2m_avatar"
     );
     assert.verifySteps(["read res.users"]);
-
-    const chatter = await contains(".o-mail-ChatWindow-name");
-    assert.strictEqual(chatter.length, 1);
-    assert.strictEqual(chatter[0].innerText, "Partner Test");
+    await contains(".o-mail-ChatWindow-name", { text: "Partner Test" });
 }
 
 QUnit.test("Properties fields: many2one avatar open chat on click", async function (assert) {

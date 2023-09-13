@@ -1,7 +1,11 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("Form renderer");
 

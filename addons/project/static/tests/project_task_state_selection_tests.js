@@ -1,11 +1,12 @@
-/** @odoo-module */
-import {
-    click,
-    getFixture,
-} from '@web/../tests/helpers/utils';
+/* @odoo-module */
+
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_helpers";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, getFixture } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
-import { start, startServer } from '@mail/../tests/helpers/test_utils';
-import { addModelNamesToFetch } from '@bus/../tests/helpers/model_definitions_helpers';
 
 addModelNamesToFetch([
     'project.project',

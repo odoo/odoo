@@ -2,9 +2,9 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { click, contains, insertText } from "@mail/../tests/helpers/test_utils";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("Livechat history command");
 

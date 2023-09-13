@@ -1,8 +1,11 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("message reply");
 
@@ -60,7 +63,7 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
         ".o-mail-Message:contains(Response to first message) .o-mail-MessageInReply-message"
     );
     await nextTick();
-    assert.isVisible($(".o-mail-Message:eq(0)"));
+    assert.isVisible(document.querySelector(".o-mail-Message"));
 });
 
 QUnit.test("reply shows correct author avatar", async (assert) => {

@@ -1,9 +1,12 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { nextTick } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("attachment list");
 
@@ -87,9 +90,9 @@ QUnit.test(
         });
         openDiscuss(channelId);
         await click(".o-mail-AttachmentCard-unlink");
-        click(".modal-footer .btn-primary");
-        click(".modal-footer .btn-primary");
-        click(".modal-footer .btn-primary");
+        await click(".modal-footer .btn-primary");
+        await click(".modal-footer .btn-primary");
+        await click(".modal-footer .btn-primary");
         await contains(".o-mail-AttachmentCard-unlink", { count: 0 });
         assert.verifySteps(["attachment_unlink"], "The unlink method must be called once");
     }
@@ -178,12 +181,14 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await click(".o-mail-AttachmentImage");
-        const image = (await contains(".o-FileViewer-viewImage"))[0];
+        await contains(".o-FileViewer-viewImage");
         await click(".o-FileViewer div[aria-label='Close']");
         // Simulate image becoming loaded.
         let successfulLoad;
         try {
-            image.dispatchEvent(new Event("load", { bubbles: true }));
+            document
+                .querySelector(".o-FileViewer-viewImage")
+                .dispatchEvent(new Event("load", { bubbles: true }));
             successfulLoad = true;
         } catch {
             successfulLoad = false;

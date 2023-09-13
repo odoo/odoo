@@ -1,7 +1,11 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("attachment box");
 
@@ -204,9 +208,9 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     });
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
-    await contains(".o-mail-AttachmentCard:eq(0) div", { text: "C.txt" });
-    await contains(".o-mail-AttachmentCard:eq(1) div", { text: "B.txt" });
-    await contains(".o-mail-AttachmentCard:eq(2) div", { text: "A.txt" });
+    await contains(":nth-child(1 of .o-mail-AttachmentCard) div", { text: "C.txt" });
+    await contains(":nth-child(2 of .o-mail-AttachmentCard) div", { text: "B.txt" });
+    await contains(":nth-child(3 of .o-mail-AttachmentCard) div", { text: "A.txt" });
 });
 
 QUnit.test("attachment box auto-closed on switch to record wih no attachments", async (assert) => {

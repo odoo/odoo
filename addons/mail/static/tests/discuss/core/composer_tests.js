@@ -1,9 +1,12 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Composer } from "@mail/core/common/composer";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("composer", {
     async beforeEach() {
@@ -45,7 +48,7 @@ QUnit.test(
         });
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "/");
-        await click(".o-mail-Composer-suggestion:eq(0)");
+        await click(":nth-child(1 of .o-mail-Composer-suggestion)");
         await contains(".o-mail-Composer-suggestion strong", { count: 0 });
         await insertText(".o-mail-Composer-input", " is user?");
         assert.verifySteps([], "No rpc done");
@@ -62,7 +65,7 @@ QUnit.test("add an emoji after a command", async () => {
     openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
-    await click(".o-mail-Composer-suggestion:eq(0)");
+    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-input", { value: "/who " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "😊" });
