@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
@@ -84,7 +85,7 @@ export class PaymentPaytm extends PaymentInterface {
                 }
                 let resultCode = data?.resultCode;
                 if (resultCode === 'S' && data?.merchantReferenceNo != referenceId){
-                    throw this.env._t("Reference number mismatched");
+                    throw _t("Reference number mismatched");
                 } else if (resultCode === 'S') {
                     paymentLine.paytm_authcode = data?.authCode;
                     paymentLine.paytm_issuer_card_no = data?.issuerMaskCardNo;
@@ -151,9 +152,8 @@ export class PaymentPaytm extends PaymentInterface {
         localStorage.setItem(uid, ++retry);
     }
     _showError(error_msg, title) {
-        var self = this;
-        self.env.services.popup.add(ErrorPopup, {
-            title: title || self.env._t('PayTM Error'),
+        this.env.services.popup.add(ErrorPopup, {
+            title: title || _t('PayTM Error'),
             body: error_msg,
         });
     }
