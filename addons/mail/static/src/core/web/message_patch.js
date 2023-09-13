@@ -26,7 +26,7 @@ patch(Message.prototype, {
     get authorAvatarAttClass() {
         return {
             ...super.authorAvatarAttClass,
-            "o_redirect cursor-pointer": this.hasAuthorClickable,
+            "o_redirect cursor-pointer": this.hasAuthorClickable(),
         };
     },
     getAuthorText() {
