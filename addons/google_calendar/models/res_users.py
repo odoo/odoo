@@ -133,6 +133,12 @@ class User(models.Model):
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
                 self.env.cr.rollback()
 
+    def is_google_calendar_synced(self):
+        """ True if Google Calendar settings are filled (Client ID / Secret) and user calendar is synced
+        meaning we can make API calls, false otherwise."""
+        self.ensure_one()
+        return self.google_calendar_token and self._get_google_sync_status() == 'sync_active'
+
     def stop_google_synchronization(self):
         self.ensure_one()
         self.google_synchronization_stopped = True
