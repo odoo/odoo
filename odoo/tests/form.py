@@ -973,8 +973,8 @@ def get_static_context(context_str):
     result = {}
     for key_ast, val_ast in zip(context_ast.keys, context_ast.values):
         try:
-            key = ast.literal_eval(ast.unparse(key_ast))
-            val = ast.literal_eval(ast.unparse(val_ast))
+            key = ast.literal_eval(key_ast)
+            val = ast.literal_eval(val_ast)
             result[key] = val
         except ValueError:
             pass
