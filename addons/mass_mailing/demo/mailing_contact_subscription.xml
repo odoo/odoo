@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Create Opt-out Records -->
+        <record id="mass_mail_contact_list_rel_1" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
+            <field name="opt_out">True</field>
+        </record>
+        <record id="mass_mail_contact_list_rel_2" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_6"/>
+            <field name="opt_out">True</field>
+        </record>
+
+        <!-- Create Blacklist Records -->
+        <record id="blacklist_1" model="mail.blacklist">
+            <field name="email">elsa.ericson@example.com</field>
+        </record>
+    </data>
+</odoo>
