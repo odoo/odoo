@@ -10,4 +10,7 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[(4, ref('mailing_tag_0')), (4, ref('utm.utm_tag_1'))]"/>
     </record>
+    <record id="mailing_sms_0_utm_source" model="utm.source">
+        <field name="name">Mailing Extra Promo</field>
+    </record>
 </data></odoo>
