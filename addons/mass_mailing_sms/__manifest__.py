@@ -4,7 +4,7 @@
 {
     'name': 'SMS Marketing',
     'summary': 'Design, send and track SMS',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Marketing/Email Marketing',
     'sequence': 245,
     'depends': [
@@ -29,6 +29,7 @@
     'demo': [
         'demo/utm.xml',
         'demo/mailing_list_contact.xml',
+        'demo/mailing_contact_subscription.xml',
         'demo/mailing_mailing.xml',
         'demo/mailing_trace.xml',
     ],
