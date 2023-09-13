@@ -1,11 +1,14 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
+import { serializeDate } from "@web/core/l10n/dates";
 import { ListController } from "@web/views/list/list_controller";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { serializeDate } from "@web/core/l10n/dates";
+import { click, contains } from "@web/../tests/utils";
 
 const { DateTime } = luxon;
 
@@ -41,7 +44,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         views: [[false, "list"]],
     });
     await contains(".o-mail-ActivityButton i.text-muted");
-    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "" });
+    await contains(".o-mail-ListActivity-summary", { text: "" });
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -92,13 +95,18 @@ QUnit.test("list activity widget with activities", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o_data_row:eq(0) .o-mail-ActivityButton i.text-warning.fa-phone");
-    assert.strictEqual(
-        $(".o_data_row:eq(0) .o-mail-ListActivity-summary")[0].innerText,
-        "Call with Al"
-    );
-    await contains(".o_data_row:eq(1) .o-mail-ActivityButton i.text-success.fa-clock-o");
-    assert.strictEqual($(".o_data_row:eq(1) .o-mail-ListActivity-summary")[0].innerText, "Type 2");
+    await contains(":nth-child(1 of .o_data_row)", {
+        containsMulti: [
+            [".o-mail-ActivityButton i.text-warning.fa-phone"],
+            [".o-mail-ListActivity-summary", { text: "Call with Al" }],
+        ],
+    });
+    await contains(":nth-child(2 of .o_data_row)", {
+        containsMulti: [
+            [".o-mail-ActivityButton i.text-success.fa-clock-o"],
+            [".o-mail-ListActivity-summary", { text: "Type 2" }],
+        ],
+    });
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -141,7 +149,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
         views: [[false, "list"]],
     });
     await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
-    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "Warning" });
+    await contains(".o-mail-ListActivity-summary", { text: "Warning" });
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -220,12 +228,13 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "Call with Al" });
-
-    await click(".o-mail-ActivityButton"); // open the popover
-    await click(".o-mail-ActivityListPopoverItem-markAsDone:eq(0)"); // mark the first activity as done
-    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']"); // confirm
-    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "Meet FP" });
+    await contains(".o-mail-ListActivity-summary", { text: "Call with Al" });
+    await click(".o-mail-ActivityButton");
+    await click(
+        ":nth-child(1 of .o-mail-ActivityListPopoverItem) .o-mail-ActivityListPopoverItem-markAsDone"
+    );
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
     assert.verifySteps(["web_search_read", "activity_format", "action_feedback", "web_read"]);
 });
 
@@ -276,8 +285,10 @@ QUnit.test("list activity exception widget with activity", async () => {
         views: [[false, "list"]],
     });
     await contains(".o_data_row", { count: 2 });
-    await contains(".o_data_row .o_activity_exception_cell:eq(0) .o-mail-ActivityException", {
-        count: 0,
+    await contains(":nth-child(1 of .o_data_row) .o_activity_exception_cell", {
+        contains: [".o-mail-ActivityException", { count: 0 }],
     });
-    await contains(".o_data_row .o_activity_exception_cell:eq(1) .o-mail-ActivityException");
+    await contains(":nth-child(2 of .o_data_row) .o_activity_exception_cell", {
+        contains: [".o-mail-ActivityException"],
+    });
 });

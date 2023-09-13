@@ -2526,6 +2526,11 @@ export async function makeMockServer(serverData, mockRPC) {
         const { loadJS, loadCSS } = assets;
         patchWithCleanup(assets, {
             async loadJS(resource) {
+                if (resource === "/web/static/lib/stacktracejs/stacktrace.js") {
+                    // Bypass `mockRPC` for the stracktrace.js lib to avoid infinite loop if there
+                    // is an error inside the `mockRPC` call.
+                    return loadJS(resource);
+                }
                 let res = await mockRPC(resource, {});
                 if (res === undefined) {
                     res = await loadJS(resource);

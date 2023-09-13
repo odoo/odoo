@@ -1,10 +1,13 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { date_to_str } from "@web/legacy/js/core/time";
 import { session } from "@web/session";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("activity menu");
 
@@ -93,7 +96,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Today'):eq(0)");
+    await click(":nth-child(1 of .o-mail-ActivityGroup) button", { text: "1 Today" });
     await contains(".o-mail-ActivityMenu", { count: 0 });
     context = {
         force_search_count: 1,

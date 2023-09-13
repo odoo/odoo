@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { insertText, contains } from "@bus/../tests/helpers/test_utils";
+import { insertText, contains, focus } from "@web/../tests/utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
@@ -76,11 +76,11 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async () =>
 
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
     await contains(".o-mail-Composer-footer", { text: "Tab to next livechat" });
-    document.querySelector(".o-mail-Composer-input").focus();
+    await focus(".o-mail-Composer-input");
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 13" });
-    document.querySelector(".o-mail-Composer-input").focus();
+    await focus(".o-mail-Composer-input");
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
@@ -259,7 +259,7 @@ QUnit.test("tab on composer doesn't switch thread if no unread thread", async (a
 
     const { openDiscuss } = await start();
     await openDiscuss(channelIds[0]);
-    document.querySelector(".o-mail-Composer-input").focus();
+    await focus(".o-mail-Composer-input");
     triggerHotkey("Tab");
     await nextTick();
     await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");

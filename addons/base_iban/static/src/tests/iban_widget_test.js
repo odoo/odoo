@@ -1,10 +1,9 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { click, contains, insertText } from "@bus/../tests/helpers/test_utils";
-
-import { start } from "@mail/../tests/helpers/test_utils";
 import { DELAY } from "@base_iban/components/iban_widget/iban_widget";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { start } from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("Fields", {}, function () {
     QUnit.module("IbanWidget");

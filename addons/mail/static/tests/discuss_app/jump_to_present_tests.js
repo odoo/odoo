@@ -1,9 +1,12 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
-import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("jump to present");
 
@@ -27,8 +30,9 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
+    await contains(".o-mail-Thread");
     assert.ok(
-        (await contains(".o-mail-Thread"))[0].scrollHeight > PRESENT_THRESHOLD,
+        document.querySelector(".o-mail-Thread").scrollHeight > PRESENT_THRESHOLD,
         "should have enough scroll height to trigger jump to present"
     );
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -84,7 +88,9 @@ QUnit.test("Jump to old reply should prompt jump to presence", async () => {
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains(".o-mail-Message", { count: 46 });
-    await contains(".o-mail-Message-content:eq(0)", { text: "Hello world!" });
+    await contains(":nth-child(1 of .o-mail-Message) .o-mail-Message-content", {
+        text: "Hello world!",
+    });
     await contains(".o-mail-Thread-jumpPresent", {
         text: "You're viewing older messagesJump to Present",
     });

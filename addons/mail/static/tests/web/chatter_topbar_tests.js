@@ -1,9 +1,12 @@
 /* @odoo-module */
 
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("chatter topbar");
 
@@ -54,8 +57,8 @@ QUnit.test("rendering with multiple partner followers", async () => {
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
     await contains(".o-mail-Follower", { count: 2 });
-    await contains(".o-mail-Follower:eq(0)", { text: "Jean Michang" });
-    await contains(".o-mail-Follower:eq(1)", { text: "Eden Hazard" });
+    await contains(":nth-child(1 of .o-mail-Follower)", { text: "Jean Michang" });
+    await contains(":nth-child(2 of .o-mail-Follower)", { text: "Eden Hazard" });
 });
 
 QUnit.test("log note toggling", async () => {
@@ -67,16 +70,15 @@ QUnit.test("log note toggling", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button", { text: "Log note" });
-    await contains("button:contains(Log note):not(.active)");
+    await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
 
     await click("button", { text: "Log note" });
-    await contains("button:contains(Log note).active");
+    await contains("button.active", { text: "Log note" });
     await contains(".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note…']");
 
     await click("button", { text: "Log note" });
-    await contains("button:contains(Log note):not(.active)");
+    await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
 });
 
@@ -89,16 +91,15 @@ QUnit.test("send message toggling", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button", { text: "Send message" });
-    await contains("button:contains(Send message):not(.active)");
+    await contains("button:not(.active)", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
 
     await click("button", { text: "Send message" });
-    await contains("button:contains(Send message).active");
+    await contains("button.active", { text: "Send message" });
     await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
 
     await click("button", { text: "Send message" });
-    await contains("button:contains(Send message):not(.active)");
+    await contains("button:not(.active)", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
 });
 
@@ -111,20 +112,18 @@ QUnit.test("log note/send message switching", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button", { text: "Send message" });
-    await contains("button:contains(Send message):not(.active)");
-    await contains("button", { text: "Log note" });
-    await contains("button:contains(Log note):not(.active)");
+    await contains("button:not(.active)", { text: "Send message" });
+    await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
 
     await click("button", { text: "Send message" });
-    await contains("button:contains(Send message).active");
-    await contains("button:contains(Log note):not(.active)");
+    await contains("button.active", { text: "Send message" });
+    await contains("button:not(.active)", { text: "Log note" });
     await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
 
     await click("button", { text: "Log note" });
-    await contains("button:contains(Send message):not(.active)");
-    await contains("button:contains(Log note).active");
+    await contains("button:not(.active)", { text: "Send message" });
+    await contains("button.active", { text: "Log note" });
     await contains(".o-mail-Composer-input[placeholder='Log an internal note…']");
 });
 
@@ -267,9 +266,9 @@ QUnit.test("composer state conserved when clicking on another topbar button", as
     await contains("button", { text: "Log note" });
     await contains("button[aria-label='Attach files']");
     await click("button", { text: "Log note" });
-    await contains("button:contains(Log note).active");
-    await contains("button:contains(Send message).active", { count: 0 });
+    await contains("button.active", { text: "Log note" });
+    await contains("button:not(.active)", { text: "Send message" });
     await click(".o-mail-Chatter-topbar button[aria-label='Attach files']");
-    await contains("button:contains(Log note).active");
-    await contains("button:contains(Send message).active", { count: 0 });
+    await contains("button.active", { text: "Log note" });
+    await contains("button:not(.active)", { text: "Send message" });
 });

@@ -1,6 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("im_status");

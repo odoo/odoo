@@ -5,7 +5,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { contains } from "@mail/../tests/helpers/test_utils";
+
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("thread service");
 

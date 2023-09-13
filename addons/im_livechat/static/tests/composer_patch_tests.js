@@ -3,13 +3,9 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    click,
-    contains,
-    dragenterFiles,
-    insertText,
-    start,
-} from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, createFile, dragenterFiles, insertText } from "@web/../tests/utils";
 
 QUnit.module("composer (patch)");
 
@@ -34,7 +30,14 @@ QUnit.test("Attachment upload via drag and drop disabled", async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer");
-    dragenterFiles($(".o-mail-Composer-input")[0]);
+    const files = [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text3.txt",
+        }),
+    ];
+    await dragenterFiles(".o-mail-Composer-input", files);
     // weak test: no guarantee that we waited long enough for the potential dropzone to show
     await contains(".o-mail-Dropzone", { count: 0 });
 });
@@ -62,7 +65,7 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
     });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/help");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     assert.verifySteps(["execute_command_help"]);
 });
 

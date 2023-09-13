@@ -1,9 +1,12 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
+import { start } from "@mail/../tests/helpers/test_utils";
+
 import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
 
@@ -32,7 +35,7 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
     await click("button", { text: "Channel" });
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
-    await click(".o-discuss-ChannelSelector-suggestion:eq(0)");
+    await click(":nth-child(1 of .o-discuss-ChannelSelector-suggestion)");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     await contains(".o-mail-ChatWindow-name[title='Gryffindors']");
 });

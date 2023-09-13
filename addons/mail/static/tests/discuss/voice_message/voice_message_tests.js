@@ -1,20 +1,17 @@
 /* @odoo-module */
 
-import { Command } from "@mail/../tests/helpers/command";
-import {
-    click,
-    contains,
-    createFile,
-    mockGetMedia,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
-import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { Command } from "@mail/../tests/helpers/command";
+import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
+
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@web/core/utils/concurrency";
 import { url } from "@web/core/utils/urls";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, createFile } from "@web/../tests/utils";
 
 QUnit.module("voice message");
 

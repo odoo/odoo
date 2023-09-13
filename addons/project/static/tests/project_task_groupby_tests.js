@@ -1,15 +1,18 @@
-/** @odoo-module */
+/* @odoo-module */
+
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getFixture } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 let target;
 
 QUnit.module("Project", (hooks) => {
     hooks.beforeEach(async () => {
         const pyEnv = await startServer();
-        pyEnv.mockServer.models['project.task'] = {
+        pyEnv.mockServer.models["project.task"] = {
             fields: {
                 id: { string: "Id", type: "integer" },
                 display_name: { string: "Name", type: "char" },
@@ -26,16 +29,17 @@ QUnit.module("Project", (hooks) => {
                 date_deadline: {
                     string: "Deadline",
                     type: "date",
-                }
+                },
             },
-            records: [{
-                id: 1,
-                display_name: "My task",
-                project_id: false,
-                user_ids: [],
-                date_deadline: false,
-
-            }],
+            records: [
+                {
+                    id: 1,
+                    display_name: "My task",
+                    project_id: false,
+                    user_ids: [],
+                    date_deadline: false,
+                },
+            ],
         };
         target = getFixture();
         setupViewRegistries();
@@ -45,8 +49,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,list":
-                `<tree js_class="project_task_list"/>`,
+            "project.task,false,list": `<tree js_class="project_task_list"/>`,
         };
         const { openView } = await start({
             serverData: { views },
@@ -63,8 +66,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,list":
-                `<tree js_class="project_task_list"/>`,
+            "project.task,false,list": `<tree js_class="project_task_list"/>`,
         };
         const { openView } = await start({
             serverData: { views },
@@ -82,8 +84,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,list":
-                `<tree js_class="project_task_list"/>`,
+            "project.task,false,list": `<tree js_class="project_task_list"/>`,
         };
         const { openView } = await start({
             serverData: { views },
@@ -101,8 +102,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,kanban":
-                `<kanban js_class="project_task_kanban" default_group_by="project_id">
+            "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="project_id">
                     <templates>
                         <t t-name="kanban-box"/>
                     </templates>
@@ -123,8 +123,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,kanban":
-                `<kanban js_class="project_task_kanban" default_group_by="user_ids">
+            "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="user_ids">
                     <templates>
                         <t t-name="kanban-box"/>
                     </templates>
@@ -145,8 +144,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,kanban":
-                `<kanban js_class="project_task_kanban" default_group_by="date_deadline">
+            "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="date_deadline">
                     <templates>
                         <t t-name="kanban-box"/>
                     </templates>
@@ -167,8 +165,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,pivot":
-                `<pivot js_class="project_pivot">
+            "project.task,false,pivot": `<pivot js_class="project_pivot">
                     <field name="project_id" type="row"/>
                 </pivot>`,
         };
@@ -182,7 +179,7 @@ QUnit.module("Project", (hooks) => {
 
         assert.strictEqual(
             target.querySelector("tr:nth-of-type(2) .o_pivot_header_cell_closed").innerText,
-            "Private",
+            "Private"
         );
     });
 
@@ -190,8 +187,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,pivot":
-                `<pivot js_class="project_pivot">
+            "project.task,false,pivot": `<pivot js_class="project_pivot">
                     <field name="user_ids" type="row"/>
                 </pivot>`,
         };
@@ -205,7 +201,7 @@ QUnit.module("Project", (hooks) => {
 
         assert.strictEqual(
             target.querySelector("tr:nth-of-type(2) .o_pivot_header_cell_closed").innerText,
-            "Unassigned",
+            "Unassigned"
         );
     });
 
@@ -213,8 +209,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,pivot":
-                `<pivot js_class="project_pivot">
+            "project.task,false,pivot": `<pivot js_class="project_pivot">
                     <field name="date_deadline" type="row"/>
                 </pivot>`,
         };
@@ -228,7 +223,7 @@ QUnit.module("Project", (hooks) => {
 
         assert.strictEqual(
             target.querySelector("tr:nth-of-type(2) .o_pivot_header_cell_closed").innerText,
-            "None",
+            "None"
         );
     });
 });

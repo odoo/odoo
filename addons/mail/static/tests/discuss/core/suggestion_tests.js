@@ -1,10 +1,13 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("suggestion", {
     async beforeEach() {
@@ -111,15 +114,15 @@ QUnit.test("Sort partner suggestions by recent chats", async () => {
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel span", { text: "User 2" });
     await insertText(".o-mail-Composer-input", "This is a test");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-content", { text: "This is a test" });
     await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
     await insertText(".o-mail-Composer-input[placeholder='Message #General…']", "@");
     await insertText(".o-mail-Composer-input", "User");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
-    await contains(".o-mail-Composer-suggestion:eq(0) strong", { text: "User 2" });
-    await contains(".o-mail-Composer-suggestion:eq(1) strong", { text: "User 1" });
-    await contains(".o-mail-Composer-suggestion:eq(2) strong", { text: "User 3" });
+    await contains(":nth-child(1 of .o-mail-Composer-suggestion) strong", { text: "User 2" });
+    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "User 1" });
+    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "User 3" });
 });
 
 QUnit.test("mention suggestion are shown after deleting a character", async () => {

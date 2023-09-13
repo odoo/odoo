@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import {
     editSelect,
@@ -9,6 +11,7 @@ import {
     getFixture,
 } from "@web/../tests/helpers/utils";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 let target;
 

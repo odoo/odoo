@@ -1,9 +1,12 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("discuss sidebar");
 
@@ -18,7 +21,9 @@ QUnit.test("toggling category button hide category items", async () => {
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
 
-    await click(".o-mail-DiscussSidebarCategory-icon:eq(0)");
+    await click(
+        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
+    );
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
@@ -33,7 +38,9 @@ QUnit.test("toggling category button does not hide active category items", async
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await contains(".o-mail-DiscussSidebarChannel.o-active");
 
-    await click(".o-mail-DiscussSidebarCategory-icon:eq(0)");
+    await click(
+        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
+    );
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel.o-active");
 });
@@ -51,7 +58,9 @@ QUnit.test("Closing a category sends the updated user setting to the server.", a
         },
     });
     openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-icon:eq(0)");
+    await click(
+        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
+    );
     assert.verifySteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
 });
 
@@ -73,7 +82,9 @@ QUnit.test("Opening a category sends the updated user setting to the server.", a
         },
     });
     openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-icon:eq(0)");
+    await click(
+        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
+    );
     assert.verifySteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
 });
 
@@ -168,7 +179,7 @@ QUnit.test("default thread rendering", async () => {
         ".o-mail-Thread:contains(Congratulations, your inbox is empty  New messages appear here.)"
     );
 
-    await click("button", { text: "Starred" });
+    await click("button div", { text: "Starred" });
     await contains("button:contains(Starred).o-active");
     await contains(
         ".o-mail-Thread:contains(No starred messages  You can mark any message as 'starred', and it shows up in this mailbox.)"
@@ -612,7 +623,7 @@ QUnit.test("chat - states: close manually by clicking the title", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
-    await click(".o-mail-DiscussSidebarCategory:contains(Direct messages) div:eq(0)");
+    await click(".o-mail-DiscussSidebarCategory div", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
@@ -976,7 +987,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
     );
     // post a new message on the last channel
     await insertText(".o-mail-Composer-input", "Blabla");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(
         ".o-mail-DiscussSidebarChannel:contains(Demo) ~ .o-mail-DiscussSidebarChannel:contains(Yoshi)"
     );

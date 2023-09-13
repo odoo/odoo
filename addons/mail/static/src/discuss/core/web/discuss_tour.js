@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("mail_tour", {
             },
         },
         {
-            trigger: ".o-mail-Composer-send:not(:disabled)",
+            trigger: ".o-mail-Composer-send:enabled",
             content: _t("Post your message on the thread"),
             position: "top",
         },

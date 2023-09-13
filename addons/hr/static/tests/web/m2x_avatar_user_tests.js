@@ -1,6 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
 import { patchWithCleanup, triggerEvent, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";

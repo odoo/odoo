@@ -2283,7 +2283,7 @@ QUnit.module("Fields", (hooks) => {
         assertFolded([false, false, false, true]);
 
         // now, create a new property, it must unfold the last group
-        await click(target, ".o_field_property_add button", { skipVisibilityCheck: true });
+        await click(target, ".o_field_property_add button");
         assert.deepEqual(getGroups(), [
             [
                 ["SEPARATOR 2", "property_2"],

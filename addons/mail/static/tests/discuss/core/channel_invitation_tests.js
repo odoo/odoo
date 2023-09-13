@@ -1,7 +1,11 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("channel invitation form");
 
@@ -50,7 +54,7 @@ QUnit.test("can invite users in channel from chat window", async () => {
     await click(
         ".o-discuss-ChannelInvitation-selectable:contains(TestPartner) input[type='checkbox']"
     );
-    await click("[title='Invite to Channel']:not(:disabled)");
+    await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
         ".o-mail-Thread .o-mail-NotificationMessage:contains(Mitchell Admin invited TestPartner to the channel)"
@@ -131,7 +135,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
-    await click("button[title='Create Group Chat']:not(:disabled)");
+    await click("button[title='Create Group Chat']:enabled");
     await contains(
         ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin, TestPartner, and TestPartner2)"
     );

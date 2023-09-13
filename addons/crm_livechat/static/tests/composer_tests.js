@@ -1,6 +1,10 @@
 /* @odoo-module */
 
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, insertText } from "@web/../tests/utils";
 
 QUnit.module("composer");
 
@@ -18,6 +22,6 @@ QUnit.test("Can execute lead command", async function (assert) {
     });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/lead great lead");
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     assert.verifySteps(["execute_command_lead"]);
 });

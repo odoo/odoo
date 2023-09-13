@@ -3,7 +3,9 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { click, contains, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("Thread model");
 
@@ -29,7 +31,7 @@ QUnit.test("Thread name unchanged when inviting new users", async () => {
     await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
-    await click("button:contains(Invite):not(:disabled)");
+    await click("button:contains(Invite):enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "James" });

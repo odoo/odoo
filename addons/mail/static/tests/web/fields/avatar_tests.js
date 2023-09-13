@@ -1,9 +1,10 @@
 /* @odoo-module */
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
-import { click, contains, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getFixture, mount } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("avatar field");
 

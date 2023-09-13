@@ -1,32 +1,29 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { start } from "@mail/../tests/helpers/test_utils";
+
+import {
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
     createFile,
     dragenterFiles,
     dropFiles,
+    inputFiles,
     insertText,
     pasteFiles,
     scroll,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
-
-import {
-    getFixture,
-    makeDeferred,
-    nextTick,
-    patchWithCleanup,
-    triggerEvent,
-    triggerHotkey,
-} from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
-
-const { inputFiles } = file;
+} from "@web/../tests/utils";
 
 QUnit.module("composer", {
     async beforeEach() {
@@ -99,9 +96,9 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
-        await contains(".o-mail-Composer-input:focus", { count: 0 });
+        await contains(".o-mail-Composer-input:not(:focus)");
         triggerHotkey("Escape");
-        await contains(".o-mail-Composer-input:focus", { count: 1 });
+        await contains(".o-mail-Composer-input:focus");
     }
 );
 
@@ -124,9 +121,11 @@ QUnit.test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
-    const textarea = (await contains(".o-mail-Composer-input", { value: "Blabla" }))[0];
+    await contains(".o-mail-Composer-input", { value: "Blabla" });
     // simulate selection of all the content by keyboard
-    textarea.setSelectionRange(0, textarea.value.length);
+    document
+        .querySelector(".o-mail-Composer-input")
+        .setSelectionRange(0, document.querySelector(".o-mail-Composer-input").value.length);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "🤠" });
     await contains(".o-mail-Composer-input", { value: "🤠" });
@@ -138,7 +137,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
-    const [textarea] = await contains(".o-mail-Composer-input");
+    const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.setSelectionRange(2, 2);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "🤠" });
@@ -153,9 +152,11 @@ QUnit.test("selected text is not replaced after cancelling the selection", async
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
-    const textarea = (await contains(".o-mail-Composer-input", { value: "Blabla" }))[0];
+    await contains(".o-mail-Composer-input", { value: "Blabla" });
     // simulate selection of all the content by keyboard
-    textarea.setSelectionRange(0, textarea.value.length);
+    document
+        .querySelector(".o-mail-Composer-input")
+        .setSelectionRange(0, document.querySelector(".o-mail-Composer-input").value.length);
     await click(".o-mail-Discuss-content");
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "🤠" });
@@ -177,8 +178,8 @@ QUnit.test(
         const textarea = $(".o-mail-Composer-input")[0];
         textarea.setSelectionRange(0, textarea.value.length);
         await nextTick();
-        await click(".o-mail-DiscussSidebarChannel:eq(1)");
-        await click(".o-mail-DiscussSidebarChannel:eq(0)");
+        await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
+        await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
         assert.ok(textarea.selectionStart === 0 && textarea.selectionEnd === textarea.value.length);
     }
 );
@@ -236,18 +237,14 @@ QUnit.test(
             res_id: channelId,
         });
         openDiscuss(channelId);
-        await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
         await contains(".o-EmojiPicker-content", { scroll: 0 });
         await scroll(".o-EmojiPicker-content", 150);
-        await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
         await contains(".o-mail-PickerContent .o-EmojiPicker-content", { scroll: 0 });
         await scroll(".o-EmojiPicker-content", 200);
-        await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
         await contains(".o-EmojiPicker-content", { scroll: 150 });
-        await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
         await contains(".o-EmojiPicker-content", { scroll: 200 });
     }
@@ -272,8 +269,8 @@ QUnit.test("send message only once when button send is clicked twice quickly", a
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
-    await click(".o-mail-Composer-send:not([disabled])");
-    await click(".o-mail-Composer-send:not([disabled])");
+    await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
 });
 
@@ -387,7 +384,7 @@ QUnit.test("pending mentions are kept when toggling composer", async () => {
     await click("button", { text: "Send message" });
     await contains(".o-mail-Composer-input", { count: 0 });
     await click("button", { text: "Send message" });
-    await click(".o-mail-Composer-send:not(:disabled)");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body a.o_mail_redirect", { text: "@Mitchell Admin" });
 });
 
@@ -419,7 +416,7 @@ QUnit.test("leave command on channel", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel:contains(general).o-active");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "general" });
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
     triggerHotkey("Enter");
@@ -464,7 +461,7 @@ QUnit.test("leave command on chat", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel:contains(Chuck Norris).o-active");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Chuck Norris" });
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion strong", { count: 1 });
     triggerHotkey("Enter");
@@ -523,7 +520,7 @@ QUnit.test("quick edit last self-message from UP arrow", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message-content", { text: "Test" });
-    await contains(".o-mail-Message:contains(Test) .o-mail-Composer", { count: 0 });
+    await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
 
     triggerHotkey("ArrowUp");
     await contains(".o-mail-Message .o-mail-Composer");
@@ -571,6 +568,9 @@ QUnit.test("composer: drop attachments", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await contains(".o-mail-Dropzone", { count: 0 });
+    await contains(".o-mail-AttachmentCard", { count: 0 });
     const files = [
         await createFile({
             content: "hello, world",
@@ -583,23 +583,21 @@ QUnit.test("composer: drop attachments", async () => {
             name: "text2.txt",
         }),
     ];
-    await contains(".o-mail-Composer-input");
-    await contains(".o-mail-Dropzone", { count: 0 });
-    await contains(".o-mail-AttachmentCard", { count: 0 });
-    dragenterFiles($(".o-mail-Composer-input")[0]);
+    await dragenterFiles(".o-mail-Composer-input", files);
     await contains(".o-mail-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
-    dropFiles((await contains(".o-mail-Dropzone"))[0], files);
+    await dropFiles(".o-mail-Dropzone", files);
     await contains(".o-mail-Dropzone", { count: 0 });
     await contains(".o-mail-AttachmentCard", { count: 2 });
-    dragenterFiles($(".o-mail-Composer-input")[0]);
-    dropFiles((await contains(".o-mail-Dropzone"))[0], [
+    const extraFiles = [
         await createFile({
             content: "hello, world",
             contentType: "text/plain",
             name: "text3.txt",
         }),
-    ]);
+    ];
+    await dragenterFiles(".o-mail-Composer-input", extraFiles);
+    await dropFiles(".o-mail-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
@@ -608,12 +606,13 @@ QUnit.test("composer: add an attachment", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
-    inputFiles((await contains(".o-mail-Composer-coreMain .o_input_file"))[0], [file]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -637,14 +636,14 @@ QUnit.test("composer: add an attachment in reply to message in history", async (
     const { openDiscuss } = await start();
     openDiscuss("mail.box_history");
     await click("[title='Reply']");
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
-    inputFiles((await contains(".o-mail-Composer-coreMain .o_input_file"))[0], [file]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
     await contains(".o-mail-AttachmentCard .fa-check");
-
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
 });
@@ -661,19 +660,20 @@ QUnit.test("composer: send button is disabled if attachment upload is not finish
         },
     });
     openDiscuss(channelId);
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
-    inputFiles((await contains(".o-mail-Composer-coreMain .o_input_file"))[0], [file]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
     await contains(".o-mail-AttachmentCard.o-isUploading");
     await contains(".o-mail-Composer-send:disabled");
     // simulates attachment finishes uploading
     attachmentUploadedPromise.resolve();
     await contains(".o-mail-AttachmentCard");
     await contains(".o-mail-AttachmentCard.o-isUploading", { count: 0 });
-    await contains(".o-mail-Composer-send:not(:disabled)");
+    await contains(".o-mail-Composer-send:enabled");
 });
 
 QUnit.test("remove an attachment from composer does not need any confirmation", async () => {
@@ -681,16 +681,16 @@ QUnit.test("remove an attachment from composer does not need any confirmation", 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
-    inputFiles((await contains(".o-mail-Composer-coreMain .o_input_file"))[0], [file]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
-
     await click(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { count: 0 });
 });
@@ -743,15 +743,15 @@ QUnit.test("remove an uploading attachment", async () => {
         },
     });
     openDiscuss(channelId);
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
-    inputFiles((await contains(".o-mail-Composer-coreMain .o_input_file"))[0], [file]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ]);
     await contains(".o-mail-AttachmentCard.o-isUploading");
-
-    click(".o-mail-AttachmentCard-unlink");
+    await click(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
 });
 
@@ -801,17 +801,18 @@ QUnit.test(
             },
         });
         openDiscuss(channelId);
-        const file1 = await createFile({
-            name: "text1.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        });
-        const file2 = await createFile({
-            name: "text2.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        });
-        inputFiles((await contains(".o-mail-Composer-coreMain .o_input_file"))[0], [file1, file2]);
+        await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+            await createFile({
+                name: "text1.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+            await createFile({
+                name: "text2.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+        ]);
         await contains(".o-mail-AttachmentCard div", { text: "text1.txt" });
         await contains(".o-mail-AttachmentCard div", { text: "text2.txt" });
         await contains(".o-mail-AttachmentCard-aside div[title='Uploading']", { count: 2 });
@@ -836,29 +837,29 @@ QUnit.test(
             },
         });
         openDiscuss(channelId);
-        const [input, file1, file2] = await Promise.all([
-            contains(".o-mail-Composer-coreMain .o_input_file"),
-            createFile({
+        await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+            await createFile({
                 name: "text1.txt",
                 content: "hello, world",
                 contentType: "text/plain",
             }),
-            createFile({
+            await createFile({
                 name: "text2.txt",
                 content: "hello, world",
                 contentType: "text/plain",
             }),
         ]);
-        inputFiles(input[0], [file1, file2]);
         await contains(".o-mail-AttachmentCard.o-isUploading div", { text: "text1.txt" });
-        await contains(".o-mail-AttachmentCard.o-isUploading div", { text: "text2.txt" });
-
-        click(".o-mail-AttachmentCard-unlink:eq(1)");
+        await click(".o-mail-AttachmentCard-unlink", {
+            parent: [
+                ".o-mail-AttachmentCard.o-isUploading",
+                { contains: ["div", { text: "text2.txt" }] },
+            ],
+        });
         await contains(".o-mail-AttachmentCard div", { count: 0, text: "text2.txt" });
-
         // Simulates the completion of the upload of the first attachment
         uploadPromise.resolve();
-        await contains('.o-mail-AttachmentCard:not(.o-isUploading):contains("text1.txt")');
+        await contains(".o-mail-AttachmentCard:not(.o-isUploading) div", { text: "text1.txt" });
     }
 );
 
