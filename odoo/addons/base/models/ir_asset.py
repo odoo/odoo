@@ -105,9 +105,18 @@ class IrAsset(models.Model):
         """
         return extra
 
-
-    def _parse_assets_extra(self, extra_parts):
-        return {}
+    def _parse_assets_extra(self, extra_parts, asset_type):
+        if len(extra_parts) != 1:
+            raise ValueError('Expect only one element in extra')
+        direction = extra_parts[0]
+        if asset_type == 'css':
+            if direction not in ['rtl', 'ltr']:
+                msg = f'Invalid extra {direction}'
+                raise ValueError(msg)
+        elif direction != '-':
+            msg = f'Invalid extra {direction}'
+            raise ValueError(msg)
+        return {}, direction == 'rtl'
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
