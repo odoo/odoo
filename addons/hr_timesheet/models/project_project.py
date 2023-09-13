@@ -132,11 +132,27 @@ class Project(models.Model):
             ['unit_amount:sum'],
         )
         timesheet_time_dict = defaultdict(list)
+
+        # Getting all subtasks by project (subtasks that do not belong to the project only)
+        task_ids_by_project_id = {project.id: project.task_ids.ids for project in self}
+        project_id_by_task_ids = defaultdict()
+        for project_id, task_ids in task_ids_by_project_id.items():
+            for task_id in task_ids:
+                project_id_by_task_ids[task_id] = project_id
+        all_subtasks_ids_by_parent_id = self.task_ids._get_subtask_ids_per_task_id()
+        all_subtasks_ids_by_project_id = defaultdict(set)
+        for parent_id, subtask_ids in all_subtasks_ids_by_parent_id.items():
+            project_id = project_id_by_task_ids[parent_id]
+            all_subtasks_ids_by_project_id[project_id] |= set(subtask_ids)
+        # Keep only subtasks that do not belong in the project
+        all_outer_subtasks_ids_by_project_id = defaultdict(list)
+        for project_id, subtask_ids in all_subtasks_ids_by_project_id.items():
+            all_outer_subtasks_ids_by_project_id[project_id] = list(subtask_ids - set(task_ids_by_project_id[project_id]))
+
         for project, product_uom, unit_amount_sum in timesheets_read_group:
             # Adding timesheet of subtasks linked to other projects
-            subtasks = project.task_ids._get_all_subtasks().filtered(lambda subtask: subtask.project_id != project)
             subtasks_timesheets_read_group = self.env['account.analytic.line']._read_group(
-                [('task_id', 'in', subtasks.ids), ('product_uom_id', '=', product_uom.id)],
+                [('task_id', 'in', all_outer_subtasks_ids_by_project_id[project.id]), ('product_uom_id', '=', product_uom.id)],
                 [],
                 ['unit_amount:sum'],
             )
