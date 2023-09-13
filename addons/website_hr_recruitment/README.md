@@ -58,7 +58,7 @@ Fully Integrated With Others Apps
 
 Easily create awesome websites with no technical knowledge required.
 
-### Blogs
+### Blog
 
 Write news, attract new visitors, build customer loyalty.
 

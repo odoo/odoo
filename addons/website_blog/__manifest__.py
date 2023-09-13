@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Blogs',
+    'name': 'Blog',
     'category': 'Website/Website',
     'sequence': 200,
     'website': 'https://www.odoo.com/app/blog',
