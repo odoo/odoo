@@ -307,3 +307,15 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(len(project_copy.task_ids.child_ids), 4)
         subtask_not_display_in_project_copy = project_copy.task_ids.child_ids.filtered(lambda t: not t.display_in_project)
         self.assertEqual(len(subtask_not_display_in_project_copy), 4, "No subtask should be displayed in the duplicate project")
+
+    def test_subtask_unlinking(self):
+        task_form = Form(self.task_1.with_context({'tracking_disable': True}))
+        with task_form.child_ids.new() as child_task_form:
+            child_task_form.name = 'Test Subtask 1'
+            child_task_form.project_id = task_form.project_id
+        task_form.save()
+        child_subtask = self.task_1.child_ids[0]
+        self.task_1.unlink()
+
+        self.assertFalse(self.task_1.exists())
+        self.assertFalse(child_subtask.exists(), 'Subtask should be removed if the parent task has been deleted')
