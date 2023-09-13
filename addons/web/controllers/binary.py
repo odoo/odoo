@@ -9,7 +9,6 @@ import os
 import unicodedata
 
 import werkzeug.exceptions
-
 try:
     from werkzeug.utils import send_file
 except ImportError:
@@ -104,8 +103,6 @@ class Binary(http.Controller):
         if not attachment:
             # try to generate one
             with replace_exceptions(ValueError, by=werkzeug.exceptions.BadRequest):
-                extra_parts = extra.split('+')
-                params = request.env['ir.asset']._parse_assets_extra(extra_parts)
                 if debug_assets:
                     bundle_name, asset_type = filename.rsplit('.', 1)
                 else:
@@ -113,6 +110,11 @@ class Binary(http.Controller):
                     if min_ != 'min':
                         _logger.error("'min' expected in extension in non debug mode")
                         raise request.not_found()
+                try:
+                    params, rtl = request.env['ir.asset']._parse_assets_extra(extra.split('+'), asset_type)
+                except ValueError:
+                    _logger.exception('Invalid assets')
+                    raise request.not_found()
                 css = asset_type == 'css'
                 js = asset_type == 'js'
                 if not js and not css:
@@ -123,7 +125,7 @@ class Binary(http.Controller):
                     css=css,
                     js=js,
                     debug_assets=debug_assets,
-                    rtl='rtl' in extra_parts,
+                    rtl=rtl,
                     assets_params=params,
                 )
                 # check if the version matches. If not, redirect to the last version
