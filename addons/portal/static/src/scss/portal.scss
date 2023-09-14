@@ -110,6 +110,13 @@ li > p {
             clear: both;
         }
     }
+    .navbar %container-flex-properties {
+        // Bootstrap set-up flex alignment to "space-between" here. The hack
+        // made above to restore the BS3 protection has to be disabled.
+        &::before, &::after {
+            display: none;
+        }
+    }
 }
 [class^="col-lg-"] {
     min-height: 24px;

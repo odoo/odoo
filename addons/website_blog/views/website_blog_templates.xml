@@ -64,6 +64,7 @@ list of filtered posts (by date or tag).
 
         <t t-call="website_blog.blogs_nav">
             <t t-set="search" t-value="original_search or search"/>
+            <t t-set="additional_classes" t-value="'mt-3'"/>
         </t>
 
         <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
