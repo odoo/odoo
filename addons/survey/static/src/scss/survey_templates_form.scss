@@ -125,16 +125,13 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         i {
             top: 0px;
             font-size: large;
-            &.fa-check-circle {
-                display: none;
-            }
         }
 
-        &.o_survey_selected i {
+        &.o_survey_selected i.fa-circle-thin,
+        &.o_survey_selected i.fa-square-o,
+        &:not(.o_survey_selected) i.fa-check-circle,
+        &:not(.o_survey_selected) i.fa-check-square {
             display: none;
-            &.fa-check-circle {
-                display: inline;
-            }
         }
     }
 
@@ -455,7 +452,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
             background-color: $gray-600;
             opacity: 1;
         }
-        i.fa-circle-thin {
+        i.fa-circle-thin, i.fa-square-o {
             display: none;
         }
     }

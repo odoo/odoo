@@ -508,14 +508,12 @@
                                t-att-checked="'checked' if answer_line else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ms-2 text-break" t-field='label.value'/>
-                        <t t-if="has_correct_answer and answer_selected">
-                            <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
-                            <i t-if="is_correct" class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
-                            <i t-else="" class="float-end mt-1 position-relative d-inline fa fa-times-circle"/>
-                        </t>
+                        <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                        <i t-if="has_correct_answer and answer_selected" t-attf-class="float-end mt-1 position-relative d-inline
+                            fa {{'fa-check-square' if is_correct else 'fa-times-square'}}"/>
                         <t t-else="">
-                            <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
-                            <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                            <i class="fa fa-check-square float-end mt-1 position-relative"/>
+                            <i class="fa fa-square-o float-end mt-1 position-relative"/>
                         </t>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
@@ -533,8 +531,8 @@
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ms-2" t-out="question.comments_message or default_comments_message" />
-                        <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
-                        <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
+                        <i class="fa fa-check-square float-end mt-1 position-relative"/>
+                        <i class="fa fa-square-o float-end mt-1 position-relative"/>
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
