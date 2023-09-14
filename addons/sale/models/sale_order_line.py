@@ -942,7 +942,7 @@ class SaleOrderLine(models.Model):
                 }
             }
 
-    @api.onchange('product_packaging_id')
+    @api.onchange('product_packaging_id', 'product_uom_qty')
     def _onchange_product_packaging_id(self):
         if self.product_packaging_id and self.product_uom_qty:
             newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, "UP")
