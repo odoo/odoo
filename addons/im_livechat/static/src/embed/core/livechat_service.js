@@ -284,7 +284,6 @@ export const livechatService = {
         "mail.chat_window",
         "mail.store",
         "notification",
-        "notification",
         "rpc",
     ],
     start(env, services) {

@@ -132,6 +132,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/js/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/web/**/*',
+            'mail/static/src/chatter/web_portal/**/*',
+            'mail/static/src/chatter/web/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/web/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),

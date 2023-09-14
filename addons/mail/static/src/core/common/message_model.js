@@ -89,6 +89,9 @@ export class Message extends Record {
         if ("author" in data) {
             this.author = data.author;
         }
+        if ("author_id" in data && data["author_id"].length) {
+            this.author = { id: data.author_id[0], name: data.author_id[1] };
+        }
         this.linkPreviews = linkPreviews.map((data) => ({ ...data, message: this }));
         this.notifications = notifications.map((notif) => ({ ...notif, message: this }));
         this.recipients = recipients.map((recipient) => ({ ...recipient, type: "partner" }));

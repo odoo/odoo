@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Chatter">
+    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex" t-att-class="{ 'overflow-auto': props.isChatterAside, 'o-chatter-disabled': props.threadId === false, 'row':props.twoColumns, 'flex-column':!props.twoColumns }" t-on-scroll="onScrollDebounced" t-ref="root">
+        <div class="o-mail-Chatter-top position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned, 'col-lg-6':props.twoColumns }" t-ref="top">
+            <div t-if="props.hasComposer" class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 px-3 overflow-x-auto">
+                <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-1" t-att-class="{
+                    'btn-primary': state.composerType !== 'note',
+                    'btn-secondary': state.composerType === 'note',
+                    'active': state.composerType === 'message',
+                    'my-2': !props.compactHeight
+                }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                    Send message
+                </button>
+                <button t-if="props.close" class="o-mail-Chatter-close btn btn-secondary flex-shrink-0 ms-2" aria-label="Close" t-on-click="props.close">
+                    <i class="oi oi-large oi-close"/>
+                </button>
+            </div>
+            <t t-if="state.composerType" name="composer type">
+                <Composer composer="state.thread.composer" autofocus="true" className="'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
+            </t>
+        </div>
+        <div class="o-mail-Chatter-content" t-att-class="{ 'col-lg-6 p-0':props.twoColumns }">
+            <t t-if="props.hasMessageList">
+                <Thread t-if="!state.isSearchOpen" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"
+                />
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

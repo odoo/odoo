@@ -275,6 +275,10 @@ export class Message extends Component {
         return this.props.messageToReplyTo;
     }
 
+    get canViewReactions() {
+        return this.reactions.length;
+    }
+
     /**
      * @returns {boolean}
      */

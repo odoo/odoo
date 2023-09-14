@@ -65,11 +65,14 @@ class AttachmentController(http.Controller):
                     "res_model": "mail.compose.message",
                 }
             )
+        Attachment = thread.env["ir.attachment"]
         if thread.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals["access_token"] = thread.env["ir.attachment"]._generate_access_token()
+            if kwargs.get('force_sudo'):
+                Attachment = thread.env["ir.attachment"].sudo()
         try:
-            attachment = thread.env["ir.attachment"].create(vals)
+            attachment = Attachment.create(vals)
             attachment._post_add_create(**kwargs)
             attachmentData = attachment._attachment_format()[0]
             if attachment.access_token:

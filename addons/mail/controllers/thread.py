@@ -10,7 +10,7 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public")
     def mail_thread_data(self, thread_model, thread_id, request_list):
         thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
         return thread._get_mail_thread_data(request_list)
@@ -93,7 +93,10 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
+        Thread = request.env[thread_model]
+        if Thread._get_access_token_from_context() or Thread.user_has_groups('base.group_portal'):
+            Thread = Thread.sudo()
+        thread = Thread._get_from_context_or_raise(int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         new_partners = []

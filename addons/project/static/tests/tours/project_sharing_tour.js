@@ -52,11 +52,15 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: 'iframe div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
     content: 'Change the stage of the task.',
 }, {
-    trigger: 'iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
+    trigger: 'iframe .o-mail-Chatter-topbar .o-mail-Chatter-sendMessage',
+    content: 'Open chatter composer',
+    run: 'click',
+}, {
+    trigger: 'iframe .o-mail-Composer-input',
     content: 'Write a message in the chatter of the task',
     run: 'text I create a new task for testing purpose.',
 }, {
-    trigger: 'iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
+    trigger: 'iframe .o-mail-Composer-send:enabled',
     content: 'Send the message',
 }, {
     trigger: 'iframe ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',

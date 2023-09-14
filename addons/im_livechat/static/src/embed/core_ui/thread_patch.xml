@@ -6,7 +6,7 @@
                 <Message message="props.thread.livechatWelcomeMessage" hasActions="false" thread="props.thread"/>
             </div>
         </xpath>
-        <xpath expr="//*[@name='content']" position="after">
+        <xpath expr="(//div[hasclass('o-mail-Thread')])[last()]" position="after">
             <Message t-if="chatbotService.isTyping" message="props.thread.chatbotTypingMessage" hasActions="false" isInChatWindow="env.inChatWindow" isTypingMessage="true"  thread="props.thread"/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-empty')]" position="replace">
@@ -14,7 +14,7 @@
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-newMessage')]" position="replace">
             <t t-if="!chatbotService.active">$0</t>
-        </xpath>
+        </xpath>F
     </t>
     <t t-inherit="mail.NotificationMessage" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-NotificationMessage')]" position="attributes">

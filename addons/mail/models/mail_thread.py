@@ -2693,6 +2693,9 @@ class MailThread(models.AbstractModel):
                 author = self._mail_find_partner_from_emails([email_from])[0]
             else:
                 author = self.env.user.partner_id
+                if self.env.user._is_public() and self._get_access_token_from_context():
+                    author = self.partner_id if hasattr(self,
+                                                        'partner_id') and self.partner_id else self.env.user.partner_id
                 email_from = author.email_formatted
             author_id = author.id
 
@@ -4423,3 +4426,7 @@ class MailThread(models.AbstractModel):
             tracking_message += return_line
 
         return tracking_message
+
+    def _get_access_token_from_context(self):
+        """To override if access token in a document is needed to authenticate portal users"""
+        return

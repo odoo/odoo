@@ -58,10 +58,11 @@
                                     <i class="fa fa-calendar-o"/>
                                 </span>
                             </div>
-                            <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="isAlignedRight" t-call="mail.Message.notification" name="message notification"/>
                         </div>
                         <div
                             class="position-relative d-flex"
+                            name="message content"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,

@@ -5,7 +5,9 @@ import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 patch(OverlayContainer.prototype, {
     isVisible(overlay) {
-        const targetInShadow = overlay.props.target?.getRootNode() instanceof ShadowRoot;
+        const targetRoot = overlay.props.target?.getRootNode();
+        const targetInShadow =
+            targetRoot instanceof ShadowRoot && targetRoot.host.id === this.env.shadowRootId;
         return targetInShadow ? this.env.inShadow : !this.env.inShadow;
-    }
+    },
 });

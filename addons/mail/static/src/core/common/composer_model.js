@@ -22,6 +22,9 @@ export class Composer extends Record {
         if ("textInputContent" in data) {
             composer.textInputContent = data.textInputContent;
         }
+        if ("fullFeature" in data) {
+            composer.fullFeature = data.fullFeature;
+        }
         if ("selection" in data) {
             composer.selection = data.selection;
         }
@@ -37,6 +40,7 @@ export class Composer extends Record {
     mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("CannedResponse");
     textInputContent = "";
+    fullFeature = true;
     thread = Record.one("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {

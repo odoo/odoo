@@ -177,6 +177,7 @@
             'web/static/src/views/view_dialogs/**/*',
             'web/static/src/views/widgets/**/*',
             'web/static/src/webclient/**/*',
+
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
@@ -218,6 +219,11 @@
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
 
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
+
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/views/web/form/form_renderer.scss',
 
@@ -233,6 +239,31 @@
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
             'web/static/src/legacy/legacy_setup.js',
+
+            # To use mail chatter in portal
+            'web/static/src/views/view_dialogs/form_view_dialog.js',
+            'web/static/src/core/debug/*',
+            'web/static/src/core/commands/*',
+            'web/static/src/views/view.js',
+            'web/static/src/views/view_hook.js',
+            'web/static/src/views/onboarding_banner.js',
+            'web/static/src/webclient/actions/action_service.js',
+            'web/static/src/webclient/actions/action_hook.js',
+            'web/static/src/webclient/actions/action_dialog.js',
+            'web/static/src/webclient/actions/reports/utils.js',
+            'web/static/src/webclient/actions/reports/report_action.js',
+            'web/static/src/webclient/actions/reports/report_hook.js',
+            'web/static/src/views/utils.js',
+            'web/static/src/libs/pdfjs.js',
+            'mail/static/src/core/**/*',
+            'mail/static/src/js/utils.js',
+            'mail/static/src/utils/common/**/*',
+            'mail/static/src/chatter/web_portal/**/*',
+            'mail/static/src/chatter/portal/**/*',
+            'mail/static/src/discuss/typing/**/*',
+            'mail/static/src/discuss/web/avatar_card/**/*',
+            'mail/static/src/discuss/core/common/action_panel.*',
+            'portal/static/src/embed/chatter/**/*',
         ],
     },
     'license': 'LGPL-3',

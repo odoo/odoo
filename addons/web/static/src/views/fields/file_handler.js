@@ -24,7 +24,7 @@ export class FileUploader extends Component {
             return;
         }
         const { target } = ev;
-        for (const file of ev.target.files) {
+        for (const file of target.files) {
             if (!checkFileSize(file.size, this.notification)) {
                 return null;
             }

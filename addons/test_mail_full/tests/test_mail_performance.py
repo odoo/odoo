@@ -239,8 +239,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=31):
-            # res = messages_all.portal_message_format(options=None)
+        with self.assertQueryCount(employee=33):
             res = messages_all.portal_message_format(options={'rating_include': False})
 
         comment_subtype = self.env.ref('mail.mt_comment')
@@ -290,7 +289,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=45):
+        with self.assertQueryCount(employee=47):
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -312,7 +311,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=18):
+        with self.assertQueryCount(employee=21):
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)

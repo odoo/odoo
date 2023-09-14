@@ -47,6 +47,9 @@ export class Attachment extends Record {
         if (!("extension" in data) && data["name"]) {
             this.extension = this.name.split(".").pop();
         }
+        if ("access_token" in data) {
+            this.accessToken = data.access_token;
+        }
         if (data.originThread !== undefined) {
             const threadData = Array.isArray(data.originThread)
                 ? data.originThread[0][1]

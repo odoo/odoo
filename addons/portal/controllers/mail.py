@@ -162,53 +162,42 @@ class PortalChatter(http.Controller):
         return result
 
     @http.route('/mail/chatter_init', type='json', auth='public', website=True)
-    def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):
-        is_user_public = request.env.user.has_group('base.group_public')
-        message_data = self.portal_message_fetch(res_model, res_id, domain=domain, limit=limit, **kwargs)
-        display_composer = False
-        if kwargs.get('allow_composer'):
-            display_composer = kwargs.get('token') or not is_user_public
-        return {
-            'messages': message_data['messages'],
-            'options': {
-                'message_count': message_data['message_count'],
-                'is_user_public': is_user_public,
-                'is_user_employee': request.env.user._is_internal(),
-                'is_user_publisher': request.env.user.has_group('website.group_website_restricted_editor'),
-                'display_composer': display_composer,
-                'partner_id': request.env.user.partner_id.id
-            }
-        }
+    def portal_chatter_init(self, res_model, res_id):
+        record = request.env[res_model].browse(int(res_id)).sudo()
+        partner_id = request.env.user.partner_id
+        if request.env.user._is_public() and hasattr(record, 'partner_id'):
+            partner_id = record.partner_id.sudo()
+        current_partner = partner_id.mail_partner_format().get(partner_id)
+        current_partner['is_user_publisher'] = request.env.user.has_group('website.group_website_restricted_editor')
+        return current_partner
 
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
-    def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
+    def portal_message_fetch(self, thread_model, thread_id, domain=False, limit=10, after=None, before=None, **kw):
         if not domain:
             domain = []
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
-        model = request.env[res_model]
+        model = request.env[thread_model]
         field = model._fields['website_message_ids']
         field_domain = field.get_domain_list(model)
         domain = expression.AND([
             domain,
             field_domain,
-            [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
+            [('res_id', '=', thread_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
         ])
 
         # Check access
         Message = request.env['mail.message']
-        if kw.get('token'):
-            access_as_sudo = _check_special_access(res_model, res_id, token=kw.get('token'))
+        if kw.get('portal_token'):
+            access_as_sudo = _check_special_access(thread_model, thread_id, token=kw['portal_token'])
             if not access_as_sudo:  # if token is not correct, raise Forbidden
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
-        return {
-            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(options=kw),
-            'message_count': Message.search_count(domain)
-        }
+        res = Message._message_fetch(domain, None, before, after, None, limit)
+        return {**res, "messages": res["messages"].portal_message_format(options=kw)}
 
     @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
     def portal_message_update_is_internal(self, message_id, is_internal):

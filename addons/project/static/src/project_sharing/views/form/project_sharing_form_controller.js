@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { useService } from '@web/core/utils/hooks';
+import { useService } from "@web/core/utils/hooks";
 import { createElement } from "@web/core/utils/xml";
-import { FormController } from '@web/views/form/form_controller';
-import { useViewCompiler } from '@web/views/view_compiler';
-import { ProjectSharingChatterCompiler } from './project_sharing_form_compiler';
-import { ChatterContainer } from '../../components/chatter/chatter_container';
+import { FormController } from "@web/views/form/form_controller";
+import { useViewCompiler } from "@web/views/view_compiler";
+import { ProjectSharingChatterCompiler } from "./project_sharing_form_compiler";
+import { Chatter } from "@mail/chatter/web_portal/chatter";
 
 export class ProjectSharingFormController extends FormController {
     setup() {
@@ -32,5 +32,5 @@ export class ProjectSharingFormController extends FormController {
 
 ProjectSharingFormController.components = {
     ...FormController.components,
-    ChatterContainer,
-}
+    Chatter,
+};

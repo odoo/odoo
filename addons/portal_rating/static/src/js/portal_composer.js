@@ -12,10 +12,10 @@ var PortalComposer = portalComposer.PortalComposer;
  */
 PortalComposer.include({
     events: Object.assign({}, PortalComposer.prototype.events, {
-        'click .stars i': '_onClickStar',
-        'mouseleave .stars': '_onMouseleaveStarBlock',
-        'mousemove .stars i': '_onMoveStar',
-        'mouseleave .stars i': '_onMoveLeaveStar',
+        'click .o-portal-Composer-stars i': '_onClickStar',
+        'mouseleave .o-portal-Composer-stars': '_onMouseleaveStarBlock',
+        'mousemove .o-portal-Composer-stars i': '_onMoveStar',
+        'mouseleave .o-portal-Composer-stars i': '_onMoveLeaveStar',
     }),
 
     /**
@@ -58,7 +58,7 @@ PortalComposer.include({
         return this._super.apply(this, arguments).then(function () {
             // rating stars
             self.$input = self.$('input[name="rating_value"]');
-            self.$star_list = self.$('.stars').find('i');
+            self.$star_list = self.$('.o-portal-Composer-stars').find('i');
             // if this is the first review, we do not use grey color contrast, even with default rating value.
             if (!self.options.default_message_id) {
                 self.$star_list.removeClass('text-black-25');
@@ -94,9 +94,9 @@ PortalComposer.include({
         // reset the stars
         this.$star_list.removeClass('fa-star fa-star-half-o').addClass('fa-star-o');
 
-        this.$('.stars').find("i:lt(" + index + ")").removeClass('fa-star-o fa-star-half-o').addClass('fa-star');
+        this.$('.o-portal-Composer-stars').find("i:lt(" + index + ")").removeClass('fa-star-o fa-star-half-o').addClass('fa-star');
         if (decimal) {
-            this.$('.stars').find("i:eq(" + index + ")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
+            this.$('.o-portal-Composer-stars').find("i:eq(" + index + ")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
         }
         this.$('.rate_text .badge').text(this.labels[index]);
     },
@@ -104,7 +104,7 @@ PortalComposer.include({
      * @private
      */
     _onClickStar: function (ev) {
-        var index = this.$('.stars i').index(ev.currentTarget);
+        var index = this.$('.o-portal-Composer-stars i').index(ev.currentTarget);
         this.set("star_value", index + 1);
         this.user_click = true;
         this.$input.val(this.get("star_value"));
@@ -120,7 +120,7 @@ PortalComposer.include({
      * @param {MouseEvent} ev
      */
     _onMoveStar: function (ev) {
-        var index = this.$('.stars i').index(ev.currentTarget);
+        var index = this.$('.o-portal-Composer-stars i').index(ev.currentTarget);
         this.$('.rate_text').show();
         this.set("star_value", index + 1);
     },

@@ -154,12 +154,16 @@ export class ThreadService {
         }
         switch (thread.type) {
             case "chatter":
-                return "/mail/thread/messages";
+                return this.ChatterFetchRoute;
             case "mailbox":
                 return `/mail/${thread.id}/messages`;
             default:
                 throw new Error(`Unknown thread type: ${thread.type}`);
         }
+    }
+
+    get ChatterFetchRoute() {
+        return "/mail/thread/messages";
     }
 
     getFetchParams(thread) {
@@ -168,7 +172,7 @@ export class ThreadService {
         }
         if (thread.type === "chatter") {
             return {
-                thread_id: thread.id,
+                thread_id: parseInt(thread.id),
                 thread_model: thread.model,
             };
         }
@@ -253,10 +257,10 @@ export class ThreadService {
             // feed needactions
             // same for needaction messages, special case for mailbox:
             // kinda "fetch new/more" with needactions on many origin threads at once
-            if (thread.eq(this.store.discuss.inbox)) {
+            if (thread === this.store.discuss.inbox) {
                 for (const message of fetched) {
                     const thread = message.originThread;
-                    if (message.notIn(thread.needactionMessages)) {
+                    if (!thread.needactionMessages.includes(message)) {
                         thread.needactionMessages.unshift(message);
                     }
                 }
@@ -666,6 +670,7 @@ export class ThreadService {
             mentionedChannels = [],
             mentionedPartners = [],
             cannedResponseIds,
+            ratingValue,
         } = {}
     ) {
         let tmpMsg;
@@ -677,6 +682,7 @@ export class ThreadService {
             mentionedChannels,
             mentionedPartners,
             thread,
+            ratingValue,
         });
         const tmpId = this.messageService.getNextTemporaryId();
         params.context = { ...this.user.context, ...params.context, temporary_id: tmpId };
@@ -759,6 +765,7 @@ export class ThreadService {
         mentionedChannels,
         mentionedPartners,
         thread,
+        ratingValue,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
@@ -791,6 +798,7 @@ export class ThreadService {
                 partner_ids,
                 subtype_xmlid: subtype,
                 partner_emails: recipientEmails,
+                rating_value: ratingValue,
             },
             thread_id: thread.id,
             thread_model: thread.model,
