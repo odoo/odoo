@@ -197,10 +197,7 @@ export class PaymentAdyen extends PaymentInterface {
 
         // FIXME POSREF TIMEOUT 5000
         return this.pos.env.services.orm.silent
-            .call("pos.payment.method", "get_latest_adyen_status", [
-                [this.payment_method.id],
-                this._adyen_get_sale_id(),
-            ])
+            .call("pos.payment.method", "get_latest_adyen_status", [[this.payment_method.id]])
             .catch(function (data) {
                 if (self.remaining_polls != 0) {
                     self.remaining_polls--;
