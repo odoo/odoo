@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import Command
 from odoo.tests import tagged
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 from odoo.addons.website.tools import MockRequest
 
 
@@ -20,6 +21,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
     def test_get_combination_info(self):
         # Setup pricelist: make sure the pricelist has a 10% discount
+        self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
             'name': "test_get_combination_info",
             'currency_id': self.currency_data['currency'].id,
@@ -51,7 +53,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         currency_ratio = 2
 
         # CASE: B2B setting (default)
-        combination_info = product_template._get_combination_info(pricelist=pricelist)
+        combination_info = product_template._get_combination_info()
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['price_extra'], 222 * currency_ratio)
@@ -60,7 +62,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         # CASE: B2C setting
         website.show_line_subtotals_tax_selection = 'tax_included'
 
-        combination_info = product_template._get_combination_info(pricelist=pricelist)
+        combination_info = product_template._get_combination_info()
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['price_extra'], round(222 * currency_ratio * tax_ratio, 2))
@@ -69,7 +71,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         # CASE: pricelist 'without_discount'
         pricelist.discount_policy = 'without_discount'
 
-        combination_info = product_template._get_combination_info(pricelist=pricelist)
+        combination_info = product_template._get_combination_info()
         self.assertEqual(combination_info['price'], pricelist.currency_id.round(2222 * discount_rate * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['list_price'], pricelist.currency_id.round(2222 * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['price_extra'], pricelist.currency_id.round(222 * currency_ratio * tax_ratio), 0)
@@ -85,6 +87,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         })
 
         # Setup pricelist: make sure the pricelist has a 10% discount
+        self.env['product.pricelist'].search([]).action_archive()
         pricelist = self.env['product.pricelist'].create({
             'name': "test_get_combination_info",
             'company_id': self.env.company.id,
@@ -118,7 +121,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         # Enable tax included
         website.show_line_subtotals_tax_selection = 'tax_included'
 
-        combination_info = product._get_combination_info(pricelist=pricelist)
+        combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 575, "500$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 575, "500$ + 15% tax (2)")
         self.assertEqual(combination_info['price_extra'], 230, "200$ + 15% tax")
@@ -138,7 +141,8 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country
-        combination_info = product._get_combination_info(pricelist=pricelist)
+        website.invalidate_recordset(['fiscal_position_id'])
+        combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(combination_info['list_price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(combination_info['price_extra'], 200, "200% + 0% tax (mapped from fp 15% -> 0%)")
@@ -148,14 +152,16 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
         # Reset / Safety check
         self.env.user.partner_id.country_id = None
-        combination_info = product._get_combination_info(pricelist=pricelist)
+        website.invalidate_recordset(['fiscal_position_id'])
+        combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 500, "434.78$ + 15% tax (2)")
         self.assertEqual(combination_info['price_extra'], 200, "173.91$ + 15% tax")
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country.id
-        combination_info = product._get_combination_info(pricelist=pricelist)
+        website.invalidate_recordset(['fiscal_position_id'])
+        combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(combination_info['price_extra'], 173.91, "173.91$ + 0% tax (mapped from fp 15% -> 0%)")

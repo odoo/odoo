@@ -71,8 +71,8 @@ class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
             'product_tmpl_id': product_tmpl.id,
         })
         current_website = self.env['website'].get_current_website()
-        pricelist = current_website.get_current_pricelist()
+        pricelist = current_website._get_current_pricelist()
         pricelist.item_ids = [(6, 0, [pricelist_item.id])]
         pricelist.discount_policy = 'without_discount'
-        res = product_tmpl._get_sales_prices(pricelist)
+        res = product_tmpl._get_sales_prices(pricelist, self.env['account.fiscal.position'])
         self.assertEqual(res[product_tmpl.id]['base_price'], 75)

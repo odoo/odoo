@@ -81,12 +81,11 @@ export class ReorderDialog extends Component {
     }
 
     async loadProductCombinationInfo(product) {
-        product.combinationInfo = await this.rpc("/sale/get_combination_info_website", {
+        product.combinationInfo = await this.rpc("/website_sale/get_combination_info", {
             product_template_id: product.product_template_id,
             product_id: product.product_id,
             combination: product.combination,
             add_qty: product.qty,
-            pricelist_id: false,
             context: {
                 website_sale_no_images: true,
             },

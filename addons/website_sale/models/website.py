@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-
 from odoo.http import request
 from odoo.osv import expression
-from odoo.addons.http_routing.models.ir_http import url_for
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.http_routing.models.ir_http import url_for
 
 
 class Website(models.Model):
@@ -35,6 +31,8 @@ class Website(models.Model):
         required=True, default='tax_excluded',
     )
 
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position', compute='_compute_fiscal_position_id')
     pricelist_id = fields.Many2one(
         'product.pricelist', compute='_compute_pricelist_id', string="Default Pricelist if any")
     currency_id = fields.Many2one(
@@ -125,11 +123,11 @@ class Website(models.Model):
 
     def _compute_pricelist_id(self):
         for website in self:
-            website.pricelist_id = website.get_current_pricelist()
+            website.pricelist_id = website._get_current_pricelist()
 
-    # NOTE VFE: moving this computation doesn't change much
-    # Because most of it must still be computed for the pricelist choice template (`pricelist_list`)
-    # Therefore, avoiding all pricelist computation is impossible in fact...
+    def _compute_fiscal_position_id(self):
+        for website in self:
+            website.fiscal_position_id = website._get_current_fiscal_position()
 
     @api.depends('all_pricelist_ids', 'pricelist_id', 'company_id')
     def _compute_currency_id(self):
@@ -252,7 +250,7 @@ class Website(models.Model):
     def _get_cached_pricelist_id(self):
         return request and request.session.get('website_sale_current_pl') or None
 
-    def get_current_pricelist(self):
+    def _get_current_pricelist(self):
         """
         :returns: The current pricelist record
         """
@@ -387,7 +385,9 @@ class Website(models.Model):
 
             # Reset the session pricelist according to logged partner pl
             request.session.pop('website_sale_current_pl', None)
-            pricelist_id = self._get_current_pricelist_id(partner_sudo)
+            # Force recomputation of the website pricelist after reset
+            self.invalidate_recordset(['pricelist_id'])
+            pricelist_id = self.pricelist_id.id
             request.session['website_sale_current_pl'] = pricelist_id
 
             # change the partner, and trigger the computes (fpos)
@@ -406,7 +406,7 @@ class Website(models.Model):
                 update_pricelist = True
         elif update_pricelist:
             # Only compute pricelist if needed
-            pricelist_id = self._get_current_pricelist_id(partner_sudo)
+            pricelist_id = self.pricelist_id.id
 
         # update the pricelist
         if update_pricelist:
@@ -434,18 +434,15 @@ class Website(models.Model):
         if not salesperson_user_sudo:
             salesperson_user_sudo = self.salesperson_id or partner_sudo.parent_id.user_id or partner_sudo.user_id
 
-        pricelist_id = self._get_current_pricelist_id(partner_sudo)
-        fiscal_position_id = self._get_current_fiscal_position_id(partner_sudo)
-
         values = {
             'company_id': self.company_id.id,
 
-            'fiscal_position_id': fiscal_position_id,
+            'fiscal_position_id': self.fiscal_position_id.id,
             'partner_id': partner_sudo.id,
             'partner_invoice_id': partner_sudo.id,
             'partner_shipping_id': addr['delivery'],
 
-            'pricelist_id': pricelist_id,
+            'pricelist_id': self.pricelist_id.id,
             'payment_term_id': self.sale_get_payment_term(partner_sudo),
 
             'team_id': self.salesteam_id.id or partner_sudo.parent_id.team_id.id or partner_sudo.team_id.id,
@@ -467,26 +464,24 @@ class Website(models.Model):
             self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
         ).id
 
-    def _get_current_pricelist_id(self, partner_sudo):
-        return self.get_current_pricelist().id \
-            or partner_sudo.property_product_pricelist.id
-
-    @api.model
-    def _get_current_fiscal_position_id(self, partner_sudo):
+    def _get_current_fiscal_position(self):
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         fpos = AccountFiscalPosition
+        partner_sudo = self.env.user.partner_id
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request and request.website.partner_id.id == partner_sudo.id:
-            if request.geoip.country_code:
-                country_id = self.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1).id
-                fpos = AccountFiscalPosition._get_fpos_by_region(country_id)
+        if request and request.geoip.country_code and self.partner_id.id == partner_sudo.id:
+            country = self.env['res.country'].search(
+                [('code', '=', request.geoip.country_code)],
+                limit=1,
+            ).id
+            fpos = AccountFiscalPosition._get_fpos_by_region(country.id)
 
         if not fpos:
             fpos = AccountFiscalPosition._get_fiscal_position(partner_sudo)
 
-        return fpos.id
+        return fpos
 
     def sale_reset(self):
         request.session.pop('sale_order_id', None)
@@ -567,6 +562,7 @@ class Website(models.Model):
         self.ensure_one()
 
         return self.is_view_active('website_sale.address_b2b')
+
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

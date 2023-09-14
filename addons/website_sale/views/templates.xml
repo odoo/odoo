@@ -356,7 +356,7 @@
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
 
-                            <div t-cache="pricelist,products" t-if="products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
+                            <div t-cache="pricelist,fiscal_position,products" t-if="products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
                                 <table class="table table-borderless h-100 m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
                                     <colgroup t-ignore="true">
                                         <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
@@ -946,18 +946,20 @@
              Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
         <t t-set="navClass" t-valuef="light"/>
 
-    <t t-cache="pricelist,product">
+    <t t-cache="pricelist,product,fiscal_position">
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+        <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale o_wsale_product_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
-                <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
-                    t-att-data-view-track="view_track and '1' or '0'"
-                    t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
+                <section id="product_detail"
+                         t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}"
+                         t-att-data-view-track="view_track and '1' or '0'"
+                         t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"
+                >
                     <div class="row align-items-center">
                         <div class="col-lg-6 d-flex align-items-center">
                             <div class="d-flex justify-content-between w-100">
@@ -1259,8 +1261,11 @@
     <template id="product_price">
         <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}">
             <h3 class="css_editable_mode_hidden">
-                <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
+                <span class="oe_price"
+                      style="white-space: nowrap;"
+                      t-out="combination_info['price']"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <span itemprop="price" style="display:none;" t-out="combination_info['price']"/>
                 <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
                 <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] and not combination_info['compare_list_price'] else 'd-none'}}"
                       style="text-decoration: line-through; white-space: nowrap;"
@@ -1273,28 +1278,19 @@
                     <bdi dir="inherit">
                     <span t-esc="combination_info['compare_list_price']"
                           groups="website_sale.group_product_price_comparison"
-                          t-options='{
-                           "widget": "monetary",
-                           "display_currency": website.currency_id,
-                       }'/>
+                          t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                     </bdi>
                 </del>
             </h3>
             <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
                 <span t-field="product.list_price"
-                    t-options='{
-                       "widget": "monetary",
-                       "display_currency": product.currency_id,
-                }'/>
+                      t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
                     <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                           groups="website_sale.group_product_price_comparison"
-                          t-options='{
-                           "widget": "monetary",
-                           "display_currency": website.currency_id,
-                       }'/>
+                          t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                     </bdi>
                 </del>
             </h3>
@@ -1326,15 +1322,24 @@
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <div class="mb-4">
                         <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="form-check mb-1">
-                            <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
-                            <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
-                            <input type="radio" name="product_id" class="form-check-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                            <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty)"/>
+                            <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty)"/>
+                            <input type="radio"
+                                   name="product_id"
+                                   class="form-check-input product_id js_product_change"
+                                   t-att-checked="'checked' if variant_id_index == 0 else None"
+                                   t-attf-id="radio_variant_#{variant_id.id}"
+                                   t-att-value="variant_id.id"
+                                   t-att-data-price="combination_info['price']"
+                                   t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                             <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="form-check-label fw-normal">
-                                <span t-esc="combination_info['display_name']"/>
+                                <span t-out="combination_info['display_name']"/>
                                 <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
                                 <span t-attf-class="badge rounded-pill text-bg-{{navClass}} border" t-if="diff_price != 0">
-                                    <span class="sign_badge_price_extra" t-esc="diff_price > 0 and '+' or '-'"/>
-                                    <span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" class="text-muted fst-italic" />
+                                    <span class="sign_badge_price_extra" t-out="diff_price > 0 and '+' or '-'"/>
+                                    <span t-out="abs(combination_info['price'] - template_combination_info['price'])"
+                                          t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                          class="text-muted fst-italic"/>
                                 </span>
                             </label>
                         </div>
@@ -1558,9 +1563,6 @@
                             </div>
                         </td>
                         <td class="text-center td-price" name="price">
-                            <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
-
                             <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                                   t-field="line.price_reduce_taxexcl" style="white-space: nowrap;"
                                   t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -1568,7 +1570,10 @@
                                   t-field="line.price_reduce_taxinc" style="white-space: nowrap;"
                                   t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             <t t-if="line.discount">
-                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                                <del t-attf-class="#{'text-danger mr8'}"
+                                     style="white-space: nowrap;"
+                                     t-esc="line.price_unit"
+                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </t>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                 class="cart_product_base_unit_price d-block text-muted"
@@ -1710,7 +1715,7 @@
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product" t-att-data-publish="product.website_published and 'on' or 'off'">
-                        <t t-set="combination_info" t-value="product._get_combination_info_variant(pricelist=website_sale_order.pricelist_id)"/>
+                        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                         <td class='td-img text-center'>
                             <a t-att-href="product.website_url">
                                 <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
@@ -1725,8 +1730,13 @@
                             <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
-                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            <span t-esc="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
+                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                 style="white-space: nowrap;"
+                                 t-out="combination_info['list_price']"
+                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            <span t-out="combination_info['price']"
+                                  style="white-space: nowrap;"
+                                  t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
                         </td>
                         <td class="w-25 text-center">
                             <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
