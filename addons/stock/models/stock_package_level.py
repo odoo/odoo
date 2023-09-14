@@ -132,8 +132,7 @@ class StockPackageLevel(models.Model):
                 package_level.show_lots_text = False
 
     def _generate_moves(self):
-        for package_level in self:
-            if package_level.package_id:
+        for package_level in self.filtered(lambda pl: pl.state == 'draft' and not pl.move_ids and pl.package_id):
                 for quant in package_level.package_id.quant_ids:
                     self.env['stock.move'].create({
                         'picking_id': package_level.picking_id.id,
@@ -150,6 +149,9 @@ class StockPackageLevel(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         package_levels = super().create(vals_list)
+        picking_ids_to_confirm = package_levels.mapped('picking_id').filtered(lambda picking: picking.state not in ['done', 'draft', 'cancelled'])
+        package_levels._generate_moves()
+        picking_ids_to_confirm.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm()
         for package_level, vals in zip(package_levels, vals_list):
             if vals.get('location_dest_id'):
                 package_level.move_line_ids.write({'location_dest_id': vals['location_dest_id']})
