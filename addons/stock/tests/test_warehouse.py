@@ -54,6 +54,30 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.wh_input_stock_loc_id).quantity, 0.0)
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
 
+    def test_initial_quant_location(self):
+        """
+        When updating product quantity, new quant should have its location set
+        to the stock location of the top warehouse.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        suppliers_location = self.env.ref('stock.stock_location_suppliers')
+
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Mixed locations',
+            'code': 'TEST',
+            'sequence': 0,
+        })
+        warehouse.in_type_id.default_location_dest_id = suppliers_location
+        warehouse.lot_stock_id = stock_location
+
+        quant = self.env['stock.quant'].new({
+            'product_id': self.product_1.id,
+            'inventory_quantity': 1,
+        })
+        quant._onchange_product_id()
+
+        self.assertEqual(quant.location_id, stock_location)
+
     def test_inventory_wizard_as_manager(self):
         """ Using the "Update Quantity" wizard as stock manager.
         """

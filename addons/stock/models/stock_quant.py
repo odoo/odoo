@@ -961,7 +961,8 @@ class StockQuant(models.Model):
         if not self.location_id:
             company_id = self.company_id and self.company_id.id or self.env.company.id
             self.location_id = self.env['stock.warehouse'].search(
-                [('company_id', '=', company_id)], limit=1).in_type_id.default_location_dest_id
+                [('company_id', '=', company_id)], limit=1
+            ).lot_stock_id
 
     def _apply_inventory(self):
         move_vals = []
