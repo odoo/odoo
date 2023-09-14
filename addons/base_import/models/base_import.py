@@ -354,6 +354,8 @@ class Import(models.TransientModel):
                 return getattr(self, '_read_' + file_extension)(options)
             except ValueError as e:
                 raise e
+            except ImportValidationError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
@@ -363,6 +365,8 @@ class Import(models.TransientModel):
             try:
                 return getattr(self, '_read_' + file_extension)(options)
             except ValueError as e:
+                raise e
+            except ImportValidationError as e:
                 raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
@@ -490,6 +494,9 @@ class Import(models.TransientModel):
                 else: # nobreak
                     separator = options['separator'] = candidate
                     break
+
+        if not len(options['quoting']) == 1:
+            raise ImportValidationError(_("Error while importing records: Text Delimiter should be a single character."))
 
         csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
