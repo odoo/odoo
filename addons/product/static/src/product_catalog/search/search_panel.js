@@ -52,5 +52,5 @@ export class ProductCatalogSearchPanel extends SearchPanel {
 
 ProductCatalogSearchPanel.subTemplates = {
     ...SearchPanel.subTemplates,
-    filtersGroup: "sale.ProductCatalogSearchPanel.FiltersGroup",
+    filtersGroup: "ProductCatalogSearchPanel.FiltersGroup",
 }

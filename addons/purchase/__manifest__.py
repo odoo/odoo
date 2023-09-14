@@ -38,6 +38,7 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'purchase/static/src/product_catalog/**/*',
             'purchase/static/src/toaster_button/*',
             'purchase/static/src/views/*.js',
             'purchase/static/src/js/tours/purchase.js',

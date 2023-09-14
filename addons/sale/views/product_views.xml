@@ -122,4 +122,29 @@
         </field>
     </record>
 
+    <record id="product_view_kanban_catalog" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.inherit.sale</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='kanban-menu']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">product.view.search.catalog.inherit.sale</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog"/>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <filter name="products" position="after">
+                <filter string="In the Order"
+                        invisible="context.get('active_model', '') != 'sale.order.line'"
+                        name="products_in_order"
+                        domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
 </odoo>

@@ -50,7 +50,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/payment_views.xml',
         'views/product_document_views.xml',
         'views/product_packaging_views.xml',
-        'views/product_product_views.xml',
         'views/product_views.xml',
         'views/res_partner_views.xml',
         'views/sale_order_line_views.xml',
@@ -70,7 +69,6 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/js/sale_progressbar_field.js',
             'sale/static/src/js/tours/sale.js',
             'sale/static/src/js/sale_product_field.js',
-            'sale/static/src/js/product_catalog/**/*',
             'sale/static/src/xml/**/*',
         ],
         'web.assets_frontend': [

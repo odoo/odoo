@@ -139,15 +139,39 @@
             </field>
         </record>
 
-    <record id="product_template_search_view_purchase" model="ir.ui.view">
-        <field name="name">product.template.search.purchase</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_search_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='categ_id']" position="after">
-                <field string="Vendor" name="seller_ids"/>
-            </xpath>
-        </field>
-    </record>
+        <record id="product_template_search_view_purchase" model="ir.ui.view">
+            <field name="name">product.template.search.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='categ_id']" position="after">
+                    <field string="Vendor" name="seller_ids"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Product catalog -->
+        <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
+            <field name="name">product.view.kanban.catalog.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="default_code" position="after">
+                    <field name="uom_po_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_view_search_catalog" model="ir.ui.view">
+            <field name="name">product.view.search.catalog.inherit.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_search_catalog"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                    <field name="seller_ids" string="Vendor"/>
+                </xpath>
+            </field>
+        </record>
 
 </odoo>

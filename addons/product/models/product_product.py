@@ -678,13 +678,13 @@ class ProductProduct(models.Model):
             sellers |= seller
         return sellers
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price', params=False):
         sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
         res = self.env['product.supplierinfo']
         for seller in sellers:
             if not res or res.partner_id == seller.partner_id:
                 res |= seller
-        return res and res.sorted('price')[:1]
+        return res and res.sorted(ordered_by)[:1]
 
     def _get_product_price_context(self, combination):
         self.ensure_one()

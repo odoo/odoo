@@ -6,13 +6,14 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
 export class ProductCatalogKanbanController extends KanbanController {
-    static template = "sale.ProductCatalogKanbanController";
+    static template = "ProductCatalogKanbanController";
 
     setup() {
         super.setup();
         this.action = useService("action");
         this.orm = useService("orm");
         this.orderId = this.props.context.order_id;
+        this.orderResModel = this.props.context.product_catalog_order_model;
 
         onWillStart(async () => this._defineButtonContent());
     }
@@ -23,9 +24,9 @@ export class ProductCatalogKanbanController extends KanbanController {
     }
 
     async _defineButtonContent() {
-        // Define the content of the button.
+        // Define the button's label depending of the order's state.
         const orderStateInfo = await this.orm.searchRead(
-            "sale.order", [["id", "=", this.orderId]], ["state"]
+            this.orderResModel, [["id", "=", this.orderId]], ["state"]
         );
         const orderIsQuotation = ["draft", "sent"].includes(orderStateInfo[0].state);
         if (orderIsQuotation) {
@@ -44,7 +45,7 @@ export class ProductCatalogKanbanController extends KanbanController {
         } else {
             await this.action.doAction({
                 type: "ir.actions.act_window",
-                res_model: "sale.order",
+                res_model: this.orderResModel,
                 views: [[false, "form"]],
                 view_mode: "form",
                 res_id: this.orderId,
