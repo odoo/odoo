@@ -209,11 +209,13 @@ export function useDragAndDrop(initialParams) {
     return useNativeDraggable(dragAndDropHookParams, initialParams);
 }
 export class dragAndDropHelper {
-    constructor(odooEditor, draggedItemEl, bodyEl) {
+    constructor(odooEditor, draggedItemEl, bodyEl, observerName) {
         this.dragState = {};
         this.draggedItemEl = draggedItemEl;
         this.odooEditor = odooEditor;
         this.bodyEl = bodyEl;
+        this.observerName = observerName;
+        this.isOriginalSnippet = !!draggedItemEl.dataset.snippet;
     }
 
     //--------------------------------------------------------------------------
@@ -250,9 +252,9 @@ export class dragAndDropHelper {
             this._removeGridAndDragHelper(rowEl);
         } else if (this.draggedItemEl.classList.contains("o_grid_item") && this.isDropped()) {
             // Case when dropping a grid item in a non-grid dropzone
-            this.odooEditor.observerActive("dragAndDropMoveSnippet");
+            this.odooEditor.observerActive(this.observerName);
             gridUtils._convertToNormalColumn(this.draggedItemEl);
-            this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+            this.odooEditor.observerUnactive(this.observerName);
         }
     }
     /**
@@ -267,14 +269,14 @@ export class dragAndDropHelper {
             // Case when a column is dropped near a grid
             const rowEl = dropzoneEl.parentNode;
 
-            this._handleGridItemCreation(rowEl);
+            this._handleGridItemCreation(dropzoneEl);
 
             // Placing it in the top left corner
-            this.odooEditor.observerActive("dragAndDropMoveSnippet");
+            this.odooEditor.observerActive(this.observerName);
             this.draggedItemEl.style.gridArea = `1 / 1 / ${1 + this.dragState.columnRowCount} / ${1 + this.dragState.columnColCount}`;
             const rowCount = Math.max(rowEl.dataset.rowCount, this.dragState.columnRowCount);
             rowEl.dataset.rowCount = rowCount;
-            this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+            this.odooEditor.observerUnactive(this.observerName);
 
             // Setting the grid item z-index
             if (rowEl === this.dragState.startingGrid) {
@@ -284,9 +286,9 @@ export class dragAndDropHelper {
             }
         } else if (this.draggedItemEl.classList.contains("o_grid_item")) {
             // Case when a grid column is dropped near a non-grid dropzone
-            this.odooEditor.observerActive("dragAndDropMoveSnippet");
+            this.odooEditor.observerActive(this.observerName);
             gridUtils._convertToNormalColumn(this.draggedItemEl);
-            this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+            this.odooEditor.observerUnactive(this.observerName);
         }
         this.dragState.currentDropzoneEl = dropzoneEl;
     }
@@ -306,7 +308,7 @@ export class dragAndDropHelper {
             // Case where the column we are dragging is over a grid dropzone
             const rowEl = dropzoneEl.parentNode;
 
-            this._handleGridItemCreation(rowEl);
+            this._handleGridItemCreation(dropzoneEl);
             const columnColCount = this.dragState.columnColCount;
             const columnRowCount = this.dragState.columnRowCount;
 
@@ -322,7 +324,7 @@ export class dragAndDropHelper {
             const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
             dropzoneEl.style.gridRowEnd = rowCount + 1;
 
-            this.odooEditor.observerActive("dragAndDropMoveSnippet");
+            this.odooEditor.observerActive(this.observerName);
             // Setting the moving grid item, the background grid and the drag
             // helper z-indexes. The grid item z-index is set to its original
             // one if we are in its starting grid, or to the maximum z-index of
@@ -346,7 +348,7 @@ export class dragAndDropHelper {
             this.draggedItemEl.style.position = "absolute";
             this.draggedItemEl.style.removeProperty("grid-area");
             rowEl.style.position = "relative";
-            this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+            this.odooEditor.observerUnactive(this.observerName);
 
             // Storing useful information
             this.dragState.startingHeight = rowEl.clientHeight;
@@ -364,7 +366,7 @@ export class dragAndDropHelper {
      */
     dropzoneOut(dropzoneEl) {
         const rowEl = dropzoneEl.parentNode;
-
+        this.draggedItemEl.remove();
         if (rowEl.classList.contains("o_grid_mode")) {
             // Cleaning
             this.dragState.gridMode = false;
@@ -373,8 +375,13 @@ export class dragAndDropHelper {
             this._removeGridAndDragHelper(rowEl);
             const rowCount = parseInt(rowEl.dataset.rowCount);
             dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
+            if (this.isOriginalSnippet && !!this.draggedItemEl.firstElementChild?.dataset.snippet) {
+                // Unwrap the dragged element from its column ('div') if it is a
+                // wrapped snippet and if the drag and drop originally applied
+                // on the snippet itself.
+                this.draggedItemEl = this.draggedItemEl.firstElementChild;
+            }
         }
-        this.draggedItemEl.remove();
         dropzoneEl.classList.remove("invisible");
 
         delete this.dragState.currentDropzoneEl;
@@ -409,6 +416,22 @@ export class dragAndDropHelper {
         filterOutSelectorGrids($selectorSiblings, (el) => el.parentElement);
         filterOutSelectorGrids($selectorChildren, (el) => el);
         return selectorGrids;
+    }
+    /**
+     * Returns an element horizontal and vertical margins and borders.
+     *
+     * @param {HTMLElement} draggedItemEl - The element whose margins and
+     * borders are required.
+     * @returns {Object} The element horizontal and vertical margins and
+     * borders.
+     */
+    getDraggedElementBordersAndMargins(draggedItemEl = this.draggedItemEl) {
+        const style = window.getComputedStyle(draggedItemEl);
+        const borderX = parseFloat(style.borderLeft) + parseFloat(style.borderRight);
+        const marginX = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+        const borderY = parseFloat(style.borderTop) + parseFloat(style.borderBottom);
+        const marginY = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+        return { borderX: borderX, marginX: marginX, borderY: borderY, marginY: marginY };
     }
     /**
      * Checks if we are currently over a dropzone, that is, if
@@ -513,21 +536,33 @@ export class dragAndDropHelper {
 
     /**
      * Transforms the dragged item into a grid element if it is not one already.
+     * If the dragged element is a snippet, it is wrapped into a div to create a
+     * column.
      *
      * @private
-     * @param {HTMLElement} rowEl - The grid row.
+     * @param {HTMLElement} dropzoneEl - The grid dropzone where the dragged
+     * item is placed.
      */
-    _handleGridItemCreation(rowEl) {
+    _handleGridItemCreation(dropzoneEl) {
+        const rowEl = dropzoneEl.parentNode;
+        if (this.draggedItemEl.dataset.snippet) {
+            // Wrap the dragged element into a column ('div') if it is a snippet
+            this.draggedItemEl.remove();
+            const columnEl = document.createElement("div");
+            columnEl.prepend(this.draggedItemEl);
+            this.draggedItemEl = columnEl;
+            dropzoneEl.after(this.draggedItemEl);
+        }
         if (!this.draggedItemEl.classList.contains("o_grid_item")) {
             // Converting the column to grid
-            this.odooEditor.observerActive("dragAndDropMoveSnippet");
+            this.odooEditor.observerActive(this.observerName);
             const spans = gridUtils._convertColumnToGrid(
                 rowEl,
                 this.draggedItemEl,
                 this.dragState.columnWidth,
                 this.dragState.columnHeight
             );
-            this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+            this.odooEditor.observerUnactive(this.observerName);
 
             // Storing the column spans
             this.dragState.columnColCount = spans.columnColCount;
@@ -543,8 +578,8 @@ export class dragAndDropHelper {
     _removeGridAndDragHelper(rowEl) {
         this.dragState.dragHelperEl.remove();
         this.dragState.backgroundGridEl.remove();
-        this.odooEditor.observerActive("dragAndDropMoveSnippet");
+        this.odooEditor.observerActive(this.observerName);
         gridUtils._resizeGrid(rowEl);
-        this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+        this.odooEditor.observerUnactive(this.observerName);
     }
 }

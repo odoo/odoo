@@ -719,6 +719,20 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
     _onGetSwitchableRelatedViews(ev) {
         this.props.getSwitchableRelatedViews().then(ev.data.onSuccess);
     }
+    /**
+     * Returns the drag and drop helper.
+     *
+     * @private
+     * @returns {Object} the drag and drop helper.
+     */
+    _getDragAndDropHelper(draggedItemEl) {
+        return new dragAndDropHelperWebsite(
+            this.options.wysiwyg.odooEditor,
+            draggedItemEl,
+            this.$body[0],
+            "dragAndDropCreateSnippet"
+        );
+    }
 }
 
 weSnippetEditor.SnippetEditor.include({
@@ -744,7 +758,12 @@ weSnippetEditor.SnippetEditor.include({
      * @returns {Object} the drag and drop helper.
      */
     _getDragAndDropHelper() {
-        return new dragAndDropHelperWebsite(this.options.wysiwyg.odooEditor, this.$target[0], this.$body[0]);
+        return new dragAndDropHelperWebsite(
+            this.options.wysiwyg.odooEditor,
+            this.$target[0],
+            this.$body[0],
+            "dragAndDropMoveSnippet"
+        );
     },
 });
 
