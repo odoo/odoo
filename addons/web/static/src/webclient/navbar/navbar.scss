@@ -60,6 +60,10 @@
     .dropdown-menu {
         border-top: $o-navbar-dropdown-menu-border-top;
         border-radius: $o-navbar-dropdown-menu-border-radius;
+
+        .disabled {
+            cursor: default;
+        }
     }
 
     .dropdown-header.dropdown-menu_group {
@@ -134,4 +138,3 @@ body.o_is_superuser .o_menu_systray {
     border-image: repeating-linear-gradient(135deg, #d9b904, #d9b904 10px, #373435 10px, #373435 20px) 2;
     border-image-width: map-get($border-widths, 2);
 }
-
