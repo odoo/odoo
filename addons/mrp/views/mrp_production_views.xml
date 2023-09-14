@@ -328,7 +328,7 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
-                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}" width="1"/>
+                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), '&amp;', ('state', '!=', 'draft'), ('parent.is_locked', '=', True)]}" width="1"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
