@@ -7,7 +7,10 @@
             <i class="fa fa-building d-lg-none"/>
             <span class="oe_topbar_name d-none d-lg-block" t-esc="companyService.currentCompany.name"/>
         </t>
-        <t t-foreach="Object.values(companyService.availableCompanies)
+        <t t-foreach="Object.values({
+                          ...companyService.availableCompanies,
+                          ...companyService.unavailableAncestorCompanies
+                      })
                       .filter((c) => !c.parent_id)
                       .sort((c1, c2) => c1.sequence - c2.sequence)
                      " t-as="company" t-key="company.id">
@@ -18,10 +21,15 @@
 
 
 <t t-name="web.SwitchCompanyItem" owl="1">
-    <DropdownItem class="'p-0 bg-white'">
-        <t t-set="isCompanySelected" t-value="selectedCompanies.includes(props.company.id)"/>
-        <t t-set="isCurrent" t-value="props.company.id === companyService.currentCompany.id"/>
-        <div class="d-flex" data-menu="company" t-att-data-company-id="props.company.id">
+    <t t-set="isCompanySelected" t-value="selectedCompanies.includes(props.company.id)"/>
+    <t t-set="isCompanyAvailable" t-value="props.company.id in companyService.availableCompanies"/>
+    <t t-set="isCurrent" t-value="props.company.id === companyService.currentCompany.id"/>
+    <DropdownItem class="'p-0 bg-white'" parentClosingMode="!isCompanyAvailable ? 'none' : 'all'">
+        <div
+            class="d-flex"
+            t-att-class="!isCompanyAvailable ? 'disabled' : ''"
+            data-menu="company"
+            t-att-data-company-id="props.company.id">
             <div
                 role="menuitemcheckbox"
                 t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
@@ -29,10 +37,10 @@
                 t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + props.company.name + ' content.'"
                 tabindex="0"
                 class="border-end toggle_company"
-                t-attf-class="{{isCurrent ? 'border-primary' : ''}}"
-                t-on-click.stop="() => this.toggleCompany(props.company.id)">
+                t-att-class="isCurrent ? 'border-primary' : !isCompanyAvailable ? 'disabled' : ''"
+                t-on-click.stop="() => isCompanyAvailable &amp;&amp; this.toggleCompany(props.company.id)">
 
-                <span class="btn btn-light border-0 p-2">
+                <span class="btn border-0 p-2" t-att-class="isCompanyAvailable ? 'btn-light' : 'disabled'">
                     <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
                 </span>
             </div>
@@ -44,14 +52,14 @@
                 t-att-title="'Switch to ' + props.company.name "
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
-                t-att-class="isCurrent ? 'alert-primary' : 'btn btn-light fw-normal border-0'"
-                t-att-style="'margin-left:' + (props.level * 20) + 'px';"
-                t-on-click="() => this.logIntoCompany(props.company.id)">
+                t-att-class="isCurrent ? 'alert-primary' : 'btn fw-normal border-0 ' + (isCompanyAvailable ? 'btn-light' : 'disabled')"
+                t-on-click="() => isCompanyAvailable &amp;&amp; this.logIntoCompany(props.company.id)">
 
                 <span
                     class='company_label pe-3'
-                    t-att-class="isCurrent ? 'text-900 fw-bold' : ''">
-                    <t t-esc="props.company.name"/>
+                    t-att-class="isCurrent ? 'text-900 fw-bold' : ''"
+                    t-attf-style="padding-left:{{props.level * 20}}px;">
+                    <t t-out="props.company.name"/>
                 </span>
             </div>
         </div>
