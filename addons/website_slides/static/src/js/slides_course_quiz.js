@@ -9,13 +9,11 @@
     import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
 
-    import SlideEnroll from '@website_slides/js/slides_course_enroll_email';
     import { _t } from "@web/core/l10n/translation";
 
     import { markup } from "@odoo/owl";
 
     const CourseJoinWidget = CourseJoin.courseJoinWidget;
-    const SlideEnrollDialog = SlideEnroll.slideEnrollDialog;
 
     /**
      * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
@@ -39,7 +37,6 @@
             'click .o_wslides_js_quiz_add': '_onCreateQuizClick',
             'click .o_wslides_js_quiz_edit_question': '_onEditQuestionClick',
             'click .o_wslides_js_quiz_delete_question': '_onDeleteQuestionClick',
-            'click .o_wslides_js_channel_enroll': '_onSendRequestToResponsibleClick',
         },
 
         custom_events: {
@@ -556,20 +553,6 @@
             new ConfirmationDialog(this, {
                 questionId: question.data('questionId'),
                 questionTitle: question.data('title')
-            }).open();
-        },
-
-        /**
-         * Handler for the contact responsible link below a Quiz
-         * @param ev
-         * @private
-         */
-        _onSendRequestToResponsibleClick: function(ev) {
-            ev.preventDefault();
-            var channelId = $(ev.currentTarget).data('channelId');
-            new SlideEnrollDialog(this, {
-                channelId: channelId,
-                $element: $(ev.currentTarget).closest('.alert.alert-info')
             }).open();
         },
 
