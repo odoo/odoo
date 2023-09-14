@@ -1165,6 +1165,19 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             for _ in self.invoice.line_ids
         ])
 
+        # The reversal (refund) should use the system rate
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
+            'date': self.invoice.invoice_date,
+            'reason': 'test the exchange rate of the reversal',
+            'journal_id': self.invoice.journal_id.id,
+        })
+        reversal = move_reversal.refund_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        self.assertRecordValues(reverse_move.line_ids, [
+            { 'currency_rate': 4.0 }
+            for _ in reverse_move.line_ids
+        ])
+
         forex_data = self.setup_multi_currency_data(
             default_values={
                 'name': "World Coin",
