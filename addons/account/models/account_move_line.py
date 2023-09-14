@@ -2028,7 +2028,7 @@ class AccountMoveLine(models.Model):
             * to_reconcile: A list of tuple <move_line, sequence> in order to perform the reconciliation after the move
                             creation.
         """
-        company = self.company_id or company
+        company = company or self.company_id
         if not company:
             return
 
