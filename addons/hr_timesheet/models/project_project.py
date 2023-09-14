@@ -89,8 +89,15 @@ class Project(models.Model):
             ['unit_amount:sum'],
         )
         timesheet_time_dict = {project.id: unit_amount_sum for project, unit_amount_sum in timesheets_read_group}
+        all_outer_subtasks_ids_by_project_id = self._get_outer_subtasks_by_project_id()
+
         for project in self:
-            project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0)
+            subtasks_timesheets_read_group = self.env['account.analytic.line']._read_group(
+                [('task_id', 'in', all_outer_subtasks_ids_by_project_id[project.id])],
+                [],
+                ['unit_amount:sum'],
+            )
+            project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0) - subtasks_timesheets_read_group[0][0]
             project.is_project_overtime = project.remaining_hours < 0
 
     @api.model
@@ -124,15 +131,8 @@ class Project(models.Model):
             if project.allow_timesheets and not project.analytic_account_id:
                 raise ValidationError(_('You cannot use timesheets without an analytic account.'))
 
-    @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
-    def _compute_total_timesheet_time(self):
-        timesheets_read_group = self.env['account.analytic.line']._read_group(
-            [('project_id', 'in', self.ids)],
-            ['project_id', 'product_uom_id'],
-            ['unit_amount:sum'],
-        )
-        timesheet_time_dict = defaultdict(list)
-
+    def _get_outer_subtasks_by_project_id(self):
+        """TO DOCUMENT"""
         # Getting all subtasks by project (subtasks that do not belong to the project only)
         task_ids_by_project_id = {project.id: project.task_ids.ids for project in self}
         project_id_by_task_ids = defaultdict()
@@ -148,6 +148,18 @@ class Project(models.Model):
         all_outer_subtasks_ids_by_project_id = defaultdict(list)
         for project_id, subtask_ids in all_subtasks_ids_by_project_id.items():
             all_outer_subtasks_ids_by_project_id[project_id] = list(subtask_ids - set(task_ids_by_project_id[project_id]))
+        return all_outer_subtasks_ids_by_project_id
+
+    @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
+    def _compute_total_timesheet_time(self): # TODO: use remaining hours field (computed in another method) ??? Are 2 methods really needed (check dependencies)
+        timesheets_read_group = self.env['account.analytic.line']._read_group(
+            [('project_id', 'in', self.ids)],
+            ['project_id', 'product_uom_id'],
+            ['unit_amount:sum'],
+        )
+        timesheet_time_dict = defaultdict(list)
+
+        all_outer_subtasks_ids_by_project_id = self._get_outer_subtasks_by_project_id()
 
         for project, product_uom, unit_amount_sum in timesheets_read_group:
             # Adding timesheet of subtasks linked to other projects
