@@ -880,3 +880,38 @@ class TestProcurement(TestMrpCommon):
         # comp2 (2 + 4 extra) = 6
         # comp3 (2 + 2 extra) = 4
         self.assertEqual(mo.picking_ids[0].move_ids.mapped('product_uom_qty'), [5, 6, 4], 'Comp qty do not match expected')
+
+    def test_pbm_and_additionnal_components(self):
+        """
+        2-steps manufacturring.
+        When adding a new component to a confirmed MO, it should add an SM in
+        the PBM picking. Also, it should be possible to define the to-consume
+        qty of the new line even if the MO is locked
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm'
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        if not mo.is_locked:
+            mo.action_toggle_is_locked()
+
+        with Form(mo) as mo_form:
+            with mo_form.move_raw_ids.new() as raw_line:
+                raw_line.product_id = self.product_2
+                raw_line.product_uom_qty = 2.0
+
+        move_vals = mo._get_move_raw_values(self.product_3, 0, self.product_3.uom_id)
+        mo.move_raw_ids = [(0, 0, move_vals)]
+        mo.move_raw_ids[-1].product_uom_qty = 3.0
+
+        expected_vals = [
+            {'product_id': self.product_1.id, 'product_uom_qty': 1.0},
+            {'product_id': self.product_2.id, 'product_uom_qty': 2.0},
+            {'product_id': self.product_3.id, 'product_uom_qty': 3.0},
+        ]
+        self.assertRecordValues(mo.move_raw_ids, expected_vals)
+        self.assertRecordValues(mo.picking_ids.move_ids, expected_vals)
