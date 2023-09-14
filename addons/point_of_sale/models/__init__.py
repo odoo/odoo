@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_bank_statement
@@ -12,7 +11,6 @@ from . import pos_bus_mixin
 from . import barcode_rule
 from . import binary
 from . import digest
-from . import ir_binary
 from . import pos_category
 from . import pos_config
 from . import pos_order

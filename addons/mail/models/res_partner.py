@@ -297,3 +297,11 @@ class ResPartner(models.Model):
         if not self.env.user or self.env.user._is_public():
             return (self.env["res.partner"], self.env["mail.guest"]._get_guest_from_context())
         return (self.env.user.partner_id, self.env["mail.guest"])
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        # access to the avatar is allowed if there is access to the messages
+        if field_name == "avatar_128" and self.env["mail.message"].search_count(
+            [("author_id", "=", self.id)], limit=1
+        ):
+            return True
+        return super()._can_return_content(field_name, access_token)
