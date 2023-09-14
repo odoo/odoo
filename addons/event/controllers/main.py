@@ -4,7 +4,7 @@
 import json
 from werkzeug.exceptions import NotFound
 
-from odoo import _
+from odoo import http, _
 from odoo.http import Controller, request, route, content_disposition
 from odoo.tools import consteq
 
@@ -75,3 +75,23 @@ class EventController(Controller):
             ('Content-Disposition', content_disposition(f'{report_name}.pdf')),
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    @http.route(['/event/init_barcode_interface'], type='json', auth="user")
+    def init_barcode_interface(self, event_id):
+        event = request.env['event.event'].browse(event_id).exists() if event_id else False
+        if event:
+            return {
+                'name': event.name,
+                'country': event.address_id.country_id.name,
+                'city': event.address_id.city,
+                'company_name': event.company_id.name,
+                'company_id': event.company_id.id
+            }
+        else:
+            return {
+                'name': _('Registration Desk'),
+                'country': False,
+                'city': False,
+                'company_name': request.env.company.name,
+                'company_id': request.env.company.id
+            }

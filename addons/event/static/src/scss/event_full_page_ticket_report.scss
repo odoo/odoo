@@ -44,3 +44,14 @@
         }
     }
 }
+
+.o_event_full_page_ticket_container .o_event_full_page_ticket_barcode {
+    border-left: dotted 2px #939393;
+    .o_event_barcode {
+        // Barcode image has fixed size. These values are hard-coded to
+        // have it aligned correctly in the pdf report.
+        margin: 28px 0 0 -28px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+}

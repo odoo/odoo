@@ -11,7 +11,7 @@
         "base.menu_theme_store",
         "base.menu_third_party",
         "account.menu_action_account_bank_journal_form",
-        "event_barcode.menu_event_registration_desk", // there's no way to come back from this menu
+        "event.menu_event_registration_desk", // there's no way to come back from this menu
         "hr_attendance.menu_hr_attendance_kiosk_no_user_mode", // same here
         "pos_adyen.menu_pos_adyen_account",
         "payment_odoo.menu_adyen_account",
