@@ -1169,7 +1169,8 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        if not self.product_id:
+        # TODO: Remove when onchanges are replaced with computes
+        if not self.product_id or (self.env.context.get('origin_po_id') and self.product_qty):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
@@ -1183,9 +1184,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        # TODO: Remove when onchanges are replaced with computes
-        if not (self.env.context.get('origin_po_id') and self.product_uom and self.product_id.uom_id.category_id == self.product_uom_category_id):
-            self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
+        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=self.partner_id.id,

@@ -432,3 +432,43 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # alt_po is cheaper than orig_po
         self.assertEqual(best_price_ids[0], po_alt.order_line.id)
         self.assertEqual(best_price_unit_ids[0], po_alt.order_line.id)
+
+    def test_alternative_po_with_multiple_price_list(self):
+        vendor_a = self.env["res.partner"].create({
+            "name": "Supplier A",
+        })
+        vendor_b = self.env["res.partner"].create({
+            "name": "Supplier B",
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor_a.id,
+                'price': 5,
+            }), (0, 0, {
+                'partner_id': vendor_b.id,
+                'price': 4,
+                'min_qty': 10,
+            }), (0, 0, {
+                'partner_id': vendor_b.id,
+                'price': 6,
+                'min_qty': 1,
+            }),
+            ]
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 100
+        po_orig = po_form.save()
+        self.assertEqual(po_orig.order_line.price_unit, 5)
+        # Creates an alternative PO
+        action = po_orig.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_b
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+        po_alt = po_orig.alternative_po_ids - po_orig
+        self.assertEqual(po_alt.order_line.price_unit, 4)
