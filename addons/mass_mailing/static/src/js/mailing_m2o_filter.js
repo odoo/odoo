@@ -57,7 +57,7 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
             return;
         }
         const filterCount = this.props.record.data.mailing_filter_count;
-        const dropdown = document.querySelectorAll('.o_field_many2one_selection > .o_input_dropdown')[1]
+        const dropdown = document.querySelector('.o_field_mailing_filter > .o_field_many2one_selection > .o_input_dropdown')
         if (dropdown) {
             dropdown.classList.toggle('d-none', !filterCount);
         }
