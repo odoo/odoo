@@ -1372,8 +1372,9 @@ class TestBoM(TestMrpCommon):
         # Creates a MO.
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
+        mo_form.product_qty = 10
         mo_1 = mo_form.save()
-        self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 1)
+        self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 10)
         self.assertEqual(mo_1.is_outdated_bom, False)
         # Update MO's component quantity.
         mo_form = Form(mo_1)
@@ -1397,6 +1398,8 @@ class TestBoM(TestMrpCommon):
             "By-Product and Operation were added to the BoM, it should be marked as updated")
         # Call "Update BoM" action, it should reset the MO as defined by the BoM.
         mo_1.action_update_bom()
+        self.assertEqual(mo_1.product_qty, 10,
+            "MO's quantity should be kept")
         self.assertEqual(mo_1.is_outdated_bom, False,
             "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
         self.assertEqual(mo_1.workorder_ids.operation_id.id, operation.id)
@@ -1417,8 +1420,8 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_1.is_outdated_bom, False,
             "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
         self.assertRecordValues(mo_1.move_raw_ids, [
-            {'bom_line_id': bom.bom_line_ids[0].id, 'product_uom_qty': bom.bom_line_ids[0].product_qty},
-            {'bom_line_id': bom.bom_line_ids[1].id, 'product_uom_qty': bom.bom_line_ids[1].product_qty},
+            {'bom_line_id': bom.bom_line_ids[0].id, 'product_uom_qty': bom.bom_line_ids[0].product_qty * 10},
+            {'bom_line_id': bom.bom_line_ids[1].id, 'product_uom_qty': bom.bom_line_ids[1].product_qty * 10},
         ])
         # Updates the BoM again (replace a component by another product).
         bom_form = Form(bom)
@@ -1468,22 +1471,44 @@ class TestBoM(TestMrpCommon):
         component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_qty': 1.0,
+            'product_qty': 2.0,
             'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
         })
 
         # Creates a MO.
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
+        mo_form.product_qty = 4
         mo_form.product_uom_id = uom_dozen
         mo_1 = mo_form.save()
-        mo_1.action_confirm()
+        self.assertRecordValues(mo_1.move_raw_ids, [{
+            'product_id': component_1.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id,
+        }, {
+            'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id,
+        }])
+
+        ### Test draft MO ###
+        # Updates BOM's quantity to 1 unit
+        bom.product_qty = 1
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "BoM changed, it should be marked as updated.")
+        mo_1.action_update_bom()
+        self.assertRecordValues(mo_1,
+            [{'product_qty': 4, 'product_uom_id': uom_dozen.id}])
+        self.assertRecordValues(mo_1.move_raw_ids, [{
+            'product_id': component_1.id, 'product_uom_qty': 48, 'product_uom': uom_unit.id,
+        }, {
+            'product_id': component_2.id, 'product_uom_qty': 48, 'product_uom': uom_unit.id,
+        }])
+
+        ### Test confirmed MO ###
+        mo_1.product_qty = 1
         self.assertRecordValues(mo_1.move_raw_ids, [{
             'product_id': component_1.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
         }, {
             'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
         }])
-
+        mo_1.action_confirm()
         # Updates the BoM by set the first BoM line's quantity to 2.
         bom_form = Form(bom)
         with bom_form.bom_line_ids.edit(0) as bom_line:
@@ -1525,7 +1550,6 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_2.is_outdated_bom, True)
 
         # Call "Update BoM" action, it should update the MO raw moves' quantity accordingly.
-        # import pudb; pudb.set_trace()
         mo_2.action_update_bom()
         self.assertEqual(mo_2.is_outdated_bom, False)
         # As there is a difference for the second component, the quantity should

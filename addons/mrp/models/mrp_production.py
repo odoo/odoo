@@ -2207,6 +2207,8 @@ class MrpProduction(models.Model):
         to the corresponding MO's components, by-products and workorders.
         """
         self.ensure_one()
+        product_qty = self.product_qty
+        uom = self.product_uom_id
         moves_to_unlink = self.env['stock.move']
         workorders_to_unlink = self.env['mrp.workorder']
         # For draft MO, all the work will be done by compute methods.
@@ -2224,6 +2226,10 @@ class MrpProduction(models.Model):
             self.bom_id = bom
             moves_to_unlink.unlink()
             workorders_to_unlink.unlink()
+            if self.state == 'draft':
+                # we reset the product_qty/uom when the bom is changed on a draft MO
+                # change them back to the original value
+                self.write({'product_qty': product_qty, 'product_uom_id': uom.id})
             return
 
         def operation_key_values(record):
@@ -2239,7 +2245,7 @@ class MrpProduction(models.Model):
         bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
         operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
 
-        # Compares the BoM's operations to the MO's workoders.
+        # Compares the BoM's operations to the MO's workorders.
         for workorder in self.workorder_ids:
             operation = operations_by_id.pop(workorder.operation_id.id, False)
             if not operation:
