@@ -326,14 +326,14 @@ class PosConfig(models.Model):
     @api.constrains('limited_partners_amount', 'limited_partners_loading')
     def _check_limited_partners(self):
         for rec in self:
-            if rec.limited_partners_loading and not self.limited_partners_amount:
+            if rec.limited_partners_loading and not rec.limited_partners_amount:
                 raise ValidationError(
                     _("Number of partners loaded can not be 0"))
 
     @api.constrains('limited_products_amount', 'limited_products_loading')
     def _check_limited_products(self):
         for rec in self:
-            if rec.limited_products_loading and not self.limited_products_amount:
+            if rec.limited_products_loading and not rec.limited_products_amount:
                 raise ValidationError(
                     _("Number of product loaded can not be 0"))
 
