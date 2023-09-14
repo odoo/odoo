@@ -234,6 +234,28 @@
             </field>
         </record>
 
+        <record id="product_view_kanban_catalog" model="ir.ui.view">
+            <field name="name">product.view.kanban.catalog.inherit.stock</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+            <field name="arch" type="xml">
+                <field name="default_code" invisible="1" position="after">
+                    <field name="detailed_type" invisible="1"/>
+                </field>
+                <div name="o_kanban_price" position="after">
+                    <div t-if="record.detailed_type.raw_value == 'product'"
+                         name="o_kanban_qty_available">
+                        <span>On Hand: </span>
+                        <field name="qty_available"/>
+                        <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
+                    </div>
+                </div>
+                <a role="menuitem" type="edit" position="after">
+                    <a role="menuitem" type="object" name="action_product_forecast_report" class="dropdown-item border-top-0">View Availability</a>
+                </a>
+            </field>
+        </record>
+
         <!-- view used for product.product only -->
         <record model="ir.ui.view" id="product_form_view_procurement_button">
             <field name="name">product.product.procurement</field>

@@ -1,9 +1,9 @@
 /** @odoo-module */
 import { Component } from "@odoo/owl";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 
-export class ProductCatalogSOL extends Component {
-    static template = "sale.ProductCatalogSOL";
+export class ProductCatalogOrderLine extends Component {
+    static template = "ProductCatalogOrderLine";
     static props = {
         productId: Number,
         quantity: Number,
@@ -15,7 +15,7 @@ export class ProductCatalogSOL extends Component {
     // Private
     //--------------------------------------------------------------------------
 
-    isInSaleOrder() {
+    isInOrder() {
         return this.props.quantity !== 0;
     }
 
@@ -28,7 +28,13 @@ export class ProductCatalogSOL extends Component {
     }
 
     get price() {
-        return formatMonetary(this.props.price, { currencyId: this.env.currencyId, digits: this.env.digits });
+        const { currencyId, digits } = this.env;
+        return formatMonetary(this.props.price, { currencyId, digits });
     }
 
+    get quantity() {
+        const digits = [false, this.env.precision];
+        const options = { digits, decimalPoint: ".", thousandsSep: "" };
+        return parseFloat(formatFloat(this.props.quantity, options));
+    }
 }
