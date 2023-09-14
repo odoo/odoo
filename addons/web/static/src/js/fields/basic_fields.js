@@ -1569,7 +1569,7 @@ var FieldEmail = InputField.extend({
             // so, select the proper one (other nodes are assumed not to contain proper data)
             this.$el.closest("." + this.className).text(this.value)
                 .addClass('o_form_uri o_text_overflow')
-                .attr('href', this.prefix + ':' + this.value);
+                .attr('href', this.prefix + ':' + encodeURIComponent(this.value));
         } else {
             this.$el.text('');
         }
