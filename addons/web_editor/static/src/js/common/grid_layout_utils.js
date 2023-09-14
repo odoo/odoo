@@ -280,7 +280,8 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
 
     // Computing the column and row spans.
     const gridProp = _getGridProperties(rowEl);
-    const columnColCount = Math.round((columnWidth + gridProp.columnGap) / (gridProp.columnSize + gridProp.columnGap));
+    // As the number of column can not exceed 12.
+    const columnColCount = Math.min(12, Math.round((columnWidth + gridProp.columnGap) / (gridProp.columnSize + gridProp.columnGap)));
     const columnRowCount = Math.ceil((columnHeight + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap));
 
     // Removing the padding and offset classes.

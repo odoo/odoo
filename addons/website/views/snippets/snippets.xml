@@ -662,7 +662,7 @@
         data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
 
     <div data-js="sizing_grid"
-        data-selector=".row > div"
+        data-selector=".row > div, .row > .o_grid_item"
         data-drop-near=".row.o_grid_mode > div"
         data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
 
@@ -677,7 +677,7 @@
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div:not(.o_grid_item_image) > img, #{so_content_addition_selector}"
-        data-drop-in="nav"/>
+        data-drop-in="nav, .row.o_grid_mode"/>
 
     <div data-js="SnippetSave"
         data-selector="[data-snippet]"

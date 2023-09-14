@@ -4608,12 +4608,13 @@ registry.sizing = SnippetOptionWidget.extend({
 
             // Hiding/showing the arrows.
             if (isGrid) {
-                const moveLeftArrowEl = this.$overlay[0].querySelector('.fa-angle-left');
-                const moveRightArrowEl = this.$overlay[0].querySelector('.fa-angle-right');
-                const showLeft = await this._computeWidgetVisibility('move_left_opt');
-                const showRight = await this._computeWidgetVisibility('move_right_opt');
-                moveLeftArrowEl.classList.toggle('d-none', !showLeft);
-                moveRightArrowEl.classList.toggle('d-none', !showRight);
+                for (const direction in ["left", "right", "up", "down"]) {
+                    const moveArrowEl = this.$overlay[0].querySelector(`.fa-angle-${direction}`);
+                    if (moveArrowEl) {
+                        const showArrow = await this._computeWidgetVisibility(`move_${direction}_opt`);
+                        moveArrowEl.classList.toggle("d-none", !showArrow);
+                    }
+                }
             }
 
             // Show/hide the buttons to send back/front a grid item.
