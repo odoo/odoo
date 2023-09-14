@@ -164,6 +164,8 @@ class IrSequence(models.Model):
         return super(IrSequence, self).unlink()
 
     def write(self, values):
+        if values.get('company_id') and any(seq.company_id.id != values['company_id'] for seq in self):
+            raise UserError(_('You can not change the company of an existing sequence. Please create a new one instead.'))
         new_implementation = values.get('implementation')
         for seq in self:
             # 4 cases: we test the previous impl. against the new one.
