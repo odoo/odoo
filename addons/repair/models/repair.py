@@ -388,11 +388,13 @@ class Repair(models.Model):
         # Cancel moves with 0 quantity_done
         self.move_ids.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))._action_cancel()
 
+        no_service_policy = 'service_policy' not in self.env['product.template']
         #SOL qty delivered = repair.move_ids.quantity_done
         for repair in self:
             if repair.sale_order_line_id:
                 ro_origin_product = repair.sale_order_line_id.product_template_id
-                if ro_origin_product.detailed_type == 'service':
+                # TODO: As 'service_policy' only appears with 'sale_project' module, isolate conditions related to this field in a 'sale_project_repair' module if it's worth
+                if ro_origin_product.detailed_type == 'service' and (no_service_policy or ro_origin_product.service_policy == 'ordered_prepaid'):
                     repair.sale_order_line_id.qty_delivered = repair.sale_order_line_id.product_uom_qty
             if not repair.product_id:
                 continue
@@ -439,7 +441,7 @@ class Repair(models.Model):
         self.move_id = product_moves.id
         self.sale_order_line_id.move_ids._set_quantities_to_reservation()
 
-        all_moves = self.move_ids + product_moves + self.sale_order_line_id.move_ids
+        all_moves = self.move_ids + product_moves
         all_moves._action_done()
 
         for sale_line in self.move_ids.sale_line_id:
