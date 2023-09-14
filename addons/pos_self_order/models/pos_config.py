@@ -131,6 +131,16 @@ class PosConfig(models.Model):
         default=lambda self: self._get_access_token(),
     )
 
+    @api.onchange("self_order_kiosk")
+    def _onchange_self_order_kiosk(self):
+        if self.self_order_kiosk:
+            self.module_pos_restaurant = False
+
+    @api.onchange("module_pos_restaurant")
+    def _onchange_module_pos_restaurant(self):
+        if self.module_pos_restaurant:
+            self.self_order_kiosk = False
+
     @staticmethod
     def _get_access_token():
         return uuid.uuid4().hex[:16]

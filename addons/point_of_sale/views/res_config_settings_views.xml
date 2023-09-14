@@ -39,7 +39,7 @@
                         There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
                     </div>
                     <div invisible="not pos_config_id">
-                        <block title="Restaurant Mode" id="restaurant_section">
+                        <block title="Restaurant Mode" id="restaurant_section" invisible="is_kiosk_mode">
                             <!-- Wrap the warnings in an o_setting_box so that it doesn't show in the search. -->
                             <setting>
                                 <field name="pos_module_pos_restaurant" readonly="pos_has_active_session"/>

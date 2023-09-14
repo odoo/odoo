@@ -38,7 +38,7 @@
                 </div>
             </xpath>
             <block id="restaurant_section" position="after">
-                <block title="Kiosk Mode" id="self_order_section">
+                <block title="Kiosk Mode" id="self_order_section" invisible="pos_module_pos_restaurant">
                     <setting string="Is a Kiosk" help="Allow customers to order from a kiosk">
                         <field name="pos_self_order_kiosk"/>
                         <div class="content-group" invisible="not is_kiosk_mode">

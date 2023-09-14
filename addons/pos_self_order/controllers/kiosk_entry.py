@@ -14,6 +14,9 @@ class PosSelfKiosk(http.Controller):
         if not config_id or not access_token:
             raise werkzeug.exceptions.NotFound()
 
+        if request.httprequest.cookies.get('frontend_lang'):
+            request.lang = request.httprequest.cookies.get('frontend_lang')
+
         pos_config_sudo = request.env["pos.config"].sudo().search([
             ("id", "=", config_id),
             ('access_token', '=', access_token)], limit=1)

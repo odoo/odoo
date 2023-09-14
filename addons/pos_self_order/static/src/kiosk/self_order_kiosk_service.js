@@ -12,7 +12,6 @@ export class selfOrder extends selfOrderCommon {
     }
 
     async setup(...args) {
-
         await super.setup(...args);
 
         this.bus_service.addChannel(`pos_config-${this.access_token}`);

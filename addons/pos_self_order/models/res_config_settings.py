@@ -35,12 +35,17 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("pos_self_order_kiosk")
     def _self_order_kiosk_change(self):
-        for record in self:
-            record.is_kiosk_mode = record.pos_self_order_kiosk
+        self.is_kiosk_mode = self.pos_self_order_kiosk
 
-            if record.pos_self_order_kiosk:
-                record.pos_config_id.self_order_view_mode = False
-                record.pos_config_id.self_order_table_mode = False
+        if self.pos_self_order_kiosk:
+            self.pos_self_order_view_mode = False
+            self.pos_self_order_table_mode = False
+            self.pos_module_pos_restaurant = False
+
+    @api.onchange("pos_module_pos_restaurant")
+    def _onchange_pos_module_pos_restaurant(self):
+        if self.pos_module_pos_restaurant:
+            self.pos_self_order_kiosk = False
 
     # self_order_table_mode is only available if self_order_view_mode is True
     @api.onchange("pos_self_order_view_mode")
