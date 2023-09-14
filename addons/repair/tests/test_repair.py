@@ -56,6 +56,11 @@ class TestRepair(common.TransactionCase):
             'type': 'product',
             'create_repair': True,
         })
+        cls.product_service_order_repair = cls.env['product.product'].create({
+            'name': 'Repair Service',
+            'type': 'service',
+            'create_repair': True,
+        })
 
         # Location
         cls.stock_warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
@@ -331,7 +336,6 @@ class TestRepair(common.TransactionCase):
         so_form.partner_id = self.res_partner_1
         with so_form.order_line.new() as line:
             line.product_id = self.product_consu_order_repair
-            # line.product_template_id = self.product_consu_order_repair.product_tmpl_id
             line.product_uom_qty = 2.0
         sale_order = so_form.save()
         order_line = sale_order.order_line[0]
@@ -412,9 +416,34 @@ class TestRepair(common.TransactionCase):
             line.quantity_done = line.product_uom_qty
         repair_order.action_repair_start()
         repair_order.action_repair_end()
-        self.assertEqual(float_compare(order_line.product_uom_qty, order_line.qty_delivered, 2), 0)
+        self.assertTrue(float_is_zero(order_line.qty_delivered, 2))
         self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.quantity_done, 2), 0)
         self.assertTrue(float_is_zero(sol_part_1.qty_delivered, 2))
+
+    def test_03_sale_order_delivered_qty(self):
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.res_partner_1
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_consu_order_repair
+            line.product_uom_qty = 1.0
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_storable_order_repair
+            line.product_uom_qty = 1.0
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_service_order_repair
+            line.product_uom_qty = 1.0
+        sale_order = so_form.save()
+        sale_order.action_confirm()
+
+        repair_order_ids = sale_order.repair_order_ids
+        repair_order_ids.action_repair_start()
+        repair_order_ids.action_repair_end()
+
+        for sol in sale_order.order_line:
+            if sol.product_template_id.type == 'service':
+                self.assertEqual(float_compare(sol.product_uom_qty, sol.qty_delivered, 2), 0)
+            else:
+                self.assertTrue(float_is_zero(sol.qty_delivered, 2))
 
     def test_repair_return(self):
         """Tests functionality of creating a repair directly from a return picking,
