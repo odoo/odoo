@@ -298,26 +298,29 @@ class StockMove(models.Model):
             # so possibly unlink lines
             move_line_vals = vals.pop('move_line_ids')
             super().write({'move_line_ids': move_line_vals})
-        if 'product_uom_qty' in vals and self.raw_material_production_id.state == 'confirmed' and not self.env.context.get('no_procurement', False):
+        old_demand = {move.id: move.product_uom_qty for move in self}
+        res = super().write(vals)
+        if 'product_uom_qty' in vals and not self.env.context.get('no_procurement', False):
             # when updating consumed qty need to update related pickings
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
             # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
-            self._run_procurement(vals['product_uom_qty'], self.product_uom_qty)
-        return super().write(vals)
+            self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
+        return res
 
-    def _run_procurement(self, new_qty, old_qty):
+    def _run_procurement(self, old_qties=False):
         procurements = []
+        old_qties = old_qties or {}
         to_assign = self.env['stock.move']
         self._adjust_procure_method()
         for move in self:
-            if new_qty > 0:
+            if float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
                 if move._should_bypass_reservation() \
                         or move.picking_type_id.reservation_method == 'at_confirm' \
                         or (move.reservation_date and move.reservation_date <= fields.Date.today()):
                     to_assign |= move
 
             if move.procure_method == 'make_to_order':
-                procurement_qty = new_qty - old_qty
+                procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
                 values = move._prepare_procurement_values()
                 origin = move._prepare_procurement_origin()
                 procurements.append(self.env['procurement.group'].Procurement(
