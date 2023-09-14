@@ -10,7 +10,6 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
 
@@ -141,3 +140,15 @@ class MailGuest(models.Model):
         """
         self.ensure_one()
         return f"{self.id}{self._cookie_separator}{self.access_token}"
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        if field_name == "avatar_128":
+            # access to the avatar is allowed if there is access to a channel
+            if self.env["discuss.channel"].search_count(
+                [("channel_member_ids", "any", [("guest_id", "=", self.id)])], limit=1
+            ):
+                return True
+            # access to the avatar is allowed if there is access to the messages
+            if self.env["mail.message"].search_count([("author_guest_id", "=", self.id)], limit=1):
+                return True
+        return super()._can_return_content(field_name, access_token)

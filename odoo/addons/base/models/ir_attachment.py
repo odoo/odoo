@@ -684,28 +684,6 @@ class IrAttachment(models.Model):
     def _generate_access_token(self):
         return str(uuid.uuid4())
 
-    def validate_access(self, access_token):
-        self.ensure_one()
-        record_sudo = self.sudo()
-
-        if access_token:
-            tok = record_sudo.with_context(prefetch_fields=False).access_token
-            valid_token = consteq(tok or '', access_token)
-            if not valid_token:
-                raise AccessError("Invalid access token")
-            return record_sudo
-
-        if record_sudo.with_context(prefetch_fields=False).public:
-            return record_sudo
-
-        if self.env.user._is_portal():
-            # Check the read access on the record linked to the attachment
-            # eg: Allow to download an attachment on a task from /my/tasks/task_id
-            self.check('read')
-            return record_sudo
-
-        return self
-
     @api.model
     def action_get(self):
         return self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
@@ -811,3 +789,18 @@ class IrAttachment(models.Model):
             stream.size = 0
 
         return stream
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        attachment_sudo = self.sudo().with_context(prefetch_fields=False)
+        if access_token:
+            if not consteq(attachment_sudo.access_token or "", access_token):
+                raise AccessError("Invalid access token")
+            return True
+        if attachment_sudo.public:
+            return True
+        if self.env.user._is_portal():
+            # Check the read access on the record linked to the attachment
+            # eg: Allow to download an attachment on a task from /my/tasks/task_id
+            self.check("read")
+            return True
+        return super()._can_return_content(field_name, access_token)

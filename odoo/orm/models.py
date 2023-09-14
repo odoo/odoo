@@ -6145,6 +6145,22 @@ class BaseModel(metaclass=MetaModel):
             return (self.company_ids & self.env.user.company_ids)[:1]
         return False
 
+    def _can_return_content(
+            self, field_name: str | None = None, access_token: str | None = None
+    ) -> bool:
+        """Determine whether one can export a file or an image from a field of
+        record ``self``, even if ``self`` is not accessible to the current user.
+        If so, the record will be ``sudo()``-ed to access the corresponding file
+        or image.
+        :param Optional[str] field_name: image field name to check the access to
+        :param Optional[str] access_token: access token to use instead of the
+            access rights and access rules
+        :rtype: bool
+        :return: whether the extra access is allowed
+        """
+        self.ensure_one()
+        return False
+
     #
     # Instance creation
     #

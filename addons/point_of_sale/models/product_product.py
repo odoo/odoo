@@ -24,3 +24,8 @@ class ProductProduct(models.Model):
                     "To delete a product, make sure all point of sale sessions are closed.\n\n"
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        if self.available_in_pos and field_name == "image_128":
+            return True
+        return super()._can_return_content(field_name, access_token)

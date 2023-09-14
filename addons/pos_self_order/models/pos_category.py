@@ -27,3 +27,8 @@ class PosCategory(models.Model):
                 raise ValidationError(_('The Availability After must be set between 00:00 and 24:00'))
             if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
                 raise ValidationError(_('The Availability Until must be greater than Availability After.'))
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        if field_name in ["image_128", "image_512"]:
+            return True
+        return super()._can_return_content(field_name, access_token)
