@@ -19,7 +19,7 @@
                     'o-chatWindowBig': store.chatHub.isBig,
                     'o-discussApp': env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
-            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
+            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="showComposerAvatar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread?.eq(props.composer.thread)">

@@ -12,9 +12,9 @@ from odoo.addons.mail.tools.discuss import Store
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
-    def mail_thread_data(self, thread_model, thread_id, request_list):
-        thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
+    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public")
+    def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
+        thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
         if not thread:
             return Store(
                 request.env[thread_model].browse(thread_id),
@@ -147,16 +147,19 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None):
+    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
-        message_sudo = guest.env["mail.message"].browse(message_id).sudo().exists()
-        if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
+        message = request.env["mail.message"]._get_with_access(message_id, "create", **kwargs)
+        if not message or not self._is_message_editable(message, **kwargs):
             raise NotFound()
-        if not message_sudo.model or not message_sudo.res_id:
-            raise NotFound()
+        # sudo: mail.message - access is checked in _get_with_access and _is_message_editable
+        message = message.sudo()
         body = Markup(body) if body else body  # may contain HTML such as @mentions
-        guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
-            message_sudo, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids
+        guest.env[message.model].browse([message.res_id])._message_update_content(
+            message, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
-        return Store(message_sudo, for_current_user=True).get_result()
+        return Store(message, for_current_user=True).get_result()
+
+    def _is_message_editable(self, message, **kwargs):
+        return message.sudo().is_current_user_or_guest_author or request.env.user._is_admin()

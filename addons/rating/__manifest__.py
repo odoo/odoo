@@ -36,6 +36,9 @@ This module allows a customer to give rating.
         "mail.assets_public": [
             "rating/static/src/core/common/**/*",
         ],
+        "portal.assets_chatter": [
+            "rating/static/src/core/common/**/*",
+        ],
     },
     'license': 'LGPL-3',
 }

@@ -15,3 +15,8 @@ class ThreadController(thread.ThreadController):
             ):
                 post_data["author_id"] = partner.id
         return post_data
+
+    def _is_message_editable(self, message, **kwargs):
+        if message._is_editable_in_portal(**kwargs):
+            return True
+        return super()._is_message_editable(message, **kwargs)

@@ -12,6 +12,7 @@ patch(Thread.prototype, {
             request_list: requestList,
             thread_id: this.id,
             thread_model: this.model,
+            ...this.rpcParams,
         });
         this.store.insert(result, { html: true });
     },

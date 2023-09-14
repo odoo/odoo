@@ -2,17 +2,7 @@
 
     <t t-name="portal.chatter_message_count">
         <t t-set="count" t-value="widget._messageCount"/>
-        <div class="o_message_counter">
-            <t t-if="count">
-                <span class="fa fa-comments" />
-                <span class="o_message_count"> <t t-esc="count"/></span>
-                <t t-if="count == 1"> comment</t>
-                <t t-else=""> comments</t>
-            </t>
-            <t t-else="">
-                There are no comments for now.
-            </t>
-        </div>
+        <div class="o_message_counter"/>
     </t>
 
     <!--
@@ -82,50 +72,6 @@
         Widget PortalChatter, and subtemplates
     -->
 
-    <t t-name="portal.chatter_messages">
-        <div class="o_portal_chatter_messages">
-            <t t-foreach="widget._messages" t-as="message" t-key="message_index">
-                <div class="d-flex o_portal_chatter_message mb-4" t-att-id="'message-' + message.id">
-                    <img class="o_avatar o_portal_chatter_avatar rounded me-3" t-att-src="message.author_avatar_url" alt="avatar"/>
-                    <div class="flex-grow-1">
-                        <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
-
-                        <div class="o_portal_chatter_message_title">
-                            <h5 class='mb-1'><t t-esc="message.author[1]"/></h5>
-                            <p class="o_portal_chatter_puslished_date">Published on <t t-esc="message.published_date_str"/></p>
-                        </div>
-                        <t t-out="message.body"/>
-
-                        <div class="o_portal_chatter_attachments">
-                            <t t-call="portal.Chatter.Attachments">
-                                <t t-set="attachments" t-value="message.attachment_ids"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </div>
-    </t>
-
-    <!-- Chatter: internal toggle widget -->
-    <t t-name="portal.chatter_internal_toggle">
-        <div t-if="message.is_message_subtype_note" class="float-end">
-            <span class="badge rounded-pill px-3 py-2 text-bg-light" title="Internal notes are only displayed to internal users.">Internal Note</span>
-        </div>
-        <div t-else="" t-attf-class="float-end o_portal_chatter_js_is_internal d-flex #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
-                t-att-data-message-id="message.id"
-                t-att-data-is-internal="message.is_internal">
-            <div class="form-check form-switch o_portal_chatter_visibility_on" title="Currently restricted to internal employees, click to make it available to everyone viewing this document.">
-                <input class="form-check-input" type="checkbox" role="switch"/>
-                <label class="form-check-label small">Public</label>
-            </div>
-            <div class="form-check form-switch o_portal_chatter_visibility_off" title="Currently available to everyone viewing this document, click to restrict to internal employees.">
-                <input class="form-check-input" type="checkbox" role="switch" checked="true"/>
-                <label class="form-check-label small">Public</label>
-            </div>
-        </div>
-    </t>
-
     <t t-name="portal.pager">
         <div class="o_portal_chatter_pager">
             <t t-if="Object.keys(widget._pagerData).length > 0">
@@ -143,24 +89,6 @@
                     </li>
                 </ul>
             </t>
-        </div>
-    </t>
-
-    <t t-name="portal.Chatter">
-        <t t-set="two_columns" t-value="widget.options['two_columns']"/>
-        <div t-attf-class="o_portal_chatter p-0 #{two_columns and 'row' or ''}">
-            <div t-attf-class="#{two_columns and 'col-lg-5' or ''}">
-                <div class="o_portal_chatter_header pb-2 text-muted">
-                    <t t-call="portal.chatter_message_count"/>
-                </div>
-                <div class="o_portal_chatter_composer"/>
-            </div>
-            <div t-attf-class="#{two_columns and 'offset-lg-1 col-lg-6' or ''}">
-                <t t-call="portal.chatter_messages"/>
-                <div class="o_portal_chatter_footer">
-                    <t t-call="portal.pager"/>
-                </div>
-            </div>
         </div>
     </t>
 

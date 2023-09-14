@@ -84,12 +84,15 @@ class AttachmentController(http.Controller):
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def mail_attachment_delete(self, attachment_id, access_token=None):
+    def mail_attachment_delete(self, attachment_id, access_token=None, **kwargs):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment:
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             return
-        message = request.env["mail.message"].search([("attachment_ids", "in", attachment.ids)], limit=1)
+        attachment_message = request.env["mail.message"].sudo().search(
+            [("attachment_ids", "in", attachment.ids)], limit=1)
+        message = request.env["mail.message"].sudo(False)._get_with_access(attachment_message.id,
+                                                                           "create", **kwargs)
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
             attachment._delete_and_notify(message)
@@ -100,7 +103,7 @@ class AttachmentController(http.Controller):
         # sudo: ir.attachment: access is validated below with membership of message or access token
         attachment_sudo = attachment.sudo()
         if message:
-            if not message.is_current_user_or_guest_author:
+            if not self._is_allowed_to_delete(message, **kwargs):
                 raise NotFound()
         else:
             if (
@@ -112,6 +115,9 @@ class AttachmentController(http.Controller):
             if attachment_sudo.res_model != "mail.compose.message" or attachment_sudo.res_id != 0:
                 raise NotFound()
         attachment_sudo._delete_and_notify(message)
+
+    def _is_allowed_to_delete(self, message, **kwargs):
+        return message.is_current_user_or_guest_author
 
     @http.route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
     def mail_attachment_get_zip(self, file_ids, zip_name, **kw):

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.tests.common import tagged
 
@@ -101,7 +101,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be removed without valid token
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/portal/attachment/remove',
+            url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
                     'attachment_id': create_res['id'],
@@ -111,11 +111,11 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
-        self.assertIn("you do not have the rights", res.text)
+        self.assertIn("The requested URL was not found on the server.", res.text)
 
         # Test attachment can be removed with token if "pending" state
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/portal/attachment/remove',
+            url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
                     'attachment_id': create_res['id'],
@@ -124,9 +124,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 200)
-        remove_res = json.loads(res.content.decode('utf-8'))['result']
         self.assertFalse(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
-        self.assertTrue(remove_res is True)
 
         # Test attachment can't be removed if not "pending" state
         attachment = self.env['ir.attachment'].create({
@@ -134,7 +132,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'access_token': self.env['ir.attachment']._generate_access_token(),
         })
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/portal/attachment/remove',
+            url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
                     'attachment_id': attachment.id,
@@ -144,9 +142,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', attachment.id)]))
-        self.assertIn("not in a pending state", res.text)
+        self.assertIn("The requested URL was not found on the server.", res.text)
 
-        # Test attachment can't be removed if attached to a message
+        # Test attachment can be removed if attached to a message
         attachment.write({
             'res_model': 'mail.compose.message',
             'res_id': 0,
@@ -156,7 +154,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'attachment_ids': [(6, 0, attachment.ids)],
         })
         res = self.opener.post(
-            url=f'{self.invoice_base_url}/portal/attachment/remove',
+            url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
                     'attachment_id': attachment.id,
@@ -165,11 +163,16 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             },
         )
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(attachment.exists())
-        self.assertIn("it is linked to a message", res.text)
+        self.assertFalse(attachment.exists())
         message.sudo().unlink()
 
         # Test attachment can't be associated if no attachment token.
+        attachment = self.env['ir.attachment'].create({
+            'name': 'an attachment',
+            'access_token': self.env['ir.attachment']._generate_access_token(),
+            'res_model': 'mail.compose.message',
+            'res_id': 0,
+        })
         res = self.opener.post(
             url=f'{self.invoice_base_url}/mail/message/post',
             json={

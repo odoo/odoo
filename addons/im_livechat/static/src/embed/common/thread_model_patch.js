@@ -58,7 +58,7 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
     /** @returns {Promise<import("models").Message} */
-    async post(body, params) {
+    async post() {
         if (
             this.channel_type === "livechat" &&
             this.store.env.services["im_livechat.livechat"].state !== SESSION_STATE.PERSISTED
@@ -69,7 +69,7 @@ patch(Thread.prototype, {
             }
             return thread.post(...arguments);
         }
-        const message = await super.post(body, params);
+        const message = await super.post(...arguments);
         this.store.env.services["im_livechat.chatbot"].bus.trigger("MESSAGE_POST", message);
         return message;
     },

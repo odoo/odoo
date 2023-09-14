@@ -497,15 +497,9 @@ export class Store extends BaseStore {
     /**
      * Get the parameters to pass to the message post route.
      */
-    async getMessagePostParams({
-        attachments,
-        body,
-        cannedResponseIds,
-        isNote,
-        mentionedChannels,
-        mentionedPartners,
-        thread,
-    }) {
+    async getMessagePostParams({ body, postData, thread }) {
+        const { attachments, cannedResponseIds, isNote, mentionedChannels, mentionedPartners } =
+            postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
             mentionedChannels,
@@ -526,7 +520,7 @@ export class Store extends BaseStore {
                 });
             partner_ids.push(...recipientIds);
         }
-        const postData = {
+        postData = {
             body: await prettifyMessageContent(body, validMentions),
             message_type: "comment",
             subtype_xmlid: subtype,

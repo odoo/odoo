@@ -12,18 +12,18 @@ import { FormCompiler } from "@web/views/form/form_compiler";
  * @returns
  */
 function compileChatter(node, params) {
-    const chatterContainerXml = createElement('ChatterContainer');
+    const chatterContainerXml = createElement("Chatter");
     const parentURLQuery = new URLSearchParams(window.parent.location.search);
     setAttributes(chatterContainerXml, {
-        token: `'${parentURLQuery.get('access_token')}'` || '',
-        resModel: params.resModel,
-        resId: params.resId,
+        token: `'${parentURLQuery.get("access_token")}'` || "",
+        threadModel: params.resModel,
+        threadId: params.resId,
         projectSharingId: params.projectSharingId,
         isFollower: params.isFollower,
         displayFollowButton: params.displayFollowButton,
     });
-    const chatterContainerHookXml = createElement('div');
-    chatterContainerHookXml.classList.add("o-mail-ChatterContainer", 'o-mail-Form-chatter');
+    const chatterContainerHookXml = createElement("div");
+    chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter", "pt-2");
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
@@ -43,26 +43,26 @@ registry.category("form_compilers").add("portal_chatter_compiler", {
 patch(FormCompiler.prototype, {
     compile(node, params) {
         const res = super.compile(node, params);
-        const chatterContainerHookXml = res.querySelector('.o-mail-Form-chatter');
+        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }
-        if (chatterContainerHookXml.parentNode.classList.contains('o_form_sheet')) {
+        if (chatterContainerHookXml.parentNode.classList.contains("o_form_sheet")) {
             return res; // if chatter is inside sheet, keep it there
         }
-        const formSheetBgXml = res.querySelector('.o_form_sheet_bg');
+        const formSheetBgXml = res.querySelector(".o_form_sheet_bg");
         const parentXml = formSheetBgXml && formSheetBgXml.parentNode;
         if (!parentXml) {
             return res; // miss-config: a sheet-bg is required for the rest
         }
         // after sheet bg (standard position, below form)
         setAttributes(chatterContainerHookXml, {
-            't-att-class': `{
-                'overflow-x-hidden overflow-y-auto o-aside h-100': __comp__.uiService.size >= ${SIZES.XXL},
-                'px-3 py-0': __comp__.uiService.size < ${SIZES.XXL},
+            "t-att-class": `{
+                "overflow-x-hidden overflow-y-auto o-aside h-100": __comp__.uiService.size >= ${SIZES.XXL},
+                "px-3 py-0": __comp__.uiService.size < ${SIZES.XXL},
             }`,
         });
         append(parentXml, chatterContainerHookXml);
         return res;
-    }
+    },
 });

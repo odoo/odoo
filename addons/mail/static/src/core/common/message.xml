@@ -30,7 +30,7 @@
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
-                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }">
+                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }" name="header">
                             <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1" t-esc="authorName"/>
                             </span>
@@ -57,7 +57,7 @@
                             <t t-if="message.is_note and !message.isPending" t-call="mail.Message.actions"/>
                         </div>
                         <div
-                            class="position-relative d-flex"
+                            class="o-mail-Message-contentContainer position-relative d-flex"
                             t-att-class="{
                                    'flex-row-reverse': isAlignedRight,
                                    }"
