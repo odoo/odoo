@@ -5,5 +5,5 @@ class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
     # will be overridden.
-    def payment_request_from_kiosk(self, order):
+    def _payment_request_from_kiosk(self, order):
         pass
