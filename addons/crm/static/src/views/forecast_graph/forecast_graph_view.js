@@ -2,11 +2,11 @@
 
 import { registry } from "@web/core/registry";
 import { graphView } from "@web/views/graph/graph_view";
-import { ForecastSearchModel } from "@crm/views/forecast_search_model";
+import { ForecastTemporalFillSearchModel } from "@crm/views/forecast_temporal_fill_search_model";
 
 export const forecastGraphView = {
     ...graphView,
-    SearchModel: ForecastSearchModel,
+    SearchModel: ForecastTemporalFillSearchModel,
 };
 
 registry.category("views").add("forecast_graph", forecastGraphView);

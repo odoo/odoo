@@ -74,16 +74,6 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "edit duplicate lead",
         run: "click"
     }, {
-        trigger: ".o_field_widget[name=date_deadline] input",
-        content: "set expected closing to end of year",
-        run: function (actions) {
-            // The leads are displayed up to the end of the 'cycle' where the last forced group is
-            // The default is 3 groups being displayed even if they are empty + 1 'add month' group
-            // 01/10/2023 + 3 months = 01/01/2024 so in that case we go to the end of the next year
-            actions.text(`text ${today.plus({'months': 3}).endOf('year').toFormat("MM/dd/yyyy")}`, this.$anchor);
-            this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
-        },
-    }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
         position: "bottom",
@@ -98,8 +88,10 @@ registry.category("web_tour.tours").add('crm_forecast', {
         run: function (actions) {
             actions.text(
                 `text ${today
-                    .plus({ months: 3, years: 1 })
+                    .plus({ years: 1 })
                     .startOf("year")
+                    .plus({ months: 1 })
+                    .startOf("month")
                     .minus({ days: 1 })
                     .toFormat("MM/dd/yyyy")}`
             );
@@ -137,7 +129,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "add next month",
         run: "click"
     }, {
-        trigger: ".o_kanban_group:not('.o_kanban_no_records'):contains('January')",
+        trigger: ".o_kanban_group:not('.o_column_unfold'):contains('January')",
         content: "Check first month of next cycle is listed and unfold folded months",
         run: function () {
             $('.o_column_folded').each(function () {

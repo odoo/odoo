@@ -1704,7 +1704,7 @@ class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
     browser = None
-    browser_size = '1366x768'
+    browser_size = '13660x768'
     touch_enabled = False
     allow_end_on_form = False
 
