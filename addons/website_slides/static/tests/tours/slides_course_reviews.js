@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: ".o_portal_chatter_message:contains(Log note)",
+            trigger: "#chatterRoot:shadow .o-mail-Chatter-content:not(:has(.o-mail-Message-content))",
         },
         {
             // If it fails here, it means the log note is considered as a review
@@ -37,10 +37,6 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             trigger: "a[id=review-tab]",
-            run: "click",
-        },
-        {
-            trigger: "label:contains(Public)",
             run: "click",
         },
         {

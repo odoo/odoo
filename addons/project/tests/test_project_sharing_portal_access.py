@@ -50,6 +50,28 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             if k not in Task.SELF_READABLE_FIELDS
         ])
 
+    def test_mention_suggestions(self):
+        suggestion_ids = {
+            partner.get("id")
+            for partner in self.task_portal.with_user(self.user_portal)
+            .get_mention_suggestions(search="")
+            .get("res.partner")
+        }
+        self.assertEqual(
+            suggestion_ids,
+            {self.user_projectuser.partner_id.id, self.user_portal.partner_id.id},
+            "Portal user as a project collaborator should have access to mention suggestions",
+        )
+        # remove portal user from the project collaborators
+        self.project_portal.collaborator_ids.filtered(
+            lambda rec: rec.partner_id == self.user_portal.partner_id
+        ).unlink()
+        self.assertEqual(
+            {},
+            self.task_portal.with_user(self.user_portal).get_mention_suggestions(search=""),
+            "Non collaborator portal user should not have access to mention suggestions",
+        )
+
     def test_readonly_fields(self):
         """ The fields are not writeable should not be editable by the portal user. """
         view_infos = self.task_portal.get_view(self.env.ref(self.project_sharing_form_view_xml_id).id)

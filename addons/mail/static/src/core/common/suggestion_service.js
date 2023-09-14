@@ -132,7 +132,7 @@ export class SuggestionService {
         };
     }
 
-    searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
+    getPartnerSuggestions(thread) {
         let partners;
         const isNonPublicChannel =
             thread &&
@@ -156,6 +156,11 @@ export class SuggestionService {
                 return persona.type === "partner";
             });
         }
+        return partners;
+    }
+
+    searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
+        const partners = this.getPartnerSuggestions(thread);
         const suggestions = [];
         for (const partner of partners) {
             if (!partner.name) {

@@ -315,6 +315,15 @@ export class Thread extends Record {
             msg.thread = this;
         },
     });
+    /** @type {String|undefined} */
+    access_token;
+    /** @type {String|undefined} */
+    hash;
+    /**
+     * Partner id for non channel threads
+     *  @type {integer|undefined}
+     */
+    pid;
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -541,6 +550,10 @@ export class Thread extends Record {
         return this.selfMember?.localMessageUnreadCounter > 0;
     }
 
+    get rpcParams() {
+        return {};
+    }
+
     /** @type {undefined|number[]} */
     lastMessageSeenByAllId = Record.attr(undefined, {
         compute() {
@@ -756,6 +769,7 @@ export class Thread extends Record {
         return {
             thread_id: this.id,
             thread_model: this.model,
+            ...this.rpcParams,
         };
     }
 
@@ -772,6 +786,10 @@ export class Thread extends Record {
         if (this.model === "mail.box" && this.id === "history") {
             return `/mail/history/messages`;
         }
+        return this.fetchRouteChatter;
+    }
+
+    get fetchRouteChatter() {
         return "/mail/thread/messages";
     }
 
@@ -951,29 +969,15 @@ export class Thread extends Record {
         this.messages.add(message);
     }
 
-    /** @param {string} body */
-    async post(
-        body,
-        {
-            attachments = [],
-            isNote = false,
-            parentId,
-            mentionedChannels = [],
-            mentionedPartners = [],
-            cannedResponseIds,
-        } = {}
-    ) {
+    /** @param {string} body
+     *  @param {Object} extraData
+     */
+    async post(body, postData = {}, extraData = {}) {
         let tmpMsg;
-        attachments = [...attachments]; // to not lose them on composer clear
-        const params = await this.store.getMessagePostParams({
-            attachments,
-            body,
-            cannedResponseIds,
-            isNote,
-            mentionedChannels,
-            mentionedPartners,
-            thread: this,
-        });
+        postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
+        const { attachments, parentId, mentionedChannels, mentionedPartners } = postData;
+        const params = await this.store.getMessagePostParams({ body, postData, thread: this });
+        Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
         params.context = { ...user.context, ...params.context, temporary_id: tmpId };
         if (parentId) {

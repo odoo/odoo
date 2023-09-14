@@ -47,7 +47,7 @@ export function onExternalClick(refName, cb) {
     let downTarget, upTarget;
     const ref = useRef(refName);
     function onClick(ev) {
-        if (ref.el && !ref.el.contains(ev.target)) {
+        if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
             upTarget = downTarget = null;
         }

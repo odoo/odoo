@@ -21,8 +21,8 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 export class Chatter extends Component {
     static template = "mail.Chatter";
     static components = { Thread, Composer };
-    static props = ["threadId?", "threadModel"];
-    static defaultProps = { threadId: false };
+    static props = ["composer?", "threadId?", "threadModel", "twoColumns?"];
+    static defaultProps = { composer: true, threadId: false, twoColumns: false };
 
     setup() {
         this.store = useState(useService("mail.store"));
