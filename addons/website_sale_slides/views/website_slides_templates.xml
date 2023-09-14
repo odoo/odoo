@@ -5,8 +5,8 @@
 <template id="lesson_content_quiz" inherit_id="website_slides.lesson_content_quiz">
     <xpath expr="//div[hasclass('o_wslides_js_lesson_quiz')]" position="attributes">
         <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
-        <attribute name="t-att-data-currency-name">product_info['currency_id'].name if product_info else None</attribute>
-        <attribute name="t-att-data-currency-symbol">product_info['currency_id'].symbol if product_info else None</attribute>
+        <attribute name="t-att-data-currency-name">product_info['currency'].name if product_info else None</attribute>
+        <attribute name="t-att-data-currency-symbol">product_info['currency'].symbol if product_info else None</attribute>
         <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
         <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if slide.channel_id.product_id else None</attribute>
         <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
@@ -58,8 +58,8 @@
 <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
     <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">
         <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
-        <attribute name="t-att-data-currency-name">product_info['currency_id'].name if product_info else None</attribute>
-        <attribute name="t-att-data-currency-symbol">product_info['currency_id'].symbol if product_info else None</attribute>
+        <attribute name="t-att-data-currency-name">product_info['currency'].name if product_info else None</attribute>
+        <attribute name="t-att-data-currency-symbol">product_info['currency'].symbol if product_info else None</attribute>
         <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
         <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if product_info else None</attribute>
         <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
@@ -112,17 +112,17 @@
                 <!-- real price -->
                 <div class="oe_price fw-bold text-nowrap h2 my-2"
                      t-esc="product_info['price']"
-                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
                 <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
-                <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
+                <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency'].name"/>
                 <!-- original discounted price, if any -->
                 <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
                      t-esc="product_info['list_price']"
-                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
             </div>
             <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
-                 t-att-data-precision="str(product_info['currency_id'].decimal_places)">
-                <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                 t-att-data-precision="str(product_info['currency'].decimal_places)">
+                <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
             </div>
         </div>
         <t t-if="not invite_preview and channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed">

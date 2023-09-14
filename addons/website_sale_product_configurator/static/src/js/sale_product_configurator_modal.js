@@ -20,6 +20,8 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
      * @param {$.Element} parent The parent container
      * @param {Object} params
      * @param {integer} params.pricelistId
+     * @param {boolean} params.isWebsite If we're on a web shop page, we need some
+     *   custom behavior
      * @param {string} params.okButtonText The text to apply on the "ok" button, typically
      *   "Add" for the sale order and "Proceed to checkout" on the web shop
      * @param {string} params.cancelButtonText same as "params.okButtonText" but
@@ -53,6 +55,10 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
 
         this._super(parent, options);
 
+        this.isWebsite = params.isWebsite;
+        this.forceDialog = params.forceDialog;
+
+        this.dialogClass = 'oe_advanced_configurator_modal' + (params.isWebsite ? ' oe_website_sale' : '');
         this.context = params.context;
         this.rootProduct = params.rootProduct;
         this.container = parent;
@@ -74,20 +80,22 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
     willStart: function () {
         var self = this;
 
-        var uri = this._getUri("/sale_product_configurator/show_advanced_configurator");
-        var getModalContent = ajax.jsonRpc(uri, 'call', {
-            mode: self.mode,
-            product_id: self.rootProduct.product_id,
-            variant_values: self.rootProduct.variant_values,
-            product_custom_attribute_values: self.rootProduct.product_custom_attribute_values,
-            pricelist_id: self.pricelistId || false,
-            add_qty: self.rootProduct.quantity,
-            force_dialog: self.forceDialog,
-            no_attribute: self.rootProduct.no_variant_attribute_values,
-            custom_attribute: self.rootProduct.product_custom_attribute_values,
-            context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
-        })
-        .then(function (modalContent) {
+        var getModalContent = ajax.jsonRpc(
+            '/sale_product_configurator/show_advanced_configurator',
+            'call',
+            {
+                mode: self.mode,
+                product_id: self.rootProduct.product_id,
+                variant_values: self.rootProduct.variant_values,
+                product_custom_attribute_values: self.rootProduct.product_custom_attribute_values,
+                pricelist_id: self.pricelistId || false,
+                add_qty: self.rootProduct.quantity,
+                force_dialog: self.forceDialog,
+                no_attribute: self.rootProduct.no_variant_attribute_values,
+                custom_attribute: self.rootProduct.product_custom_attribute_values,
+                context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
+            }
+        ).then(function (modalContent) {
             if (modalContent) {
                 var $modalContent = $(modalContent);
                 $modalContent = self._postProcessContent($modalContent);
@@ -374,10 +382,14 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
         ).then(function (productId) {
             $parent.find('.product_id').val(productId);
 
-            ajax.jsonRpc(self._getUri("/sale_product_configurator/optional_product_items"), 'call', {
-                'product_id': productId,
-                'pricelist_id': self.pricelistId || false,
-            }).then(function (addedItem) {
+            ajax.jsonRpc(
+                '/sale_product_configurator/optional_product_items',
+                'call',
+                {
+                    'product_id': productId,
+                    'pricelist_id': self.pricelistId || false,
+                }
+            ).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);
 
@@ -504,7 +516,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
      * @private
      */
     _triggerPriceUpdateOnChangeQuantity: function () {
-        return true;
+        return !this.isWebsite;
     },
     /**
      * Returns a unique id for `$el`.
