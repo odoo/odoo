@@ -75,6 +75,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     //-------------------------------------------------------------------------
 
     QUnit.test("default params", async (assert) => {
+        const fixture = getFixture();
         await mountPicker();
 
         assertDateTimePicker({
@@ -101,6 +102,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.deepEqual(
             getTexts(minuteSelect, "option"),
             range(12, (i) => pad2(i * 5))
+        );
+        assert.strictEqual(
+            fixture
+                .querySelector(".o_datetime_picker")
+                .style.getPropertyValue("--DateTimePicker__Day-template-columns"),
+            "8"
         );
     });
 
@@ -635,6 +642,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("additional month, empty range value", async (assert) => {
+        const fixture = getFixture();
         await mountPicker({
             value: [null, null],
             range: true,
@@ -683,9 +691,16 @@ QUnit.module("Components", ({ beforeEach }) => {
             getTexts(secondTimePicker[1], "option"),
             range(12, (i) => pad2(i * 5))
         );
+        assert.strictEqual(
+            fixture
+                .querySelector(".o_datetime_picker")
+                .style.getPropertyValue("--DateTimePicker__Day-template-columns"),
+            "7"
+        );
     });
 
     QUnit.test("range value", async (assert) => {
+        const fixture = getFixture();
         await mountPicker({
             value: [
                 DateTime.fromObject({ day: 5, hour: 17, minute: 18 }),
@@ -737,9 +752,16 @@ QUnit.module("Components", ({ beforeEach }) => {
             getTexts(secondTimePicker[1], "option"),
             range(12, (i) => pad2(i * 5))
         );
+        assert.strictEqual(
+            fixture
+                .querySelector(".o_datetime_picker")
+                .style.getPropertyValue("--DateTimePicker__Day-template-columns"),
+            "7"
+        );
     });
 
     QUnit.test("range value on small device", async (assert) => {
+        const fixture = getFixture();
         isSmall = true;
 
         await mountPicker({
@@ -781,6 +803,12 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.deepEqual(
             getTexts(secondTimePicker[1], "option"),
             range(12, (i) => pad2(i * 5))
+        );
+        assert.strictEqual(
+            fixture
+                .querySelector(".o_datetime_picker")
+                .style.getPropertyValue("--DateTimePicker__Day-template-columns"),
+            "7"
         );
     });
 
@@ -1272,6 +1300,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("disable show week numbers", async (assert) => {
+        const fixture = getFixture();
         await mountPicker({ showWeekNumbers: false });
 
         assertDateTimePicker({
@@ -1292,5 +1321,11 @@ QUnit.module("Components", ({ beforeEach }) => {
             ],
             time: [[13, 0]],
         });
+        assert.strictEqual(
+            fixture
+                .querySelector(".o_datetime_picker")
+                .style.getPropertyValue("--DateTimePicker__Day-template-columns"),
+            "7"
+        );
     });
 });
