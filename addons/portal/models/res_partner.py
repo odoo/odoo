@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, api
 
 
 class ResPartner(models.Model):
@@ -18,3 +17,16 @@ class ResPartner(models.Model):
         edit it (as in backend)."""
         self.ensure_one()
         return not self.parent_id
+
+    @api.model
+    def _get_portal_partner_from_context(self):
+        portal_partner = self.env.context.get("portal_partner")
+        if portal_partner and isinstance(portal_partner, self.pool["res.partner"]):
+            return portal_partner
+        return self.env["res.partner"]
+
+    @api.model
+    def _get_current_persona(self):
+        if partner := self._get_portal_partner_from_context():
+            return (partner, self.env["mail.guest"])
+        return super()._get_current_persona()

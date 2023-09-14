@@ -65,7 +65,7 @@
                             <t t-if="message.is_note and !message.isPending" t-call="mail.Message.actions"/>
                         </div>
                         <div
-                            class="position-relative d-flex"
+                            class="o-mail-Message-contentContainer position-relative d-flex"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,

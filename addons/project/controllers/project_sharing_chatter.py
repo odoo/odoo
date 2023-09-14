@@ -30,7 +30,7 @@ class ProjectSharingChatter(PortalChatter):
         return task[task._mail_post_token_field]
 
     # ============================================================ #
-    # Note concerning the methods portal_chatter_(init/post/fetch)
+    # Note concerning the methods portal_chatter_(post/fetch)
     # ============================================================ #
     #
     # When the project is shared to a portal user with the edit rights,
@@ -70,17 +70,6 @@ class ProjectSharingChatter(PortalChatter):
     #   work with other installed applications or customizations
 
     @route()
-    def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):
-        project_sharing_id = kwargs.get('project_sharing_id')
-        if project_sharing_id:
-            # if there is a token in `kwargs` then it should be the access_token of the project shared
-            token = self._check_project_access_and_get_token(project_sharing_id, res_model, res_id, kwargs.get('token'))
-            if token:
-                del kwargs['project_sharing_id']
-                kwargs['token'] = token
-        return super().portal_chatter_init(res_model, res_id, domain=domain, limit=limit, **kwargs)
-
-    @route()
     def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
         project_sharing_id = kwargs.get("project_sharing_id")
         if project_sharing_id:
@@ -93,10 +82,10 @@ class ProjectSharingChatter(PortalChatter):
         return super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
 
     @route()
-    def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
+    def portal_message_fetch(self, thread_model, thread_id, domain=False, limit=10, after=None, before=None, **kw):
         project_sharing_id = kw.get('project_sharing_id')
         if project_sharing_id:
-            token = self._check_project_access_and_get_token(project_sharing_id, res_model, res_id, kw.get('token'))
+            token = self._check_project_access_and_get_token(project_sharing_id, thread_model, thread_id, kw.get('token'))
             if token is not None:
                 kw['token'] = token # Update token (either string which contains token value or False)
-        return super().portal_message_fetch(res_model, res_id, domain=domain, limit=limit, offset=offset, **kw)
+        return super().portal_message_fetch(thread_model, thread_id, domain=domain, limit=limit, after=after, before=before, **kw)

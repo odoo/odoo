@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import email_normalize
+from odoo.osv import expression
 
 
 class ResPartner(models.Model):
@@ -80,3 +80,30 @@ class ResPartner(models.Model):
         else:
             action['domain'] = search_domain
         return action
+
+    @api.model
+    def get_mention_suggestions_from_task(self, task_id, search, limit=8):
+        """Return 'limit'-first partners' such that the name or email matches a 'search' string.
+        Prioritize partners that are also (internal) users, and then extend the research to all partners.
+        Only followers of the given task or followers of its project are returned.
+        The return format is a list of partner data (as per returned by `mail_partner_format()`).
+        """
+        task_sudo = self.env['project.task'].sudo().search([('id', '=', task_id)])
+        shared_project_sudo = task_sudo.project_id
+        shared_project = shared_project_sudo.with_user(self.env.user)
+        if not (shared_project and shared_project._check_project_sharing_access()):
+            return []
+        try:
+            shared_project.check_access_rights('read')
+            shared_project.check_access_rule('read')
+        except AccessError:
+            return []
+        followers = shared_project_sudo.message_follower_ids + task_sudo.message_follower_ids
+        domain = expression.AND(
+            [
+                self._get_mention_suggestions_domain(search),
+                [("id", "in", followers.partner_id.ids)],
+            ]
+        )
+        partners = self.sudo()._search_mention_suggestions(domain, limit)
+        return list(partners.mail_partner_format().values())

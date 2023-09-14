@@ -5,7 +5,8 @@ from odoo.exceptions import ValidationError
 
 from odoo import _, http
 from odoo.http import request
-from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
+from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.portal.models.mail_thread import add_portal_partner_to_context
 from odoo.tools import plaintext2html, html2plaintext
 
 
@@ -41,6 +42,7 @@ class SlidesPortalChatter(PortalChatter):
             })
         return result
 
+    @add_portal_partner_to_context
     @http.route([
         '/slides/mail/update_comment',
         '/mail/chatter_update',
@@ -55,8 +57,7 @@ class SlidesPortalChatter(PortalChatter):
 
         self._portal_post_check_attachments(attachment_ids, post.get('attachment_tokens', []))
 
-        pid = int(post['pid']) if post.get('pid') else False
-        if not _check_special_access(thread_model, thread_id, post.get('token'), post.get('hash'), pid):
+        if not request.env["res.partner"]._get_portal_partner_from_context():
             raise Forbidden()
 
         # fetch and update mail.message

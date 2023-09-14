@@ -8,11 +8,15 @@ patch(Thread.prototype, {
         if (requestList.includes("messages")) {
             this.fetchNewMessages();
         }
-        const result = await rpc("/mail/thread/data", {
+        const result = await rpc("/mail/thread/data", this.getFetchDataParams(requestList));
+        this.store.insert(result, { html: true });
+    },
+
+    getFetchDataParams(requestList) {
+        return {
             request_list: requestList,
             thread_id: this.id,
             thread_model: this.model,
-        });
-        this.store.insert(result, { html: true });
+        };
     },
 });

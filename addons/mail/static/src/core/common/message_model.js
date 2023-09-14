@@ -372,15 +372,15 @@ export class Message extends Record {
     }
 
     async react(content) {
-        await rpc(
-            "/mail/message/reaction",
-            {
-                action: "add",
-                content,
-                message_id: this.id,
-            },
-            { silent: true }
-        );
+        await rpc("/mail/message/reaction", this.getReactParams(content), { silent: true });
+    }
+
+    getReactParams(content) {
+        return {
+            action: "add",
+            content,
+            message_id: this.id,
+        };
     }
 
     async remove() {
