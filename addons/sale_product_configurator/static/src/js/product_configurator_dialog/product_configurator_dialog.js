@@ -234,6 +234,13 @@ export class ProductConfiguratorDialog extends Component {
         if (this._isPossibleCombination(product)) {
             const updatedValues = await this._updateCombination(product, product.quantity);
             Object.assign(product, updatedValues);
+            // When a combination should exist but was deleted from the database, it should not be
+            // selectable and considered as an exclusion.
+            if (!product.id && product.attribute_lines.every(ptal => ptal.create_variant === "always")) {
+                const combination = this._getCombination(product);
+                product.archived_combinations = product.archived_combinations.concat([combination]);
+                this._checkExclusions(product);
+            }
         }
     }
 
