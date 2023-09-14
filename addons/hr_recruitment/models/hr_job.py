@@ -30,7 +30,7 @@ class Job(models.Model):
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
         domain=lambda self: self._address_id_domain(),
-        help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.")
+        help="Select an address where the employees will be working. Addresses need to be added to the Partner of the Company to be visible in the field.")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
     all_application_count = fields.Integer(compute='_compute_all_application_count', string="All Application Count")
