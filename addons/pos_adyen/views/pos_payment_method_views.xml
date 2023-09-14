@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='use_payment_terminal']" position="after">
                 <!-- Adyen -->
-                <field name="adyen_api_key" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
+                <field name="adyen_api_key" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'" password="True"/>
                 <field name="adyen_terminal_identifier" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
                 <field name="adyen_test_mode" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
             </xpath>
