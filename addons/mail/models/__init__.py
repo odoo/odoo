@@ -53,7 +53,6 @@ from . import bus_presence
 from . import ir_action_act_window
 from . import ir_actions_server
 from . import ir_attachment
-from . import ir_binary
 from . import ir_config_parameter
 from . import ir_cron
 from . import ir_http
