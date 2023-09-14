@@ -43,6 +43,38 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         setupViewRegistries();
     });
 
+    QUnit.module('basic');
+
+
+    QUnit.test('simple rendering', async function (assert) {
+        assert.expect(2);
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: "<p>toto toto toto</p><p>tata</p>",
+        }
+        ];
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" style="height: 100px"/>
+                </form>`,
+        });
+
+        const field = target.querySelector('.o_field_html[name="txt"]');
+        const editable = field.querySelector("[contenteditable='true']");
+        console.log(target.cloneNode(true))
+        assert.strictEqual(editable.innerHTML,
+            '<p>toto toto toto</p><p>tata</p>',
+            "should have rendered a div with correct content");
+        assert.strictEqual(field.getAttribute('style'), 'height: 100px',
+            "should have applied the style correctly");
+    });
+
 
     QUnit.module('Sandboxed Preview');
 
@@ -186,7 +218,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await iframeReady(iframe);
         assert.strictEqual(iframe.contentDocument.body.textContent.trim(), 'Hello');
         assert.strictEqual(iframe.contentDocument.head.querySelector('style').textContent.trim().replace(/\s/g, ''),
-                           'body{color:red;}', 'Head nodes should remain unaltered in the head');
+            'body{color:red;}', 'Head nodes should remain unaltered in the head');
         assert.equal(iframe.contentWindow.getComputedStyle(iframe.contentDocument.body).color, 'rgb(255, 0, 0)');
         // check button is there
         assert.containsOnce(target, '#codeview-btn-group > button');
@@ -203,9 +235,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await iframeReady(iframe);
         assert.strictEqual(iframe.contentDocument.body.textContent.trim(), 'Hi');
         assert.strictEqual(iframe.contentDocument.head.querySelector('style').textContent.trim().replace(/\s/g, ''),
-                          'body{color:blue;}', 'Head nodes should remain unaltered in the head');
+            'body{color:blue;}', 'Head nodes should remain unaltered in the head');
         assert.equal(iframe.contentWindow.getComputedStyle(iframe.contentDocument.body).color, 'rgb(0, 0, 255)',
-                     'Style should be applied inside the iframe.');
+            'Style should be applied inside the iframe.');
 
         const saveButton = target.querySelector('.o_form_button_save');
         assert.ok(saveButton);
@@ -339,7 +371,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     <br>
                 </p>
             `.replace(/(?:\s|(?:\r\n))+/g, ' ')
-             .replace(/\s?(<|>)\s?/g, '$1');
+                .replace(/\s?(<|>)\s?/g, '$1');
         };
         // Promise to resolve when we want the response of the modify_image RPC.
         const modifyImagePromise = makeDeferred();
@@ -496,9 +528,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
             // Simulate paste.
             editor._onPaste({
-                preventDefault() {},
+                preventDefault() { },
                 clipboardData: {
-                    getData() {},
+                    getData() { },
                     items: [{
                         kind: 'file',
                         type: 'image/png',
