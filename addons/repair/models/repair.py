@@ -385,7 +385,8 @@ class Repair(models.Model):
         for repair in self:
             if repair.sale_order_line_id:
                 ro_origin_product = repair.sale_order_line_id.product_template_id
-                if ro_origin_product.detailed_type == 'service':
+                # TODO: As 'service_policy' only appears with 'sale_project' module, isolate conditions related to this field in a 'sale_project_repair' module
+                if ro_origin_product.detailed_type == 'service' and ('service_policy' not in ro_origin_product and ro_origin_product.service_policy == 'ordered_prepaid'):
                     repair.sale_order_line_id.qty_delivered = repair.sale_order_line_id.product_uom_qty
             if not repair.product_id:
                 continue
