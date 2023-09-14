@@ -339,9 +339,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         return mail
 
-    def _find_sent_email(self, email_from, emails_to, subject=None):
-        """ Find an outgoing email based on from / to and optional subject when
-        having a conflict.
+    def _find_sent_email(self, email_from, emails_to, subject=None, body=None, attachment_names=None):
+        """ Find an outgoing email based on from / to and optional subject, body
+        and attachment names when having conflicts.
 
         :return sent_email: an outgoing email generated during the mock;
         """
@@ -349,9 +349,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             mail for mail in self._mails
             if set(mail['email_to']) == set(emails_to) and mail['email_from'] == email_from
         ]
-        if len(sent_emails) > 1 and subject:
+        if len(sent_emails) > 1:
             # try to better filter
-            sent_email = next((mail for mail in sent_emails if mail['subject'] == subject), False)
+            sent_email = next((mail for mail in sent_emails
+                               if (subject is None or mail['subject'] == subject)
+                               and (body is None or mail['body'] == body)
+                               and (attachment_names is None
+                                    or set(attachment_names) == set(attachment[0] for attachment in mail['attachments']))
+                               ), False)
         else:
             sent_email = sent_emails[0] if sent_emails else False
         return sent_email
@@ -563,14 +568,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """
         direct_check = ['body_alternative', 'email_from', 'references', 'reply_to', 'subject']
         content_check = ['body_alternative_content', 'body_content', 'references_content']
-        list_check = ['email_bcc', 'email_cc', 'email_to']
+        email_list_check = ['email_bcc', 'email_cc', 'email_to']
         other_check = ['attachments', 'attachments_info', 'body']
 
         expected = {}
-        for fname in direct_check + content_check + list_check + other_check:
+        for fname in direct_check + content_check + email_list_check + other_check:
             if fname in values:
                 expected[fname] = values[fname]
-        unknown = set(values.keys()) - set(direct_check + content_check + list_check + other_check)
+        unknown = set(values.keys()) - set(direct_check + content_check + email_list_check + other_check)
         if unknown:
             raise NotImplementedError('Unsupported %s' % ', '.join(unknown))
 
@@ -591,10 +596,15 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         expected['email_to'] = email_to_list
 
         # fetch mail
+        attachments = [attachment['name']
+                       for attachment in values.get('attachments_info', [])
+                       if 'name' in attachment]
         sent_mail = self._find_sent_email(
             expected['email_from'],
             expected['email_to'],
-            values.get('subject'),
+            subject=values.get('subject'),
+            body=values.get('body'),
+            attachment_names=attachments or None
         )
         debug_info = ''
         if not sent_mail:
@@ -629,7 +639,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         if 'body' in expected:
             self.assertHtmlEqual(expected['body'], sent_mail['body'], 'Value for %s: expected %s, received %s' % ('body', expected['body'], sent_mail['body']))
         # beware to avoid list ordering differences (but Falsy values -> compare directly)
-        for val in list_check:
+        for val in email_list_check:
             if expected.get(val):
                 self.assertEqual(sorted(expected[val]), sorted(sent_mail[val]),
                                  'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
