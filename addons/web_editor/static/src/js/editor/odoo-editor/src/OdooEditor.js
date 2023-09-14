@@ -1961,7 +1961,14 @@ export class OdooEditor extends EventTarget {
             doJoin &&
             next &&
             !(next.previousSibling && next.previousSibling === joinWith) &&
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
             this.editable.contains(next) && (closestElement(joinWith,'TD') === closestElement(next, 'TD'))
+||||||| parent of c79acba4cc6 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+            this.editable.contains(next)
+=======
+            this.editable.contains(next) &&
+            closestElement(joinWith, "TD") === closestElement(next, "TD")
+>>>>>>> c79acba4cc6 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
         ) {
             const restore = preserveCursor(this.document);
             this.observerFlush();
