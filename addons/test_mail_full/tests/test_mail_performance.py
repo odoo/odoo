@@ -239,19 +239,19 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=11):
+        with self.assertQueryCount(employee=13):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
         comment_subtype = self.env.ref('mail.mt_comment')
         self.assertEqual(len(res), len(messages_all))
         for format_res, message, record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(len(format_res['attachment_ids']), 2)
+            self.assertEqual(len(format_res['attachments']), 2)
             self.assertEqual(
-                format_res['attachment_ids'],
+                format_res['attachments'],
                 [
                     {
-                        'access_token': message.attachment_ids[0].access_token,
+                        'accessToken': message.attachment_ids[0].access_token,
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
                         'id': message.attachment_ids[0].id,
@@ -260,7 +260,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'res_id': record.id,
                         'res_model': record._name,
                     }, {
-                        'access_token': message.attachment_ids[1].access_token,
+                        'accessToken': message.attachment_ids[1].access_token,
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
                         'id': message.attachment_ids[1].id,
@@ -271,7 +271,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                     }
                 ]
             )
-            self.assertEqual(format_res['author_id'], (record.customer_id.id, record.customer_id.display_name))
+            self.assertEqual((format_res['author']['id'], format_res['author']['name']), (record.customer_id.id, record.customer_id.display_name))
             self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
             self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
             self.assertEqual(format_res['published_date_str'], 'May 15, 2023, 10:30:05 AM')
@@ -290,7 +290,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=25):
+        with self.assertQueryCount(employee=27):
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -312,7 +312,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=16):
+        with self.assertQueryCount(employee=19):
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)

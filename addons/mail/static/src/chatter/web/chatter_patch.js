@@ -190,6 +190,36 @@ patch(Chatter.prototype, {
         return _t("Unfollow");
     },
 
+    changeThreadIfNeeded(nextProps) {
+        const props = nextProps ? nextProps : this.props;
+        if (
+            this.props.threadId !== nextProps?.threadId ||
+            this.props.threadModel !== nextProps?.threadModel
+        ) {
+            this.state.thread.name = props.webRecord?.data?.display_name || undefined;
+            this.attachmentUploader.thread = this.state.thread;
+            if (props.threadId === false) {
+                if (this.state.thread.messages.length === 0) {
+                    this.state.thread.messages.push({
+                        id: this.store.getNextTemporaryId(),
+                        author: this.store.self,
+                        body: _t("Creating a new record..."),
+                        message_type: "notification",
+                        trackingValues: [],
+                        res_id: props.threadId,
+                        model: props.threadModel,
+                    });
+                }
+                this.state.composerType = false;
+            } else {
+                this.onThreadCreated?.(this.state.thread);
+                this.onThreadCreated = null;
+                this.closeSearch();
+            }
+        }
+        super.changeThreadIfNeeded(...arguments);
+    },
+
     async _follow(thread) {
         await this.orm.call(thread.model, "message_subscribe", [[thread.id]], {
             partner_ids: [this.store.self.id],

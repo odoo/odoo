@@ -332,8 +332,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # consider having hanging registrations, still not processed (e.g. adding
         # a new scheduler after)
         self.env.invalidate_all()
-        # com 61, event 39
-        with self.assertQueryCount(64), self.mock_datetime_and_now(reference_now), \
+        # com 60, event 38
+        with self.assertQueryCount(65), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {

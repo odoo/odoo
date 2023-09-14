@@ -34,11 +34,10 @@ export class Chatter extends Component {
         FileUploader,
         SearchMessagesPanel,
     };
-    static props = ["threadId?", "threadModel", "webRecord?", "saveRecord?"];
+    static props = ["threadId?", "threadModel"];
     static defaultProps = { threadId: false };
 
     setup() {
-        super.setup();
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
         this.store = useState(useService("mail.store"));

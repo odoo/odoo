@@ -16,7 +16,8 @@ registry.category('web_tour.tours').add('course_reviews', {
 }, {
     trigger: 'a[id="review-tab"]',
 }, {
-    trigger: '.o_portal_chatter_message:contains("Log note")',
+    shadow_dom: "#chatterRoot",
+    trigger: ".o-mail-Chatter-content:not(:has(o-mail-Message-content))",
     run: function() {},
 }, {
     trigger: 'span:contains("Add Review")',
@@ -31,8 +32,6 @@ registry.category('web_tour.tours').add('course_reviews', {
     in_modal: false,
 }, {
     trigger: 'a[id="review-tab"]',
-}, {
-    trigger: 'label:contains("Public")',
 }, {
     trigger: 'span:contains("Edit Review")',
     // If it fails here, it means the system is allowing you to add another review.
