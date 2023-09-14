@@ -16,13 +16,11 @@ class AccountMove(models.Model):
         string='B_MPV_Prowizja',
         help="Supply of agency and other services pertaining to the transfer of a single-purpose voucher",
     )
-    l10n_pl_delivery_date = fields.Date(
-        string='PL Delivery Date',
-        copy=False,
-    )
-    l10n_pl_show_delivery_date = fields.Boolean(compute='_compute_l10n_pl_show_delivery_date')
 
-    @api.depends('l10n_pl_delivery_date')
-    def _compute_l10n_pl_show_delivery_date(self):
+    @api.depends('country_code', 'move_type')
+    def _compute_show_delivery_date(self):
+        # EXTENDS 'account'
+        super()._compute_show_delivery_date()
         for move in self:
-            move.l10n_pl_show_delivery_date = move.l10n_pl_delivery_date and move.is_sale_document()
+            if move.country_code == 'PL':
+                move.show_delivery_date = move.is_sale_document()
