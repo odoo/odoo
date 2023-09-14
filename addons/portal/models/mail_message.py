@@ -4,6 +4,7 @@
 from odoo import models
 from odoo.http import request
 from odoo.tools import format_datetime
+from collections import defaultdict
 
 
 class MailMessage(models.Model):
@@ -39,7 +40,6 @@ class MailMessage(models.Model):
         return {
             'attachment_ids',
             'author_avatar_url',
-            'author_id',
             'body',
             'date',
             'id',
@@ -47,6 +47,8 @@ class MailMessage(models.Model):
             'is_message_subtype_note',
             'published_date_str',
             'subtype_id',
+            'res_id',
+            'model',
         }
 
     def _portal_message_format(self, properties_names):
@@ -98,6 +100,13 @@ class MailMessage(models.Model):
                 values['is_message_subtype_note'] = (values.get('subtype_id') or [False, ''])[0] == note_id
             if 'published_date_str' in properties_names:
                 values['published_date_str'] = format_datetime(self.env, values['date']) if values.get('date') else ''
+            values['messageReactionGroups'] = self._reaction_groups(message)
+            author = {
+                'id': message.author_id.id,
+                'is_company': message.author_id.is_company,
+                'name': message.author_id.name,
+            } if message.author_id else [('clear',)]
+            values["author"] = author
         return vals_list
 
     def _portal_message_format_attachments(self, attachment_values):
@@ -116,3 +125,9 @@ class MailMessage(models.Model):
             'video' in (attachment_values["mimetype"] or "")
             else attachment_values["mimetype"])
         return attachment_values
+
+    def _bus_notification_target(self):
+        self.ensure_one()
+        if portal_token := self.env["mail.thread"]._get_access_token_from_context():
+            return 'portal_Chatter-' + portal_token
+        return super()._bus_notification_target()

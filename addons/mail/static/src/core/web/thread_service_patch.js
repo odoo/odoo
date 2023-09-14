@@ -69,14 +69,7 @@ patch(ThreadService.prototype, {
                 isLoadingAttachments: false,
             });
         }
-        if ("mainAttachment" in result) {
-            thread.mainAttachment = result.mainAttachment.id
-                ? this.store.Attachment.insert(result.mainAttachment)
-                : undefined;
-        }
-        if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
-            this.setMainAttachmentFromIndex(thread, 0);
-        }
+
         if ("followers" in result) {
             if (result.selfFollower) {
                 thread.selfFollower = this.store.Follower.insert({

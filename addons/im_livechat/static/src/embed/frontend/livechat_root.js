@@ -19,7 +19,7 @@ export class LivechatRoot extends Component {
     static components = { ChatWindowContainer, LivechatButton, OverlayContainer };
 
     setup() {
-        useSubEnv({ inShadow: true });
+        useSubEnv({ inShadow: true, ShadowRootId: "liveChatRoot" });
         this.overlayService = useService("overlay");
     }
 }

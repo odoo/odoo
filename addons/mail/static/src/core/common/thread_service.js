@@ -173,7 +173,7 @@ export class ThreadService {
         }
         if (thread.type === "chatter") {
             return {
-                thread_id: thread.id,
+                thread_id: parseInt(thread.id),
                 thread_model: thread.model,
             };
         }
@@ -258,10 +258,10 @@ export class ThreadService {
             // feed needactions
             // same for needaction messages, special case for mailbox:
             // kinda "fetch new/more" with needactions on many origin threads at once
-            if (thread.eq(this.store.discuss.inbox)) {
+            if (thread === this.store.discuss.inbox) {
                 for (const message of fetched) {
                     const thread = message.originThread;
-                    if (message.notIn(thread.needactionMessages)) {
+                    if (!thread.needactionMessages.includes(message)) {
                         thread.needactionMessages.unshift(message);
                     }
                 }
@@ -352,7 +352,7 @@ export class ThreadService {
                 });
                 if (!thread.isLoaded) {
                     thread.messages.push(message);
-                    if (message.isNeedaction && message.notIn(thread.needactionMessages)) {
+                    if (message.isNeedaction && !thread.needactionMessages.includes(message)) {
                         thread.needactionMessages.push(message);
                     }
                 }
@@ -726,9 +726,9 @@ export class ThreadService {
                             continue;
                         }
                         if (
-                            member.persona.notEq(thread._store.user) ||
+                            member.persona.id !== thread._store.user?.id ||
                             (serverData.channel.channelMembers[0][1].length === 1 &&
-                                member.persona?.eq(thread._store.user))
+                                member.persona.id === thread._store.user?.id)
                         ) {
                             thread.chatPartnerId = member.persona.id;
                         }

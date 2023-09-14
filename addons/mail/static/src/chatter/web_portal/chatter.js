@@ -5,16 +5,11 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { Composer } from "@mail/core/common/composer";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { Thread } from "@mail/core/common/thread";
-import { Activity } from "@mail/core/web/activity";
-import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
-import { useHover, useScrollPosition } from "@mail/utils/common/hooks";
+import { useScrollPosition } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
-import { RecipientList } from "./recipient_list";
-import { FollowerList } from "./follower_list";
 
 import {
     Component,
-    markup,
     onMounted,
     onPatched,
     onWillStart,
@@ -27,10 +22,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { escapeHTML } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
 
@@ -48,21 +40,15 @@ export class Chatter extends Component {
         Dropdown,
         Thread,
         Composer,
-        Activity,
         FileUploader,
-        FollowerList,
-        SuggestedRecipientsList,
     };
     static props = [
         "close?",
         "compactHeight?",
         "displayName?",
-        "hasActivities?",
-        "hasFollowers?",
         "hasMessageList?",
         "hasMessageListScrollAdjust?",
         "hasParentReloadOnAttachmentsChanged?",
-        "hasParentReloadOnFollowersUpdate?",
         "hasParentReloadOnMessagePosted?",
         "isAttachmentBoxVisibleInitially?",
         "isInFormSheetBg?",
@@ -73,12 +59,9 @@ export class Chatter extends Component {
     ];
     static defaultProps = {
         compactHeight: false,
-        hasActivities: true,
-        hasFollowers: true,
         hasMessageList: true,
         hasMessageListScrollAdjust: false,
         hasParentReloadOnAttachmentsChanged: false,
-        hasParentReloadOnFollowersUpdate: false,
         hasParentReloadOnMessagePosted: false,
         isAttachmentBoxVisibleInitially: false,
         isInFormSheetBg: true,
@@ -90,7 +73,6 @@ export class Chatter extends Component {
     setup() {
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
-        this.activityService = useState(useService("mail.activity"));
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
@@ -100,20 +82,17 @@ export class Chatter extends Component {
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
             scrollToAttachments: 0,
-            showActivities: true,
             showAttachmentLoading: false,
             /** @type {import("@mail/core/common/thread_model").Thread} */
             thread: undefined,
         });
-        this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
             this.threadService.getThread(this.props.threadModel, this.props.threadId)
         );
         this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
-        this.recipientsPopover = usePopover(RecipientList);
-        useChildSubEnv({ inChatter: true });
+        useChildSubEnv({ ...this.env, inChatter: true });
         useDropzone(
             this.rootRef,
             async (ev) => {
@@ -145,14 +124,10 @@ export class Chatter extends Component {
                     name: this.props.webRecord?.data?.display_name || undefined,
                 });
             }
-            return this.load(this.props.threadId, [
-                "followers",
-                "attachments",
-                "suggestedRecipients",
-            ]);
+            return this.load(this.props.threadId, this.requestList);
         });
         onWillUpdateProps((nextProps) => {
-            this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
+            this.load(nextProps.threadId, this.requestList);
             if (nextProps.threadId === false) {
                 this.state.composerType = false;
             }
@@ -199,19 +174,8 @@ export class Chatter extends Component {
         );
     }
 
-    /**
-     * @returns {import("@mail/core/web/activity_model").Activity[]}
-     */
-    get activities() {
-        return this.state.thread.activities;
-    }
-
-    get followerButtonLabel() {
-        return _t("Show Followers");
-    }
-
-    get followingText() {
-        return _t("Following");
+    get requestList() {
+        return ["attachments"];
     }
 
     /**
@@ -226,76 +190,17 @@ export class Chatter extends Component {
     }
 
     /**
-     * @returns {string}
-     */
-    get toRecipientsText() {
-        const recipients = [...this.state.thread.recipients].slice(0, 5).map(({ partner }) => {
-            const text = partner.email ? partner.emailWithoutDomain : partner.name;
-            return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
-                text
-            )}</span>`;
-        });
-        const formatter = new Intl.ListFormat(
-            this.store.env.services["user"].lang?.replace("_", "-"),
-            { type: "unit" }
-        );
-        if (this.state.thread.recipients.size > 5) {
-            recipients.push("…");
-        }
-        return markup(formatter.format(recipients));
-    }
-
-    /**
      * @param {number} threadId
-     * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
+     * @param {['attachments'|'messages']} requestList
      */
-    load(
-        threadId = this.props.threadId,
-        requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
-    ) {
+    load(threadId = this.props.threadId, requestList = ["attachments", "messages"]) {
         const { threadModel } = this.props;
         this.state.thread = this.threadService.getThread(threadModel, threadId);
         this.scrollPosition.model = this.state.thread.scrollPosition;
         if (!threadId) {
             return;
         }
-        if (this.props.hasActivities && !requestList.includes("activities")) {
-            requestList.push("activities");
-        }
         this.threadService.fetchData(this.state.thread, requestList);
-    }
-
-    async _follow(threadModel, threadId) {
-        await this.orm.call(threadModel, "message_subscribe", [[threadId]], {
-            partner_ids: [this.store.self.id],
-        });
-        this.onFollowerChanged();
-    }
-
-    async onClickFollow() {
-        if (this.props.threadId) {
-            this._follow(this.props.threadModel, this.props.threadId);
-        } else {
-            this.onNextUpdate = (nextProps) => {
-                if (nextProps.threadId) {
-                    this._follow(nextProps.threadModel, nextProps.threadId);
-                } else {
-                    return true;
-                }
-            };
-            await this.props.saveRecord?.();
-        }
-    }
-
-    async onClickUnfollow() {
-        await this.threadService.removeFollower(this.state.thread.selfFollower);
-        this.onFollowerChanged();
-    }
-
-    onFollowerChanged() {
-        document.body.click(); // hack to close dropdown
-        this.reloadParentView();
-        this.load(this.props.threadId, ["followers", "suggestedRecipients"]);
     }
 
     onPostCallback() {
@@ -305,14 +210,9 @@ export class Chatter extends Component {
         this.toggleComposer();
         this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.props.threadId, ["followers", "messages", "suggestedRecipients"]);
-    }
-
-    onAddFollowers() {
-        this.load(this.state.thread.id, ["followers", "suggestedRecipients"]);
-        if (this.props.hasParentReloadOnFollowersUpdate) {
-            this.reloadParentView();
-        }
+        const requestList = this.requestList;
+        requestList.splice(this.requestList.indexOf("attachments"), 1, "messages");
+        this.load(this.props.threadId, requestList);
     }
 
     async reloadParentView() {
@@ -345,33 +245,6 @@ export class Chatter extends Component {
             };
             this.props.saveRecord?.();
         }
-    }
-
-    toggleActivities() {
-        this.state.showActivities = !this.state.showActivities;
-    }
-
-    async scheduleActivity() {
-        const schedule = async (threadId) => {
-            await this.activityService.schedule(this.props.threadModel, threadId);
-            this.load(this.props.threadId, ["activities", "messages"]);
-        };
-        if (this.props.threadId) {
-            schedule(this.props.threadId);
-        } else {
-            this.onNextUpdate = (nextProps) => {
-                if (nextProps.threadId) {
-                    schedule(nextProps.threadId);
-                } else {
-                    return true;
-                }
-            };
-            this.props.saveRecord?.();
-        }
-    }
-
-    get unfollowText() {
-        return _t("Unfollow");
     }
 
     async unlinkAttachment(attachment) {
@@ -412,12 +285,5 @@ export class Chatter extends Component {
 
     onScroll() {
         this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
-    }
-
-    onClickRecipientList(ev) {
-        if (this.recipientsPopover.isOpen) {
-            return this.recipientsPopover.close();
-        }
-        this.recipientsPopover.open(ev.target, { thread: this.state.thread });
     }
 }

@@ -322,3 +322,7 @@ class Partner(models.Model):
         if self.env.user._is_public() and guest:
             return (self.env["res.partner"], guest)
         return (self.env.user.partner_id, self.env["mail.guest"])
+
+    def _get_partner_from_context(self):
+        """To override in case of access the partner in env context"""
+        return

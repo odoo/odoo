@@ -23,7 +23,8 @@ export class FileUploader extends Component {
         if (!ev.target.files.length) {
             return;
         }
-        for (const file of ev.target.files) {
+        const target = ev.target;
+        for (const file of target.files) {
             if (!checkFileSize(file.size, this.notification)) {
                 return null;
             }
@@ -47,7 +48,7 @@ export class FileUploader extends Component {
                 this.state.isUploading = false;
             }
         }
-        ev.target.value = null;
+        target.value = null;
         if (this.props.multiUpload && this.props.onUploadComplete) {
             this.props.onUploadComplete({});
         }

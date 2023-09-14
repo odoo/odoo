@@ -4,7 +4,47 @@
 import hashlib
 import hmac
 
+from functools import wraps
+from inspect import Parameter, signature
+
 from odoo import api, fields, models, _
+from odoo.http import request
+from odoo.addons.bus.websocket import wsrequest
+
+
+def check_portal_access_token(func):
+    """ Decorate a function to extract the portal token from the request.
+    The portal token is then available on the context of the current
+    request.
+    """
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        req = request or wsrequest
+        portal_token = kwargs.pop("portal_token", None)
+        portal_res_id = kwargs.pop("portal_res_id", None)
+        portal_res_model = kwargs.pop("portal_res_model", None)
+        if portal_token:
+            record = request.env[kwargs.get('thread_model') or portal_res_model].browse(
+                int(kwargs.get('thread_id') or portal_res_id)).sudo()
+            has_access = hasattr(record, '_check_special_access') and record._check_special_access(portal_token)
+            if has_access:
+                req.env.context = {**req.env.context, "portal_token": portal_token}
+                if req.env.user._is_public() and hasattr(record, 'partner_id'):
+                    req.env.context = {**req.env.context, "portal_partner": record.partner_id}
+        return func(self, *args, **kwargs)
+
+    old_sig = signature(wrapper)
+    params = list(old_sig.parameters.values())
+    new_param_index = next((
+        index for index, param in enumerate(params)
+        if param.kind in [Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD]
+    ), len(params))
+    for param in ["portal_token", "portal_res_id", "portal_res_model"]:
+        new_param = Parameter(param, Parameter.POSITIONAL_OR_KEYWORD, default=None)
+        params.insert(new_param_index, new_param)
+        new_param_index += 1
+    wrapper.__signature__ = old_sig.replace(parameters=params)
+    return wrapper
 
 
 class MailThread(models.AbstractModel):
@@ -78,3 +118,6 @@ class MailThread(models.AbstractModel):
         secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
         token = (self.env.cr.dbname, self[self._mail_post_token_field], pid)
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha256).hexdigest()
+
+    def _get_access_token_from_context(self):
+        return self.env.context.get("portal_token")

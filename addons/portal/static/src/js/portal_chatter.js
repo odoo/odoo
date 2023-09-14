@@ -61,7 +61,7 @@ var PortalChatter = publicWidget.Widget.extend({
         this.on("change:domain", this, this._onChangeDomain);
         // set options and parameters
         this.set('message_count', this.options['message_count']);
-        this.set('messages', this.preprocessMessages(this.result['messages']));
+        // this.set('messages', this.preprocessMessages(this.result['messages']));
         // bind bus event: this (portal.chatter) and 'portal.rating.composer' in portal_rating
         // are separate and sibling widgets, this event is to be triggered from portal.rating.composer,
         // hence bus event is bound to achieve usage of the event in another widget.
@@ -82,15 +82,15 @@ var PortalChatter = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     messageFetch: function (domain) {
-        var self = this;
-        return this._rpc({
-            route: '/mail/chatter_fetch',
-            params: self._messageFetchPrepareParams(),
-        }).then(function (result) {
-            self.set('messages', self.preprocessMessages(result['messages']));
-            self.set('message_count', result['message_count']);
-            return result;
-        });
+//        var self = this;
+//        return this._rpc({
+//            route: '/mail/chatter_fetch',
+//            params: self._messageFetchPrepareParams(),
+//        }).then(function (result) {
+//            self.set('messages', self.preprocessMessages(result['messages']));
+//            self.set('message_count', result['message_count']);
+//            return result;
+//        });
     },
     /**
      * Update the messages format
@@ -176,15 +176,15 @@ var PortalChatter = publicWidget.Widget.extend({
      * @returns {Deferred}
      */
     _chatterInit: function () {
-        var self = this;
-        return this._rpc({
-            route: '/mail/chatter_init',
-            params: this._messageFetchPrepareParams()
-        }).then(function (result) {
-            self.result = result;
-            self.options = Object.assign(self.options, self.result['options'] || {});
-            return result;
-        });
+//        var self = this;
+//        return this._rpc({
+//            route: '/mail/chatter_init',
+//            params: this._messageFetchPrepareParams()
+//        }).then(function (result) {
+//            self.result = result;
+//            self.options = Object.assign(self.options, self.result['options'] || {});
+//            return result;
+//        });
     },
     /**
      * Change the current page by refreshing current domain

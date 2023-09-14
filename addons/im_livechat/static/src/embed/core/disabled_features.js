@@ -11,7 +11,7 @@ import { SESSION_STATE } from "./livechat_service";
 
 patch(Composer.prototype, {
     get allowUpload() {
-        return false;
+        return this.env.inChatter ? super.allowUpload : false;
     },
 });
 

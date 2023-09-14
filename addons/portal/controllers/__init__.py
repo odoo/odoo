@@ -4,3 +4,7 @@
 from . import web
 from . import portal
 from . import mail
+from . import thread
+from . import attachment
+from . import webclient
+from . import message_reaction

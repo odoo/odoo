@@ -9,18 +9,8 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers import mail
+from odoo.addons.portal.models.mail_thread import check_portal_access_token
 from odoo.exceptions import AccessError
-
-
-def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
-    record = request.env[res_model].browse(res_id).sudo()
-    if _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
-        return consteq(_hash, record._sign_token(pid))
-    elif token:  # Token Case: token is the global one of the document
-        token_field = request.env[res_model]._mail_post_token_field
-        return (token and record and consteq(record[token_field], token))
-    else:
-        raise Forbidden()
 
 
 def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=False, nosubscribe=True, **kw):
@@ -55,7 +45,7 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
     # current user access rights (_mail_post_access use case).
     if token or (_hash and pid):
         pid = int(pid) if pid else False
-        if _check_special_access(res_model, res_id, token=token, _hash=_hash, pid=pid):
+        if record._check_special_access(token=token, _hash=_hash, pid=pid):
             record = record.sudo()
         else:
             raise Forbidden()
@@ -181,34 +171,34 @@ class PortalChatter(http.Controller):
         }
 
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
-    def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
+    @check_portal_access_token
+    def portal_message_fetch(self, thread_model, thread_id, domain=False, limit=10, offset=0, **kw):
         if not domain:
             domain = []
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
-        model = request.env[res_model]
+        model = request.env[thread_model]
         field = model._fields['website_message_ids']
         field_domain = field.get_domain_list(model)
         domain = expression.AND([
             domain,
             field_domain,
-            [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
+            [('res_id', '=', thread_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
         ])
 
         # Check access
+        record = request.env[thread_model].browse(thread_id).sudo()
         Message = request.env['mail.message']
-        if kw.get('token'):
-            access_as_sudo = _check_special_access(res_model, res_id, token=kw.get('token'))
+        access_token = request.env['mail.thread']._get_access_token_from_context()
+        if access_token:
+            access_as_sudo = record._check_special_access(token=access_token)
             if not access_as_sudo:  # if token is not correct, raise Forbidden
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
-        return {
-            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(options=kw),
-            'message_count': Message.search_count(domain)
-        }
+        return Message.search(domain, limit=limit, offset=offset).portal_message_format(options=kw)
 
     @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
     def portal_message_update_is_internal(self, message_id, is_internal):

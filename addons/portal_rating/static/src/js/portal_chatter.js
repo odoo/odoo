@@ -124,24 +124,24 @@ PortalChatter.include({
      * @private
      */
     _updateRatingCardValues: function (result) {
-        if (!result['rating_stats']) {
-            return;
-        }
-        const self = this;
-        const ratingData = {
-            'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
-            'percent': [],
-        };
-        Object.keys(result["rating_stats"]["percent"])
-            .sort()
-            .reverse()
-            .forEach((rating) => {
-                ratingData["percent"].push({
-                    num: self.roundToHalf(rating),
-                    percent: roundPrecision(result["rating_stats"]["percent"][rating], 0.01),
-                });
-            });
-        this.set('rating_card_values', ratingData);
+//        if (!result['rating_stats']) {
+//            return;
+//        }
+//        const self = this;
+//        const ratingData = {
+//            'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
+//            'percent': [],
+//        };
+//        Object.keys(result["rating_stats"]["percent"])
+//            .sort()
+//            .reverse()
+//            .forEach((rating) => {
+//                ratingData["percent"].push({
+//                    num: self.roundToHalf(rating),
+//                    percent: roundPrecision(result["rating_stats"]["percent"][rating], 0.01),
+//                });
+//            });
+//        this.set('rating_card_values', ratingData);
     },
     /**
      * @override

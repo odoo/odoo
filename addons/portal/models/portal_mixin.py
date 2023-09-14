@@ -3,7 +3,9 @@
 import uuid
 from ast import literal_eval
 from werkzeug.urls import url_encode
+from werkzeug.exceptions import Forbidden
 from odoo import api, exceptions, fields, models, _
+from odoo.tools import consteq
 
 
 class PortalMixin(models.AbstractModel):
@@ -134,3 +136,13 @@ class PortalMixin(models.AbstractModel):
             '#%s' % anchor if anchor else ''
         )
         return url
+
+    def _check_special_access(self, token='', _hash='', pid=False):
+        self.ensure_one()
+        if _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
+            return consteq(_hash, self._sign_token(pid))
+        elif token:  # Token Case: token is the global one of the document
+            token_field = self.env[self._name]._mail_post_token_field
+            return (token and consteq(self[token_field], token))
+        else:
+            raise Forbidden()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 {
     'name': 'Customer Portal',
     'summary': 'Customer Portal',
@@ -48,10 +49,54 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/js/portal_sidebar.js',
             'portal/static/src/xml/portal_security.xml',
             'portal/static/src/js/components/**/*',
+
+            'web/static/src/views/view_dialogs/form_view_dialog.js',
+            'web/static/src/core/debug/*',
+            'web/static/src/core/commands/*',
+            'web/static/src/model/**/*',
+            'web/static/src/search/**/*',
+            'web/static/src/views/view.js',
+            'web/static/src/views/view_hook.js',
+            'web/static/src/views/onboarding_banner.js',
+            'web/static/src/webclient/actions/action_service.js',
+            'web/static/src/webclient/actions/action_hook.js',
+            'web/static/src/webclient/actions/action_dialog.js',
+            'web/static/src/webclient/actions/reports/utils.js',
+            'web/static/src/webclient/actions/reports/report_action.js',
+            'web/static/src/webclient/actions/reports/report_hook.js',
+            'web/static/src/views/utils.js',
+
+            'mail/static/src/core/**/*',
+            ('remove', 'mail/static/src/core/web/mail_core_web_service.js'),
+            'mail/static/src/discuss/typing/**/*',
+            'mail/static/src/js/utils.js',
+            'web/static/src/views/fields/formatters.js',
+            'web/static/src/views/fields/file_handler.*',
+            'mail/static/src/utils/common/**/*',
+            'mail/static/src/chatter/web_portal/**/*',
+            'portal/static/src/embed/core/**/*',
+            'mail/static/src/chatter/portal/**/*',
+            'portal/static/src/embed/frontend/**/*',
+            'portal/static/src/embed/external/**/*',
         ],
         'web.assets_tests': [
             'portal/static/tests/**/*',
         ],
+        'portal.assets_chatter': [
+            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            ('include', 'web._assets_bootstrap_backend'),
+            'web/static/src/webclient/webclient.scss',
+            'web/static/src/core/avatar/avatar.scss',
+            'mail/static/src/core/common/**/*',
+            'mail/static/src/utils/common/**/*',
+            ('remove', 'mail/static/src/**/*.dark.scss'),
+            'mail/static/src/chatter/web_portal/chatter.scss',
+            'portal/static/src/embed/scss/shadow.scss',
+        ]
     },
     'license': 'LGPL-3',
 }

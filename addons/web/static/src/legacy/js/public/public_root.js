@@ -376,18 +376,21 @@ export async function createPublicRoot(RootWidget) {
         }
         return fetch(url, ...args);
     }
-    serviceRegistry.add("rpc", {
-        async: true,
-        start(env) {
-            let rpcId = 0;
-            return function rpc(route, params = {}, settings) {
-                if (!route.match(/^(?:https?:)?\/\//)) {
-                    route = baseUrl + route;
-                }
-                return jsonrpc(env, rpcId++, route, params, settings);
-            };
-        },
-    }, { force: true });
+    
+    if (!registry.category("services").contains("rpc")) {
+        serviceRegistry.add("rpc", {
+            async: true,
+            start(env) {
+                let rpcId = 0;
+                return function rpc(route, params = {}, settings) {
+                    if (!route.match(/^(?:https?:)?\/\//)) {
+                        route = baseUrl + route;
+                    }
+                    return jsonrpc(env, rpcId++, route, params, settings);
+                };
+            },
+        }, { force: true });
+    }
 
     const wowlEnv = makeEnv();
 

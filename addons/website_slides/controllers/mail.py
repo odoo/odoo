@@ -7,7 +7,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import http, _
 from odoo.http import request
-from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
+from odoo.addons.portal.controllers.mail import PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
 
 
@@ -51,7 +51,8 @@ class SlidesPortalChatter(PortalChatter):
         self._portal_post_check_attachments(attachment_ids, attachment_tokens)
 
         pid = int(post['pid']) if post.get('pid') else False
-        if not _check_special_access(res_model, res_id, token=post.get('token'), _hash=post.get('hash'), pid=pid):
+        record = request.env[res_model].browse(res_id).sudo()
+        if not record._check_special_access(token=post.get('token'), _hash=post.get('hash'), pid=pid):
             raise Forbidden()
 
         # fetch and update mail.message
