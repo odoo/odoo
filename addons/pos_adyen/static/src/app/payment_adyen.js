@@ -264,7 +264,7 @@ export class PaymentAdyen extends PaymentInterface {
         const payment_result = payment_response.PaymentResult;
 
         const cashier_receipt = payment_response.PaymentReceipt.find((receipt) => {
-            receipt.DocumentQualifier == "CashierReceipt";
+            return receipt.DocumentQualifier == "CashierReceipt";
         });
 
         if (cashier_receipt) {
@@ -274,7 +274,7 @@ export class PaymentAdyen extends PaymentInterface {
         }
 
         const customer_receipt = payment_response.PaymentReceipt.find((receipt) => {
-            receipt.DocumentQualifier == "CustomerReceipt";
+            return receipt.DocumentQualifier == "CustomerReceipt";
         });
 
         if (customer_receipt) {

@@ -193,7 +193,7 @@ class PosSelfOrderController(http.Controller):
         if not order_sudo or not payment_method_sudo or payment_method_sudo not in order_sudo.config_id.payment_method_ids:
             raise NotFound("Order or payment method not found")
 
-        status = payment_method_sudo.payment_request_from_kiosk(order_sudo)
+        status = payment_method_sudo._payment_request_from_kiosk(order_sudo)
 
         if not status:
             raise BadRequest("Something went wrong")
