@@ -1020,8 +1020,13 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
     }
 
-    const selectedTextNodes = getSelectedNodes(editor.editable)
+    // Get selected nodes within td to handle non-p elements like h1, h2...
+    // Targeting <br> to ensure span stays inside its corresponding block node.
+    const selectedNodesInTds = [...editor.editable.querySelectorAll('.o_selected_td')]
+        .map(node => closestElement(node).querySelector('br'));
+    const selectedNodes = getSelectedNodes(editor.editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable && isVisibleTextNode(n));
+    const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
@@ -1051,7 +1056,6 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
 
         const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
-
         if (firstBlockOrClassHasFormat && !applyStyle) {
             formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
         } else if (!firstBlockOrClassHasFormat && applyStyle) {
@@ -1293,7 +1297,7 @@ export function isSelectionFormat(editable, format) {
     const selectedNodes = getTraversedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
     const isFormatted = formatsSpecs[format].isFormatted;
-    return selectedNodes.every(n => isFormatted(n, editable));
+    return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
 }
 
 export function isUnbreakable(node) {

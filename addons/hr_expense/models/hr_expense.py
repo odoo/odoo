@@ -142,7 +142,7 @@ class HrExpense(models.Model):
         for expense in self:
             expense.same_currency = bool(not expense.company_id or (expense.currency_id and expense.currency_id == expense.company_currency_id))
 
-    @api.depends('product_id')
+    @api.depends('product_id.standard_price')
     def _compute_product_has_cost(self):
         for expense in self:
             expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
