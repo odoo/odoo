@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
+from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 from odoo.tools.sql import create_index
 
@@ -28,7 +29,7 @@ SALE_ORDER_STATE = [
 
 class SaleOrder(models.Model):
     _name = 'sale.order'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
@@ -1098,15 +1099,20 @@ class SaleOrder(models.Model):
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
 
-    def _get_product_catalog_domain(self):
-        """Get the domain to search for products in the catalog.
+    def _default_order_line_values(self):
+        default_data = super()._default_order_line_values()
+        new_default_data = self.env['sale.order.line']._get_product_catalog_lines_data()
+        return {**default_data, **new_default_data}
 
-        For a model that uses products that has to be hidden in the catalog, it must override this
-        method and extend the appropriate domain.
-        :returns: A list of tuples that represents a domain.
-        :rtype: list
-        """
-        return  [('sale_ok', '=', True), ('company_id', 'in', [self.company_id.id, False]),]
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'product_catalog_currency_id': self.currency_id.id,
+            'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
+        }
+
+    def _get_product_catalog_domain(self):
+        return expression.AND([super()._get_product_catalog_domain(), [('sale_ok', '=', True)]])
 
     # INVOICING #
 
@@ -1790,6 +1796,24 @@ class SaleOrder(models.Model):
 
         return generated_invoices
 
+    def _get_product_catalog_order_data(self, products, **kwargs):
+        pricelist = self.pricelist_id._get_products_price(
+            quantity=1.0,
+            products=products,
+            currency=self.currency_id,
+            date=self.date_order,
+            **kwargs,
+        )
+        return {product_id: {'price': price} for product_id, price in pricelist.items()}
+
+    def _get_product_catalog_record_lines(self, product_ids):
+        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
+        for line in self.order_line:
+            if line.display_type or line.product_id.id not in product_ids:
+                continue
+            grouped_lines[line.product_id] |= line
+        return grouped_lines
+
     def _get_product_documents(self):
         self.ensure_one()
 
@@ -1805,6 +1829,39 @@ class SaleOrder(models.Model):
                 document.attached_on == 'quotation'
                 or (self.state == 'sale' and document.attached_on == 'sale_order')
         )
+
+    def _update_order_line_info(self, product_id, quantity, **kwargs):
+        """ Update sale order line information for a given product or create a
+        new one if none exists yet.
+        :param int product_id: The product, as a `product.product` id.
+        :return: The unit price of the product, based on the pricelist of the
+                 sale order and the quantity selected.
+        :rtype: float
+        """
+        sol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
+        if sol:
+            if quantity != 0:
+                sol.product_uom_qty = quantity
+            elif self.state in ['draft', 'sent']:
+                price_unit = self.pricelist_id._get_product_price(
+                    product=sol.product_id,
+                    quantity=1.0,
+                    currency=self.currency_id,
+                    date=self.date_order,
+                    **kwargs,
+                )
+                sol.unlink()
+                return price_unit
+            else:
+                sol.product_uom_qty = 0
+        elif quantity > 0:
+            sol = self.env['sale.order.line'].create({
+                'order_id': self.id,
+                'product_id': product_id,
+                'product_uom_qty': quantity,
+                'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
+            })
+        return sol.price_unit
 
     #=== HOOKS ===#
 

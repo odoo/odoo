@@ -1069,21 +1069,7 @@ class SaleOrderLine(models.Model):
 
     def action_add_from_catalog(self):
         order = self.env['sale.order'].browse(self.env.context.get('order_id'))
-        kanban_view_id = self.env.ref('sale.sale_product_catalog_kanban_view').id
-        search_view_id = self.env.ref('sale.sale_product_catalog_search_view').id
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Products'),
-            'res_model': 'product.product',
-            'views': [(kanban_view_id, 'kanban'), (False, 'form')],
-            'search_view_id': [search_view_id, 'search'],
-            'domain': order._get_product_catalog_domain(),
-            'context': {
-                **self.env.context,
-                **self._get_action_add_from_catalog_extra_context(order),
-            },
-        }
+        return order.action_add_from_catalog()
 
     #=== BUSINESS METHODS ===#
 
@@ -1183,14 +1169,7 @@ class SaleOrderLine(models.Model):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
 
-    def _get_action_add_from_catalog_extra_context(self, order):
-        return dict(
-            product_catalog_order_id=order.id,
-            product_catalog_currency_id=order.currency_id.id,
-            product_catalog_digits=order.order_line._fields['price_unit'].get_digits(order.env),
-        )
-
-    def _get_catalog_info(self):
+    def _get_product_catalog_lines_data(self, **kwargs):
         """ Return information about sale order lines in `self`.
 
         If `self` is empty, this method returns only the default value(s) needed for the product
@@ -1230,6 +1209,7 @@ class SaleOrderLine(models.Model):
                     quantity=1.0,
                     currency=order.currency_id,
                     date=order.date_order,
+                    **kwargs,
                 ),
                 'quantity': sum(
                     self.mapped(

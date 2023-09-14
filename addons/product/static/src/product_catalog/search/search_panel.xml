@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates id="template" xml:space="preserve">
-    <t t-name="sale.ProductCatalogSearchPanel.FiltersGroup" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
+    <t t-name="ProductCatalogSearchPanel.FiltersGroup" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
         <li t-foreach="[...values.keys()]" position="replace">
             <li t-foreach="[...this.state.sectionOfAttributes.keys()]" t-as="attrName" t-key="attrName"
                 class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"

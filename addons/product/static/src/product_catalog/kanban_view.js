@@ -17,4 +17,4 @@ export const productCatalogKanbanView = {
     SearchPanel: ProductCatalogSearchPanel,
 };
 
-registry.category("views").add("sale_product_kanban", productCatalogKanbanView);
+registry.category("views").add("product_kanban_catalog", productCatalogKanbanView);

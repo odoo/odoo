@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ProductCatalogKanbanRecord } from "./kanban_record";
 
 export class ProductCatalogKanbanRenderer extends KanbanRenderer {
-    static template = "sale.ProductCatalogKanbanRenderer";
+    static template = "ProductCatalogKanbanRenderer";
     static components = {
         ...KanbanRenderer.components,
         KanbanRecord: ProductCatalogKanbanRecord,

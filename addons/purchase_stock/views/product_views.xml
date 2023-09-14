@@ -23,4 +23,21 @@
             </field>
         </field>
     </record>
+
+    <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.purchase_stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <div name="o_kanban_qty_available" position="after">
+                <div t-if="record.detailed_type.raw_value == 'product'"
+                     name="o_kanban_qty_forecasted">
+                    <span>Forecasted: </span>
+                    <field name="virtual_available"/>
+                    <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
+                </div>
+            </div>
+        </field>
+    </record>
 </odoo>
