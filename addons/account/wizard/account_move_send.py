@@ -430,8 +430,7 @@ class AccountMoveSend(models.Model):
             .with_context(
                 no_new_invoice=True,
                 mail_notify_author=self.env.user.partner_id.id in partner_ids,
-                mailing_document_based=True)\
-            .message_post(
+            ).message_post(
                 message_type='comment',
                 **kwargs,
                 **{

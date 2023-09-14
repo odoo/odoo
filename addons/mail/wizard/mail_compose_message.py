@@ -1084,8 +1084,7 @@ class MailComposer(models.TransientModel):
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict, recipients_info)
         optout_emails = self._get_optout_emails(mail_values_dict)
         done_emails = self._get_done_emails(mail_values_dict)
-        # in case of an invoice e.g.
-        mailing_document_based = self.env.context.get('mailing_document_based')
+        sent_emails_mapping = {}  # distinct emails sent to each address as {email_address: [mail_values]}
 
         for record_id, mail_values in mail_values_dict.items():
             recipients = recipients_info[record_id]
@@ -1108,7 +1107,7 @@ class MailComposer(models.TransientModel):
             elif optout_emails and mail_to in optout_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_optout'
-            elif done_emails and mail_to in done_emails and not mailing_document_based:
+            elif mail_to in done_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_dup'
             # void of falsy values -> error
@@ -1118,8 +1117,20 @@ class MailComposer(models.TransientModel):
             elif not mail_to_normalized:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
-            elif done_emails is not None and not mailing_document_based:
-                done_emails.append(mail_to)
+            elif mail_to in sent_emails_mapping:
+                # If the number of attachments on the mail exactly matches the number of attachments on the composer
+                # we assume the attachments are copies of the ones attached to the composer and thus are the same
+                if len(self.attachment_ids) == len(mail_values.get('attachment_ids', [])) and\
+                   any(sent_mail.get('subject') == mail_values.get('subject') and
+                       sent_mail.get('body') == mail_values.get('body') for sent_mail in sent_emails_mapping[mail_to]):
+                    mail_values['state'] = 'cancel'
+                    mail_values['failure_type'] = 'mail_dup'
+                else:
+                    sent_emails_mapping[mail_to].append(mail_values)
+            else:
+                sent_emails_mapping[mail_to] = [mail_values]
+
+        done_emails += sent_emails_mapping.keys()
 
         return mail_values_dict
 
