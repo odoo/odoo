@@ -5881,6 +5881,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await editInput(target, ".o_field_widget[name=int_field] input", 64);
+        await nextTick();
 
         assert.containsOnce(document.body, ".modal");
         assert.strictEqual(
@@ -12424,6 +12425,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target, "button[name=do_it]");
+        await nextTick();
         assert.containsNone(target, ".o_form_error_dialog");
         assert.containsOnce(target, ".modal");
         assert.strictEqual(
