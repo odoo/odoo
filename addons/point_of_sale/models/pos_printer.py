@@ -12,8 +12,11 @@ class PosPrinter(models.Model):
     name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
     printer_type = fields.Selection(string='Printer Type', default='iot',
         selection=[('iot', ' Use a printer connected to the IoT Box')])
-    proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")
+    proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy", compute='_compute_proxy_ip')
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
+
+    def _compute_proxy_ip(self):
+        return True
 
     @api.constrains('proxy_ip')
     def _constrains_proxy_ip(self):
