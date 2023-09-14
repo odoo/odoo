@@ -258,7 +258,8 @@ export class LivechatService {
      */
     get thread() {
         return Object.values(this.store.Thread.records).find(
-            ({ id, type }) => type === "livechat" && id === this.sessionCookie?.id
+            ({ id, type }) =>
+                type === "livechat" && id === (this.sessionCookie?.id ?? this.TEMPORARY_ID)
         );
     }
 
