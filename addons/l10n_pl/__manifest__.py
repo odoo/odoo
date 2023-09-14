@@ -24,9 +24,15 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
         'account',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'data/l10n_pl.l10n_pl_tax_office.csv',
         'data/res.country.state.csv',
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
+        'views/account_move_views.xml',
+        'views/product_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
