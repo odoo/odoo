@@ -14,6 +14,7 @@ from odoo.osv import expression
 from odoo.tools import format_list, SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
+from odoo.addons.mail.tools.discuss import Store
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -2009,3 +2010,25 @@ class Task(models.Model):
             ):
                 kwargs["token"] = token
         return super()._get_thread_with_access(thread_id, mode, **kwargs)
+
+    def get_mention_suggestions(self, search, limit=8):
+        """Return the 'limit'-first followers of the given task or followers of its project matching
+        a 'search' string as a list of partner data (returned by `_to_store()`).
+        See similar method for all partners `get_mention_suggestions()`.
+        """
+        self.ensure_one()
+        project = self.project_id
+        if not (
+            project
+            and project._check_project_sharing_access()
+            and project._get_thread_with_access(project.id)
+        ):
+            return {}
+        # sudo: mail.followers - reading message_follower_ids on accessible task/project is allowed
+        followers = project.sudo().message_follower_ids | self.sudo().message_follower_ids
+        domain = expression.AND([
+            self.env["res.partner"]._get_mention_suggestions_domain(search),
+            [("id", "in", followers.partner_id.ids)],
+        ])
+        partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
+        return Store(partners).get_result()

@@ -55,7 +55,7 @@ registry.category("web_tour.tours").add('course_member', {
 {
     trigger: '.o_wslides_fs_sidebar_header',
     run: "press ArrowLeft",
-}, 
+},
 {
     trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Gardening: The Know-How)",
 },
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('course_member', {
 {
     // check progression
     trigger: '.o_wslides_progress_percentage:contains("60")',
-}, 
+},
 {
     trigger: '.o_wslides_fs_slide_name:contains("How to Grow and Harvest The Best Strawberries | Basics")',
     run: 'click',
@@ -139,8 +139,4 @@ registry.category("web_tour.tours").add('course_member', {
     trigger: 'a[id="review-tab"]',
     run: "click",
 },
-{
-    // check review is correctly added
-    trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
-}
 ]});

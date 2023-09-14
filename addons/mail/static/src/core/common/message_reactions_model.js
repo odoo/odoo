@@ -29,6 +29,7 @@ export class MessageReactions extends Record {
                     action: "remove",
                     content: this.content,
                     message_id: this.message.id,
+                    ...this.message.thread.rpcParams,
                 },
                 { silent: true }
             )

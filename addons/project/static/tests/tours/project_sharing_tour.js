@@ -66,11 +66,11 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Change the stage of the task.',
     run: "click",
 }, {
-    trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
+    trigger: ':iframe .o-mail-Composer-input',
     content: 'Write a message in the chatter of the task',
     run: "edit I create a new task for testing purpose.",
 }, {
-    trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
+    trigger: ':iframe .o-mail-Composer-send:enabled',
     content: 'Send the message',
     run: "click",
 }, {

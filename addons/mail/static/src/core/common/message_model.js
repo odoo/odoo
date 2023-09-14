@@ -363,7 +363,12 @@ export class Message extends Record {
     }
 
     get canToggleStar() {
-        return Boolean(!this.is_transient && this.thread && this.store.self.type === "partner");
+        return Boolean(
+            !this.is_transient &&
+                this.thread &&
+                this.store.self.type === "partner" &&
+                this.store.self.isInternalUser
+        );
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
@@ -414,6 +419,7 @@ export class Message extends Record {
             body: await prettifyMessageContent(body, validMentions),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
+            ...this.thread.rpcParams,
         });
         this.store.insert(data, { html: true });
         if (this.hasLink && this.store.hasLinkPreviewFeature) {
@@ -429,6 +435,7 @@ export class Message extends Record {
                     action: "add",
                     content,
                     message_id: this.id,
+                    ...this.thread.rpcParams,
                 },
                 { silent: true }
             )
@@ -441,6 +448,7 @@ export class Message extends Record {
             attachment_tokens: [],
             body: "",
             message_id: this.id,
+            ...this.thread.rpcParams,
         });
         this.body = "";
         this.attachment_ids = [];
