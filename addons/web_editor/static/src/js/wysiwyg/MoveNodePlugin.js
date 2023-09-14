@@ -93,7 +93,14 @@ export class MoveNodePlugin {
                 this._resetHooksNextMousemove = true;
             } else {
                 this._visibleMovableElements.delete(element);
-                this._elementHookMap.get(element).style.display = `none`;
+                const hookElement = this._elementHookMap.get(element);
+                if (hookElement) {
+                    // If hookElement is undefined, it means that this callback
+                    // was called after a new element was inserted in the
+                    // editable, but before the next _updateHooks. The hook will
+                    // be created when that happens.
+                    hookElement.style.display = `none`;
+                }
             }
         }
     }
@@ -186,10 +193,7 @@ export class MoveNodePlugin {
     }
     _getMovableElements() {
         return [...new Set([...this._editable.querySelectorAll(ALLOWED_ELEMENTS)])]
-            .filter((node) =>
-                node.parentElement && node.parentElement.isContentEditable &&
-                isNodeMovable(node)
-            );
+            .filter((node) => isNodeMovable(node));
     }
     _getDroppableElements(draggableNode) {
         return this._getMovableElements().filter((node) =>
