@@ -526,6 +526,12 @@ class HrEmployeePrivate(models.Model):
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
 
+    def _get_age(self, target_date=None):
+        self.ensure_one()
+        if target_date is None:
+            target_date = fields.Date.context_today(self.env.user)
+        return relativedelta(target_date, self.birthday).years if self.birthday else 0
+
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
