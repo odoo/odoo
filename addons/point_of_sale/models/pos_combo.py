@@ -20,7 +20,7 @@ class PosCombo(models.Model):
     _description = "Product combo choices"
     _order = "sequence, id"
     name = fields.Char(string="Name", required=True)
-    combo_line_ids = fields.One2many("pos.combo.line", "combo_id", string="Products in Combo")
+    combo_line_ids = fields.One2many("pos.combo.line", "combo_id", string="Products in Combo", copy=True)
     num_of_products = fields.Integer("No of Products", compute="_compute_num_of_products")
     sequence = fields.Integer(copy=False)
 
