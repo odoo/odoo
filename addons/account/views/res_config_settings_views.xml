@@ -62,6 +62,10 @@
                                 documentation="/applications/finance/accounting/taxation/taxes/taxcloud.html">
                                 <field name="module_account_taxcloud" widget="upgrade_boolean"/>
                             </setting>
+                            <setting id="avatax_settings" string="AvaTax" help="Automatically compute tax rates"
+                                documentation="/applications/finance/accounting/taxation/taxes/avatax.html">
+                                <field name="module_account_avatax" widget="upgrade_boolean"/>
+                            </setting>
                             <setting id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located." documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" help="Apply VAT of the EU country to which goods and services are delivered.">
                                 <field name="module_l10n_eu_oss"/>
                             </setting>
