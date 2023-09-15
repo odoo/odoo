@@ -5,7 +5,10 @@ from psycopg2.extras import Json
 import logging
 from enum import IntEnum
 
+from psycopg2.sql import Composable, SQL
+
 import odoo.modules
+import odoo.tools.sql
 
 _logger = logging.getLogger(__name__)
 
@@ -179,3 +182,15 @@ def has_trigram(cr):
     """
     cr.execute("SELECT proname FROM pg_proc WHERE proname='word_similarity'")
     return len(cr.fetchall()) > 0
+
+def _unaccent_wrapper(x):
+    if isinstance(x, odoo.tools.sql.SQL):
+        return odoo.tools.sql.SQL("unaccent(%s)", x)
+    if isinstance(x, Composable):
+        return SQL('unaccent({})').format(x)
+    return 'unaccent({})'.format(x)
+
+def get_unaccent_wrapper(cr):
+    if odoo.registry(cr.dbname).has_unaccent:
+        return _unaccent_wrapper
+    return lambda x: x

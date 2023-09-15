@@ -121,10 +121,8 @@ import reprlib
 import traceback
 from datetime import date, datetime, time
 
-from psycopg2.sql import Composable, SQL
-
-import odoo.modules
 from odoo.models import BaseModel, check_property_field_value_name
+from odoo.modules.db import get_unaccent_wrapper
 from odoo.tools import pycompat, Query, _generate_table_alias, sql
 
 
@@ -730,17 +728,6 @@ def check_leaf(element, internal=False):
 # --------------------------------------------------
 # SQL utils
 # --------------------------------------------------
-
-def _unaccent_wrapper(x):
-    if isinstance(x, Composable):
-        return SQL('unaccent({})').format(x)
-    return 'unaccent({})'.format(x)
-
-def get_unaccent_wrapper(cr):
-    if odoo.registry(cr.dbname).has_unaccent:
-        return _unaccent_wrapper
-    return lambda x: x
-
 
 class expression(object):
     """ Parse a domain expression
