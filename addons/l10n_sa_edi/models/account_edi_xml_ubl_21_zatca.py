@@ -118,7 +118,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         return {
             **super()._get_partner_address_vals(partner),
             'building_number': partner.l10n_sa_edi_building_number,
-            'neighborhood': partner.street2,
+            'city_subdivision_name ': partner.street2,
             'plot_identification': partner.l10n_sa_edi_plot_identification,
         }
 

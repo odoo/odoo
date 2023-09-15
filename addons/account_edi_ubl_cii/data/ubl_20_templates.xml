@@ -5,7 +5,11 @@
         <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:AddressFormatCode t-att="vals.get('address_format_code_attrs', {})" t-out="vals.get('address_format_code')"/>
             <cbc:StreetName t-out="vals.get('street_name')"/>
+            <cbc:BuildingNumber t-out="vals.get('building_number')"/>
+            <cbc:PlotIdentification t-out="vals.get('plot_identification')"/>
+            <cbc:CitySubdivisionName t-out="vals.get('city_subdivision_name ')"/>
             <cbc:AdditionalStreetName t-out="vals.get('additional_street_name')"/>
             <cbc:CityName t-out="vals.get('city_name')"/>
             <cbc:PostalZone t-out="vals.get('postal_zone')"/>
@@ -58,7 +62,10 @@
                         </t>
                     </cac:RegistrationAddress>
                     <cac:TaxScheme>
-                        <cbc:ID t-out="foreach_vals.get('tax_scheme_id')"/>
+                        <cbc:ID
+                            t-att="foreach_vals.get('tax_scheme_id_attrs', {})"
+                            t-out="foreach_vals.get('tax_scheme_id')"/>
+                        <cbc:Name t-out="foreach_vals.get('tax_name')"/>
                     </cac:TaxScheme>
                 </cac:PartyTaxScheme>
             </t>
@@ -67,8 +74,8 @@
                 <cac:PartyLegalEntity>
                     <cbc:RegistrationName t-out="foreach_vals.get('registration_name')"/>
                     <cbc:CompanyID
-                            t-att="foreach_vals.get('company_id_attrs', {})"
-                            t-out="foreach_vals.get('company_id')"/>
+                        t-att="foreach_vals.get('company_id_attrs', {})"
+                        t-out="foreach_vals.get('company_id')"/>
                     <cac:RegistrationAddress>
                         <t t-call="{{AddressType_template}}">
                             <t t-set="vals" t-value="foreach_vals.get('registration_address_vals', {})"/>
@@ -139,7 +146,11 @@
             <cbc:TaxExemptionReason
                     t-out="vals.get('tax_exemption_reason')"/>
             <cac:TaxScheme>
-                <cbc:ID t-translation="off" t-out="vals.get('tax_scheme_id')"/>
+                <cbc:ID
+                    t-translation="off"
+                    t-att="vals.get('tax_scheme_id_attrs')"
+                    t-out="vals.get('tax_scheme_id')"/>
+                <cbc:Name t-translation="off" t-out="vals.get('tax_scheme_name')"/>
             </cac:TaxScheme>
         </t>
     </template>
@@ -263,7 +274,9 @@
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:UBLVersionID t-out="vals.get('ubl_version_id')"/>
             <cbc:CustomizationID t-out="vals.get('customization_id')"/>
-            <cbc:ProfileID t-out="vals.get('profile_id')"/>
+            <cbc:ProfileID
+                t-att="vals.get('profile_id_attrs', {})"
+                t-out="vals.get('profile_id')"/>
             <cbc:ID t-out="vals.get('id')"/>
             <cbc:IssueDate t-out="vals.get('issue_date')"/>
             <cbc:InvoiceTypeCode

@@ -17,15 +17,8 @@ class AccountMoveSend(models.Model):
     _inherit = 'account.move.send'
 
     enable_ubl_cii_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')  # label for the checkbox_ubl_cii_xml field
+    checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
-
-    @api.model
-    def _get_default_enable_ubl_cii_xml(self, move):
-        return not move.invoice_pdf_report_id \
-            and not move.ubl_cii_xml_id \
-            and move.is_sale_document() \
-            and bool(move.partner_id.ubl_cii_format)
 
     def _get_available_field_values_in_multi(self, move):
         # EXTENDS 'account'
@@ -51,7 +44,7 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         super()._compute_send_mail_extra_fields()
         for wizard in self:
-            wizard.enable_ubl_cii_xml = any(wizard._get_default_enable_ubl_cii_xml(m) for m in wizard.move_ids)
+            wizard.enable_ubl_cii_xml = any(m._need_ubl_cii_xml() for m in wizard.move_ids)
 
     @api.depends('checkbox_ubl_cii_xml')
     def _compute_mail_attachments_widget(self):
@@ -99,9 +92,8 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if self.mode == 'invoice_single' and self.checkbox_ubl_cii_xml and self._get_default_enable_ubl_cii_xml(invoice):
+        if self.mode == 'invoice_single' and self.checkbox_ubl_cii_xml and invoice._need_ubl_cii_xml():
             builder = invoice.partner_id._get_edi_builder()
-
             xml_content, errors = builder._export_invoice(invoice)
             filename = builder._export_invoice_filename(invoice)
 
@@ -136,8 +128,8 @@ class AccountMoveSend(models.Model):
         if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)
 
-        # Always silently generate a Factur-X and embed it inside the PDF (inter-portability)
-        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx':
+        # Always silently generate a Factur-X and embed it inside the PDF for inter-portability
+        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx':
             xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
@@ -163,8 +155,7 @@ class AccountMoveSend(models.Model):
         writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        if 'ubl_cii_xml_options' in invoice_data \
-                and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx' \
+        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
                 and not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
@@ -189,7 +180,7 @@ class AccountMoveSend(models.Model):
         writer_buffer.close()
 
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
-        # Add PDF to XML
+        # Adding the PDF to the XML
         tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
         anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
         if not anchor_elements:
@@ -197,12 +188,19 @@ class AccountMoveSend(models.Model):
 
         filename = invoice_data['pdf_attachment_values']['name']
         content = invoice_data['pdf_attachment_values']['raw']
+
+        edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
+        doc_type_code_vals = edi_model._get_document_type_code_vals(invoice, invoice_data)
+        document_type_code_attributes = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
+        document_type_code_value = doc_type_code_vals.get('value', '')
+
         to_inject = f'''
             <cac:AdditionalDocumentReference
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cbc:ID>{escape(filename)}</cbc:ID>
+                <cbc:DocumentTypeCode {document_type_code_attributes}>{document_type_code_value}</cbc:DocumentTypeCode>
                 <cac:Attachment>
                     <cbc:EmbeddedDocumentBinaryObject
                         mimeCode="application/pdf"
