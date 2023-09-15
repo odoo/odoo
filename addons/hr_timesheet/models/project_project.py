@@ -81,23 +81,10 @@ class Project(models.Model):
             arch = self.env['account.analytic.line']._apply_time_label(arch, related_model=self._name)
         return arch, view
 
-    @api.depends('allow_timesheets', 'timesheet_ids')
+    @api.depends('allow_timesheets', 'timesheet_ids', 'timesheet_encode_uom_id')
     def _compute_remaining_hours(self):
-        timesheets_read_group = self.env['account.analytic.line']._read_group(
-            [('project_id', 'in', self.ids)],
-            ['project_id'],
-            ['unit_amount:sum'],
-        )
-        timesheet_time_dict = {project.id: unit_amount_sum for project, unit_amount_sum in timesheets_read_group}
-        all_outer_subtasks_ids_by_project_id = self._get_outer_subtasks_by_project_id()
-
         for project in self:
-            subtasks_timesheets_read_group = self.env['account.analytic.line']._read_group(
-                [('task_id', 'in', all_outer_subtasks_ids_by_project_id[project.id])],
-                [],
-                ['unit_amount:sum'],
-            )
-            project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0) - subtasks_timesheets_read_group[0][0]
+            project.remaining_hours = project.allocated_hours - project.total_timesheet_time
             project.is_project_overtime = project.remaining_hours < 0
 
     @api.model
@@ -132,7 +119,13 @@ class Project(models.Model):
                 raise ValidationError(_('You cannot use timesheets without an analytic account.'))
 
     def _get_outer_subtasks_by_project_id(self):
-        """TO DOCUMENT"""
+        """ For each project in the recordset, returns the subtasks linked to this project that
+            do not belong to it.
+
+        :return: a dictionary with project id as key and a list of subtask ids as value
+                 e.g. {project1_id: [subtask1_id, subtask2_id, ...], project2_id: ...}
+        :rtype: dict(list())
+        """
         # Getting all subtasks by project (subtasks that do not belong to the project only)
         task_ids_by_project_id = {project.id: project.task_ids.ids for project in self}
         project_id_by_task_ids = defaultdict()
@@ -147,7 +140,9 @@ class Project(models.Model):
         # Keep only subtasks that do not belong in the project
         all_outer_subtasks_ids_by_project_id = defaultdict(list)
         for project_id, subtask_ids in all_subtasks_ids_by_project_id.items():
-            all_outer_subtasks_ids_by_project_id[project_id] = list(subtask_ids - set(task_ids_by_project_id[project_id]))
+            outer_subtasks = list(subtask_ids - set(task_ids_by_project_id[project_id]))
+            if len(outer_subtasks):
+                all_outer_subtasks_ids_by_project_id[project_id] = outer_subtasks
         return all_outer_subtasks_ids_by_project_id
 
     @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
