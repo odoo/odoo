@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api, SUPERUSER_ID, index
 from odoo.http import request
 
 
@@ -124,6 +124,6 @@ class website_form_model_fields(models.Model):
         return True
 
     website_form_blacklisted = fields.Boolean(
-        'Blacklisted in web forms', default=True, index=True,
+        'Blacklisted in web forms', default=True, index=index.false(),
         help='Blacklist this field for web forms'
     )

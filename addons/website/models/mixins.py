@@ -183,7 +183,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index='btree')
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 

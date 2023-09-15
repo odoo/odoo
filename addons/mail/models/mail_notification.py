@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, index
 from odoo.exceptions import AccessError
 from odoo.tools.translate import _
 
@@ -32,7 +32,7 @@ class MailNotification(models.Model):
         ('exception', 'Exception'),
         ('canceled', 'Canceled')
         ], string='Status', default='ready', index=True)
-    is_read = fields.Boolean('Is Read', index=True)
+    is_read = fields.Boolean('Is Read', index=index.false())
     read_date = fields.Datetime('Read Date', copy=False)
     failure_type = fields.Selection(selection=[
         # generic
