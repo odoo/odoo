@@ -41,7 +41,7 @@ class SupplierInfo(models.Model):
         required=True, help="The price to purchase a product")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.company.id, index=1)
+        default=lambda self: self.env.company.id, index=True)
     currency_id = fields.Many2one(
         'res.currency', 'Currency',
         default=lambda self: self.env.company.currency_id.id,
