@@ -25,7 +25,7 @@ class PosSession(models.Model):
             domain = ['&', ('company_id', '=', self.config_id.company_id.id), '|', ('user_id', '=', self.user_id.id), ('id', 'in', self.config_id.employee_ids.ids)]
         else:
             domain = [('company_id', '=', self.config_id.company_id.id)]
-        return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id', 'barcode', 'work_contact_id'], 'load': False}}
+        return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id'], 'load': False}}
 
     def _get_pos_ui_hr_employee(self, params):
         employees = self.env['hr.employee'].search_read(**params['search_params'])
@@ -37,7 +37,6 @@ class PosSession(models.Model):
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
         for employee in employees:
             employee['role'] = 'manager' if employee['user_id'] and employee['user_id'] in manager_ids else 'cashier'
-            employee['access_card'] = employee['barcode']
             employee['barcode'] = bp_per_employee_id[employee['id']]['barcode']
             employee['pin'] = bp_per_employee_id[employee['id']]['pin']
 
