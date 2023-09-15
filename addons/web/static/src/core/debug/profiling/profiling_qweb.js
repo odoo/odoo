@@ -23,9 +23,12 @@ export class ProfilingQwebView extends Component {
         this.ace = useRef("ace");
         this.selector = useRef("selector");
 
-        for (const line of this.profile.data) {
+        let data = JSON.parse(this.props.value);
+        for (const line of data[0].results.data) {
             line.xpath = line.xpath.replace(/([^\]])\//g, "$1[1]/").replace(/([^\]])$/g, "$1[1]");
         }
+        this.props.value = JSON.stringify(data);
+
         this.state = useState({
             viewID: this.profile.data.length ? this.profile.data[0].view_id : 0,
             view: null,
