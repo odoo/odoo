@@ -2780,18 +2780,23 @@ class BaseModel(metaclass=MetaModel):
             comodel = self.env[field.comodel_name]
             subquery = Query(self.env.cr, comodel._table)
             comodel._apply_ir_rules(subquery)
-            # add the extra join condition only if there is an actual subquery
-            extra, extra_params = None, ()
-            if subquery.where_clause:
-                subquery_str, extra_params = subquery.select()
-                extra = '"{rhs}"."%s" IN (%s)' % (field.column2, subquery_str)
             # LEFT JOIN field_relation ON
             #     alias.id = field_relation.field_column1
             #     AND field_relation.field_column2 IN (subquery)
-            rel_alias = query.left_join(
-                alias, 'id', field.relation, field.column1, field.name,
-                extra=extra, extra_params=extra_params,
+            rel_alias = query.make_alias(alias, field.name)
+            condition = SQL(
+                "%s = %s",
+                SQL.identifier(alias, 'id'),
+                SQL.identifier(rel_alias, field.column1),
             )
+            if subquery.where_clause:
+                condition = SQL(
+                    "%s AND %s IN %s",
+                    condition,
+                    SQL.identifier(rel_alias, field.column2),
+                    subquery.subselect(),
+                )
+            query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
             return '"%s"."%s"' % (rel_alias, field.column2)
         elif field.translate and not self.env.context.get('prefetch_langs'):
             lang = self.env.lang or 'en_US'
