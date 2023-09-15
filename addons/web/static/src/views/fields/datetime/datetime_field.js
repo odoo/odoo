@@ -10,6 +10,7 @@ import {
     formatDateTime,
     today,
 } from "@web/core/l10n/dates";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
@@ -196,7 +197,7 @@ export class DateTimeField extends Component {
     isRange(value) {
         return (
             this.relatedField &&
-            (this.props.required || ensureArray(value).filter(Boolean).length === 2)
+            ((this.props.required && evaluateBooleanExpr(this.props.required, this.props.record.evalContextWithVirtualIds)) || ensureArray(value).filter(Boolean).length === 2)
         );
     }
 
