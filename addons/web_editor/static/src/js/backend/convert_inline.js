@@ -561,9 +561,9 @@ function enforceTablesResponsivity(editable) {
                     <td>                                            commonTd
                         [mso: <table><tr>]
                         FOR EACH CHILD:
-                        [mso: <td>]
+                        [mso:            <td>]
                         <div class="o_stacking_wrapper">            wrapDiv
-                            <table>                                 wrapTable
+                            <table class="o_stacking_wrapper">      wrapTable
                                 <tr>                                newTr
                                     <td>                            td
     */
@@ -751,6 +751,12 @@ async function toInline($editable, cssRules, $iframe) {
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+        imgTop.setAttribute('data-fixed-height', 'true');
+    }
+    // Write down the original dimensions of all images.
+    for (const img of editable.querySelectorAll('.img')) {
+        img.setAttribute('data-original-image-width', _getWidth(img));
+        img.setAttribute('data-original-image-height', _getHeight(img));
     }
 
     attachmentThumbnailToLinkImg($editable);
@@ -807,6 +813,11 @@ async function toInline($editable, cssRules, $iframe) {
         if (centeredImage.parentElement.children.length === 1) {
             centeredImage.parentElement.style.setProperty('text-align', 'center');
         }
+    }
+    // Remove temporary attributes.
+    for (const img of editable.querySelectorAll('[data-original-image-width],[data-original-image-height]')) {
+        img.setAttribute('data-original-image-width', _getWidth(img));
+        img.setAttribute('data-original-image-height', _getHeight(img));
     }
 
     // Remove contenteditable attributes
@@ -1670,10 +1681,12 @@ let lastComputedStyle
  * @returns
  */
 function _getStylePropertyValue(element, propertyName) {
-    const computedStyle = lastComputedStyleElement === element ? lastComputedStyle : getComputedStyle(element)
-    lastComputedStyleElement = element;
-    lastComputedStyle = computedStyle;
-    return computedStyle[propertyName] || element.style.getPropertyValue(propertyName);
+    return _withOriginalImageSizes(element, () => {
+        const computedStyle = lastComputedStyleElement === element ? lastComputedStyle : getComputedStyle(element)
+        lastComputedStyleElement = element;
+        lastComputedStyle = computedStyle;
+        return computedStyle[propertyName] || element.style.getPropertyValue(propertyName);
+    });
 }
 /**
  * Equivalent to JQuery's `width` method. Returns the element's visible width.
@@ -1682,7 +1695,7 @@ function _getStylePropertyValue(element, propertyName) {
  * @returns {Number}
  */
 function _getWidth(element) {
-    return parseFloat(getComputedStyle(element).width.replace('px', '')) || 0;
+    return _withOriginalImageSizes(element, () => parseFloat(getComputedStyle(element).width.replace('px', '')) || 0);
 }
 /**
  * Equivalent to JQuery's `height` method. Returns the element's visible height.
@@ -1691,7 +1704,7 @@ function _getWidth(element) {
  * @returns {Number}
  */
 function _getHeight(element) {
-    return parseFloat(getComputedStyle(element).height.replace('px', '')) || 0;
+    return _withOriginalImageSizes(element, () => parseFloat(getComputedStyle(element).height.replace('px', '')) || 0);
 }
 /**
  * Hides the given node (or just its opening/closing tag) for Outlook with mso
@@ -1741,6 +1754,22 @@ function _normalizeStyle(style) {
         }
     }
     return normalizedStyle;
+}
+function _withOriginalImageSizes(element, callback) {
+    const images = [...(element.nodeName === 'IMG' ? [element] : []), ...element.querySelectorAll('img')];
+    const imageStyles = new Map();
+    for (const image of images) {
+        imageStyles.set(image, { width: image.style.width, height: image.style.height });
+        image.style.width = image.getAttribute('data-original-image-width') + 'px';
+        image.style.height = image.getAttribute('data-original-image-height') + 'px';
+    }
+    const res = callback();
+    for (const image of images) {
+        const imageSize = imageStyles.get(image);
+        image.style.width = imageSize.width;
+        image.style.height = imageSize.height;
+    }
+    return res;
 }
 /**
  * Wrap a given element into a new parent, in place.
