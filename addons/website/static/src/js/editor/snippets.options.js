@@ -763,13 +763,6 @@ options.Class.include({
     async _refreshBundles() {
         // Finally, only update the bundles as no reload is required
         await this._reloadBundles();
-        // Any option that require to reload bundle should probably
-        // also update the color preview of the theme tabs, as
-        // bundles can affect the look of the previews.
-        this.trigger_up('option_update', {
-            optionName: 'ThemeColors',
-            name: 'update_color_previews',
-        });
 
         // Some public widgets may depend on the variables that were
         // customized, so we have to restart them *all*.
@@ -1612,11 +1605,6 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    notify(name, data) {
-        if (name === 'update_color_previews') {
-            this.updateColorPreviews = true;
-        }
-    },
     /**
      * @override
      */
@@ -1625,28 +1613,11 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
         oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
     },
-    /**
-     * @override
-     */
-    async updateUI() {
-        if (this.updateColorPreviews) {
-            this.trigger_up('update_color_previews');
-            this.updateColorPreviews = false;
-        }
-        await this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _select() {
-        this.updateColorPreviews = true;
-        return this._super(...arguments);
-    },
     /**
      * @override
      */
@@ -1681,7 +1652,6 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }
-        this.trigger_up('update_color_previews');
         await this._super(...arguments);
     },
 });
