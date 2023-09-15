@@ -2,11 +2,12 @@
 
 import logging
 from ast import literal_eval
+from os.path import join as opj
 
 from odoo.modules import get_modules
-from odoo.modules.module import _DEFAULT_MANIFEST, module_manifest, get_module_path, get_module_resource
+from odoo.modules.module import _DEFAULT_MANIFEST, module_manifest, get_module_path
 from odoo.tests import BaseCase
-from odoo.tools import file_open
+from odoo.tools.misc import file_open, file_path
 
 _logger = logging.getLogger(__name__)
 
@@ -105,8 +106,9 @@ class ManifestLinter(BaseCase):
                 module)
         else:
             path_parts = value.split('/')
-            path = get_module_resource(path_parts[1], *path_parts[2:])
-            if not path:
+            try:
+                file_path(opj(*path_parts[1:]))
+            except FileNotFoundError:
                 _logger.warning(
                     "Icon value specified in manifest of module %s wasn't found in given path."
                     " Please specify a correct value or remove this key from the manifest.",

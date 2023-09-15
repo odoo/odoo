@@ -5,9 +5,9 @@ import base64
 from dateutil.relativedelta import relativedelta
 from odoo import tests
 from odoo.fields import Datetime
-from odoo.modules.module import get_module_resource
 from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.tools.misc import file_open
 
 
 class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
@@ -15,10 +15,8 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     def setUp(self):
         super(TestUICommon, self).setUp()
         # Load pdf and img contents
-        pdf_path = get_module_resource('website_slides', 'static', 'src', 'img', 'presentation.pdf')
-        pdf_content = base64.b64encode(open(pdf_path, "rb").read())
-        img_path = get_module_resource('website_slides', 'static', 'src', 'img', 'slide_demo_gardening_1.jpg')
-        img_content = base64.b64encode(open(img_path, "rb").read())
+        pdf_content = base64.b64encode(file_open('website_slides/static/src/img/presentation.pdf', "rb").read())
+        img_content = base64.b64encode(file_open('website_slides/static/src/img/slide_demo_gardening_1.jpg', "rb").read())
 
         self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',

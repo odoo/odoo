@@ -8,9 +8,9 @@ from lxml import etree as ET
 from lxml.builder import E
 
 import odoo
-from odoo.modules.module import get_resource_path
 from odoo.tests import common
 from odoo.tools.convert import convert_file, xml_import, _eval_xml
+from odoo.tools.misc import file_path
 
 Field = E.field
 Value = E.value
@@ -237,7 +237,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        filepath = get_resource_path('test_convert', 'data/test_translated_field/test_model_data.xml')
+        filepath = file_path('test_convert/data/test_translated_field/test_model_data.xml')
         doc = ET.parse(filepath)
         obj = xml_import(env_fr, 'test_convert', {}, mode='init', xml_filename=filepath)
         obj.parse(doc.getroot())

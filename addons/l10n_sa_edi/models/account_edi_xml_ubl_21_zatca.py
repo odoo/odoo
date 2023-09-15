@@ -3,7 +3,7 @@ from hashlib import sha256
 from base64 import b64encode
 from lxml import etree
 from odoo import models, fields
-from odoo.modules.module import get_module_resource
+from odoo.tools.misc import file_path
 import re
 
 TAX_EXEMPTION_CODES = ['VATEX-SA-29', 'VATEX-SA-29-7', 'VATEX-SA-30']
@@ -57,7 +57,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
         def _transform_and_canonicalize_xml(content):
             """ Transform XML content to remove certain elements and signatures using an XSL template """
-            invoice_xsl = etree.parse(get_module_resource('l10n_sa_edi', 'data', 'pre-hash_invoice.xsl'))
+            invoice_xsl = etree.parse(file_path('l10n_sa_edi/data/pre-hash_invoice.xsl'))
             transform = etree.XSLT(invoice_xsl)
             return _canonicalize_xml(transform(content))
 

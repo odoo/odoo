@@ -7,8 +7,8 @@ import pprint
 import unittest
 
 from odoo.tests.common import TransactionCase, can_import, RecordCapturer
-from odoo.modules.module import get_module_resource
 from odoo.tools import mute_logger, pycompat
+from odoo.tools.misc import file_open
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.addons.test_base_import.models.test_base_import import model as base_import_model
 
@@ -358,8 +358,7 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
-        xls_file_path = get_module_resource('test_base_import', 'data', 'test.xls')
-        file_content = open(xls_file_path, 'rb').read()
+        file_content = file_open('test_base_import/data/test.xls', 'rb').read()
         import_wizard = self.env['base_import.import'].create({
             'res_model': base_import_model('preview'),
             'file': file_content,
@@ -382,8 +381,7 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
-        xlsx_file_path = get_module_resource('test_base_import', 'data', 'test.xlsx')
-        file_content = open(xlsx_file_path, 'rb').read()
+        file_content = file_open('test_base_import/data/test.xlsx', 'rb').read()
         import_wizard = self.env['base_import.import'].create({
             'res_model': base_import_model('preview'),
             'file': file_content,
@@ -406,8 +404,7 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
-        ods_file_path = get_module_resource('test_base_import', 'data', 'test.ods')
-        file_content = open(ods_file_path, 'rb').read()
+        file_content = file_open('test_base_import/data/test.ods', 'rb').read()
         import_wizard = self.env['base_import.import'].create({
             'res_model': base_import_model('preview'),
             'file': file_content,

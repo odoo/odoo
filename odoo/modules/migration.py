@@ -11,10 +11,10 @@ import os
 import re
 from os.path import join as opj
 
-from odoo.modules.module import get_resource_path
 import odoo.release as release
 import odoo.upgrade
 from odoo.tools.parse_version import parse_version
+from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ VERSION_RE = re.compile(
 
 
 def load_script(path, module_name):
-    full_path = get_resource_path(*path.split(os.path.sep)) if not os.path.isabs(path) else path
+    full_path = file_path(path) if not os.path.isabs(path) else path
     spec = importlib.util.spec_from_file_location(module_name, full_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -122,14 +122,21 @@ class MigrationManager(object):
                 if _verify_upgrade_version(path, version)
             }
 
+        def check_path(path):
+            try:
+                return file_path(path)
+            except FileNotFoundError:
+                return False
+
         for pkg in self.graph:
             if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade' or
                     getattr(pkg, 'load_state', None) == 'to upgrade'):
                 continue
 
+
             self.migrations[pkg.name] = {
-                'module': get_scripts(get_resource_path(pkg.name, 'migrations')),
-                'module_upgrades': get_scripts(get_resource_path(pkg.name, 'upgrades')),
+                'module': get_scripts(check_path(pkg.name + '/migrations')),
+                'module_upgrades': get_scripts(check_path(pkg.name + '/upgrades')),
             }
 
             scripts = defaultdict(list)

@@ -14,11 +14,11 @@ import threading
 
 from odoo import http, service
 from odoo.http import Response
-from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.web.controllers.home import Home
+from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
@@ -112,8 +112,8 @@ class IoTboxHomepage(Home):
 
     @http.route('/list_handlers', type='http', auth='none', website=True)
     def list_handlers(self):
-        drivers_list = helpers.list_file_by_os(get_resource_path('hw_drivers', 'iot_handlers', 'drivers'))
-        interfaces_list = helpers.list_file_by_os(get_resource_path('hw_drivers', 'iot_handlers', 'interfaces'))
+        drivers_list = helpers.list_file_by_os(file_path('hw_drivers/iot_handlers/drivers'))
+        interfaces_list = helpers.list_file_by_os(file_path('hw_drivers/iot_handlers/interfaces'))
         return handler_list_template.render({
             'title': "Odoo's IoT Box - Handlers list",
             'breadcrumb': 'Handlers list',
@@ -167,7 +167,7 @@ class IoTboxHomepage(Home):
         else:
                 persistent = ""
 
-        subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent])
+        subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent])
         server = helpers.get_odoo_server_url()
         res_payload = {
             'message': 'Connecting to ' + essid,
@@ -198,7 +198,7 @@ class IoTboxHomepage(Home):
     @http.route('/handlers_clear', type='http', auth='none', cors='*', csrf=False)
     def clear_handlers_list(self):
         for directory in ['drivers', 'interfaces']:
-            for file in list(Path(get_resource_path('hw_drivers', 'iot_handlers', directory)).glob('*')):
+            for file in list(Path(file_path(f'hw_drivers/iot_handlers/{directory}')).glob('*')):
                 if file.name != '__pycache__':
                     helpers.unlink_file(str(file.relative_to(*file.parts[:3])))
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069/list_handlers'>"
@@ -216,7 +216,7 @@ class IoTboxHomepage(Home):
             url = helpers.get_odoo_server_url()
             token = helpers.get_token()
         if iotname and platform.system() == 'Linux':
-            subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/rename_iot.sh'), iotname])
+            subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/rename_iot.sh'), iotname])
         helpers.odoo_restart(5)
         return 'http://' + helpers.get_ip() + ':8069'
 
@@ -238,7 +238,7 @@ class IoTboxHomepage(Home):
             token = token.split('|')[1]
         else:
             url = ''
-        subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server_wifi.sh'), url, iotname, token, essid, password, persistent])
+        subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/connect_to_server_wifi.sh'), url, iotname, token, essid, password, persistent])
         return url
 
     # Set server address

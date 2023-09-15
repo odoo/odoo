@@ -3,9 +3,10 @@
 
 from collections import Counter
 
-from odoo.modules import get_modules, get_resource_path
+from odoo.modules import get_modules
 from odoo.tests.common import TransactionCase
 from odoo.tools.translate import TranslationFileReader
+from odoo.tools.misc import file_path
 
 
 class PotLinter(TransactionCase):
@@ -21,8 +22,9 @@ class PotLinter(TransactionCase):
 
         # retrieve all modules, and their corresponding POT file
         for module in get_modules():
-            filename = get_resource_path(module, 'i18n', module + '.pot')
-            if not filename:
+            try:
+                filename = file_path(f'{module}/i18n/{module}.pot')
+            except FileNotFoundError:
                 continue
             counts = Counter(map(format, TranslationFileReader(filename)))
             duplicates = [key for key, count in counts.items() if count > 1]

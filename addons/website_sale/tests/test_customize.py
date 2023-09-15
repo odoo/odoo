@@ -4,8 +4,9 @@ import base64
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.fields import Command
-from odoo.modules.module import get_module_resource
 from odoo.tests import tagged
+from odoo.tools.misc import file_open
+
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
@@ -125,8 +126,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         })
         self.product_product_4_product_template.attribute_line_ids[0].write({'value_ids': [(4, product_attribute_value_7.id)]})
 
-        img_path = get_module_resource('product', 'static', 'img', 'product_product_11-image.png')
-        img_content = base64.b64encode(open(img_path, "rb").read())
+        img_content = base64.b64encode(file_open('product/static/img/product_product_11-image.png', "rb").read())
         self.product_product_11_product_template = self.env['product.template'].create({
             'name': 'Conference Chair (TEST)',
             'website_sequence': 9999, # laule

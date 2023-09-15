@@ -28,12 +28,11 @@ from rjsmin import jsmin as rjsmin
 
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
-from odoo.modules.module import get_resource_path
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler,
     apply_inheritance_specs)
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
-from odoo.tools.misc import file_open, html_escape as escape
+from odoo.tools.misc import file_open, file_path
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
@@ -186,8 +185,8 @@ class AssetsBundle(object):
         self.env.cr.execute(f"""DELETE FROM {attachments._table} WHERE id IN (
             SELECT id FROM {attachments._table} WHERE id in %s FOR NO KEY UPDATE SKIP LOCKED
         )""", [tuple(attachments.ids)])
-        for file_path in to_delete:
-            attachments._file_delete(file_path)
+        for fpath in to_delete:
+            attachments._file_delete(fpath)
 
     def clean_attachments(self, extension):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
@@ -719,7 +718,7 @@ class AssetsBundle(object):
             except IOError:
                 rtlcss = 'rtlcss'
 
-        cmd = [rtlcss, '-c', get_resource_path("base", "data/rtlcss.json"), '-']
+        cmd = [rtlcss, '-c', file_path("base/data/rtlcss.json"), '-']
 
         try:
             rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -1091,7 +1090,7 @@ class SassStylesheetAsset(PreprocessedCSS):
 class ScssStylesheetAsset(PreprocessedCSS):
     @property
     def bootstrap_path(self):
-        return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+        return file_path('web/static/lib/bootstrap/scss')
 
     precision = 8
     output_style = 'expanded'

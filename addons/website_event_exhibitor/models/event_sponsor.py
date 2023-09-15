@@ -7,7 +7,6 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.resource.models.utils import float_to_time
-from odoo.modules.module import get_resource_path
 from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate
 
@@ -116,7 +115,7 @@ class Sponsor(models.Model):
             elif sponsor.partner_id.image_256:
                 sponsor.website_image_url = self.env['website'].image_url(sponsor.partner_id, 'image_256', size=256)
             else:
-                sponsor.website_image_url = get_resource_path('website_event_exhibitor', 'static/src/img', 'event_sponsor_default_%d.png' % (sponsor.id % 1))
+                sponsor.website_image_url = 'website_event_exhibitor/static/src/img/event_sponsor_default_0.jpeg'
 
     def _synchronize_with_partner(self, fname):
         """ Synchronize with partner if not set. Setting a value does not write

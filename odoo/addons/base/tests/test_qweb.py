@@ -12,7 +12,6 @@ from lxml.builder import E
 from copy import deepcopy
 from textwrap import dedent
 
-from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import misc, mute_logger

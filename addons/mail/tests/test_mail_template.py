@@ -5,7 +5,6 @@ from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.modules.module import get_module_resource
 from odoo.tests import Form, tagged, users
 from odoo.tools import convert_file
 
@@ -174,13 +173,14 @@ class TestMailTemplate(MailCommon):
 @tagged('mail_template')
 class TestMailTemplateReset(MailCommon):
 
-    def _load(self, module, *args):
+    def _load(self, module, filepath):
+        # pylint: disable=no-value-for-parameter
         convert_file(self.env, module='mail',
-                     filename=get_module_resource(module, *args),
+                     filename=filepath,
                      idref={}, mode='init', noupdate=False, kind='test')
 
     def test_mail_template_reset(self):
-        self._load('mail', 'tests', 'test_mail_template.xml')
+        self._load('mail', 'tests/test_mail_template.xml')
 
         mail_template = self.env.ref('mail.mail_template_test').with_context(lang=self.env.user.lang)
 
@@ -212,7 +212,7 @@ class TestMailTemplateReset(MailCommon):
 
     def test_mail_template_reset_translation(self):
         """ Test if a translated value can be reset correctly when its translation exists/doesn't exist in the po file of the directory """
-        self._load('mail', 'tests', 'test_mail_template.xml')
+        self._load('mail', 'tests/test_mail_template.xml')
 
         self.env['res.lang']._activate_lang('en_UK')
         self.env['res.lang']._activate_lang('fr_FR')

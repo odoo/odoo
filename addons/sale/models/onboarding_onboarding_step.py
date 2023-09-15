@@ -3,7 +3,6 @@
 import base64
 
 from odoo import _, api, Command, models
-from odoo.modules.module import get_resource_path
 from odoo.tools import file_open
 
 
@@ -39,8 +38,7 @@ class OnboardingStep(models.Model):
             # take any existing product or create one
             product = self.env['product.product'].search([], limit=1)
             if not product:
-                default_image_path = get_resource_path('product', 'static/img', 'product_product_13-image.jpg')
-                with file_open(default_image_path, 'rb') as default_image_stream:
+                with file_open('product/static/img/product_product_13-image.jpg', 'rb') as default_image_stream:
                     product = self.env['product.product'].create({
                         'name': _('Sample Product'),
                         'active': False,

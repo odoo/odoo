@@ -6,8 +6,8 @@ import re
 import subprocess
 from unittest import skipIf
 from odoo import tools
-from odoo.modules.module import get_resource_path
 from odoo.tests import tagged
+from odoo.tools.misc import file_path
 
 from . import lint_case
 
@@ -32,7 +32,7 @@ class TestESLint(lint_case.LintCase):
             if not re.match('.*/libs?/.*', p)  # don't check libraries
             if not re.match('.*/o_spreadsheet/o_spreadsheet.js', p) # don't check generated code
         ]
-        eslintrc_path = get_resource_path('test_lint', 'tests', 'eslintrc')
+        eslintrc_path = file_path('test_lint/tests/eslintrc')
 
         _logger.info('Testing %s js files', len(files_to_check))
         # https://eslint.org/docs/user-guide/command-line-interface

@@ -9,7 +9,6 @@ import subprocess
 import time
 
 from odoo import http, tools
-from odoo.modules.module import get_resource_path
 
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices, manager

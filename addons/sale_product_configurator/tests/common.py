@@ -2,8 +2,7 @@
 import base64
 
 from odoo.tests.common import TransactionCase
-from odoo.modules.module import get_module_resource
-
+from odoo.tools.misc import file_open
 
 class TestProductConfiguratorCommon(TransactionCase):
 
@@ -78,8 +77,8 @@ class TestProductConfiguratorCommon(TransactionCase):
         cls.product_product_custo_desk.product_variant_ids[3].active = False
 
         # Setup a first optional product
-        img_path = get_module_resource('product', 'static', 'img', 'product_product_11-image.png')
-        img_content = base64.b64encode(open(img_path, "rb").read())
+        img_path = 'product/static/img/product_product_11-image.png'
+        img_content = base64.b64encode(file_open(img_path, "rb").read())
         cls.product_product_conf_chair = cls.env['product.template'].create({
             'name': 'Conference Chair (TEST)',
             'image_1920': img_content,

@@ -4,7 +4,6 @@ from odoo import Command, fields
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
-from odoo.modules.module import get_resource_path
 from odoo.tests import tagged
 from odoo.tools import file_open
 
@@ -179,9 +178,8 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
     #########
 
     def import_bill_xml_file_in_purchase_journal(self, file_path):
-        full_file_path = get_resource_path(self.test_module, 'tests/test_files', file_path)
-        self.assertTrue(full_file_path, f'File not found: {file_path}')
-        with file_open(full_file_path, 'rb') as file:
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
             xml_attachment = self.env['ir.attachment'].create({
                 'mimetype': 'application/xml',
                 'name': 'test_invoice.xml',

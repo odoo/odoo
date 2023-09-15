@@ -28,7 +28,7 @@ except ImportError:
 import odoo
 from . import pycompat
 from .config import config
-from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from odoo import SUPERUSER_ID, api
 from odoo.exceptions import ValidationError
@@ -155,9 +155,10 @@ def _eval_xml(self, node, env):
         # after that, only text content makes sense
         data = pycompat.to_text(data)
         if t == 'file':
-            from ..modules import module
             path = data.strip()
-            if not module.get_module_resource(self.module, path):
+            try:
+                file_path(os.path.join(self.module, path))
+            except FileNotFoundError:
                 raise IOError("No such file or directory: '%s' in %s" % (
                     path, self.module))
             return '%s,%s' % (self.module, path)

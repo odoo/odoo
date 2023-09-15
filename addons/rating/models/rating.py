@@ -5,7 +5,7 @@ import uuid
 
 from odoo import api, fields, models
 from odoo.addons.rating.models import rating_data
-from odoo.modules.module import get_resource_path
+from odoo.tools.misc import file_open
 
 
 class Rating(models.Model):
@@ -96,12 +96,13 @@ class Rating(models.Model):
         self.rating_image_url = False
         self.rating_image = False
         for rating in self:
+            image_path = f'rating/static/src/img/{rating._get_rating_image_filename()}'
+            rating.rating_image_url = f'/{image_path}'
             try:
-                image_path = get_resource_path('rating', 'static/src/img', rating._get_rating_image_filename())
-                rating.rating_image_url = '/rating/static/src/img/%s' % rating._get_rating_image_filename()
-                rating.rating_image = base64.b64encode(open(image_path, 'rb').read()) if image_path else False
-            except (IOError, OSError):
-                pass
+                rating.rating_image = base64.b64encode(
+                    file_open(image_path, 'rb', filter_ext=('.png',)).read())
+            except (IOError, OSError, FileNotFoundError):
+                rating.rating_image = False
 
     @api.depends('rating')
     def _compute_rating_text(self):

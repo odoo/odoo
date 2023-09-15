@@ -14,14 +14,14 @@ from lxml import etree
 from base64 import b64decode, b64encode
 from datetime import datetime
 from math import floor
+from os.path import join as opj
 
 from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, ValidationError
-from odoo.modules.module import get_resource_path
-from odoo.tools import file_open
+from odoo.tools.misc import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.base.models.assetsbundle import AssetsBundle
@@ -569,11 +569,12 @@ class Web_Editor(http.Controller):
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
     def _get_shape_svg(self, module, *segments):
-        shape_path = get_resource_path(module, 'static', *segments)
-        if not shape_path:
+        shape_path = opj(module, 'static', *segments)
+        try:
+            with file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
+                return file.read()
+        except FileNotFoundError:
             raise werkzeug.exceptions.NotFound()
-        with tools.file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
-            return file.read()
 
     def _update_svg_colors(self, options, svg):
         user_colors = []

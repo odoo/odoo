@@ -428,10 +428,9 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    csvpath = odoo.modules.module.get_resource_path('base', 'data', 'res.lang.csv')
     try:
         # read (code, name) from languages in base/data/res.lang.csv
-        with open(csvpath, 'rb') as csvfile:
+        with file_open('base/data/res.lang.csv', 'rb') as csvfile:
             reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
             code_index = fields.index("code")
@@ -441,7 +440,7 @@ def scan_languages():
                 for row in reader
             ]
     except Exception:
-        _logger.error("Could not read %s", csvpath)
+        _logger.error("Could not read res.lang.csv")
         result = []
 
     return sorted(result or [('en_US', u'English')], key=itemgetter(1))

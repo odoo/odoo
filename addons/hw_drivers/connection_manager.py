@@ -9,7 +9,6 @@ from threading import Thread
 import time
 import urllib3
 
-from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.main import iot_devices, manager
 from odoo.addons.hw_drivers.tools import helpers
 
