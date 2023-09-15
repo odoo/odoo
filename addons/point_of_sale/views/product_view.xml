@@ -90,10 +90,10 @@
                 <attribute name="invisible">detailed_type == "combo"</attribute>
             </xpath>
             <xpath expr="//page[@name='inventory']" position="attributes">
-                <attribute name="invisible">detailed_type == "combo"</attribute>
+                <attribute name="invisible">type in ['combo', 'service']</attribute>
             </xpath>
             <xpath expr="//page[@name='invoicing']" position="attributes">
-                <attribute name="invisible">detailed_type == "combo"</attribute>
+                <attribute name="invisible">type in ['combo', 'service']</attribute>
             </xpath>
         </field>
     </record>
