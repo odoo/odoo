@@ -114,6 +114,7 @@ class ResConfigSettings(models.TransientModel):
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_oss = fields.Boolean(string="EU Intra-community Distance Selling")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
+    module_account_avatax = fields.Boolean(string="Account Avatax")
     module_account_invoice_extract = fields.Boolean(string="Document Digitization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
