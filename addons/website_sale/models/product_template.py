@@ -23,45 +23,106 @@ class ProductTemplate(models.Model):
     _mail_post_access = 'read'
     _check_company_auto = True
 
+    #=== DEFAULT METHODS ===#
+
+    @api.model
+    def _default_website_sequence(self):
+        ''' We want new product to be the last (highest seq).
+        Every product should ideally have an unique sequence.
+        Default sequence (10000) should only be used for DB first product.
+        As we don't resequence the whole tree (as `sequence` does), this field
+        might have negative value.
+        '''
+        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
+        max_sequence = self._cr.fetchone()[0]
+        if max_sequence is None:
+            return 10000
+        return max_sequence + 5
+
+    #=== FIELDS ===#
+
     website_description = fields.Html(
-        'Description for the website', translate=html_translate,
+        string="Description for the website",
+        translate=html_translate,
         sanitize_overridable=True,
-        sanitize_attributes=False, sanitize_form=False)
-    description_ecommerce = fields.Html("eCommerce Description", translate=html_translate,
-        sanitize_overridable=True, sanitize_attributes=False, sanitize_form=False)
+        sanitize_attributes=False,
+        sanitize_form=False,
+    )
+    description_ecommerce = fields.Html(
+        string="eCommerce Description",
+        translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False,
+        sanitize_form=False,
+    )
+
     alternative_product_ids = fields.Many2many(
-        'product.template', 'product_alternative_rel', 'src_id', 'dest_id', check_company=True,
-        string='Alternative Products', help='Suggest alternatives to your customer (upsell strategy). '
-                                            'Those products show up on the product page.')
+        string="Alternative Products",
+        comodel_name='product.template',
+        relation='product_alternative_rel',
+        column1='src_id', column2='dest_id',
+        check_company=True,
+        help="Suggest alternatives to your customer (upsell strategy). Those products show up on the product page.",
+    )
     accessory_product_ids = fields.Many2many(
-        'product.product', 'product_accessory_rel', 'src_id', 'dest_id', string='Accessory Products', check_company=True,
-        help='Accessories show up when the customer reviews the cart before payment (cross-sell strategy).')
-    website_size_x = fields.Integer('Size X', default=1)
-    website_size_y = fields.Integer('Size Y', default=1)
-    website_ribbon_id = fields.Many2one('product.ribbon', string='Ribbon')
-    website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence(), copy=False, index=True)
+        string="Accessory Products",
+        comodel_name='product.product',
+        relation='product_accessory_rel',
+        column1='src_id', column2='dest_id',
+        check_company=True,
+        help="Accessories show up when the customer reviews the cart before payment (cross-sell strategy).",
+    )
+
+    website_size_x = fields.Integer(string="Size X", default=1)
+    website_size_y = fields.Integer(string="Size Y", default=1)
+    website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name='product.ribbon')
+    website_sequence = fields.Integer(
+        string="Website Sequence",
+        default=_default_website_sequence,
+        copy=False,
+        index=True,
+        help="Determine the display order in the Website E-commerce",
+    )
     public_categ_ids = fields.Many2many(
-        'product.public.category', relation='product_public_category_product_template_rel',
-        string='Website Product Category',
+        string="Website Product Category",
+        comodel_name='product.public.category',
+        relation='product_public_category_product_template_rel',
         help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit "
-             "Click on the page and enable 'Categories' to view all eCommerce categories.")
+             "Click on the page and enable 'Categories' to view all eCommerce categories.",
+    )
 
-    product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
+    product_template_image_ids = fields.One2many(
+        string="Extra Product Media",
+        comodel_name='product.image',
+        inverse_name='product_tmpl_id',
+        copy=True,
+    )
 
-    base_unit_count = fields.Float('Base Unit Count', required=True, default=0,
-                                   compute='_compute_base_unit_count', inverse='_set_base_unit_count', store=True,
-                                   help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.")
-    base_unit_id = fields.Many2one('website.base.unit', string='Custom Unit of Measure',
-                                   compute='_compute_base_unit_id', inverse='_set_base_unit_id', store=True,
-                                   help="Define a custom unit to display in the price per unit of measure field.")
-    base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
-    base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
+    base_unit_count = fields.Float(
+        string="Base Unit Count",
+        compute='_compute_base_unit_count',
+        inverse='_set_base_unit_count',
+        store=True,
+        required=True,
+        default=0,
+        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.")
+    base_unit_id = fields.Many2one(
+        string="Custom Unit of Measure",
+        comodel_name='website.base.unit',
+        compute='_compute_base_unit_id',
+        inverse='_set_base_unit_id',
+        store=True,
+        help="Define a custom unit to display in the price per unit of measure field.")
+    base_unit_price = fields.Monetary(string="Price Per Unit", compute="_compute_base_unit_price")
+    base_unit_name = fields.Char(
+        compute='_compute_base_unit_name',
+        help="Displays the custom unit for the products if defined or the selected unit of measure otherwise.")
 
     compare_list_price = fields.Monetary(
-        'Compare to Price',
-        currency_field="currency_id",
+        string="Compare to Price",
         help="The amount will be displayed strikethroughed on the eCommerce product page")
+
+    #=== COMPUTE METHODS ===#
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
@@ -98,6 +159,14 @@ class ProductTemplate(models.Model):
     def _compute_base_unit_name(self):
         for template in self:
             template.base_unit_name = template.base_unit_id.name or template.uom_name
+
+    def _compute_website_url(self):
+        super()._compute_website_url()
+        for product in self:
+            if product.id:
+                product.website_url = "/shop/%s" % slug(product)
+
+    #=== BUSINESS METHODS ===#
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -568,19 +637,6 @@ class ProductTemplate(models.Model):
         else:
             super(ProductTemplate, self)._init_column(column_name)
 
-    def _default_website_sequence(self):
-        ''' We want new product to be the last (highest seq).
-        Every product should ideally have an unique sequence.
-        Default sequence (10000) should only be used for DB first product.
-        As we don't resequence the whole tree (as `sequence` does), this field
-        might have negative value.
-        '''
-        self._cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
-        max_sequence = self._cr.fetchone()[0]
-        if max_sequence is None:
-            return 10000
-        return max_sequence + 5
-
     def set_sequence_top(self):
         min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
         self.website_sequence = min_sequence.website_sequence - 5
@@ -616,12 +672,6 @@ class ProductTemplate(models.Model):
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
         res['default_meta_description'] = self.description_sale
         return res
-
-    def _compute_website_url(self):
-        super()._compute_website_url()
-        for product in self:
-            if product.id:
-                product.website_url = "/shop/%s" % slug(product)
 
     @api.model
     def _get_alternative_product_filter(self):
