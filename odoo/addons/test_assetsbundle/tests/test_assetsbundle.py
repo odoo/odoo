@@ -18,12 +18,12 @@ from odoo.addons import __path__ as ADDONS_PATH
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
-from odoo.modules.module import get_resource_path, get_manifest
+from odoo.modules.module import get_manifest
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.tools import mute_logger, func
-
+from odoo.tools.misc import file_path
 
 GETMTINE = os.path.getmtime
 
@@ -241,7 +241,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         last_modified0 = bundle0.get_checksum('js')
         version0 = bundle0.get_version('js')
 
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
+        path = file_path('test_assetsbundle/static/src/js/test_jsfile1.js')
         bundle1 = self._get_asset(self.jsbundle_name, debug_assets=True)
 
         with self._touch(path):
@@ -504,7 +504,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # Touch test_cssfile1.css
         # Note: No lang specific context given while calling _get_asset so it will load assets for en_US
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
+        path = file_path('test_assetsbundle/static/src/css/test_cssfile1.css')
         ltr_bundle1 = self._get_asset(self.cssbundle_name, debug_assets=True)
 
         with self._touch(path):
@@ -768,7 +768,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         self._bundle(self._get_asset(), False, False, '(Second access, no change)')
 
         # Touch the file and compile a third time
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
+        path = file_path('test_assetsbundle/static/src/scss/test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         with self._touch(path, t):

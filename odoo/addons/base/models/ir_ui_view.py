@@ -21,12 +21,13 @@ import odoo
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
-from odoo.modules.module import get_resource_from_path, get_resource_path
+from odoo.modules.module import get_resource_from_path
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node, str2bool
-from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools import safe_eval, lazy, lazy_property, frozendict
-from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
+from odoo.tools.convert import _fix_multiple_roots
+from odoo.tools.misc import file_path
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 from odoo.models import check_method_name
 from odoo.osv.expression import expression
 
@@ -234,22 +235,24 @@ actual arch.
             if read_file and view.arch_fs and (view.xml_id or view.key):
                 xml_id = view.xml_id or view.key
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
-                fullpath = get_resource_path(*view.arch_fs.split('/'))
-                if fullpath:
-                    arch_fs = get_view_arch_from_file(fullpath, xml_id)
-                    # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    if arch_fs:
-                        arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
-                        translation_dictionary = field_arch_db.get_translation_dictionary(
-                            view.with_env(env_en).arch_db, {lang: view.with_env(env_lang).arch_db}
-                        )
-                        arch_fs = field_arch_db.translate(
-                            lambda term: translation_dictionary[term][lang],
-                            arch_fs
-                        )
-                else:
+                try:
+                    fullpath = file_path(view.arch_fs)
+                except FileNotFoundError:
                     _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
+                    continue
+
+                arch_fs = get_view_arch_from_file(fullpath, xml_id)
+                # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
+                if arch_fs:
+                    arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
+                    translation_dictionary = field_arch_db.get_translation_dictionary(
+                        view.with_env(env_en).arch_db, {lang: view.with_env(env_lang).arch_db}
+                    )
+                    arch_fs = field_arch_db.translate(
+                        lambda term: translation_dictionary[term][lang],
+                        arch_fs
+                    )
             view.arch = pycompat.to_text(arch_fs or view.arch_db)
 
     def _inverse_arch(self):

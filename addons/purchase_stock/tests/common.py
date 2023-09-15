@@ -4,7 +4,6 @@ from datetime import timedelta
 from odoo import fields
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo import tools
-from odoo.modules.module import get_module_resource
 
 
 class PurchaseTestCommon(TestStockCommon):

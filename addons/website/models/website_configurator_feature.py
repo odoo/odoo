@@ -5,7 +5,6 @@ import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
-from odoo.modules.module import get_resource_path
 
 
 class WebsiteConfiguratorFeature(models.Model):
@@ -34,11 +33,11 @@ class WebsiteConfiguratorFeature(models.Model):
     @staticmethod
     def _process_svg(theme, colors, image_mapping):
         svg = None
-        preview_svg = get_resource_path(theme, 'static', 'description', theme + '.svg')
-        if not preview_svg:
+        try:
+            with tools.file_open(f'{theme}/static/description/{theme}.svg', 'r') as file:
+                svg = file.read()
+        except FileNotFoundError:
             return False
-        with tools.file_open(preview_svg, 'r') as file:
-            svg = file.read()
 
         default_colors = {
             'color1': '#3AADAA',

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import suppress
+
 import odoo
 import logging
 
@@ -17,8 +19,8 @@ def get_installed_modules(cursor):
 def get_neutralization_queries(modules):
     # neutralization for each module
     for module in modules:
-        filename = odoo.modules.get_module_resource(module, 'data/neutralize.sql')
-        if filename:
+        filename = f'{module}/data/neutralize.sql'
+        with suppress(FileNotFoundError):
             with odoo.tools.misc.file_open(filename) as file:
                 yield file.read().strip()
 

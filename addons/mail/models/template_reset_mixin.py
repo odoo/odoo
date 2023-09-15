@@ -7,10 +7,9 @@ from lxml import etree
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.modules import get_module_resource
-from odoo.modules.module import get_resource_from_path, get_resource_path
+from odoo.modules.module import get_resource_from_path
 from odoo.tools.convert import xml_import
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_path
 from odoo.tools.translate import TranslationImporter, get_po_paths
 
 
@@ -79,7 +78,7 @@ class TemplateResetMixin(models.AbstractModel):
         for template in self.filtered('template_fs'):
             external_id = template.get_external_id().get(template.id)
             module, xml_id = external_id.split('.')
-            fullpath = get_resource_path(*template.template_fs.split('/'))
+            fullpath = file_path(template.template_fs)
             if fullpath:
                 for field_name, field in template._fields.items():
                     if field.translate is True:

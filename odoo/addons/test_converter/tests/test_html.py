@@ -7,6 +7,7 @@ import re
 
 from odoo.tests import common
 from odoo.tools import html_escape as e
+from odoo.tools.misc import file_open
 
 directory = os.path.dirname(__file__)
 
@@ -216,7 +217,7 @@ class TestBinaryExport(TestBasicExport):
     def test_image(self):
         converter = self.env['ir.qweb.field.image']
 
-        with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
+        with file_open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
         encoded_content = base64.b64encode(content)
@@ -225,13 +226,13 @@ class TestBinaryExport(TestBasicExport):
         self.assertEqual(
             value, u'<img src="data:image/jpeg;base64,%s">' % encoded_content.decode('ascii'))
 
-        with open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
+        with file_open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
             converter.value_to_html(base64.b64encode(content), {})
 
-        with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
+        with file_open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):

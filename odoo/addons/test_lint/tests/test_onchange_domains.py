@@ -3,7 +3,7 @@ import itertools
 import os
 
 from . import lint_case
-
+from odoo.tools.misc import file_open
 
 class OnchangeChecker(lint_case.NodeVisitor):
     def matches_onchange(self, node):
@@ -37,7 +37,7 @@ class TestOnchangeDomains(lint_case.LintCase):
         checker = OnchangeChecker()
         rs = []
         for path in self.iter_module_files('*.py'):
-            with open(path, 'rb') as f:
+            with file_open(path, 'rb') as f:
                 t = ast.parse(f.read(), path)
             rs.extend(zip(itertools.repeat(os.path.relpath(path)), checker.visit(t)))
 

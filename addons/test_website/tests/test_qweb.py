@@ -6,19 +6,18 @@ import re
 
 from odoo import tools
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.modules.module import get_module_resource
 
 
 class TestQweb(TransactionCaseWithUserDemo):
-    def _load(self, module, *args):
+    def _load(self, module, filepath):
         tools.convert_file(
-            self.env, 'test_website',
-            get_module_resource(module, *args),
+            self.env, module,
+            filepath,
             {}, 'init', False, 'test'
         )
 
     def test_qweb_cdn(self):
-        self._load('test_website', 'tests', 'template_qweb_test.xml')
+        self._load('test_website', 'tests/template_qweb_test.xml')
 
         website = self.env.ref('website.default_website')
         website.write({

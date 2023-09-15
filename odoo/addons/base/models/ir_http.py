@@ -31,7 +31,6 @@ from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.tools import get_lang, submap
 from odoo.tools.translate import code_translations
-from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
 

@@ -4,13 +4,14 @@
 import io
 import uuid
 import base64
+from os.path import join as opj
 from PIL import Image
 from typing import Optional, List, Dict
 from werkzeug.urls import url_quote
 from odoo.exceptions import UserError
 from odoo.tools import image_to_base64
 
-from odoo import api, fields, models, modules, _, service
+from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
 
 
@@ -123,7 +124,7 @@ class PosConfig(models.Model):
 
         for pos_config_id in pos_config_ids:
             for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']:
-                image_path = modules.get_module_resource("pos_self_order", "static/img", image_name)
+                image_path = opj("pos_self_order/static/img", image_name)
                 attachment = self.env['ir.attachment'].create({
                     'name': image_name,
                     'datas': base64.b64encode(file_open(image_path, "rb").read()),

@@ -29,7 +29,7 @@ from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
-from odoo.tools.misc import get_lang, babel_locale_parse
+from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -479,20 +479,13 @@ class Image(models.AbstractModel):
 
     def load_local_url(self, url):
         match = self.local_url_re.match(urls.url_parse(url).path)
-
         rest = match.group('rest')
-        for sep in os.sep, os.altsep:
-            if sep and sep != '/':
-                rest.replace(sep, '/')
 
-        path = odoo.modules.get_module_resource(
-            match.group('module'), 'static', *(rest.split('/')))
-
-        if not path:
-            return None
+        path = os.path.join(
+            match.group('module'), 'static', rest)
 
         try:
-            with open(path, 'rb') as f:
+            with file_open(path, 'rb') as f:
                 # force complete image load to ensure it's valid image data
                 image = I.open(f)
                 image.load()

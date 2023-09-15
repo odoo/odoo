@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.modules.module import get_module_resource
+from odoo.tools.misc import file_open
 
 
 class TestRecruitmentProcess(TestHrCommon):
@@ -36,7 +35,7 @@ class TestRecruitmentProcess(TestHrCommon):
 
         # An applicant is interested in the job position. So he sends a resume by email.
         # In Order to test process of Recruitment so giving HR officer's rights
-        with open(get_module_resource('hr_recruitment', 'tests', 'resume.eml'), 'rb') as request_file:
+        with file_open('hr_recruitment/tests/resume.eml', 'rb') as request_file:
             request_message = request_file.read()
         self.env['mail.thread'].with_user(self.res_users_hr_recruitment_officer).message_process(
             'hr.applicant', request_message, custom_values={"job_id": self.job_developer.id})

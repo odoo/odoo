@@ -3,11 +3,11 @@ import base64
 
 from freezegun import freeze_time
 from collections import Counter
+from os.path import join as opj
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import fields
 from odoo.tools import misc
-from odoo.modules.module import get_resource_path, get_module_resource
 
 from lxml import etree
 
@@ -117,8 +117,8 @@ class TestUBLCommon(AccountTestInvoicingCommon):
     def _update_invoice_from_file(self, module_name, subfolder, filename, invoice):
         """ Create an attachment from a file and post it on the invoice
         """
-        file_path = get_module_resource(module_name, subfolder, filename)
-        with misc.file_open(file_path, 'rb') as file:
+        file_path = opj(module_name, subfolder, filename)
+        with misc.file_open(file_path, 'rb', filter_ext=('.xml',)) as file:
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.encodebytes(file.read()),
@@ -234,8 +234,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
-        expected_file_full_path = get_resource_path(self.test_module, 'tests/test_files', expected_file_path)
-        self.assertTrue(expected_file_full_path, "expected file not found")
+        expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
         expected_etree = etree.parse(expected_file_full_path).getroot()
 
         modified_etree = self.with_applied_xpath(

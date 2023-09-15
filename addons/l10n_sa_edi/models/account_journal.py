@@ -6,7 +6,7 @@ from datetime import datetime
 from base64 import b64encode, b64decode
 from odoo import models, fields, service, _, api
 from odoo.exceptions import UserError
-from odoo.modules.module import get_module_resource
+from odoo.tools.misc import file_open
 from requests.exceptions import HTTPError, RequestException
 from cryptography import x509
 from cryptography.x509 import ObjectIdentifier, load_der_x509_certificate
@@ -288,8 +288,8 @@ class AccountJournal(models.Model):
             'simplified/invoice.xml', 'simplified/credit.xml', 'simplified/debit.xml',
         ], {}
         for file in file_names:
-            fpath = get_module_resource('l10n_sa_edi', 'tests/compliance', file)
-            with open(fpath, 'rb') as ip:
+            fpath = f'l10n_sa_edi/tests/compliance/{file}'
+            with file_open(fpath, 'rb', filter_ext=('.xml',)) as ip:
                 compliance_files[file] = ip.read().decode()
         return compliance_files
 

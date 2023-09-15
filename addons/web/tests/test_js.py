@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from contextlib import suppress
+
 import odoo.tests
+from odoo.tools.misc import file_open
 
 RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 
@@ -45,11 +48,12 @@ class WebSuite(odoo.tests.HttpCase):
 
         for asset in assets:
             filename = asset['filename']
-            if not filename or not filename.endswith('.js'):
+            if not filename.endswith('.js'):
                 continue
-            with open(filename, 'rb') as fp:
-                if RE_ONLY.search(fp.read().decode('utf-8')):
-                    self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
+            with suppress(FileNotFoundError):
+                with file_open(filename, 'rb', filter_ext=('.js',)) as fp:
+                    if RE_ONLY.search(fp.read().decode('utf-8')):
+                        self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
 
 
 @odoo.tests.tagged('post_install', '-at_install')

@@ -13,10 +13,10 @@ import werkzeug.wsgi
 import odoo
 import odoo.modules.registry
 from odoo import http
-from odoo.modules import get_manifest, get_resource_path
+from odoo.modules import get_manifest
 from odoo.http import request
 from odoo.tools import lazy
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_open, file_path
 from .utils import _local_web_translations
 
 
@@ -80,7 +80,7 @@ class WebClient(http.Controller):
         for addon_name in mods:
             manifest = get_manifest(addon_name)
             if manifest and manifest['bootstrap']:
-                f_name = get_resource_path(addon_name, 'i18n', f'{lang}.po')
+                f_name = file_path(f'{addon_name}/i18n/{lang}.po')
                 if not f_name:
                     continue
                 translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
