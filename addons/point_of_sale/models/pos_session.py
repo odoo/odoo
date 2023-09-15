@@ -1666,6 +1666,7 @@ class PosSession(models.Model):
             'account.fiscal.position',
             'op.student',
             'pos.file.uploader',
+            'pos.hr.employee',
         ]
 
         return models_to_load
@@ -1817,7 +1818,7 @@ class PosSession(models.Model):
                 'domain': self._get_partners_domain(),
                 'fields': [
                     'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
-                    'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name'
+                    'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'commercial_partner_id'
                 ],
             },
         }
@@ -1846,6 +1847,17 @@ class PosSession(models.Model):
     def _get_pos_ui_op_student(self, params):
         return self.env['op.student'].search_read(**params['search_params'])
 
+    def _loader_params_pos_hr_employee(self):
+        return {
+            'search_params': {
+                'domain': self._get_partners_domain(),
+                'fields': ['name', 'id', 'user_id', 'barcode', 'work_contact_id']
+            },
+        }
+
+    def _get_pos_ui_pos_hr_employee(self, params):
+        return self.env['hr.employee'].search_read(**params['search_params'])
+      
     def _loader_params_pos_file_uploader(self):
         return {
             'search_params': {
