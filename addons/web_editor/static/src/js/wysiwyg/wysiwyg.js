@@ -1496,6 +1496,7 @@ export class Wysiwyg extends Component {
      * @param {object} params
      * @param {Node} [params.node] Optionnal
      * @param {Node} [params.htmlClass] Optionnal
+     * @param {Class} [params.MediaDialog] Optional
      */
     openMediaDialog(params = {}) {
         const sel = this.odooEditor.document.getSelection();
@@ -1512,7 +1513,7 @@ export class Wysiwyg extends Component {
         const editable = OdooEditorLib.closestElement(params.node || range.startContainer, '.o_editable') || this.odooEditor.editable;
         const { resModel, resId, field, type } = this._getRecordInfo(editable);
 
-        this.env.services.dialog.add(MediaDialog, {
+        this.env.services.dialog.add(params.MediaDialog || MediaDialog, {
             resModel,
             resId,
             useMediaLibrary: !!(field && (resModel === 'ir.ui.view' && field === 'arch' || type === 'html')),
