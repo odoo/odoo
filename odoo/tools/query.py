@@ -110,10 +110,11 @@ class Query(object):
         self._where_clauses.append(SQL(where_clause, *where_params))
         self._ids = None
 
-    def join(self, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra=None, extra_params=()):
+    def join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str):
         """
         Perform a join between a table already present in the current Query object and
-        another table.
+        another table.  This method is essentially a shortcut for methods :meth:`~.make_alias`
+        and :meth:`~.add_join`.
 
         :param str lhs_alias: alias of a table already defined in the current Query object.
         :param str lhs_column: column of `lhs_alias` to be used for the join's ON condition.
@@ -121,59 +122,24 @@ class Query(object):
         :param str rhs_column: column of `rhs_alias` to be used for the join's ON condition.
         :param str link: used to generate the alias for the joined table, this string should
             represent the relationship (the link) between both tables.
-        :param str extra: an sql string of a predicate or series of predicates to append to the
-            join's ON condition, `lhs_alias` and `rhs_alias` can be injected if the string uses
-            the `lhs` and `rhs` variables with the `str.format` syntax. e.g.::
-
-                query.join(..., extra="{lhs}.name != {rhs}.name OR ...", ...)
-
-        :param tuple extra_params: a tuple of values to be interpolated into `extra`, this is
-            done by psycopg2.
-
-        Full example:
-
-        >>> rhs_alias = query.join(
-        ...     "res_users",
-        ...     "partner_id",
-        ...     "res_partner",
-        ...     "id",
-        ...     "partner_id",           # partner_id is the "link" from res_users to res_partner
-        ...     "{lhs}.\"name\" != %s",
-        ...     ("Mitchell Admin",),
-        ... )
-        >>> rhs_alias
-        res_users_res_partner__partner_id
-
-        From the example above, the resulting query would be something like::
-
-            SELECT ...
-            FROM "res_users" AS "res_users"
-            JOIN "res_partner" AS "res_users_res_partner__partner_id"
-                ON "res_users"."partner_id" = "res_users_res_partner__partner_id"."id"
-                AND "res_users"."name" != 'Mitchell Admin'
-            WHERE ...
-
         """
-        return self._join('JOIN', lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
+        assert lhs_alias in self._tables or lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
+        rhs_alias = self.make_alias(lhs_alias, link)
+        condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
+        self.add_join('JOIN', rhs_alias, rhs_table, condition)
+        return rhs_alias
 
-    def left_join(self, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra=None, extra_params=()):
+    def left_join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str):
         """ Add a LEFT JOIN to the current table (if necessary), and return the
         alias corresponding to ``rhs_table``.
 
         See the documentation of :meth:`join` for a better overview of the
         arguments and what they do.
         """
-        return self._join('LEFT JOIN', lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
-
-    def _join(self, kind, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra=None, extra_params=()):
         assert lhs_alias in self._tables or lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
-        if extra:
-            extra = SQL(extra, *extra_params)
-            extra = SQL(extra.code.format(lhs=lhs_alias, rhs=rhs_alias), *extra.params)
-            condition = SQL("%s AND %s", condition, extra)
-        self.add_join(kind, rhs_alias, rhs_table, condition)
+        self.add_join('LEFT JOIN', rhs_alias, rhs_table, condition)
         return rhs_alias
 
     @property
