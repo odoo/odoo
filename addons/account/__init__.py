@@ -35,9 +35,22 @@ def _auto_install_l10n(env):
         if module_ids:
             module_ids.sudo().button_install()
 
+def _auto_install_avatax(env):
+    """ Install the avatax module automatically if the company is in a country that uses avatax """
+    avatax_country_codes = ['US', 'BR']
+
+    country = env.company.country_id
+    country_code = country.code
+
+    if country_code in avatax_country_codes:
+        module = env['ir.module.module'].search([('name', '=', 'account_avatax')])
+        if module.state == 'uninstalled':
+            module.sudo().button_install()
+
 def _account_post_init(env):
     _auto_install_l10n(env)
     _set_fiscal_country(env)
+    _auto_install_avatax(env)
 
 # imported here to avoid dependency cycle issues
 # pylint: disable=wrong-import-position
