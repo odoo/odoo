@@ -76,7 +76,7 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
                     left: $cart.offset().left + offsetLeft,
                     width: 75,
                     height: 75,
-                }, 1000, 'easeInOutExpo');
+                }, 500);
 
             $imgclone.animate({
                 width: 0,
