@@ -1856,8 +1856,13 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_pos_hr_employee(self, params):
-        return self.env['hr.employee'].search_read(**params['search_params'])
-      
+        employees = self.sudo().env['hr.employee'].search_read(**params['search_params'])
+        for employee in employees:
+            employee['access_card'] = employee['barcode']
+            employee.pop("barcode", None)
+
+        return employees
+
     def _loader_params_pos_file_uploader(self):
         return {
             'search_params': {
