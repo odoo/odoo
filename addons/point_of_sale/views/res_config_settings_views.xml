@@ -404,17 +404,17 @@
                             </setting>
                             <setting string="Allow Ship Later" help="Sell products and deliver them later.">
                                 <field name="pos_ship_later"/>
-                                <div class="mt16" invisible="not pos_ship_later">
-                                    <div>
-                                        <label for="pos_warehouse_id" string="Warehouse" class="fw-normal me-1"/>
+                                <div class="content-group mt16" invisible="not pos_ship_later">
+                                    <div class="row">
+                                        <label for="pos_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label"/>
                                         <field name="pos_warehouse_id" required="pos_ship_later"/>
                                     </div>
-                                    <div groups="stock.group_adv_location">
-                                        <label for="pos_route_id" string="Specific route" class="fw-norma me-1"/>
+                                    <div groups="stock.group_adv_location" class="row">
+                                        <label for="pos_route_id" string="Specific route" class="col-lg-3 o_light_label"/>
                                         <field name="pos_route_id"/>
                                     </div>
-                                    <div>
-                                        <label for="pos_picking_policy" class="fw-normal me-1"/>
+                                    <div class="row">
+                                        <label for="pos_picking_policy" class="col-lg-3 o_light_label"/>
                                         <field name="pos_picking_policy" required="pos_ship_later"/>
                                     </div>
                                 </div>
