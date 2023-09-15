@@ -21,7 +21,7 @@ class Project(models.Model):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
-    total_timesheet_time = fields.Integer(
+    total_timesheet_time = fields.Integer( # NOTE: Is this field really needed ????? (reamining hours already exists and could do the job ?)
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
