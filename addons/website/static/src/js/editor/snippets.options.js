@@ -772,9 +772,9 @@ options.Class.include({
 
         // Finally, only update the bundles as no reload is required
         await this._reloadBundles();
-        // Any option that require to reload bundle should probably
-        // also update the color preview of the theme tabs, as
-        // bundles can affect the look of the previews.
+        // TODO kept to be fully stable but this is useless, this is done
+        // automatically with _reloadBundles. As this is not a costly operation
+        // it is ok to do it twice for no reason in stable. To remove in master.
         this.trigger_up('option_update', {
             optionName: 'ThemeColors',
             name: 'update_color_previews',
@@ -1588,6 +1588,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 
     notify(name, data) {
         if (name === 'update_color_previews') {
+            // TODO remove this part in master, this is handled automatically
+            // at each bundle reload.
             this.updateColorPreviews = true;
         }
     },
@@ -1604,6 +1606,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      */
     async updateUI() {
         if (this.updateColorPreviews) {
+            // TODO remove this part in master, this is handled automatically
+            // at each bundle reload.
             this.trigger_up('update_color_previews');
             this.updateColorPreviews = false;
         }
@@ -1658,6 +1662,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }
+        // TODO investigate in master why this would be necessary
         this.trigger_up('update_color_previews');
         await this._super(...arguments);
     },
