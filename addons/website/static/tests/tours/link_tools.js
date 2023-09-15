@@ -176,8 +176,15 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     wTourUtils.clickOnElement("OK button", ".btn-primary"),
     {
         content: "Drag Mega at the top",
-        trigger: '.oe_menu_editor li:contains("Mega") .fa-bars',
-        run: "drag_move_and_drop [0,0]@.oe_menu_editor li:contains('Home') .fa-bars => .oe_menu_editor li",
+        trigger: '.oe_menu_editor li:contains("Mega") > div',
+        run: ({ tip_widget }) => {
+            return wTourUtils.dragMoveAndDrop(
+                tip_widget.$anchor[0],
+                ".oe_menu_editor li:contains('Home')",
+                ".oe_menu_editor .o_nested_sortable_placeholder",
+                { x: 0, y: -5 },
+            );
+        }
     },
     {
         content: "Wait for drop",

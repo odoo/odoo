@@ -416,6 +416,91 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
         `we-select[data-name=${widgetName}] we-button:contains(${elementName})`));
     return steps;
 }
+/**
+ * Util to easily trigger a pointer event.
+ *
+ * @param {HTMLElement} element - The element to trigger the event on
+ * @param {String} type - The type of the event
+ * @param {PointerEventInit} [options] - Event options
+ * @returns {void|boolean|*}
+ */
+function triggerPointerEvent(element, type, options) {
+    const eventInit = {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        ...options,
+    };
+    return element.dispatchEvent(new PointerEvent(type, eventInit));
+}
+/**
+ * Calculates the center of an HTML element.
+ *
+ * @param {HTMLElement} element
+ * @returns {{top: number, left: number}}
+ */
+function calculateCenter(element) {
+    const rect = element.getBoundingClientRect();
+    return {
+        left: rect.left + (rect.width / 2),
+        top: rect.top + (rect.height / 2),
+    };
+}
+/**
+ * Wait for the next OWL tick so that events can bubble and component
+ * can render. It is the same as the nextTick test util used in QUnit tests.
+ *
+ * @return {Promise}
+ */
+async function nextTick() {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => setTimeout(resolve));
+}
+/**
+ * To be used as a step's run function. Util to drag, move then drop an element
+ * while also waiting for a tick for owl to process the changes.
+ *
+ * @param {HTMLElement} element the element to initiate a drag on
+ * @param {String} fromSelector Selector for an element which the drag will go through
+ * @param {String}  toSelector Selector for the final element on which the dragged
+ *                             element will be dropped on
+ * @param {{x: number, y: number}} offset defines an offset of the `from` element.
+ * @returns {Promise<void>}
+ */
+async function dragMoveAndDrop(element, fromSelector, toSelector, offset) {
+    // TODO: Make this work inside an iframe.
+    triggerPointerEvent(element, "pointerenter");
+    const elementCenter = calculateCenter(element);
+    triggerPointerEvent(element, "pointerdown", {
+        clientX: elementCenter.left, clientY: elementCenter.top,
+    });
+    // Drag through "from".
+    // TODO: Replace jQuery, unfortunately, :contains is not supported.
+    // Move the element in two events as the nested_sortable hook does not
+    // allow for a vertical move and a horizontal move in the same event.
+    const fromCenter = calculateCenter(
+        $(fromSelector)[0],
+    );
+    triggerPointerEvent(element, "pointermove", {
+        clientX: fromCenter.left,
+        clientY: fromCenter.top + offset.y,
+    });
+    // Let the event be processed by OWL.
+    await nextTick();
+    triggerPointerEvent(element, "pointermove", {
+        clientX: fromCenter.left + offset.x,
+        clientY: fromCenter.top + offset.y,
+    });
+    // Let the event be processed by OWL.
+    await nextTick();
+    // Drop into "to".
+    const toCenter = calculateCenter(
+        $(toSelector)[0],
+    );
+    triggerPointerEvent(element, "pointerup", {
+        clientX: toCenter.left, clientY: toCenter.top,
+    });
+}
 
 export default {
     addMedia,
@@ -433,6 +518,7 @@ export default {
     clickOnSave,
     clickOnSnippet,
     clickOnText,
+    dragMoveAndDrop,
     dragNDrop,
     goBackToBlocks,
     goToTheme,

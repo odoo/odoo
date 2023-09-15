@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
+import { closest } from "@web/core/utils/ui";
 import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
 
@@ -133,6 +134,11 @@ export class EditMenuDialog extends Component {
             nest: true,
             listTagName: "ul",
             handle: "div",
+            onDragStart: ({ element }) => {
+                const placeholder = this.menuEditor.el.querySelector(".o_nested_sortable_placeholder");
+                const elementStyle = getComputedStyle(element);
+                placeholder.style.height = elementStyle.height;
+            },
             onDrop: ({ element, previous, parent }) => {
                 const menuId = element && element.dataset.menuId;
                 const previousId = previous && previous.dataset.menuId;
@@ -141,6 +147,9 @@ export class EditMenuDialog extends Component {
                 const newParentMenu = this.map.get(parseInt(newParentId) || newParentId) || this.state.rootMenu;
                 const previousMenu = this.map.get(parseInt(previousId) || previousId);
                 this.reorderMenu(menu, previousMenu, newParentMenu);
+            },
+            elementFromPoint: (x, y) => {
+                return closest(this.menuEditor.el.querySelectorAll("li:not(.o_dragged)"), { x, y });
             }
         });
     }

@@ -74,6 +74,7 @@ export const useNestedSortable = makeDraggableHook({
         nest: [Boolean],
         listTagName: [String],
         nestInterval: [Number],
+        elementFromPoint: [Function]
     },
     defaultParams: {
         connectGroups: false,
@@ -85,6 +86,7 @@ export const useNestedSortable = makeDraggableHook({
         nest: false,
         listTagName: "ul",
         nestInterval: 15,
+        elementFromPoint: (x, y) => document.elementFromPoint(x, y),
     },
 
     // Set the parameters.
@@ -104,6 +106,7 @@ export const useNestedSortable = makeDraggableHook({
         // (i.e. changing parent when moving horizontally)
         ctx.nestInterval = params.nestInterval;
         ctx.isRTL = localization.direction === "rtl";
+        ctx.elementFromPoint = params.elementFromPoint;
     },
 
     // Set the current group and create the placeholder row that will take the
@@ -266,7 +269,7 @@ export const useNestedSortable = makeDraggableHook({
             }
         }
         const currentTop = ctx.pointer.y - ctx.current.offset.y;
-        const closestEl = document.elementFromPoint(ctx.selectorX, currentTop);
+        const closestEl = ctx.elementFromPoint(ctx.selectorX, currentTop);
         if (!closestEl) {
             // Cursor outside of viewport
             return;

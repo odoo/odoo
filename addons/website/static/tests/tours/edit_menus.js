@@ -166,9 +166,16 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Drag item into parent",
-        trigger: '.oe_menu_editor li:contains("Contact us") > .ui-sortable-handle',
+        trigger: '.oe_menu_editor li:contains("Contact us") > div',
         // Menu rows are 38px tall.
-        run: "drag_move_and_drop [50,38]@.oe_menu_editor li:contains('Home') > .ui-sortable-handle => .oe_menu_editor li:contains('Home') .ui-sortable-placeholder",
+        run: ({ tip_widget }) => {
+            return wTourUtils.dragMoveAndDrop(
+                tip_widget.$anchor[0],
+                ".oe_menu_editor li:contains('Home') > div",
+                ".oe_menu_editor li:contains('Home') .o_nested_sortable_placeholder",
+                { x: 50, y: 38}
+            );
+        }
     },
     {
         content: "Wait for drop",
@@ -178,8 +185,15 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     // Drag the Mega menu to the first position.
     {
         content: "Drag Mega at the top",
-        trigger: '.oe_menu_editor li:contains("Megaaaaa!") > .ui-sortable-handle',
-        run: "drag_move_and_drop [0,0]@.oe_menu_editor li:contains('Home') > .ui-sortable-handle => .oe_menu_editor li",
+        trigger: '.oe_menu_editor li:contains("Megaaaaa!") > div',
+        run: ({ tip_widget }) => {
+            return wTourUtils.dragMoveAndDrop(
+                tip_widget.$anchor[0],
+                ".oe_menu_editor li:contains('Home') > div",
+                ".oe_menu_editor .o_nested_sortable_placeholder",
+                { x: 0, y: 0}
+            );
+        }
     },
     {
         content: "Wait for drop",
