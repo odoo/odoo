@@ -1483,7 +1483,8 @@ class ReportSaleDetails(models.AbstractModel):
                 'quantity': qty,
                 'price_unit': price_unit,
                 'discount': discount,
-                'uom': product.uom_id.name
+                'uom': product.uom_id.name,
+                'cost': product.standard_price,
             } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 

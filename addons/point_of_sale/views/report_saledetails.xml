@@ -22,6 +22,7 @@
                     <th>Product</th>
                     <th>Quantity</th>
                     <th>Price Unit</th>
+                    <th>Cost</th>
                 </tr></thead>
                 <tbody>
                 <tr t-foreach='products' t-as='line'>
@@ -38,6 +39,9 @@
                     <t t-if='line["discount"] != 0'>
                         Disc: <t t-esc='line["discount"]' />%
                     </t>
+                    </td>
+                     <td>
+                        <t t-esc='line["cost"]' />
                     </td>
                 </tr>
                 </tbody>
