@@ -690,7 +690,10 @@ class AccountReportExpression(models.Model):
 
         return auto_chosen_target
 
-    def action_view_carryover_lines(self, options):
+    def action_view_carryover_lines(self, options, column_group_key=None):
+        if column_group_key:
+            options = self.report_line_id.report_id._get_column_group_options(options, column_group_key)
+
         date_from, date_to, dummy = self.report_line_id.report_id._get_date_bounds_info(options, self.date_scope)
 
         return {
