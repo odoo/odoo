@@ -11,14 +11,11 @@ export class ActivityModel extends RelationalModel {
         if (params && "groupBy" in params) {
             params.groupBy = [];
         }
-        const prom = this.fetchActivityData(params).then((data) => {
-            this.activityData = data;
-        });
-        await Promise.all([prom, super.load(params)]);
+        await Promise.all([this.fetchActivityData(params), super.load(params)]);
     }
 
-    fetchActivityData(params) {
-        return this.orm.call("mail.activity", "get_activity_data", [], {
+    async fetchActivityData(params) {
+        this.activityData = await this.orm.call("mail.activity", "get_activity_data", [], {
             res_model: this.config.resModel,
             domain: params.domain || this.env.searchModel._domain,
             limit: params.limit || this.initialLimit,
