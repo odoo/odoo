@@ -30,7 +30,7 @@
                                     'o-active btn-odoo': composerView and composerView.composer.isLog,
                                     'btn-light': composerView and !composerView.composer.isLog or !composerView,
                                 }"
-                                t-att-disabled="!isTemporary and !hasWriteAccess"
+                                t-att-disabled="!canPostMessage"
                                 t-on-click="onClickLogNote"
                                 data-hotkey="shift+m"
                             >
