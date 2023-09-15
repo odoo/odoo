@@ -176,18 +176,6 @@
         <template id="ubl_21_AddressType_zatca" inherit_id="account_edi_ubl_cii.ubl_20_AddressType" primary="True">
             <!-- AdditionalStreetName causes the Validation SDK to crash, so it has to be removed -->
             <xpath expr="//*[local-name()='AdditionalStreetName']" position="replace"/>
-            <xpath expr="//*[local-name()='StreetName']" position="after">
-                <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-                   xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                   xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                    <!--  Add Building number in compliance with rules KSA-17 (seller)/ KSA-18 (customer)  -->
-                    <cbc:BuildingNumber t-out="vals.get('building_number')"/>
-                    <!--  Add Plot identification in compliance with rules KSA-23 (seller)/ KSA-19 (customer)  -->
-                    <cbc:PlotIdentification t-out="vals.get('plot_identification')"/>
-                    <!--  Add Neighborhood in compliance with rules KSA-3 (seller)/ KSA-4 (customer)  -->
-                    <cbc:CitySubdivisionName t-out="vals.get('neighborhood')"/>
-                </t>
-            </xpath>
         </template>
 
         <template id="ubl_21_InvoiceType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">

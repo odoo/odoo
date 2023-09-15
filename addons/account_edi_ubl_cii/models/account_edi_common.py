@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import _, models, Command
 from odoo.tools import float_repr
 from odoo.exceptions import UserError, ValidationError
@@ -103,6 +101,10 @@ class AccountEdiCommon(models.AbstractModel):
         if amount is None:
             return None
         return float_repr(float_round(amount, precision_digits), precision_digits)
+
+    def _get_currency_decimal_places(self, currency_id):
+        # Allows other documents to easily override in case there is a flat max precision number
+        return currency_id.decimal_places
 
     def _get_uom_unece_code(self, line):
         """
