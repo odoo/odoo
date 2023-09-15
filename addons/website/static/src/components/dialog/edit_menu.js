@@ -2,10 +2,11 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
+import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
 
-const { Component, useState, useEffect, onWillStart, useRef, onMounted } = owl;
+const { Component, useState, useEffect, onWillStart, useRef } = owl;
 
 const useControlledInput = (initialValue, validate) => {
     const input = useState({
@@ -127,26 +128,57 @@ export class EditMenuDialog extends Component {
             this.toDelete = [];
         });
 
-        onMounted(() => {
-            this.$sortables = $(this.menuEditor.el);
-            this.$sortables.nestedSortable({
-                listType: 'ul',
-                handle: 'div',
-                items: 'li',
-                maxLevels: 2,
-                toleranceElement: '> div',
-                forcePlaceholderSize: true,
-                opacity: 0.6,
-                placeholder: 'oe_menu_placeholder',
-                tolerance: 'pointer',
-                attribute: 'data-menu-id',
-                expression: '()(.+)', // nestedSortable takes the second match of an expression (*sigh*)
-                isAllowed: (placeholder, placeholderParent, currentItem) => {
-                    return !placeholderParent
-                        || !currentItem[0].dataset.isMegaMenu && !placeholderParent[0].dataset.isMegaMenu;
-                },
-            });
+        useNestedSortable({
+            ref: this.menuEditor,
+            nest: true,
+            listTagName: "ul",
+            handle: "div",
+            onDrop: ({ element, previous, parent }) => {
+                const menuId = element && element.dataset.menuId;
+                const previousId = previous && previous.dataset.menuId;
+                const newParentId = parent && parent.dataset.menuId;
+                const menu = this.map.get(parseInt(menuId) || menuId);
+                const newParentMenu = this.map.get(parseInt(newParentId) || newParentId) || this.state.rootMenu;
+                const previousMenu = this.map.get(parseInt(previousId) || previousId);
+                this.reorderMenu(menu, previousMenu, newParentMenu);
+            }
         });
+    }
+
+    reorderMenu(menu, previousMenu, newParentMenu) {
+        const findMenuIndex = (id) => {
+            return (menu) => menu.fields.id === id;
+        };
+        // Remove from old menu
+        const oldParentMenu = this.map.get(menu.fields["parent_id"]);
+        const menuIndex = oldParentMenu.children.findIndex(findMenuIndex(menu.fields.id));
+        oldParentMenu.children.splice(menuIndex, 1);
+        // Find correct parent menu
+        if (newParentMenu !== this.state.rootMenu) {
+            // Prevent going further than 2 levels deep
+            if (newParentMenu.fields["parent_id"] !== this.state.rootMenu.fields.id) {
+                previousMenu = newParentMenu;
+                newParentMenu = this.map.get(newParentMenu.fields["parent_id"]);
+            }
+            // Prevent a menu with children or a mega menu from going anywhere but
+            // the top level. Prevent a menu from using a mega menu as a parent.
+            if (
+                menu.fields["is_mega_menu"]
+                || menu.children.length >= 1
+                || newParentMenu.fields["is_mega_menu"]
+            ) {
+                previousMenu = newParentMenu;
+                newParentMenu = this.state.rootMenu;
+            }
+        }
+        // Insert in new menu
+        if (previousMenu) {
+            const previousIndex = newParentMenu.children.findIndex(findMenuIndex(previousMenu.fields.id));
+            newParentMenu.children.splice(previousIndex + 1, 0, menu);
+        } else {
+            newParentMenu.children.unshift(menu);
+        }
+        menu.fields["parent_id"] = newParentMenu.fields.id;
     }
 
     populate(map, menu) {
@@ -168,7 +200,7 @@ export class EditMenuDialog extends Component {
                         new_window: isNewWindow,
                         'is_mega_menu': isMegaMenu,
                         sequence: 0,
-                        'parent_id': false,
+                        'parent_id': this.state.rootMenu.fields.id,
                     },
                     'children': [],
                 };
@@ -205,22 +237,21 @@ export class EditMenuDialog extends Component {
     }
 
     async onClickSave() {
-        const newMenus = this.$sortables.nestedSortable('toArray', {startDepthCount: 0});
+        const rootId = this.state.rootMenu.fields.id;
+        const newMenus = [
+            ...this.state.rootMenu.children,
+            ...this.state.rootMenu.children.flatMap((menu) => menu.children)
+        ];
         const levels = [];
         const data = [];
 
         // Resequence, re-tree and remove useless data
         for (const menu of newMenus) {
-            if (menu.id) {
-                levels[menu.depth] = (levels[menu.depth] || 0) + 1;
-                const {fields: menuFields} = this.map.get(menu.id) || this.map.get(parseInt(menu.id, 10));
-                menuFields['sequence'] = levels[menu.depth];
-                // JQuery's nestedSortable() extracts parent_ids as string.
-                // They must be ints when they are actual existing ids but
-                // remain as strings when they represent a creation ("new-##").
-                menuFields['parent_id'] = parseInt(menu['parent_id']) || menu['parent_id'] || this.state.rootMenu.fields['id'];
-                data.push(menuFields);
-            }
+            const depth = menu.fields.parent_id !== rootId;
+            levels[depth] = (levels[depth] || 0) + 1;
+            const {fields: menuFields} = this.map.get(menu.fields.id);
+            menuFields["sequence"] = levels[depth];
+            data.push(menuFields);
         }
 
         await this.orm.call('website.menu', 'save', [
