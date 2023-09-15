@@ -257,6 +257,8 @@ class DiscussController(http.Controller):
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals['access_token'] = channel_partner.env['ir.attachment']._generate_access_token()
         try:
+            if 'activity_id' in kwargs:
+                channel_partner = channel_partner.with_context(activity_id=int(kwargs['activity_id']))
             attachment = channel_partner.env['ir.attachment'].create(vals)
             attachment._post_add_create()
             attachmentData = {
