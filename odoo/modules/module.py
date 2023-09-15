@@ -196,14 +196,11 @@ def get_resource_path(module, *args):
     :rtype: str
     :return: absolute path to the resource
     """
+    warnings.warn(
+        f"Since 17.0: use tools.misc.file_path instead of get_resource_path({module}, {args})",
+        DeprecationWarning,
+    )
     resource_path = opj(module, *args)
-    try:
-        return file_path(resource_path)
-    except (FileNotFoundError, ValueError):
-        return False
-
-def check_resource_path(mod_path, *args):
-    resource_path = opj(mod_path, *args)
     try:
         return file_path(resource_path)
     except (FileNotFoundError, ValueError):
@@ -211,6 +208,7 @@ def check_resource_path(mod_path, *args):
 
 # backwards compatibility
 get_module_resource = get_resource_path
+check_resource_path = get_resource_path
 
 def get_resource_from_path(path):
     """Tries to extract the module name and the resource's relative path
