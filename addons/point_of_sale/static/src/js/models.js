@@ -255,7 +255,7 @@ class PosGlobalState extends PosModel {
                 if (employee.work_contact_id && employee.work_contact_id.length > 0) {
                     let foundPartners = partners.filter(p => p.commercial_partner_id && p.commercial_partner_id.length > 0 && p.commercial_partner_id[0] === employee.work_contact_id[0]);
                     if (foundPartners && foundPartners.length > 0) {
-                        foundPartners[0].studentCardNumber = employee.barcode;
+                        foundPartners[0].studentCardNumber = employee.access_card;
                     }
                 }
             }
