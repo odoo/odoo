@@ -25,7 +25,7 @@
                                 'o-active btn-odoo': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
                                 'btn-light': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog or !chatterTopbar.chatter.composerView,
                             }"
-                            t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                            t-att-disabled="!chatterTopbar.chatter.canPostMessage"
                             t-on-click="chatterTopbar.chatter.onClickLogNote"
                             data-hotkey="shift+m"
                         >
