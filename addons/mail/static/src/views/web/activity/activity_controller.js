@@ -47,8 +47,7 @@ export class ActivityController extends Component {
                 limit: limit,
                 total: count,
                 onUpdate: async (params) => {
-                    await this.model.root.load(params);
-                    this.model.fetchActivityData(params);
+                    await Promise.all([this.model.root.load(params), this.model.fetchActivityData(params)]);
                 },
                 updateTotal: hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
             };
