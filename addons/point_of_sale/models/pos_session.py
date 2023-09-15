@@ -1857,7 +1857,7 @@ class PosSession(models.Model):
 
     def _get_pos_ui_pos_hr_employee(self, params):
         return self.env['hr.employee'].search_read(**params['search_params'])
-
+      
     def _loader_params_pos_file_uploader(self):
         return {
             'search_params': {

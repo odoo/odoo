@@ -261,6 +261,7 @@ class PosGlobalState extends PosModel {
             }
         }
     }
+
     _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
         if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
             correspondingProduct.applicablePricelistItems[pricelist.id] = [];
