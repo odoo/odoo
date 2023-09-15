@@ -13,6 +13,10 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 
+export class CancelConfirmationDialog extends ConfirmationDialog {
+    static template = "point_of_sale.CancelConfirmationDialog";
+}
+
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Input, Dialog };
     static template = "point_of_sale.ClosePosPopup";
@@ -58,12 +62,13 @@ export class ClosePosPopup extends Component {
             return;
         }
         if (this.hasUserAuthority()) {
-            this.dialog.add(ConfirmationDialog, {
+            this.dialog.add(CancelConfirmationDialog, {
                 title: _t("Payments Difference"),
                 body: _t(
-                    "Do you want to accept payments difference and post a profit/loss journal entry?"
+                    "The money counted doesn't match what we expected. Want to log the difference for the books?"
                 ),
                 confirm: this.closeSession.bind(this),
+                cancel: () => {},
             });
             return;
         }
@@ -123,6 +128,7 @@ export class ClosePosPopup extends Component {
 
         return parseFloat(counted) - expectedAmount;
     }
+
     getMaxDifference() {
         return Math.max(
             ...Object.keys(this.state.payments).map((id) =>

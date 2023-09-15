@@ -110,5 +110,20 @@
             </t>
         </Dialog>
     </t>
-
+    <t t-name="point_of_sale.CancelConfirmationDialog">
+        <Dialog size="'md'" modalRef="modalRef">
+            <t t-set-slot="header">
+                <h4 class="modal-title title" t-esc="props.title" />
+            </t>
+            <p t-out="props.body" class="text-prewrap"/>
+            <t t-set-slot="footer">
+                <button class="button confirm btn btn-secondary" t-on-click="props.confirm">
+                    Proceed anyway
+                </button>
+                <button class="button cancel btn btn-primary" t-on-click="props.close">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
 </templates>
