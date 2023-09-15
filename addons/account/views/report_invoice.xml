@@ -199,7 +199,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication" class="mt-4">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
@@ -248,6 +247,7 @@
                             <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
                             <img class="border border-dark rounded" t-att-src="qr_code_url"/>
                         </p>
+                    </div>
                     </div>
                 </div>
             </t>

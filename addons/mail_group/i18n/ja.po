@@ -48,6 +48,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                こんにちは。<br><br>\n"
+"                メーリングリスト <strong t-out=\"object.name or ''\"></strong>へのご登録のご希望を受け付けました。\n"
+"                <br><br>\n"
+"                確定するには、以下のリンクをご覧下さい: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                間違い、またはこの要求をされていない場合、このメッセージは無視して下さい。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -62,6 +71,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                こんにちは。<br><br>\n"
+"                メーリングリスト<strong t-out=\"object.name or ''\"></strong>からの登録解除のご希望を受け付けました。\n"
+"                <br><br>\n"
+"                確定するには、以下のリンクをご覧下さい。: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                間違い、またはこの要求をされていない場合、このメッセージは無視して下さい。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -73,6 +91,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>こんにちは<t t-out=\"object.partner_id.name or ''\"></t></p>\n"
+"                <p>以下に、メーリングリスト {{ object.mail_group_id.name }} の説明をお送りします。</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message

@@ -6,9 +6,8 @@ from unittest.mock import patch
 
 from odoo import http
 from odoo.tests import common, tagged
-from odoo.tools import mute_logger
 from odoo.tools.misc import get_lang
-from odoo.addons.web.controllers.export import ExportXlsxWriter
+from odoo.addons.web.controllers.export import ExportXlsxWriter, Export
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -393,37 +392,17 @@ class TestGroupedExport(XlsxCreatorCase):
             ['1'                ,'86420.86'],
         ])
 
-    @mute_logger('odoo.addons.web.controllers.export')
-    def test_export_with_deleted_field(self):
-        model = self.env['ir.model']._get('res.partner')
-        url = '/web/export/namelist'
-        header = {"Content-Type": "application/json"}
+@tagged('-at_install', 'post_install')
+class TestExport(common.HttpCase):
 
-        custom_field = self.env['ir.model.fields'].create([{
-            'name': 'x_test',
-            'ttype': 'char',
-            'field_description': 'test field',
-            'model_id': model.id,
-        }])
-
-        export_template = self.env['ir.exports'].create({
-            'name': custom_field.name,
-            'export_fields': [(0, 0, {'name': custom_field.name})],
-        })
-
-        data = json.dumps({
-                'params': {
-                    'model': model.model,
-                    'export_id': export_template.id,
-                    },
-                })
-
-        export_line_field = self.env['ir.exports.line'].search([('name', '=', export_template.name)])
-
-        self.url_open(url, data, headers=header).json()
-        self.assertTrue(export_line_field.exists())
-
-        custom_field.unlink()
-
-        self.url_open(url, data, headers=header).json()
-        self.assertFalse(export_line_field.exists())
+    def test_properties_type_fields_not_selectable_with_import_compat(self):
+        with patch.object(Export, 'fields_get', return_value={
+            'id': {'string': 'ID', 'type': 'integer'},
+            'name': {'string': 'Name', 'type': 'char'},
+            'properties': {'string': 'Properties', 'type': 'properties'},
+            'properties_definition': {'string': 'Properties Definition', 'type': 'properties_definition'}
+        }):
+            fields = Export().get_fields("mock_model", import_compat=True)
+            field_names = [field['id'] for field in fields]
+            self.assertNotIn('properties', field_names)
+            self.assertNotIn('properties_definition', field_names)

@@ -1261,7 +1261,7 @@ class TranslationImporter:
             reader = TranslationFileReader(fileobj, fileformat=fileformat)
             self._load(reader, lang, xmlids)
         except IOError:
-            iso_lang = get_iso_codes(self.lang)
+            iso_lang = get_iso_codes(lang)
             filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
             _logger.exception("couldn't read translation file %s", filename)
 
@@ -1397,6 +1397,7 @@ class TranslationImporter:
         self.model_translations.clear()
 
         env.invalidate_all()
+        env.registry.clear_caches()
         if self.verbose:
             _logger.info("translations are loaded successfully")
 
@@ -1575,7 +1576,9 @@ def _get_translation_upgrade_queries(cr, field):
               GROUP BY it.res_id
             )
             UPDATE {Model._table} m
-               SET "{field.name}" = CASE WHEN t.noupdate THEN m."{field.name}" || t.value ELSE t.value || m."{field.name}" END
+               SET "{field.name}" = CASE WHEN t.noupdate IS FALSE THEN t.value || m."{field.name}"
+                                         ELSE m."{field.name}" || t.value
+                                     END
               FROM t
              WHERE t.res_id = m.id
         """
@@ -1586,6 +1589,21 @@ def _get_translation_upgrade_queries(cr, field):
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
+        query = f"""
+            SELECT t.res_id, m."{field.name}", t.value, t.noupdate
+              FROM t
+              JOIN "{Model._table}" m ON t.res_id = m.id
+        """
+        if translation_name == 'ir.ui.view,arch_db':
+            cr.execute("SELECT id from ir_module_module WHERE name = 'website' AND state='installed'")
+            if cr.fetchone():
+                query = f"""
+                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, l.code
+                      FROM t
+                      JOIN "{Model._table}" m ON t.res_id = m.id
+                      JOIN website w ON m.website_id = w.id
+                      JOIN res_lang l ON w.default_lang_id = l.id
+                """
         cr.execute(f"""
             WITH t0 AS (
                 -- aggregate translations by source term --
@@ -1601,12 +1619,8 @@ def _get_translation_upgrade_queries(cr, field):
              LEFT JOIN ir_model_data imd
                     ON imd.model = %s AND imd.res_id = t0.res_id
               GROUP BY t0.res_id
-            )
-            SELECT t.res_id, m."{field.name}", t.value, t.noupdate
-              FROM t
-              JOIN "{Model._table}" m ON t.res_id = m.id
-        """, [translation_name, Model._name])
-        for id_, new_translations, translations, noupdate in cr.fetchall():
+            )""" + query, [translation_name, Model._name])
+        for id_, new_translations, translations, noupdate, *extra in cr.fetchall():
             if not new_translations:
                 continue
             # new_translations contains translations updated from the latest po files
@@ -1626,6 +1640,8 @@ def _get_translation_upgrade_queries(cr, field):
             }
             if "en_US" not in new_values:
                 new_values["en_US"] = field.translate(lambda v: None, src_value)
+            if extra and extra[0] not in new_values:
+                new_values[extra[0]] = new_values["en_US"]
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 

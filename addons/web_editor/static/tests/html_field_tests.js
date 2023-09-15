@@ -295,7 +295,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     QUnit.module('Save scenarios');
 
     QUnit.test("Ensure that urgentSave works even with modified image to save", async (assert) => {
-        assert.expect(3);
+        assert.expect(5);
         let formController;
         // Patch to get the controller instance.
         patchWithCleanup(FormController.prototype, {
@@ -379,6 +379,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 route === `/web_editor/modify_image/${imageRecord.id}`
             ) {
                 if (modifyImageCount === 0) {
+                    assert.equal(args.res_model, 'partner');
+                    assert.equal(args.res_id, 1);
                     await modifyImagePromise;
                     return newImageSrc;
                 } else {
@@ -418,7 +420,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // Replace the empty paragraph with a paragrah containing an unsaved
         // modified image
-        editor.editable.classList.add("o_dirty");
         const imageContainerElement = parseHTML(imageContainerHTML).firstChild;
         let paragraph = editor.editable.querySelector(".test_target");
         editor.editable.replaceChild(imageContainerElement, paragraph);

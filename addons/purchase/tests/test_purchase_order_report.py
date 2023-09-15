@@ -182,3 +182,37 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po_2.flush_model()
         report = self.env['purchase.report'].search([('product_id', "=", self.product_a.id)])
         self.assertEqual(report.currency_id, self.env.company.currency_id)
+
+    def test_avg_price_calculation(self):
+        """
+            Check that the average price is calculated based on the quantity ordered in each line
+            PO:
+                - 10 unit of product A -> price $50
+                - 1 unit of product A -> price $10
+            Total qty_ordered: 11
+            avergae price: 46.36 = ((10 * 50) + (10 * 1)) / 11
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 50.0,
+                }),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 1.0,
+                    'price_unit': 10.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        po.flush_model()
+        report = self.env['purchase.report'].read_group(
+            [('product_id', '=', self.product_a.id)],
+            ['qty_ordered', 'price_average:avg'],
+            ['product_id'],
+        )
+        self.assertEqual(report[0]['qty_ordered'], 11)
+        self.assertEqual(round(report[0]['price_average'], 2), 46.36)

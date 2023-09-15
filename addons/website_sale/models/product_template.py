@@ -38,7 +38,7 @@ class ProductTemplate(models.Model):
     website_size_y = fields.Integer('Size Y', default=1)
     website_ribbon_id = fields.Many2one('product.ribbon', string='Ribbon')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence(), copy=False)
+                                      default=lambda self: self._default_website_sequence(), copy=False, index=True)
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
         string='Website Product Category',
@@ -200,6 +200,14 @@ class ProductTemplate(models.Model):
                 if not price_list_contains_template:
                     price_reduce = base_sales_prices[template.id]
                     template_price_vals.update(price_reduce=price_reduce)
+                if template.currency_id != pricelist.currency_id:
+                    base_price = template.currency_id._convert(
+                        base_price,
+                        pricelist.currency_id,
+                        self.env.company,
+                        fields.Datetime.now(),
+                        round=False
+                    )
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
