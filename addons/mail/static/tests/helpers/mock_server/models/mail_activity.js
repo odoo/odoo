@@ -24,7 +24,9 @@ patch(MockServer.prototype, {
         if (args.model === "mail.activity" && args.method === "get_activity_data") {
             const res_model = args.args[0] || args.kwargs.res_model;
             const domain = args.args[1] || args.kwargs.domain;
-            return this._mockMailActivityGetActivityData(res_model, domain);
+            const limit = args[2] || args.kwargs.limit || 0;
+            const offset = args[3] || args.kwargs.offset || 0;
+            return this._mockMailActivityGetActivityData(res_model, domain, limit, offset);
         }
         return super._performRPC(route, args);
     },
@@ -112,11 +114,14 @@ patch(MockServer.prototype, {
      * @private
      * @param {string} res_model
      * @param {string} domain
+     * @param {number} limit
+     * @param {number} offset
      * @returns {Object}
      */
-    _mockMailActivityGetActivityData(res_model, domain) {
+    _mockMailActivityGetActivityData(res_model, domain, limit = 0, offset = 0) {
         const self = this;
-        const records = this.getRecords(res_model, domain);
+        const allRecords = this.getRecords(res_model, domain);
+        const records = limit ? allRecords.slice(offset, offset + limit) : allRecords;
 
         const activityTypes = this.getRecords("mail.activity.type", []);
         const activityIds = records.map((x) => x.activity_ids).flat();
