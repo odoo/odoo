@@ -613,6 +613,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         await Promise.all(proms).then(() => {
             $allLinksIframe.remove();
         });
+
+        // Update the panel so that color previews reflect the ones used by the
+        // edited content.
+        this.setCSSVariables(this.snippetsMenu.el);
+
         if (event.data.onSuccess) {
             return event.data.onSuccess();
         }
@@ -772,7 +777,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             'snippet_removed': this._onSnippetRemoved.bind(this),
             'reload_bundles': this._reloadBundles.bind(this),
             'menu_dialog': this._onMenuDialogRequest.bind(this),
-            'update_color_previews': this._onColorPreviewsUpdate.bind(this),
             'request_mobile_preview': this._onMobilePreviewRequest.bind(this),
             'get_switchable_related_views': this._onGetSwitchableRelatedViews.bind(this),
         };
@@ -1106,15 +1110,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 await event.data.save(...args);
             },
         });
-    }
-    /**
-     * Updates the panel so that color previews reflects the ones used by the
-     * edited content.
-     *
-     * @private
-     */
-    _onColorPreviewsUpdate() {
-        this.setCSSVariables(this.snippetsMenu.el);
     }
     /**
      * Update the context to trigger a mobile view.
