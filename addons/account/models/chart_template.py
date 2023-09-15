@@ -638,28 +638,28 @@ class AccountChartTemplate(models.AbstractModel):
             if company[fname]:
                 del accounts_data[fname]
 
-        self = self.with_context(lang='en_US')
-        langs = langs or [code for code, _name in self.env['res.lang'].get_installed()]
-
-        #get translations for accounts_data
-        translation_importer = TranslationImporter(self.env.cr, verbose=False)
-        for mname, data in accounts_data.items():
-            for _xml_id, record in data.items():
-                fnames = {fname.split('@')[0] for fname in record}
-                for lang in langs:
-                    for fname in fnames:
-                        value = record.get(f"{fname}@{lang}")
-                        if not value:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
-                            value = record.get(f"{fname}@{lang.split('_')[0]}")
-                        if value:
-                            xml_id = f"account.{company.id}_{_xml_id}"
-                            translation_importer.model_translations[mname][fname][xml_id][lang] = value
-        translation_importer.save(overwrite=False)
-
+        # self._accounts_add_translations(accounts_data)
 
         accounts = self.env['account.account'].create(accounts_data.values())
         for company_attr_name, account in zip(accounts_data.keys(), accounts):
             company[company_attr_name] = account
+
+    def _accounts_add_translations(self, accounts, langs=None):
+        if not langs:
+            langs = [code for code, _name in self.env['res.lang'].get_installed()]
+
+        for lang in langs:
+            for id,account in accounts.items():
+                self._single_account_add_translation(id, lang)
+
+
+    def _single_account_add_translation(self, account_id, lang):
+        account = self.env['account.chart.template'].browse(account_id)
+        #get translation from po file
+        # translation = 
+        # if translation:
+            # account.with_context(lang=lang).name = translation.value
+            
 
     @api.model
     def _instantiate_foreign_taxes(self, country, company):
@@ -1018,6 +1018,7 @@ class AccountChartTemplate(models.AbstractModel):
                                 value = record.get(f"{fname}@{lang.split('_')[0]}")
                             if value:
                                 for company in chart_companies:
+                                    import pdb; pdb.set_trace()
                                     xml_id = f"account.{company.id}_{_xml_id}"
                                     translation_importer.model_translations[mname][fname][xml_id][lang] = value
         translation_importer.save(overwrite=False)
