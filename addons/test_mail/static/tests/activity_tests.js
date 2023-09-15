@@ -225,62 +225,62 @@ QUnit.module("test_mail", {}, function () {
 
             for (let i = 0; i < 101; i++) {
                 activityToCreate.push({
-                    display_name: "An activity " + i,
+                    display_name: "An activity " + (i * 2),
                     date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
                 });
+                activityToCreate.push({
+                    display_name: "An activity " + (i * 2 + 1),
+                    date_deadline: serializeDate(DateTime.now().plus({ days: 2 })),
+                    can_write: true,
+                    state: "planned",
+                    activity_type_id: mailActivityTypeIds[1],
+                });
             }
             const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
             for (let i = 0; i < 101; i++) {
-                // The default limit of the RelationalModel is 80, test if it is overwrited to display up to 100 records
-                recordsToCreate.push({ name: i + "", activity_ids: [createdActivity[i]] });
+                recordsToCreate.push({ name: "pagerTestRecord" + i, activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]] });
             }
             pyEnv["mail.test.activity"].create(recordsToCreate);
 
             const { openView } = await start({
                 serverData,
-                mockRPC: function (route, args) {
-                    if (args.method === "get_activity_data") {
-                        assert.step(
-                            `get activities records starting with a ${args.kwargs.offset} offset`
-                        );
-                        assert.strictEqual(
-                            args.kwargs.limit,
-                            100,
-                            "a limit of 100 records is used when fetching activity data"
-                        );
-                    }
-                },
             });
             await openView({
                 res_model: "mail.test.activity",
                 views: [[false, "activity"]],
+                domain: [['name', 'like', 'pagerTestRecord']],
             });
-
-            assert.verifySteps(
-                ["get activities records starting with a 0 offset"],
-                "'get_activity_data' has been called correctly"
-            );
             assert.containsN(
                 document.body,
                 ".o_activity_record",
                 100,
                 "Only 100 records should have been displayed"
             );
-
-            await click(document.querySelector(".o_pager_next"));
-            assert.verifySteps(
-                ["get activities records starting with a 100 offset"],
-                "'get_activity_data' has been called correctly"
+            assert.containsN(
+                document.body,
+                ".o_activity_summary_cell.planned",
+                200,
+                "200 activities should have been displayed (2 per records)"
             );
+            await click(document.querySelector(".o_pager_next"));
             assert.containsN(
                 document.body,
                 ".o_activity_record",
-                3,
-                "Only 3 records are now displayed"
+                1,
+                "Only 1 record is now displayed"
             );
+            assert.containsN(
+                document.body,
+                ".o_activity_summary_cell.planned",
+                2,
+                "Only the 2 activities of the last record are now displayed"
+            );
+            await click(document.querySelector(".o_pager_previous"));
+            assert.containsN(document.body, ".o_activity_record", 100);
+            assert.containsN(document.body, ".o_activity_summary_cell.planned", 200);
         }
     );
 
