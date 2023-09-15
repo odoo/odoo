@@ -5544,8 +5544,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
-        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
-        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
 
         await editInput(target, ".o_field_widget[name=foo] input", "");
         triggerHotkey("alt+n");
@@ -5555,8 +5554,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
             "Unable to save. Correct the issue or discard changes"
         );
-        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
-        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
         assert.containsOnce(target, ".o_notification_manager .o_notification");
         assert.verifySteps([]);
@@ -5581,17 +5579,16 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
-        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
-        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
 
         await click(target.querySelector(".o_pager_next"));
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "second record");
-        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
 
         await click(target.querySelector(".o_pager_previous"));
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
-        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
     });
 
     QUnit.test("keynav: switching to another record from a dirty one", async function (assert) {
@@ -5636,11 +5633,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("alt+n");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
-        assert.strictEqual(
-            target.querySelector(".o_pager_value").textContent,
-            "2",
-            "pager value should be 2"
-        );
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo] input").value,
             "blip",
@@ -5650,11 +5643,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("alt+p");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
-        assert.strictEqual(
-            target.querySelector(".o_pager_value").textContent,
-            "1",
-            "pager value should be 1"
-        );
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo] input").value,
             "new value",
@@ -5678,12 +5667,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_pager_value").textContent,
-            "1",
-            "pager value should be 1"
-        );
-
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo] input").value,
             "yop",
@@ -5707,12 +5691,7 @@ QUnit.module("Views", (hooks) => {
             ".modal:visible",
             "no confirm modal should be displayed"
         );
-        assert.strictEqual(
-            target.querySelector(".o_pager_value").textContent,
-            "2",
-            "pager value should be 2"
-        );
-
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
         assert.containsN(
             target,
             ".o_priority .fa-star-o",
@@ -5730,12 +5709,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_pager_next"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
-        assert.strictEqual(
-            target.querySelector(".o_pager_value").textContent,
-            "1",
-            "pager value should be 1"
-        );
-
+        assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo] input").value,
             "new value",

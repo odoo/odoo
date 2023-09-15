@@ -888,7 +888,7 @@ export class Record extends DataPoint {
         }
         if ((creation || nextId) && records.length) {
             const resId = records[0].id;
-            const resIds = resId in this.resIds ? this.resIds : this.resIds.concat([resId]);
+            const resIds = this.resIds.includes(resId) ? this.resIds : this.resIds.concat([resId]);
             this.model._updateConfig(this.config, { resId, resIds }, { reload: false });
         }
         if (reload) {
