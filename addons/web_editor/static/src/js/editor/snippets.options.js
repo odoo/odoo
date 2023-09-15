@@ -1090,11 +1090,25 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
 
         if (!this.menuTogglerEl.classList.contains('active')) {
             this.open();
+            const menuElBottomPosition = this.menuEl.getBoundingClientRect().bottom;
+            const snippetsPanelEl = this.menuEl.closest("#oe_snippets");
+            if (!snippetsPanelEl) {
+                return;
+            }
+            // If after opening, the dropdown list overflows the customization
+            // panel at the bottom, scroll the customization panel so that the
+            // dropdown is completely visible.
+            if (menuElBottomPosition > snippetsPanelEl.offsetHeight) {
+                const customizePanelEl = this.menuEl.closest(".o_we_customize_panel");
+                customizePanelEl.scrollTop += menuElBottomPosition - snippetsPanelEl.offsetHeight;
+            }
         } else {
             this.close();
         }
         const activeButton = this._userValueWidgets.find(widget => widget.isActive());
         if (activeButton) {
+            // Useful when the dropdown has a vertical scrollbar => scroll to
+            // the active button.
             this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
         }
     },
