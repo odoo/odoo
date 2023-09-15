@@ -680,7 +680,7 @@ registerModel({
                 const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
                     await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
-                    if (this.composer.exists()) {
+                    if (this.exists() && this.composer) {
                         this.composer._reset();
                     }
                     return;

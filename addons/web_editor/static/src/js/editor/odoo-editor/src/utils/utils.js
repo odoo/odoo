@@ -47,7 +47,7 @@ const tldWhitelist = [
     'ug', 'uk', 'um', 'us', 'uy', 'uz', 'va', 'vc', 've', 'vg', 'vi', 'vn',
     'vu', 'wf', 'ws', 'ye', 'yt', 'yu', 'za', 'zm', 'zr', 'zw', 'co\\.uk'];
 
-const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})\\b))(?:(?:[/?#])[^\\s]*(?<![.,})\\]'"]))?`;
+const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})\\b))(?:\\/[^\\s.,'")}\\]]*[?#.,)}\\]'"]?[^\\s.,'")}\\]]+|(?:[^!(){}.,\\[\\]'"\\s]+)|\\/[^\\s.,'")}\\]]*[^\\s?#.,'")}\\]]*)?`;
 const httpRegex = `(?:https?:\\/\\/)`;
 const httpCapturedRegex= `(https?:\\/\\/)`;
 
@@ -1020,8 +1020,13 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
     }
 
-    const selectedTextNodes = getSelectedNodes(editor.editable)
+    // Get selected nodes within td to handle non-p elements like h1, h2...
+    // Targeting <br> to ensure span stays inside its corresponding block node.
+    const selectedNodesInTds = [...editor.editable.querySelectorAll('.o_selected_td')]
+        .map(node => closestElement(node).querySelector('br'));
+    const selectedNodes = getSelectedNodes(editor.editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable && isVisibleTextNode(n));
+    const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
@@ -1051,7 +1056,6 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
 
         const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
-
         if (firstBlockOrClassHasFormat && !applyStyle) {
             formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
         } else if (!firstBlockOrClassHasFormat && applyStyle) {
@@ -1293,7 +1297,7 @@ export function isSelectionFormat(editable, format) {
     const selectedNodes = getTraversedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
     const isFormatted = formatsSpecs[format].isFormatted;
-    return selectedNodes.every(n => isFormatted(n, editable));
+    return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
 }
 
 export function isUnbreakable(node) {
@@ -1451,6 +1455,7 @@ export const paragraphRelatedElements = [
     'H5',
     'H6',
     'PRE',
+    'BLOCKQUOTE',
 ];
 
 /**

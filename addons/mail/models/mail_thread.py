@@ -1933,7 +1933,7 @@ class MailThread(models.AbstractModel):
                         node.set('src', '/web/image/%s?access_token=%s' % attachment_data)
                         postprocessed = True
                 if postprocessed:
-                    return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
+                    return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='unicode')
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
 

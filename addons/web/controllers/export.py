@@ -331,6 +331,8 @@ class Export(http.Controller):
             if import_compat and not field_name == 'id':
                 if exclude and field_name in exclude:
                     continue
+                if field.get('type') in ('properties', 'properties_definition'):
+                    continue
                 if field.get('readonly'):
                     # If none of the field's states unsets readonly, skip the field
                     if all(dict(attrs).get('readonly', True)
@@ -365,15 +367,7 @@ class Export(http.Controller):
     def namelist(self, model, export_id):
         # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
         export = request.env['ir.exports'].browse([export_id]).read()[0]
-        exported_fields = request.env['ir.exports.line'].browse(export['export_fields'])
-        fields = self.fields_get(model)
-
-        for invalid_fields in exported_fields.filtered(lambda f: f.name not in fields):
-            # ir.exports.line lack a ondelete=cascade foreign key on ir.model.fields
-            _logger.warning("Field %r not found for saved ir.exports of model %s, deleting", invalid_fields.name, model)
-            invalid_fields.unlink()
-
-        export_fields_list = exported_fields.read()
+        export_fields_list = request.env['ir.exports.line'].browse(export['export_fields']).read()
 
         fields_data = self.fields_info(
             model, [f['name'] for f in export_fields_list])

@@ -775,7 +775,7 @@ class PosOrder(models.Model):
                 aml_vals_entry_found[0]['balance'] += payment_id.amount
             else:
                 aml_vals_list_per_nature['payment_terms'].append({
-                    'partner_id': self.partner_id.id if is_split_transaction else False,
+                    'partner_id': commercial_partner.id if is_split_transaction else False,
                     'name': f"{reversed_move_receivable_account_id.code} {reversed_move_receivable_account_id.code}",
                     'account_id': reversed_move_receivable_account_id.id,
                     'currency_id': self.currency_id.id,

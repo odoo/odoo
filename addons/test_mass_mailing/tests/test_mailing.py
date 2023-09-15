@@ -458,6 +458,37 @@ class TestMassMailing(TestMassMailCommon):
         self.assertEqual(mailing.canceled, 3)
 
     @users('user_marketing')
+    def test_mailing_w_seenlist(self):
+        """
+        Tests whether function `_get_seen_list` is correctly able to identify duplicate emails,
+        even through different batches.
+        Mails use different names to make sure they are recognized as duplicates even without being
+        normalized (e.g.: '"jc" <0@example.com>' and '"vd" <0@example.com>' are duplicates)
+        """
+        BATCH_SIZE = 5
+        names = ['jc', 'vd']
+        emails = [f'test.{i}@example.com' for i in range(BATCH_SIZE)]
+        records = self.env['mailing.test.partner'].create([{
+            'name': f'test_duplicates {i}', 'email_from': f'"{names[i % 2]}" <{emails[i % BATCH_SIZE]}>'
+        } for i in range(20)])
+
+        mailing = self.env['mailing.mailing'].create({
+            'mailing_domain': [('name', 'ilike', 'test_duplicates %')],
+            'mailing_model_id': self.env.ref('test_mass_mailing.model_mailing_test_partner').id,
+            'name': 'test duplicates',
+            'subject': 'test duplicates',
+        })
+
+        with self.mock_mail_gateway():
+            for i in range(0, 20, BATCH_SIZE):
+                mailing.action_send_mail(records[i:i + BATCH_SIZE].mapped('id'))
+            self.assertEqual(len(self._mails), BATCH_SIZE)
+            self.assertEqual(mailing.canceled, 15)
+            mails_sent = [email_normalize(mail['email_to'][0]) for mail in self._mails]
+            for email in emails:
+                self.assertEqual(mails_sent.count(email), 1)
+
+    @users('user_marketing')
     def test_mailing_w_seenlist_unstored_partner(self):
         """ Test seen list when partners are not stored. """
         test_customers = self.env['res.partner'].sudo().create([

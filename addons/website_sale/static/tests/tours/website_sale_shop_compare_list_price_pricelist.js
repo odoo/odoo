@@ -19,10 +19,10 @@ tour.register('compare_list_price_price_list_display', {
 
         tourUtils.assertProductPrice("price_reduce", "2,000", "test_product_default"),
         tourUtils.assertProductPrice("price_reduce", "4,000", "test_product_with_compare_list_price"),
-        tourUtils.assertProductPrice("base_price",   "2,500", "test_product_with_compare_list_price"),
-        tourUtils.assertProductPrice("price_reduce",   "4,000", "test_product_with_pricelist"),
+        tourUtils.assertProductPrice("base_price",   "5,000", "test_product_with_compare_list_price"),
+        tourUtils.assertProductPrice("price_reduce", "4,000", "test_product_with_pricelist"),
         tourUtils.assertProductPrice("price_reduce", "8,000", "test_product_with_pricelist_and_compare_list_price"),
-        tourUtils.assertProductPrice("base_price",   "4,500", "test_product_with_pricelist_and_compare_list_price"),
+        tourUtils.assertProductPrice("base_price",   "9,000", "test_product_with_pricelist_and_compare_list_price"),
 
         ...tourUtils.selectPriceList('pricelist_with_discount'),
 

@@ -133,7 +133,7 @@
                             alt="Follower"/>
                         <small
                             t-if="follower_index == 5"
-                            t-esc="'+' + (follower_size - 5)"
+                            t-esc="'+' + (record.message_partner_ids.raw_value.length - 5)"
                             class="text-info fw-bold ms-1"/>
                       </t>
                     </div>
