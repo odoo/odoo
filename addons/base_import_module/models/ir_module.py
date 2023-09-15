@@ -5,7 +5,6 @@ import logging
 import lxml
 import os
 import sys
-import tempfile
 import zipfile
 from collections import defaultdict
 from os.path import join as opj
@@ -187,7 +186,7 @@ class IrModule(models.Model):
                 if zf.file_size > MAX_FILE_SIZE:
                     raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
 
-            with file_open_temporary_directory(self.env) as module_dir:
+            with file_open_temporary_directory(self.env) as manager:
                 manifest_files = [
                     file
                     for file in z.filelist
@@ -196,10 +195,10 @@ class IrModule(models.Model):
                 ]
                 module_data_files = defaultdict(list)
                 for manifest in manifest_files:
-                    manifest_path = z.extract(manifest, module_dir)
+                    manifest_path = z.extract(manifest, manager.tmp_path)
                     mod_name = manifest.filename.split('/')[0]
                     try:
-                        with file_open(manifest_path, 'rb', env=self.env) as f:
+                        with manager.file_open(manifest_path, 'rb') as f:
                             terp = ast.literal_eval(f.read().decode())
                     except Exception:
                         continue
@@ -213,14 +212,14 @@ class IrModule(models.Model):
                     is_data_file = filename in module_data_files[mod_name]
                     is_static = filename.startswith('%s/static' % mod_name)
                     if is_data_file or is_static:
-                        z.extract(file, module_dir)
+                        z.extract(file, manager.tmp_path)
 
-                dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
+                dirs = [d for d in os.listdir(manager.tmp_path) if os.path.isdir(opj(manager.tmp_path, d))]
                 for mod_name in dirs:
                     module_names.append(mod_name)
                     try:
                         # assert mod_name.startswith('theme_')
-                        path = opj(module_dir, mod_name)
+                        path = opj(manager.tmp_path, mod_name)
                         if self._import_module(mod_name, path, force=force):
                             success.append(mod_name)
                     except Exception as e:

@@ -15,6 +15,7 @@ from subprocess import Popen, PIPE
 
 from .. import api
 from . import ustr, config
+from .misc import file_open, file_open_temporary_directory
 from .safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -43,14 +44,15 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
             raise ValueError("Report %s produced a non-pdf header, %r" % (rname, res_data[:10]))
         res_text = False
         try:
-            fd, rfname = tempfile.mkstemp(suffix=res_format)
-            os.write(fd, res_data)
-            os.close(fd)
+            with file_open_temporary_directory(env) as manager:
+                pdfpath = os.path.join(manager.tmp_path, "sample.pdf")
+                with manager.file_open(pdfpath, "wb") as fd:
+                    fd.write(res_data)
 
-            proc = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', rfname, '-'], shell=False, stdout=PIPE)
-            stdout, stderr = proc.communicate()
-            res_text = ustr(stdout)
-            os.unlink(rfname)
+                proc = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', pdfpath, '-'], shell=False, stdout=PIPE)
+                stdout = proc.communicate()[0]
+                res_text = ustr(stdout)
+
         except Exception:
             _logger.debug("Unable to parse PDF report: install pdftotext to perform automated tests.")
 

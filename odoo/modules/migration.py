@@ -114,7 +114,9 @@ class MigrationManager(object):
             return True
 
         def get_scripts(path):
-            if not path:
+            try:
+                path = file_path(path)
+            except FileNotFoundError:
                 return {}
             return {
                 version: glob.glob(opj(path, version, '*.py'))

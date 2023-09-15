@@ -5,7 +5,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path, ustr
+from odoo.tools.misc import file_open_temporary_directory, find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -14,7 +14,6 @@ import io
 import logging
 import os
 import lxml.html
-import tempfile
 import subprocess
 import re
 import json
@@ -442,46 +441,41 @@ class IrActionsReport(models.Model):
             set_viewport_size=set_viewport_size)
 
         files_command_args = []
-        temporary_files = []
-        if header:
-            head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
-            with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
-                head_file.write(header.encode())
-            temporary_files.append(head_file_path)
-            files_command_args.extend(['--header-html', head_file_path])
-        if footer:
-            foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-            with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
-                foot_file.write(footer.encode())
-            temporary_files.append(foot_file_path)
-            files_command_args.extend(['--footer-html', foot_file_path])
+        with file_open_temporary_directory(self.env) as manager:
 
-        paths = []
-        for i, body in enumerate(bodies):
-            prefix = '%s%d.' % ('report.body.tmp.', i)
-            body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
-            with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
-                # HACK: wkhtmltopdf doesn't like big table at all and the
-                #       processing time become exponential with the number
-                #       of rows (like 1H for 250k rows).
-                #
-                #       So we split the table into multiple tables containing
-                #       500 rows each. This reduce the processing time to 1min
-                #       for 250k rows. The number 500 was taken from opw-1689673
-                if len(body) < 4 * 1024 * 1024: # 4Mib
-                    body_file.write(body.encode())
-                else:
-                    tree = lxml.html.fromstring(body)
-                    _split_table(tree, 500)
-                    body_file.write(lxml.html.tostring(tree))
-            paths.append(body_file_path)
-            temporary_files.append(body_file_path)
+            if header:
+                head_file_path = os.path.join(manager.tmp_path, 'report-header.html')
+                with manager.file_open(head_file_path, 'wb') as head_file:
+                    head_file.write(header.encode())
+                files_command_args.extend(['--header-html', head_file_path])
+            if footer:
+                foot_file_path = os.path.join(manager.tmp_path, 'report-footer.html')
+                with manager.file_open(foot_file_path, 'wb') as foot_file:
+                    foot_file.write(footer.encode())
+                files_command_args.extend(['--footer-html', foot_file_path])
 
-        pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
-        os.close(pdf_report_fd)
-        temporary_files.append(pdf_report_path)
+            paths = []
+            for i, body in enumerate(bodies):
+                html_report_path = os.path.join(manager.tmp_path, 'report-%s.html' % i)
+                paths.append(html_report_path)
 
-        try:
+                with manager.file_open(html_report_path, 'wb') as body_file:
+                    # HACK: wkhtmltopdf doesn't like big table at all and the
+                    #       processing time become exponential with the number
+                    #       of rows (like 1H for 250k rows).
+                    #
+                    #       So we split the table into multiple tables containing
+                    #       500 rows each. This reduce the processing time to 1min
+                    #       for 250k rows. The number 500 was taken from opw-1689673
+                    if len(body) < 4 * 1024 * 1024: # 4Mib
+                        body_file.write(body.encode())
+                    else:
+                        tree = lxml.html.fromstring(body)
+                        _split_table(tree, 500)
+                        body_file.write(lxml.html.tostring(tree))
+
+            pdf_report_path = os.path.join(manager.tmp_path, 'report.pdf')
+
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
@@ -497,19 +491,10 @@ class IrActionsReport(models.Model):
                 raise UserError(message % (str(process.returncode), err[-1000:]))
             else:
                 if err:
-                    _logger.warning('wkhtmltopdf: %s' % err)
-        except:
-            raise
+                    _logger.warning('wkhtmltopdf: %s', err)
 
-        with open(pdf_report_path, 'rb') as pdf_document:
-            pdf_content = pdf_document.read()
-
-        # Manual cleanup of the temporary files
-        for temporary_file in temporary_files:
-            try:
-                os.unlink(temporary_file)
-            except (OSError, IOError):
-                _logger.error('Error when trying to remove file %s' % temporary_file)
+            with manager.file_open(pdf_report_path, 'rb') as pdf_document:
+                pdf_content = pdf_document.read()
 
         return pdf_content
 

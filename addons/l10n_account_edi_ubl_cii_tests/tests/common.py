@@ -234,8 +234,8 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
-        expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
-        expected_etree = etree.parse(expected_file_full_path).getroot()
+        expected_file_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
+        expected_etree = etree.parse(expected_file_path).getroot()
 
         modified_etree = self.with_applied_xpath(
             expected_etree,
