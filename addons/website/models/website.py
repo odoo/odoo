@@ -23,7 +23,7 @@ from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
-from odoo.modules.module import get_resource_path, get_manifest
+from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
 from odoo.tools.translate import _, xml_translate
 from odoo.tools import escape_psql, pycompat
@@ -98,8 +98,7 @@ class Website(models.Model):
         return self.env.ref('base.main_company').social_tiktok
 
     def _default_logo(self):
-        image_path = get_resource_path('website', 'static/src/img', 'website_logo.svg')
-        with tools.file_open(image_path, 'rb') as f:
+        with tools.file_open('website/static/src/img/website_logo.svg', 'rb') as f:
             return base64.b64encode(f.read())
 
     logo = fields.Binary('Website Logo', default=_default_logo, help="Display this logo on the website.")
@@ -134,8 +133,7 @@ class Website(models.Model):
     robots_txt = fields.Html('Robots.txt', translate=False, groups='website.group_website_designer', sanitize=False)
 
     def _default_favicon(self):
-        img_path = get_resource_path('web', 'static/img/favicon.ico')
-        with tools.file_open(img_path, 'rb') as f:
+        with tools.file_open('web/static/img/favicon.ico', 'rb') as f:
             return base64.b64encode(f.read())
 
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)

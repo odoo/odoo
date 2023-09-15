@@ -3,7 +3,6 @@
 import base64
 import json
 import os
-import tempfile
 
 from io import BytesIO
 from zipfile import ZipFile

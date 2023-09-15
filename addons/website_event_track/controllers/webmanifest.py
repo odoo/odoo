@@ -7,8 +7,8 @@ import pytz
 from odoo import http
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.http import request
-from odoo.modules.module import get_module_resource
 from odoo.tools import ustr
+from odoo.tools.misc import file_open
 from odoo.tools.translate import _
 
 
@@ -47,8 +47,7 @@ class TrackManifest(http.Controller):
     def service_worker(self):
         """ Returns a ServiceWorker javascript file scoped for website_event
         """
-        sw_file = get_module_resource('website_event_track', 'static/src/js/service_worker.js')
-        with open(sw_file, 'r') as fp:
+        with file_open('website_event_track/static/src/js/service_worker.js', 'r') as fp:
             body = fp.read()
         js_cdn_url = 'undefined'
         if request.website.cdn_activated:

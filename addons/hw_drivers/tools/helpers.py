@@ -23,7 +23,7 @@ import secrets
 
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
-from odoo.modules.module import get_resource_path
+from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
@@ -368,7 +368,7 @@ def load_iot_handlers():
     And execute these python drivers and interfaces
     """
     for directory in ['interfaces', 'drivers']:
-        path = get_resource_path('hw_drivers', 'iot_handlers', directory)
+        path = file_path(f'hw_drivers/iot_handlers/{directory}')
         filesList = list_file_by_os(path)
         for file in filesList:
             spec = util.spec_from_file_location(file, str(Path(path).joinpath(file)))

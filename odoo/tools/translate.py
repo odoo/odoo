@@ -17,6 +17,7 @@ import tarfile
 import threading
 import warnings
 from collections import defaultdict, namedtuple
+from contextlib import suppress
 from datetime import datetime
 from os.path import join
 
@@ -27,9 +28,8 @@ from psycopg2.extras import Json
 
 import odoo
 from odoo.exceptions import UserError
-from odoo.modules.module import get_resource_path
 from . import config, pycompat
-from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, get_iso_codes, SKIPPED_ELEMENT_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -1146,7 +1146,7 @@ class TranslationModuleReader:
         if not module:
             return
         extra_comments = extra_comments or []
-        src_file = open(fabsolutepath, 'rb')
+        src_file = file_open(fabsolutepath, 'rb')
         options = {}
         if extract_method == 'python':
             options['encoding'] = 'UTF-8'
@@ -1239,7 +1239,8 @@ class TranslationImporter:
                      the language must be present and activated in the database
         :param xmlids: if given, only translations for records with xmlid in xmlids will be loaded
         """
-        with file_open(filepath, mode='rb') as fileobj:
+        with suppress(FileNotFoundError), file_open(filepath, mode='rb') as fileobj:
+            _logger.info('loading base translation file %s for language %s', filepath, lang)
             fileformat = os.path.splitext(filepath)[-1][1:].lower()
             self.load(fileobj, fileformat, lang, xmlids=xmlids)
 
@@ -1484,12 +1485,15 @@ def get_po_paths(module_name: str, lang: str):
     else:
         langs = [lang_base, lang]
 
-    return [
+    po_paths = [
         path
         for lang_ in langs
         for dir_ in ('i18n', 'i18n_extra')
-        if (path := get_resource_path(module_name, dir_, lang_ + '.po'))
+        if (path := join(module_name, dir_, lang_ + '.po'))
     ]
+    for path in po_paths:
+        with suppress(FileNotFoundError):
+            yield file_path(path)
 
 
 class CodeTranslations:

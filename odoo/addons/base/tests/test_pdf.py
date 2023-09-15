@@ -3,7 +3,7 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tools import pdf
-from odoo.modules.module import get_module_resource
+from odoo.tools.misc import file_open
 import io
 
 
@@ -12,8 +12,7 @@ class TestPdf(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        file_path = get_module_resource('base', 'tests', 'minimal.pdf')
-        self.file = open(file_path, 'rb').read()
+        self.file = file_open('base/tests/minimal.pdf', 'rb').read()
         self.minimal_reader_buffer = io.BytesIO(self.file)
         self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
 

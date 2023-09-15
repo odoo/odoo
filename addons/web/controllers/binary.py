@@ -18,7 +18,6 @@ import odoo.modules.registry
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
-from odoo.modules import get_resource_path
 from odoo.tools import file_open, file_path, replace_exceptions
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_guess_size_from_field_name
@@ -214,12 +213,11 @@ class Binary(http.Controller):
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo'
         imgext = '.png'
-        placeholder = functools.partial(get_resource_path, 'web', 'static', 'img')
         dbname = request.db
         uid = (request.session.uid if dbname else None) or odoo.SUPERUSER_ID
 
         if not dbname:
-            response = http.Stream.from_path(placeholder(imgname + imgext)).get_response()
+            response = http.Stream.from_path(file_path('web/static/img/logo.png')).get_response()
         else:
             try:
                 # create an empty registry
@@ -255,9 +253,9 @@ class Binary(http.Controller):
                             response_class=Response,
                         )
                     else:
-                        response = http.Stream.from_path(placeholder('nologo.png')).get_response()
+                        response = http.Stream.from_path(file_path('web/static/img/nologo.png')).get_response()
             except Exception:
-                response = http.Stream.from_path(placeholder(imgname + imgext)).get_response()
+                response = http.Stream.from_path(file_path(f'web/static/img/{imgname}{imgext}')).get_response()
 
         return response
 
@@ -273,7 +271,7 @@ class Binary(http.Controller):
         """
         supported_exts = ('.ttf', '.otf', '.woff', '.woff2')
         fonts = []
-        fonts_directory = file_path(os.path.join('web', 'static', 'fonts', 'sign'))
+        fonts_directory = file_path('web/static/fonts/sign')
         if fontname:
             font_path = os.path.join(fonts_directory, fontname)
             with file_open(font_path, 'rb', filter_ext=supported_exts) as font_file:

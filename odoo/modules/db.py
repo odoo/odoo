@@ -25,8 +25,9 @@ def initialize(cr):
     and ir_model_data entries.
 
     """
-    f = odoo.modules.get_module_resource('base', 'data', 'base_data.sql')
-    if not f:
+    try:
+        f = odoo.tools.misc.file_path('base/data/base_data.sql')
+    except FileNotFoundError:
         m = "File not found: 'base.sql' (provided by module 'base')."
         _logger.critical(m)
         raise IOError(m)

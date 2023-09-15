@@ -3,13 +3,13 @@
 
 import base64
 from collections import defaultdict
+from os.path import join as opj
 import operator
 import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.modules import get_module_resource
 from odoo.osv import expression
 
 MENU_ITEM_SEPARATOR = "/"
@@ -56,16 +56,16 @@ class IrUiMenu(models.Model):
         else:
             return self.name
 
-    def read_image(self, path):
+    def _read_image(self, path):
         if not path:
             return False
         path_info = path.split(',')
-        icon_path = get_module_resource(path_info[0], path_info[1])
-        icon_image = False
-        if icon_path:
-            with tools.file_open(icon_path, 'rb') as icon_file:
-                icon_image = base64.encodebytes(icon_file.read())
-        return icon_image
+        icon_path = opj(path_info[0], path_info[1])
+        try:
+            with tools.file_open(icon_path, 'rb', filter_ext=('.png',)) as icon_file:
+                return base64.encodebytes(icon_file.read())
+        except FileNotFoundError:
+            return False
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -179,10 +179,10 @@ class IrUiMenu(models.Model):
             `web_icon` can either be:
               - an image icon [module, path]
               - a built icon [icon_class, icon_color, background_color]
-            and it only has to call `read_image` if it's an image.
+            and it only has to call `_read_image` if it's an image.
         """
         if web_icon and len(web_icon.split(',')) == 2:
-            return self.read_image(web_icon)
+            return self._read_image(web_icon)
 
     def unlink(self):
         # Detach children and promote them to top-level, because it would be unwise to

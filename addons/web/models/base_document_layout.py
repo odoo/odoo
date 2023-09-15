@@ -5,8 +5,8 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.modules import get_resource_path
 from odoo.tools import html2plaintext, is_html_empty
+from odoo.tools.misc import file_path
 
 try:
     import sass as libsass
@@ -289,7 +289,7 @@ class BaseDocumentLayout(models.TransientModel):
 
         precision = 8
         output_style = 'expanded'
-        bootstrap_path = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+        bootstrap_path = file_path('web/static/lib/bootstrap/scss')
 
         try:
             return libsass.compile(

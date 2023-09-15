@@ -9,7 +9,6 @@ import io
 import logging
 import os
 import shutil
-import tempfile
 import threading
 import zipfile
 
@@ -32,7 +31,7 @@ from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
 from odoo.tools.translate import TranslationImporter, get_po_paths
 from odoo.http import request
-from odoo.modules import get_module_path, get_module_resource
+from odoo.modules import get_module_path
 
 _logger = logging.getLogger(__name__)
 
@@ -162,10 +161,8 @@ class Module(models.Model):
             if not module.name:
                 module.description_html = False
                 continue
-            module_path = modules.get_module_path(module.name, display_warning=False)  # avoid to log warning for fake community module
-            if module_path:
-                path = modules.check_resource_path(module_path, 'static/description/index.html')
-            if module_path and path:
+            path = os.path.join(module.name, '/static/description/index.html')
+            try:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
                     if doc.startswith(XML_DECLARATION):
@@ -191,7 +188,7 @@ class Module(models.Model):
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
                     module.description_html = tools.html_sanitize(lxml.html.tostring(html))
-            else:
+            except FileNotFoundError:
                 overrides = {
                     'embed_stylesheet': False,
                     'doctitle_xform': False,
@@ -246,7 +243,7 @@ class Module(models.Model):
             module.icon_image = ''
             if module.icon:
                 path_parts = module.icon.split('/')
-                path = modules.get_module_resource(path_parts[1], *path_parts[2:])
+                path = os.path.join(path_parts[1], *path_parts[2:])
             elif module.id:
                 path = modules.module.get_module_icon_path(module)
             else:
