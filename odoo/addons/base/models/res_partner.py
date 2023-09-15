@@ -190,14 +190,14 @@ class Partner(models.Model):
                 values['type'] = None
         return values
 
-    name = fields.Char(index=True, default_export_compatible=True)
-    complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
-    date = fields.Date(index=True)
+    name = fields.Char(index='trigram', default_export_compatible=True)
+    complete_name = fields.Char(compute='_compute_complete_name', store=True, index='trigram')
+    date = fields.Date()
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
-    ref = fields.Char(string='Reference', index=True)
+    ref = fields.Char(string='Reference', index='btree_not_null')
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
