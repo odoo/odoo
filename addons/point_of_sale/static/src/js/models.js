@@ -100,7 +100,8 @@ class PosGlobalState extends PosModel {
         this.user = null;
         this.partners = [];
         this.students = [];
-        this.uploaded_files = []
+        this.employees = [];
+        this.uploaded_files = [];
         this.taxes = [];
         this.pos_session = null;
         this.config = null;
@@ -195,7 +196,8 @@ class PosGlobalState extends PosModel {
         this.bills = loadedData['pos.bill'];
         this.partners = loadedData['res.partner'];
         this.students = loadedData['op.student'];
-        this.uploaded_files = loadedData['pos.file.uploader']
+        this.employees = loadedData['pos.hr.employee'];
+        this.uploaded_files = loadedData['pos.file.uploader'];
         this.addPartners(this.partners);
         this.picking_type = loadedData['stock.picking.type'];
         this.user = loadedData['res.users'];
@@ -229,10 +231,11 @@ class PosGlobalState extends PosModel {
         this.db.set_uuid(this.config.uuid);
     }
     addPartners(partners) {
-        this._enrichPartners(partners, this.students);
+        this._enrichPartnersStudentCardNumbers(partners, this.students);
+        this._enrichPartnersEmployeeBarCodes(partners, this.employees);
         return this.db.add_partners(partners);
     }
-    _enrichPartners(partners, students) {
+    _enrichPartnersStudentCardNumbers(partners, students) {
         if (students) {
             for (let i in students) {
                 let student = students[i];
@@ -245,6 +248,20 @@ class PosGlobalState extends PosModel {
             }
         }
     }
+    _enrichPartnersEmployeeBarCodes(partners, employees) {
+        if (employees) {
+            for (let i in employees) {
+                let employee = employees[i];
+                if (employee.work_contact_id && employee.work_contact_id.length > 0) {
+                    let foundPartners = partners.filter(p => p.commercial_partner_id && p.commercial_partner_id.length > 0 && p.commercial_partner_id[0] === employee.work_contact_id[0]);
+                    if (foundPartners && foundPartners.length > 0) {
+                        foundPartners[0].studentCardNumber = employee.access_card;
+                    }
+                }
+            }
+        }
+    }
+
     _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
         if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
             correspondingProduct.applicablePricelistItems[pricelist.id] = [];
