@@ -319,7 +319,7 @@ class AccountEdiCommon(models.AbstractModel):
                 # Normalize the name of the file : some e-fff emitters put the full path of the file
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
                 # Get only the filename with a pdf extension.
-                name = attachment_name.text.split('\\')[-1].split('/')[-1].split('.')[0] + '.pdf'
+                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + '.pdf'
                 attachment = self.env['ir.attachment'].create({
                     'name': name,
                     'res_id': invoice.id,
@@ -535,7 +535,7 @@ class AccountEdiCommon(models.AbstractModel):
         for xpath in xpath_dict['basis_qty']:
             basis_quantity_node = tree.find(xpath)
             if basis_quantity_node is not None:
-                basis_qty = float(basis_quantity_node.text)
+                basis_qty = float(basis_quantity_node.text) or 1
 
         # gross_price_unit (optional)
         gross_price_unit = None
