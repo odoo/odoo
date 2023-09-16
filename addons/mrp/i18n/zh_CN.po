@@ -11,6 +11,7 @@
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # Chloe Wang, 2023
+# Ryan <ouyang.em@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,7 +231,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-nowrap\">待生产</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1284,6 +1285,7 @@ msgid ""
 "                                       Also note that purchase security lead"
 " times will be added when appropriate."
 msgstr ""
+"计算从物料清单（BoM）中重新补充所有零部件所需的天数，可以通过购买或制造零部件和/或子组件来实现。 还请注意，在适当的情况下，将添加采购安全提前时间。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1476,6 +1478,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"提前创建并确认制造订单这么多天，以确保有足够的时间来补充零部件或制造半成品。\n"
+"请注意，在适当的情况下，还将考虑安全提前时间。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -4887,7 +4891,7 @@ msgstr "组件 %s 不应与要生产的产品相同。"
 msgid ""
 "The current configuration is incorrect because it would create a cycle "
 "between these products: %s."
-msgstr ""
+msgstr "当前的配置是不正确的，因为它会在这些产品之间创建一个循环：%s。"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
@@ -5136,12 +5140,12 @@ msgstr "时间跟踪：%(user)s"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Additional time in minutes for the cleaning."
-msgstr ""
+msgstr "清洁需要额外分钟的时间。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Additional time in minutes for the setup."
-msgstr ""
+msgstr "设置需要额外分钟的时间。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5526,6 +5530,16 @@ msgstr "有效"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Validate"
 msgstr "验证"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6203,13 +6217,6 @@ msgstr "需在“绩效”类别中定义至少一个未启用的生产力损失
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "需为完工产品提供批号."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "需提供供应批号/序列号"
 
 #. module: mrp
 #. odoo-python

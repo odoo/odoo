@@ -29,6 +29,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_published
@@ -242,6 +244,9 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"この自動アクションを無効にすると、ワークフローを継続することができます。\n"
+"しかし、この後に作成されたデータは破損する可能性があります、\n"
+"重要なおよび/または必要なフィールドを設定するカスタマイズを事実上無効にすることになるからです。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -276,7 +281,7 @@ msgstr "メールテンプレート"
 msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
-msgstr ""
+msgstr "Eメール、フォロワー、活動のアクションタイプは、レコードの削除には使用できません。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -293,7 +298,7 @@ msgstr "変更があると発動する動作をトリガーするフィールド
 #, python-format
 msgid ""
 "Form Modification based actions can only be used with code action type."
-msgstr ""
+msgstr "フォーム修正ベースのアクションは、コードアクションタイプでのみ使用できます。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -401,7 +406,7 @@ msgstr "ノート"
 #, python-format
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
-msgstr ""
+msgstr "このアクションは、スケジュールの%d分後までトリガ可能であることに注意して下さい。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -537,6 +542,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"自動化されたアクションの実行中にエラーが発生しました\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
@@ -703,4 +710,4 @@ msgstr "この自動化されたアクションを無効にするか、編集し
 msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
-msgstr ""
+msgstr "削除されたレコードに対して、メールを送信したり、フォロワーを追加したり、活動を作成したりできません。 単に動作しません。"
