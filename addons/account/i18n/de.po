@@ -13,6 +13,7 @@
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Mathias Landgraf <mathias.landgraf@ironcad4d.de>, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -1936,7 +1937,7 @@ msgstr "Buchhaltungsdokumente"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting Entries"
-msgstr "Buchungseinträge"
+msgstr "Buchungen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3655,6 +3656,8 @@ msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
 msgstr ""
+"Kann keinen nicht verwendeten Jounalcode erzeugen. Bitte ändern Sie den "
+"Namen für das Journal %s."
 
 #. module: account
 #. odoo-python
@@ -7135,7 +7138,7 @@ msgstr "AUF NÄCHSTE HALBE ZAHL"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
-msgstr "Hat Buchungseinträge"
+msgstr "Hat Buchungsposten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -7462,8 +7465,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
-"Wenn angekreuzt, erhält der Buchungsposten oder die Rechnung einen Hash, "
-"sobald diese gebucht werden, und kann nicht mehr geändert werden."
+"Wenn diese Option aktiviert ist, erhält die Buchung oder Rechnung beim "
+"Buchen einen Hash-Wert und kann nicht mehr geändert werden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8292,7 +8295,7 @@ msgstr "Ist niedriger als"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr "Wird mit einem Kontoauszug abgeglichen"
+msgstr "Ist mit einem Kontoauszug abgeglichen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -12284,7 +12287,7 @@ msgstr "Verkaufsbeleg"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Sales"
-msgstr "Verkauf"
+msgstr "Verkäufe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
