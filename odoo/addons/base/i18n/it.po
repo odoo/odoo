@@ -1499,6 +1499,21 @@ msgid ""
 "        You need to configure your certificate and the tax agency.  \n"
 "    "
 msgstr ""
+"\n"
+"        Questo modulo invia al SII le informazioni relative alle tasse (principalmente IVA) relative \n"
+"        alle fatture fornitore e alle fatture del cliente.  Si tratta del \n"
+"        Procedimiento G417 - IVA. Llevanza de libros registro.  È \n"
+"        richiesto per ogni azienda con un fatturato di +6M€ e gli altri possono \n"
+"        già utilizzarlo.  Le fatture vengono inviate automaticamente dopo la convalida.  \n"
+"        \n"
+"        L'invio dell'informazione al SII dipende dalla \n"
+"        configurazione delle tasse.  Le tasse \n"
+"        presenti nel modello di grafico (l10n_es) sono configurate \n"
+"        automaticamente per avere il giusto tipo. Tuttavia, è possibile \n"
+"        che sia necessario creare imposte aggiuntive per alcuni casi di exempt/no sujeta.   \n"
+"        \n"
+"        È necessario configurare il proprio certificato e l'agenzia fiscale.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -2430,6 +2445,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Aggiunge un nuovo modello chiamato \"Tipo di identificazione\" che estende la funzionalità del campo IVA del partner e permette all'utente di identificare (ed eventualmente fatturare) i contatti non solo attraverso il numero di identificazione fiscale (IVA) ma anche con altri tipi di identificazione come documenti nazionali, passaporto, permesso di soggiorno, ecc. Dopo aver installato questo modulo, nel modulo partner troverai due nuovi campi:\n"
+"\n"
+"*Tipo di identificazione\n"
+"*Numero di identificazione\n"
+"\n"
+"Si tratta di un requisito comune per alcuni Paesi LATAM come Argentina e Cile. Se la tua localizzazione possiede questi requisiti hai bisogno di utilizzare questo modulo e indicare nel tuo modulo di localizzazione i tipi di identificazione utilizzati nel tuo Paese. Generalmente tali tipi di identificazione sono definiti dalle autorità governative che regolano le operazioni fiscali. Ad esempio:\n"
+"\n"
+"*AFIP in Argentina indica DNI, CUIT (IVA per enti giuridici), CUIL (IVA per persone fisiche) e altri 80 tipi di identificazione validi.\n"
+"\n"
+"Ogni identificazione presenta le seguenti informazioni:\n"
+"\n"
+"*name: nome breve per l'identificazione\n"
+"*description: può essere lo stesso nome o un nome più lungo\n"
+"*country_id: il Paese a cui appartiene il tipo di identificazione\n"
+"*is_vat: identifica il valore come l'IVA corrispondente al Paese specifico.\n"
+"*sequence: permette di classificare i tipi di identificazione in base a quelli più utilizzati.\n"
+"*active: è possibile attivare/disattivare le identificazioni per facilitare i clienti\n"
+"\n"
+"Al fine di rendere il modulo compatibile con ambienti multiaziendali dove sono presenti aziende che non hanno bisogno o non supportano tale requisito abbiamo aggiunto tipi di identificazione generici e regole generiche per gestire le informazioni di contatto e rendere il tutto trasparente per l'utente durante l'utilizzo della sola IVA.\n"
+"\n"
+"Identificazioni generiche:\n"
+"\n"
+"*IVA: il codice di identificazione fiscale o numero di partita IVA, verrà selezionato in maniera predefinita come tipo di identificazione così l'utente avrà solo bisogno di aggiunere il numero corrispondente.\n"
+"*Passaporto\n"
+"*Permesso di soggiorno (Documento valido)\n"
+"\n"
+"Regole creazione nuovo partner: vedremo solamente i tipi di identificazione significativi, tenendo in considerazioni le seguenti regole:\n"
+"\n"
+"*Se il partner non presenta un indirizzo: verranno mostrati i tipi di identificazione generici oltre a quelli definiti nel Paese dell'azienda del partner (se il partner non ha un'azienda specifica, verranno mostrati i tipi di identificazione relativi all'azienda dell'utente corrente.)\n"
+"\n"
+"*Se il partner presenta un indirizzo: verranno mostrati i tipi di identificazione generici più quelli indicati dal Paese del partner.\n"
+"\n"
+"Quando si crea una nuova azienda, per il partner verrà configurato sempre il tipo di identificazione is_vat relativo al paese.\n"
+"\n"
+"Tutti i tipi di identificazione indicati possono essere revisionati e attivati/disattivati dal menu \"Contatti/Configurazione/Tipo di identificazione\".\n"
+"\n"
+"Questo modulo è compatibile con il modulo base_vat per poter convalidare i numeri di partita IVA per ogni Paese che ha o meno la possibilità di gestire più tipi di identificazione.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -2480,6 +2533,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"Aggiunge ai moduli del sito web la possibilità di creare contatti od opportunità nell'app CRM.\n"
+"I moduli devono essere personalizzati nel *Website Builder* per creare contatti.\n"
+"\n"
+"Questo modulo include la convalida di numeri telefonici di contatto."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -2643,6 +2701,20 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Abilita i pagamenti con POS via carta di credito\n"
+"==============================\n"
+"\n"
+"Questo modulo permette ai clienti di pagare i propri ordini tramite carte\n"
+"di credito. Le transazioni sono elaborate da Vantiv (sviluppato da Wells\n"
+"Fargo Bank). È necessario un conto per esercenti Vantiv che permette\n"
+":\n"
+"\n"
+"*di effettuare pagamenti più veloci passando la carta di credito sullo schermata di pagamento\n"
+"*di combinare i pagamenti in contanti ai pagamenti via carte di credito\n"
+"*Cashback\n"
+"*Carte supportate: Visa, MasterCard, American Express, Discover\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -3397,6 +3469,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Piano contabile per il Venezuela.\n"
+"===============================\n"
+"\n"
+"Il Venezuela non presenta piani contabili stabiliti per legge ma , but the default\n"
+"proposed in Odoo should comply with some Accepted best practices in Venezuela,\n"
+"this plan comply with this practices.\n"
+"\n"
+"This module has been tested as base for more of 1000 companies, because\n"
+"it is based in a mixtures of most common software in the Venezuelan\n"
+"market what will allow for sure to accountants feel them first steps with\n"
+"Odoo more comfortable.\n"
+"\n"
+"This module doesn't pretend be the total localization for Venezuela,\n"
+"but it will help you to start really quickly with Odoo in this country.\n"
+"\n"
+"This module give you.\n"
+"---------------------\n"
+"\n"
+"- Basic taxes for Venezuela.\n"
+"- Have basic data to run tests with community localization.\n"
+"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+"\n"
+"We recomend use of account_anglo_saxon if you want valued your\n"
+"stocks as Venezuela does with out invoices.\n"
+"\n"
+"If you install this module, and select Custom chart a basic chart will be proposed,\n"
+"but you will need set manually account defaults for taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3859,6 +3959,17 @@ msgid ""
 "- Základní fiskální pozice pro českou legislativu\n"
 "    "
 msgstr ""
+"\n"
+"Piano contabile e localizzazione ceca con imposte e posizioni di bilancio di base.\n"
+"\n"
+"Tento modul definuje:\n"
+"\n"
+"- Českou účetní osnovu za rok 2020\n"
+"\n"
+"- Základní sazby pro DPH z prodeje a nákupu\n"
+"\n"
+"- Základní fiskální pozice pro českou legislativu\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -4135,6 +4246,15 @@ msgid ""
 "governements, etc.)\n"
 "    "
 msgstr ""
+"\n"
+"Interscambio dati elettronici\n"
+"=======================================\n"
+"Con EDI si intende l'interscambio elettronico di informazioni aziendali utilizzando un formato predefinito.\n"
+"\n"
+"Questo è il modulo base per l'importazione e l'esportazione delle fatture in vari formati EDI e la\n"
+"trasmissioni di tali documenti alle varie parti coinvolte nello scambio (altre aziende,\n"
+"governi, ecc.)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -4479,6 +4599,35 @@ msgid ""
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 "    "
 msgstr ""
+"\n"
+"Funzionale\n"
+"----------\n"
+"\n"
+"Questo modulo aggiunge funzionalità relative alla contabilità per la localizzazione ecuadoriana che\n"
+"rappresentano i requisiti minimi per avviare un'attività in Ecuador secondo quanto stabilito\n"
+"dagli organi regolatori locali come l'autorità fiscale ecuadoriana -SRI- e il \n"
+"Provveditorato aziendale -Super Intendencia de Compañías-\n"
+"\n"
+"Segui gli step per la configurazione:\n"
+"1. Nelle impostazioni dell'azienda configura l'Ecuador come nazione;\n"
+"2. Installa il modulo contabilità o fatturazione, tutto verrà gestito automaticamente \n"
+"\n"
+"Punti importanti:\n"
+"*Il piano contabile ecuadoriano verrà installato automaticamente in base all'esempio fornito dalla Super Intendencia de Compañías\n"
+"*Verrà installato anche l'elenco delle imposte (comprese le ritenute) e sarà possibile disattivare quelle non utilizzate dalla tua azienda\n"
+"*Verranno installati anche posizioni di bilancio, tipi di documento, elenco delle banche locali, elenco degli stati locali, ecc.\n"
+"\n"
+"Tecnico\n"
+"---------\n"
+"Dati master:\n"
+"*Piano contabile su indicazione di Super Cías\n"
+"*Imposte ecuadoriane, tag imposte e gruppi imposte\n"
+"*Posizioni di bilancio ecuadoriane\n"
+"*Tipi di documento (ci sono circa 41 tipi di documenti relativi all'acquisto in Ecuador)\n"
+"*Tipi di identificazione\n"
+"*Banche ecuadoriane\n"
+"* Partner: Consumidor Final, SRI, IESS e convalida di base dell'IVA\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -5959,6 +6108,13 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
+"\n"
+"Widget organigramma per risorse umane\n"
+"=======================\n"
+"\n"
+"Questo modulo estende il modulo dipendente con un organigramma.\n"
+"(N+1, N+2, subordinazioni dirette)\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -6458,6 +6614,12 @@ msgid ""
 "speakers..\n"
 "        "
 msgstr ""
+"\n"
+"Marketing via SMS per i partecipanti di un evento\n"
+"=====================================\n"
+"\n"
+"Modulo ponte che aggiunge i requisiti UX per facilitare il marketing via SMS per i partecipanti di un evento.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -6653,6 +6815,21 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"Piano contabile e localizzazione: piano contabile 2020, aliquota IVA di base + \n"
+"posizioni di bilancio.\n"
+"\n"
+"Tento modul definuje:\n"
+"• Slovenskú účtovú osnovu za rok 2020\n"
+"\n"
+"• Základné sadzby pre DPH z predaja a nákupu\n"
+"\n"
+"• Základné fiškálne pozície pre slovenskú legislatívu\n"
+"\n"
+" \n"
+"Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www.26house.com.\n"
+"    \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -7342,6 +7519,15 @@ msgid ""
 " - Multiple Fiscal positions\n"
 " "
 msgstr ""
+"\n"
+"Localizzazione di base più recente necessaria per utilizzare Odoo in Israele:\n"
+"================================================================================\n"
+"\n"
+"Il modulo consiste in:\n"
+" -Piano contabile generico israeliano\n"
+" -Imposte e resoconto fiscale\n"
+" -Posizioni di bilancio multiple\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -8537,6 +8723,20 @@ msgid ""
 "can setup API keys to replace their main password.\n"
 "    "
 msgstr ""
+"\n"
+"Autenticazione a due fattori (TOTP)\n"
+"================================\n"
+"Permette agli utenti di configurare l'autenticazione a due fattori sull'account utente\n"
+"per maggior sicurezza attraverso l'utiizzo di time-based one-time passwords (TOTP).\n"
+"\n"
+"Una volta abilitata, l'utente dovrà inserire un codice a 6 cifre come previsto\n"
+"dalla loro app di autenticazione prima di ottenere l'accesso al sistema.\n"
+"Tutte le app di autenticazione popolari sono supportate.\n"
+"\n"
+"Nota: ovviamente, i due fattori evitano l'accesso RPC basato su password per gli utenti\n"
+"dove abilitata. Per essere in grado di abilitare gli script RPC, l'utente\n"
+"può configurare le chiavi API per sostituire le password principali.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -11222,7 +11422,7 @@ msgstr "Aziende consentite"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_plugin
 msgid "Allows integration with mail plugins."
-msgstr ""
+msgstr "Permette l'integrazione con i plugin e-mail."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
@@ -13078,6 +13278,8 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
+"Alcune nazioni applicano la ritenuta alla fonte sull'importo delle fatture, "
+"in conformità con la legislazione interna. "
 
 #. module: base
 #: model:res.country,name:base.td
@@ -13407,6 +13609,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Colleen Diaz lavora nel settore informatico <b>da 10 anni</b>. In particolare,\n"
+"                è conosciuto per la vendita di trappole per topi. Grazie a questo trucco ha ridotto\n"
+"                il budget informatico di almeno la metà negli utimi due anni."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -14231,7 +14436,7 @@ msgstr "Crea un contatto nella tua rubrica"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_group
 msgid "Create a Country Group"
-msgstr ""
+msgstr "Crea un gruppo nazione"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -15308,7 +15513,7 @@ msgstr "Disattiva"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
 msgid "Disable smart shrinking"
-msgstr ""
+msgstr "Disattiva il rimpicciolimento intelligente"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -15710,6 +15915,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Douglas Fletcher lavora nel settore dell'informatica <b>da 10 anni</b>. È famoso\n"
+"    in particolare per la vendita di trappole per topi. Grazie a questo trucco ha ridotto\n"
+"    il budget informatico di almeno la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -15841,7 +16049,7 @@ msgstr "Driver hardware ESC/POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss
 msgid "EU One Stop Shop (OSS)"
-msgstr ""
+msgstr "EU One Stop Shop (OSS)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss_reports
@@ -15979,7 +16187,7 @@ msgstr "Fatturazione elettronica per la Colombia con Carvajal"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Element %r cannot be located in parent view"
-msgstr ""
+msgstr "Impossibile localizzare l'elemento %r nella vista genitore"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -16093,12 +16301,12 @@ msgstr "Attiva il profiling per"
 #. module: base
 #: model:ir.model,name:base.model_base_enable_profiling_wizard
 msgid "Enable profiling for some time"
-msgstr ""
+msgstr "Attiva il profiling per un po' di tempo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__expiration
 msgid "Enable profiling until"
-msgstr ""
+msgstr "Attiva il profiling fino al"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -16178,7 +16386,7 @@ msgstr "Divertimento"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
-msgstr ""
+msgstr "Numero voci"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer_restaurant
@@ -17904,6 +18112,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"Gordon Owens lavora nel settore dell'informatica <b>da 10 anni</b>. È conosciuto\n"
+"                in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
+"                il budget IT di quasi la metà negli ultimi due anni.\n"
+"                Famoso consulente senior."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -19611,7 +19823,7 @@ msgstr "Chiave non valida: la vista qweb dovrebbe avere una chiave"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid mode attribute:"
-msgstr ""
+msgstr "Attributo modalità non valido:"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
@@ -19658,7 +19870,7 @@ msgstr "\"%(value)s\" speciale non valido nel pulsante"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid specification for moved nodes: %r"
-msgstr ""
+msgstr "Specifica non valida per i nodi spostati: %r."
 
 #. module: base
 #: code:addons/base/models/ir_property.py:0
@@ -19705,7 +19917,7 @@ msgstr "Tasso aziendale inverso"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__inverse_rate
 msgid "Inverse Rate"
-msgstr ""
+msgstr "Tasso inverso"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__type
@@ -29252,6 +29464,8 @@ msgid ""
 "The name for the current rate is empty.\n"
 "Please set it."
 msgstr ""
+"Il nome della tariffa attuale è vuoto.\n"
+"Per favore, configuralo."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -29302,7 +29516,7 @@ msgstr "Il codice della valuta deve essere unico !"
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
 msgid "The currency of rate 1 to the rate of the currency."
-msgstr ""
+msgstr "La valuta della tariffa 1 per la tariffa della valuta."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_currency_rate_check
@@ -29507,6 +29721,8 @@ msgid ""
 "The new rate is quite far from the previous rate.\n"
 "Incorrect currency rates may cause critical problems, make sure the rate is correct !"
 msgstr ""
+"Il nuovo tasso è molto diverso dal precedente.\n"
+"Tassi di cambio non corretti possono causare problemi seri, assicurati che il tasso sia corretto!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_increment
@@ -29569,6 +29785,13 @@ msgid ""
 "\n"
 "Therefore, changing decimal precisions in a running database is not recommended."
 msgstr ""
+"La precisione è stata ridotta per %s.\n"
+"Nota che i dati esistenti NON verranno aggiornati in seguito alla modifica.\n"
+"\n"
+"Dato che la precisione decimale ha un impatto sul sistema intero, ciò potrebbe causare problemi importanti.\n"
+"Ad es. la riduzione della precisione potrebbe disturbare l'equilibrio finanziario.\n"
+"\n"
+"Quindi, non è consigliato modificare la precisione decimale in un database in funzione."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__priority

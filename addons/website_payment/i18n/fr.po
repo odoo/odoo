@@ -10,6 +10,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2022
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Grégory Schreiner <gregory@mokatourisme.fr>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +70,11 @@ msgstr "<b>ID du paiement:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Payment Method:</b>"
 msgstr "<b>Méthode de paiement :</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Pays...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -158,11 +164,6 @@ msgstr "Pays <span class=\"s_website_form_mark\"> *</span>"
 #, python-format
 msgid "Country is required."
 msgstr "Le pays est obligatoire."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "Pays..."
 
 #. module: website_payment
 #. openerp-web
