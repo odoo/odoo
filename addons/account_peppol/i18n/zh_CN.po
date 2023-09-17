@@ -44,6 +44,9 @@ msgid ""
 "                                        I want to migrate my Peppol connection to Odoo (optional):\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        我想将 Peppol 连接迁移到 Odoo（可选）：\n"
+"                                    </span>"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -71,28 +74,28 @@ msgstr "应用程序状态："
 #, python-format
 msgid ""
 "Can't cancel an active registration. Please request a migration instead."
-msgstr ""
+msgstr "无法取消活动注册。请改为申请迁移。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't cancel registration with this status: %s"
-msgstr ""
+msgstr "无法取消此状态的注册：%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't deregister with this status: %s"
-msgstr ""
+msgstr "此状态下无法取消注册：%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Can't migrate registration with this status: %s"
-msgstr ""
+msgstr "此状态下无法迁移注册：%s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -102,7 +105,7 @@ msgstr "取消Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Cancel registration"
-msgstr ""
+msgstr "取消注册"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__canceled
@@ -167,21 +170,21 @@ msgstr "联系人"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid "Contact details were updated."
-msgstr ""
+msgstr "联系方式已更新。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Contact email and phone number are required."
-msgstr ""
+msgstr "需要提供联络电邮和电话号码。"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Deregister from Peppol"
-msgstr ""
+msgstr "从 Peppol 取消注册"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -191,7 +194,7 @@ msgstr "已完成"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
-msgstr ""
+msgstr "EDI 使用者"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -201,7 +204,7 @@ msgstr "EDI识别"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__enable_peppol
 msgid "Enable Peppol"
-msgstr ""
+msgstr "启用 Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__error
@@ -232,7 +235,7 @@ msgstr "导入 Peppol 文档失败。发送端点： %s"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I accept that Odoo may process my e-invoices."
-msgstr ""
+msgstr "我同意 Odoo 可以处理我的电子发票。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -255,18 +258,18 @@ msgstr "最后一次 Peppol 终端点验证"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Migrate registration to another service"
-msgstr ""
+msgstr "将注册迁移到另一项服务"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_migration_key
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
-msgstr ""
+msgstr "迁移密钥"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Migration key"
-msgstr ""
+msgstr "迁移密钥"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -292,7 +295,7 @@ msgstr "尚未验证"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Our staff members will first review your request within two working days."
-msgstr ""
+msgstr "我们的工作人员将在两个工作日内首先审查您的申请。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -436,21 +439,21 @@ msgstr "电话号码"
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "Phone number (for validation)"
-msgstr ""
+msgstr "电话号码（供验证）"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Please do not hesitate to contact our support if you need further "
 "assistance."
-msgstr ""
+msgstr "如果您需要进一步帮助，请随时联系我们的支持人员。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a phone number to verify your application."
-msgstr ""
+msgstr "请输入电话号码以验证您的申请。"
 
 #. module: account_peppol
 #. odoo-python
@@ -461,13 +464,16 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"请以正确的国际格式输入电话号码。\n"
+"例如：+32123456789，其中 +32 是国家/地区代码。\n"
+"目前仅支持欧洲国家。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Please fill in the EAS code and the Participant ID code."
-msgstr ""
+msgstr "请填写 EAS 代码和参与者 ID 代码。"
 
 #. module: account_peppol
 #. odoo-python
@@ -481,13 +487,13 @@ msgstr "请在合作伙伴设置中，验证合作伙伴配置。"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Primary contact email"
-msgstr ""
+msgstr "主要联系邮箱"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email for Peppol-related communication"
-msgstr ""
+msgstr "Peppol 相关通信的主要联系电邮"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -512,13 +518,13 @@ msgstr "已拒绝"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Retry registration"
-msgstr ""
+msgstr "重试注册"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_verification_code
 msgid "SMS verification code"
-msgstr ""
+msgstr "短信验证码"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_move_send__checkbox_send_peppol
@@ -535,14 +541,14 @@ msgstr "通过 Peppol 传送"
 msgid ""
 "Start sending and receiving documents via Peppol as soon as you receive our "
 "email notification."
-msgstr ""
+msgstr "收到我们的电邮通知后，你可立即开始通过 Peppol 传送和接收文件。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
-msgstr ""
+msgstr "Peppol 终端点识别号码不正确。"
 
 #. module: account_peppol
 #. odoo-python
@@ -558,7 +564,7 @@ msgstr "文件已发送至 Peppol 接入点进行处理"
 msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
-msgstr ""
+msgstr "终端点号码可能不正确。 请检查你输入的身份证号码是否正确。"
 
 #. module: account_peppol
 #. odoo-python
@@ -586,7 +592,7 @@ msgstr "合作伙伴的 EAS 代码和 PEPPOL 终端有效"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "The rejection reason has been sent to you via email."
-msgstr ""
+msgstr "拒绝原因已通过电子邮件发送给您。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -598,7 +604,7 @@ msgstr "标识该用户的唯一 ID，通常是增值税识别号"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "The verification code should contain six digits."
-msgstr ""
+msgstr "验证码应包含六位数字。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -618,7 +624,7 @@ msgstr "Peppol BIS Billing 3.0及其衍生产品使用的唯一标识符，也�
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Update contact details"
-msgstr ""
+msgstr "更新联络资料"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__is_account_peppol_participant
@@ -640,12 +646,12 @@ msgstr "有效"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Validate registration"
-msgstr ""
+msgstr "验证注册"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sent_verification
 msgid "Verification code sent"
-msgstr ""
+msgstr "验证码已发送"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -660,7 +666,7 @@ msgstr "验证合作伙伴的 Peppol 终端点"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Verify phone number"
-msgstr ""
+msgstr "验证电话号码"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -671,7 +677,7 @@ msgstr "警告消息"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "We sent a verification code to"
-msgstr ""
+msgstr "刚发送验证码至"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -680,27 +686,27 @@ msgstr ""
 msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
-msgstr ""
+msgstr "你将无法再在 Odoo 中发送或接收 Peppol 文件。 确定要继续？"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this phone number"
-msgstr ""
+msgstr "您将收到发送至该电话号码的验证码"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol identification is:"
-msgstr ""
+msgstr "您的 Peppol 身份识别是："
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Your confirmation code is"
-msgstr ""
+msgstr "您的确认码是"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
-msgstr ""
+msgstr "您的迁移密钥是："

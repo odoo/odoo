@@ -915,8 +915,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"창고(들) 내 품목 이동을 처리하기 위한 이동 경로을 추가합니다. 예 : 입고 품목의 경우 하역 > 품질 관리 > 재고, 발송 품목의 경우 선별 > 포장 > 배송.\n"
-"또한 특정 하위 위치(예 : 특정 보관함, 랙)로 바로 입고되는 품목을 전달하기 위해 창고 위치에 대한 보관 규칙을 설정할 수 있습니다."
+"창고 내 품목 이동을 처리하기 위한 이동 경로를 추가합니다. (예. 입고 품목의 경우 하역 > 품질 관리 > 재고, 발송 품목의 경우 선별 > 포장 > 배송 등)\n"
+"또한 특정 하위 위치 (예. 특정 보관함 또는 선반)로 바로 입고되는 품목을 전달하기 위해 창고 위치에 대한 보관 규칙을 설정할 수 있습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -927,8 +927,8 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"창고(들) 내 품목 이동을 처리하기 위한 이동 경로을 추가합니다. 예 : 입고 품목의 경우 하역 > 품질 관리 > 재고, 발송 제품의 경우 선별 > 포장 > 배송.\n"
-"또한 특정 하위 위치(예 : 특정 보관함, 랙)로 바로 입고되는 품목을 전달하기 위해 창고 위치에 대한 입고 규칙을 설정할 수 있습니다."
+"창고 내 품목 이동을 처리하기 위한 이동 경로를 추가합니다. (예. 입고 품목의 경우 하역 > 품질 관리 > 재고, 발송 품목의 경우 선별 > 포장 > 배송 등)\n"
+"또한 특정 하위 위치 (예. 특정 보관함 또는 선반)로 바로 입고되는 품목을 전달하기 위해 창고 위치에 대한 보관 규칙을 설정할 수 있습니다.."
 
 #. module: stock
 #. odoo-javascript
@@ -940,7 +940,7 @@ msgstr "항목 추가: %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Add quality checks to your transfer operations"
-msgstr "전송 작업에 품질 검사 추가"
+msgstr "이송 작업에 품질 검사를 추가합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1045,7 +1045,7 @@ msgstr "항상"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Day and Month"
-msgstr "연간 재고 일 및 월"
+msgstr "연간 재고 조사 날짜"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
@@ -1337,7 +1337,7 @@ msgstr "바코드가 유효한 EAN 입니다."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Transfers"
-msgstr "이송 일괄 작업"
+msgstr "일괄 이송 작업"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
@@ -1673,42 +1673,42 @@ msgstr "회사"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs"
-msgstr "배송비 계산"
+msgstr "배송 커넥터를 사용하여 운송비를 계산합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "DHL로 배송비 계산 및 배송"
+msgstr "DHL로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Easypost로 배송비 계산 및 배송"
+msgstr "Easypost로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "FedEx로 배송비 계산 및 배송"
+msgstr "FedEx로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Sendcloud로 배송비 계산 및 배송"
+msgstr "Sendcloud로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "UPS로 배송비 계산 및 배송"
+msgstr "UPS로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "USPS로 배송비 계산 및 배송"
+msgstr "USPS로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "bpost로 배송비 계산 및 배송"
+msgstr "bpost로 배송비를 계산 및 배송합니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
@@ -1774,7 +1774,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
 msgid "Consignment"
-msgstr "탁송 재고"
+msgstr "위탁매매"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
@@ -2225,7 +2225,7 @@ msgstr "예약 날짜"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Day and month that annual inventory counts should occur."
-msgstr "연간 재고 조사를 실시하는 월일"
+msgstr "연간 재고 조사를 실시하는 월과 일자를 정의합니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -2315,7 +2315,7 @@ msgstr "기본 반품 위치"
 #: model:ir.model.fields,help:stock.field_stock_storage_category_capacity__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr "모든 재고 운용에 사용되는 기본 단위."
+msgstr "모든 재고 운용에 사용되는 기본 단위입니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -2366,12 +2366,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"품목을 가져올 정확한 위치 (선반)나 어떤 로트로 가져올지 등을 설정할 기본 방법을 정의합니다. 이 방법은 품목 카테고리 수준에서 적용될 수 있으며 설정한 내용이 없는 경우에는 상위 위치에서 대안책으로 설정된 내용이 실행됩니다.\n"
+"품목을 가져올 정확한 위치 (선반)나 어떤 로트로 가져올지 등 기본 방법을 정의합니다. 이 방법은 품목 카테고리 수준에서 적용될 수 있으며 설정한 내용이 없는 경우에는 상위 위치에서 대안책으로 설정된 내용이 실행됩니다.\n"
 "\n"
-"FIFO: 먼저 입고된 품목이나 로트부터 먼저 출고됩니다.\n"
-"LIFO: 나중에 입고된 품목이나 로트부터 먼저 출고됩니다.\n"
-"Closet: 대상 장소에 가장 가까이에 위치한 품목이나 로트부터 먼저 출고됩니다.\n"
-"FEFO: 처분 일자에 가장 근접한 품목이나 로트부터 먼저 출고됩니다 (\"유효기간 만료\" 설정에 따라서 이 방법은 달라질 수 있습니다)."
+"FIFO: 먼저 입고된 품목이나 로트가 먼저 출고됩니다.\n"
+"LIFO: 나중에 입고된 품목이나 로트가 먼저 출고됩니다.\n"
+"Closet: 대상 장소에 가장 가까이에 위치한 품목이나 로트가 먼저 출고됩니다.\n"
+"FEFO: 유효기간에 가장 근접한 품목이나 로트가 먼저 출고됩니다. (\"유효기간 만료\" 설정에 따라서 이 방법은 달라질 수 있습니다)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2980,7 +2980,7 @@ msgstr "예상 배송일:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
 msgid "Expiration Dates"
-msgstr "유통 기한"
+msgstr "유통기한"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -3126,7 +3126,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #, python-format
 msgid "Forecasted"
-msgstr "예측완료"
+msgstr "예측 수량"
 
 #. module: stock
 #. odoo-javascript
@@ -3317,12 +3317,12 @@ msgstr "규칙을 통해 일련번호 생성"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
-msgstr "공급 업체에서 고객까지 완벽한 추적성 확보"
+msgstr "공급업체에서 고객에 이르기까지 완벽한 추적 기능을 제공합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr "파트너에 대한 유익한 정보 또는 경고 차단"
+msgstr "협력사와 관련된 정보 또는 경고 내용을 차단합니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
@@ -3366,7 +3366,7 @@ msgstr "그룹별..."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
-msgstr "웨이브 전송을 통해 그룹화하여 이동 작업을 함께 처리"
+msgstr "웨이브 이송을 통해 그룹화하여 이동 작업을 함께 처리합니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -4581,7 +4581,7 @@ msgstr "LOT 및 일련번호"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr "로트 및 일련번호가 배송 전표에 표시됩니다."
+msgstr "LOT 및 일련번호가 배송 전표에 표시됩니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -4656,7 +4656,7 @@ msgstr "보관 카테고리 관리"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr "품목 패키지 관리 (예: 6병 포장, 10개들이 상자 포장)"
+msgstr "품목 패키지를 관리합니다. (예. 6병 포장, 10개들이 상자 포장)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -5982,12 +5982,12 @@ msgstr "인쇄"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr "로트 및 일련번호용 GS1 바코드 인쇄"
+msgstr "LOT 및 일련번호용 GS1 바코드 인쇄"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr "로트 및 일련번호용 GS1 바코드 인쇄"
+msgstr "LOT 및 일련번호용 GS1 바코드 인쇄"
 
 #. module: stock
 #. odoo-javascript
@@ -6027,17 +6027,17 @@ msgstr "해당 날짜에 정시 처리"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "바코드로 작업 처리 속도 향상"
+msgstr "바코드를 사용하여 작업 처리 속도를 향상할 수 있습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations in wave transfers"
-msgstr "웨이브 전송에서의 작업 처리"
+msgstr "웨이브 이송 방식으로 작업을 처리합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr "작업자별 일괄 이송 처리"
+msgstr "작업자별로 일괄 이송을 처리합니다."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
@@ -6980,7 +6980,7 @@ msgstr "공급업체에게 고객에게 배달하도록 요청"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr "배송주문서에 서명이 필요합니다"
+msgstr "배송주문서에 서명 확인을 추가합니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_method
@@ -7411,19 +7411,19 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "품목의 판매와 구매 단위를 다르게 설정"
+msgstr "품목의 판매와 구매 단위를 다르게 설정합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
-msgstr "배송 주문이 완료되면 자동 확인 SMS 문자 메시지 보내기"
+msgstr "배송 주문이 완료되면 자동으로 확인 SMS 문자 메시지를 전송합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
-msgstr "배송 주문이 완료되면 자동 확인 이메일 보내기"
+msgstr "배송 주문이 완료되면 자동으로 확인 이메일을 전송합니다."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -7598,17 +7598,17 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr "로트 및 일련번호에 만료일 설정"
+msgstr "LOT 및 일련번호에 유통기한을 설정합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "저장된 품목의 소유자 설정"
+msgstr "보관 중인 품목의 소유자를 설정합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
-msgstr "세부선택사항을 조정할 품목 속성 (예 : 색상, 크기) 설정"
+msgstr "세부선택사항을 위해 품목 속성 (예. 색상, 크기)을 설정합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7675,7 +7675,7 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
-"배송 커넥터를 사용하면 정확한 운송 비용을 계산하고 배송 꼬리표를 인쇄하고 창고에서 운송 업체 선택을 요청하여 고객에게 배송 할 수 "
+"배송 커넥터를 사용하면 정확한 운송 비용을 계산하고 배송 라벨를 인쇄하여 창고에서 운송 업체 선택을 요청한 뒤 고객에게 배송 할 수 "
 "있습니다. 배송 방법에서 배송 커넥터를 적용하십시오."
 
 #. module: stock
@@ -8183,7 +8183,7 @@ msgstr "저장 공간"
 msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
-msgstr "창고의 특정 위치(예: 저장소, 랙)에 품목을 보관하고 그에 따라 재고를 추적하십시오."
+msgstr "창고의 특정 위치 (예. 창고 보관함, 선반)에 품목을 보관하고 재고의 보관 위치를 추적할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
@@ -8529,7 +8529,7 @@ msgstr "되돌리기를 할 제고 조정 항목이 없습니다."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
-msgstr "아직 품목 이동내역이 없습니다."
+msgstr "품목 이동내역이 아직 없습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -8656,7 +8656,7 @@ msgid ""
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
 "이 메뉴는 특정 품목에 대한 재고 작업의 전체 추적성을 제공합니다. \n"
-"                      품목을 필터링하여 품목의 과거 이동을 모두 볼 수 있습니다."
+"                      품목을 필터링하면 해당 품목의 과거 이동 내역을 모두 확인할 수 있습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -8931,7 +8931,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "창고 내에서의 품목 공간 추적"
+msgstr "창고 내에서의 품목 보관 위치를 추적합니다."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -9274,7 +9274,7 @@ msgstr "기존 항목 사용"
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
-msgstr "GS1 제작 데이터 매트릭스를 사용하여 로트 및 일련번호를 바코드로 인쇄하십시오."
+msgstr "GS1 데이터 매트릭스를 사용하여 로트 및 일련번호를 바코드로 인쇄합니다."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -9414,7 +9414,7 @@ msgstr "WH/재고"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Waiting"
-msgstr "대기중"
+msgstr "대기 중"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__waiting
@@ -9589,7 +9589,7 @@ msgstr "재고에 대한 경고"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Wave Transfers"
-msgstr "웨이브 전송"
+msgstr "웨이브 이송"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids

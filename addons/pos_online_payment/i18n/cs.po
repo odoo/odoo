@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"POT-Creation-Date: 2023-08-19 08:03+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -117,6 +117,38 @@ msgstr "Zrušit"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot edit a POS online payment essential data."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Could not create an online payment method (company_id=%d, pos_config_id=%d)"
 msgstr ""
 
 #. module: pos_online_payment
@@ -265,22 +297,22 @@ msgstr "Nastavení prodejního místa"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Objednávky Prodejního místa"
+msgstr "Objednávky prodejního místa"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Platební podmíky v místě prodeje"
+msgstr "Platební metody prodejního místa"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Platby v místě prodeje"
+msgstr "Platby prodejního místa"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Sezení Prodejního místa"
+msgstr "Relace prodejního místa"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -565,7 +597,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "payment provider"
-msgstr ""
+msgstr "Poskytovatel platby"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,16 +38,30 @@ msgid ""
 "                        </option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                        <option value=\"done\" title=\"Successful payment\">\n"
+"                            支付成功\n"
+"                        </option>\n"
+"                        <option value=\"pending\" title=\"Payment processing\">\n"
+"                            处理中\n"
+"                        </option>\n"
+"                        <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                            已取消\n"
+"                        </option>\n"
+"                        <option value=\"error\" title=\"Processing error\">\n"
+"                            错误\n"
+"                        </option>\n"
+"                    </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Details (test data)</b></small>"
-msgstr ""
+msgstr "<small><b>支付详情支付（测试数据）</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Status</b></small>"
-msgstr ""
+msgstr "<small><b>支付状态</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -175,7 +190,7 @@ msgstr ""
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
-msgstr ""
+msgstr "应设置从此令牌创建的交易所处的状态。"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -192,11 +207,11 @@ msgstr "该交易没有与令牌挂钩。"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "您选择了以下演示付款状态： %s"

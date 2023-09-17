@@ -1,34 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_action_rule
-#
-# Translators:
+# 	* base_automation
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2016-06-02 11:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hindi (http://www.transifex.com/odoo/odoo-9/language/hi/)\n"
-"Language: hi\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-07-25 12:22+0000\n"
+"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
 "\"\n"
 "                (ID:"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid "A code server action can be executed from the website, using a dedicated controller. The address is <base>/website/action/<website_path>. Set this field as True to allow users to run this action. If it is set to False the action cannot be run through the website."
 msgstr ""
 
 #. module: base_automation
@@ -54,7 +47,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
 msgid "Active"
-msgstr "सक्रिय"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
@@ -99,14 +92,7 @@ msgid "Automation"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr ""
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
-#: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr ""
 
@@ -147,16 +133,9 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
-msgid "Child server actions that will be executed. Note that the last return returned action value will be used as global return value."
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
 msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
+"Child server actions that will be executed. Note that the last return "
+"returned action value will be used as global return value."
 msgstr ""
 
 #. module: base_automation
@@ -202,14 +181,14 @@ msgid "Delay type"
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -235,7 +214,7 @@ msgid "Due type"
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -247,9 +226,12 @@ msgid "Email Template"
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "Email, followers or activities action types cannot be used when deleting records."
+msgid ""
+"Email, followers or activities action types cannot be used when deleting "
+"records."
 msgstr ""
 
 #. module: base_automation
@@ -263,9 +245,11 @@ msgid "Fields that trigger the onchange."
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "Form Modification based actions can only be used with code action type."
+msgid ""
+"Form Modification based actions can only be used with code action type."
 msgstr ""
 
 #. module: base_automation
@@ -290,17 +274,16 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
-msgid "If present, this condition must be satisfied before executing the action rule."
+msgid ""
+"If present, this condition must be satisfied before executing the action "
+"rule."
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
-msgid "If present, this condition must be satisfied before the update of the record."
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
-msgid "Last Modified on"
+msgid ""
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr ""
 
 #. module: base_automation
@@ -345,7 +328,9 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
-msgid "Model for record creation / update. Set this field only to specify a different model than the base model."
+msgid ""
+"Model for record creation / update. Set this field only to specify a "
+"different model than the base model."
 msgstr ""
 
 #. module: base_automation
@@ -364,9 +349,11 @@ msgid "Note"
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "Note that this action can be triggered up to %d minutes after its schedule."
+msgid ""
+"Note that this action can be triggered up to %d minutes after its schedule."
 msgstr ""
 
 #. module: base_automation
@@ -396,12 +383,16 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
-msgid "Optional help text for the users with a description of the target view, such as its usage and purpose."
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
-msgid "Provide the field used to link the newly created record on the record used by the server action."
+msgid ""
+"Provide the field used to link the newly created record on the record used "
+"by the server action."
 msgstr ""
 
 #. module: base_automation
@@ -412,11 +403,6 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 msgid "Responsible"
-msgstr "जिम्मेदार"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
 msgstr ""
 
 #. module: base_automation
@@ -425,14 +411,9 @@ msgid "Send as"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "अनुक्रम"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -446,7 +427,9 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
-msgid "Setting a value makes this action available in the sidebar for the given model."
+msgid ""
+"Setting a value makes this action available in the sidebar for the given "
+"model."
 msgstr ""
 
 #. module: base_automation
@@ -475,28 +458,28 @@ msgid "Target Model Name"
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%(state_value)s\" action type"
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
-msgid "The action will be triggered if and only if one of these fields is updated. If empty, all fields are watched."
+msgid ""
+"The action will be triggered if and only if one of these fields is updated. "
+"If empty, all fields are watched."
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
 msgstr ""
 
 #. module: base_automation
@@ -538,7 +521,10 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
-msgid "Use 'Specific User' to always assign the same user on the next activity. Use 'Generic User From Record' to specify the field name of the user to choose on the record."
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
 msgstr ""
 
 #. module: base_automation
@@ -567,29 +553,25 @@ msgid "Value Mapping"
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
+#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
-msgid "When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days."
+msgid ""
+"When calculating a day-based timed condition, it is possible to use a "
+"calendar to compute the date based on working days."
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
-msgid "When dealing with multiple actions, the execution order is based on the sequence. Low number means high priority."
+msgid ""
+"When dealing with multiple actions, the execution order is based on the "
+"sequence. Low number means high priority."
 msgstr ""
 
 #. module: base_automation
@@ -606,25 +588,31 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
-msgid "Write Python code that the action will execute. Some variables are available for use; help about python expression is given in the help tab."
+msgid ""
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about python expression is given in the help tab."
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
-msgid "You can ask an administrator to disable or correct this automated action."
+msgid ""
+"You can ask an administrator to disable or correct this automated action."
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid "You cannot send an email, add followers or create an activity for a deleted record.  It simply does not work."
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
 msgstr ""

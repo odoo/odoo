@@ -6,9 +6,9 @@
 # Wil Odoo, 2023
 # Jiří Podhorecký, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-# Jakub Smolka, 2023
 # Tomáš Píšek, 2023
 # Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Ivana Bartonkova, 2023\n"
+"Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -748,7 +748,7 @@ msgstr "Přidat"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add Contacts to Mailing List"
-msgstr "Přidání kontaktu do seznamu adres"
+msgstr "Přidání kontaktů do emailového seznamu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1574,7 +1574,7 @@ msgstr "Počítadlo počtu odmítnutých e-mailů pro tento kontakt"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__country_id
 msgid "Country"
-msgstr "Stát"
+msgstr "Země"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1939,12 +1939,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
 msgid "Email Thread"
-msgstr "E-mailové vlákno"
+msgstr "Emailové vlákno"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Průvodce sestavením e-mailu"
+msgstr "Průvodce sestavením emailu"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2604,7 +2604,7 @@ msgstr "Sledovač odkazů"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr "Link tracker klikněte"
+msgstr "Klik sledovače odkazů"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2679,14 +2679,14 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr "Mix vykreslení pošty"
+msgstr "Mixin renderování emailu"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_mail_server
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mail_server_id
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_mail_server_id
 msgid "Mail Server"
-msgstr "Mail Server"
+msgstr "Emailový server"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mail_server_available
@@ -2731,12 +2731,12 @@ msgstr "Poštovní kampaně"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
 msgid "Mailing Contact"
-msgstr "Poštovní kontakt"
+msgstr "Emailový kontakt"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_import
 msgid "Mailing Contact Import"
-msgstr ""
+msgstr "Import emailových kontaktů"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
@@ -2746,7 +2746,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Favorite Filters"
-msgstr ""
+msgstr "Oblíbené emailové filtery"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
@@ -2760,7 +2760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
 msgid "Mailing List"
-msgstr "seznam adres"
+msgstr "Emailový seznam"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
@@ -2812,7 +2812,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
 msgid "Mailing Statistics"
-msgstr "Statistiky pošty"
+msgstr "Emailové statistiky"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
@@ -2963,7 +2963,7 @@ msgstr "Název hromadné pošty"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_tree
 msgid "Mass Mailing Statistics"
-msgstr "Statistiky hromadného zasílání"
+msgstr "Statistiky hromadných emailů"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_trace_report_action_mail
@@ -2979,7 +2979,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_subscription
 msgid "Mass Mailing Subscription Information"
-msgstr "Informace o odebírání hromadné pošty"
+msgstr "Informace o odběru hromadných emailů"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
@@ -3017,7 +3017,7 @@ msgstr "Sloučit"
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr "Sloučit hromadný seznam adresátů"
+msgstr "Sloučení hromadných emailových seznamů"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__merge_options
@@ -3484,7 +3484,7 @@ msgstr "Odchozí"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Odchozí e-maily"
+msgstr "Odchozí emaily"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -3818,7 +3818,7 @@ msgstr "Vzorové ikony"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_test
 msgid "Sample Mail Wizard"
-msgstr "Ukázkový průvodce e-mailem"
+msgstr "Průvodce testovacím emailem"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4598,7 +4598,7 @@ msgstr "UTM kampaň"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_medium
 msgid "UTM Medium"
-msgstr "UTM Médium"
+msgstr "UTM médium"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
@@ -4609,7 +4609,7 @@ msgstr "Médium UTM: způsob doručení (e-mail, sms, ...)"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_source
 msgid "UTM Source"
-msgstr "UTM Zdroj"
+msgstr "UTM zdroj"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options

@@ -33,7 +33,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Awaiting arrival</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>กำลังรอการมาถึง</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -48,7 +48,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> <b>ยกเลิกแล้ว</b>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Received</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>ได้รับแล้ว</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -57,6 +57,9 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    การจัดส่งบางส่วนเสร็จสิ้นแล้ว สามารถสร้างการคืนสินค้าได้จากใบสั่งจัดส่ง\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -70,11 +73,14 @@ msgid ""
 "                                    <i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"small badge text-bg-success orders_label_text_align\">\n"
+"                                    <i class=\"fa fa-fw fa-truck\"/> <b>จัดส่งแล้ว</b>\n"
+"                                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_product_catalog_kanban_view_inherit
 msgid "<span>On Hand: </span>"
-msgstr ""
+msgstr "<span>มีอยู่ในครอบครอง: </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -96,7 +102,7 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Returns</strong>"
-msgstr ""
+msgstr "<strong>การส่งคืน</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -107,6 +113,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"ตามการกำหนดค่าของสินค้า ปริมาณที่ส่งมอบสามารถคำนวณโดยอัตโนมัติตามกลไก:\n"
+"- กำหนดเอง: ปริมาณถูกตั้งค่าด้วยตนเองในบรรทัด\n"
+"- วิเคราะห์จากค่าใช้จ่าย: ปริมาณคือผลรวมปริมาณจากค่าใช้จ่ายที่ผ่านรายการ\n"
+"- ระบบบันทึกเวลา: ปริมาณคือผลรวมของชั่วโมงที่บันทึกไว้ในงานที่เชื่อมโยงกับรายการการขายนี้\n"
+"- การเคลื่อนย้ายสต็อค: ปริมาณมาจากการเลือกที่ได้รับการยืนยัน\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -144,7 +155,7 @@ msgstr "พร้อม"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Available in stock"
-msgstr "มีในสต๊อก"
+msgstr "มีในสต็อก"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -169,7 +180,7 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Customer reference"
-msgstr ""
+msgstr "การอ้างอิงของลูกค้า"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -199,7 +210,7 @@ msgstr "คำสั่งจัดส่ง"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "สถานะการจัดส่ง"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -275,7 +286,7 @@ msgstr "คาดการณ์วันที่คาดหวัง"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr "พยากรณ์สต๊อก"
+msgstr "สต็อกที่คาดการณ์"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -285,7 +296,7 @@ msgstr "จำนวนที่ฟรีวันนี้"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "จัดส่งครบแล้ว"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -321,7 +332,7 @@ msgstr "ตำแหน่ง Incoterm"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "รายละเอียด Incoterm"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -355,12 +366,12 @@ msgstr "ข้อมูล JSON สำหรับวิดเจ็ต popover"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
 msgid "Journal Entry"
-msgstr "รายการบันทึกประจำวัน"
+msgstr "รายการสมุดรายวัน"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "รายการบันทึก"
+msgstr "รายการสมุดรายวัน"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -416,19 +427,19 @@ msgstr "เลื่อนวันที่คาดว่าจะจัดส
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
-msgstr ""
+msgstr "ไม่มีว่างในอนาคต"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "ไม่ได้จัดส่ง"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
-msgstr ""
+msgstr "ความพร้อมใช้งานในอนาคตไม่เพียงพอ"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -447,7 +458,7 @@ msgstr "เมื่อ"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "จัดส่งแล้วบางส่วน"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -552,12 +563,12 @@ msgstr "ยกเลิกคำสั่งขาย"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "ไลน์คำสั่งขาย"
+msgstr "บรรทัดคำสั่งขาย"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "ไลน์คำสั่งขาย"
+msgstr "บรรทัดคำสั่งขาย"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
@@ -612,33 +623,33 @@ msgstr "นโยบายการจัดส่ง"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "ย้ายสต๊อก"
+msgstr "ย้ายสต็อก"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr "ย้ายสต๊อก"
+msgstr "ย้ายสต็อก"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "รายงานการเติมสต๊อก"
+msgstr "รายงานการเติมสต็อก"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "กฎสต๊อก"
+msgstr "กฎของสต็อก"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "รายงานกฎสต๊อก"
+msgstr "รายงานกฎสต็อก"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "รายงานกฎสต๊อก"
+msgstr "รายงานกฎสต็อก"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -668,6 +679,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
+"ปริมาณที่สั่งไม่สามารถลดลงต่ำกว่าจำนวนที่จัดส่งไปแล้วได้ "
+"ให้สร้างการคืนสินค้าในสินค้าคงคลังของคุณแทน"
 
 #. module: sale_stock
 #. odoo-javascript

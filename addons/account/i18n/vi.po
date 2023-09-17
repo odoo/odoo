@@ -1580,7 +1580,7 @@ msgstr "Nhóm sổ nhật kí tài khoản"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "Mapping tài khoản"
+msgstr "Thay thế tài khoản"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1932,7 +1932,7 @@ msgstr "Tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Mapping tài khoản của vị trí tài chính"
+msgstr "Thay thế tài khoản của vị trí tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2327,7 +2327,7 @@ msgstr "Cho phép đối chiếu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
 msgid "Allow check printing and deposits"
-msgstr "Cho phép in séc và đặt cọc"
+msgstr "Cho phép in séc và tiền gửi"
 
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
@@ -2703,8 +2703,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (VAT/Country) are met."
 msgstr ""
-"Tự động áp dụng mapping tài khoản và thuế trên hóa đơn nếu đáp ứng các tiêu "
-"chí phù hợp (VAT/Quốc gia)."
+"Tự động áp dụng thay thế tài khoản và thuế trên hóa đơn nếu đáp ứng các tiêu"
+" chí phù hợp (VAT/Quốc gia)."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -3492,6 +3492,15 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Không thể tạo một mã tài khoản không được sử dụng."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10296,12 +10305,12 @@ msgstr "Hạn mức đối tác"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Mapping đối tác"
+msgstr "Tìm kiếm đối tác"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Dòng mapping đối tác"
+msgstr "Dòng tìm kiếm đối tác"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -10322,7 +10331,7 @@ msgstr "Đối tác đã được thiết lập"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Mapping đối tác cho mẫu đối chiếu"
+msgstr "Tìm kiếm đối tác cho mẫu đối chiếu"
 
 #. module: account
 #. odoo-python
@@ -10757,7 +10766,9 @@ msgstr "Vui lòng chọn một giá trị làm tròn dương hoàn toàn."
 #, python-format
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
-msgstr "Vui lòng điền ít nhất một văn bản so khớp để tạo một mapping đối tác."
+msgstr ""
+"Vui lòng điền ít nhất một văn bản so khớp để tạo một tiêu chí tìm kiếm đối "
+"tác."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11373,6 +11384,8 @@ msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
 " This action is irreversible."
 msgstr ""
+"Hãy tải lại dữ liệu kế toán (thuế, tài khoản,...) nếu bạn nhận thấy có sự "
+"mâu thuẫn. Không thể đảo ngược hành động này."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -12926,12 +12939,12 @@ msgstr "Thông báo ngày chốt thuế"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Mapping thuế"
+msgstr "Thay thế thuế"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Mapping thuế của vị trí tài chính"
+msgstr "Thay thế thuế của vị trí tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -13668,7 +13681,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
-msgstr "Biểu thức chính quy sau không hợp lệ để tạo mapping đối tác: %s"
+msgstr "Biểu thức chính quy sau không hợp lệ để tạo tìm kiếm đối tác: %s"
 
 #. module: account
 #. odoo-python
@@ -13797,7 +13810,7 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
-"Mapping sử dụng biểu thức chính quy.\n"
+"Tiêu chí tìm kiếm sử dụng biểu thức chính quy.\n"
 "- Để khớp văn bản ở đầu dòng (trong nhãn hoặc ghi chú), chỉ cần điền văn bản của bạn.\n"
 "- Để khớp văn bản ở bất kỳ đâu (trong nhãn hoặc ghi chú), hãy đặt văn bản của bạn ở giữa dấu .*\n"
 "  VD: .*N°48748 abc123.*"
@@ -16380,8 +16393,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
-"Bạn không thể xóa/vô hiệu hoá tài khoản \"%s\" đang được cài cho mapping tài"
-" khoản của vị trí tài chính."
+"Bạn không thể xóa/vô hiệu hoá tài khoản \"%s\" đang được cài cho thay thế "
+"tài khoản của vị trí tài chính."
 
 #. module: account
 #. odoo-python

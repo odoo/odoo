@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' недійсний паттерн штрих-коду Regex. Ви мали на увазі '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -214,13 +215,19 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Шаблони також можуть визначати, як числові значення, такі як вага або ціна, можуть бути закодовані\n"
+" в штрих-коді. Вони ідентифікуцються за <code>{NNN}</code> де N\n"
+"                                визначає де кодуються цифри. Числа з плаваючою точкою також підтримуються \n"
+"десятковими дробами, позначеними D, наприклад <code>{NNNDD}</code>. У такому випадку\n"
+"                                поле штрих-коду на пов'язаних записах <i>має</i> показувати ці цифри як\n"
+"                                нулі."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Відскануйте знову!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name

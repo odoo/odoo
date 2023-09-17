@@ -188,7 +188,7 @@ msgstr "%s含税"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "%s Statement %s"
-msgstr ""
+msgstr "%s 结单 %s"
 
 #. module: account
 #. odoo-python
@@ -302,7 +302,7 @@ msgstr "......（%s 其它）"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "1.05"
-msgstr ""
+msgstr "1.05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
@@ -312,7 +312,7 @@ msgstr "下月有底后10天"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "11.05"
-msgstr ""
+msgstr "11.05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -333,32 +333,32 @@ msgstr "7 天內付清享 2% 折扣,期限30 天；"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "20.00"
-msgstr ""
+msgstr "20.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2021-09-19"
-msgstr ""
+msgstr "2021 年 9 月 19 日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-12"
-msgstr ""
+msgstr "2023 年 9 月 12 日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-25"
-msgstr ""
+msgstr "2023 年 9 月 25 日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-10-31"
-msgstr ""
+msgstr "2023 年 10 月 31 日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2024-01-01"
-msgstr ""
+msgstr "2024年 1 月 1 日"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -371,12 +371,12 @@ msgstr "21 天"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -396,20 +396,20 @@ msgstr "立即支付30%，余额60天内支付"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "30.00"
-msgstr ""
+msgstr "30.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "4.05"
-msgstr ""
+msgstr "4.05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -419,7 +419,7 @@ msgstr "45 天"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "9.00"
-msgstr ""
+msgstr "9.00"
 
 #. module: account
 #. odoo-python
@@ -731,6 +731,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}\" class=\"fst-italic\">\n"
+"                                        第二笔付款将在目标日记账中建立。\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -989,12 +992,12 @@ msgstr "<span role=\"separator\">查看</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Last Statement</span>"
-msgstr ""
+msgstr "<span title=\"Latest Statement\">上期结单</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr ""
+msgstr "<span title=\"Outstanding Payments/Receipts\">付款</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1186,7 +1189,7 @@ msgstr "<strong>贷项凭单日期：</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong><br/>"
-msgstr ""
+msgstr "<strong>客户代码：</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1196,7 +1199,7 @@ msgstr "<strong>日期：</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>送货日期：</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1206,7 +1209,7 @@ msgstr "<strong>到期日期：</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>到期日：</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1216,7 +1219,7 @@ msgstr "<strong>期末余额</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm:</strong><br/>"
-msgstr ""
+msgstr "<strong>国际贸易术语：</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1232,7 +1235,7 @@ msgstr "<strong>收据日期：</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>参考：</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1358,7 +1361,7 @@ msgstr "该分录的其中一行用于已弃用的科目，无法过账。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
+msgstr "备注，其内容通常适用于上述部分或产品。"
 
 #. module: account
 #. odoo-python
@@ -1411,7 +1414,7 @@ msgstr "已创建第二笔支付："
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
-msgstr ""
+msgstr "分节标题"
 
 #. module: account
 #. odoo-python
@@ -1495,7 +1498,7 @@ msgstr "科目币种"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr ""
+msgstr "会计仪表板新手简介"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3409,6 +3412,15 @@ msgstr "不能生成未使用的科目代码。"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -3692,7 +3704,7 @@ msgstr "科目表"
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Chart of accounts set!"
-msgstr ""
+msgstr "账目总表已设置！"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -3954,7 +3966,7 @@ msgstr "与该日记账相关的公司"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
 msgid "Composite Report"
-msgstr ""
+msgstr "组合报表"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__engine
@@ -4518,7 +4530,7 @@ msgstr "贷项凭单"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only send sales documents"
-msgstr ""
+msgstr "您只能发送销售文档"
 
 #. module: account
 #. odoo-python
@@ -4549,7 +4561,7 @@ msgstr "贷项凭单"
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_to_invoice
 #: model:ir.model.fields,field_description:account.field_res_users__credit_to_invoice
 msgid "Credit To Invoice"
-msgstr ""
+msgstr "贷记入发票"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -4827,7 +4839,7 @@ msgstr "自定义"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_base_document_layout
 msgid "Customize the look of your documents."
-msgstr ""
+msgstr "自定义文档外观。"
 
 #. module: account
 #. odoo-javascript
@@ -4962,7 +4974,7 @@ msgstr "天"
 #: model:ir.model.fields,field_description:account.field_res_partner__days_sales_outstanding
 #: model:ir.model.fields,field_description:account.field_res_users__days_sales_outstanding
 msgid "Days Sales Outstanding (DSO)"
-msgstr ""
+msgstr "销售变现天数（DSO）"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after_end_of_month
@@ -5149,7 +5161,7 @@ msgstr "定义现金付款时可用的最小硬币额"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
-msgstr ""
+msgstr "设定财政年度和报税周期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -5528,7 +5540,7 @@ msgstr "单据数字化"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
 msgid "Documents Layout"
-msgstr ""
+msgstr "文件版面格式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
@@ -6870,12 +6882,12 @@ msgstr "INV"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/00001"
-msgstr ""
+msgstr "INV/2023/00001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/0001"
-msgstr ""
+msgstr "INV/2023/0001"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_exception_icon
@@ -7079,7 +7091,7 @@ msgstr "导入日记账项目模板"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_setup_bill
 msgid "Import Vendor Bills"
-msgstr ""
+msgstr "导入供应商账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7725,7 +7737,7 @@ msgstr "旧版发票应用程序"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_invoice
 msgid "Invoicing Onboarding"
-msgstr ""
+msgstr "发票功能新手简介"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
@@ -8746,7 +8758,7 @@ msgstr "匹配的行的最大日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__max_tax_lock_date
 msgid "Max Tax Lock Date"
-msgstr ""
+msgstr "最大税款锁定日期"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -8982,7 +8994,7 @@ msgstr "轻松浏览报告，查看数字背后的信息"
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
-msgstr ""
+msgstr "需要取消请求"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -9101,7 +9113,7 @@ msgstr "无银行匹配"
 #: code:addons/account/controllers/download_edi_docs.py:0
 #, python-format
 msgid "No EDI documents found for export."
-msgstr ""
+msgstr "未找到可供导出的 EDI 文件。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9444,29 +9456,29 @@ msgstr "新手入门"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
 msgid "Onboarding Accounting Periods"
-msgstr ""
+msgstr "会计期间新手简介"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_bank_account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_chart_of_accounts
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_sales_tax
 msgid "Onboarding Bank Account"
-msgstr ""
+msgstr "银行账户新手简介"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_company_data
 msgid "Onboarding Company Data"
-msgstr ""
+msgstr "公司数据新手简介"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_create_invoice
 msgid "Onboarding Create Invoice"
-msgstr ""
+msgstr "创建发票新手简介"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr ""
+msgstr "文档格式新手简介"
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
@@ -9476,12 +9488,12 @@ msgstr "入门步骤"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_setup_bill
 msgid "Onboarding Step Image"
-msgstr ""
+msgstr "步骤图片新手简介"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_default_taxes
 msgid "Onboarding Taxes"
-msgstr ""
+msgstr "税项新手简介"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -9551,7 +9563,7 @@ msgstr "只允许管理员安装图表模板"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Only draft journal entries can be cancelled."
-msgstr ""
+msgstr "只可取消日记账草稿记项。"
 
 #. module: account
 #. odoo-python
@@ -9571,7 +9583,7 @@ msgstr "合作伙伴（银行）只能创建一项付款，不是为各账单创
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr ""
+msgstr "只限已过账/已取消的日记账记项，才可重设为草稿。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10309,7 +10321,7 @@ msgstr "付款条款：立即付款"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment within 30 calendar days"
-msgstr ""
+msgstr "30 个日历日内付款"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
@@ -10562,7 +10574,7 @@ msgstr "前项小计"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
 msgid "Prefix Groups Threshold"
-msgstr ""
+msgstr "字首组别门槛"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
@@ -11074,6 +11086,13 @@ msgid "Reload"
 msgstr "重新载入"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
+" This action is irreversible."
+msgstr "如果发现不一致，请重新载入会计数据（税款、账户等）。此操作不可撤回。"
+
+#. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "对日记账分录进行重新排序。"
@@ -11128,7 +11147,7 @@ msgstr "表示非0值的最小硬币（例如：0.05）。"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
-msgstr ""
+msgstr "要求取消"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -11417,7 +11436,7 @@ msgstr "短信发送错误"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "SO123"
-msgstr ""
+msgstr "SO123"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -11620,12 +11639,12 @@ msgstr "小节"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_main_report_ids
 msgid "Section Of"
-msgstr ""
+msgstr "分节有关"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
 msgid "Sections"
-msgstr ""
+msgstr "分节"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
@@ -11962,7 +11981,7 @@ msgstr "设置税项"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Set up your chart of accounts and record initial balances."
-msgstr ""
+msgstr "设定账目总表，开始记账。"
 
 #. module: account
 #. odoo-python
@@ -12034,7 +12053,7 @@ msgstr "显示小数分隔符"
 #: model:ir.model.fields,field_description:account.field_account_move__show_delivery_date
 #: model:ir.model.fields,field_description:account.field_account_payment__show_delivery_date
 msgid "Show Delivery Date"
-msgstr ""
+msgstr "显示送货日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_discount_details
@@ -12236,7 +12255,7 @@ msgstr "对账单行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 msgid "Statement Name"
-msgstr ""
+msgstr "结单名称"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
@@ -12323,7 +12342,7 @@ msgstr "步骤已完成！"
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Step completed!"
-msgstr ""
+msgstr "步骤已完成！"
 
 #. module: account
 #: model:account.account,name:account.1_stock_out
@@ -12769,7 +12788,7 @@ msgstr "具有相同标签的付款和发票免税不能在相同日记账项目
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_default_taxes
 msgid "Taxes set!"
-msgstr ""
+msgstr "已设置税项！"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13399,7 +13418,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "分录未能过账，原因：%(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -13637,7 +13656,7 @@ msgstr "即时余额（%s）与指定的期末余额不匹配。"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "The sections defined on a report cannot have sections themselves."
-msgstr ""
+msgstr "报表上定义的分节，不可再包含分节。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13877,7 +13896,7 @@ msgstr "这些税项在创建的任何新产品下设定。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Thirty one dollar and Five cents"
-msgstr ""
+msgstr "叁拾壹美元伍分"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -14012,7 +14031,7 @@ msgstr "该分录包含与您财政状况不兼容的税项。在财政状况和
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "This entry has been %s"
-msgstr ""
+msgstr "记项已被%s"
 
 #. module: account
 #. odoo-python
@@ -14026,7 +14045,7 @@ msgstr "分录已从%s复制"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been reversed from %s"
-msgstr ""
+msgstr "记项已从%s撤销"
 
 #. module: account
 #. odoo-python
@@ -14045,7 +14064,7 @@ msgstr "该字段用在应收账款和应付账款日记账分录。可以为该
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "This invoice is being sent in the background."
-msgstr ""
+msgstr "发票正在后台发送。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -14104,7 +14123,7 @@ msgstr "该分录在以下会计日期发布：%(date)s"
 #: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "此操作会令序列间断。"
 
 #. module: account
 #. odoo-python
@@ -15324,7 +15343,7 @@ msgstr "只能登记已过账日记账分录的付款。"
 #, python-format
 msgid ""
 "You can only request a cancellation for invoice sent to the government."
-msgstr ""
+msgstr "只可要求取消发送给政府的发票。"
 
 #. module: account
 #. odoo-python
@@ -15950,7 +15969,7 @@ msgstr "邮编范围到"
 msgid ""
 "[(Total Receivable/Total Revenue) * number of days since the first invoice] "
 "for this customer"
-msgstr ""
+msgstr "此客户的 [ ( 应收总额 ÷ 总收入 ) × 首张发票后的天数 ]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -16238,7 +16257,7 @@ msgstr "保留要求为剩余金额支付10%的固定利息的权利。"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "reversed"
-msgstr ""
+msgstr "已撤销"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -16295,7 +16314,7 @@ msgstr "承诺尽最大努力、按照约定时间表、在到期日期前提供
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "单位"
 
 #. module: account
 #. odoo-python

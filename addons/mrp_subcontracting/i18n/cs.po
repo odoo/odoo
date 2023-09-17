@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Ivana Bartonkova, 2023\n"
+"Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr "Vše"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Přehled kusovníku"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
@@ -61,7 +62,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_change_production_qty
 msgid "Change Production Qty"
-msgstr "Změna množství výroby"
+msgstr "Změna vyráběného množství"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
@@ -172,7 +173,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
 msgid "Inventory Locations"
-msgstr "Umístění (množ.) inventáře"
+msgstr "Skladové lokace"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
@@ -281,12 +282,12 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Pohyby produktu (trasa pohybu zboží)"
+msgstr "Pohyby produktu (položka pohybu zásob)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_replenish
 msgid "Product Replenish"
-msgstr ""
+msgstr "Doplnění produktu"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -308,7 +309,7 @@ msgstr "Výroby"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
 msgid "Quants"
-msgstr "Množství"
+msgstr "Kvanty"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -378,7 +379,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Vrátit dodávku"
+msgstr "Vratkový přesun"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -428,7 +429,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
 msgid "Stock Rule"
-msgstr "Pravidlo zásob"
+msgstr "Zásobovací pravidlo"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -537,7 +538,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Ceník dodavatele"
+msgstr "Dodavatelský ceník"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
@@ -582,7 +583,7 @@ msgstr "Spotřebováno celkem"
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__incoming_picking
 msgid "Transfer"
-msgstr "Převod"
+msgstr "Přesun"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
@@ -600,6 +601,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
+"Průvodce případem, že je nastavena striktní spotřeba a na výrobu bylo "
+"použito více materiálu (ve vztahu ke kusovníku)"
 
 #. module: mrp_subcontracting
 #. odoo-python

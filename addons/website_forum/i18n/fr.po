@@ -140,7 +140,7 @@ msgstr "%d karma requis pour supprimer ou réactiver un post."
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to downvote."
-msgstr "%d karma requis pour voter."
+msgstr "%d karma requis pour voter négativement."
 
 #. module: website_forum
 #. odoo-python
@@ -200,7 +200,7 @@ msgstr "%d karma requis pour délier un post."
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to upvote."
-msgstr "%d karma requis pour voter à la hausse."
+msgstr "%d karma requis pour voter positivement."
 
 #. module: website_forum
 #. odoo-python
@@ -890,7 +890,7 @@ msgstr "Réponse approuvée"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_4
 msgid "Answer voted up 15 times"
-msgstr "La réponse a été votée plus de 15 fois"
+msgstr "Réponse votée plus de 15 fois"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_2
@@ -900,7 +900,7 @@ msgstr "Réponse votée plus de 4 fois"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_3
 msgid "Answer voted up 6 times"
-msgstr "Réponse plébiscitée plus de 6 fois"
+msgstr "Réponse votée plus de 6 fois"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_5
@@ -1151,7 +1151,7 @@ msgstr "Peut convertir en commentaire"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_downvote
 msgid "Can Downvote"
-msgstr "Peut voter défavorablement"
+msgstr "Peut voter négativement"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_edit
@@ -1176,7 +1176,7 @@ msgstr "Peut délier"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_upvote
 msgid "Can Upvote"
-msgstr "Peut voter favorablement"
+msgstr "Peut voter positivement"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_use_full_editor
@@ -1241,7 +1241,7 @@ msgstr "Fermer"
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_reasons
 msgid "Close Reasons"
-msgstr "Motifs de résiliation"
+msgstr "Motifs de fermeture"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_all
@@ -2323,7 +2323,7 @@ msgstr "Étiquettes les plus utilisées"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__vote_count_desc
 msgid "Most Voted"
-msgstr "Les plus approuvés"
+msgstr "Le plus voté"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -2601,7 +2601,7 @@ msgstr "Publier des réponses"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reason_action
 msgid "Post Close Reason"
-msgstr "Raisons de la fermeture du post"
+msgstr "Motif de fermeture du post"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
@@ -2678,7 +2678,7 @@ msgstr "Confidentialité"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__public
 msgid "Public"
-msgstr "Publique"
+msgstr "Public"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__privacy
@@ -2737,7 +2737,7 @@ msgstr "Questions modifiées"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_downvote
 msgid "Question downvoted"
-msgstr "Question votée défavorablement"
+msgstr "Question votée négativement"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2769,7 +2769,7 @@ msgstr "La question ne peut pas être vide."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
 msgid "Question upvoted"
-msgstr "Question votée favorablement"
+msgstr "Question votée positivement"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_q_10
@@ -3082,7 +3082,7 @@ msgstr "S'inscrire"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
 msgid "Signed In"
-msgstr "Connecté"
+msgstr "Utilisateurs connectés"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3124,6 +3124,12 @@ msgstr "Désolé, nous n'avons trouvé aucun"
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid "Sorry, you cannot select your own posts as best answer"
+msgstr ""
+
+#. module: website_forum
+#. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
@@ -3725,7 +3731,7 @@ msgid ""
 "are gradually assigned to the users based on those points."
 msgstr ""
 "Quand une question ou réponse est votée, l'utilisateur qui l'a publié gagne "
-"des points, qui sont appelés \"points de karma'. Ces points servent de "
+"des points, qui sont appelés \"points de karma\". Ces points servent de "
 "mesure approximative pour la confiance de la communauté envers cette "
 "personne. Différentes tâches de modération sont attribuées graduellement à "
 "l'utilisateur sur base de ces points."
@@ -4129,7 +4135,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "upvote, add comments"
-msgstr "voter favorablement, ajouter des commentaires"
+msgstr "voter positivement, ajouter des commentaires"
 
 #. module: website_forum
 #. odoo-python

@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Jakub Smolka, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Tomáš Píšek, 2023
 # Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Ivana Bartonkova, 2023\n"
+"Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -695,7 +695,7 @@ msgstr "Produkt"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "Měrná jednotka výrobku"
+msgstr "Produktová měrná jednotka"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -739,12 +739,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Objednávka"
+msgstr "Nákupní objednávka"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Řádek objednávky"
+msgstr "Položka nákupní objednávky"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -770,13 +770,13 @@ msgstr "Nákupčí"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 msgid "Purchase Requisition"
-msgstr "Požadavek k nákupu"
+msgstr "Nákupní požadavek"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
-msgstr "Řádek požadavku na objednávku"
+msgstr "Položka nákupního požadavku"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
@@ -967,12 +967,12 @@ msgstr "Informace o dodavateli"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Ceník dodavatele"
+msgstr "Dodavatelský ceník"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
-msgstr ""
+msgstr "Technický model pro seskupení nákupních objednávek do tenderu"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -1125,11 +1125,13 @@ msgstr ""
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
 msgstr ""
+"Průvodce případem, kdy má nákupní objednávka stále otevřené alternativní "
+"objednávky"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
 msgid "Wizard to preset values for alternative PO"
-msgstr ""
+msgstr "Průvodce přednastavením hodnot pro alternativní PO"
 
 #. module: purchase_requisition
 #. odoo-python

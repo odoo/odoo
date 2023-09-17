@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +23,12 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "1.5"
-msgstr ""
+msgstr "1.5"
 
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr "โต๊ะทำงานสำหรับ 4 ท่าน"
+msgstr "โต๊ะสำหรับ 4 ท่าน"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -35,6 +36,9 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o p-2\" "
+"title=\"ค่าที่ตั้งไว้ที่นี่เป็นค่าเฉพาะของบริษัท\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -44,12 +48,12 @@ msgstr "<span>ตัวเลือก</span>"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span>Payment</span>"
-msgstr ""
+msgstr "<span>การชำระเงิน</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span>Signature</span>"
-msgstr ""
+msgstr "<span>ลายเซ็น</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -85,7 +89,7 @@ msgstr "เพิ่มในรถเข็น"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Add to order lines"
-msgstr "เพิ่มไลน์คำสั่ง"
+msgstr "เพิ่มบรรทัดคำสั่ง"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
@@ -180,7 +184,7 @@ msgstr "ค่าเริ่มต้นเทมเพลต"
 msgid ""
 "Default values will be overwritten by values provided by the quotation "
 "template."
-msgstr ""
+msgstr "ค่าเริ่มต้นจะถูกเขียนทับด้วยค่าที่ให้ไว้ในเทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -194,12 +198,12 @@ msgstr "คำอธิบาย"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Design your quotation templates using building blocks"
-msgstr ""
+msgstr "ออกแบบเทมเพลตใบเสนอราคาของคุณโดยใช้แบบเอกสารสำเร็จรูป"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr "ไดเจส"
+msgstr "แยกแยะ"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -236,12 +240,14 @@ msgstr "ไม่มีสิทธิ์เข้าถึง ข้ามข�
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Extra Chips"
-msgstr ""
+msgstr "ชิปเสริม"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"สินค้าต้องห้าม ปริมาณ และ UoM "
+"ในรายการใบเสนอราคาการขายที่ไม่สามารถรับผิดชอบได้"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -339,7 +345,7 @@ msgstr "ลายเซ็นออนไลน์"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "การยืนยันออนไลน์"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -527,10 +533,10 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"เหนื่อยกับแคตตาล็อกสินค้าที่ซับซ้อน? "
-"ลองใช้ตัวกำหนดค่าสินค้าเพื่อช่วยฝ่ายขายกำหนดค่าสินค้าด้วยตัวเลือกต่างๆ เช่น "
-"สี ขนาด ความจุ และอื่น ๆ "
-"ทำให้การเข้ารหัสคำสั่งซื้อขายง่ายขึ้นและป้องกันข้อผิดพลาด"
+"พบปัญหากับแค็ตตาล็อกสินค้าที่ดูซับซ้อนใช่ไหม ลองใช้ตัวกำหนดค่าสินค้า "
+"เพื่อช่วยฝ่ายขายกำหนดค่าสินค้าที่มีตัวเลือกต่างๆ เช่น สี ขนาด ความจุ "
+"และอื่นๆ "
+"ซึ่งจะทำให้การเข้ารหัสคำสั่งซื้อขายง่ายขึ้นและป้องกันการเกิดข้อผิดพลาดได้"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

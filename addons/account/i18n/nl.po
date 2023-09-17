@@ -2634,12 +2634,12 @@ msgstr "Kostenplaatsplannen"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analytische nauwkeurigheid"
+msgstr "Kostenplaats nauwkeurigheid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Analytische regels"
+msgstr "Kostenplaatsregels"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3495,6 +3495,17 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Kan geen ongebruikte rekeningcode genereren."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+"Kan geen ongebruikte dagboekcode genereren. Verander de naam van het dagboek"
+" %s."
 
 #. module: account
 #. odoo-python
@@ -5673,7 +5684,7 @@ msgstr "Documenten digitaliseren"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
 msgid "Documents Layout"
-msgstr "Layout documenten"
+msgstr "Lay-out documenten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
@@ -7397,7 +7408,7 @@ msgstr "Inkomende betaalmethodes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "In de analytische kost inbegrepen"
+msgstr "Toevoegen aan kostenplaats"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -9765,7 +9776,7 @@ msgstr "Onboarding factuur aanmaken"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr "Onboarding layout documenten"
+msgstr "Onboarding lay-out documenten"
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
@@ -14509,8 +14520,8 @@ msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
 msgstr ""
-"Deze analytische distributie is van toepassing op alle financiële "
-"rekeneningen met het opgegeven voorvoegsel. "
+"Deze kostenplaatsdistributie is van toepassing op alle financiële rekeningen"
+" met het opgegeven voorvoegsel. "
 
 #. module: account
 #. odoo-python

@@ -3237,7 +3237,7 @@ msgstr "ブール値"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #, python-format
 msgid "Branch:"
-msgstr ""
+msgstr "支店:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__include_initial_balance
@@ -3401,6 +3401,15 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "未使用のアカウントコードは生成できません。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -11080,7 +11089,7 @@ msgstr "リロード"
 msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
 " This action is irreversible."
-msgstr ""
+msgstr "不整合に気づいたら、会計データ(税金、勘定科目など)を再読み込みて下さい。この操作は元に戻せません。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard

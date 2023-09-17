@@ -8,6 +8,7 @@
 # adrianojprado <adrianojprado@gmail.com>, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# Éder Brito <britoederr@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:35+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1015,6 +1016,9 @@ msgid ""
 "        Bridge module between MRP subcontracting and Repair\n"
 "    "
 msgstr ""
+"\n"
+"        Módulo ponte entre subcontratação MRP e Reparo\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_sms
@@ -2002,6 +2006,13 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"    Torne a data de bloqueio irreversível:\n"
+"\n"
+"    * Você não pode definir restrições mais rígidas aos contadores do que aos usuários. Portanto, a Data de Bloqueio de Todos os Usuários deve ser anterior (ou igual) à Data de Bloqueio de Faturas/Notas.\n"
+"    * Você não pode bloquear um período que ainda não terminou. Portanto, a Data de Bloqueio de Todos os Usuários deve ser anterior (ou igual) ao último dia do mês anterior.\n"
+"    * Qualquer nova Data de Bloqueio de Todos os Usuários deve ser posterior (ou igual) à anterior.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_taxcloud
@@ -3115,6 +3126,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"Adiciona a possibilidade de gerar leads ou oportunidades no seu APP de CRM provenientes dos formulários do seu website.\n"
+"Os formulários precisam ser personalizados dentro do *Construtor de Site* a fim de gerar leads.\n"
+"\n"
+"Este módulo inclui a validação de números de contato de telefones e celulares."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -3150,6 +3166,8 @@ msgid ""
 "\n"
 "Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Adiciona suporte ao preenchimento de três campos opcionais ao utilizar o Chorus Pro, especialmente quando faturando serviços públicos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -3421,6 +3439,9 @@ msgid ""
 "Allows to compute accurate margin for Service sales.\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"Permite calcular margem precisa para vendas de serviços.\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -4802,6 +4823,12 @@ msgid ""
 "This module add completed courses to resume for employees.\n"
 "        "
 msgstr ""
+"\n"
+"E-learning e Habilidades para RH\n"
+"============================\n"
+"\n"
+"Este módulo adiciona cursos concluídos de currículos para funcionários.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi
@@ -13587,6 +13614,8 @@ msgid ""
 "Authenticate by using SSL certificates, belonging to your domain name. \n"
 "SSL certificates allow you to authenticate your mail server for the entire domain name."
 msgstr ""
+"Autentique usando certificados SSL, pertencentes ao seu nome de domínio. \n"
+"Os certificados SSL permitem autenticar seus servidores de e-mail para todos o nomes de domínio. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication
@@ -13596,7 +13625,7 @@ msgstr "Autenticar com"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication_info
 msgid "Authentication Info"
-msgstr ""
+msgstr "Informações de Autenticação"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -14802,6 +14831,7 @@ msgstr "Cancelar Atualização"
 #, python-format
 msgid "Cannot create %r because the template to inherit %r is not found."
 msgstr ""
+"Não foi possível criar %r porque o modelo de herança %r não foi encontrado."
 
 #. module: base
 #. odoo-python
@@ -14967,7 +14997,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Changing to 12-hour clock format instead."
-msgstr ""
+msgstr "Alterando para o formato de 12 horas ao invés."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__char
@@ -15523,7 +15553,7 @@ msgstr "Calcular"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Compute method cannot depend on field 'id'"
-msgstr ""
+msgstr "O método de cálculo não pode depender do campo 'id'"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -15649,6 +15679,8 @@ msgid ""
 "Connect to your server through your usual username and password. \n"
 "This is the most basic SMTP authentication process and may not be accepted by all providers. \n"
 msgstr ""
+"Conecte ao seu servidor através de seu nome de usuário e senha usual.\n"
+"Esta é a forma mais básica do processo de autenticação SMTP e pode não ser aceita por todos os provedores.\n"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -16398,18 +16430,18 @@ msgstr "Croácia - Relatórios de Contabilidade"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
 msgid "Cron"
-msgstr ""
+msgstr "Cron"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_form
 msgid "Cron Trigger"
-msgstr ""
+msgstr "Cron Trigger"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_tree
 msgid "Cron Triggers"
-msgstr ""
+msgstr "Cron Triggers"
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -16954,6 +16986,8 @@ msgid ""
 "Deleting the template users is not allowed. Deleting this profile will "
 "compromise critical functionalities."
 msgstr ""
+"Excluir os modelos de usuários não é permitido. Deletar este perfil "
+"comprometerá funcionalidades críticas."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory_delivery
@@ -19486,6 +19520,8 @@ msgstr "De"
 msgid ""
 "From here you can manage all bank accounts linked to you and your contacts."
 msgstr ""
+"A partir daqui você pode gerenciar todas as contas bancárias vinculadas a "
+"você e a seus contatos."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -20821,7 +20857,7 @@ msgstr "Mixin de Imagem"
 #: code:addons/fields.py:0
 #, python-format
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "A imagem não está codificada em base64."
 
 #. module: base
 #. odoo-python
@@ -20999,6 +21035,8 @@ msgid ""
 "Incorrect Password, try again or click on Forgot Password to reset your "
 "password."
 msgstr ""
+"Senha incorreta, tente novamente ou clique em Esqueci a Senh apara redefinir"
+" sua senha."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -21164,6 +21202,8 @@ msgid ""
 "Inherited view cannot have 'Groups' define on the record. Use 'groups' "
 "attributes inside the view definition"
 msgstr ""
+"A view herdada não possui 'Groups' definidos no registro. Use atributos de "
+"'groups' dentro da definição da view."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
@@ -21414,7 +21454,7 @@ msgstr "Invalid 'group by' parameter"
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "Formato JSON inválido no campo Valor padrão."
 
 #. module: base
 #. odoo-python
@@ -21446,7 +21486,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid domain format %(expr)s in %(use)s"
-msgstr ""
+msgstr "Formato de domínio inválido %(expr)s em %(use)s"
 
 #. module: base
 #. odoo-python
@@ -21460,7 +21500,7 @@ msgstr "Invalid field %s.%s"
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Invalid inherit mode. Module %r and template name %r"
-msgstr ""
+msgstr "Modo de herança inválido. Módulo %r e nome do modelo %r"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_inheritance_mode
@@ -21481,7 +21521,7 @@ msgstr "Chave inválida: a visualização QWeb deve ter uma chave"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid mode attribute:"
-msgstr ""
+msgstr "Atributo de modo inválido:"
 
 #. module: base
 #. odoo-python
@@ -21535,14 +21575,14 @@ msgstr "Especial inválido '%(value)s' no botão"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid specification for moved nodes: %r"
-msgstr ""
+msgstr "Especificação inválida para nós movidos: %r"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Invalid template user. It seems it has been deleted."
-msgstr ""
+msgstr "Usuário de modelo invalido. Parece que ele foi excluído."
 
 #. module: base
 #. odoo-python
@@ -21587,12 +21627,12 @@ msgstr "Inventário, logística, Avaliação, Contabilidade"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
 msgid "Inverse Company Rate"
-msgstr ""
+msgstr "Taxa Inversa da Empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__inverse_rate
 msgid "Inverse Rate"
-msgstr ""
+msgstr "Taxa Inversa"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
@@ -21638,7 +21678,7 @@ msgstr "IoT para PdV"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_ir_profile
 msgid "Ir profile"
-msgstr ""
+msgstr "É perfil"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -21678,12 +21718,12 @@ msgstr "É uma Empresa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "Os detalhes da empresa estão vazios"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__is_current_company_currency
 msgid "Is Current Company Currency"
-msgstr ""
+msgstr "É a moeda atual da empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_public
@@ -24092,6 +24132,8 @@ msgstr ""
 msgid ""
 "Name or id %(name_or_id)r in %(use)s must be present in view but is missing."
 msgstr ""
+"O nome ou id $(name_or_id)r em %(use)s deve estar presente na view, mas está"
+" ausente."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -24186,7 +24228,7 @@ msgstr "Nova Senha"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_own__confirm_password
 msgid "New Password (Confirmation)"
-msgstr ""
+msgstr "Nova senha (confirmação)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__new
@@ -24362,7 +24404,7 @@ msgstr "Não atualizável"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
-msgstr ""
+msgstr "Campo não-relacional %(field)r no caminho %(field_path)r em %(use)s)"
 
 #. module: base
 #. odoo-python
@@ -24478,7 +24520,7 @@ msgstr "Observações"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_wishlist
 msgid "Notify the user when a product is back in stock"
-msgstr ""
+msgstr "Notificar o usuário quando o produto estiver de volta no estoque"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__numbercall
@@ -25790,7 +25832,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Odoo is unable to merge the generated PDFs."
-msgstr ""
+msgstr "O Odoo não consegue mesclar os PDFs gerados."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -26893,7 +26935,7 @@ msgstr "Partner module for website"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_company_registry_partner_id
 msgid "Partner with same Company Registry"
-msgstr ""
+msgstr "Usuário com o mesmo Registro da Empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
@@ -26966,7 +27008,7 @@ msgstr "Caminho"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__path
 msgid "Path (or glob pattern)"
-msgstr ""
+msgstr "Caminho (ou padrão glob)"
 
 #. module: base
 #. odoo-python
@@ -27392,7 +27434,7 @@ msgstr "Avaliação do Portal"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "Portal Users"
-msgstr ""
+msgstr "Usuários de Portal"
 
 #. module: base
 #: model:res.groups,comment:base.group_portal
@@ -27444,7 +27486,7 @@ msgstr "Nome da tabela PostgreSQL implementada na relação many2many."
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Precision Digits"
-msgstr ""
+msgstr "Dígitos de Precisão"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -27575,7 +27617,7 @@ msgstr "Disponibilidade do Produto"
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison_wishlist
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_wishlist
 msgid "Product Availability Notifications"
-msgstr ""
+msgstr "Notificações de Disponibilidade de Produto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -27641,7 +27683,7 @@ msgstr "Professor"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_list
 msgid "Profile Session"
-msgstr ""
+msgstr "Sessão de Perfil"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_ir_profile
@@ -28191,7 +28233,7 @@ msgstr "Quality steps and IoT devices"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql_count
 msgid "Queries Count"
-msgstr ""
+msgstr "Contagem de Consultas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet_quiz
@@ -31268,7 +31310,7 @@ msgstr "Guia técnico"
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Template %r already exists in module %r"
-msgstr ""
+msgstr "O modelo %r já existe no módulo %r"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
@@ -31281,7 +31323,7 @@ msgstr "Nome do modelo"
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Template name is missing in file %r."
-msgstr ""
+msgstr "O nome do modelo está ausente no arquivo %r"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation
@@ -31486,7 +31528,7 @@ msgstr "Tailândia - Contabilidade"
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The \"%s\" action cannot be selected as home action."
-msgstr ""
+msgstr "A ação \"%s\" não pode ser selecionada como ação inicial."
 
 #. module: base
 #. odoo-python
@@ -31574,7 +31616,7 @@ msgstr "O campo ativo permite esconder a categoria sem removê-la."
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment collides with an existing file."
-msgstr ""
+msgstr "O anexo colide com um arquivo existente."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -31594,7 +31636,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr ""
+msgstr "O vínculo entre Usuário/Número da Conta deve ser única."
 
 #. module: base
 #. odoo-python
@@ -31649,7 +31691,7 @@ msgstr "O código da moeda deve ser único!"
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
 msgid "The currency of rate 1 to the rate of the currency."
-msgstr ""
+msgstr "A taxa da moeda 1 para a taxa da moeda."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_currency_rate_check
@@ -31740,13 +31782,17 @@ msgid ""
 "previously modified it, and you are therefore not able to modify it yourself"
 " while preserving the content."
 msgstr ""
+"O campo valor que você está salvando (%s %s) incluí conteúdo que é restrito "
+"por razões de segurança. É possível que alguém com privilégios superiores "
+"tenha o modificado anteriormente, e portanto, você não poderá modificá-lo "
+"enquanto preserva o conteúdo."
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "O seguinte idioma não está ativado: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -31784,6 +31830,8 @@ msgid ""
 "                            Users can choose their favorite language in "
 "their preferences."
 msgstr ""
+"O idioma que você selecionou foi instalado com sucesso. Usuários podem "
+"escolher o idioma favorito deles nas preferências."
 
 #. module: base
 #. odoo-python
@@ -31793,6 +31841,8 @@ msgid ""
 "The languages that you selected have been successfully installed. Users can "
 "choose their favorite language in their preferences."
 msgstr ""
+"Os idiomas que você selecionou foram instalados com sucesso. Os usuários "
+"podem escolher o idioma favorito deles nas preferências."
 
 #. module: base
 #. odoo-python
@@ -31834,6 +31884,8 @@ msgid ""
 "The method _button_immediate_install cannot be called on init or non loaded "
 "registries. Please use button_install instead."
 msgstr ""
+"O método _button_immediate_install não pode ser chamado em registros init ou"
+" non loaded. Por favor, use button_install ao invés."
 
 #. module: base
 #. odoo-python
@@ -31873,6 +31925,8 @@ msgid ""
 "The name for the current rate is empty.\n"
 "Please set it."
 msgstr ""
+"O nome da taxa atual está vazio.\n"
+"Por favor defina-o."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
@@ -31952,13 +32006,19 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Field: %(field_name)s (%(field_tech_name)s)\n"
 msgstr ""
+"A operação não pode ser concluída:\n"
+"- Criar/atualizar: um campo obrigatório não está definido.\n"
+"- Excluir: outro modelo exige que o registro seja excluído. Se possível, arquive-o ao invés.\n"
+"\n"
+"Modelo: %(model_name)s (%(model_tech_name)s)\n"
+"Campo: %(field_name)s (%(field_tech_name)s)\n"
 
 #. module: base
 #. odoo-python
 #: code:addons/model.py:0 code:addons/model.py:0
 #, python-format
 msgid "The operation cannot be completed: %s"
-msgstr ""
+msgstr "A operação não pode ser concluída: %s"
 
 #. module: base
 #. odoo-python
@@ -31970,6 +32030,10 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Constraint: %(constraint)s\n"
 msgstr ""
+"A operação não pode ser concluída: outro modelo exige que o registro seja excluído. Se possível, arquive-o ao invés.\n"
+"\n"
+"Modelo: %(model_name)s (%(model_tech_name)s)\n"
+"Limitação: %(constraint)s\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -32046,7 +32110,7 @@ msgstr "A taxa de câmbio para uma unidade da outra moeda"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The rate of the currency to the currency of rate 1 "
-msgstr ""
+msgstr "A taxa da moeda para a moeda de taxa 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -32073,6 +32137,9 @@ msgid ""
 "\n"
 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname."
 msgstr ""
+"O modelo do relatório %r está errado, por favor entre em contato com seu administrador. \n"
+"\n"
+"Não é possível separar o arquivo para salvar como anexo porque o modelo do relatório não contem atributos 'data-oe-model' e 'data-oe-id' na div com a classname 'article'."
 
 #. module: base
 #. odoo-python
@@ -35047,7 +35114,7 @@ msgstr "You cannot deactivate the user you're currently logged in as."
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot delete a group linked with a settings field."
-msgstr ""
+msgstr "Você não pode excluir um grupo vinculado a um campo de configuração."
 
 #. module: base
 #. odoo-python
@@ -35086,7 +35153,7 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
-msgstr ""
+msgstr "Você não pode deletar o registro %s."
 
 #. module: base
 #. odoo-python
@@ -35119,7 +35186,7 @@ msgstr "Não é possível mesclar um contato com um de seus pais."
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot rename config parameters with keys %s"
-msgstr ""
+msgstr "Você não pode renomear os parâmetros de configuração com as chaves %s"
 
 #. module: base
 #. odoo-python

@@ -1,20 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * analytic
-#
-# Translators:
+# 	* analytic
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2016-06-03 04:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hindi (http://www.transifex.com/odoo/odoo-9/language/hi/)\n"
-"Language: hi\n"
+"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"PO-Revision-Date: 2023-07-25 12:21+0000\n"
+"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -57,10 +55,8 @@ msgid "Active"
 msgstr ""
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-#, python-format
-msgid "Add a line"
+#: model:account.analytic.account,name:analytic.analytic_active_account
+msgid "Active account"
 msgstr ""
 
 #. module: analytic
@@ -312,7 +308,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__company_id
 msgid "Company"
-msgstr "संस्था"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__complete_name
@@ -331,7 +327,9 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
 msgstr ""
 
 #. module: analytic
@@ -375,13 +373,13 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
 msgid "Customer"
-msgstr "साथी"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
-msgstr "तिथि"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
@@ -418,7 +416,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__description
 msgid "Description"
-msgstr "विवरण"
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
@@ -445,13 +443,6 @@ msgid "Domain"
 msgstr ""
 
 #. module: analytic
-#. odoo-javascript
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
-#, python-format
-msgid "Editing"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -470,7 +461,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
-msgstr "द्वारा वर्गीकृत करें"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
@@ -633,7 +624,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: analytic
@@ -700,7 +691,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "साथी"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -722,12 +713,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
-msgstr "मात्रा"
+msgstr ""
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Quick search: %s"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
-msgstr "संदर्भ"
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_department
@@ -760,18 +758,34 @@ msgid "Search Analytic Lines"
 msgstr ""
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Search: Analytic Account"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
-msgid "Select a company for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this company, it will automatically take this as an analytic account)"
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
-msgid "Select a partner category for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
-msgid "Select a partner for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)"
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
 msgstr ""
 
 #. module: analytic
@@ -788,7 +802,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 #, python-format
-msgid "The selected account belongs to another company than the one you're trying to create an analytic item for"
+msgid ""
+"The selected account belongs to another company than the one you're trying "
+"to create an analytic item for"
 msgstr ""
 
 #. module: analytic
@@ -820,7 +836,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
-msgstr "उपयोगकर्ता"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
@@ -828,17 +844,28 @@ msgid "View"
 msgstr ""
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "View all"
+msgstr ""
+
+#. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
-msgid "You can't set a different company on your analytic account since there are some analytic items linked to it."
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some analytic items linked to it."
 msgstr ""
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
 #, python-format
-msgid "You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company"
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
 msgstr ""
 
 #. module: analytic
