@@ -62,6 +62,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/legacy/scss/ui.scss',
 
+            'web/static/src/polyfills/clipboard.js',
+
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/popper/popper.js',
@@ -82,7 +84,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
-            'web/static/lib/clipboard/clipboard.js',
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
@@ -192,7 +193,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/lib/select2/select2.js',
-            'web/static/lib/clipboard/clipboard.js',
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',

@@ -195,39 +195,6 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["copied tooltip"]);
     });
 
-    QUnit.test("CopyClipboard fields with clipboard not available", async function (assert) {
-        patchWithCleanup(browser, {
-            console: {
-                warn: (msg) => assert.step(msg),
-            },
-            navigator: {
-                clipboard: undefined,
-            },
-        });
-
-        await makeView({
-            serverData,
-            type: "form",
-            resModel: "partner",
-            arch: `
-                <form>
-                    <sheet>
-                        <div>
-                            <field name="text_field" widget="CopyClipboardText"/>
-                        </div>
-                    </sheet>
-                </form>`,
-            resId: 1,
-        });
-
-        await click(target, ".o_clipboard_button");
-        await nextTick();
-        assert.verifySteps(
-            ["This browser doesn't allow to copy to clipboard"],
-            "console simply displays a warning on failure"
-        );
-    });
-
     QUnit.module("CopyClipboardButtonField");
 
     QUnit.test("CopyClipboardButtonField in form view", async function (assert) {

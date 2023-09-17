@@ -6,6 +6,7 @@ import SurveySessionChart from "@survey/js/survey_session_chart";
 import SurveySessionTextAnswers from "@survey/js/survey_session_text_answers";
 import SurveySessionLeaderBoard from "@survey/js/survey_session_leaderboard";
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 
 const nextPageTooltips = {
     closingWords: _t('End of Survey'),
@@ -93,12 +94,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
 
     /**
      * Copies the survey URL link to the clipboard.
-     * We use 'ClipboardJS' to avoid having to print the URL in a standard text input
+     * We avoid having to print the URL in a standard text input.
      *
      * @param {MouseEvent} ev
      */
-    _onCopySessionLink: function (ev) {
-        var self = this;
+    _onCopySessionLink: async function (ev) {
         ev.preventDefault();
 
         var $clipboardBtn = this.$('.o_survey_session_copy');
@@ -113,22 +113,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             }
         });
 
-        var clipboard = new ClipboardJS('.o_survey_session_copy', {
-            text: function () {
-                return self.$('.o_survey_session_copy_url').val();
-            },
-            container: this.el
-        });
-
-        clipboard.on('success', function () {
-            clipboard.destroy();
-            $clipboardBtn.popover('show');
-            setTimeout(() => $clipboardBtn.popover('dispose'), 800);
-        });
-
-        clipboard.on('error', function (e) {
-            clipboard.destroy();
-        });
+        await browser.navigator.clipboard.writeText(this.$('.o_survey_session_copy_url').val());
+        $clipboardBtn.popover('show');
+        setTimeout(() => $clipboardBtn.popover('dispose'), 800);
     },
 
     /**
