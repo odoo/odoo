@@ -26,9 +26,6 @@ export class CopyButton extends Component {
     }
 
     async onClick() {
-        if (!browser.navigator.clipboard) {
-            return browser.console.warn("This browser doesn't allow to copy to clipboard");
-        }
         let write;
         // any kind of content can be copied into the clipboard using
         // the appropriate native methods

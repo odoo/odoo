@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { browser } from "@web/core/browser/browser";
 
 var SelectBox = publicWidget.Widget.extend({
     events: {
@@ -121,13 +122,6 @@ var RecentLinkBox = publicWidget.Widget.extend({
         this.animating_copy = false;
         this.rpc = this.bindService("rpc");
     },
-    /**
-     * @override
-     */
-    start: function () {
-        new ClipboardJS(this.$('.btn_shorten_url_clipboard').get(0));
-        return this._super.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -136,7 +130,9 @@ var RecentLinkBox = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _toggleCopyButton: function () {
+    _toggleCopyButton: async function () {
+        await browser.navigator.clipboard.writeText(this.link_obj.short_url);
+
         if (this.animating_copy) {
             return;
         }
@@ -353,7 +349,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         var defs = [this._super.apply(this, arguments)];
 
         // UTMS selects widgets
@@ -370,9 +366,6 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         this.recentLinks = new RecentLinks(this);
         defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
         this.recentLinks.getRecentLinks('newest');
-
-        // Clipboard Library
-        new ClipboardJS($('#btn_shorten_url').get(0));
 
         this.url_copy_animating = false;
 
@@ -431,7 +424,10 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onShortenUrlButtonClick: function () {
+    _onShortenUrlButtonClick: async function (ev) {
+        const textValue = ev.target.dataset["clipboard-text"];
+        await browser.navigator.clipboard.writeText(textValue);
+
         if (!$('#btn_shorten_url').hasClass('btn-copy') || this.url_copy_animating) {
             return;
         }

@@ -3,6 +3,7 @@
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { browser } from "@web/core/browser/browser";
 const { DateTime } = luxon;
 
 var BarChart = publicWidget.Widget.extend({
@@ -133,7 +134,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         var self = this;
         this.charts = {};
 
@@ -148,8 +149,6 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         defs.push(this._lastWeekClicksByCountry());
         defs.push(this._lastMonthClicksByCountry());
         defs.push(this._super.apply(this, arguments));
-
-        new ClipboardJS($('.copy-to-clipboard')[0]);
 
         this.animating_copy = false;
 
@@ -288,8 +287,11 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onCopyToClipboardClick: function (ev) {
+    _onCopyToClipboardClick: async function (ev) {
         ev.preventDefault();
+
+        const textValue = ev.target.dataset["clipboard-text"];
+        await browser.navigator.clipboard.writeText(textValue);
 
         if (this.animating_copy) {
             return;

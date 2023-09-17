@@ -6,6 +6,7 @@ import { InputConfirmationDialog } from "@portal/js/components/input_confirmatio
 import { handleCheckIdentity } from "@portal/js/portal_security";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
@@ -47,23 +48,12 @@ function fromField(f, record) {
 
         const copyButton = document.createElement('button');
         copyButton.setAttribute('class', 'btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2');
-        copyButton.onclick = function(event) {
+        copyButton.onclick = async function(event) {
             event.preventDefault();
             $(copyButton).tooltip({title: _t("Copied!"), trigger: "manual", placement: "bottom"});
-            var clipboard = new ClipboardJS('.o_clipboard_button', {
-                target: function () {
-                    return $(secretSpan)[0];
-                },
-                container: this.el
-            });
-            clipboard.on('success', function () {
-                clipboard.destroy();
-                $(copyButton).tooltip('show');
-                setTimeout(() => $(copyButton).tooltip("hide"), 800);
-            });
-            clipboard.on('error', function (e) {
-                clipboard.destroy();
-            });
+            await browser.navigator.clipboard.writeText($(secretSpan)[0].innerText);
+            $(copyButton).tooltip('show');
+            setTimeout(() => $(copyButton).tooltip("hide"), 800);
         };
 
         copyButton.appendChild(copySpanIcon);

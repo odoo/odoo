@@ -3,6 +3,7 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
 import '@website_slides/js/slides';
 import { _t } from "@web/core/l10n/translation";
+import { browser } from '@web/core/browser/browser';
 
 export const ShareMail = publicWidget.Widget.extend({
     events: {
@@ -109,27 +110,14 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
         });
     },
 
-    _onShareLinkCopy: function (ev) {
+    _onShareLinkCopy: async function (ev) {
         ev.preventDefault();
         var $clipboardBtn = $(ev.currentTarget);
         $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-        var self = this;
-        var clipboard = new ClipboardJS('#' + $clipboardBtn[0].id, {
-            target: function () {
-                var share_link_el = self.$('#wslides_share_link_id_' + $clipboardBtn[0].id.split('id_')[1]);
-                return share_link_el[0];
-            },
-            container: this.el
-        });
-        clipboard.on('success', function () {
-            clipboard.destroy();
-            $clipboardBtn.tooltip('show');
-            setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
-        });
-        clipboard.on('error', function (e) {
-            console.log(e);
-            clipboard.destroy();
-        })
+        var share_link_el = this.$('#wslides_share_link_id_' + $clipboardBtn[0].id.split('id_')[1]);
+        await browser.navigator.clipboard.writeText(share_link_el[0].innerText);    
+        $clipboardBtn.tooltip('show');
+        setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
     },
 });
 
@@ -139,28 +127,16 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
         'click .o_embed_clipboard_button': '_onShareLinkCopy',
     },
 
-    _onShareLinkCopy: function (ev) {
+    _onShareLinkCopy: async function (ev) {
         ev.preventDefault();
         const $clipboardBtn = $(ev.currentTarget);
         $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-        const clipboard = new ClipboardJS('#' + $clipboardBtn[0].id, {
-            target: () => {
-                const share_embed_el = this.$('#wslides_share_embed_id_' + $clipboardBtn[0].id.split('id_')[1]);
-                return share_embed_el[0];
-            },
-            container: this.el
-        });
-        clipboard.on('success', function () {
-            clipboard.destroy();
-            $clipboardBtn.tooltip('show');
-            setTimeout(function () {
-                $clipboardBtn.tooltip("hide");
-            }, 800);
-        });
-        clipboard.on('error', function (e) {
-            console.log(e);
-            clipboard.destroy();
-        })
+        var share_embed_el = this.$('#wslides_share_embed_id_' + $clipboardBtn[0].id.split('id_')[1]);
+        await browser.navigator.clipboard.writeText(share_embed_el[0].innerText);    
+        $clipboardBtn.tooltip('show');
+        setTimeout(function () {
+            $clipboardBtn.tooltip("hide");
+        }, 800);
     },
 });
 

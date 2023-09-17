@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { ancestors } from '@web_editor/js/common/wysiwyg_utils';
 import { KeepLast } from '@web/core/utils/concurrency';
+import { browser } from "@web/core/browser/browser";
 
 export class LinkPopoverWidget {
     static createFor(params) {
@@ -66,39 +67,12 @@ export class LinkPopoverWidget {
         this.$copyLink = this.$el.find('.o_we_copy_link');
         this.$fullUrl = this.$el.find('.o_we_full_url');
 
-        // Use the right ClipboardJS with respect to the prototype of this.el
-        // since, starting with Firefox 109, a widget element prototype that is
-        // adopted by an iframe will not be instanceof its original constructor.
-        // See: https://github.com/webcompat/web-bugs/issues/118350
-        const ClipboardJS =
-            this.el instanceof HTMLElement
-                ? window.ClipboardJS
-                : this.el.ownerDocument.defaultView.ClipboardJS;
         this.$urlLink.attr('href', this.href);
         this.$fullUrl.attr('href', this.href);
         this.$el.find(`.o_we_edit_link`).on('click', this._onEditLinkClick.bind(this));
         this.$el.find(`.o_we_remove_link`).on('click', this._onRemoveLinkClick.bind(this));
 
-        // Copy onclick handler
-        // ClipboardJS uses "instanceof" to verify the elements passed to its
-        // constructor. Unfortunately, when the element is within an iframe,
-        // instanceof is not behaving the same across all browsers.
-        const containerWindow = this.container.ownerDocument.defaultView;
-        let _ClipboardJS = ClipboardJS;
-        if (this.$copyLink[0] instanceof containerWindow.HTMLElement) {
-            _ClipboardJS = containerWindow.ClipboardJS;
-        }
-        const clipboard = new _ClipboardJS(
-            this.$copyLink[0],
-            {text: () => this.target.href} // Absolute href
-        );
-        clipboard.on('success', () => {
-            this.$copyLink.tooltip('hide');
-            this.notify(_t("Link copied to clipboard."), {
-                type: 'success',
-            });
-            this.popover.hide();
-        });
+        this.$copyLink.on("click", this._onCopyLinkClick.bind(this));
 
         // init tooltips & popovers
         this.$el.find('[data-bs-toggle="tooltip"]').tooltip({
@@ -336,6 +310,21 @@ export class LinkPopoverWidget {
         ev.preventDefault();
         this.wysiwyg.removeLink();
         ev.stopImmediatePropagation();
+        this.popover.hide();
+    }
+    /**
+     * Copy the link/anchor
+     * 
+     * @private
+     * @param {Event} ev
+     */
+    async _onCopyLinkClick(ev) {
+        ev.preventDefault();
+        await browser.navigator.clipboard.writeText(this.target.href);
+        this.$copyLink.tooltip('hide');
+        this.notify(_t("Link copied to clipboard."), {
+            type: 'success',
+        });
         this.popover.hide();
     }
 }

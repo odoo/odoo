@@ -18,6 +18,7 @@
             'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
         ],
         'spreadsheet.o_spreadsheet': [
+            'web/static/src/polyfills/clipboard.js',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/**/*.js',
             # Load all o_spreadsheet templates first to allow to inherit them
