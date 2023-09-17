@@ -7,10 +7,10 @@
 # Claudecir Garcia Martins, 2023
 # Lucas Borba, 2023
 # Bruno Pergher, 2023
-# Kevilyn Rosa, 2023
-# Layna Nascimento, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Kevilyn Rosa, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -413,7 +413,7 @@ msgstr ""
 "                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Quantidade</span></td>\n"
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
-"                        <t t-if=\"object.company_id.tax_calculation_rounding_method == 'round_per_line'\">\n"
+"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
 "                            Impostos não incl.\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
@@ -451,7 +451,7 @@ msgstr ""
 "                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tCurso sobre como cuidar de árvores</td>\n"
 "                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
-"                        <t t-if=\"object.company_id.tax_calculation_rounding_method == 'round_per_line'\">\n"
+"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
 "                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10,00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
