@@ -5,6 +5,7 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -24,12 +25,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "# Attendees"
-msgstr ""
+msgstr "參加者數目"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "# Completed"
-msgstr ""
+msgstr "已完成數目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
@@ -39,24 +40,24 @@ msgstr "#完成幻燈片"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "# Questions"
-msgstr ""
+msgstr "問題數目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 msgid "# Total Views"
-msgstr ""
+msgstr "總瀏覽次數"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "# Views"
-msgstr "#視圖"
+msgstr "瀏覽次數"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_count
 msgid "# of Embeds"
-msgstr ""
+msgstr "嵌入數目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
@@ -121,7 +122,7 @@ msgstr "<b>按序排列</b>"
 #, python-format
 msgid ""
 "<b>Save & Publish</b> your lesson to make it available to your attendees."
-msgstr "<b>保存並發佈</b>您的課程，以供與會者使用。"
+msgstr "<b>儲存並發佈</b>你的課程，以供你的參加者使用。"
 
 #. module: website_slides
 #. openerp-web
@@ -317,8 +318,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This document is private."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
-"label=\"Attention\" title=\"Attention\"/> 這份文件是私有的。"
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"注意\" "
+"title=\"注意\"/> 這是私人文件。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -337,9 +338,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
 " title=\"Infographic\"/>"
-msgstr ""
-"<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
-" title=\"Infographic\"/>"
+msgstr "<i class=\"fa fa-file-image-o mr-2\" aria-label=\"資訊圖\" role=\"img\" title=\"資訊圖\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -469,6 +468,8 @@ msgid ""
 "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>\n"
 "                                            Share"
 msgstr ""
+"<i class=\"fa fa-share-alt\" aria-label=\"分享\" title=\"分享\"/>\n"
+"                                            分享"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -714,12 +715,12 @@ msgstr "<span class=\"o_stat_text\">課程</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "<span class=\"o_stat_text\">Embed Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">嵌入檢視</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card_information_arrow
 msgid "<span class=\"o_wslides_arrow\">New Content</span>"
-msgstr "<span class=\"o_wslides_arrow\">新課程</span>"
+msgstr "<span class=\"o_wslides_arrow\">新內容</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
@@ -752,7 +753,7 @@ msgstr "<span class=\"text-muted font-weight-bold mr-3\">評分</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Attendees</span>"
-msgstr "<span class=\"text-muted\">與會者</span>"
+msgstr "<span class=\"text-muted\">參加者</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -849,7 +850,7 @@ msgstr "<span>問正確的問題</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Logic</span>"
-msgstr "<span>構思</span>"
+msgstr "<span>邏輯</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -880,13 +881,13 @@ msgstr "<span>×</span>"
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_report
 msgid "<strong>Create a course</strong>"
-msgstr ""
+msgstr "<strong>建立一個課程</strong>"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report
 msgid "<strong>No Attendees Yet!</strong>"
-msgstr ""
+msgstr "<strong>未有參加者。</strong>"
 
 #. module: website_slides
 #. openerp-web
@@ -908,17 +909,17 @@ msgstr "好的課程是有結構的。為您的第一個章節選擇一個名稱
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_file_type
 msgid "A resource of type file cannot contain a link."
-msgstr ""
+msgstr "檔案類型的資源，不可包含連結。"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_resource_check_url
 msgid "A resource of type url must contain a link."
-msgstr ""
+msgstr "網址（URL）類型的資源，必須包含連結。"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
 msgid "A slide is either filled with a url or HTML content. Not both."
-msgstr ""
+msgstr "投影片只可填寫網址，或以 HTML 編寫內容，不可兩者兼有。"
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_tag_slide_tag_unique
@@ -1091,7 +1092,7 @@ msgstr "特定投影片的額外資料"
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_advanced
 msgid "Advanced"
-msgstr "高級"
+msgstr "進階"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
@@ -1124,7 +1125,7 @@ msgstr "所有問題都必須回答！"
 msgid ""
 "Allow Attendees to like and comment your content and to submit reviews on "
 "your course."
-msgstr ""
+msgstr "允許參加者讚好及評論你的內容，以及提交對你課程的評價。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
@@ -1139,12 +1140,12 @@ msgstr "允許預覽"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Allow Reviews"
-msgstr ""
+msgstr "允許評價"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__allow_comment
 msgid "Allow rating on Course"
-msgstr "允許評分課程"
+msgstr "允許對課程評分"
 
 #. module: website_slides
 #. openerp-web
@@ -1306,7 +1307,7 @@ msgstr "參加者數量"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Attendees of %s"
-msgstr "與會者的"
+msgstr "%s 的參加者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
@@ -1321,7 +1322,7 @@ msgstr "平均評分"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Average Review"
-msgstr ""
+msgstr "平均評價"
 
 #. module: website_slides
 #. openerp-web
@@ -1341,7 +1342,7 @@ msgstr "徽章"
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_basic
 msgid "Basic"
-msgstr "基礎的"
+msgstr "基礎"
 
 #. module: website_slides
 #. openerp-web
@@ -1410,7 +1411,7 @@ msgstr "類別"
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Certifications"
-msgstr "證照"
+msgstr "認證"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_certification
@@ -1514,7 +1515,7 @@ msgstr "在您的電腦上選擇一個<b>檔案</b>"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Choose a PDF"
-msgstr ""
+msgstr "選擇 PDF 檔案"
 
 #. module: website_slides
 #. openerp-web
@@ -1528,7 +1529,7 @@ msgstr "選擇格式"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Choose an Image"
-msgstr ""
+msgstr "選擇一張圖片"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -1589,12 +1590,12 @@ msgstr "顏色索引"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "Come back later to check the feedbacks given by your Attendees."
-msgstr ""
+msgstr "請稍後回來，查看參加者回應的意見。"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "Come back later to oversee how well your Attendees are doing."
-msgstr ""
+msgstr "請稍後回來，監察參加者表現。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__comment
@@ -1673,7 +1674,7 @@ msgstr "完成"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
 msgid "Completion Notification"
-msgstr ""
+msgstr "課程完成通知"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -1800,6 +1801,8 @@ msgid ""
 "Content are the lessons that compose a course\n"
 "                    <br>and can be of different types (presentations, documents, videos, ...)."
 msgstr ""
+"「內容」是指構成一個課程的不同課節，\n"
+"                    <br>可以是不同類型的（例如：簡報、文件、影片等）。"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_slide_action
@@ -1832,7 +1835,7 @@ msgstr "複製連結"
 msgid ""
 "Could not find your video. Please check if your link is correct and if the "
 "video can be accessed."
-msgstr ""
+msgstr "找不到你的影片。請檢查連結是否正確，以及影片是否開放存取。"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -1900,12 +1903,12 @@ msgstr "課程名稱"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
 msgid "Course Type"
-msgstr ""
+msgstr "課程類型"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
 msgid "Course finished"
-msgstr "課程結束"
+msgstr "課程已完成"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -1957,17 +1960,17 @@ msgstr "創建"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
 msgid "Create a Content Tag"
-msgstr ""
+msgstr "建立內容標籤"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Create a Course Group"
-msgstr ""
+msgstr "建立課程組"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a community and let Attendees answer each others' questions."
-msgstr ""
+msgstr "建立社群，並讓參加者回答大家的問題。"
 
 #. module: website_slides
 #. openerp-web
@@ -2029,7 +2032,7 @@ msgstr "創建日期"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
 msgid "Custom HTML content for slides of category 'Article'."
-msgstr ""
+msgstr "文章類別投影片的自訂 HTML 內容。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
@@ -2055,32 +2058,32 @@ msgstr "通過選單定義的可見性挑戰"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Defines how people can enroll to your Course."
-msgstr ""
+msgstr "設定人們如何註冊你的課程。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__promote_strategy
 msgid "Defines the content that will be promoted on the course home page"
-msgstr ""
+msgstr "定義將在課程主頁上推廣的內容"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid ""
 "Defines the email your Attendees will receive each time you upload new "
 "content."
-msgstr ""
+msgstr "定義你每次上載新內容時，參加者將收到的電子郵件。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
 msgid ""
 "Defines the email your Attendees will receive once they reach the end of "
 "your course."
-msgstr ""
+msgstr "定義參加者完成課程後收到的電子郵件。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_visibility
 msgid "Defines who can access your courses and their content."
-msgstr ""
+msgstr "定義誰人可存取你的課程及其內容。"
 
 #. module: website_slides
 #. openerp-web
@@ -2197,7 +2200,7 @@ msgstr "文件"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__doc
 msgid "Document (Word, Google Doc, ...)"
-msgstr ""
+msgstr "文件（Word、Google 文件等）"
 
 #. module: website_slides
 #. openerp-web
@@ -2205,14 +2208,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_google_url
 #, python-format
 msgid "Document Link"
-msgstr ""
+msgstr "文件連結"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Document Source"
-msgstr ""
+msgstr "文件來源"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__documentation
@@ -2303,13 +2306,13 @@ msgstr "分享幻燈片時使用的信件模板"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
 msgid "Embed Code"
-msgstr "嵌入代碼"
+msgstr "嵌入程式碼"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_embed_action
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
 msgid "Embed Views"
-msgstr ""
+msgstr "嵌入檢視"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -2342,7 +2345,7 @@ msgstr "註冊信息"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Enroll Policy"
-msgstr "註冊策略"
+msgstr "註冊政策"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
@@ -2368,7 +2371,7 @@ msgstr "輸入您的<b>問題</b>，盡可能簡潔明了"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Estimated Completion Time"
-msgstr ""
+msgstr "預計完成時間"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -2379,27 +2382,27 @@ msgstr "評估和認證您的學生。"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Evaluate the knowledge of your Attendees and certify their skills."
-msgstr ""
+msgstr "評估參加者的知識，認證他們的技能。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
 msgid "External Embed Code"
-msgstr ""
+msgstr "外部嵌入程式碼"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_ids
 msgid "External Slide Embeds"
-msgstr ""
+msgstr "外部投影片嵌入"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "External URL"
-msgstr ""
+msgstr "外部網址"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_embed_view_tree
 msgid "External Website"
-msgstr ""
+msgstr "外部網站"
 
 #. module: website_slides
 #. openerp-web
@@ -2441,7 +2444,7 @@ msgstr "文件太大。文件大小不能超過 25 MB"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Filter &amp; order"
-msgstr "Filter &amp; order"
+msgstr "篩選及排序"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__copyvalue
@@ -2455,7 +2458,7 @@ msgstr "最終的佔位符表達式，可以複製粘貼到目標模板字段。
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "Finally you can click here to enjoy your content in fullscreen"
-msgstr ""
+msgstr "最後，你可按此處，以全螢幕觀賞內容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -2465,7 +2468,7 @@ msgstr "完成課程"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "First Try"
-msgstr ""
+msgstr "首次嘗試"
 
 #. module: website_slides
 #. openerp-web
@@ -2481,21 +2484,21 @@ msgstr "首先，創建您的課程，然後使用網站構建器進行編輯。
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid "First, let's add a <b>Document</b>. It has to be a .pdf file."
-msgstr ""
+msgstr "首先，我們加入一個<b>文件</b>。它必須是 PDF 檔案。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "First, upload the file on your Google Drive account."
-msgstr ""
+msgstr "首先，將檔案上載至你的 Google 雲端硬碟帳戶。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "First, upload your videos on Vimeo and mark them as"
-msgstr ""
+msgstr "首先，將你的影片上載至 Vimeo，並標記為"
 
 #. module: website_slides
 #. openerp-web
@@ -2537,7 +2540,7 @@ msgstr "論壇"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Fourth Try & More"
-msgstr ""
+msgstr "第四次嘗試或更多"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -2546,7 +2549,7 @@ msgstr ""
 #, python-format
 msgid ""
 "From here you'll be able to monitor attendees and to track their progress."
-msgstr ""
+msgstr "此處讓你能監察參加者學習情況，及追蹤他們的進度。"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_challenge
@@ -2599,12 +2602,12 @@ msgstr "Google Drive API 密鑰"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__google_drive_id
 msgid "Google Drive ID of the external URL"
-msgstr ""
+msgstr "外部網址 Google 雲端硬碟識別碼"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__google_drive_video
 msgid "Google Drive Video"
-msgstr ""
+msgstr "Google 雲端硬碟影片"
 
 #. module: website_slides
 #. openerp-web
@@ -2657,7 +2660,7 @@ msgstr "HTTP 路由"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 msgid "Has Menu Entry"
-msgstr ""
+msgstr "有選單項目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
@@ -2676,14 +2679,14 @@ msgstr "首頁"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How do I add new content?"
-msgstr ""
+msgstr "如何加入新內容？"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to create a Lesson as an Article?"
-msgstr ""
+msgstr "如何建立文章形式的課節？"
 
 #. module: website_slides
 #. openerp-web
@@ -2704,7 +2707,7 @@ msgstr "如何上傳您的影片？"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to use Google Drive?"
-msgstr ""
+msgstr "如何使用 Google 雲端硬碟？"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
@@ -2764,7 +2767,7 @@ msgstr "如果您想確保參加者已經理解並記住了內容，您可以在
 msgid ""
 "If you want to use other types of files, you may want to use an external "
 "source (Google Drive) instead."
-msgstr ""
+msgstr "若想使用其他類型文件，你可能需要改為使用外部來源（即 Google 雲端硬碟）。"
 
 #. module: website_slides
 #. openerp-web
@@ -2804,7 +2807,7 @@ msgstr "圖像 512"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_binary_content
 msgid "Image Content"
-msgstr ""
+msgstr "圖片內容"
 
 #. module: website_slides
 #. openerp-web
@@ -2812,19 +2815,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_google_url
 #, python-format
 msgid "Image Link"
-msgstr ""
+msgstr "圖片連結"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Image Source"
-msgstr ""
+msgstr "圖片來源"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographic
 msgid "Infographics"
-msgstr "信息圖"
+msgstr "資訊圖"
 
 #. module: website_slides
 #. openerp-web
@@ -2843,7 +2846,7 @@ msgstr "安裝 \"%s\"."
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
 msgid "Intermediate"
-msgstr "上手"
+msgstr "中級"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -2919,7 +2922,7 @@ msgstr "是正確的答案"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "It should look similar to"
-msgstr ""
+msgstr "它看起來應該類似"
 
 #. module: website_slides
 #. openerp-web
@@ -3046,7 +3049,7 @@ msgstr "最後更新時間"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__latest
 msgid "Latest Created"
-msgstr ""
+msgstr "最新建立"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
@@ -3111,25 +3114,25 @@ msgstr "連結"
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_google_url
 msgid ""
 "Link of the document (we currently only support Google Drive as source)"
-msgstr ""
+msgstr "文件連結（我們目前只支援 Google 雲端硬碟作為來源）"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__image_google_url
 msgid "Link of the image (we currently only support Google Drive as source)"
-msgstr ""
+msgstr "圖片連結（我們目前只支援 Google 雲端硬碟作為來源）"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__video_url
 msgid ""
 "Link of the video (we support YouTube, Google Drive and Vimeo as sources)"
-msgstr ""
+msgstr "影片連結（我們支援 YouTube、Google 雲端硬碟及 Vimeo 作為來源）"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Loading content..."
-msgstr ""
+msgstr "正在載入內容⋯"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
@@ -3264,7 +3267,7 @@ msgstr "我的活動截止時間"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "My Content"
-msgstr ""
+msgstr "我的內容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3304,7 +3307,7 @@ msgstr "新認證"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "New Content Notification"
-msgstr ""
+msgstr "新內容通知"
 
 #. module: website_slides
 #. openerp-web
@@ -3317,7 +3320,7 @@ msgstr "新課程"
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid ""
 "New {{ object.slide_category }} published on {{ object.channel_id.name }}"
-msgstr ""
+msgstr "新的 {{ object.slide_category }} 已在 {{ object.channel_id.name }} 發佈"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3372,13 +3375,13 @@ msgstr "否"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "No Attendee has completed this course yet!"
-msgstr ""
+msgstr "尚未有參加者完成本課程！"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "No Attendees Yet!"
-msgstr ""
+msgstr "未有參加者。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -3389,17 +3392,17 @@ msgstr "尚未創建課程。"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "No Notification"
-msgstr ""
+msgstr "沒有通知"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "No Quiz data yet!"
-msgstr ""
+msgstr "未有測驗數據。"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "No Reviews yet!"
-msgstr ""
+msgstr "未有評價。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -3479,12 +3482,12 @@ msgstr "行動數量"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_article
 msgid "Number of Articles"
-msgstr ""
+msgstr "文章數目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_slides
 msgid "Number of Contents"
-msgstr ""
+msgstr "內容數目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_document
@@ -3494,7 +3497,7 @@ msgstr "文件數量"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_infographic
 msgid "Number of Images"
-msgstr ""
+msgstr "圖片數目"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
@@ -3556,7 +3559,7 @@ msgstr "主管"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "On Google Drive"
-msgstr ""
+msgstr "在 Google 雲端硬碟"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__invite
@@ -3568,14 +3571,14 @@ msgstr "應邀"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "On Vimeo"
-msgstr ""
+msgstr "在 Vimeo"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "On YouTube"
-msgstr ""
+msgstr "在 YouTube"
 
 #. module: website_slides
 #. openerp-web
@@ -3618,12 +3621,12 @@ msgstr "PDF"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_binary_content
 msgid "PDF Content"
-msgstr ""
+msgstr "PDF 內容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Paid Courses"
-msgstr ""
+msgstr "已付費課程"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_id
@@ -3700,13 +3703,13 @@ msgstr "請 <a href=\"/web/signup?redirect=%s\">創建帳戶</a> 投票這一課
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Please enter a valid Vimeo video link"
-msgstr ""
+msgstr "請輸入有效的 Vimeo 影片連結"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Please enter valid Google Drive Link"
-msgstr ""
+msgstr "請輸入有效的 Google 雲端硬碟連結"
 
 #. module: website_slides
 #. openerp-web
@@ -3731,7 +3734,7 @@ msgstr "請至少選擇一位收件人。"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Points Rewards"
-msgstr ""
+msgstr "積分獎勵"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
@@ -3815,7 +3818,7 @@ msgstr "已發佈"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Published Contents"
-msgstr ""
+msgstr "已發佈內容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4050,7 +4053,7 @@ msgstr "資源"
 #, python-format
 msgid ""
 "Resource %(resource_name)s is a link and should not contain a data file"
-msgstr ""
+msgstr "資源 %(resource_name)s 是一個連結，不應包含數據檔案"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__resource_type
@@ -4091,7 +4094,7 @@ msgstr "限制發佈到此網站。"
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__external
 #, python-format
 msgid "Retrieve from Google Drive"
-msgstr ""
+msgstr "從 Google 雲端硬碟讀取"
 
 #. module: website_slides
 #. openerp-web
@@ -4120,7 +4123,7 @@ msgstr "複習課程"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_tree_slide_channel
 msgid "Review Date"
-msgstr ""
+msgstr "評價日期"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel
@@ -4181,7 +4184,7 @@ msgstr "簡訊發送錯誤"
 #: model:ir.model.fields,help:website_slides.field_slide_slide__embed_code_external
 msgid ""
 "Same as 'Embed Code' but used to embed the content on an external website."
-msgstr ""
+msgstr "與「嵌入程式碼」相同，但用於將內容嵌入到外部網站上。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -4243,7 +4246,7 @@ msgstr "搜尋的內容"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Second Try"
-msgstr ""
+msgstr "第二次嘗試"
 
 #. module: website_slides
 #. openerp-web
@@ -4270,7 +4273,7 @@ msgstr "安全指示物"
 #: code:addons/website_slides/models/res_users.py:0
 #, python-format
 msgid "See our eLearning"
-msgstr ""
+msgstr "看看我們的網上學習平台"
 
 #. module: website_slides
 #. openerp-web
@@ -4282,7 +4285,7 @@ msgstr "選擇<b>課程</b>來創建與管理。"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
 msgid "Select Manually"
-msgstr ""
+msgstr "手動選擇"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -4308,7 +4311,7 @@ msgstr "選擇以下正確答案："
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Sell access to your courses on your website and track revenues."
-msgstr ""
+msgstr "在你的網站上銷售你課程的存取權限，並追蹤收入。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
@@ -4426,7 +4429,7 @@ msgstr "分享於Twitter"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__sheet
 msgid "Sheet (Excel, Google Sheet, ...)"
-msgstr ""
+msgstr "試算表（Excel、Google 試算表等）"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_short
@@ -4495,7 +4498,7 @@ msgstr "幻燈片標籤"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 msgid "Slide Type"
-msgstr ""
+msgstr "投影片類型"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
@@ -4531,7 +4534,7 @@ msgstr "幻燈片"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__slides
 msgid "Slides (PowerPoint, Google Slides, ...)"
-msgstr ""
+msgstr "投影片（PowerPoint、Google 簡報等）"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
@@ -4546,7 +4549,7 @@ msgstr "排序"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__source_type
 msgid "Source Type"
-msgstr ""
+msgstr "來源類型"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -4628,7 +4631,7 @@ msgstr "訂閱者信息"
 msgid ""
 "Subtype of the slide category, allows more precision on the actual file type"
 " / source type."
-msgstr ""
+msgstr "投影片類別的子類型，可讓實際檔案類型 / 來源類型的分類更精確。"
 
 #. module: website_slides
 #. openerp-web
@@ -4734,7 +4737,7 @@ msgstr "<b>您的課程標題</b>是自動完成的，但您可以根據需要�
 msgid ""
 "The Google Drive link can be obtained by using the 'share' button in the "
 "Google interface."
-msgstr ""
+msgstr "可使用 Google 介面的「分享」按鈕，獲取 Google 雲端硬碟連結。"
 
 #. module: website_slides
 #. openerp-web
@@ -4743,7 +4746,7 @@ msgstr ""
 msgid ""
 "The Google Drive link to use here can be obtained by clicking the \"Share\" "
 "button in the Google interface."
-msgstr ""
+msgstr "此處使用的 Google 雲端硬碟連結，可在 Google 介面按「分享」按鈕獲取。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
@@ -4791,14 +4794,14 @@ msgstr "通過網站訪問單據的完整網址。"
 msgid ""
 "The video link to input here can be obtained by using the 'share' button in "
 "the Vimeo interface."
-msgstr ""
+msgstr "此處輸入的影片連結，可在 Vimeo 介面使用「分享」按鈕獲得。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
-msgstr ""
+msgstr "然後，前往文件權限，將其設為「任何擁有連結的人」。"
 
 #. module: website_slides
 #. openerp-web
@@ -4815,7 +4818,7 @@ msgstr "第三方網站網址"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Third Try"
-msgstr ""
+msgstr "第三次嘗試"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_answer__comment
@@ -4854,7 +4857,7 @@ msgstr "這個測驗已經做完了, 重新開始是不可能的。"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "This video already exists in this channel on the following content: %s"
-msgstr ""
+msgstr "頻道已存在此影片，有關內容如下： %s"
 
 #. module: website_slides
 #. openerp-web
@@ -4864,6 +4867,8 @@ msgid ""
 "Through Google Drive, we support most common types of documents.\n"
 "                                        Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
 msgstr ""
+"我們透過 Google 雲端硬碟，支援最常見的文件類型。\n"
+"                                        包括一般文書（Google 文件、.docx）、試算表（Google 試算表、.xlsx）、PowerPoint 簡報等。"
 
 #. module: website_slides
 #. openerp-web
@@ -4873,7 +4878,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 #, python-format
 msgid "Title"
-msgstr "稱謂"
+msgstr "標題"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -4890,12 +4895,12 @@ msgstr "總計"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Total Attendees"
-msgstr ""
+msgstr "參加者總數"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Total Completed"
-msgstr ""
+msgstr "已完成總數"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
@@ -4906,7 +4911,7 @@ msgstr "總時長"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_tree_report
 msgid "Total Questions"
-msgstr ""
+msgstr "問題總數"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_slides
@@ -4946,13 +4951,13 @@ msgstr "記錄的例外活動型別。"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "URL of the Google Drive file or URL of the YouTube video"
-msgstr ""
+msgstr "Google 雲端硬碟檔案或 YouTube 影片的網址"
 
 #. module: website_slides
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "無法發佈信件，請配置發件人的EMail地址。"
+msgstr "未能張貼訊息。請配置發件人電郵地址。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -4966,7 +4971,7 @@ msgstr "未歸類"
 #: code:addons/website_slides/models/slide_embed.py:0
 #, python-format
 msgid "Unknown Website"
-msgstr ""
+msgstr "未知網站"
 
 #. module: website_slides
 #. openerp-web
@@ -5011,7 +5016,7 @@ msgstr "更新"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Update all your Attendees at once through mass mailings."
-msgstr ""
+msgstr "使用群發電郵，即時同步通知所有參加者。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5031,7 +5036,7 @@ msgstr "上傳組"
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__local_file
 #, python-format
 msgid "Upload from Device"
-msgstr ""
+msgstr "從裝置上載"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
@@ -5043,17 +5048,17 @@ msgstr "上傳者"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Uploading document ..."
-msgstr "上傳文件中..."
+msgstr "正在上載文件⋯"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
 msgid "Use Content Tags to classify your Content."
-msgstr ""
+msgstr "使用內容標籤，對你的內容進行分類。"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Use Course Groups to classify and organize your Courses."
-msgstr ""
+msgstr "使用課程組別，整理你的課程並加以分類。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -5104,17 +5109,17 @@ msgstr "影片連結"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__video_source_type
 msgid "Video Source"
-msgstr ""
+msgstr "影片來源"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__vimeo_id
 msgid "Video Vimeo ID"
-msgstr ""
+msgstr "影片 Vimeo 識別碼"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__youtube_id
 msgid "Video YouTube ID"
-msgstr ""
+msgstr "影片 YouTube 識別碼"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_video
@@ -5158,7 +5163,7 @@ msgstr "Vimeo"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__vimeo_video
 msgid "Vimeo Video"
-msgstr ""
+msgstr "Vimeo 影片"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
@@ -5274,7 +5279,7 @@ msgstr "歡迎訪問您的課程主頁。目前它仍然是空的。點選<b>新
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
-msgstr "What does"
+msgstr "什麼會"
 
 #. module: website_slides
 #. openerp-web
@@ -5282,7 +5287,7 @@ msgstr "What does"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What types of documents do we support?"
-msgstr ""
+msgstr "我們支援哪些類型文件？"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_model_object_field
@@ -5303,7 +5308,7 @@ msgstr "如果關係型字段被選為第一個字段，這個字段顯示這個
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "When using local files, we only support PDF files."
-msgstr ""
+msgstr "若使用本地文件，我們只支援 PDF 檔案。"
 
 #. module: website_slides
 #. openerp-web
@@ -5338,7 +5343,7 @@ msgstr "是"
 msgid ""
 "You are not allowed to add members to this course. Please contact the course"
 " responsible or an administrator."
-msgstr ""
+msgstr "你不可將新成員加入至此課程。請聯絡課程負責人或系統管理員。"
 
 #. module: website_slides
 #. openerp-web
@@ -5352,7 +5357,7 @@ msgstr "您可以對答案<b>添加評論。</b>如果用戶選擇此答案，�
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "You can add questions to this quiz in the 'Quiz' tab."
-msgstr ""
+msgstr "可在「測驗」分頁中，新增問題至此測驗。"
 
 #. module: website_slides
 #. openerp-web
@@ -5381,20 +5386,20 @@ msgstr "您不能為此課程添加標籤。"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
-msgstr "如果您不是其成員，則無法將幻燈片標記為已完成。"
+msgstr "非成員不可將投影片標記為已完成。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr "如果您不是其成員之一，則無法將幻燈片標記為已查看。"
+msgstr "非成員不可將投影片標記為已觀看。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members."
-msgstr "如果您不是其成員之一，則無法將幻燈片測驗標記為已完成。"
+msgstr "非成員不可將投影片測驗標記為已完成。"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -5481,7 +5486,7 @@ msgstr "YouTube"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__youtube_video
 msgid "YouTube Video"
-msgstr ""
+msgstr "YouTube 影片"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -5500,6 +5505,8 @@ msgid ""
 "Your eLearning platform starts here!<br>\n"
 "                    Upload content, set up rewards, manage attendees..."
 msgstr ""
+"你的電子學習平台從這裏開始！<br>\n"
+"                    上載內容、設立獎勵、管理參加者⋯"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5507,7 +5514,7 @@ msgstr ""
 msgid ""
 "Your file could not be found on Google Drive, please check the link and/or "
 "privacy settings"
-msgstr ""
+msgstr "在 Google 雲端硬碟上找不到你的文件。請檢查連結及/或私隱設定"
 
 #. module: website_slides
 #. openerp-web
@@ -5517,7 +5524,7 @@ msgid ""
 "Your first section is created, now it's time to add lessons to your course. "
 "Click on <b>Add Content</b> to upload a document, create an article or link "
 "a video."
-msgstr ""
+msgstr "你已建立第一個章節，現在是時候向你的課程加入課節了。請按「<b>新增內容</b>」以上載文件、建立文章，或插入影片連結。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5525,7 +5532,7 @@ msgstr ""
 msgid ""
 "Your video could not be found on Vimeo, please check the link and/or privacy"
 " settings"
-msgstr ""
+msgstr "在 Vimeo 上找不到你的影片，請檢查連結及/或私隱設定"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5534,7 +5541,7 @@ msgstr ""
 msgid ""
 "Your video could not be found on YouTube, please check the link and/or "
 "privacy settings"
-msgstr ""
+msgstr "在 YouTube 上找不到你的影片，請檢查連結及/或私隱設定"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
@@ -5545,7 +5552,7 @@ msgstr "達到"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "and join this Community"
-msgstr ""
+msgstr "並加入此社群"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -5567,31 +5574,31 @@ msgstr "通過電子信件。"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "e.g \"https://drive.google.com/file/...\""
-msgstr ""
+msgstr "例：https://drive.google.com/file/…"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "e.g \"https://www.youtube.com/watch?v=ebBez6bcSEc\""
-msgstr ""
+msgstr "例：https://www.youtube.com/watch?v=ebBez6bcSEc"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g \"www.youtube.com/watch?v=ebBez6bcSEc\""
-msgstr ""
+msgstr "例：www.youtube.com/watch?v=ebBez6bcSEc"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 msgid "e.g 'HowTo'"
-msgstr ""
+msgstr "例：技巧教學"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "e.g. \"15\""
-msgstr ""
+msgstr "例：15"
 
 #. module: website_slides
 #. openerp-web
@@ -5599,21 +5606,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "e.g. \"Computer Science for kids\""
-msgstr ""
+msgstr "例：兒童計算機科學"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "e.g. \"Introduction\""
-msgstr ""
+msgstr "例：入門簡介"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
-msgstr ""
+msgstr "例：甚麼動物不會飛？"
 
 #. module: website_slides
 #. openerp-web
@@ -5635,7 +5642,7 @@ msgstr "例如: 在本視頻中，我們將向您介紹Odoo如何幫助您拓展
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. Setting up your computer"
-msgstr ""
+msgstr "例：設置你的電腦"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
@@ -5669,14 +5676,14 @@ msgstr "電子教學課程概覽"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for 'Private' videos and similar to"
-msgstr ""
+msgstr "for 'Private' videos and similar to"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "for public ones."
-msgstr ""
+msgstr "for public ones."
 
 #. module: website_slides
 #. openerp-web
@@ -5685,21 +5692,21 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
-msgstr ""
+msgstr "https://drive.google.com/file/d/ABC/view?usp=sharing"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907333/30da9ff3d8"
-msgstr ""
+msgstr "https://vimeo.com/558907333/30da9ff3d8"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://vimeo.com/558907555"
-msgstr ""
+msgstr "https://vimeo.com/558907555"
 
 #. module: website_slides
 #. openerp-web
@@ -5717,6 +5724,8 @@ msgid ""
 "mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
+"是甚麼意思？ － Vimeo 的「私人」私隱設定選項，是指影片只能由擁有連結的用戶觀看。\n"
+"                                    該影片永遠不會出現在搜尋結果或你的頻道中。"
 
 #. module: website_slides
 #. openerp-web
@@ -5726,7 +5735,8 @@ msgid ""
 "means? The YouTube \"unlisted\" means it is a video which can be viewed only"
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
-msgstr "方法？ YouTube“不公開”意味著它是一個只能由擁有連結的用戶觀看的視頻。您的視頻永遠不會出現在搜索結果或您的頻道中。"
+msgstr ""
+"是甚麼意思？ － YouTube 的「不公開列出」私隱設定選項，是指影片只能由擁有連結的用戶觀看。該影片永遠不會出現在搜尋結果或你的頻道中。"
 
 #. module: website_slides
 #. openerp-web
@@ -5756,7 +5766,7 @@ msgstr "聯繫負責人。"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 msgid "to access resources"
-msgstr ""
+msgstr "以存取學習資源"
 
 #. module: website_slides
 #. openerp-web
@@ -5779,7 +5789,7 @@ msgstr "分享這個"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "unlisted"
-msgstr ""
+msgstr "不公開列出"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -5799,7 +5809,7 @@ msgstr "your-friend@domain.com"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr ""
+msgstr "{{ user.name }} 向你分享了 {{ object.slide_category }}！"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
