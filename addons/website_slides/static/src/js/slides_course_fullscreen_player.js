@@ -12,6 +12,7 @@
     import Dialog from '@web/legacy/js/core/dialog';
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+    import { browser } from '@web/core/browser/browser';
 
     import { markup } from "@odoo/owl";
 
@@ -439,25 +440,13 @@
             window.open(popUpURL, 'Share Dialog', 'width=626,height=436');
         },
 
-        _onShareLinkCopy: function (ev) {
+        _onShareLinkCopy: async function (ev) {
             ev.preventDefault();
             var $clipboardBtn = this.$('.o_clipboard_button');
             $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-            var self = this;
-            var clipboard = new ClipboardJS('.o_clipboard_button', {
-                target: function () {
-                    return self.$('.o_wslides_js_share_link')[0];
-                },
-                container: this.el
-            });
-            clipboard.on('success', function () {
-                clipboard.destroy();
-                $clipboardBtn.tooltip('show');
-                setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
-            });
-            clipboard.on('error', function (e) {
-                clipboard.destroy();
-            })
+            await browser.navigator.clipboard.writeText(this.$('.o_wslides_js_share_link')[0].innerText);    
+            $clipboardBtn.tooltip('show');
+            setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
         },
 
     });

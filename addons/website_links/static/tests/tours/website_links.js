@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 
 registry.category("web_tour.tours").add('website_links_tour', {
     test: true,
@@ -21,7 +22,11 @@ registry.category("web_tour.tours").add('website_links_tour', {
                 $('.o_website_links_utm_forms input#campaign-select').val(1).change();
                 $('.o_website_links_utm_forms input#channel-select').val(1).change();
                 $('.o_website_links_utm_forms input#source-select').val(1).change();
+                // Patch and ignore write on clipboard in tour as we don't have permissions
+                const oldWriteText = browser.navigator.clipboard.writeText;
+                browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
                 $('#btn_shorten_url').click();
+                browser.navigator.clipboard.writeText = oldWriteText;
             },
         },
         // 2. Visit it

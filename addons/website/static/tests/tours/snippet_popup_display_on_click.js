@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import wTourUtils from "@website/js/tours/tour_utils";
+import { browser } from "@web/core/browser/browser";
 
 wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     test: true,
@@ -20,14 +21,11 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         trigger: "#oe_snippets we-button[data-name='onclick_opt']",
         in_modal: false,
         run() {
-            // The clipboard cannot be accessed from a script.
-            // https://w3c.github.io/editing/docs/execCommand/#dfn-the-copy-command
-            // The execCommand is patched for that step so that ClipboardJS still
-            // sends the "success" event.
-            const oldExecCommand = document.execCommand;
-            document.execCommand = () => true;
+            // Patch and ignore write on clipboard in tour as we don't have permissions
+            const oldWriteText = browser.navigator.clipboard.writeText;
+            browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
             this.$anchor[0].click();
-            document.execCommand = oldExecCommand;
+            browser.navigator.clipboard.writeText = oldWriteText;
         }
     },
     {
