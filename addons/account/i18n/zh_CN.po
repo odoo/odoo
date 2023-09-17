@@ -3290,6 +3290,15 @@ msgstr "不能生成未使用的科目代码。"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -4418,7 +4427,7 @@ msgstr "贷项凭单"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only send sales documents"
-msgstr ""
+msgstr "您只能发送销售文档"
 
 #. module: account
 #. odoo-python
@@ -8936,7 +8945,7 @@ msgstr "无银行匹配"
 #: code:addons/account/controllers/download_edi_docs.py:0
 #, python-format
 msgid "No EDI documents found for export."
-msgstr ""
+msgstr "未找到可供导出的 EDI 文件。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -10862,7 +10871,7 @@ msgstr "重新载入"
 msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
 " This action is irreversible."
-msgstr ""
+msgstr "如果发现不一致，请重新载入会计数据（税款、账户等）。此操作不可撤回。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -13208,7 +13217,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "分录未能过账，原因：%(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -13894,7 +13903,7 @@ msgstr "该分录在以下会计日期发布：%(date)s"
 #: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "此操作会令序列间断。"
 
 #. module: account
 #. odoo-python

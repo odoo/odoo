@@ -16,12 +16,12 @@
 # Mateus Lopes <mateus1@gmail.com>, 2023
 # ff68f1f9b02a0effe4204ba86a8b106e_92c9ca6, 2023
 # lucas LucasLc7, 2023
-# Éder Brito <britoederr@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Kevilyn Rosa, 2023
 # adrianojprado <adrianojprado@gmail.com>, 2023
 # Layna Nascimento, 2023
+# Éder Brito <britoederr@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-04 14:39+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1333,13 +1333,14 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created: %s"
-msgstr ""
+msgstr "Um pagamento secundário foi criado: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
 msgstr ""
+"Um pagamento secundário será criado automaticamente no diário de destino."
 
 #. module: account
 #. odoo-python
@@ -2122,6 +2123,9 @@ msgid ""
 "cancelling {percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Entradas de Ajustes foram criadas para esta fatura:<ul><li>%(link1)s "
+"cancelando {percent:.2f}%% de {amount}</li><li>%(link0)s adiando para "
+"{new_date}</li></ul>"
 
 #. module: account
 #. odoo-python
@@ -2131,6 +2135,8 @@ msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"Entrada de Ajuste para {link}: {percent:.2f}% de {amount} reconhecida em "
+"{new_date}"
 
 #. module: account
 #. odoo-python
@@ -2139,6 +2145,8 @@ msgstr ""
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
 msgstr ""
+"Entrada de Ajuste {link}: {percent:.2f}% de {amount} reconhecida a partir de"
+" {date}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -3376,6 +3384,17 @@ msgstr "Não é possível gerar um código de conta não utilizada."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+"Não foi possível gerar um código de diário não utilizado. Por favor, altere "
+"o nome para o diário %s."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -3680,7 +3699,7 @@ msgstr "Plano de contas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of accounts set."
-msgstr ""
+msgstr "Plano de contas definido."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -7452,7 +7471,7 @@ msgstr "Transferência interna"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_id
 msgid "Internal Transfer Account"
-msgstr ""
+msgstr "Conta de transferência interna"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
@@ -8144,12 +8163,12 @@ msgstr "Nome do Diário"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments Account"
-msgstr ""
+msgstr "Conta de pagamentos pendentes do diário"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts Account"
-msgstr ""
+msgstr "Conta de recebimentos pendentes do diário"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
@@ -11050,7 +11069,7 @@ msgstr "Tipo de faturas reconciliadas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled Items"
-msgstr ""
+msgstr "Itens reconciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -11201,6 +11220,8 @@ msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
 " This action is irreversible."
 msgstr ""
+"Recarregue os dados financeiros (impostos, contas...) caso notar "
+"inconsistências. Esta ação é irreversível."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -14361,7 +14382,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been duplicated from %s%s"
-msgstr ""
+msgstr "A entrada foi duplicada a partir de %s%s"
 
 #. module: account
 #. odoo-python
@@ -14467,7 +14488,7 @@ msgstr "Esta operação criará uma lacuna na sequência."
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
-msgstr ""
+msgstr "O pagamento foi criado a partir de %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15714,7 +15735,7 @@ msgstr "Você só pode alterar o período/conta para itens de diário lançados.
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "You can only print the original document for purchase documents."
-msgstr ""
+msgstr "Você só pode imprimir o documento original para documentos de compra"
 
 #. module: account
 #. odoo-python
@@ -16852,14 +16873,14 @@ msgstr "{label}: lançamento de ajuste de {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% reconhecido em {new_date}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"
-msgstr ""
+msgstr "{percent:0.2f}% para reconhecer em {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
