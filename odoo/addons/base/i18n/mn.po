@@ -17,9 +17,9 @@
 # baaska sh <sh.baaskash@gmail.com>, 2020
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2020
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
-# hish, 2022
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
 # Bayarkhuu Bataa, 2023
+# hish, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Bayarkhuu Bataa, 2023\n"
+"Last-Translator: hish, 2023\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13020,6 +13020,15 @@ msgid "Error message returned when the constraint is violated."
 msgstr ""
 
 #. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -15981,6 +15990,18 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Буруу 'бүлэглэх' параметр"
+
+#. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -22678,7 +22699,7 @@ msgstr "Борлуулалт"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "Борлуулалт, Худалдан авалт"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
@@ -27334,6 +27355,12 @@ msgstr ""
 " боломжгүй."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -27354,6 +27381,12 @@ msgstr "Та хэрэглэгчийн сонгосон хэлийг устгах
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "Эцэг хаягтай нь холбох хаягийг нэгтгэж болохгүй."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

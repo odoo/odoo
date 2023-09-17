@@ -24,8 +24,8 @@
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2142,6 +2142,44 @@ msgid ""
 "\n"
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Aggiunge un nuovo modello chiamato \"Tipo di identificazione\" che estende la funzionalità del campo IVA del partner e permette all'utente di identificare (ed eventualmente fatturare) i contatti non solo attraverso il numero di identificazione fiscale (IVA) ma anche con altri tipi di identificazione come documenti nazionali, passaporto, permesso di soggiorno, ecc. Dopo aver installato questo modulo, nel modulo partner troverai due nuovi campi:\n"
+"\n"
+"*Tipo di identificazione\n"
+"*Numero di identificazione\n"
+"\n"
+"Si tratta di un requisito comune per alcuni Paesi LATAM come Argentina e Cile. Se la tua localizzazione possiede questi requisiti hai bisogno di utilizzare questo modulo e indicare nel tuo modulo di localizzazione i tipi di identificazione utilizzati nel tuo Paese. Generalmente tali tipi di identificazione sono definiti dalle autorità governative che regolano le operazioni fiscali. Ad esempio:\n"
+"\n"
+"*AFIP in Argentina indica DNI, CUIT (IVA per enti giuridici), CUIL (IVA per persone fisiche) e altri 80 tipi di identificazione validi.\n"
+"\n"
+"Ogni identificazione presenta le seguenti informazioni:\n"
+"\n"
+"*name: nome breve per l'identificazione\n"
+"*description: può essere lo stesso nome o un nome più lungo\n"
+"*country_id: il Paese a cui appartiene il tipo di identificazione\n"
+"*is_vat: identifica il valore come l'IVA corrispondente al Paese specifico.\n"
+"*sequence: permette di classificare i tipi di identificazione in base a quelli più utilizzati.\n"
+"*active: è possibile attivare/disattivare le identificazioni per facilitare i clienti\n"
+"\n"
+"Al fine di rendere il modulo compatibile con ambienti multiaziendali dove sono presenti aziende che non hanno bisogno o non supportano tale requisito abbiamo aggiunto tipi di identificazione generici e regole generiche per gestire le informazioni di contatto e rendere il tutto trasparente per l'utente durante l'utilizzo della sola IVA.\n"
+"\n"
+"Identificazioni generiche:\n"
+"\n"
+"*IVA: il codice di identificazione fiscale o numero di partita IVA, verrà selezionato in maniera predefinita come tipo di identificazione così l'utente avrà solo bisogno di aggiunere il numero corrispondente.\n"
+"*Passaporto\n"
+"*Permesso di soggiorno (Documento valido)\n"
+"\n"
+"Regole creazione nuovo partner: vedremo solamente i tipi di identificazione significativi, tenendo in considerazioni le seguenti regole:\n"
+"\n"
+"*Se il partner non presenta un indirizzo: verranno mostrati i tipi di identificazione generici oltre a quelli definiti nel Paese dell'azienda del partner (se il partner non ha un'azienda specifica, verranno mostrati i tipi di identificazione relativi all'azienda dell'utente corrente.)\n"
+"\n"
+"*Se il partner presenta un indirizzo: verranno mostrati i tipi di identificazione generici più quelli indicati dal Paese del partner.\n"
+"\n"
+"Quando si crea una nuova azienda, per il partner verrà configurato sempre il tipo di identificazione is_vat relativo al paese.\n"
+"\n"
+"Tutti i tipi di identificazione indicati possono essere revisionati e attivati/disattivati dal menu \"Contatti/Configurazione/Tipo di identificazione\".\n"
+"\n"
+"Questo modulo è compatibile con il modulo base_vat per poter convalidare i numeri di partita IVA per ogni Paese che ha o meno la possibilità di gestire più tipi di identificazione.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -2345,6 +2383,20 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Abilita i pagamenti con POS via carta di credito\n"
+"==============================\n"
+"\n"
+"Questo modulo permette ai clienti di pagare i propri ordini tramite carte\n"
+"di credito. Le transazioni sono elaborate da Vantiv (sviluppato da Wells\n"
+"Fargo Bank). È necessario un conto per esercenti Vantiv che permette\n"
+":\n"
+"\n"
+"*di effettuare pagamenti più veloci passando la carta di credito sullo schermata di pagamento\n"
+"*di combinare i pagamenti in contanti ai pagamenti via carte di credito\n"
+"*Cashback\n"
+"*Carte supportate: Visa, MasterCard, American Express, Discover\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -3053,6 +3105,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Piano contabile per il Venezuela.\n"
+"===============================\n"
+"\n"
+"Il Venezuela non presenta piani contabili stabiliti per legge ma , but the default\n"
+"proposed in Odoo should comply with some Accepted best practices in Venezuela,\n"
+"this plan comply with this practices.\n"
+"\n"
+"This module has been tested as base for more of 1000 companies, because\n"
+"it is based in a mixtures of most common software in the Venezuelan\n"
+"market what will allow for sure to accountants feel them first steps with\n"
+"Odoo more comfortable.\n"
+"\n"
+"This module doesn't pretend be the total localization for Venezuela,\n"
+"but it will help you to start really quickly with Odoo in this country.\n"
+"\n"
+"This module give you.\n"
+"---------------------\n"
+"\n"
+"- Basic taxes for Venezuela.\n"
+"- Have basic data to run tests with community localization.\n"
+"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+"\n"
+"We recomend use of account_anglo_saxon if you want valued your\n"
+"stocks as Venezuela does with out invoices.\n"
+"\n"
+"If you install this module, and select Custom chart a basic chart will be proposed,\n"
+"but you will need set manually account defaults for taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3682,6 +3762,15 @@ msgid ""
 "governements, etc.)\n"
 "    "
 msgstr ""
+"\n"
+"Interscambio dati elettronici\n"
+"=======================================\n"
+"Con EDI si intende l'interscambio elettronico di informazioni aziendali utilizzando un formato predefinito.\n"
+"\n"
+"Questo è il modulo base per l'importazione e l'esportazione delle fatture in vari formati EDI e la\n"
+"trasmissioni di tali documenti alle varie parti coinvolte nello scambio (altre aziende,\n"
+"governi, ecc.)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -5487,6 +5576,13 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
+"\n"
+"Widget organigramma per risorse umane\n"
+"=======================\n"
+"\n"
+"Questo modulo estende il modulo dipendente con un organigramma.\n"
+"(N+1, N+2, subordinazioni dirette)\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -5897,6 +5993,12 @@ msgid ""
 "speakers..\n"
 "        "
 msgstr ""
+"\n"
+"Marketing via SMS per i partecipanti di un evento\n"
+"=====================================\n"
+"\n"
+"Modulo ponte che aggiunge i requisiti UX per facilitare il marketing via SMS per i partecipanti di un evento.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -7950,6 +8052,20 @@ msgid ""
 "can setup API keys to replace their main password.\n"
 "    "
 msgstr ""
+"\n"
+"Autenticazione a due fattori (TOTP)\n"
+"================================\n"
+"Permette agli utenti di configurare l'autenticazione a due fattori sull'account utente\n"
+"per maggior sicurezza attraverso l'utiizzo di time-based one-time passwords (TOTP).\n"
+"\n"
+"Una volta abilitata, l'utente dovrà inserire un codice a 6 cifre come previsto\n"
+"dalla loro app di autenticazione prima di ottenere l'accesso al sistema.\n"
+"Tutte le app di autenticazione popolari sono supportate.\n"
+"\n"
+"Nota: ovviamente, i due fattori evitano l'accesso RPC basato su password per gli utenti\n"
+"dove abilitata. Per essere in grado di abilitare gli script RPC, l'utente\n"
+"può configurare le chiavi API per sostituire le password principali.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -12372,6 +12488,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Colleen Diaz lavora nel settore informatico <b>da 10 anni</b>. In particolare,\n"
+"                è conosciuto per la vendita di trappole per topi. Grazie a questo trucco ha ridotto\n"
+"                il budget informatico di almeno la metà negli utimi due anni."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -14578,6 +14697,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Douglas Fletcher lavora nel settore dell'informatica <b>da 10 anni</b>. È famoso\n"
+"    in particolare per la vendita di trappole per topi. Grazie a questo trucco ha ridotto\n"
+"    il budget informatico di almeno la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -16561,6 +16683,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"Gordon Owens lavora nel settore dell'informatica <b>da 10 anni</b>. È conosciuto\n"
+"                in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
+"                il budget IT di quasi la metà negli ultimi due anni.\n"
+"                Famoso consulente senior."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -18081,6 +18207,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Parametro \"raggruppa per\" non valido"
+
+#. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
