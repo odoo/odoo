@@ -130,6 +130,8 @@ msgstr "Annulla"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
+"Fai clic su \"Riprendi\" per proseguire con l'importazione, ricominciando "
+"dalla riga %s."
 
 #. module: base_import
 #. odoo-python
@@ -267,6 +269,20 @@ msgstr "Errore nell'analisi della data [%s:L%d]: %s"
 #, python-format
 msgid "Error at row %s: \"%s\""
 msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Si è verificato un errore durante l'importazione delle registrazioni: tutte "
+"le righe devono avere le stesse dimensioni ma la riga corrispondente al "
+"titolo ha %d voci mentre la prima riga ha %d. È necessario modificare il "
+"carattere separatore."
 
 #. module: base_import
 #. odoo-javascript

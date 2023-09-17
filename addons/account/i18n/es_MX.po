@@ -11,6 +11,7 @@
 # Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Alfonso González, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Alfonso González, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3560,6 +3561,17 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "No se puede generar un código de cuenta sin utilizar."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+"No se puede generar un código de diario sin usar. Por favor cambiar el "
+"nombre del diario %s."
 
 #. module: account
 #. odoo-python
@@ -13862,14 +13874,6 @@ msgid ""
 msgstr ""
 "La secuencia de asientos de diario no se ajusta al formato actual. Solo el "
 "contador puede cambiarla."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
-"Los meses y días de las líneas de términos de pago deben ser positivos."
 
 #. module: account
 #. odoo-python

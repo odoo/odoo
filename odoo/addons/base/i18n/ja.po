@@ -269,6 +269,87 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"デンマーク用ローカライゼーションモジュール\n"
+"===============================\n"
+"\n"
+"デンマークの**会計表**を管理するモジュールです。I/S、IVS、ApS、A/Sだけでなく、ワンマンビジネスもカバーします。\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -474,6 +555,9 @@ msgid ""
 "\n"
 "This module adds enable you to view the margin of your Point of Sale orders in the Sales Margin report.\n"
 msgstr ""
+"\n"
+"\n"
+"このモジュールを使用すると、売上マージンレポートでPOSオーダのマージンを表示できるようになります。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -548,6 +632,9 @@ msgid ""
 "            Egyptian Tax Authority Invoice Integration\n"
 "        "
 msgstr ""
+"\n"
+"           エジプト税務当局のインボイス統合\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_tremol
@@ -556,6 +643,9 @@ msgid ""
 "            Kenya Tremol Device EDI Integration\n"
 "        "
 msgstr ""
+"\n"
+"            ケニア・トレモール・デバイスのEDI統合\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -577,6 +667,9 @@ msgid ""
 "        Accounting chart and localization for Hungary\n"
 "    "
 msgstr ""
+"\n"
+"        ハンガリーの会計チャートとローカライズ\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -632,6 +725,9 @@ msgid ""
 "        Accounting reports for Hungary\n"
 "    "
 msgstr ""
+"\n"
+"        ハンガリー向けの会計レポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kz_reports
@@ -641,6 +737,10 @@ msgid ""
 "        Contains Balance sheet, Profit and Loss reports\n"
 "    "
 msgstr ""
+"\n"
+"        リトアニア向けの会計レポート\n"
+"\n"
+"        貸借対照表、利益/損失レポートが含まれています"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -673,6 +773,9 @@ msgid ""
 "        Accounting reports for Pakistan\n"
 "    "
 msgstr ""
+"\n"
+"        パキスタン向けの会計レポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports
@@ -689,6 +792,9 @@ msgid ""
 "        Accounting reports for Poland\n"
 "    "
 msgstr ""
+"\n"
+"        ポーランド向けの会計レポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_reports
@@ -697,6 +803,9 @@ msgid ""
 "        Accounting reports for Romania\n"
 "    "
 msgstr ""
+"\n"
+"        ルーマニア向けの会計レポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_reports
@@ -707,6 +816,11 @@ msgid ""
 "        Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 "    "
 msgstr ""
+"\n"
+"        セルビア向けの会計レポート\n"
+"        このモジュールは公式文書 \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"に基づいています。\n"
+"        引用元: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -748,6 +862,9 @@ msgid ""
 "        Accounting reports for Turkey\n"
 "    "
 msgstr ""
+"\n"
+"        トルコ向けの会計レポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -795,6 +912,9 @@ msgid ""
 "        Allow clients to Schedule Appointments through the Portal\n"
 "    "
 msgstr ""
+"\n"
+"        顧客がポータルから予約できるようにします\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_1099
@@ -803,6 +923,9 @@ msgid ""
 "        Allows users to easily export accounting data that can be imported to a 3rd party that does 1099 e-filing.\n"
 "    "
 msgstr ""
+"\n"
+"        1099電子申告を行う第3者へインポート可能な会計データを簡単にエクスポートできます。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -822,6 +945,9 @@ msgid ""
 "        Arabic/English for GCC + lot/SN numbers\n"
 "    "
 msgstr ""
+"\n"
+"        GCC + ロット/シリアル番号の番号用のアラビア語/英語\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -830,6 +956,9 @@ msgid ""
 "        Avoid auto-enabling the documents feature on fsm projects.\n"
 "    "
 msgstr ""
+"\n"
+"        フィールドサービス管理(FSM)プロジェクトでは、ドキュメント機能を自動で有効化しないで下さい。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo_reports
@@ -838,6 +967,9 @@ msgid ""
 "        Base module for Bolivian reports\n"
 "    "
 msgstr ""
+"\n"
+"        ボリビアのレポート用の基本モジュール\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_reports
@@ -846,6 +978,9 @@ msgid ""
 "        Base module for Bulgarian reports\n"
 "    "
 msgstr ""
+"\n"
+"        ブルガリアのレポート用の基本モジュール\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz_reports
@@ -854,6 +989,9 @@ msgid ""
 "        Base module for Mozambican reports\n"
 "    "
 msgstr ""
+"\n"
+"        モザンビークのレポート用の基本モジュール\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -882,6 +1020,9 @@ msgid ""
 "        Bridge between Helpdesk and Industry FSM Sale\n"
 "    "
 msgstr ""
+"\n"
+"        ヘルプデスクと産業フィールドサービス管理(FSM)販売のブリッジ\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_quality
@@ -890,6 +1031,9 @@ msgid ""
 "        Bridge module between MRP subcontracting and Quality\n"
 "    "
 msgstr ""
+"\n"
+"        MRPと外注の間のブリッジモジュール\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_repair
@@ -898,6 +1042,9 @@ msgid ""
 "        Bridge module between MRP subcontracting and Repair\n"
 "    "
 msgstr ""
+"\n"
+"        MRP外注と修理の間のブリッジモジュール\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_sms
@@ -906,6 +1053,9 @@ msgid ""
 "        Bridge module between belgian accounting and SMS\n"
 "    "
 msgstr ""
+"\n"
+"        ベルギー会計とSMSの間のブリッジモジュール\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_account_reports
@@ -986,6 +1136,9 @@ msgid ""
 "        Chart accounting and taxes for Bulgaria\n"
 "    "
 msgstr ""
+"\n"
+"        ブルガリア向けの会計表と税\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lv
@@ -1002,6 +1155,17 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"      ラトビア会計の勘定科目表(COA)テンプレート。\n"
+"このモジュールには以下も含まれます：\n"
+"      * 税グループ、\n"
+"       * 最も一般的なラトビア税\n"
+"       * 財政ポジション\n"
+"       * ラトビアの銀行リスト\n"
+"\n"
+"        著者Allegro IT (詳細 https://www.allegro.lv)\n"
+"共著者Chick.Farm (詳細 https://www.myacc.cloud)author is Allegro IT (visit for more information https://www.allegro.lv)\n"
+"            "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -1036,6 +1200,9 @@ msgid ""
 "        Chart of accounts and taxes for Slovenia.\n"
 "    "
 msgstr ""
+"\n"
+"        スロベニア向けの勘定科目表と税\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -1056,6 +1223,9 @@ msgid ""
 "        UNSPSC code for their products and uoms.\n"
 "    "
 msgstr ""
+"\n"
+"        コロンビア、ペルー、メキシコのような国々は、UNSPSCコードを使用できるようにする必要があります。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -1075,6 +1245,9 @@ msgid ""
 "        Display the worksheet template when planning an Intervention from a ticket\n"
 "    "
 msgstr ""
+"\n"
+"        チケットから介入を計画するとき、ワークシートテンプレートを表示します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -1149,6 +1322,9 @@ msgid ""
 "        Enable the VAT wizard when posting a tax return journal entry\n"
 "    "
 msgstr ""
+"\n"
+"       税務申告書の仕訳入力時にVATウィザードを有効にします。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -1168,6 +1344,9 @@ msgid ""
 "        Export payments as NACHA files for use in the United States.\n"
 "    "
 msgstr ""
+"\n"
+"       米国内で使用するために、支払いをNACHAファイルとしてエクスポートします。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_temporal
@@ -1175,6 +1354,8 @@ msgid ""
 "\n"
 "        Extend sale flow to sell/lease/rent a product depending on duration, quantity, price list"
 msgstr ""
+"\n"
+"        販売フローを拡張し、期間、数量、価格表に応じて製品を販売/リース/レンタルします。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -1196,6 +1377,11 @@ msgid ""
 "        So this module is to get the warehouse address if the bill is created from Purchase Order\n"
 "    "
 msgstr ""
+"\n"
+"        請求書が販売オーダから作成された場合、倉庫の住所を取得します。\n"
+"\n"
+"        よって、このモジュールは、請求書が発注書から作成された場合、倉庫の住所を取得します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -1207,6 +1393,12 @@ msgid ""
 "        So this module is to get the warehouse address if the invoice is created from Sale Order\n"
 "    "
 msgstr ""
+"\n"
+"       請求書が販売オーダから作成された場合、倉庫の住所を取得します。\n"
+"        インドEDIでは、配送先住所の詳細があれば送信します。\n"
+"\n"
+"        よって、このモジュールは、販売オーダが発注書から作成された場合、倉庫の住所を取得します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
@@ -1214,6 +1406,8 @@ msgid ""
 "\n"
 "        Get warehouse address if the bill is created from Purchase Order"
 msgstr ""
+"\n"
+"        請求書が購買オーダから作成された場合、倉庫の住所を取得します。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -1221,6 +1415,8 @@ msgid ""
 "\n"
 "        Get warehouse address if the invoice is created from Sale Order"
 msgstr ""
+"\n"
+"         請求書が購買オーダから作成された場合、倉庫の住所を取得します。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1258,6 +1454,9 @@ msgid ""
 "        Manage your mailing lists from Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"        Odooからメーリングリストを管理します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
@@ -1266,6 +1465,9 @@ msgid ""
 "        Mexico Month 13 Trial Balance Report\n"
 "    "
 msgstr ""
+"\n"
+"        メキシコ13ヶ月目試算表\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec_import
@@ -1296,6 +1498,9 @@ msgid ""
 "        Mozambican Accounting localization\n"
 "    "
 msgstr ""
+"\n"
+"        モザンビーク会計ローカリゼーション\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -1335,6 +1540,9 @@ msgid ""
 "        This bridge module adds some smart buttons between Purchase and Subcontracting\n"
 "    "
 msgstr ""
+"\n"
+"        このブリッジモジュールは、購買と外注の間にスマートボタンをいくつか追加します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -1389,6 +1597,11 @@ msgid ""
 "        Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 "    "
 msgstr ""
+"\n"
+"        これはセルビア語ローカライゼーションの基本モジュールです。勘定科目表と税金を管理します。\n"
+"        このモジュールは公式文書\"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"に基づいています。\n"
+"        引用元: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph
@@ -1397,6 +1610,9 @@ msgid ""
 "        This is the module to manage the accounting chart for The Philippines.\n"
 "    "
 msgstr ""
+"\n"
+"        フィリピンの会計表を管理するモジュールです。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
@@ -1428,6 +1644,9 @@ msgid ""
 "        This module allow your customer to choose a Point Relais® and use it as shipping address.\n"
 "    "
 msgstr ""
+"\n"
+"        このモジュールにより、顧客はPoint Relais®を選択し、配送先住所として使用することができます。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_mondialrelay
@@ -1439,6 +1658,12 @@ msgid ""
 "        Delivery price pre-configured is an example, you need to adapt the pricing's rules.\n"
 "    "
 msgstr ""
+"\n"
+"        このモジュールにより、顧客はPoint Relais®を選択し、配送先住所として使用することができます。\n"
+"        このモジュールはWebServiceを実装しません。ウィジェットの統合だけです。\n"
+"\n"
+"        予め設定されている配送価格はその一例で、価格設定の規則を適応させる必要があります。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -1479,6 +1704,15 @@ msgid ""
 "        Forecast shifts and keep an eye on the hours consumed on your plannable products.\n"
 "    "
 msgstr ""
+"\n"
+"       このモジュールにより、プロダクト設定に基づいて販売オーダを予定することができます。\n"
+"\n"
+"         \"サービス計画\"オプションが有効になっているプロダクト用に、シフトに入ることができる\n"
+"従業員のシフトを予測することができます。\n"
+"        (つまりプロダクトに設定されている役割と同じ役割を持つ従業員)\n"
+"\n"
+"        シフトを予測し、計画可能なプロダクトの消費時間を監視します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_planning
@@ -1493,6 +1727,15 @@ msgid ""
 "        Plan shifts and keep an eye on the hours consumed on your plannable products.\n"
 "    "
 msgstr ""
+"\n"
+"        このモジュールは、プロダクト設定に基づいて販売オーダを予定することができます。\n"
+"\n"
+"        \" \"サービス計画\"オプションが有効になっているプロダクト用に、シフトに入ることができる\n"
+"従業員のシフトを予測することができます。\n"
+"        (つまりプロダクトに設定されている役割と同じ役割を持つ従業員)\n"
+"\n"
+"        シフトを予測し、計画可能なプロダクトの消費時間を監視します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1563,6 +1806,8 @@ msgid ""
 "        This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.\n"
 "    "
 msgstr ""
+"\n"
+"        このモジュールはCloudflare Turnstileを実装しているため、フォームでのボットスパムを防ぐことができます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1590,6 +1835,9 @@ msgid ""
 "        This module makes it possible to manage employee skills during an appraisal process.\n"
 "    "
 msgstr ""
+"\n"
+"        このモジュールで。評価プロセスにおける従業員のスキル管理ができます。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -1629,6 +1877,8 @@ msgid ""
 "\n"
 "        Track equipment and maintenance requests"
 msgstr ""
+"\n"
+"        機器とメンテナンス要求を追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -1665,6 +1915,9 @@ msgid ""
 "        XML Export of the Journal Entries for the Mexican Tax Authorities for a compulsory audit.\n"
 "    "
 msgstr ""
+"\n"
+"        メキシコ税務当局の強制監査用仕訳帳のXMLエクスポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
@@ -1706,6 +1959,10 @@ msgid ""
 "       Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
 "    "
 msgstr ""
+"\n"
+"       このモジュールはETAポータルと統合し、請求書に自動的に署名して税務当局に送信します。\n"
+"       このモジュールの開発にご協力頂いた Plementus <info@plementus.com> に感謝致します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_edi_tremol
@@ -1714,6 +1971,9 @@ msgid ""
 "       This module integrates with the Kenyan G03 Tremol control unit device to the KRA through TIMS.\n"
 "    "
 msgstr ""
+"\n"
+"       このモジュールは、ケニアのG03トレモール・コントロール・ユニット装置とTIMSを通じてKRAに統合されます。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -1766,6 +2026,8 @@ msgid ""
 "\n"
 "    Arabic/English for GCC\n"
 msgstr ""
+"\n"
+" GCC用アラビア語/英語\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
@@ -1776,6 +2038,11 @@ msgid ""
 "    - extended address fields\n"
 "    "
 msgstr ""
+"\n"
+"    配送ガイドを拡長するブリッジモジュール(Complemento XML Carta de Porte)\n"
+"    - 輸出商品 (COMEX)\n"
+"    - 拡張住所フィールド\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended_40
@@ -1804,6 +2071,8 @@ msgid ""
 "\n"
 "    Create customizable quality worksheet for workorder.\n"
 msgstr ""
+"\n"
+"   作業オーダ用にカスタマイズ可能な品質ワークシートを作成\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control_worksheet
@@ -1811,6 +2080,8 @@ msgid ""
 "\n"
 "    Create customizable worksheet for Quality Control.\n"
 msgstr ""
+"\n"
+"   品質管理用にカスタマイズしたワークシートを作成\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -1824,6 +2095,14 @@ msgid ""
 "    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 "    "
 msgstr ""
+"\n"
+"    クロアチアの勘定科目表を更新 (RRIF ver.2021)\n"
+"\n"
+"    引用元\n"
+"    https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -1846,6 +2125,12 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    リトアニアSAF-Tは、XML形式を使用してさまざまなタイプの会計トランザクションデータをエクスポートするための標準ファイル形式です。\n"
+"   使用されているXSDのバージョンはv2.01(2019年以降)です。リトアニア当局で使用されている最新のものです。\n"
+"    SAF-T Financialの最初のバージョンは、顧客やサプライヤとの取引を含む総勘定元帳レベルに限定されています。\n"
+"    必要なマスタデータも含まれています。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -1993,6 +2278,12 @@ msgid ""
 "    guide.\n"
 "    "
 msgstr ""
+"\n"
+"   AからBの間で商品を送った証明として配送ガイド (Complemento XML Carta de Porte)\n"
+"    が必要です。\n"
+"\n"
+"   配送ガイドを作成できるのは、配送オーダが有効になってからです。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
@@ -2006,6 +2297,13 @@ msgid ""
 "    guide.\n"
 "    "
 msgstr ""
+"\n"
+"    AからBの間で商品を送った証明として配送ガイド (Guía de Remisión) \n"
+"   が必要です。\n"
+"\n"
+"    配送ガイドを作成できるのは、配送オーダが有効になって\n"
+"からです。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -2144,6 +2442,14 @@ msgid ""
 "and encourage users to configure their 2FA using an authenticator app.\n"
 "    "
 msgstr ""
+"\n"
+"メールによる2FA\n"
+"===============\n"
+"認証アプリを使用する2FAが設定されていない場合の\n"
+"ユーザのメール受信箱にコードを送信する2要素認証。\n"
+"デフォルトで2要素認証を使用するようユーザに強制し、\n"
+"認証アプリを使用した2FAを設定するようユーザに促します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -2453,6 +2759,10 @@ msgid ""
 "==========================================\n"
 "    "
 msgstr ""
+"\n"
+"フランスの給与規定に関する会計データ\n"
+"==========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_account
@@ -2462,6 +2772,10 @@ msgid ""
 "===========================================\n"
 "    "
 msgstr ""
+"\n"
+"香港の給与規定に関する会計データ\n"
+"===========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll_account
@@ -2471,6 +2785,10 @@ msgid ""
 "==========================================\n"
 "    "
 msgstr ""
+"\n"
+"インドの給与規定に関する会計データ\n"
+"==========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll_account
@@ -2481,6 +2799,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"サウジアラビア王国の給与規定に関する会計データ\n"
+"=======================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_account
@@ -2490,6 +2813,10 @@ msgid ""
 "========================================\n"
 "    "
 msgstr ""
+"\n"
+"ケニアの給与規定に関する会計データ\n"
+"========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_hr_payroll_account
@@ -2499,6 +2826,10 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"ルクセンブルグの給与規定に関する会計データ\n"
+"============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -2509,6 +2840,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"アラブ首長国連邦の給与規定に関する会計データ\n"
+"=======================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -2518,6 +2854,10 @@ msgid ""
 "==================\n"
 "    "
 msgstr ""
+"\n"
+"会計インポート\n"
+"==================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports
@@ -2542,6 +2882,12 @@ msgid ""
 "to the administration.\n"
 "    "
 msgstr ""
+"\n"
+"会計レポート税務リマインダ\n"
+"===============================\n"
+"このモジュールは、税務報告書が管理者に送信される準備ができた際の\n"
+"通知を追加します。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ee_reports
@@ -2550,6 +2896,9 @@ msgid ""
 "Accounting Reports for Estonia\n"
 "    "
 msgstr ""
+"\n"
+"エストニア向けの会計レポート\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2587,6 +2936,12 @@ msgid ""
 "* Adds Profit and Loss report adapted for Ecuador\n"
 "    "
 msgstr ""
+"\n"
+"エクアドル向けの会計レポート\n"
+"==============================\n"
+"*エクアドル向けの貸借対照表レポートを追加\n"
+"* エクアドル向けの損益レポートを追加\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -2640,6 +2995,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"イタリアの会計レポート\n"
+"============================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_reports
@@ -2650,6 +3010,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"ケニアの会計レポート\n"
+"============================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -2662,6 +3027,12 @@ msgid ""
 "Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"ルクセンブルグの会計レポート\n"
+"=================================\n"
+"ルクセンブルグの SAF-T (FAIAとしても知られる)は XML形式を使用してさまざまなタイプの会計トランザクションデータをエクスポートするための標準ファイル形式です。\n"
+"SAF-T Financialの最初のバージョンは、顧客およびサプライヤのトランザクションを含む総勘定元帳レベルに制限されています。 必要なマスタデータも含まれています。 \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -2672,6 +3043,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"ノルウェーの会計レポート\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada_reports
@@ -2681,6 +3057,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"OHADA会計レポート\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt_reports
@@ -2691,6 +3071,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"ポルトトガルの会計レポート\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -2702,6 +3087,12 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"シンガポールの会計レポート\n"
+"================================\n"
+"このモジュールはIRAS監査ファイルを生成します。\n"
+" - RAS監査ファイルを作成するには、会計 -> レポーティング -> IRAS 監査ファイルに進んで下さい。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2709,6 +3100,8 @@ msgid ""
 "\n"
 "Add Subcontracting information in Cost Analysis Report and The Production Analysis\n"
 msgstr ""
+"\n"
+"原価分析レポートと生産分析に外注情報を追加します\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -2901,6 +3294,8 @@ msgid ""
 "\n"
 "Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Chorus Proを使用する際に使用される3つのオプションフィールド(特に公共サービスの請求書作成時)への入力サポートを追加しました。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -2951,6 +3346,8 @@ msgid ""
 "\n"
 "Adds an action to sign documents attached to tasks.\n"
 msgstr ""
+"\n"
+"タスクに添付された文書に署名するアクションを追加します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -2978,6 +3375,8 @@ msgid ""
 "\n"
 "Adds the ability to set workspace templates on products.\n"
 msgstr ""
+"\n"
+"プロダクトにワークスペーステンプレートを設定する機能を追加\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -3052,6 +3451,10 @@ msgid ""
 "=====================================================\n"
 "    "
 msgstr ""
+"\n"
+"モジュールのインストールを要求する内部ユーザを許可します。\n"
+"=====================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -3071,6 +3474,9 @@ msgid ""
 "Allow the user to select if he wants to receive email notifications when a product of his wishlist gets back in stock.\n"
 "    "
 msgstr ""
+"\n"
+"ウィッシュリストのプロダクトが再入荷した際にEメール通知を受け取るかどうかをユーザが選択できるようにします。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_crm
@@ -3080,6 +3486,10 @@ msgid ""
 "-----------------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"ウェブサイトを通して予定された予約からリードを生成することができます。\n"
+"-----------------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -3121,6 +3531,8 @@ msgid ""
 "\n"
 "Allows customers to pay for their orders at a shop, instead of paying online.\n"
 msgstr ""
+"\n"
+"顧客がオーダの支払をオンラインの代わりに、店舗で支払うことを可能にします。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -3141,6 +3553,9 @@ msgid ""
 "Allows to compute accurate margin for Service sales.\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"サービス売上の正確なマージンを計算できるようにします。\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -3163,6 +3578,10 @@ msgid ""
 "===========================================================\n"
 "Additional information is displayed in the name of the SOL when it is used in services apps (project and planning). \n"
 msgstr ""
+"\n"
+"SOLサービスアプリで販売情報を表示できます。\n"
+"===========================================================\n"
+"サービスアプリ(プロジェクト、プランニング)で使用する場合、SOLの名前に追加情報が表示されます。 \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -3314,6 +3733,10 @@ msgid ""
 "===============================================\n"
 "    "
 msgstr ""
+"\n"
+"ルクセンブルクのVAT年次報告書 - 2023年最新版\n"
+"===============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -34202,7 +34625,7 @@ msgstr "ir.actions.server"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__json
 msgid "json"
-msgstr ""
+msgstr "Json"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
@@ -34219,7 +34642,7 @@ msgstr "多2多"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "多対多フィールドは参照によって評価できません。"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

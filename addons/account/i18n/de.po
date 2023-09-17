@@ -13,6 +13,7 @@
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Mathias Landgraf <mathias.landgraf@ironcad4d.de>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Mathias Landgraf <mathias.landgraf@ironcad4d.de>, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3557,6 +3558,17 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Sie können keinen ungebrauchten Kontocode generieren."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+"Kann keinen nicht verwendeten Jounalcode erzeugen. Bitte ändern Sie den "
+"Namen für das Journal %s."
 
 #. module: account
 #. odoo-python
@@ -8250,7 +8262,7 @@ msgstr "Ist niedriger als"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr "Wird mit einem Kontoauszug abgeglichen"
+msgstr "Ist mit einem Kontoauszug abgeglichen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -12202,7 +12214,7 @@ msgstr "Verkaufsbeleg"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Sales"
-msgstr "Verkauf"
+msgstr "Verkäufe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_use_credit_limit
