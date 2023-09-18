@@ -21,7 +21,7 @@ class WebsiteVisitor(models.Model):
         super(WebsiteVisitor, self)._compute_email_phone()
 
         left_visitors = self.filtered(lambda visitor: not visitor.email or not visitor.mobile)
-        leads = left_visitors.mapped('lead_ids').sorted('create_date', reverse=True)
+        leads = left_visitors.sudo().mapped('lead_ids').sorted('create_date', reverse=True)
         visitor_to_lead_ids = dict((visitor.id, visitor.lead_ids.ids) for visitor in left_visitors)
 
         for visitor in left_visitors:
