@@ -65,7 +65,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         delivery.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on delivery')
         # check dont delivery twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         # Check Return / Rejection
@@ -97,7 +97,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont claim twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_check_id', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
@@ -147,7 +147,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont return twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "is already used on another payment"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_check_id', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
