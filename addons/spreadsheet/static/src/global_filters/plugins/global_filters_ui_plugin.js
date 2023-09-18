@@ -4,7 +4,7 @@
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
  * @typedef {import("./global_filters_core_plugin").GlobalFilter} GlobalFilter
  * @typedef {import("./global_filters_core_plugin").FieldMatching} FieldMatching
- 
+
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -86,12 +86,14 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
             case "ADD_GLOBAL_FILTER":
                 this.recordsDisplayName[cmd.filter.id] = cmd.filter.defaultValueDisplayNames;
                 break;
-            case "EDIT_GLOBAL_FILTER":
-                if (this.values[cmd.id] && this.values[cmd.id].rangeType !== cmd.filter.rangeType) {
-                    delete this.values[cmd.id];
+            case "EDIT_GLOBAL_FILTER": {
+                const id = cmd.filter.id;
+                if (this.values[id] && this.values[id].rangeType !== cmd.filter.rangeType) {
+                    delete this.values[id];
                 }
-                this.recordsDisplayName[cmd.filter.id] = cmd.filter.defaultValueDisplayNames;
+                this.recordsDisplayName[id] = cmd.filter.defaultValueDisplayNames;
                 break;
+            }
             case "SET_GLOBAL_FILTER_VALUE":
                 this.recordsDisplayName[cmd.id] = cmd.displayNames;
                 if (!cmd.value) {

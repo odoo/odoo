@@ -23,7 +23,7 @@ export function selectCell(model, xc) {
  * @param {{filter: GlobalFilter}} filter
  */
 export async function addGlobalFilter(model, filter, fieldMatchings = {}) {
-    const result = model.dispatch("ADD_GLOBAL_FILTER", { ...filter, ...fieldMatchings });
+    const result = model.dispatch("ADD_GLOBAL_FILTER", { filter, ...fieldMatchings });
     await waitForDataSourcesLoaded(model);
     return result;
 }
@@ -41,7 +41,7 @@ export async function removeGlobalFilter(model, id) {
  * Edit a global filter and ensure the data sources are completely reloaded
  */
 export async function editGlobalFilter(model, filter) {
-    const result = model.dispatch("EDIT_GLOBAL_FILTER", filter);
+    const result = model.dispatch("EDIT_GLOBAL_FILTER", { filter });
     await waitForDataSourcesLoaded(model);
     return result;
 }
