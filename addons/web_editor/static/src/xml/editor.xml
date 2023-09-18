@@ -13,34 +13,50 @@
                     <span title="Text style">Normal</span>
                 </button>
                 <ul class="dropdown-menu">
+                    <li id="display-1-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-1" data-call="setTag" data-arg1="h1,display-1">Header 1 Display 1</a>
+                    </li>
+                    <li id="display-2-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-2" data-call="setTag" data-arg1="h1,display-2">Header 1 Display 2</a>
+                    </li>
+                    <li id="display-3-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-3" data-call="setTag" data-arg1="h1,display-3">Header 1 Display 3</a>
+                    </li>
+                    <li id="display-4-dropdown-item">
+                        <a class="dropdown-item" href="#" id="display-4" data-call="setTag" data-arg1="h1,display-4">Header 1 Display 4</a>
+                    </li>
+                    <li t-if="props.showHeading1" id="heading1-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading1" data-call="setTag" data-arg1="h1">Header 1</a>
+                    </li>
+                    <li t-if="props.showHeading2" id="heading2-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading2" data-call="setTag" data-arg1="h2">Header 2</a>
+                    </li>
+                    <li t-if="props.showHeading3" id="heading3-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading3" data-call="setTag" data-arg1="h3">Header 3</a>
+                    </li>
+                    <li t-if="props.showHeading4" id="heading4-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading4" data-call="setTag" data-arg1="h4">Header 4</a>
+                    </li>
+                    <li t-if="props.showHeading5" id="heading5-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading5" data-call="setTag" data-arg1="h5">Header 5</a>
+                    </li>
+                    <li t-if="props.showHeading6" id="heading6-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading6" data-call="setTag" data-arg1="h6">Header 6</a>
+                    </li>
                     <li id="paragraph-dropdown-item">
                         <a class="dropdown-item" href="#" id="paragraph" data-call="setTag" data-arg1="p">Normal</a>
                     </li>
+                    <li id="light-dropdown-item">
+                        <a class="dropdown-item" href="#" id="light" data-call="setTag" data-arg1="p,lead">Light</a>
+                    </li>
+                    <li id="small-dropdown-item">
+                        <a class="dropdown-item" href="#" id="small" data-call="setTag" data-arg1="p,small">Small</a>
+                    </li>
                     <li id="pre-dropdown-item">
-                        <a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre"><pre>Code</pre></a>
-                    </li>
-                    <li t-if="props.showHeading1" id="heading1-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading1" data-call="setTag" data-arg1="h1"><h1>Header 1</h1></a>
-                    </li>
-                    <li t-if="props.showHeading2" id="heading2-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading2" data-call="setTag" data-arg1="h2"><h2>Header 2</h2></a>
-                    </li>
-                    <li t-if="props.showHeading3" id="heading3-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading3" data-call="setTag" data-arg1="h3"><h3>Header 3</h3></a>
-                    </li>
-                    <li t-if="props.showHeading4" id="heading4-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading4" data-call="setTag" data-arg1="h4"><h4>Header 4</h4></a>
-                    </li>
-                    <li t-if="props.showHeading5" id="heading5-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading5" data-call="setTag" data-arg1="h5"><h5>Header 5</h5></a>
-                    </li>
-                    <li t-if="props.showHeading6" id="heading6-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading6" data-call="setTag" data-arg1="h6"><h6>Header 6</h6></a>
+                        <a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre">Code</a>
                     </li>
                     <li id="blockquote-dropdown-item">
-                        <a class="dropdown-item" href="#" id="blockquote" data-call="setTag" data-arg1="blockquote">
-                            <blockquote>Quote</blockquote>
-                        </a>
+                        <a class="dropdown-item" href="#" id="blockquote" data-call="setTag" data-arg1="blockquote">Quote</a>
                     </li>
                 </ul>
             </div>

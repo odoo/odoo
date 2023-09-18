@@ -67,6 +67,11 @@ export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
 export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs", "display-4-fs", "h1-fs",
     "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "small"];
 
+/**
+ * Array of all the classes used by the editor to change the text style.
+ */
+export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead"];
+
 //------------------------------------------------------------------------------
 // Position and sizes
 //------------------------------------------------------------------------------
@@ -964,7 +969,7 @@ const formatsSpecs = {
             .find(cls => node.classList.contains(cls)),
         addStyle: (node, props) => node.classList.add(props.className),
         removeStyle: (node) => {
-            node.classList.remove(...FONT_SIZE_CLASSES);
+            node.classList.remove(...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES);
             if (node.classList.length === 0) {
                 node.removeAttribute("class");
             }
@@ -1828,10 +1833,12 @@ export function isColorGradient(value) {
  */
 export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumericToUnit) {
     const tagNameRelatedToFontSize = ["h1", "h2", "h3", "h4", "h5", "h6"];
+    const styleClassesRelatedToFontSize = ["display-1", "display-2", "display-3", "display-4"];
     const closestStartContainerEl = closestElement(sel.getRangeAt(0).startContainer);
     const closestFontSizedEl = closestStartContainerEl.closest(`
         [style*='font-size'],
         ${FONT_SIZE_CLASSES.map(className => `.${className}`)},
+        ${styleClassesRelatedToFontSize.map(className => `.${className}`)},
         ${tagNameRelatedToFontSize}
     `);
     let remValue;
@@ -1851,13 +1858,15 @@ export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumeric
         // the toolbar because it's responsive.
         const fontSizeClass = FONT_SIZE_CLASSES.find(
             className => closestFontSizedEl.classList.contains(className));
+        let fsName;
         if (fontSizeClass) {
-            const fsName = fontSizeClass.substring(0, fontSizeClass.length - 3); // Without -fs
-            remValue = parseFloat(getCSSVariableValue(`${fsName}-font-size`));
+            fsName = fontSizeClass.substring(0, fontSizeClass.length - 3); // Without -fs
         } else {
-            const tagName = closestFontSizedEl.tagName.toLowerCase();
-            remValue = parseFloat(getCSSVariableValue(`${tagName}-font-size`));
+            fsName = styleClassesRelatedToFontSize.find(
+                    className => closestFontSizedEl.classList.contains(className))
+                || closestFontSizedEl.tagName.toLowerCase();
         }
+        remValue = parseFloat(getCSSVariableValue(`${fsName}-font-size`));
     }
     // It's default font size (no font size class / style).
     if (remValue === undefined) {

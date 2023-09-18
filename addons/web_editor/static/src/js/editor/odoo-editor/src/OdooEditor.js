@@ -2023,7 +2023,9 @@ export class OdooEditor extends EventTarget {
                 if (!this.isSelectionInEditable()) {
                     this.historyResetLatestComputedSelection(true);
                 }
-                this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
+                const arg1 = buttonEl.dataset.arg1;
+                const args = arg1 && arg1.split(",") || [];
+                this.execCommand(buttonEl.dataset.call, ...args);
 
                 ev.preventDefault();
                 this._updateToolbar();
@@ -3113,16 +3115,22 @@ export class OdooEditor extends EventTarget {
         const listUIClasses = {UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks'};
         const block = closestBlock(sel.anchorNode);
         let activeLabel = undefined;
-        for (const [style, tag, isList] of [
-            ['paragraph', 'P', false],
-            ['pre', 'PRE', false],
-            ['heading1', 'H1', false],
-            ['heading2', 'H2', false],
-            ['heading3', 'H3', false],
-            ['heading4', 'H4', false],
-            ['heading5', 'H5', false],
-            ['heading6', 'H6', false],
-            ['blockquote', 'BLOCKQUOTE', false],
+        for (const [style, cssSelector, isList] of [
+            ['paragraph', 'p:not(.small, .lead)', false],
+            ['pre', 'pre', false],
+            ['heading1', 'h1:not(.display-1, .display-2, .display-3, .display-4)', false],
+            ['heading2', 'h2', false],
+            ['heading3', 'h3', false],
+            ['heading4', 'h4', false],
+            ['heading5', 'h5', false],
+            ['heading6', 'h6', false],
+            ['display-1', 'h1.display-1', false],
+            ['display-2', 'h1.display-2', false],
+            ['display-3', 'h1.display-3', false],
+            ['display-4', 'h1.display-4', false],
+            ['blockquote', 'blockquote', false],
+            ['small', '.small', false],
+            ['light', '.lead', false],
             ['unordered', 'UL', true],
             ['ordered', 'OL', true],
             ['checklist', 'CL', true],
@@ -3132,8 +3140,8 @@ export class OdooEditor extends EventTarget {
                 button.classList.toggle('active', false);
             } else if (button) {
                 const isActive = isList
-                    ? block.tagName === 'LI' && getListMode(block.parentElement) === tag
-                    : block.tagName === tag;
+                    ? block.tagName === 'LI' && getListMode(block.parentElement) === cssSelector
+                    : block.matches(cssSelector);
                 button.classList.toggle('active', isActive);
 
                 if (!isList && isActive) {
