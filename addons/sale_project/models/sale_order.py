@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv.expression import AND
 
 
 class SaleOrder(models.Model):
@@ -130,6 +132,7 @@ class SaleOrder(models.Model):
             'default_project_id': default_project_id,
             'default_user_ids': [self.env.uid],
         }
+        action['domain'] = AND([ast.literal_eval(action['domain']), [('id', 'in', self.tasks_ids.ids)]])
         return action
 
     def action_create_project(self):
