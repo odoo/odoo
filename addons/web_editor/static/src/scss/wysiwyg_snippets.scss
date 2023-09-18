@@ -1192,6 +1192,33 @@
                 }
             }
 
+            // When the dropdown or the colorpicker is displayed above the
+            // selector.
+            &.o_we_select_dropdown_up {
+
+                we-selection-items {
+                    top: auto !important;
+                    bottom: 100% !important;
+                    margin-bottom: $o-we-sidebar-content-field-dropdown-spacing !important;
+                }
+                .o_we_dropdown_caret {
+                    align-self: flex-start !important;
+
+                    &::before, &::after {
+                        top: auto !important;
+                        bottom: 100% !important;
+                        margin-bottom: $o-we-dropdown-caret-spacing;
+                        transform: rotate(180deg) translateX(-50%) !important;
+                    }
+                }
+                &.o_we_so_color_palette .o_we_dropdown_caret {
+
+                    &::before, &::after {
+                        margin-bottom: $o-we-dropdown-caret-spacing / 2;
+                    }
+                }
+            }
+
             we-select-page {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
