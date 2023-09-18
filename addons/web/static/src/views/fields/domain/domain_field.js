@@ -5,7 +5,7 @@ import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { EvaluationError } from "@web/core/py_js/py_interpreter";
+import { EvaluationError } from "@web/core/py_js/py_builtin";
 import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
