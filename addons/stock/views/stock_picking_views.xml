@@ -235,6 +235,7 @@
                 <field name="has_packages" invisible="1"/>
                 <field name="picking_type_entire_packs" invisible="1"/>
                 <field name="use_create_lots" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
 
                 <header>
                     <button name="action_confirm" attrs="{'invisible': [('show_mark_as_todo', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="x"/>
@@ -298,14 +299,14 @@
                     <group>
                         <group>
                             <div class="o_td_label">
-                                <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
+                                <label for="location_dest_partner_id" string="Delivery Address" style="font-weight:bold;"
                                        attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
-                                <label for="partner_id" string="Receive From" style="font-weight:bold;"
+                                <label for="location_dest_partner_id" string="Receive From" style="font-weight:bold;"
                                        attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
-                                <label for="partner_id" string="Contact" style="font-weight:bold;"
+                                <label for="location_dest_partner_id" string="Contact" style="font-weight:bold;"
                                        attrs="{'invisible': [('picking_type_code', 'in', ['incoming', 'outgoing'])]}"/>
                             </div>
-                            <field name="partner_id" nolabel="1"/>
+                            <field name="location_dest_partner_id" nolabel="1"/>
                             <field name="picking_type_id" attrs="{'invisible': [('hide_picking_type', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>

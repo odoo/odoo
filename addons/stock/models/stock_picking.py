@@ -326,6 +326,7 @@ class Picking(models.Model):
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id,
         check_company=True, readonly=True, required=True,
         states={'draft': [('readonly', False)]})
+    location_dest_partner_id = fields.Many2one('res.partner', compute='_compute_location_dest_partner_id')
     move_lines = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many('stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package', inverse='_set_move_without_package')
     has_scrap_move = fields.Boolean(
@@ -628,6 +629,10 @@ class Picking(models.Model):
             return
         for picking in self:
             picking.show_allocation = picking._get_show_allocation(picking.picking_type_id)
+
+    def _compute_location_dest_partner_id(self):
+        for picking in self:
+            picking.location_dest_partner_id = picking.location_dest_id.company_id.partner_id or picking.partner_id
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
