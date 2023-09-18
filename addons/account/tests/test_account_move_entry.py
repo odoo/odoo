@@ -486,6 +486,29 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
         ])
 
+    def test_misc_custom_tags(self):
+        tag = self.env['account.account.tag'].create({
+            'name': "test_misc_custom_tags",
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        })
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'debit_line'
+            debit_line.account_id = self.company_data['default_account_revenue']
+            debit_line.debit = 1000
+            debit_line.tax_tag_ids.add(tag)
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'credit_line'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.credit = 1000
+        move = move_form.save()
+        self.assertRecordValues(move.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'debit': 1000.0,   'credit': 0.0,      'tax_tag_ids': tag.ids},
+            {'debit': 0.0,      'credit': 1000.0,   'tax_tag_ids': []},
+        ])
+
     def test_misc_prevent_unlink_posted_items(self):
         # You cannot remove journal items if the related journal entry is posted.
         self.test_move.action_post()
