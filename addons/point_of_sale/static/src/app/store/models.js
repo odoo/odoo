@@ -2138,21 +2138,19 @@ export class Order extends PosModel {
         }
     }
     async addComboLines(comboParent, options) {
-        const pricelist = this.pos.getDefaultPricelist();
         const originalPrices = {};
 
-        let [originalTotal, targetExtra] = [0, 0];
+        let originalTotal = 0;
         for (const comboLine of options.comboLines) {
             const product = this.pos.db.product_by_id[comboLine.product_id[0]];
-            const originalPrice = product.get_price(pricelist, 1, comboLine.combo_price);
+            const originalPrice = this.pos.db.combo_by_id[comboLine.combo_id[0]].base_price;
             originalTotal += product.get_display_price({ price: originalPrice });
-            targetExtra += product.get_display_price({ price: comboLine.combo_price });
 
             // Keep track of the original price of each product for the subsequent for loop.
             originalPrices[product.id] = originalPrice;
         }
 
-        const targetPrice = comboParent.product.lst_price + targetExtra;
+        const targetPrice = comboParent.product.lst_price;
         const childPriceFactor = targetPrice / originalTotal;
         for (const comboLine of options.comboLines) {
             const product = this.pos.db.product_by_id[comboLine.product_id[0]];
@@ -2161,6 +2159,29 @@ export class Order extends PosModel {
                 price: childUnitPrice,
                 comboParent,
             });
+        }
+
+        // Adjust the price of the last combo line to make sure the total price of the combo
+        // is the same as the target price.
+        const childLines = this.get_orderlines().filter(
+            (l) => l.comboParent?.uuid === comboParent.uuid
+        );
+        const totalComboPrice = childLines.reduce((acc, l) => acc + l.get_display_price(), 0);
+        const diff = targetPrice - totalComboPrice;
+        if (!this.env.utils.floatIsZero(diff)) {
+            const lastLine = childLines[childLines.length - 1];
+            lastLine.set_unit_price(lastLine.get_unit_price() + diff);
+        }
+
+        // Finally, take into account the combo price for each combo line.
+        for (const comboLine of options.comboLines) {
+            if (this.env.utils.floatIsZero(comboLine.combo_price)) {
+                continue;
+            }
+            const presentLine = childLines.find((l) => l.product.id === comboLine.product_id[0]);
+            if (presentLine) {
+                presentLine.set_unit_price(presentLine.get_unit_price() + comboLine.combo_price);
+            }
         }
     }
     set_orderline_options(orderline, options) {
