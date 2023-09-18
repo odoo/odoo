@@ -1797,7 +1797,7 @@ export class PosStore extends Reactive {
     }
     // FIXME: POSREF, method exist only to be overrided
     async addProductFromUi(product, options) {
-        this.get_order().add_product(product, options);
+        return this.get_order().add_product(product, options);
     }
     async addProductToCurrentOrder(product, options = {}) {
         if (Number.isInteger(product)) {

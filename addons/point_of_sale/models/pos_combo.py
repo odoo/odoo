@@ -23,6 +23,11 @@ class PosCombo(models.Model):
     combo_line_ids = fields.One2many("pos.combo.line", "combo_id", string="Products in Combo", copy=True)
     num_of_products = fields.Integer("No of Products", compute="_compute_num_of_products")
     sequence = fields.Integer(copy=False)
+    base_price = fields.Float(
+        compute="_compute_base_price",
+        string="Product Price",
+        help="The value from which pro-rating of the component price is based. This is to ensure that whatever product the user chooses for a component, it will always be they same price."
+    )
 
     @api.depends("combo_line_ids")
     def _compute_num_of_products(self):
@@ -44,3 +49,9 @@ class PosCombo(models.Model):
     def _check_combo_line_ids_is_not_null(self):
         if any(not rec.combo_line_ids for rec in self):
             raise ValidationError(_("Please add products in combo."))
+
+    @api.depends("combo_line_ids")
+    def _compute_base_price(self):
+        for rec in self:
+            # Use the lowest price of the combo lines as the base price
+            rec.base_price = min(rec.combo_line_ids.mapped("product_id.lst_price"))
