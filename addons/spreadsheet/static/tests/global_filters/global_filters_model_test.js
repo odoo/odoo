@@ -44,29 +44,23 @@ const { DateTime } = luxon;
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
  *
- * @typedef {Object} FilterPayload
- * @property {GlobalFilter} filter
  */
 
-/** @type FilterPayload */
+/** @type GlobalFilter */
 const LAST_YEAR_FILTER = {
-    filter: {
-        id: "42",
-        type: "date",
-        label: "Last Year",
-        rangeType: "fixedPeriod",
-        defaultValue: { yearOffset: -1 },
-    },
+    id: "42",
+    type: "date",
+    label: "Last Year",
+    rangeType: "fixedPeriod",
+    defaultValue:  {yearOffset: -1},
 };
 /** @type FilterPayload */
 const LAST_YEAR_LEGACY_FILTER = {
-    filter: {
-        id: "41",
-        type: "date",
-        rangeType: "fixedPeriod",
-        label: "Legacy Last Year",
-        defaultValue: { year: "last_year" },
-    },
+    id: "41",
+    type: "date",
+    rangeType: "fixedPeriod",
+    label: "Legacy Last Year",
+    defaultValue: { year: "last_year" },
 };
 
 const DEFAULT_FIELD_MATCHINGS = {
@@ -119,13 +113,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.expect(4);
 
         const { model } = await createSpreadsheetWithPivotAndList();
-        const gfDef = { ...THIS_YEAR_GLOBAL_FILTER, id: 1 };
-        let result = await editGlobalFilter(model, gfDef);
+        let result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: 1 });
         assert.deepEqual(result.reasons, [CommandResult.FilterNotFound]);
-        await addGlobalFilter(model, LAST_YEAR_FILTER);
-        const gf = model.getters.getGlobalFilters()[0];
-        gfDef.id = gf.id;
-        result = await editGlobalFilter(model, gfDef);
+        await addGlobalFilter(model, { ...LAST_YEAR_FILTER, id: 1 });
+        result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: 1 });
         assert.deepEqual(result, DispatchResult.Success);
         assert.equal(model.getters.getGlobalFilters().length, 1);
         assert.deepEqual(model.getters.getGlobalFilters()[0].defaultValue.yearOffset, 0);
@@ -142,30 +133,28 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.expect(6);
 
         const { model } = await createSpreadsheetWithPivotAndList();
-        const filter = { ...THIS_YEAR_GLOBAL_FILTER.filter, label: "Hello" };
-        await addGlobalFilter(model, { filter });
+        const filter = { ...THIS_YEAR_GLOBAL_FILTER, label: "Hello" };
+        await addGlobalFilter(model, filter);
         assert.equal(model.getters.getGlobalFilters().length, 1);
 
         // Add filter with same name
-        let result = await addGlobalFilter(model, { filter: { ...filter, id: "456" } });
+        let result = await addGlobalFilter(model, { ...filter, id: "456" });
         assert.deepEqual(result.reasons, [CommandResult.DuplicatedFilterLabel]);
         assert.equal(model.getters.getGlobalFilters().length, 1);
 
         // Edit to set same name as other filter
-        await addGlobalFilter(model, {
-            filter: { ...filter, id: "789", label: "Other name" },
-        });
+        await addGlobalFilter(model, { ...filter, id: "789", label: "Other name" });
         assert.equal(model.getters.getGlobalFilters().length, 2);
         result = await editGlobalFilter(model, {
-            id: "789",
-            filter: { ...filter, label: "Hello" },
+            ...filter,
+            label: "Other name",
         });
         assert.deepEqual(result.reasons, [CommandResult.DuplicatedFilterLabel]);
 
         // Edit to set same name
         result = await editGlobalFilter(model, {
-            id: "789",
-            filter: { ...filter, label: "Other name" },
+            ...filter,
+            label: "Hello",
         });
         assert.deepEqual(result, DispatchResult.Success);
     });
@@ -173,31 +162,22 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     QUnit.test("Can name/rename filters with special characters", async function (assert) {
         assert.expect(5);
         const { model } = await createSpreadsheetWithPivot();
-        const filter = Object.assign({}, THIS_YEAR_GLOBAL_FILTER.filter, {
-            label: "{my} We)ird. |*ab(el []",
-        });
-        let result = model.dispatch("ADD_GLOBAL_FILTER", { filter });
+        const filter = { ...THIS_YEAR_GLOBAL_FILTER, label: "{my} We)ird. |*ab(el []" };
+        let result = await addGlobalFilter(model, filter);
         assert.deepEqual(result, DispatchResult.Success);
         assert.equal(model.getters.getGlobalFilters().length, 1);
 
-        const filterId = model.getters.getGlobalFilters()[0].id;
-
         // Edit to set another name with special characters
-        result = model.dispatch("EDIT_PIVOT_FILTER", {
-            id: filterId,
-            filter: Object.assign({}, filter, { label: "+Othe^ we?rd name+$" }),
-        });
+        result = await editGlobalFilter(model, { ...filter, label: "+Othe^ we?rd name+$" });
+
         assert.deepEqual(result, DispatchResult.Success);
 
-        result = model.dispatch("EDIT_PIVOT_FILTER", {
-            id: filterId,
-            filter: Object.assign({}, filter, { label: "normal name" }),
-        });
+        result = await editGlobalFilter(model, { ...filter, label: "normal name" });
         assert.deepEqual(result, DispatchResult.Success);
 
-        result = model.dispatch("EDIT_PIVOT_FILTER", {
-            id: filterId,
-            filter: Object.assign({}, filter, { label: "?ack +.* to {my} We)ird. |*ab(el []" }),
+        result = await editGlobalFilter(model, {
+            ...filter,
+            label: "?ack +.* to {my} We)ird. |*ab(el []",
         });
         assert.deepEqual(result, DispatchResult.Success);
     });
@@ -211,7 +191,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     1: { chain: "created_on", type: "date", offset: 1 },
                 },
             });
-            const filterId = THIS_YEAR_GLOBAL_FILTER.filter.id;
+            const filterId = THIS_YEAR_GLOBAL_FILTER.id;
 
             let fieldMatching = model.getters.getPivotFieldMatching("1", filterId);
             assert.equal(fieldMatching.chain, "created_on");
@@ -248,7 +228,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     1: { chain: "created_on", type: "date", offset: 1 },
                 },
             });
-            const filterId = THIS_YEAR_GLOBAL_FILTER.filter.id;
+            const filterId = THIS_YEAR_GLOBAL_FILTER.id;
 
             insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
             const fieldMatching = model.getters.getListFieldMatching("1", filterId);
@@ -256,12 +236,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         }
     );
     QUnit.test("Can save a value to an existing global filter", async function (assert) {
-        assert.expect(8);
-
         const { model } = await createSpreadsheetWithPivotAndList();
         await addGlobalFilter(
             model,
-            { filter: LAST_YEAR_FILTER.filter },
+            LAST_YEAR_FILTER,
             { pivot: DEFAULT_FIELD_MATCHINGS, list: DEFAULT_FIELD_MATCHINGS }
         );
         const gf = model.getters.getGlobalFilters()[0];
@@ -290,19 +268,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         insertChartInSpreadsheet(model);
         const chartId = model.getters.getOdooChartIds()[0];
-        await addGlobalFilter(
-            model,
-            {
-                filter: {
-                    ...LAST_YEAR_FILTER.filter,
-                },
-            },
-            {
-                pivot: { 1: { chain: "date", type: "date" } },
-                list: { 1: { chain: "date", type: "date" } },
-                chart: { [chartId]: { chain: "date", type: "date" } },
-            }
-        );
+        await addGlobalFilter(model, LAST_YEAR_FILTER, {
+            pivot: { 1: { chain: "date", type: "date" } },
+            list: { 1: { chain: "date", type: "date" } },
+            chart: { [chartId]: { chain: "date", type: "date" } },
+        });
         const pivotDomain = model.getters.getPivotComputedDomain("1");
         assert.deepEqual(pivotDomain[0], "&");
         assert.deepEqual(pivotDomain[1], ["date", ">=", "2021-01-01"]);
@@ -334,16 +304,12 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithList();
         /** @type GlobalFilter */
         const filter = {
-            ...THIS_YEAR_GLOBAL_FILTER.filter,
+            ...THIS_YEAR_GLOBAL_FILTER,
             defaultValue: { yearOffset: 0, period: "third_quarter" },
         };
-        await addGlobalFilter(
-            model,
-            { filter },
-            {
-                list: { 1: { chain: "date", type: "date", offset: 2 } },
-            }
-        );
+        await addGlobalFilter(model, filter, {
+            list: { 1: { chain: "date", type: "date", offset: 2 } },
+        });
         const listDomain = model.getters.getListComputedDomain("1");
         assert.deepEqual(listDomain[0], "&");
         assert.deepEqual(listDomain[1], ["date", ">=", "2023-01-01"]);
@@ -356,16 +322,12 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const chartId = model.getters.getOdooChartIds()[0];
         /** @type GlobalFilter */
         const filter = {
-            ...THIS_YEAR_GLOBAL_FILTER.filter,
+            ...THIS_YEAR_GLOBAL_FILTER,
             defaultValue: { yearOffset: 0, period: "july" },
         };
-        await addGlobalFilter(
-            model,
-            { filter },
-            {
-                chart: { [chartId]: { chain: "date", type: "date", offset: -2 } },
-            }
-        );
+        await addGlobalFilter(model, filter, {
+            chart: { [chartId]: { chain: "date", type: "date", offset: -2 } },
+        });
         const chartDomain = model.getters.getChartDataSource(chartId).getComputedDomain();
         assert.deepEqual(chartDomain[0], "&");
         assert.deepEqual(chartDomain[1], ["date", ">=", "2022-05-01"]);
@@ -411,7 +373,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     },
                 },
             },
-            globalFilters: [LAST_YEAR_LEGACY_FILTER.filter, LAST_YEAR_FILTER.filter],
+            globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_FILTER],
         });
         const model = await createModelWithDataSource({ spreadsheetData });
 
@@ -467,11 +429,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await addGlobalFilter(
             model,
             {
-                filter: {
-                    id: "42",
-                    type: "relation",
-                    label: "Relation Filter",
-                },
+                id: "42",
+                type: "relation",
+                label: "Relation Filter",
             },
             {
                 pivot: {
@@ -494,13 +454,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     QUnit.test("Relational filter default to current user", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "relation",
-                label: "User Filter",
-                modelName: "res.users",
-                defaultValue: "current_user",
-            },
+            id: "42",
+            type: "relation",
+            label: "User Filter",
+            modelName: "res.users",
+            defaultValue: "current_user",
         });
         const [filter] = model.getters.getGlobalFilters();
         assert.deepEqual(model.getters.getGlobalFilterValue(filter.id), [7]);
@@ -518,26 +476,20 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Text Filter",
-            },
+            id: "42",
+            type: "text",
+            label: "Text Filter",
         });
         await addGlobalFilter(model, {
-            filter: {
-                id: "43",
-                type: "date",
-                label: "Date Filter",
-                rangeType: "fixedPeriod",
-            },
+            id: "43",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "fixedPeriod",
         });
         await addGlobalFilter(model, {
-            filter: {
-                id: "44",
-                type: "relation",
-                label: "Relation Filter",
-            },
+            id: "44",
+            type: "relation",
+            label: "Relation Filter",
         });
         const [text] = model.getters.getGlobalFilters();
         assert.equal(model.getters.getActiveFilterCount(), false);
@@ -553,11 +505,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Text Filter",
-            },
+            id: "42",
+            type: "text",
+            label: "Text Filter",
         });
         const [filter] = model.getters.getGlobalFilters();
         assert.equal(model.getters.getActiveFilterCount(), false);
@@ -573,11 +523,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "relation",
-                label: "Relation Filter",
-            },
+            id: "42",
+            type: "relation",
+            label: "Relation Filter",
         });
         const [filter] = model.getters.getGlobalFilters();
         assert.equal(model.getters.getActiveFilterCount(), false);
@@ -593,12 +541,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "date",
-                label: "Date Filter",
-                rangeType: "fixedPeriod",
-            },
+            id: "42",
+            type: "date",
+            label: "Date Filter",
+            rangeType: "fixedPeriod",
         });
         const [filter] = model.getters.getGlobalFilters();
         assert.equal(model.getters.getActiveFilterCount(), false);
@@ -635,11 +581,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await nextTick();
         assert.equal(getCellValue(model, "A10"), "#ERROR");
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Text Filter",
-            },
+            id: "42",
+            type: "text",
+            label: "Text Filter",
         });
         await nextTick();
         assert.equal(getCellValue(model, "A10"), "");
@@ -659,11 +603,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Date Filter")`);
         await nextTick();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "date",
-                label: "Date Filter",
-            },
+            id: "42",
+            type: "date",
+            label: "Date Filter",
         });
         await nextTick();
         const [filter] = model.getters.getGlobalFilters();
@@ -723,12 +665,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Relation Filter")`);
         await nextTick();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "relation",
-                label: "Relation Filter",
-                modelName: "partner",
-            },
+            id: "42",
+            type: "relation",
+            label: "Relation Filter",
+            modelName: "partner",
         });
         await nextTick();
         const [filter] = model.getters.getGlobalFilters();
@@ -767,11 +707,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
             const model = await createModelWithDataSource();
             await addGlobalFilter(model, {
-                filter: {
-                    id: "42",
-                    type: "date",
-                    label: "Cuillère",
-                },
+                id: "42",
+                type: "date",
+                label: "Cuillère",
             });
             setCellContent(
                 model,
@@ -780,10 +718,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             );
             const [filter] = model.getters.getGlobalFilters();
             const newFilter = {
+                ...filter,
                 type: "date",
                 label: "Interprete",
             };
-            await editGlobalFilter(model, { id: filter.id, filter: newFilter });
+            await editGlobalFilter(model, newFilter);
             assert.equal(
                 getCellFormula(model, "A10"),
                 `=ODOO.FILTER.VALUE("Interprete") & ODOO.FILTER.VALUE("Interprete")`
@@ -796,11 +735,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Cuillère",
-            },
+            id: "42",
+            type: "text",
+            label: "Cuillère",
         });
         await setGlobalFilterValue(model, {
             id: "42",
@@ -817,11 +754,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Cuillère",
-            },
+            id: "42",
+            type: "text",
+            label: "Cuillère",
         });
         assert.equal(model.getters.getGlobalFilters().length, 1);
         model.dispatch("REQUEST_UNDO");
@@ -835,11 +770,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Cuillère",
-            },
+            id: "42",
+            type: "text",
+            label: "Cuillère",
         });
         await removeGlobalFilter(model, "42");
         assert.equal(model.getters.getGlobalFilters().length, 0);
@@ -854,19 +787,14 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Cuillère",
-            },
+            id: "42",
+            type: "text",
+            label: "Cuillère",
         });
         await editGlobalFilter(model, {
             id: "42",
-            filter: {
-                id: "42",
-                type: "text",
-                label: "Arthouuuuuur",
-            },
+            type: "text",
+            label: "Arthouuuuuur",
         });
         assert.equal(model.getters.getGlobalFilters()[0].label, "Arthouuuuuur");
         model.dispatch("REQUEST_UNDO");
@@ -889,13 +817,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await addGlobalFilter(
             model,
             {
-                filter: {
-                    id: "42",
-                    type: "relation",
-                    label: "Relation Filter",
-                    modelName: "product",
-                    defaultValue: [41],
-                },
+                id: "42",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [41],
             },
             { pivot: { 1: { chain: "product_id", type: "many2one" } } }
         );
@@ -1043,14 +969,12 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             "partner/read_group",
         ]);
         assert.strictEqual(getCellValue(model, "A1"), 131);
-        model.dispatch("ADD_GLOBAL_FILTER", {
-            filter: {
-                id: "42",
-                type: "date",
-                rangeType: "fixedPeriod",
-                label: "This month",
-                defaultValue: {}, // no default value!
-            },
+        addGlobalFilter(model, {
+            id: "42",
+            type: "date",
+            rangeType: "fixedPeriod",
+            label: "This month",
+            defaultValue: {}, // no default value!
         });
         assert.strictEqual(getCellValue(model, "A1"), 131);
         assert.verifySteps([]);
@@ -1158,9 +1082,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivot();
         const label = "This year";
         const defaultValue = "value";
-        await addGlobalFilter(model, {
-            filter: { id: "42", type: "text", label, defaultValue },
-        });
+        await addGlobalFilter(model, { id: "42", type: "text", label, defaultValue });
         const [filter] = model.getters.getGlobalFilters();
         assert.equal(model.getters.getGlobalFilterValue(filter.id), defaultValue);
     });
@@ -1211,13 +1133,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const label = "This year";
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, {
-            filter: {
-                id: "1",
-                type: "date",
-                label,
-                defaultValue: "this_year",
-                rangeType: "fixedPeriod",
-            },
+            id: "1",
+            type: "date",
+            label,
+            defaultValue: "this_year",
+            rangeType: "fixedPeriod",
         });
         assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
             yearOffset: 0,
@@ -1229,13 +1149,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const label = "This month";
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, {
-            filter: {
-                id: "1",
-                type: "date",
-                label,
-                defaultValue: "this_month",
-                rangeType: "fixedPeriod",
-            },
+            id: "1",
+            type: "date",
+            label,
+            defaultValue: "this_month",
+            rangeType: "fixedPeriod",
         });
         assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
             yearOffset: 0,
@@ -1248,13 +1166,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const label = "This quarter";
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, {
-            filter: {
-                id: "1",
-                type: "date",
-                label,
-                defaultValue: "this_quarter",
-                rangeType: "fixedPeriod",
-            },
+            id: "1",
+            type: "date",
+            label,
+            defaultValue: "this_quarter",
+            rangeType: "fixedPeriod",
         });
         assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
             yearOffset: 0,
@@ -1298,13 +1214,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const defaultValue = RELATIVE_DATE_RANGE_TYPES[1].type;
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, {
-            filter: {
-                id: "42",
-                type: "date",
-                label,
-                defaultValue,
-                rangeType: "relative",
-            },
+            id: "42",
+            type: "date",
+            label,
+            defaultValue,
+            rangeType: "relative",
         });
         assert.equal(
             model.getters.getFilterDisplayValue(label),
@@ -1324,7 +1238,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             defaultValue: "last_week",
             rangeType: "relative",
         };
-        await addGlobalFilter(model, { filter }, { pivot: { 1: { chain: "date", type: "date" } } });
+        await addGlobalFilter(model, filter, { pivot: { 1: { chain: "date", type: "date" } } });
         let computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 7);
         assertDateDomainEqual(assert, "date", "2022-05-10", "2022-05-16", computedDomain);
@@ -1371,11 +1285,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             defaultValue: "last_week",
             rangeType: "relative",
         };
-        await addGlobalFilter(
-            model,
-            { filter },
-            { pivot: { 1: { chain: "date", type: "date", offset: -1 } } }
-        );
+        await addGlobalFilter(model, filter, {
+            pivot: { 1: { chain: "date", type: "date", offset: -1 } },
+        });
         let computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 7);
         assertDateDomainEqual(assert, "date", "2022-05-03", "2022-05-09", computedDomain);
@@ -1421,10 +1333,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 </pivot>`,
             });
             await addGlobalFilter(model, {
-                filter: {
-                    id: "42",
-                    type: "relation",
-                },
+                id: "42",
+                type: "relation",
             });
             model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", {
                 filters: [{ filterId: "42", value: [31] }],
@@ -1441,11 +1351,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             patchDate(2022, 6, 14, 0, 0, 0);
             const { model } = await createSpreadsheetWithPivot();
             await addGlobalFilter(model, {
-                filter: {
-                    id: "42",
-                    type: "date",
-                    rangeType: "fixedPeriod",
-                },
+                id: "42",
+                type: "date",
+                defaultValue: "this_month",
+                rangeType: "fixedPeriod",
             });
             const newValue = { yearOffset: -6, period: "may" };
             model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", {
@@ -1472,11 +1381,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "42",
-                        type: "relation",
-                        label: "relational filter",
-                    },
+                    id: "42",
+                    type: "relation",
+                    label: "relational filter",
                 },
                 {
                     pivot: { 1: { chain: "product_id", type: "many2one" } },
@@ -1485,12 +1392,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "43",
-                        type: "date",
-                        label: "date filter 1",
-                        rangeType: "fixedPeriod",
-                    },
+                    id: "43",
+                    type: "date",
+                    label: "date filter 1",
+                    rangeType: "fixedPeriod",
+                    defaultValue: "this_month"
                 },
                 {
                     pivot: { 1: { chain: "date", type: "date" } },
@@ -1540,11 +1446,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "42",
-                        type: "relation",
-                        label: "relational filter",
-                    },
+                    id: "42",
+                    type: "relation",
+                    label: "relational filter",
                 },
                 {
                     pivot: { 1: { chain: "product_id", type: "many2one" } },
@@ -1553,12 +1457,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "43",
-                        type: "date",
-                        label: "date filter 1",
-                        rangeType: "fixedPeriod",
-                    },
+                    id: "43",
+                    type: "date",
+                    label: "date filter 1",
+                    dateValue: "this_month",
+                    rangeType: "fixedPeriod",
                 },
                 {
                     pivot: { 1: { chain: "product_id", type: "many2one" } },
@@ -1585,11 +1488,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "42",
-                        type: "relation",
-                        defaultValue: [],
-                    },
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
                 },
                 { pivot: { 1: { chain: "product_id", type: "many2one" } } }
             );
@@ -1617,11 +1518,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "42",
-                        type: "relation",
-                        defaultValue: [],
-                    },
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
                 },
                 { pivot: { 1: { chain: "product_id", type: "many2one" } } }
             );
@@ -1646,11 +1545,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 </pivot>`,
             });
             await addGlobalFilter(model, {
-                filter: {
-                    id: "42",
-                    type: "relation",
-                    defaultValue: [],
-                },
+                id: "42",
+                type: "relation",
+                defaultValue: [],
             });
             const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
             assert.deepEqual(filters, []);
@@ -1671,11 +1568,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             await addGlobalFilter(
                 model,
                 {
-                    filter: {
-                        id: "42",
-                        type: "relation",
-                        defaultValue: [],
-                    },
+                    id: "42",
+                    type: "relation",
+                    defaultValue: [],
                 },
                 { pivot: { 1: { chain: "product_id", type: "many2one" } } }
             );
@@ -1696,12 +1591,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             });
             setCellContent(model, "B3", '=ODOO.PIVOT(1, "probability", "#product_id", 1)');
             await addGlobalFilter(model, {
-                filter: {
-                    id: "42",
-                    type: "relation",
-                    defaultValue: [1],
-                    pivotFields: { 1: { field: "product_id", type: "many2one" } },
-                },
+                id: "42",
+                type: "relation",
+                defaultValue: [1],
+                pivotFields: { 1: { field: "product_id", type: "many2one" } },
             });
             const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B3"));
             assert.deepEqual(filters, []);
@@ -1794,12 +1687,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 </pivot>`,
             });
             await addGlobalFilter(model, {
-                filter: {
-                    id: "42",
-                    label: "fake",
-                    type: "relation",
-                    defaultValue: [],
-                },
+                id: "42",
+                label: "fake",
+                type: "relation",
+                defaultValue: [],
             });
             const filters = model.getters.getFiltersMatchingPivot(getCellFormula(model, "B2"));
             assert.deepEqual(filters, []);
@@ -1812,12 +1703,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const chartId = model.getters.getOdooChartIds()[0];
 
         const filter = (label) => ({
-            filter: {
-                id: "42",
-                label,
-                type: "date",
-                defaultValue: {},
-            },
+            id: "42",
+            label,
+            type: "date",
+            defaultValue: {},
         });
         const resultPivot = await addGlobalFilter(model, filter("fake1"), {
             pivot: { 1: { offset: -2 } },
@@ -1836,13 +1725,11 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     QUnit.test("Can create a relative date filter with an empty default value", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
         const filter = {
-            filter: {
-                id: "42",
-                label: "test",
-                type: "date",
-                defaultValue: {},
-                rangeType: "relative",
-            },
+            id: "42",
+            label: "test",
+            type: "date",
+            defaultValue: {},
+            rangeType: "relative",
         };
         const result = await addGlobalFilter(model, filter);
         assert.ok(result.isSuccessful);

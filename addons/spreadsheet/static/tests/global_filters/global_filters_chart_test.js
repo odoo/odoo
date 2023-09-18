@@ -14,11 +14,7 @@ async function addChartGlobalFilter(model) {
         rangeType: "fixedPeriod",
         defaultValue: { yearOffset: -1 },
     };
-    await addGlobalFilter(
-        model,
-        { filter },
-        { chart: { [chartId]: { chain: "date", type: "date" } } }
-    );
+    await addGlobalFilter(model, filter, { chart: { [chartId]: { chain: "date", type: "date" } } });
 }
 
 QUnit.module("spreadsheet > Global filters chart", {}, () => {
@@ -56,11 +52,9 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
             label: "Last Year",
             rangeType: "fixedPeriod",
         };
-        await addGlobalFilter(
-            model,
-            { filter },
-            { chart: { [chartId]: { chain: "date", type: "date" } } }
-        );
+        await addGlobalFilter(model, filter, {
+            chart: { [chartId]: { chain: "date", type: "date" } },
+        });
         model.updateMode("dashboard");
         let computedDomain = model.getters.getChartDataSource(chartId).getComputedDomain();
         assert.deepEqual(computedDomain, []);

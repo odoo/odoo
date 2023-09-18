@@ -44,9 +44,9 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     allowDispatch(cmd) {
         switch (cmd.type) {
             case "EDIT_GLOBAL_FILTER":
-                if (!this.getGlobalFilter(cmd.id)) {
+                if (!this.getGlobalFilter(cmd.filter.id)) {
                     return CommandResult.FilterNotFound;
-                } else if (this._isDuplicatedLabel(cmd.id, cmd.filter.label)) {
+                } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
                 return checkFiltersTypeValueCombination(cmd.filter.type, cmd.filter.defaultValue);
@@ -56,7 +56,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
                 }
                 break;
             case "ADD_GLOBAL_FILTER":
-                if (this._isDuplicatedLabel(cmd.id, cmd.filter.label)) {
+                if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
                 return checkFiltersTypeValueCombination(cmd.filter.type, cmd.filter.defaultValue);
@@ -75,7 +75,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
                 this.history.update("globalFilters", cmd.filter.id, cmd.filter);
                 break;
             case "EDIT_GLOBAL_FILTER":
-                this._editGlobalFilter(cmd.id, cmd.filter);
+                this._editGlobalFilter(cmd.filter);
                 break;
             case "REMOVE_GLOBAL_FILTER":
                 this.history.update("globalFilters", cmd.id, undefined);
@@ -169,10 +169,10 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      * @param {string} id Id of the filter to update
      * @param {GlobalFilter} newFilter
      */
-    _editGlobalFilter(id, newFilter) {
+    _editGlobalFilter(newFilter) {
+        const id = newFilter.id;
         const currentLabel = this.getGlobalFilter(id).label;
         const globalFilters = { ...this.globalFilters };
-        newFilter.id = id;
         globalFilters[id] = newFilter;
         this.history.update("globalFilters", globalFilters);
         const newLabel = this.getGlobalFilter(id).label;
