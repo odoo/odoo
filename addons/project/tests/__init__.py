@@ -12,6 +12,7 @@ from . import test_project_sharing
 from . import test_project_sharing_portal_access
 from . import test_project_sharing_ui
 from . import test_project_subtasks
+from . import test_project_tags_filter
 from . import test_project_task_type
 from . import test_project_ui
 from . import test_project_update_access_rights
