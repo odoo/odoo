@@ -301,6 +301,8 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr("bool([1])"), true);
             assert.strictEqual(evaluateExpr("bool('')"), false);
             assert.strictEqual(evaluateExpr("bool('foo')"), true);
+            assert.strictEqual(evaluateExpr("bool(set())"), false);
+            assert.strictEqual(evaluateExpr("bool(set([1]))"), true);
             assert.strictEqual(
                 evaluateExpr("bool(date_deadline)", { date_deadline: "2008" }),
                 true
@@ -398,14 +400,14 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateBooleanExpr("0 + 3 - a", { a: 1 }), true);
             assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - 2", { a: 1 }), false);
             assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - b", { a: 1, b: 2 }), false);
-            assert.strictEqual(evaluateBooleanExpr('a', { a: "foo" }), true);
+            assert.strictEqual(evaluateBooleanExpr("a", { a: "foo" }), true);
             assert.strictEqual(evaluateBooleanExpr("a", { a: [1] }), true);
             assert.strictEqual(evaluateBooleanExpr("a", { a: [] }), false);
         });
 
         QUnit.test("throw if has missing value", (assert) => {
             assert.throws(() => evaluateBooleanExpr("a", { b: 0 }));
-            assert.strictEqual(evaluateBooleanExpr("1 or a"), true);  // do not throw (lazy value)
+            assert.strictEqual(evaluateBooleanExpr("1 or a"), true); // do not throw (lazy value)
             assert.throws(() => evaluateBooleanExpr("0 or a"));
             assert.throws(() => evaluateBooleanExpr("a or b", { b: true }));
             assert.throws(() => evaluateBooleanExpr("a and b", { b: true }));
@@ -415,6 +417,148 @@ QUnit.module("py", {}, () => {
             assert.throws(() => evaluateBooleanExpr("0 + 3 - a", { b: 1 }));
             assert.throws(() => evaluateBooleanExpr("0 + 3 - a - 2", { b: 1 }));
             assert.throws(() => evaluateBooleanExpr("0 + 3 - a - b", { b: 2 }));
+        });
+
+        QUnit.module("sets");
+
+        QUnit.test("static set", (assert) => {
+            assert.deepEqual(evaluateExpr("set()"), new Set());
+            assert.deepEqual(evaluateExpr("set([])"), new Set([]));
+            assert.deepEqual(evaluateExpr("set([0])"), new Set([0]));
+            assert.deepEqual(evaluateExpr("set([1])"), new Set([1]));
+            assert.deepEqual(evaluateExpr("set([0, 0])"), new Set([0]));
+            assert.deepEqual(evaluateExpr("set([0, 1])"), new Set([0, 1]));
+            assert.deepEqual(evaluateExpr("set([1, 1])"), new Set([1]));
+
+            assert.deepEqual(evaluateExpr("set('')"), new Set());
+            assert.deepEqual(evaluateExpr("set('a')"), new Set(["a"]));
+            assert.deepEqual(evaluateExpr("set('ab')"), new Set(["a", "b"]));
+
+            assert.deepEqual(evaluateExpr("set({})"), new Set());
+            assert.deepEqual(evaluateExpr("set({ 'a': 1 })"), new Set(["a"]));
+            assert.deepEqual(evaluateExpr("set({ '': 1, 'a': 1 })"), new Set(["", "a"]));
+
+            assert.throws(() => evaluateExpr("set(0)"));
+            assert.throws(() => evaluateExpr("set(1)"));
+            assert.throws(() => evaluateExpr("set(None)"));
+            assert.throws(() => evaluateExpr("set(false)"));
+            assert.throws(() => evaluateExpr("set(true)"));
+            assert.throws(() => evaluateExpr("set(1, 2)"));
+
+            assert.throws(() => evaluateExpr("set(expr)", { expr: undefined }));
+            assert.throws(() => evaluateExpr("set(expr)", { expr: null }));
+
+            assert.throws(() => evaluateExpr("set([], [])")); // valid but not supported by py_js
+
+            assert.throws(() => evaluateExpr("set({ 'a' })")); // valid but not supported by py_js
+        });
+
+        QUnit.test("set intersection", (assert) => {
+            assert.deepEqual(evaluateExpr("set([1,2,3]).intersection()"), new Set([1, 2, 3]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3]).intersection(set([2,3]))"),
+                new Set([2, 3])
+            );
+            assert.deepEqual(evaluateExpr("set([1,2,3]).intersection([2,3])"), new Set([2, 3]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3]).intersection(r)", { r: [2, 3] }),
+                new Set([2, 3])
+            );
+            assert.deepEqual(
+                evaluateExpr("r.intersection([2,3])", { r: new Set([1, 2, 3, 2]) }),
+                new Set([2, 3])
+            );
+
+            assert.deepEqual(
+                evaluateExpr("set(foo_ids).intersection([2,3])", { foo_ids: [1, 2] }),
+                new Set([2])
+            );
+            assert.deepEqual(
+                evaluateExpr("set(foo_ids).intersection([2,3])", { foo_ids: [1] }),
+                new Set()
+            );
+            assert.deepEqual(
+                evaluateExpr("set([foo_id]).intersection([2,3])", { foo_id: 1 }),
+                new Set()
+            );
+            assert.deepEqual(
+                evaluateExpr("set([foo_id]).intersection([2,3])", { foo_id: 2 }),
+                new Set([2])
+            );
+
+            assert.throws(() => evaluateExpr("set([]).intersection([], [])")); // valid but not supported by py_js
+            assert.throws(() => evaluateExpr("set([]).intersection([], [], [])")); // valid but not supported by py_js
+        });
+
+        QUnit.test("set difference", (assert) => {
+            assert.deepEqual(evaluateExpr("set([1,2,3]).difference()"), new Set([1, 2, 3]));
+            assert.deepEqual(evaluateExpr("set([1,2,3]).difference(set([2,3]))"), new Set([1]));
+            assert.deepEqual(evaluateExpr("set([1,2,3]).difference([2,3])"), new Set([1]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3]).difference(r)", { r: [2, 3] }),
+                new Set([1])
+            );
+            assert.deepEqual(
+                evaluateExpr("r.difference([2,3])", { r: new Set([1, 2, 3, 2, 4]) }),
+                new Set([1, 4])
+            );
+
+            assert.deepEqual(
+                evaluateExpr("set(foo_ids).difference([2,3])", { foo_ids: [1, 2] }),
+                new Set([1])
+            );
+            assert.deepEqual(
+                evaluateExpr("set(foo_ids).difference([2,3])", { foo_ids: [1] }),
+                new Set([1])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([foo_id]).difference([2,3])", { foo_id: 1 }),
+                new Set([1])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([foo_id]).difference([2,3])", { foo_id: 2 }),
+                new Set()
+            );
+
+            assert.throws(() => evaluateExpr("set([]).difference([], [])")); // valid but not supported by py_js
+            assert.throws(() => evaluateExpr("set([]).difference([], [], [])")); // valid but not supported by py_js
+        });
+
+        QUnit.test("set union", (assert) => {
+            assert.deepEqual(evaluateExpr("set([1,2,3]).union()"), new Set([1, 2, 3]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3]).union(set([2,3,4]))"),
+                new Set([1, 2, 3, 4])
+            );
+            assert.deepEqual(evaluateExpr("set([1,2,3]).union([2,4])"), new Set([1, 2, 3, 4]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3]).union(r)", { r: [2, 4] }),
+                new Set([1, 2, 3, 4])
+            );
+            assert.deepEqual(
+                evaluateExpr("r.union([2,3])", { r: new Set([1, 2, 2, 4]) }),
+                new Set([1, 2, 3, 4])
+            );
+
+            assert.deepEqual(
+                evaluateExpr("set(foo_ids).union([2,3])", { foo_ids: [1, 2] }),
+                new Set([1, 2, 3])
+            );
+            assert.deepEqual(
+                evaluateExpr("set(foo_ids).union([2,3])", { foo_ids: [1] }),
+                new Set([1, 2, 3])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([foo_id]).union([2,3])", { foo_id: 1 }),
+                new Set([1, 2, 3])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([foo_id]).union([2,3])", { foo_id: 2 }),
+                new Set([2, 3])
+            );
+
+            assert.throws(() => evaluateExpr("set([]).union([], [])")); // valid but not supported by py_js
+            assert.throws(() => evaluateExpr("set([]).union([], [], [])")); // valid but not supported by py_js
         });
     });
 });
