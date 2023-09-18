@@ -69,7 +69,10 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-row w-100 h-100 gap-3">
                     <button class="btn btn-secondary w-100 h-100 p-0 m-0 fs-2 text-uppercase" t-on-click="backToMenu">Back to Menu</button>
-                    <button t-attf-class="{{ selfOrder.currentOrder.lines.length === 0 ? 'disabled' : '' }} w-100 h-100 btn btn-primary p-0 m-0 fs-2 text-uppercase" t-on-click="pay">Pay <t t-if="selfOrder.pos_payment_methods.length === 0">at counter</t></button>
+                    <button t-attf-class="{{ selfOrder.currentOrder.lines.length === 0 ? 'disabled' : '' }} w-100 h-100 btn btn-primary p-0 m-0 fs-2 text-uppercase" t-on-click="pay">
+                        <t t-if="selfOrder.pos_payment_methods.length === 0">Pay at counter</t>
+                        <t t-else="">Pay</t>
+                    </button>
                 </div>
             </t>
         </KioskTemplate>

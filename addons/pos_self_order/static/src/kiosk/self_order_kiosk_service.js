@@ -78,6 +78,26 @@ export class selfOrder extends selfOrderCommon {
             this.router.navigate("default");
         }
     }
+
+    async initPayment() {
+        try {
+            if (this.pos_payment_methods.length === 0) {
+                await this.rpc("/pos-self-order/process-new-order/kiosk", {
+                    order: this.currentOrder,
+                    access_token: this.access_token,
+                    table_identifier: null,
+                }).then((order) => {
+                    this.updateOrderFromServer(order);
+                });
+
+                this.router.navigate("payment_success");
+            } else {
+                this.router.navigate("payment");
+            }
+        } catch (error) {
+            this.handleErrorNotification(error);
+        }
+    }
 }
 
 export const selfOrderService = {

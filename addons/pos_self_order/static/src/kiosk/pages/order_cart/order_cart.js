@@ -27,7 +27,7 @@ export class OrderCart extends Component {
         if (this.selfOrder.kiosk_mode === "table" && !this.selfOrder.currentOrder.take_away) {
             this.router.navigate("stand_number");
         } else {
-            this.router.navigate("payment");
+            this.selfOrder.initPayment();
         }
     }
 

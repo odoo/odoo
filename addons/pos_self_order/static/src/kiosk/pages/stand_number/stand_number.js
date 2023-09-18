@@ -49,7 +49,7 @@ export class StandNumber extends Component {
     confirm() {
         if (this.state.standNumber.length > 0) {
             this.selfOrder.tablePadNumber = this.state.standNumber;
-            this.router.navigate("payment");
+            this.selfOrder.initPayment();
         }
     }
 

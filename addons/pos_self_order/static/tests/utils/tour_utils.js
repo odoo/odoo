@@ -150,7 +150,7 @@ export const PosSelf = {
         isTableNumber: (number) => {
             return {
                 content: `Verify if right table is selected`,
-                trigger: `.tablepad-number:contains(${number})`,
+                trigger: `.tablepad-number:contains('${number}')`,
                 run: () => {},
             };
         },
@@ -247,7 +247,9 @@ export const PosSelf = {
                 trigger: `.o_kiosk_item_card:has(.o_kiosk_product_name:contains("${name}")) .btn .fa.fa-trash`,
             };
         },
-        pressNumpad: (keys) => [{ ...Numpad.click(keys), mobile: false }],
+        pressNumpad(keys) {
+            return keys.split("").map((key) => Numpad.click(key, { mobile: false }));
+        },
         selectLocation: (location) => {
             return {
                 content: `Select location: ${location}`,
