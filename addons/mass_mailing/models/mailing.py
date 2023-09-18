@@ -134,7 +134,7 @@ class MassMailing(models.Model):
         string='Status',
         default='draft', required=True,
         copy=False, tracking=True,
-        group_expand='_group_expand_states')
+        group_expand=True)
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -571,9 +571,6 @@ class MassMailing(models.Model):
             if mailing.ab_testing_enabled:
                 vals['ab_testing_schedule_datetime'] = mailing.ab_testing_schedule_datetime
         return vals_list
-
-    def _group_expand_states(self, states, domain, order):
-        return [key for key, val in self._fields['state'].selection]
 
     # ------------------------------------------------------
     # ACTIONS

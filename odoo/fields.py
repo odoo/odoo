@@ -203,7 +203,8 @@ class Field(MetaField('DummyField', (object,), {})):
         * ``sum`` : sum of all values
 
     :param str group_expand: function used to expand read_group results when grouping on
-        the current field.
+        the current field. For selection fields, ``group_expand=True`` automatically
+        expands groups for all selection keys.
 
         .. code-block:: python
 
