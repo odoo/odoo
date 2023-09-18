@@ -1990,7 +1990,7 @@ class PosSession(models.Model):
     def _loader_params_pos_combo(self):
         products = self._context.get('loaded_data')['product.product']
         combo_ids = set().union(*[product.get('combo_ids') for product in products])
-        return {'search_params': {'fields': ['id', 'name', 'combo_line_ids']}, 'ids': combo_ids}
+        return {'search_params': {'fields': ['id', 'name', 'combo_line_ids', 'base_price']}, 'ids': combo_ids}
 
     def _get_pos_ui_pos_combo(self, params):
         return self.env['pos.combo'].browse(params['ids']).read(**params['search_params'])
@@ -1998,7 +1998,7 @@ class PosSession(models.Model):
     def _loader_params_pos_combo_line(self):
         combo_ids = self._context.get('loaded_data')['pos.combo']
         combo_line_ids = set().union(*[combo.get('combo_line_ids') for combo in combo_ids])
-        return {'search_params': {'fields': ['id', 'product_id', 'combo_price']}, 'ids': combo_line_ids}
+        return {'search_params': {'fields': ['id', 'product_id', 'combo_price', 'combo_id']}, 'ids': combo_line_ids}
 
     def _get_pos_ui_pos_combo_line(self, params):
         return self.env['pos.combo.line'].browse(params['ids']).read(**params['search_params'])

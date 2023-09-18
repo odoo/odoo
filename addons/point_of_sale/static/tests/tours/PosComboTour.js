@@ -43,21 +43,21 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         ...ProductScreen.check.selectedOrderlineHas(
             "Combo Product 3",
             "1.0",
-            "14.63",
+            "12.92",
             "Office Combo"
         ),
         ...ProductScreen.do.clickOrderline("Combo Product 5"),
         ...ProductScreen.check.selectedOrderlineHas(
             "Combo Product 5",
             "1.0",
-            "16.87",
+            "17.87",
             "Office Combo"
         ),
         ...ProductScreen.do.clickOrderline("Combo Product 8"),
         ...ProductScreen.check.selectedOrderlineHas(
             "Combo Product 8",
             "1.0",
-            "28.11",
+            "28.81",
             "Office Combo"
         ),
 
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         combo.select("Combo Product 5"),
         combo.select("Combo Product 8"),
         combo.confirm(),
-        ...ProductScreen.check.totalAmountIs("59.61"),
+        ...ProductScreen.check.totalAmountIs("59.60"),
         ...ProductScreen.do.clickPayButton(),
         ...PaymentScreen.do.clickPaymentMethod("Bank"),
         ...PaymentScreen.do.clickValidate(),
@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         combo.select("Combo Product 6"),
         combo.confirm(),
         ...ProductScreen.check.totalAmountIs("50.00"),
-        ...ProductScreen.check.totalTaxIs("8.91"),
+        ...ProductScreen.check.totalTaxIs("8.92"),
 
         // the split screen is tested in `pos_restaurant`
     ],
