@@ -25,6 +25,7 @@ class AccrualPlanLevel(models.Model):
         string='sequence', compute='_compute_sequence', store=True,
         help='Sequence is generated automatically by start time delta.')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True, ondelete="cascade")
+    accrued_gain_time = fields.Selection(related='accrual_plan_id.accrued_gain_time')
     start_count = fields.Integer(
         "Start after",
         help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.", default="1")
@@ -44,6 +45,7 @@ class AccrualPlanLevel(models.Model):
         ('hour', 'Hours')
     ], compute="_compute_added_value_type", store=True, required=True, default="day")
     frequency = fields.Selection([
+        ('hourly', 'Hourly'),
         ('daily', 'Daily'),
         ('weekly', 'Weekly'),
         ('bimonthly', 'Twice a month'),
@@ -121,7 +123,7 @@ class AccrualPlanLevel(models.Model):
 
     _sql_constraints = [
         ('check_dates',
-         "CHECK( (frequency = 'daily') or"
+         "CHECK( (frequency IN ('daily', 'hourly')) or"
          "(week_day IS NOT NULL AND frequency = 'weekly') or "
          "(first_day > 0 AND second_day > first_day AND first_day <= 31 AND second_day <= 31 AND frequency = 'bimonthly') or "
          "(first_day > 0 AND first_day <= 31 AND frequency = 'monthly')or "
@@ -211,7 +213,7 @@ class AccrualPlanLevel(models.Model):
         Returns the next date with the given last call
         """
         self.ensure_one()
-        if self.frequency == 'daily':
+        if self.frequency in ['hourly', 'daily']:
             return last_call + relativedelta(days=1)
         elif self.frequency == 'weekly':
             daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -260,7 +262,7 @@ class AccrualPlanLevel(models.Model):
         Contrary to `_get_next_date` this function will return the 01/02 if that date is given
         """
         self.ensure_one()
-        if self.frequency == 'daily':
+        if self.frequency in ['hourly', 'daily']:
             return last_call
         elif self.frequency == 'weekly':
             daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
