@@ -229,6 +229,7 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(template_dyn.name, 'Test Dynamical')
 
         variant_dyn = template_dyn._create_product_variant(template_dyn._get_first_possible_combination())
+        variant_dyn = variant_dyn.with_context(create_product_product=True)
         self.assertEqual(len(template_dyn.product_variant_ids), 1)
 
         variant_dyn_copy = variant_dyn.copy()
