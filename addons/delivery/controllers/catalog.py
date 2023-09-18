@@ -7,7 +7,9 @@ from odoo.addons.sale.controllers.catalog import CatalogController
 class CatalogControllerDelivery(CatalogController):
 
     @route()
-    def sale_product_catalog_update_sale_order_line_info(self, order_id, product_id, quantity):
+    def sale_product_catalog_update_sale_order_line_info(
+        self, order_id, product_id, quantity, **kwargs
+    ):
         """ Override of `sale` to recompute the delivery prices.
 
         :param int order_id: The sale order, as a `sale.order` id.
@@ -18,7 +20,7 @@ class CatalogControllerDelivery(CatalogController):
         :rtype: float
         """
         price_unit = super().sale_product_catalog_update_sale_order_line_info(
-            order_id, product_id, quantity
+            order_id, product_id, quantity, **kwargs
         )
         order = request.env['sale.order'].browse(order_id)
         if order:
