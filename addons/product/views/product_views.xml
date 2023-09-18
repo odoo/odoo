@@ -215,6 +215,9 @@
                     <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product Template"/>
                 </field>
+                <filter name="categ_id" position="after">
+                    <filter string="Product Template" name="product_tmpl_id" context="{'group_by':'product_tmpl_id'}"/>
+                </filter>
             </field>
         </record>
 
