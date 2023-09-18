@@ -1642,21 +1642,6 @@ class WebsiteSale(http.Controller):
 
         return request.render("website_sale.payment", render_values)
 
-    @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
-    def shop_payment_get_status(self, sale_order_id, **post):
-        order = request.env['sale.order'].sudo().browse(sale_order_id).exists()
-        if order.id != request.session.get('sale_last_order_id'):
-            # either something went wrong or the session is unbound
-            # prevent recalling every 3rd of a second in the JS widget
-            return {}
-
-        return {
-            'recall': order.get_portal_last_transaction().state == 'pending',
-            'message': request.env['ir.ui.view']._render_template("website_sale.payment_confirmation_status", {
-                'order': order
-            })
-        }
-
     @http.route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)
     def shop_payment_validate(self, sale_order_id=None, **post):
         """ Method that should be called by the server when receiving an update
