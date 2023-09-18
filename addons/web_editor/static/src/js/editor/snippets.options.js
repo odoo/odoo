@@ -1032,6 +1032,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     close: function () {
         this._super(...arguments);
+        this.el.classList.remove("o_we_select_dropdown_up");
         if (this.menuTogglerEl) {
             this.menuTogglerEl.classList.remove('active');
         }
@@ -1048,6 +1049,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     open() {
         this._super(...arguments);
         this.menuTogglerEl.classList.add('active');
+        this._adjustDropdownPosition();
     },
     /**
      * @override
@@ -1113,6 +1115,37 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      */
     _shouldIgnoreClick(ev) {
         return !!ev.target.closest('[role="button"]');
+    },
+    /**
+     * Decides whether the dropdown should be positioned below or above the
+     * selector based on the available space.
+     *
+     * @private
+     */
+    _adjustDropdownPosition() {
+        const customizePanelEl = this.menuEl.closest(".o_we_customize_panel");
+        if (!customizePanelEl) {
+            return;
+        }
+
+        this.el.classList.remove("o_we_select_dropdown_up");
+        const customizePanelElCoords = customizePanelEl.getBoundingClientRect();
+        let dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+
+        // Adds a margin to prevent the dropdown from sticking to the edge of
+        // the customize panel.
+        const dropdownMenuMargin = 5;
+        // If after opening, the dropdown list overflows the customization
+        // panel at the bottom, opens the dropdown above the selector.
+        if ((dropdownMenuElCoords.bottom + dropdownMenuMargin) > customizePanelElCoords.bottom) {
+            this.el.classList.add("o_we_select_dropdown_up");
+            dropdownMenuElCoords = this.menuEl.getBoundingClientRect();
+            // If there is no available space above it either, then we open
+            // it below the selector.
+            if (dropdownMenuElCoords.top < customizePanelElCoords.top) {
+                this.el.classList.remove("o_we_select_dropdown_up");
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1547,6 +1580,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
                 selectedColor: this._value,
                 resetTabCount: ++this.resetTabCount,
             });
+            this._super(...arguments);
         } else {
             // TODO review in master, this does async stuff. Maybe the open
             // method should now be async. This is not really robust as the
@@ -1554,8 +1588,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             // the use of the saved promise where we can should mitigate that
             // issue.
             this._colorPaletteRenderPromise = this._renderColorPalette();
+            this._super(...arguments);
+            this._colorPaletteRenderPromise.then(() => {
+                // Re-adjust the position of the colorpicker once the
+                // colorpalette is completely rendered (once that the
+                // colorpicker has its final height.
+                // TODO should not be needed once everything will be converted
+                // to owl.
+                this._adjustDropdownPosition();
+            });
         }
-        this._super(...arguments);
     },
     /**
      * @override
@@ -2580,6 +2622,15 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * We never try to adjust the position for selection with pagers as they
+     * are fullscreen.
+     *
+     * @override
+     */
+    _adjustDropdownPosition() {
+        return;
+    },
     /**
      * @override
      */
