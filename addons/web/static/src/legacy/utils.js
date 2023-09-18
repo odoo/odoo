@@ -152,7 +152,6 @@ export function makeLegacyRPCService(legacyEnv) {
         start(_, { rpc: wowlRPC }) {
             const rpc = makeLegacyRPC(wowlRPC);
             legacyEnv.services.ajax = { rpc };
-            legacyEnv.services.rpc = rpc;
         },
     };
 }
