@@ -1176,6 +1176,7 @@ class AccountMove(models.Model):
             expected_tax_rep_lines = set()
             current_tax_rep_lines = set()
             inv_recompute_all_taxes = recompute_all_taxes
+            has_taxes = False
             for line in invoice.line_ids:
                 if line.recompute_tax_line:
                     inv_recompute_all_taxes = True
@@ -1183,6 +1184,7 @@ class AccountMove(models.Model):
                 if line.tax_repartition_line_id:
                     current_tax_rep_lines.add(line.tax_repartition_line_id._origin)
                 elif line.tax_ids:
+                    has_taxes = True
                     if invoice.is_invoice(include_receipts=True):
                         is_refund = invoice.move_type in ('out_refund', 'in_refund')
                     else:
@@ -1203,12 +1205,13 @@ class AccountMove(models.Model):
             delta_tax_rep_lines = expected_tax_rep_lines - current_tax_rep_lines
 
             # Compute taxes.
-            if inv_recompute_all_taxes:
-                invoice._recompute_tax_lines()
-            elif recompute_tax_base_amount:
-                invoice._recompute_tax_lines(recompute_tax_base_amount=True)
-            elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
-                invoice._recompute_tax_lines(tax_rep_lines_to_recompute=delta_tax_rep_lines)
+            if has_taxes or current_tax_rep_lines:
+                if inv_recompute_all_taxes:
+                    invoice._recompute_tax_lines()
+                elif recompute_tax_base_amount:
+                    invoice._recompute_tax_lines(recompute_tax_base_amount=True)
+                elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
+                    invoice._recompute_tax_lines(tax_rep_lines_to_recompute=delta_tax_rep_lines)
 
             if invoice.is_invoice(include_receipts=True):
 
