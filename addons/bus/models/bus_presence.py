@@ -6,6 +6,7 @@ from psycopg2 import OperationalError
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.index import unique
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -25,13 +26,13 @@ class BusPresence(models.Model):
     _description = 'User Presence'
     _log_access = False
 
-    user_id = fields.Many2one('res.users', 'Users', ondelete='cascade')
+    user_id = fields.Many2one(
+        'res.users', 'Users', ondelete='cascade',
+        index=unique(where="{field} is not null")
+    )
     last_poll = fields.Datetime('Last Poll', default=lambda self: fields.Datetime.now())
     last_presence = fields.Datetime('Last Presence', default=lambda self: fields.Datetime.now())
     status = fields.Selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status', default='offline')
-
-    def init(self):
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS bus_presence_user_unique ON %s (user_id) WHERE user_id IS NOT NULL" % self._table)
 
     @api.model
     def update_presence(self, inactivity_period, identity_field, identity_value):
