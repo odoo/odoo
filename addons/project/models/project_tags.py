@@ -82,8 +82,9 @@ class ProjectTags(models.Model):
             project_tasks_tags_domain = [('id', 'in', [row[0] for row in self.env.cr.fetchall()])]
             # we apply the domain and limit to the ids we've already found
             ids += self.env['project.tags'].search(expression.AND([domain, project_tasks_tags_domain]), limit=limit, order=order).ids
-        if len(ids) < limit:
-            ids += self.env['project.tags'].search(expression.AND([domain, [('id', 'not in', ids)]]), limit=limit - len(ids), order=order).ids
+        if not limit or len(ids) < limit:
+            limit = limit and limit - len(ids)
+            ids += self.env['project.tags'].search(expression.AND([domain, [('id', 'not in', ids)]]), limit=limit, order=order).ids
         return ids
 
     @api.model
