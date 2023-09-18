@@ -11,11 +11,15 @@
                             <label for="added_value" string="Employee accrue"/>
                         </div>
                         <div>
+                            <field name="accrued_gain_time" invisible="1"/>
                             <field name="can_modify_value_type" invisible="1"/>
                             <field name="added_value" widget="FloatWithoutTrailingZeros" style="width: 4rem" class="me-1"/>
                             <field name="added_value_type" style="width: 3.4rem" nolabel="1" readonly="not can_modify_value_type"/>
                         </div>
                         <div style="width: 5rem"/>
+                        <div name="hourly" invisible="frequency != 'hourly'">
+                            <field name="frequency" style="width: 5rem"/>
+                        </div>
                         <div name="daily" invisible="frequency != 'daily'">
                             <field name="frequency" style="width: 5rem"/>
                         </div>

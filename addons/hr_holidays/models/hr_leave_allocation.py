@@ -401,27 +401,38 @@ class HolidaysAllocation(models.Model):
             return (previous_level, current_level_idx - 1)
         return (current_level, current_level_idx)
 
+    def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
+        self.ensure_one()
+        datetime_min_time = datetime.min.time()
+        start_dt = datetime.combine(start_date, datetime_min_time)
+        end_dt = datetime.combine(end_date, datetime_min_time)
+        worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
+            [self.employee_id.id]['hours']
+        if start_period != start_date or end_period != end_date:
+            start_dt = datetime.combine(start_period, datetime_min_time)
+            end_dt = datetime.combine(end_period, datetime_min_time)
+            planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
+                [self.employee_id.id]['hours']
+        else:
+            planned_worked = worked
+        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
+            domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
+        if level.frequency == 'hourly':
+            if level.accrual_plan_id.is_based_on_worked_time:
+                work_entry_prorata = planned_worked
+            else:
+                work_entry_prorata = planned_worked + left
+        else:
+            work_entry_prorata = worked / (left + planned_worked) if (left + planned_worked) else 0
+        return work_entry_prorata
+
     def _process_accrual_plan_level(self, level, start_period, start_date, end_period, end_date):
         """
         Returns the added days for that level
         """
         self.ensure_one()
-        if level.accrual_plan_id.is_based_on_worked_time:
-            datetime_min_time = datetime.min.time()
-            start_dt = datetime.combine(start_date, datetime_min_time)
-            end_dt = datetime.combine(end_date, datetime_min_time)
-            worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
-                [self.employee_id.id]['hours']
-            if start_period != start_date or end_period != end_date:
-                start_dt = datetime.combine(start_period, datetime_min_time)
-                end_dt = datetime.combine(end_period, datetime_min_time)
-                planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
-                    [self.employee_id.id]['hours']
-            else:
-                planned_worked = worked
-            left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
-                domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
-            work_entry_prorata = worked / (left + planned_worked) if (left + planned_worked) else 0
+        if level.frequency == 'hourly' or level.accrual_plan_id.is_based_on_worked_time:
+            work_entry_prorata = self._get_accrual_plan_level_work_entry_prorata(level, start_period, start_date, end_period, end_date)
             added_value = work_entry_prorata * level.added_value
         else:
             added_value = level.added_value

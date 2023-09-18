@@ -10,7 +10,7 @@ from odoo.tests import tagged
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'accruals')
 class TestAccrualAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
@@ -40,6 +40,101 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                        SET create_date = '%s'
                        WHERE id = %s
                        """ % (date, allocation_id))
+
+    def test_frequency_hourly_calendar(self):
+        with freeze_time("2017-12-5"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'hourly',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 10000
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+            self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
+            allocation._update_accrual()
+            tomorrow = datetime.date.today() + relativedelta(days=2)
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
+
+            with freeze_time(tomorrow):
+                allocation._update_accrual()
+                nextcall = datetime.date.today() + relativedelta(days=1)
+                self.assertEqual(allocation.number_of_days, 8, 'There should be 8 day allocated.')
+                self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
+                allocation._update_accrual()
+                self.assertEqual(allocation.number_of_days, 8, 'There should be only 8 day allocated.')
+
+    def test_frequency_hourly_worked_hours(self):
+        with freeze_time("2017-12-5"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': True,
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'hourly',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 10000
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+            self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
+            allocation._update_accrual()
+            tomorrow = datetime.date.today() + relativedelta(days=2)
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
+
+            holiday_type = self.env['hr.leave.type'].create({
+                'name': 'Paid Time Off',
+                'requires_allocation': 'no',
+                'responsible_ids': [(4, self.user_hrmanager_id)],
+                'time_type': 'leave',
+                'request_unit': 'half_day',
+            })
+            leave = self.env['hr.leave'].create({
+                'name': 'leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': holiday_type.id,
+                'request_date_from': '2017-12-06 08:00:00',
+                'request_date_to': '2017-12-06 17:00:00',
+                'request_unit_half': True,
+                'request_date_from_period': 'am',
+            })
+            leave.action_validate()
+
+            with freeze_time(tomorrow):
+                allocation._update_accrual()
+                nextcall = datetime.date.today() + relativedelta(days=1)
+                self.assertEqual(allocation.number_of_days, 4, 'There should be 4 day allocated.')
+                self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
+                allocation._update_accrual()
+                self.assertEqual(allocation.number_of_days, 4, 'There should be only 4 day allocated.')
 
     def test_frequency_daily(self):
         with freeze_time("2017-12-5"):
