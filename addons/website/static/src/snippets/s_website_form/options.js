@@ -175,19 +175,24 @@ const FormEditor = options.Class.extend({
         return this.$target[0].dataset.mark;
     },
     /**
-     * Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
-     * all "`" character by `&lsquo;`. This is needed in order to be able to
-     * perform querySelector of this type: `querySelector(`[name="${name}"]`)`.
-     * It also encodes the "\\" sequence to avoid having to escape it when doing
-     * a `querySelector`.
+     * Replace all `"` character by `&quot;`.
      *
      * @param {string} name
+     * @returns {string}
      */
     _getQuotesEncodedName(name) {
-        return name.replaceAll(/"/g, character => `&quot;`)
-                   .replaceAll(/'/g, character => `&apos;`)
-                   .replaceAll(/`/g, character => `&lsquo;`)
-                   .replaceAll("\\", character => `&bsol;`);
+        // Browsers seem to be encoding the double quotation mark character as
+        // `%22` (URI encoded version) when used inside an input's name. It is
+        // actually quite weird as a sent `<input name='Hello "world" %22'/>`
+        // will actually be received as `Hello %22world%22 %22` on the server,
+        // making it impossible to know which is actually a real double
+        // quotation mark and not the "%22" string. Values do not have this
+        // problem: `Hello "world" %22` would be received as-is on the server.
+        // In the future, we should consider not using label values as input
+        // names anyway; the idea was bad in the first place. We should probably
+        // assign random field names (as we do for IDs) and send a mapping
+        // with the labels, as values (TODO ?).
+        return name.replaceAll(/"/g, character => `&quot;`);
     },
     /**
      * @private
@@ -1002,11 +1007,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     onRemove() {
         const fieldName = this.$target[0].querySelector('.s_website_form_input').name;
-        const isMultipleField = this.formEl.querySelectorAll(`.s_website_form_input[name="${fieldName}"]`).length > 1;
+        const isMultipleField = this.formEl.querySelectorAll(`.s_website_form_input[name="${CSS.escape(fieldName)}"]`).length > 1;
         if (isMultipleField) {
             return;
         }
-        const dependentFieldContainerEl = this.formEl.querySelectorAll(`[data-visibility-dependency="${fieldName}"]`);
+        const dependentFieldContainerEl = this.formEl.querySelectorAll(`[data-visibility-dependency="${CSS.escape(fieldName)}"]`);
         for (const fieldContainerEl of dependentFieldContainerEl) {
             this._deleteConditionalVisibility(fieldContainerEl);
         }
@@ -1078,7 +1083,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             inputEls.forEach(el => el.name = value);
 
             // Synchronize the fields whose visibility depends on this field
-            const dependentEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousInputName}"]`);
+            const dependentEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${CSS.escape(previousInputName)}"]`);
             for (const dependentEl of dependentEls) {
                 if (!previewMode && this._findCircular(this.$target[0], dependentEl)) {
                     // For all the fields whose visibility depends on this
@@ -1170,7 +1175,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const input = inputEls[i];
             if (newValuesText[i] && input.value && !newValuesText.includes(input.value)) {
                 for (const dependentEl of this.formEl.querySelectorAll(
-                        `[data-visibility-condition="${input.value}"][data-visibility-dependency="${inputName}"]`)) {
+                        `[data-visibility-condition="${CSS.escape(input.value)}"][data-visibility-dependency="${CSS.escape(inputName)}"]`)) {
                     dependentEl.dataset.visibilityCondition = newValuesText[i];
                 }
                 break;
@@ -1351,7 +1356,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _getDependencyEl(fieldEl = this.$target[0]) {
         const dependencyName = fieldEl.dataset.visibilityDependency;
-        return this.formEl.querySelector(`.s_website_form_input[name="${dependencyName}"]`);
+        return this.formEl.querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
     },
     /**
      * @param {HTMLElement} dependentFieldEl
@@ -1369,7 +1374,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             // Get all the fields that have the same label as the dependent
             // field.
             let dependentFieldEls = Array.from(this.formEl
-                .querySelectorAll(`.s_website_form_input[name="${dependentFieldName}"]`))
+                .querySelectorAll(`.s_website_form_input[name="${CSS.escape(dependentFieldName)}"]`))
                 .map((el) => el.closest(".s_website_form_field"));
             // Remove the duplicated fields. This could happen if the field has
             // multiple inputs ("Multiple Checkboxes" for example.)
@@ -1557,7 +1562,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (hasConditionalVisibility) {
             this.$target[0].classList.add('s_website_form_field_hidden_if', 'd-none');
         }
-        const dependentFieldEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousName}"]`);
+        const dependentFieldEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${CSS.escape(previousName)}"]`);
         const newFormInputEl = this.$target[0].querySelector('.s_website_form_input');
         const newName = newFormInputEl.name;
         const newType = newFormInputEl.type;
