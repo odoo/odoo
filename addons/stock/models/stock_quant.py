@@ -24,12 +24,12 @@ class StockQuant(models.Model):
 
     def _domain_location_id(self):
         if not self._is_inventory_mode():
-            return
+            return []
         return [('usage', 'in', ['internal', 'transit'])]
 
     def _domain_lot_id(self):
         if not self._is_inventory_mode():
-            return
+            return []
         domain = []
         if self.env.context.get('active_model') == 'product.product':
             domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
@@ -43,7 +43,7 @@ class StockQuant(models.Model):
 
     def _domain_product_id(self):
         if not self._is_inventory_mode():
-            return
+            return []
         domain = [('type', '=', 'product')]
         if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
             products = self.env.context.get('product_tmpl_ids', []) + [self.env.context.get('product_tmpl_id', 0)]
