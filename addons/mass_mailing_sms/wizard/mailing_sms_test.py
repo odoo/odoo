@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from werkzeug.urls import url_join
 
 from odoo import fields, models, _
+from odoo.addons.sms.tools.sms_api import SmsApi
 
 
 class MassSMSTest(models.TransientModel):
@@ -30,16 +32,16 @@ class MassSMSTest(models.TransientModel):
             # Returns a proper error if there is a syntax error with qweb
             body = self.env['mail.render.mixin']._render_template(body, self.mailing_id.mailing_model_real, record.ids)[record.id]
 
-        new_sms_messages_sudo = self.env['sms.sms'].sudo().create([
-            {'body': body, 'number': number} for number in sanitized_numbers])
-        sent_sms_list = self.env['sms.api']._send_sms_batch([{
+        new_sms_messages_sudo = self.env['sms.sms'].sudo().create([{'body': body, 'number': number} for number in sanitized_numbers])
+        sms_api = SmsApi(self.env)
+        sent_sms_list = sms_api._send_sms_batch([{
             'content': body,
             'numbers': [{'number': sms_id.number, 'uuid': sms_id.uuid} for sms_id in new_sms_messages_sudo],
-        }], dlr=True)
+        }], delivery_reports_url=url_join(self[0].get_base_url(), '/sms/status'))
 
         error_messages = {}
         if any(sent_sms.get('state') != 'success' for sent_sms in sent_sms_list):
-            error_messages = self.env['sms.api']._get_sms_api_error_messages()
+            error_messages = sms_api._get_sms_api_error_messages()
 
         notification_messages = []
         if invalid_numbers:

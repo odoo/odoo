@@ -1,26 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import _
 from odoo.addons.iap.tools import iap_tools
 
-DEFAULT_ENDPOINT = 'https://sms.api.odoo.com'
 
+class SmsApi:
+    DEFAULT_ENDPOINT = 'https://sms.api.odoo.com'
 
-class SmsApi(models.AbstractModel):
-    _name = 'sms.api'
-    _description = 'SMS API'
+    def __init__(self, env):
+        self.env = env
 
-    @api.model
-    def _contact_iap(self, local_endpoint, params):
+    def _contact_iap(self, local_endpoint, params, timeout=15):
         account = self.env['iap.account'].get('sms')
         params['account_token'] = account.account_token
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', DEFAULT_ENDPOINT)
-        # TODO PRO, the default timeout is 15, do we have to increase it ?
-        return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params)
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
+        return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
 
-    @api.model
-    def _send_sms_batch(self, messages, dlr=False):
+    def _send_sms_batch(self, messages, delivery_reports_url=False):
         """ Send SMS using IAP in batch mode
 
         :param list messages: list of SMS (grouped by content) to send:
@@ -34,7 +31,7 @@ class SmsApi(models.AbstractModel):
                   ]
               }, ...
           ]```
-        :param bool dlr: whether to receive delivery reports or not
+        :param str delivery_reports_url: url to route receiving delivery reports
         :return: response from the endpoint called, which is a list of results
           formatted as ```[
               {
@@ -47,13 +44,8 @@ class SmsApi(models.AbstractModel):
               }, ...
           ]```
         """
-        params = {
-            'messages': messages,
-            'webhook_url': dlr and (self.get_base_url() + '/sms/status')
-        }
-        return self._contact_iap('/iap/sms/3/send', params)
+        return self._contact_iap('/iap/sms/3/send', {'messages': messages, 'webhook_url': delivery_reports_url})
 
-    @api.model
     def _get_sms_api_error_messages(self):
         """Return a mapping of `_send_sms_batch` errors to an error message.
 
@@ -62,7 +54,7 @@ class SmsApi(models.AbstractModel):
         buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
         buy_credits = f'<a href="{buy_credits_url}" target="_blank">%s</a>' % _('Buy credits.')
 
-        sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', DEFAULT_ENDPOINT)
+        sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         sms_account_token = self.env['iap.account'].sudo().get('sms').account_token
         register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">%s</a>' % (
             _('Register now.')

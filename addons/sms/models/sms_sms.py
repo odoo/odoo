@@ -5,7 +5,10 @@ import logging
 import threading
 from uuid import uuid4
 
+from werkzeug.urls import url_join
+
 from odoo import api, fields, models, tools, _
+from odoo.addons.sms.tools.sms_api import SmsApi
 
 _logger = logging.getLogger(__name__)
 
@@ -169,8 +172,9 @@ class SmsSms(models.Model):
             'numbers': [{'number': sms.number, 'uuid': sms.uuid} for sms in body_sms_records],
         } for body, body_sms_records in self.grouped('body').items()]
 
+        delivery_reports_url = url_join(self[0].get_base_url(), '/sms/status')
         try:
-            results = self.env['sms.api']._send_sms_batch(messages, dlr=True)
+            results = SmsApi(self.env)._send_sms_batch(messages, delivery_reports_url=delivery_reports_url)
         except Exception as e:
             _logger.info('Sent batch %s SMS: %s: failed with exception %s', len(self.ids), self.ids, e)
             if raise_exception:
