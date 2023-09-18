@@ -1115,6 +1115,52 @@ class TestExpression(SavepointCaseWithUserDemo):
             records.filtered(lambda r: r.parent_name not in ['christope', False]),
         )
 
+    def test_filtered_domain_field_one2many_path(self):
+        Partner = self.env['res.partner'].with_context(active_test=False)
+
+        parents = Partner.create([
+            {'name': 'jean'},
+            {'name': 'christope'},
+            {'type': 'other'},
+            {'name': 'lala', 'active': False},
+        ])
+        childs = Partner.create([
+            {'name': 'child', 'parent_id': parents[0].id},
+            {'name': 'child', 'parent_id': parents[1].id},
+            {'name': 'child', 'parent_id': parents[2].id},
+            {'name': 'child', 'parent_id': parents[3].id},
+        ])
+
+        records = (parents + childs).with_context(active_test=True)
+        init_leaf = ('id', 'in', records.ids)
+
+        result = self._search(Partner, [('child_ids', '=', False), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: not r.child_ids),
+        )
+
+        result = self._search(Partner, [('child_ids', '!=', False), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.child_ids),
+        )
+
+        # ('child_ids.name', '=', 'blu') => Exist at least one child with 'blu' name
+        result = self._search(Partner, [('child_ids.name', '=', 'blu'), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: 'blu' in r.child_ids.mapped('name')),
+        )
+
+        # ('child_ids.name', '!=', 'blu') => Exist at least one child with a different name than 'blu' ??
+        # result = self._search(Partner, [('child_ids.name', '!=', 'blu'), init_leaf])
+        # self.assertEqual(
+        #     result,
+        #     records.filtered(lambda r: 'blu' not in r.child_ids.mapped('name')),
+        # )
+
+
 class TestExpression2(TransactionCase):
 
     def test_long_table_alias(self):
