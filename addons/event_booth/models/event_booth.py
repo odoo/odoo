@@ -25,7 +25,7 @@ class EventBooth(models.Model):
     # state
     state = fields.Selection(
         [('available', 'Available'), ('unavailable', 'Unavailable')],
-        string='Status', group_expand='_group_expand_states',
+        string='Status', group_expand=True,
         default='available', required=True, tracking=True)
     is_available = fields.Boolean(compute='_compute_is_available', search='_search_is_available')
 
@@ -57,9 +57,6 @@ class EventBooth(models.Model):
         if (negative and operand) or not operand:
             return [('state', '=', 'unavailable')]
         return [('state', '=', 'available')]
-
-    def _group_expand_states(self, states, domain, order):
-        return [key for key, val in self._fields['state'].selection]
 
     @api.model_create_multi
     def create(self, vals_list):

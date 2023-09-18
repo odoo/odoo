@@ -46,7 +46,7 @@ class Contract(models.Model):
         ('open', 'Running'),
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
-    ], string='Status', group_expand='_expand_states', copy=False,
+    ], string='Status', group_expand=True, copy=False,
         tracking=True, help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
@@ -82,9 +82,6 @@ class Contract(models.Model):
     def _compute_calendar_mismatch(self):
         for contract in self:
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
-
-    def _expand_states(self, states, domain, order):
-        return [key for key, val in self._fields['state'].selection]
 
     @api.depends('employee_id')
     def _compute_employee_contract(self):
