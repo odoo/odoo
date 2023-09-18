@@ -110,3 +110,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             binded_ro_ids |= line.order_id.sudo().repair_order_ids.filtered(lambda ro: ro.sale_order_line_id.id == line.id and ro.state != 'done')
         binded_ro_ids.action_repair_cancel()
+
+    def has_valued_move_ids(self):
+        res = super().has_valued_move_ids()
+        return res and not self.move_ids.repair_id

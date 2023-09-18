@@ -473,3 +473,23 @@ class TestRepair(common.TransactionCase):
         ], limit=1)
         self.assertEqual(repair.move_ids[0].location_dest_id, location_dest_id)
 
+    def test_purchase_price_so_create_from_repair(self):
+        """
+        Test that the purchase price is correctly set on the SO line,
+        when creating a SO from a repair order.
+        """
+        self.product_product_11.standard_price = 10
+        repair = self.env['repair.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'product_id': self.product_product_3.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'move_ids': [
+                (0, 0, {
+                    'repair_line_type': 'add',
+                    'product_id': self.product_product_11.id,
+                })
+            ],
+        })
+        repair.action_create_sale_order()
+        self.assertEqual(repair.sale_order_id.order_line.product_id, self.product_product_11)
+        self.assertEqual(repair.sale_order_id.order_line.purchase_price, 10)

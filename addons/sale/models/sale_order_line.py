@@ -1274,3 +1274,6 @@ class SaleOrderLine(models.Model):
                 round=False,
             )
         return amount
+
+    def has_valued_move_ids(self):
+        return self.move_ids
