@@ -142,7 +142,7 @@ odoo.define('website.s_website_form', function (require) {
                 // the values to submit() for these fields but this could break
                 // customizations that use the current behavior as a feature.
                 for (const name of fieldNames) {
-                    const fieldEl = this.$target[0].querySelector(`[name="${name}"]`);
+                    const fieldEl = this.$target[0].querySelector(`[name="${CSS.escape(name)}"]`);
 
                     // In general, we want the data-for and prefill values to
                     // take priority over set default values. The 'email_to'
