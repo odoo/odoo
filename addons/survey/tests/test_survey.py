@@ -430,37 +430,81 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertFalse(bool(get_question_by_title(cloned_survey, 'Q2').triggering_answer_ids))
 
     @users('survey_manager')
+    def test_matrix_rows_display_name(self):
+        """Check that matrix rows' display name is not changed."""
+        # A case's shape is: (question title, row value, expected row display names)
+        cases = [
+            (
+                'Question 1',
+                'Row A is short, so what?',
+                'Row A is short, so what?',
+            ), (
+                'Question 2',
+                'Row B is a very long question, but it is shown by itself so there shouldn\'t be any change',
+                'Row B is a very long question, but it is shown by itself so there shouldn\'t be any change',
+            ),
+        ]
+
+        for question_title, row_value, exp_display_name in cases:
+            question = self.env['survey.question'].create({
+                'title': question_title,
+                'matrix_row_ids': [Command.create({'value': row_value})],
+            })
+
+            with self.subTest(question=question_title, row=row_value):
+                self.assertEqual(question.matrix_row_ids[0].display_name, exp_display_name)
+
+    @users('survey_manager')
     def test_suggested_answer_display_name(self):
-        """Check that answers' display name is not too long and allows to identify the question & answer."""
-        # A case's shape is: (question_title, answer value, expected display name)
+        """Check that answers' display name is not too long and allows to identify the question & answer.
+
+        When a matrix answer though, simply show the value as the question and row should be made
+        clear via the survey.user.input.line context."""
+        # A case's shape is: (question title, answer value, expected display name, additional create values)
         cases = [
             (
                 'Question 1',
                 'Answer A is short',
                 'Question 1 : Answer A is short',
+                {}
             ), (
                 'Question 2',
                 'Answer B is a very long answer, so it should itself be shortened or we would go too far',
                 'Question 2 : Answer B is a very long answer, so it should itself be shortened or we...',
+                {}
             ), (
                 'Question 3 is a very long question, so what can we do?',
                 'Answer A is short',
                 'Question 3 is a very long question, so what can we do? : Answer A is short',
+                {}
             ), (
                 'Question 4 is a very long question, so what can we do?',
                 'Answer B is a bit too long for Q4 now',
                 'Question 4 is a very long question, so what can... : Answer B is a bit too long for Q4 now',
+                {}
             ), (
                 'Question 5 is a very long question, so what can we do?',
                 'Answer C is so long that both the question and the answer will be shortened',
                 'Question 5 is a very long... : Answer C is so long that both the question and the...',
+                {}
+            ), (
+                'Question 6',
+                'Answer A is short, so what?',
+                'Answer A is short, so what?',
+                {'question_type': 'matrix'},
+            ), (
+                'Question 7',
+                'Answer B is a very long answer, but it is shown by itself so there shouldn\'t be any change',
+                'Answer B is a very long answer, but it is shown by itself so there shouldn\'t be any change',
+                {'question_type': 'matrix'},
             ),
         ]
 
-        for question_title, answer_value, exp_display_name in cases:
+        for question_title, answer_value, exp_display_name, other_values in cases:
             question = self.env['survey.question'].create({
                 'title': question_title,
                 'suggested_answer_ids': [Command.create({'value': answer_value})],
+                **other_values
             })
 
             with self.subTest(question=question_title, answer=answer_value):

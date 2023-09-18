@@ -681,17 +681,19 @@ class SurveyQuestionAnswer(models.Model):
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    @api.depends('value', 'question_id.title')
+    @api.depends('value', 'question_id.question_type', 'question_id.title', 'matrix_question_id')
     def _compute_display_name(self):
-        """Render an answer name as "Question title : Answer value" making sure it is not too long.
+        """Render an answer name as "Question title : Answer value", making sure it is not too long.
 
-        This implementation makes sure we have at least 30 characters for the question title,
-        then we elide it, leaving the rest of the space for the answer.
+        Unless the answer is part of a matrix-type question, this implementation makes sure we have
+        at least 30 characters for the question title, then we elide it, leaving the rest of the
+        space for the answer.
         """
         for answer in self:
-            # _origin (or fallback title) is (likely temporarily) needed to support survey snapshot
-            # during onchange for a deleted answer used as trigger in another question.
-            title = answer._origin.question_id.title
+            if not answer.question_id or answer.question_id.question_type == 'matrix':
+                answer.display_name = answer.value
+                continue
+            title = answer.question_id.title or _("[Question Title]")
             n_extra_characters = len(title) + len(answer.value) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
             if n_extra_characters <= 0:
                 answer.display_name = f'{title} : {answer.value}'
