@@ -215,7 +215,7 @@
                         </group>
                         <group>
                             <field name="should_show_status" invisible="1"/>
-                            <field name="current_status" class="w-auto" required="should_show_status" invisible="not should_show_status"/>
+                            <field name="current_status" class="w-auto" required="should_show_status" readonly="not should_show_status" invisible="not should_show_status"/>
                             <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                             <div class="o_row" colspan="2">
                                 <div colspan="1">
