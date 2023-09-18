@@ -489,16 +489,14 @@ class AccountMoveLine(models.Model):
 
     @api.depends('product_id')
     def _compute_name(self):
-        for line in self:
+        for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
             if line.display_type == 'payment_term':
-                if not line.name:
-                    term_lines = line.move_id.line_ids.filtered(lambda l: l.display_type == 'payment_term') | line
-                    name = line.move_id.payment_reference or ''
-                    if len(term_lines) > 1:
-                        index = term_lines._ids.index(line.id) + 1
-                        name = _('%s installment #%s', name, index).lstrip()
-                    line.name = name
-                continue
+                term_lines = line.move_id.line_ids.filtered(lambda l: l.display_type == 'payment_term') | line
+                name = line.move_id.payment_reference or ''
+                if len(term_lines) > 1:
+                    index = term_lines._ids.index(line.id) + 1
+                    name = _('%s installment #%s', name, index).lstrip()
+                line.name = name
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
             if line.partner_id.lang:

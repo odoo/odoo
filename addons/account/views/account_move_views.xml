@@ -850,6 +850,7 @@
                         <field name="need_cancel_request" invisible="1"/>
                         <field name="has_reconciled_entries" invisible="1"/>
                         <field name="restrict_mode_hash_table" invisible="1"/>
+                        <field name="inalterable_hash" invisible="1"/>
                         <field name="country_code" invisible="1"/>
                         <field name="display_inactive_currency_warning" invisible="1"/>
                         <field name="statement_line_id" invisible="1"/>
@@ -927,7 +928,8 @@
                                        invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode"
                                        readonly="state != 'draft'"/>
                                 <field name="payment_reference"
-                                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
+                                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                                       readonly="inalterable_hash != False"/>
                                 <field name="partner_bank_id"
                                        context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
