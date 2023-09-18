@@ -121,7 +121,7 @@ class Product(models.Model):
         'location', 'warehouse',
     )
     def _compute_quantities(self):
-        products = self.filtered(lambda p: p.type != 'service')
+        products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
             product.update(res[product.id])
