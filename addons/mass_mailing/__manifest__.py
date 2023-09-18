@@ -4,7 +4,7 @@
 {
     'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
-    'version': '2.6',
+    'version': '2.7',
     'sequence': 60,
     'website': 'https://www.odoo.com/app/email-marketing',
     'category': 'Marketing/Email Marketing',
@@ -27,7 +27,8 @@
         'data/ir_cron_data.xml',
         'data/ir_module_data.xml',
         'data/mailing_data_templates.xml',
-        'data/mailing_list_data.xml',
+        'data/mailing_list_contact.xml',
+        'data/mailing_contact_subscription.xml',
         'data/res_users_data.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mailing_contact_import_views.xml',
@@ -79,7 +80,11 @@
         'views/snippets/s_title.xml',
     ],
     'demo': [
-        'data/mass_mailing_demo.xml',
+        'demo/utm.xml',
+        'demo/mailing_list_contact.xml',
+        'demo/mailing_contact_subscription.xml',
+        'demo/mailing_mailing.xml',
+        'demo/mailing_trace.xml',
     ],
     'application': True,
     'assets': {
