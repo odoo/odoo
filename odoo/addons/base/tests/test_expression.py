@@ -9,8 +9,6 @@ from unittest.mock import patch
 import psycopg2
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.fields import Date
-from odoo.models import BaseModel
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import mute_logger
 from odoo.osv import expression
@@ -325,7 +323,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # check if many2one works with negative empty list
         all_partners = Partner.search([])
         res_partners = self._search(Partner, ['|', ('company_id', 'not in', []), ('company_id', '=', False)])
-        self.assertEqual(all_partners, res_partners, "not in [] fails")
+        self.assertEqual(all_partners, res_partners)
 
         # check that many2one will pick the correct records with a list
         partners = self._search(Partner, [('company_id', 'in', [False])])
@@ -348,10 +346,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         partners = self._search(Partner, [('create_uid.active', '=', True)])
 
         # check that multi-level expressions with negative op work
-        all_partners = self._search(Partner, [('company_id', '!=', False)])
+        partners = self._search(Partner, [('company_id', '!=', False)])
 
-        # FP Note: filtered_domain differs
-        res_partners = Partner.search([('company_id.partner_id', 'not in', [])])
+        res_partners = self._search(Partner, [('company_id.partner_id', 'not in', [])])
         self.assertEqual(all_partners, res_partners, "not in [] fails")
 
         # Test the '(not) like/in' behavior. res.partner and its parent_id
@@ -823,7 +820,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         with self.assertRaisesRegex(AssertionError, "^Invalid field 'name.\"Et plouf\"'"):
             Country.search([('name."Et plouf"', 'in', ['foo'])])
 
-        with self.assertRaisesRegex(KeyError, r"^'does_not_exist'$"):
+        with self.assertRaisesRegex(ValueError, r"^Invalid field res\.country\.does_not_exist in leaf \('does_not_exist', '=', 'foo'\)$"):
             Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
 
         with self.assertRaisesRegex(ValueError, r"^Invalid leaf \('create_date', '>>', 'foo'\)$"):
@@ -982,23 +979,23 @@ class TestExpression(SavepointCaseWithUserDemo):
             records.filtered(lambda r: r.parent_id.name == 'christope'),
         )
 
-        # result = self._search(Partner, [('parent_id.name', '!=', 'christope'), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_id.name != 'christope'),
-        # )
+        result = self._search(Partner, [('parent_id.name', '!=', 'christope'), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name != 'christope'),
+        )
 
-        # result = self._search(Partner, [('parent_id.name', '=', False), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: not r.parent_id.name),
-        # )
+        result = self._search(Partner, [('parent_id.name', '=', False), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: not r.parent_id.name),
+        )
 
-        # result = self._search(Partner, [('parent_id.name', '!=', False), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_id.name),
-        # )
+        result = self._search(Partner, [('parent_id.name', '!=', False), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name),
+        )
 
         result = self._search(Partner, [('parent_id.name', 'in', ['christope', 'blu']), init_leaf])
         self.assertEqual(
@@ -1006,23 +1003,23 @@ class TestExpression(SavepointCaseWithUserDemo):
             records.filtered(lambda r: r.parent_id.name in ['christope', 'blu']),
         )
 
-        # result = self._search(Partner, [('parent_id.name', 'not in', ['christope', 'blu']), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_id.name not in ['christope', 'blu']),
-        # )
+        result = self._search(Partner, [('parent_id.name', 'not in', ['christope', 'blu']), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name not in ['christope', 'blu']),
+        )
 
-        # result = self._search(Partner, [('parent_id.name', 'in', ['christope', False]), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_id.name in ['christope', False]),
-        # )
+        result = self._search(Partner, [('parent_id.name', 'in', ['christope', False]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name in ['christope', False]),
+        )
 
-        # result = self._search(Partner, [('parent_id.name', 'not in', ['christope', False]), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_id.name not in ['christope', False]),
-        # )
+        result = self._search(Partner, [('parent_id.name', 'not in', ['christope', False]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_id.name not in ['christope', False]),
+        )
 
         result = self._search(Partner, [('parent_id', 'any', [('name', '=', 'christope')]), init_leaf])
         self.assertEqual(
@@ -1073,17 +1070,17 @@ class TestExpression(SavepointCaseWithUserDemo):
             records.filtered(lambda r: r.parent_name == 'christope'),
         )
 
-        # result = self._search(Partner, [('parent_name', '!=', 'christope'), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_name != 'christope'),
-        # )
+        result = self._search(Partner, [('parent_name', '!=', 'christope'), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name != 'christope'),
+        )
 
-        # result = self._search(Partner, [('parent_name', '=', False), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: not r.parent_name),
-        # )
+        result = self._search(Partner, [('parent_name', '=', False), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: not r.parent_name),
+        )
 
         result = self._search(Partner, [('parent_name', '!=', False), init_leaf])
         self.assertEqual(
@@ -1097,17 +1094,17 @@ class TestExpression(SavepointCaseWithUserDemo):
             records.filtered(lambda r: r.parent_name in ['christope', 'blu']),
         )
 
-        # result = self._search(Partner, [('parent_name', 'not in', ['christope', 'blu']), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_name not in ['christope', 'blu']),
-        # )
+        result = self._search(Partner, [('parent_name', 'not in', ['christope', 'blu']), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name not in ['christope', 'blu']),
+        )
 
-        # result = self._search(Partner, [('parent_name', 'in', ['christope', False]), init_leaf])
-        # self.assertEqual(
-        #     result,
-        #     records.filtered(lambda r: r.parent_name in ['christope', False]),
-        # )
+        result = self._search(Partner, [('parent_name', 'in', ['christope', False]), init_leaf])
+        self.assertEqual(
+            result,
+            records.filtered(lambda r: r.parent_name in ['christope', False]),
+        )
 
         result = self._search(Partner, [('parent_name', 'not in', ['christope', False]), init_leaf])
         self.assertEqual(

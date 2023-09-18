@@ -359,6 +359,15 @@ def _anyfy_leaves(domain, model):
         if not field:
             raise ValueError(f"Invalid field {model._name}.{path[0]} in leaf {item}")
         if len(path) > 1 and field.relational:  # skip properties
+            falsy = any(val is False or val is None for val in right) if isinstance(right, list) else (right is False or right is None)
+            if (
+                field.type == 'many2one' and not field.required
+                and (
+                    (operator not in NEGATIVE_TERM_OPERATORS and falsy)
+                    or (operator in NEGATIVE_TERM_OPERATORS and not falsy)
+                )
+            ):
+                result.extend(('|', (path[0], '=', False)))
             subdomain = [(path[1], operator, right)]
             comodel = model.env[field.comodel_name]
             result.append((path[0], 'any', _anyfy_leaves(subdomain, comodel)))

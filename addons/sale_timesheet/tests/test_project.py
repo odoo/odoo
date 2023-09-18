@@ -86,7 +86,7 @@ class TestProject(TestCommonSaleTimesheet):
             'stage_id': done_stage.id,
         })
         self.env.flush_all()
-        self.assertEqual(self.project_global._fetch_sale_order_items({'project.task': [('stage_id.fold', '=', False)]}), employee_mapping.sale_line_id)
+        self.assertEqual(self.project_global._fetch_sale_order_items({'project.task': [('stage_id', '!=', False), ('stage_id.fold', '=', False)]}), employee_mapping.sale_line_id)
         self.assertEqual(self.project_global._fetch_sale_order_items({'project.task': [('stage_id.fold', '=', True)]}), task.sale_line_id | employee_mapping.sale_line_id)
 
         task2 = self.env['project.task'].create({
@@ -96,7 +96,7 @@ class TestProject(TestCommonSaleTimesheet):
             'stage_id': new_stage.id,
         })
 
-        self.assertEqual(self.project_global._fetch_sale_order_items({'project.task': [('stage_id.fold', '=', False)]}), task2.sale_line_id | employee_mapping.sale_line_id)
+        self.assertEqual(self.project_global._fetch_sale_order_items({'project.task': [('stage_id', '!=', False), ('stage_id.fold', '=', False)]}), task2.sale_line_id | employee_mapping.sale_line_id)
         self.assertEqual(self.project_global._fetch_sale_order_items({'project.task': [('stage_id.fold', '=', True)]}), task.sale_line_id | employee_mapping.sale_line_id)
 
         self.project_global.allow_billable = False
