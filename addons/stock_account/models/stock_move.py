@@ -18,7 +18,15 @@ class StockMove(models.Model):
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
+<<<<<<< HEAD
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
+||||||| parent of 6bf7c33708c (temp)
+    analytic_account_line_id = fields.Many2one(
+        'account.analytic.line', copy=False, index=True)
+=======
+    analytic_account_line_id = fields.Many2one(
+        'account.analytic.line', copy=False, index='btree_not_null')
+>>>>>>> 6bf7c33708c (temp)
 
     def _filter_anglo_saxon_moves(self, product):
         return self.filtered(lambda m: m.product_id.id == product.id)
