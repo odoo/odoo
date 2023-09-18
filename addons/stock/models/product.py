@@ -834,7 +834,7 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def _compute_tracking(self):
         self.filtered(
-            lambda t: not t.tracking or t.type == 'consu' and t.tracking != 'none'
+            lambda t: not t.tracking or t.type in ('consu', 'service')  and t.tracking != 'none'
         ).tracking = 'none'
 
     @api.onchange('type')
