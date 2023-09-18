@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, useSubEnv } from "@odoo/owl";
 import { useselfOrder } from "@pos_self_order/kiosk/self_order_kiosk_service";
 import { AttributeSelection } from "@pos_self_order/kiosk/components/attribute_selection/attribute_selection";
 import { KioskTemplate } from "@pos_self_order/kiosk/template/kiosk_template";
 import { Line } from "@pos_self_order/common/models/line";
 import { useService } from "@web/core/utils/hooks";
-import { flattenSelectedAttribute } from "@pos_self_order/common/utils";
 
 export class Product extends Component {
     static template = "pos_self_order.Product";
@@ -16,6 +15,7 @@ export class Product extends Component {
     setup() {
         this.selfOrder = useselfOrder();
         this.router = useService("router");
+        useSubEnv({ attribute_components: [] });
 
         if (!this.props.product) {
             this.router.navigate("productList");
@@ -26,10 +26,13 @@ export class Product extends Component {
         this.state = useState({
             qty: 1,
             customer_note: "",
-            selectedVariants: {},
             showQtyButtons: false,
             product: this.props.product,
         });
+
+        if (this.product.attributes.length === 0) {
+            this.state.showQtyButtons = true;
+        }
     }
 
     get product() {
@@ -50,6 +53,10 @@ export class Product extends Component {
         return increase ? this.state.qty++ : this.state.qty--;
     }
 
+    toggleQtyBtn(bool) {
+        this.state.showQtyButtons = bool;
+    }
+
     async addToCart() {
         const lines = this.selfOrder.currentOrder.lines;
 
@@ -61,19 +68,11 @@ export class Product extends Component {
                 product_id: this.product.id,
                 customer_note: this.state.customer_note,
                 price_subtotal_incl: this.product.price_info.display_price,
-                selected_attributes: flattenSelectedAttribute(this.state.selectedVariants),
+                selected_attributes: this.env.attribute_components[0].selectedAttributeIds,
             })
         );
 
         await this.selfOrder.getPricesFromServer();
         this.router.back();
-    }
-
-    get attributeSelection() {
-        if (this.product.attributes.length === 0) {
-            this.state.showQtyButtons = true;
-        }
-
-        return this.product.attributes.length > 0;
     }
 }

@@ -27,9 +27,10 @@
                     <div t-attf-class="{{ state.showQtyButtons ? 'h-50' : 'h-75' }}">
                         <div class="h-100 px-4 overflow-y-auto">
                             <AttributeSelection
-                            t-if="attributeSelection"
-                            product="product"
-                            state="state"/>
+                                t-if="product.attributes.length > 0"
+                                product="product"
+                                toggleQtyBtn.bind="toggleQtyBtn"
+                                options="{defaultAttr: false}"/>
                         </div>
                     </div>
                     <div t-if="state.showQtyButtons" class="d-flex flex-column justify-content-center align-items-center w-100 h-25 p-5 bg-view border-top" style="z-index:1">

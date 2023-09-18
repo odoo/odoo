@@ -248,7 +248,7 @@ export const PosSelf = {
             };
         },
         pressNumpad(keys) {
-            return keys.split("").map((key) => Numpad.click(key, { mobile: false }));
+            return keys.split("").map((key) => Numpad.click(key));
         },
         selectLocation: (location) => {
             return {

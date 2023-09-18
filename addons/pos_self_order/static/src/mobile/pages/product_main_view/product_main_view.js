@@ -1,24 +1,26 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Component, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onWillUnmount, useState, useSubEnv } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/mobile/self_order_mobile_service";
 import { NavBar } from "@pos_self_order/mobile/components/navbar/navbar";
 import { Product } from "@pos_self_order/common/models/product";
 import { Line } from "@pos_self_order/common/models/line";
 import { useService } from "@web/core/utils/hooks";
-import { flattenSelectedAttribute } from "@pos_self_order/common/utils";
+import { AttributeSelection } from "@pos_self_order/mobile/components/attribute_selection/attribute_selection";
 
 export class ProductMainView extends Component {
     static template = "pos_self_order.ProductMainView";
     static props = { product: { type: Product, optional: true } };
     static components = {
         NavBar,
+        AttributeSelection,
     };
 
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+        useSubEnv({ attribute_components: [] });
 
         if (!this.props.product) {
             this.router.navigate("productList");
@@ -37,42 +39,6 @@ export class ProductMainView extends Component {
                     this.selfOrder.comboByIds[id].combo_line_ids[0].id,
                 ]) || []
             ),
-            /** this will be an object that will have the attribute id as key and the value id as value
-             *  ex: selectedVariants: {4: 9, 5: 11, 6: Set()} */
-            selectedVariants: Object.fromEntries(
-                this.product.attributes.map((att) => {
-                    let selectedValue =
-                        att.display_type == "multi" ? {} : att.values[0].id.toString();
-
-                    if (this.selfOrder.editedLine) {
-                        selectedValue = att.values
-                            .filter((v) =>
-                                Object.values(
-                                    this.selfOrder.editedLine.selected_attributes
-                                ).includes(v.id)
-                            )
-                            .map((v) => v.id);
-                        selectedValue =
-                            att.display_type == "multi" ? {} : selectedValue[0].toString();
-
-                        if (att.display_type == "multi") {
-                            for (const value of att.values) {
-                                selectedValue[value.id] = selectedValue.includes(value.id)
-                                    ? true
-                                    : false;
-                            }
-                        }
-                    } else {
-                        if (att.display_type == "multi") {
-                            for (const value of att.values) {
-                                selectedValue[value.id] = false;
-                            }
-                        }
-                    }
-
-                    return [att.id, selectedValue];
-                })
-            ),
         });
 
         onWillUnmount(() => {
@@ -80,22 +46,6 @@ export class ProductMainView extends Component {
         });
 
         this.initState();
-    }
-    getAttributeWithStringIds(attribute) {
-        const values = attribute.values.map((value) => ({
-            ...value,
-            id: value.id.toString(),
-        }));
-        return { ...attribute, values };
-    }
-    get disableAttributes() {
-        const order = this.selfOrder.currentOrder;
-
-        return (
-            this.selfOrder.editedLine &&
-            this.selfOrder.editedLine.uuid &&
-            order.lastChangesSent[this.selfOrder.editedLine.uuid]
-        );
     }
 
     initState() {
@@ -142,7 +92,7 @@ export class ProductMainView extends Component {
         const line = this.selfOrder.currentOrder.lines.find(
             (l) =>
                 JSON.stringify(l.selected_attributes.sort()) ===
-                    JSON.stringify(flattenSelectedAttribute(this.state.selectedVariants).sort()) &&
+                    JSON.stringify(this.env.attribute_components[0].selectedAttributeIds.sort()) &&
                 l.customer_note === this.state.customer_note &&
                 l.product_id === this.product.id
         );
@@ -153,12 +103,13 @@ export class ProductMainView extends Component {
     async addToCart() {
         const lines = this.selfOrder.currentOrder.lines;
         const lineToMerge = this.orderlineCanBeMerged();
+        const selectedAttributes = this.env.attribute_components[0].selectedAttributeIds;
 
         if (lineToMerge) {
             const editedLine = this.selfOrder.editedLine;
             const gap = editedLine ? -1 : 0;
 
-            lineToMerge.selected_attributes = flattenSelectedAttribute(this.state.selectedVariants);
+            lineToMerge.selected_attributes = selectedAttributes;
             lineToMerge.customer_note = this.state.customer_note;
             lineToMerge.qty += this.state.qty + gap;
         } else {
@@ -168,7 +119,7 @@ export class ProductMainView extends Component {
                 qty: this.state.qty,
                 product_id: this.product.id,
                 customer_note: this.state.customer_note,
-                selected_attributes: flattenSelectedAttribute(this.state.selectedVariants),
+                selected_attributes: selectedAttributes,
             });
             lines.push(mainLine);
             for (const [combo_id, combo_line_id] of Object.entries(this.state.selectedCombos)) {

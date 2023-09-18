@@ -34,14 +34,14 @@
                             t-att-value="value.id"
                             t-on-click="attributeClicked"
                             t-attf-id="{{ attribute.id }}_{{ value.id }}"
-                            t-model="this.props.state.selectedVariants[attribute.id]" />
+                            t-model="this.state.selectedValues[attribute.id]" />
                         <input
                             type="checkbox"
                             class="d-none"
                             t-else=""
                             t-att-checked="attrIsSelected"
                             t-att-value="value.id"
-                            t-model="this.props.state.selectedVariants[attribute.id][value.id]"
+                            t-model="this.state.selectedValues[attribute.id][value.id]"
                             t-on-click="() => this.attributeClicked(value.id)"
                             t-attf-id="{{ attribute.id }}_{{ value.id }}" />
                     </t>

@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("kiosk_order_tour_table_service", {
         ...PosSelf.action.clicKioskProduct("Monitor Stand"),
         PosSelf.action.clickPrimaryBtn("Review Order"),
         PosSelf.check.isKioskOrderline("Monitor Stand", "3.67", 1),
-        PosSelf.action.clickPrimaryBtn("Pay at counter"),
+        PosSelf.action.clickPrimaryBtn("Pay"),
         ...PosSelf.action.pressNumpad("2"),
         PosSelf.action.clickPrimaryBtn("Pay"),
         PosSelf.check.isTableNumber("2"),

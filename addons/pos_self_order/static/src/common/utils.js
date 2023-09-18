@@ -12,15 +12,3 @@ export const categorySorter = (a, b, start_categ_id) => {
     }
     return a.id - b.id; // sort by id if sequences are the same
 };
-
-export const flattenSelectedAttribute = (selectedVariants) => {
-    return Object.values(selectedVariants)
-        .map((value) =>
-            value instanceof Object
-                ? Object.keys(value)
-                      .filter((key) => value[key] === true)
-                      .map(Number)
-                : [parseInt(value)]
-        )
-        .flat();
-};
