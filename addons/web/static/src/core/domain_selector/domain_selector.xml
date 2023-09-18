@@ -23,6 +23,12 @@
                     </t>
                 </t>
             </t>
+            <t t-elif="props.isExpression">
+                This expression is not supported.
+                <t t-if="!props.readonly">
+                    <button class="btn btn-sm btn-primary o_reset_domain_button ms-1" t-on-click="() => this.resetDomain()">Reset expression</button>
+                </t>
+            </t>
             <t t-else="">
                 This domain is not supported.
                 <t t-if="!props.readonly">
