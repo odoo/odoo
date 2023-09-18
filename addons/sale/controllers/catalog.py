@@ -7,7 +7,7 @@ from odoo.tools import groupby
 class CatalogController(Controller):
 
     @route('/sales/catalog/sale_order_lines_info', auth='user', type='json')
-    def sale_product_catalog_get_sale_order_lines_info(self, order_id, product_ids):
+    def sale_product_catalog_get_sale_order_lines_info(self, order_id, product_ids, **kwargs):
         """ Returns products information to be shown in the catalog.
 
         :param int order_id: The sale order, as a `sale.order` id.
@@ -50,12 +50,15 @@ class CatalogController(Controller):
                 products=request.env['product.product'].browse(product_ids),
                 currency=order.currency_id,
                 date=order.date_order,
+                **kwargs,
             ).items()
         })
         return sale_order_line_info
 
     @route('/sales/catalog/update_sale_order_line_info', auth='user', type='json')
-    def sale_product_catalog_update_sale_order_line_info(self, order_id, product_id, quantity):
+    def sale_product_catalog_update_sale_order_line_info(
+        self, order_id, product_id, quantity, **kwargs
+    ):
         """ Update sale order line information on a given sale order for a given product.
 
         :param int order_id: The sale order, as a `sale.order` id.
@@ -77,6 +80,7 @@ class CatalogController(Controller):
                     quantity=1.0,
                     currency=sol.order_id.currency_id,
                     date=sol.order_id.date_order,
+                    **kwargs,
                 )
                 sol.unlink()
                 return price_unit
