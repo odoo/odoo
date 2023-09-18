@@ -438,15 +438,7 @@ def get_modules_with_version():
 def adapt_version(version):
     serie = release.major_version
     if version == serie or not version.startswith(serie + '.'):
-        base_version = version
         version = '%s.%s' % (serie, version)
-    else:
-        base_version = version[len(serie) + 1:]
-
-    if not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", base_version):
-        raise ValueError(f"Invalid version {base_version!r}. Modules should have a version in format `x.y`, `x.y.z`,"
-                         f" `{serie}.x.y` or `{serie}.x.y.z`.")
-
     return version
 
 
