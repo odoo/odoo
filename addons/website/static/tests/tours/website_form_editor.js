@@ -28,13 +28,9 @@
         });
     }
 
-    // Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
-    // all "`" character by `&lsquo;`.
+    // Replace all `"` character by `&quot;`.
     const getQuotesEncodedName = function (name) {
-            return name.replaceAll(/"/g, character => `&quot;`)
-                       .replaceAll(/'/g, character => `&apos;`)
-                       .replaceAll(/`/g, character => `&lsquo;`)
-                       .replaceAll("\\", character => `&bsol;`);
+            return name.replaceAll(/"/g, character => `&quot;`);
     };
 
     const triggerFieldByLabel = (label) => {
@@ -114,7 +110,7 @@
         if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
             const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
-            testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
+            testText += `:has(${inputType}[name="${CSS.escape(nameAttribute)}"]${required ? "[required]" : ""})`;
         }
         ret.push({
             content: "Check the resulting field",
