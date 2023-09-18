@@ -276,3 +276,22 @@ class TestVirtualAvailable(TestStockCommon):
         res = self.env['product.template'].name_search(name='123', operator='not ilike')
         res_ids = [r[0] for r in res]
         self.assertNotIn(template.id, res_ids)
+
+    def test_change_type_tracked_product(self):
+        product = self.env['product.template'].create({
+            'name': 'Brand new product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        product_form = Form(product)
+        product_form.type = 'service'
+        product = product_form.save()
+        self.assertEqual(product.tracking, 'none')
+
+        product.type = 'product'
+        product.tracking = 'serial'
+        self.assertEqual(product.tracking, 'serial')
+        product_form = Form(product.product_variant_id)
+        product_form.type = 'service'
+        product = product_form.save()
+        self.assertEqual(product.tracking, 'none')
