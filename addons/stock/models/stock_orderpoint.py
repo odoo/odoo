@@ -336,22 +336,19 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
         to_refill = defaultdict(float)
-        all_product_ids = self._get_orderpoint_products().ids
+        all_product_ids = self._get_orderpoint_products()
         all_replenish_location_ids = self.env['stock.location'].search([('replenish_location', '=', True)])
         ploc_per_day = defaultdict(set)
         # For each replenish location get products with negative virtual_available aka forecast
-        for products in map(self.env['product.product'].browse, split_every(5000, all_product_ids)):
-            for loc in all_replenish_location_ids:
-                quantities = products.with_context(location=loc.id).mapped('virtual_available')
-                for product, quantity in zip(products, quantities):
-                    if float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) >= 0:
-                        continue
-                    # group product by lead_days and location in order to read virtual_available
-                    # in batch
-                    rules = product._get_rules_from_location(loc)
-                    lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
-                    ploc_per_day[(lead_days, loc)].add(product.id)
-            products.invalidate_recordset()
+        for loc in all_replenish_location_ids:
+            for product in all_product_ids.with_context(location=loc.id):
+                if float_compare(product.virtual_available, 0, precision_rounding=product.uom_id.rounding) >= 0:
+                    continue
+                # group product by lead_days and location in order to read virtual_available
+                # in batch
+                rules = product._get_rules_from_location(loc)
+                lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
+                ploc_per_day[(lead_days, loc)].add(product.id)
 
         # recompute virtual_available with lead days
         today = fields.datetime.now().replace(hour=23, minute=59, second=59)
