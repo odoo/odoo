@@ -3856,3 +3856,46 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             other_income_account,
             "Removing a product from an invoice line should no change the account."
         )
+
+    def test_compute_name_payment_reference(self):
+        """
+        Test that the label of the payment_term line is consistent with the payment reference
+        Also tests that it won't affect the hash inalterability report
+        """
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.partner_id = self.partner_b
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        invoice = move_form.save()
+        payment_term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+
+        self.assertRecordValues(payment_term_lines, [
+            {'name': ''},
+            {'name': ''},
+        ])
+
+        move_form.payment_reference = "Super Reference"
+        move_form.save()
+
+        self.assertRecordValues(payment_term_lines, [
+            {'name': 'Super Reference installment #1'},
+            {'name': 'Super Reference installment #2'},
+        ])
+
+        move_form.payment_reference = "Great Reference"
+        invoice = move_form.save()
+
+        self.assertRecordValues(payment_term_lines, [
+            {'name': 'Great Reference installment #1'},
+            {'name': 'Great Reference installment #2'},
+        ])
+
+        invoice.action_post()
+        move_form.payment_reference = "Bad Reference"
+        move_form.save()
+
+        # The integrity check should work
+        integrity_check = invoice.company_id._check_hash_integrity()['results'][0]
+        self.assertEqual(integrity_check['msg_cover'], 'All entries are hashed.')
