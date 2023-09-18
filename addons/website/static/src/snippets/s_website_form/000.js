@@ -625,7 +625,11 @@ odoo.define('website.s_website_form', function (require) {
          */
         _buildVisibilityFunction(fieldEl) {
             const visibilityCondition = fieldEl.dataset.visibilityCondition;
+            
+            
             const dependencyName = fieldEl.dataset.visibilityDependency;
+            
+            console.log(fieldEl.dataset);
             const comparator = fieldEl.dataset.visibilityComparator;
             const between = fieldEl.dataset.visibilityBetween;
             return () => {
@@ -637,8 +641,19 @@ odoo.define('website.s_website_form', function (require) {
                 }
 
                 const formData = new FormData(this.$target[0]);
-                const currentValueOfDependency = formData.get(dependencyName);
-                return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
+               
+                
+                const selected= formData.getAll(dependencyName);
+               
+                if(selected.includes(visibilityCondition))
+                {
+                 
+                return this._compareTo(comparator, visibilityCondition, visibilityCondition, between);
+                }
+                return this._compareTo(comparator, undefined, visibilityCondition, between);
+              
+                
+                
             };
         },
         /**
