@@ -6,6 +6,12 @@ import { registry } from "@web/core/registry";
 const commandRegistry = registry.category("discuss.channel_commands");
 
 commandRegistry
+    .add("s", {
+        help: _t("Canned response"),
+        func: () => {
+            console.log("wololo");
+        },
+    })
     .add("help", {
         help: _t("Show a helper message"),
         methodName: "execute_command_help",

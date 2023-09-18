@@ -24,6 +24,7 @@ export class DiscussCoreCommon {
         this.outOfFocusService = services["mail.out_of_focus"];
         this.store = services["mail.store"];
         this.threadService = services["mail.thread"];
+        this.suggestionService = services["mail.suggestion"];
     }
 
     setup() {
@@ -114,6 +115,9 @@ export class DiscussCoreCommon {
                         { type: "info" }
                     );
                 }
+            });
+            this.busService.subscribe("discuss.channel/canned_response", (payload) => {
+                this.suggestionService.searchCannedResponseSuggestions("b", false);
             });
             this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
                 const { channel_id, last_message_id, partner_id } = payload;
@@ -305,6 +309,7 @@ export const discussCoreCommon = {
         "mail.out_of_focus",
         "mail.store",
         "mail.thread",
+        "mail.suggestion",
         "notification",
         "orm",
         "presence",

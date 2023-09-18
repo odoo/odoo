@@ -17,8 +17,13 @@ patch(ThreadService.prototype, {
         if (thread.model === "discuss.channel" && body.startsWith("/")) {
             const [firstWord] = body.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
+            if (command.func) {
+                command.func();
+                return;
+            }
             if (
                 command &&
+                command.methodName &&
                 (!command.channel_types || command.channel_types.includes(thread.type))
             ) {
                 await this.executeCommand(thread, command, body);

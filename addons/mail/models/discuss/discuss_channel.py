@@ -1299,6 +1299,9 @@ class Channel(models.Model):
 
         self._send_transient_message(self.env.user.partner_id, msg)
 
+    def execute_command_canned(self, **kwargs):
+        self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/canned_response', {});
+
     def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Specifically handle channel members. """
         chat_channels = self.filtered(lambda channel: channel.channel_type == 'chat')
