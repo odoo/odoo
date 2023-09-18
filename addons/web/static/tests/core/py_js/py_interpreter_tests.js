@@ -460,6 +460,98 @@ QUnit.module("py", {}, () => {
             );
         });
 
+        QUnit.module("builtin");
+
+        QUnit.test("any", (assert) => {
+            assert.deepEqual(evaluateExpr("any([1,2,3,0])"), true);
+            assert.deepEqual(evaluateExpr("any([0,0,0])"), false);
+            assert.deepEqual(evaluateExpr("any(a for a in [1,2,3,0])"), true);
+            assert.deepEqual(evaluateExpr("any(a for a in [0,0,0])"), false);
+        });
+
+        QUnit.test("all", (assert) => {
+            assert.deepEqual(evaluateExpr("all([1,2,3,0])"), false);
+            assert.deepEqual(evaluateExpr("all([1,1,1])"), true);
+            assert.deepEqual(evaluateExpr("all(a for a in [1,2,3,0])"), false);
+            assert.deepEqual(evaluateExpr("all(a for a in [1,1,1])"), true);
+        });
+
+        QUnit.module("sets");
+
+        QUnit.test("static set", (assert) => {
+            assert.deepEqual(evaluateExpr("set()"), new Set());
+            assert.deepEqual(evaluateExpr("set([1,2,3])"), new Set([1, 2, 3]));
+            assert.throws(() => evaluateExpr("set(1,2,3)"));
+        });
+
+        QUnit.test("set contains generator", (assert) => {
+            assert.deepEqual(evaluateExpr("set(a for a in [1,2,3,2])"), new Set([1, 2, 3]));
+            assert.deepEqual(
+                evaluateExpr("set(a for a in r)", { r: [1, 2, 3, 2] }),
+                new Set([1, 2, 3])
+            );
+        });
+
+        QUnit.test("set intersection", (assert) => {
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).intersection()"), new Set([]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).intersection(set([2,3]))"),
+                new Set([2, 3])
+            );
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).intersection([2,3])"), new Set([2, 3]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).intersection(a for a in [2,3])"),
+                new Set([2, 3])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).intersection(r)", { r: [2, 3] }),
+                new Set([2, 3])
+            );
+            assert.deepEqual(
+                evaluateExpr("r.intersection([2,3])", { r: new Set([1, 2, 3, 2]) }),
+                new Set([2, 3])
+            );
+        });
+
+        QUnit.test("set difference", (assert) => {
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).difference()"), new Set([1, 2, 3]));
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).difference(set([2,3]))"), new Set([1]));
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).difference([2,3])"), new Set([1]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).difference(a for a in [2,3])"),
+                new Set([1])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).difference(r)", { r: [2, 3] }),
+                new Set([1])
+            );
+            assert.deepEqual(
+                evaluateExpr("r.difference([2,3])", { r: new Set([1, 2, 3, 2, 4]) }),
+                new Set([1, 4])
+            );
+        });
+
+        QUnit.test("set union", (assert) => {
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).union()"), new Set([1, 2, 3]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).union(set([2,3,4]))"),
+                new Set([1, 2, 3, 4])
+            );
+            assert.deepEqual(evaluateExpr("set([1,2,3,2]).union([2,4])"), new Set([1, 2, 3, 4]));
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).union(a for a in [2,3,4])"),
+                new Set([1, 2, 3, 4])
+            );
+            assert.deepEqual(
+                evaluateExpr("set([1,2,3,2]).union(r)", { r: [2, 4] }),
+                new Set([1, 2, 3, 4])
+            );
+            assert.deepEqual(
+                evaluateExpr("r.union([2,3])", { r: new Set([1, 2, 2, 4]) }),
+                new Set([1, 2, 3, 4])
+            );
+        });
+
         QUnit.module("evaluate to boolean");
 
         QUnit.test("simple expression", (assert) => {

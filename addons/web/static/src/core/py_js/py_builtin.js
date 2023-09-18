@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { PyDate, PyDateTime, PyRelativeDelta, PyTime, PyTimeDelta } from "./py_date";
+import { ParserError } from "./py_parser";
 
 export const BUILTINS = {
     /**
@@ -28,6 +29,43 @@ export const BUILTINS = {
                 return true;
         }
         return true;
+    },
+
+    any(iterable) {
+        if (!(iterable instanceof Array)) {
+            throw new ParserError("value error");
+        }
+        for (const value of iterable) {
+            if (value) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    all(iterable) {
+        if (!(iterable instanceof Array)) {
+            throw new ParserError("value error");
+        }
+        for (const value of iterable) {
+            if (!value) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    set(iterable) {
+        if (iterable === null || iterable === undefined || !arguments[1]) {
+            return new Set();
+        }
+        if (typeof iterable !== "object" || Object.keys(arguments[1]).length) {
+            throw new ParserError("value error");
+        }
+        if (iterable instanceof Array) {
+            return new Set(iterable);
+        }
+        return new Set(Object.keys(iterable));
     },
 
     time: {

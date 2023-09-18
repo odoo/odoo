@@ -273,6 +273,43 @@ const STRING = {
     },
 };
 
+const SET = {
+    intersection(set) {
+        return (iterable) => {
+            if (iterable === null || iterable === undefined) {
+                return new Set();
+            }
+            if (!(iterable instanceof Array) && !(iterable instanceof Set)) {
+                iterable = Object.keys(iterable);
+            }
+            return new Set([...iterable].filter(x => set.has(x)));
+        }
+    },
+    difference(set) {
+        return (iterable) => {
+            if (iterable === null || iterable === undefined) {
+                return new Set(set);
+            }
+            if (!(iterable instanceof Array) && !(iterable instanceof Set)) {
+                iterable = Object.keys(iterable);
+            }
+            iterable = new Set(iterable);
+            return new Set([...set].filter(x => !iterable.has(x)));
+        }
+    },
+    union(set) {
+        return (iterable) => {
+            if (iterable === null || iterable === undefined) {
+                return new Set(set);
+            }
+            if (!(iterable instanceof Array) && !(iterable instanceof Set)) {
+                iterable = Object.keys(iterable);
+            }
+            return new Set([...set, ...iterable]);
+        }
+    },
+};
+
 // -----------------------------------------------------------------------------
 // Evaluate function
 // -----------------------------------------------------------------------------
@@ -378,6 +415,9 @@ export function evaluate(ast, context = {}) {
                 }
                 if (typeof left === "string") {
                     return STRING[ast.key](left);
+                }
+                if (left instanceof Set) {
+                    return SET[ast.key](left);
                 }
                 if (ast.key == "get" && typeof left === "object") {
                     return DICT[ast.key](toPyDict(left));
