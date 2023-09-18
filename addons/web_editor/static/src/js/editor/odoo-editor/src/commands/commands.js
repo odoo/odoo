@@ -51,6 +51,8 @@ import {
     resetOuids,
     firstLeaf,
     lastLeaf,
+    FONT_SIZE_CLASSES,
+    TEXT_STYLE_CLASSES,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -322,7 +324,7 @@ export const editorCommands = {
     redo: editor => editor.historyRedo(),
 
     // Change tags
-    setTag(editor, tagName) {
+    setTag(editor, tagName, extraClass = "") {
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
@@ -340,7 +342,24 @@ export const editorCommands = {
                 if (inLI && tagName === "P") {
                     inLI.oToggleList(0);
                 } else {
-                    setTagName(block, tagName);
+                    const newEl = setTagName(block, tagName);
+                    newEl.classList.remove(
+                        ...FONT_SIZE_CLASSES,
+                        ...TEXT_STYLE_CLASSES,
+                        // We want to be able to edit the case `<h2 class="h3">`
+                        // but in that case, we want to display "Header 2" and
+                        // not "Header 3" as it is more important to display
+                        // the semantic tag being used (especially for h1 ones).
+                        // This is why those are not in `TEXT_STYLE_CLASSES`.
+                        "h1", "h2", "h3", "h4", "h5", "h6"
+                    );
+                    delete newEl.style.fontSize;
+                    if (extraClass) {
+                        newEl.classList.add(extraClass);
+                    }
+                    if (newEl.classList.length === 0) {
+                        newEl.removeAttribute("class");
+                    }
                 }
             } else {
                 // eg do not change a <div> into a h1: insert the h1
