@@ -367,7 +367,7 @@ export class Wysiwyg extends Component {
             getContextFromParentRect: options.getContextFromParentRect,
             getScrollContainerRect: () => {
                 if (!this.scrollContainer || !this.scrollContainer.getBoundingClientRect) {
-                    this.scrollContainer = document.querySelector('.o_action_manager');
+                    this.scrollContainer = document.querySelector('.o_action_manager') || document.body;
                 }
                 return this.scrollContainer.getBoundingClientRect();
             },
