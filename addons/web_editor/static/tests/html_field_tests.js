@@ -36,6 +36,24 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     },
                     records: [],
                 },
+                'note.note' : {
+                    fields: {
+                        display_name: {
+                            string: "Displayed name",
+                            type: "char"
+                        },
+                        header: {
+                            string: "Header",
+                            type: "html",
+                            required: true,
+                        },
+                        body: {
+                            string: "Message",
+                            type: "html"
+                        },
+                    },
+                    records: [],
+                }
             },
         };
         target = getFixture();
@@ -48,24 +66,25 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
     QUnit.test('simple rendering', async function (assert) {
         assert.expect(2);
-        serverData.models.partner.records = [{
+        serverData.models['note.note'].records = [{
             id: 1,
-            txt: "<p>toto toto toto</p><p>tata</p>",
-        }
-        ];
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
 
         await makeView({
             type: "form",
             resId: 1,
-            resModel: "partner",
+            resModel: "note.note",
             serverData,
             arch: `
                 <form>
-                    <field name="txt" widget="html" style="height: 100px"/>
+                    <field name="body" widget="html" style="height: 100px"/>
                 </form>`,
         });
 
-        const field = target.querySelector('.o_field_html[name="txt"]');
+        const field = target.querySelector('.o_field_html[name="body"]');
         const editable = field.querySelector("[contenteditable='true']");
         console.log(target.cloneNode(true))
         assert.strictEqual(editable.innerHTML,
@@ -75,6 +94,40 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             "should have applied the style correctly");
     });
 
+    QUnit.test('check if required field is set', async function (assert) {
+        assert.expect(3);
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+
+        const widget = await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "note.note",
+            serverData,
+            arch: `
+                <form>
+                    <field name="header" widget="html" style="height: 100px"/>
+                </form>`,
+        });
+        // click .o_form_button_save
+        // nextTick
+        // check if notif here
+
+        await click(target, '.o_form_button_save');
+        assert.containsOnce(target, ".o_notification");
+        const notif = target.querySelector(".o_notification");
+        assert.strictEqual(
+            notif.querySelector(".o_notification_content").textContent,
+            "Header"
+        );
+        assert.hasClass(notif, "border-danger");
+        
+    });
 
     QUnit.module('Sandboxed Preview');
 
@@ -218,7 +271,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await iframeReady(iframe);
         assert.strictEqual(iframe.contentDocument.body.textContent.trim(), 'Hello');
         assert.strictEqual(iframe.contentDocument.head.querySelector('style').textContent.trim().replace(/\s/g, ''),
-            'body{color:red;}', 'Head nodes should remain unaltered in the head');
+        'body{color:red;}', 'Head nodes should remain unaltered in the head');
         assert.equal(iframe.contentWindow.getComputedStyle(iframe.contentDocument.body).color, 'rgb(255, 0, 0)');
         // check button is there
         assert.containsOnce(target, '#codeview-btn-group > button');
