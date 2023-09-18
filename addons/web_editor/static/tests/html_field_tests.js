@@ -104,7 +104,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             body: "<p>toto toto toto</p><p>tata</p>",
         }];
 
-        const widget = await makeView({
+        await makeView({
             type: "form",
             resId: 1,
             resModel: "note.note",
