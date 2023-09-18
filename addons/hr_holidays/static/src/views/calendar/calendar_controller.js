@@ -93,7 +93,7 @@ export class TimeOffCalendarController extends CalendarController {
                     resModel: this.model.resModel,
                     resId: record.id || false,
                     context,
-                    title: record.title,
+                    title: _t("Time Off Request"),
                     viewId: this.model.formViewId,
                     onRecordSaved: onDialogClosed,
                     onRecordDeleted: (record) => this.deleteRecord(record),
