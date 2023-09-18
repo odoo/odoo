@@ -4,11 +4,10 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import exceptions, tools
-from odoo.tests import common
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.models.sms_api import SmsApi
-from odoo.addons.sms.models.sms_sms import SmsSms
+from odoo.addons.sms.models.sms_sms import SmsApi, SmsSms
+from odoo.tests import common
 
 
 class MockSMS(common.BaseCase):
