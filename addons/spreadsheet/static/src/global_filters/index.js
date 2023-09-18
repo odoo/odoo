@@ -51,7 +51,7 @@ inverseCommandRegistry
         return [
             {
                 type: "REMOVE_GLOBAL_FILTER",
-                id: cmd.id,
+                id: cmd.filter.id,
             },
         ];
     })
@@ -59,7 +59,6 @@ inverseCommandRegistry
         return [
             {
                 type: "ADD_GLOBAL_FILTER",
-                id: cmd.id,
                 filter: {},
             },
         ];

@@ -493,14 +493,12 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         await addGlobalFilter(
             model,
             {
-                filter: {
-                    id: "42",
-                    type: "relation",
-                    label: "test",
-                    defaultValue: [41],
-                    modelName: undefined,
-                    rangeType: undefined,
-                },
+                id: "42",
+                type: "relation",
+                label: "test",
+                defaultValue: [41],
+                modelName: undefined,
+                rangeType: undefined,
             },
             {
                 list: { 1: { chain: "product_id", type: "many2one" } },
