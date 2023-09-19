@@ -11,7 +11,7 @@ class IrAttachment(models.Model):
         """Create product.document for attachments added in products chatters"""
         attachments = super().create(vals_list)
         if not self.env.context.get('disable_product_documents_creation'):
-            product_attachments = self.filtered(
+            product_attachments = attachments.filtered(
                 lambda attachment:
                     attachment.res_model in ('product.product', 'product.template')
                     and not attachment.res_field

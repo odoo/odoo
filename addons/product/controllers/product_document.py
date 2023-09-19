@@ -26,9 +26,7 @@ class ProductDocumentController(Controller):
         for ufile in files:
             try:
                 mimetype = ufile.content_type
-                request.env['product.document'].with_context(
-                    disable_product_documents_creation=True,
-                ).create({
+                request.env['product.document'].create({
                     'name': ufile.filename,
                     'res_model': record._name,
                     'res_id': record.id,
