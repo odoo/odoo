@@ -87,9 +87,36 @@ class AccountMove(models.Model):
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
 
+    l10n_it_origin_document_type = fields.Selection(
+        string="Origin Document Type",
+        selection=[('purchase_order', 'Purchase Order'), ('contract', 'Contract'), ('agreement', 'Agreement')],
+        copy=False)
+    l10n_it_origin_document_name = fields.Char(
+        string="Origin Document Name",
+        copy=False)
+    l10n_it_origin_document_date = fields.Date(
+        string="Origin Document Date",
+        copy=False)
+    l10n_it_cig = fields.Char(
+        string="CIG",
+        copy=False,
+        help="Tender Unique Identifier")
+    l10n_it_cup = fields.Char(
+        string="CUP",
+        copy=False,
+        help="Public Investment Unique Identifier")
+    # Technical field for showing the above fields or not
+    l10n_it_partner_pa = fields.Boolean(compute='_compute_l10n_it_partner_pa')
+
     # -------------------------------------------------------------------------
     # Computes
     # -------------------------------------------------------------------------
+
+    @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
+    def _compute_l10n_it_partner_pa(self):
+        for move in self:
+            move.l10n_it_partner_pa = (move.country_code == 'IT' and move.commercial_partner_id.l10n_it_pa_index and
+                                       len(move.commercial_partner_id.l10n_it_pa_index) == 6)
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):
@@ -333,7 +360,11 @@ class AccountMove(models.Model):
             'buyer_info': buyer_info_values,
             'seller_info': seller_info_values,
             'representative_info': representative_info_values,
-            'origin_document_type': False,  # see module l10n_it_edi_pa, will be merged in master
+            'origin_document_type': self.l10n_it_origin_document_type,
+            'origin_document_name': self.l10n_it_origin_document_name,
+            'origin_document_date': self.l10n_it_origin_document_date,
+            'cig': self.l10n_it_cig,
+            'cup': self.l10n_it_cup,
             'currency': self.currency_id or self.company_currency_id if not convert_to_euros else self.env.ref('base.EUR'),
             'document_total': document_total,
             'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
@@ -1011,6 +1042,13 @@ class AccountMove(models.Model):
         for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
+
+        if self.l10n_it_partner_pa:
+            if not self.l10n_it_origin_document_type:
+                errors.append(_("This invoice targets the Public Administration, please fill out"
+                                " Origin Document Type field in the Electronic Invoicing tab."))
+            if self.l10n_it_origin_document_date and self.l10n_it_origin_document_date > fields.Date.today():
+                errors.append(_("The Origin Document Date cannot be in the future."))
 
         errors += self._l10n_it_edi_export_taxes_data_check()
 

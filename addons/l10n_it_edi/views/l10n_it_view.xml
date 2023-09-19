@@ -155,6 +155,14 @@
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                             </group>
+                            <field name="l10n_it_partner_pa" invisible="1"/>
+                            <group invisible="not l10n_it_partner_pa">
+                                <field name="l10n_it_origin_document_type" readonly="state != 'draft'"/>
+                                <field name="l10n_it_origin_document_name" readonly="state != 'draft'"/>
+                                <field name="l10n_it_origin_document_date" readonly="state != 'draft'"/>
+                                <field name="l10n_it_cig" readonly="state != 'draft'"/>
+                                <field name="l10n_it_cup" readonly="state != 'draft'"/>
+                            </group>
                         </group>
                     </page>
                 </xpath>
