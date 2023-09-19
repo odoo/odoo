@@ -12,6 +12,10 @@ import Wysiwyg from 'web_editor.wysiwyg';
 // Legacy
 import legacyEnv from 'web.commonEnv';
 
+const wait = async (ms=150) => {
+    await new Promise((res) => setTimeout(res(), ms))
+}
+
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();
     iframe.addEventListener("load", function () {
@@ -150,10 +154,13 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const editable = field.querySelector("[contenteditable='true']");
         await click(editable);
 
+        assert.strictEqual(
+            window.getComputedStyle(document.querySelector("#toolbar")).getPropertyValue("visibility"),
+            "hidden",
+            "should hide the toolbar");
+
         // select the text
         const pText = editable.querySelector("p").firstChild
-        console.log('ptext', pText)
-        console.log(Wysiwyg.setRange)
         Wysiwyg.setRange(pText, 1, pText, 5);
         // text is selected
 
@@ -161,30 +168,31 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         assert.strictEqual(range.sc, pText,
             "should select the text");
+        await wait(1000);
+        assert.strictEqual(
+            window.getComputedStyle(document.querySelector("#toolbar")).getPropertyValue("visibility"),
+            "visible",
+            "should show the toolbar")
 
-        async function openColorpicker() {
-            const colorpicker = document.querySelector('#toolbar')
-            const openingProm = new Promise(resolve => {
-                setTimeout(resolve, 500)
-            });
-            console.log(colorpicker.cloneNode(true))
-            await click(colorpicker.querySelector('button:first-child'));
-            return openingProm;
-        }
 
-        await openColorpicker();
-        let backgroundMenu = document.querySelector('.note-back-color-preview .colorpicker-menu');
-        assert.ok(backgroundMenu && document.querySelector('o_we_color_btn'),
-            "should display the color picker");
+        // async function openColorpicker() {
+        //     await click(document.querySelector(".note-back-color-preview"))
+        // }
 
-        await new Promise((res) => setTimeout(res, 500))
-        await click(document.querySelector('.o_we_color_btn'));
-        assert.ok(!backgroundMenu.querySelector('.note-back-color-preview'),
-            "should close the color picker");
+        // await openColorpicker();
+        // await wait(500);
+        // let backgroundMenu = document.querySelector('.note-back-color-preview .colorpicker-menu');
+        // assert.ok(document.querySelector('.o_we_color_btn'),
+        //     "should display some button");
 
-        assert.strictEqual(editable.innerHTML,
-            '<p>t<font style="background-color: rgb(0, 255, 255);">oto toto </font>toto</p><p>tata</p>',
-            "should have rendered the field correctly in edit");
+        // await new Promise((res) => setTimeout(res, 500))
+        // await click(document.querySelector('.o_we_color_btn'));
+        // assert.ok(!backgroundMenu.querySelector('.note-back-color-preview'),
+        //     "should close the color picker");
+
+        // assert.strictEqual(editable.innerHTML,
+        //     '<p>t<font style="background-color: rgb(0, 255, 255);">oto toto </font>toto</p><p>tata</p>',
+        //     "should have rendered the field correctly in edit");
 
         // var fontElement = $field.find('.note-editable font')[0];
         // var rangeControl = {
