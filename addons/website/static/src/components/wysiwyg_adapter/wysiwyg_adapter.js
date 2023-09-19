@@ -360,6 +360,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 showChecklist: false,
                 showAnimateText: true,
                 showTextHighlights: true,
+                showFontSize: false,
+                useFontSizeInput: true,
             },
             context: this._context,
             editable: this.$editable,
