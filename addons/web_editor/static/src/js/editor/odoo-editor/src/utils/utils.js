@@ -1872,8 +1872,8 @@ export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumeric
     `);
     let remValue;
     if (closestFontSizedEl) {
-        const customFontSize = closestFontSizedEl.style.fontSize;
-        if (customFontSize) {
+        const useFontSizeInput = closestFontSizedEl.style.fontSize;
+        if (useFontSizeInput) {
             // Use the computed value to always convert to px. However, this
             // currently does not check that the inline font-size is the one
             // actually having an effect (there could be an !important CSS rule
