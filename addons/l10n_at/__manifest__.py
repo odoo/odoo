@@ -30,6 +30,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
     'data': [
         'data/res.country.state.csv',
         'data/account_account_tag.xml',
+        'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
     ],
     'demo': [
