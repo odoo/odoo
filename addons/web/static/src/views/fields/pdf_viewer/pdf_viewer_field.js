@@ -16,27 +16,19 @@ export class PdfViewerField extends Component {
     };
     static props = {
         ...standardFieldProps,
-        fileNameField: { type: String, optional: true },
-        previewImage: { type: String, optional: true },
     };
 
     setup() {
         this.notification = useService("notification");
         this.state = useState({
-            fileName: this.props.record.data[this.props.fileNameField] || "",
             isValid: true,
             objectUrl: "",
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
-                this.state.fileName = nextProps.record.data[nextProps.fileNameField] || "";
                 this.state.objectUrl = "";
             }
         });
-    }
-
-    get fileName() {
-        return this.state.fileName || this.props.record.data[this.props.name] || "";
     }
 
     get url() {
@@ -48,20 +40,15 @@ export class PdfViewerField extends Component {
             this.state.objectUrl ||
                 url("/web/content", {
                     model: this.props.record.resModel,
-                    field: this.props.previewImage || this.props.name,
+                    field: this.props.name,
                     id: this.props.record.resId,
                 })
         );
         return `/web/static/lib/pdfjs/web/viewer.html?file=${file}#page=${page}`;
     }
 
-    update({ data, name }) {
-        this.state.fileName = name || "";
-        const { fileNameField, record } = this.props;
+    update({ data }) {
         const changes = { [this.props.name]: data || false };
-        if (fileNameField in record.fields && record.data[fileNameField] !== name) {
-            changes[fileNameField] = name || false;
-        }
         return this.props.record.update(changes);
     }
 
@@ -70,11 +57,10 @@ export class PdfViewerField extends Component {
         this.update({});
     }
 
-    onFileUploaded({ data, name, objectUrl }) {
-        this.state.fileName = name;
+    onFileUploaded({ data, objectUrl }) {
         this.state.isValid = true;
         this.state.objectUrl = objectUrl;
-        this.update({ data, name });
+        this.update({ data });
     }
 
     onLoadFailed() {
@@ -89,10 +75,6 @@ export const pdfViewerField = {
     component: PdfViewerField,
     displayName: _t("PDF Viewer"),
     supportedTypes: ["binary"],
-    extractProps: ({ attrs, options }) => ({
-        fileNameField: attrs.filename,
-        previewImage: options.preview_image,
-    }),
 };
 
 registry.category("fields").add("pdf_viewer", pdfViewerField);
