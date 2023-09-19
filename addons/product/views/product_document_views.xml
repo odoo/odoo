@@ -12,9 +12,9 @@
                         <field name="name" readonly="not datas and type != 'url'"/>
                     </h1>
                     <group>
-                        <field name="type"/>
-                        <field name="datas" filename="name" invisible="type == 'url'"/>
-                        <field name="url" widget="url" invisible="type == 'binary'"/>
+                        <field name="type" readonly="datas or id"/>
+                        <field name="datas" filename="name" invisible="type == 'url'" required="type == 'binary'"/>
+                        <field name="url" widget="url" invisible="type == 'binary'" required="type == 'url'"/>
                     </group>
                     <group string="Attached To" groups="base.group_no_one">
                         <field name="res_name"/>
