@@ -33,9 +33,9 @@
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_list"/>
         <field name="arch" type="xml">
-            <tree position="inside">
+            <field name="name" position="after">
                 <field name="attached_on"/>
-            </tree>
+            </field>
         </field>
     </record>
 
