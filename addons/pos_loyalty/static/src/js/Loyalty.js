@@ -1154,10 +1154,15 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             return _t("The reward could not be applied.");
         }
         for (const rewardLine of rewardLines) {
-            this.orderlines.add(this._createLineFromVals(rewardLine));
+            this._addRewardLine(this._createLineFromVals(rewardLine));
         }
         return true;
     }
+
+    _addRewardLine(line){
+        this.orderlines.add(line);
+    }
+
     _createLineFromVals(vals) {
         vals['lst_price'] = vals['price'];
         const line = Orderline.create({}, {pos: this.pos, order: this, product: vals['product']});
