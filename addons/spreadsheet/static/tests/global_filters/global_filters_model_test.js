@@ -9,8 +9,11 @@ import {
 } from "@spreadsheet/../tests/utils/model";
 import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
-import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
-
+import {
+    THIS_YEAR_GLOBAL_FILTER,
+    LAST_YEAR_GLOBAL_FILTER,
+    NEXT_YEAR_GLOBAL_FILTER,
+} from "@spreadsheet/../tests/utils/global_filter";
 import { getCellFormula, getCellValue } from "@spreadsheet/../tests/utils/getters";
 import {
     addGlobalFilter,
@@ -18,6 +21,7 @@ import {
     removeGlobalFilter,
     setCellContent,
     setGlobalFilterValue,
+    moveGlobalFilter,
 } from "@spreadsheet/../tests/utils/commands";
 import {
     createSpreadsheetWithPivot,
@@ -46,14 +50,6 @@ const { DateTime } = luxon;
  *
  */
 
-/** @type GlobalFilter */
-const LAST_YEAR_FILTER = {
-    id: "42",
-    type: "date",
-    label: "Last Year",
-    rangeType: "fixedPeriod",
-    defaultValue:  {yearOffset: -1},
-};
 /** @type FilterPayload */
 const LAST_YEAR_LEGACY_FILTER = {
     id: "41",
@@ -73,7 +69,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
         const { model } = await createSpreadsheetWithPivotAndList();
         assert.equal(model.getters.getGlobalFilters().length, 0);
-        await addGlobalFilter(model, LAST_YEAR_FILTER, {
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {
             pivot: DEFAULT_FIELD_MATCHINGS,
         });
         assert.equal(model.getters.getGlobalFilters().length, 1);
@@ -87,7 +83,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         async function (assert) {
             const { model } = await createSpreadsheetWithPivotAndList();
             assert.equal(model.getters.getGlobalFilters().length, 0);
-            await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: { 1: {} } });
+            await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, { pivot: { 1: {} } });
             assert.equal(model.getters.getGlobalFilters().length, 1);
             const computedDomain = model.getters.getPivotComputedDomain("1");
             assert.deepEqual(computedDomain, []);
@@ -100,7 +96,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         let result = await removeGlobalFilter(model, 1);
         assert.deepEqual(result.reasons, [CommandResult.FilterNotFound]);
-        await addGlobalFilter(model, LAST_YEAR_FILTER);
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER);
         const gf = model.getters.getGlobalFilters()[0];
         result = await removeGlobalFilter(model, gf.id);
         assert.deepEqual(result, DispatchResult.Success);
@@ -115,7 +111,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         let result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: 1 });
         assert.deepEqual(result.reasons, [CommandResult.FilterNotFound]);
-        await addGlobalFilter(model, { ...LAST_YEAR_FILTER, id: 1 });
+        await addGlobalFilter(model, { ...LAST_YEAR_GLOBAL_FILTER, id: 1 });
         result = await editGlobalFilter(model, { ...THIS_YEAR_GLOBAL_FILTER, id: 1 });
         assert.deepEqual(result, DispatchResult.Success);
         assert.equal(model.getters.getGlobalFilters().length, 1);
@@ -239,7 +235,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         await addGlobalFilter(
             model,
-            LAST_YEAR_FILTER,
+            LAST_YEAR_GLOBAL_FILTER,
             { pivot: DEFAULT_FIELD_MATCHINGS, list: DEFAULT_FIELD_MATCHINGS }
         );
         const gf = model.getters.getGlobalFilters()[0];
@@ -268,7 +264,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         insertChartInSpreadsheet(model);
         const chartId = model.getters.getOdooChartIds()[0];
-        await addGlobalFilter(model, LAST_YEAR_FILTER, {
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {
             pivot: { 1: { chain: "date", type: "date" } },
             list: { 1: { chain: "date", type: "date" } },
             chart: { [chartId]: { chain: "date", type: "date" } },
@@ -373,7 +369,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     },
                 },
             },
-            globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_FILTER],
+            globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_GLOBAL_FILTER],
         });
         const model = await createModelWithDataSource({ spreadsheetData });
 
@@ -1603,7 +1599,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
     QUnit.test("field matching is removed when pivot is deleted", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
-        await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: DEFAULT_FIELD_MATCHINGS });
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, { pivot: DEFAULT_FIELD_MATCHINGS });
         const [pivotId] = model.getters.getPivotIds();
         const [filter] = model.getters.getGlobalFilters();
         const matching = {
@@ -1627,7 +1623,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
     QUnit.test("field matching is removed when list is deleted", async function (assert) {
         const { model } = await createSpreadsheetWithList();
-        await addGlobalFilter(model, LAST_YEAR_FILTER, { list: DEFAULT_FIELD_MATCHINGS });
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, { list: DEFAULT_FIELD_MATCHINGS });
         const [listId] = model.getters.getListIds();
         const [filter] = model.getters.getGlobalFilters();
         const matching = {
@@ -1653,7 +1649,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
         const sheetId = model.getters.getActiveSheetId();
         const [chartId] = model.getters.getChartIds(sheetId);
-        await addGlobalFilter(model, LAST_YEAR_FILTER, {
+        await addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {
             chart: { [chartId]: { chain: "date", type: "date" } },
         });
         const [filter] = model.getters.getGlobalFilters();
@@ -1733,5 +1729,38 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         };
         const result = await addGlobalFilter(model, filter);
         assert.ok(result.isSuccessful);
+    });
+
+    QUnit.test("allowDispatch of MOVE_GLOBAL_FILTERS", function (assert) {
+        const model = new Model();
+        addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {});
+
+        let result = moveGlobalFilter(model, "notAnId", 1);
+        assert.deepEqual(result.reasons, [CommandResult.FilterNotFound]);
+
+        result = moveGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER.id, -1);
+        assert.deepEqual(result.reasons, [CommandResult.InvalidFilterMove]);
+
+        result = moveGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER.id, 1);
+        assert.deepEqual(result.reasons, [CommandResult.InvalidFilterMove]);
+    });
+
+    QUnit.test("can move a global filter", function (assert) {
+        const model = new Model();
+        addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, NEXT_YEAR_GLOBAL_FILTER, {});
+
+        const lastYearFilterId = LAST_YEAR_GLOBAL_FILTER.id;
+
+        moveGlobalFilter(model, lastYearFilterId, 1);
+        assert.deepEqual(model.getters.getGlobalFilters()[1].id, lastYearFilterId);
+
+        moveGlobalFilter(model, lastYearFilterId, 1);
+        assert.deepEqual(model.getters.getGlobalFilters()[2].id, lastYearFilterId);
+
+        moveGlobalFilter(model, lastYearFilterId, -2);
+        assert.deepEqual(model.getters.getGlobalFilters()[0].id, lastYearFilterId);
     });
 });
