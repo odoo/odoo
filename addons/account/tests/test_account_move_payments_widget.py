@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tests.common import users
 
 import json
 
@@ -70,6 +71,15 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             ],
         })
         cls.payment_2017_curr_3.action_post()
+
+        cls.payment_2017_curr_2_partner_b = cls.env['account.move'].create({
+            'date': '2017-01-01',
+            'line_ids': [
+                (0, 0, {'debit': 0.0, 'credit': 500.0, 'amount_currency': -950.0, 'currency_id': cls.curr_2.id, 'account_id': cls.receivable_account.id, 'partner_id': cls.partner_b.id}),
+                (0, 0, {'debit': 500.0, 'credit': 0.0, 'amount_currency': 950.0, 'currency_id': cls.curr_2.id, 'account_id': cls.payable_account.id, 'partner_id': cls.partner_b.id}),
+            ],
+        })
+        cls.payment_2017_curr_2_partner_b.action_post()
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -182,3 +192,38 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
 
         self._test_all_outstanding_payments(out_invoice, expected_amounts)
         self._test_all_outstanding_payments(in_invoice, expected_amounts)
+
+    @users('admin')
+    def test_registered_payments_foreign_currency(self):
+        """
+        Test the outstanding payments widget on an invoice in a foreign currency with a registered payment in the same foreign currency.
+        """
+
+        self.partner_b.property_account_receivable_id = self.receivable_account
+        out_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-06',
+            'partner_id': self.partner_b.id,
+            'currency_id': self.curr_2.id,
+            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 950.0})],
+        })
+        out_invoice.action_post()
+
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=out_invoice.ids).create({
+            'amount': 950.0,
+            'group_payment': True,
+            'currency_id': self.curr_2.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        exchange_move = out_invoice.line_ids.full_reconcile_id.exchange_move_id
+        expected_amounts = {
+            payment.move_id.id: 950.0,
+            exchange_move.id: exchange_move.amount_total_signed,
+        }
+
+        reconciled_payments_widget_vals = json.loads(out_invoice.invoice_payments_widget)
+        current_amounts = {vals['move_id']: vals['amount'] for vals in reconciled_payments_widget_vals['content']}
+
+        self.assertDictEqual(current_amounts, expected_amounts)
