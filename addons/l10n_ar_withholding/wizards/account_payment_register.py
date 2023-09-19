@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountPaymentRegisterWithholding(models.TransientModel):
@@ -11,6 +15,7 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
     name = fields.Char(string='Number', required=False, default='/')
     tax_id = fields.Many2one('account.tax', required=True,)
+    l10n_ar_withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
 
@@ -87,22 +92,26 @@ class AccountPaymentRegister(models.TransientModel):
             if rec.l10n_latam_check_id:
                 rec.currency_id = rec.l10n_latam_check_id.currency_id
                 rec.net_amount = rec.l10n_latam_check_id.amount
-                base_lines = rec.line_ids.move_id.invoice_line_ids
                 conversion_rate = rec._get_conversion_rate()
+
                 amount_total = sum(rec.mapped('line_ids.move_id.amount_total'))
                 amount_untaxed = sum(rec.mapped('line_ids.move_id.amount_untaxed'))
-                net_amount_curency = rec.l10n_latam_check_id.amount * conversion_rate
                 payment_total_ratio = min(rec.source_amount / amount_total, 1)
+                net_amount_curency = rec.l10n_latam_check_id.amount * conversion_rate
+
                 for withholding in rec.withholding_ids:
-                    tax_base_lines = base_lines.filtered(lambda x: withholding.tax_id in x.product_id.l10n_ar_supplier_withholding_taxes_ids)
+                    tax_base_lines =rec.line_ids.move_id.invoice_line_ids.filtered(lambda x: withholding.tax_id in x.product_id.l10n_ar_supplier_withholding_taxes_ids)
                     if withholding.tax_id.l10n_ar_withholding_amount_type == 'untaxed_amount':
-                        payment_ratio = amount_untaxed / net_amount_curency
-                        factor_base = sum(tax_base_lines.mapped('price_subtotal')) * conversion_rate / amount_untaxed
+                        base_lines_amount_total = sum(rec.mapped('line_ids.move_id.amount_total'))
+                        base_lines_amount_untaxed = sum(rec.mapped('line_ids.move_id.amount_untaxed'))
+                        base_line_payment_ratio =  base_lines_amount_untaxed / base_lines_amount_total
+                        payment_ratio = min(payment_total_ratio , (net_amount_curency * base_line_payment_ratio) / amount_untaxed)
+                        base = sum(tax_base_lines.mapped('price_subtotal'))
                     else:
-                        payment_ratio = amount_total / net_amount_curency
-                        factor_base = sum(tax_base_lines.mapped('price_total')) * conversion_rate / amount_total
-                    if factor_base:
-                        withholding.base_amount = net_amount_curency * min(factor_base,1) * payment_ratio * payment_total_ratio / conversion_rate
+                        payment_ratio = min(payment_total_ratio, net_amount_curency / amount_total)
+                        base = sum(tax_base_lines.mapped('price_total'))
+                    if payment_ratio:
+                        withholding.base_amount = base * payment_ratio
                         withholding._compute_amount()
                 rec.amount = rec.l10n_latam_check_id.amount + sum(rec.withholding_ids.mapped('amount'))
             else:
