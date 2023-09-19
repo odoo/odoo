@@ -24,8 +24,20 @@ export class ImageUrlField extends Component {
             src: this.props.record.data[this.props.name],
         });
 
+<<<<<<< HEAD
         useRecordObserver((record) => {
             this.state.src = record.data[this.props.name];
+||||||| parent of 93475391b03 (temp)
+        onWillUpdateProps((nextProps) => {
+            if (this.props.record.data[this.props.name] !== nextProps.record.data[nextProps.name]) {
+                this.state.value = nextProps.record.data[nextProps.name];
+            }
+=======
+        onWillUpdateProps((nextProps) => {
+            if (this.state.src !== nextProps.record.data[nextProps.name]) {
+                this.state.src = nextProps.record.data[nextProps.name];
+            }
+>>>>>>> 93475391b03 (temp)
         });
     }
 
