@@ -1442,7 +1442,7 @@ class ReportSaleDetails(models.AbstractModel):
                 # start by default today 00:00:00
                 user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
                 today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
-                date_start = today.astimezone(pytz.timezone('UTC'))
+                date_start = today.astimezone(pytz.timezone('UTC')).replace(tzinfo=None)
 
             if date_stop:
                 date_stop = fields.Datetime.from_string(date_stop)
