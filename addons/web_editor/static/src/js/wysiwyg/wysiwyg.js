@@ -895,6 +895,7 @@ export class Wysiwyg extends Component {
     setupToolbar(toolbarEl) {
         this.toolbarEl = toolbarEl;
         this.odooEditor.setupToolbar(toolbarEl);
+        this._configureToolbar(this.options)
         this._updateEditorUI();
     }
     /**
