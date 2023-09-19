@@ -149,7 +149,7 @@ class StockPicking(models.Model):
             }
             return self.env['ir.qweb']._render('sale_stock.exception_on_picking', values)
 
-        documents = self._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_groupby)
+        documents = self.sudo()._log_activity_get_documents(moves, 'sale_line_id', 'DOWN', _keys_in_groupby)
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
