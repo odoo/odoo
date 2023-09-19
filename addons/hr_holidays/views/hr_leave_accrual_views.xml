@@ -113,7 +113,7 @@
                             <field name="accrued_gain_time" widget="radio"/>
                             <field name="carryover_date" widget="radio"/>
                             <label for="carryover_month" string="Carry-Over Date" invisible="carryover_date != 'other'"/>
-                            <div name="carryover" initially="carryover_date != 'other'">
+                            <div name="carryover" invisible="carryover_date != 'other'">
                                 <field name="carryover_day" invisible="1"/>
                                 <field name="carryover_day_display"  required="1" style="width: 4.75rem;"/> of
                                 <field name="carryover_month"  required="1" style="width: 6rem;"/>
