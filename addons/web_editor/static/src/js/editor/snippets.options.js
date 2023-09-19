@@ -5,6 +5,7 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import rpc from "@web/legacy/js/core/rpc";
+import { useSortable } from "@web/core/utils/sortable";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import Widget from "@web/legacy/js/core/widget";
@@ -41,6 +42,8 @@ import {
     normalizeCSSColor,
  } from '@web/core/utils/colors';
 import { renderToElement } from "@web/core/utils/render";
+
+import { Component, xml } from "@odoo/owl";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
@@ -1934,6 +1937,23 @@ const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({
     pickerType: 'date',
 });
 
+/**
+ * OWL Component that allows the use of the useSortableHook
+ * to be used on legacy widgets.
+ */
+export class SortableAdapter extends Component {
+    static props = {
+        el: { type: HTMLElement },
+        sortableParams: { type: Object },
+    };
+    static template = xml`<div class="d-none"/>`;
+    setup() {
+        useSortable({
+            ref: { el: this.props.el },
+            ...this.props.sortableParams,
+        });
+    }
+}
 const ListUserValueWidget = UserValueWidget.extend({
     tagName: 'we-list',
     events: {
@@ -1960,7 +1980,7 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    start() {
+    async start() {
         this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
         if (this.el.dataset.availableRecords) {
             this.records = JSON.parse(this.el.dataset.availableRecords);
@@ -1977,7 +1997,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         tableWrapper.appendChild(this.listTable);
         this.containerEl.appendChild(tableWrapper);
         this.el.classList.add('o_we_fw');
-        this._makeListItemsSortable();
+        await this._makeListItemsSortable();
         if (this.createWidget) {
             return this.createWidget.appendTo(this.containerEl);
         }
@@ -1998,8 +2018,9 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue() {
-        this._super(...arguments);
+    async setValue() {
+        await this._super(...arguments);
+        this.sortable?.destroy();
         const currentValues = this._value ? JSON.parse(this._value) : [];
         this.listTable.innerHTML = '';
         if (this.addItemButton) {
@@ -2049,7 +2070,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (!this.createWidget && !this.isCustom) {
             this._reloadSelectDropdown(currentValues);
         }
-        this._makeListItemsSortable();
+        await this._makeListItemsSortable();
     },
     /**
      * @override
@@ -2059,6 +2080,12 @@ const ListUserValueWidget = UserValueWidget.extend({
             return this.createWidget.getValue(methodName);
         }
         return this._value;
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.sortable?.destroy();
     },
 
     //--------------------------------------------------------------------------
@@ -2141,18 +2168,20 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
-    _makeListItemsSortable() {
+    async _makeListItemsSortable() {
         if (this.el.dataset.unsortable) {
             return;
         }
-        $(this.listTable).sortable({
-            axis: 'y',
-            handle: '.o_we_drag_handle',
-            items: 'tr',
-            cursor: 'move',
-            opacity: 0.6,
-            stop: (event, ui) => {
-                this._notifyCurrentState();
+        this.sortable = await attachComponent(this, this.el, SortableAdapter, {
+            el: this.listTable,
+            sortableParams: {
+                handle: ".o_we_drag_handle",
+                elements: "tr",
+                cursor: "move",
+                onDrop: ({ element, next }) => {
+                    this.listTable.insertBefore(element, next);
+                    this._notifyCurrentState();
+                },
             },
         });
     },
