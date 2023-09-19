@@ -66,8 +66,7 @@ export async function waitForDataSourcesLoaded(model) {
     }
     // Read a first time in order to trigger the RPC
     readAllCellsValue();
-    //@ts-ignore
-    await model.config.custom.dataSources.waitForAllLoaded();
+    await model.config.custom.dataSources?.waitForAllLoaded();
     await nextTick();
     // Read a second time to trigger the compute format (which could trigger a RPC for currency, in list)
     readAllCellsValue();

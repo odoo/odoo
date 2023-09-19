@@ -56,6 +56,10 @@ export async function setGlobalFilterValue(model, payload) {
     return result;
 }
 
+export function moveGlobalFilter(model, id, delta) {
+    return model.dispatch("MOVE_GLOBAL_FILTER", { id, delta });
+}
+
 /**
  * Set the selection
  */

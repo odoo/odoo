@@ -21,6 +21,7 @@ const {
 coreTypes.add("ADD_GLOBAL_FILTER");
 coreTypes.add("EDIT_GLOBAL_FILTER");
 coreTypes.add("REMOVE_GLOBAL_FILTER");
+coreTypes.add("MOVE_GLOBAL_FILTER");
 
 invalidateEvaluationCommands.add("ADD_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("EDIT_GLOBAL_FILTER");
