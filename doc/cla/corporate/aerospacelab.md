@@ -14,3 +14,4 @@ List of contributors:
 
 Thibault Libioulle thibault.libioulle@aerospacelab.be https://github.com/tli-asl
 Rémi Chauvenne remi.chauvenne@aerospacelab.be https://github.com/rch-asl
+Ismaël Ajerrar ismael.ajerrar@aerospacelab.be https://github.com/iaj-asl
