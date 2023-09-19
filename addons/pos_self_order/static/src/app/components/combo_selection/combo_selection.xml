@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ComboSelection" owl="1">
+        <div class="self_order_attribute_selection h-100 p-4">
+            <t t-if="!props.comboState.selectedProduct">
+                <div class="attribute_name py-1 mt-3 mb-4 fw-bold">
+                    <h1>Choose your <t t-esc="props.combo.name" /></h1>
+                </div>
+                <div class="combo-list align-items-center justify-content-start">
+                    <div class="row row-cols-3 g-3">
+                        <t t-foreach="props.combo.combo_line_ids" t-as="line" t-key="line.id">
+                            <div class="col">
+                                <div
+                                t-attf-for="{{ props.combo.id }}_{{ line.id }}"
+                                class="position-relative btn btn-light d-flex flex-column align-items-center justify-content-center p-3 rounded border overflow-hidden"
+                                t-on-click="() => this.productClicked(line.id)">
+                                    <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id[0]]"/>
+                                    <img
+                                        class="h-100 w-100 rounded bg-view"
+                                        t-attf-src="/menu/get-image/{{ product.id }}/512?unique={{product.write_date}}"
+                                        alt="Product image"
+                                        loading="lazy"
+                                        onerror="this.remove()" />
+                                    <div class="name d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 pt-3 text-center">
+                                        <h2 class="m-0" t-esc="line.product_id[1]" />
+                                        <span t-if="line.combo_price" class="position-absolute top-0 end-0 m-1 px-2 rounded border border-white text-bg-primary bg-opacity-75 fs-4">
+                                            + <t t-esc="selfOrder.formatMonetary(line.combo_price)" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <AttributeSelection toggleQtyBtn.bind="toggleQtyBtn" product="props.comboState.selectedProduct" />
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderWidget">
+        <div class="page-buttons fixed-bottom w-100 shadow-sm bg-white">
+            <div class="row m-2 h-100 ">
+                <button t-attf-class="btn btn-secondary col-3 p-0 m-0 text-uppercase {{ cancelAvailable ? '' : 'disabled' }}" t-on-click="cancel">
+                    Cancel Order
+                </button>
+                <div class="col-6 p-2 m-0">
+                    <span>To Order</span>
+                    <div class="m-2">
+                        <span class="p-2 bg-300 rounded" t-esc="lineNotSend.count" />
+                        <span class="mx-2" t-if="selfOrder.currentOrder.lines.length" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
+                    </div>
+                </div>
+                <button t-attf-class="col-3 cart btn btn-primary col-3 p-0 m-0 text-uppercase {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action">
+                    <span t-esc="buttonToShow.label"/>
+                    <span class="px-2" t-if="lineNotSend.count === 0" t-esc="selfOrder.formatMonetary(this.selfOrder.currentOrder.amount_total)"/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -50,11 +50,10 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         self.pos_config = self.env["pos.config"].create(
             {
                 "name": "BarTest",
-                "self_order_default_user_id": self.pos_user.id,
+                "self_ordering_default_user_id": self.pos_user.id,
                 "module_pos_restaurant": True,
-                "self_order_view_mode": True,
+                "self_ordering_mode": 'consultation',
                 "floor_ids": self.env["restaurant.floor"].search([]),
-                "self_order_table_mode": False,
             }
         )
 

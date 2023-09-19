@@ -14,11 +14,8 @@
     'installable': True,
     'auto_install': True,
     'assets': {
-        'pos_self_order.assets_mobile': [
+        'pos_self_order.assets': [
             'pos_online_payment_self_order/static/src/**/*',
-        ],
-        'pos_self_order.assets_mobile_tests': [
-            'pos_online_payment_self_order/static/tests/tours/**/*',
         ],
     },
     'license': 'LGPL-3',

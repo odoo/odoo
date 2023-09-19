@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_sale.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('absolute-content-price')]" position="before">
+            <div t-if="optionalProducts.length" class="upsale-content d-flex flex-column justify-content-center gap-3 h-75 border-top bg-100 pt-5 p-4">
+                <h2 class="m-0 fw-bolder">Want to add something ?</h2>
+                <div class="upsale-product d-flex flex-wrap flex-column overflow-auto gap-3">
+                    <t t-foreach="optionalProducts" t-as="product" t-key="product.id">
+                        <ProductCard product="product" />
+                    </t>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('absolute-content-price')]" position="attributes">
+            <attribute name="t-attf-class">{{ optionalProducts.length === 0 ? 'h-100' : 'h-25' }}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('order-price')]" position="attributes">
+            <attribute name="t-attf-class">{{ optionalProducts.length === 0 ? 'h-10' : 'h-50' }}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('order-content')]" position="attributes">
+            <attribute name="t-attf-class">{{ optionalProducts.length === 0 ? 'h-90' : 'h-50' }}</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -17,15 +17,6 @@ from odoo.tools import file_open, split_every
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
-    def _self_order_default_image_name(self) -> str:
-        return "default_background.jpg"
-
-    def _self_order_default_image(self) -> bytes:
-        image_path = modules.get_module_resource(
-            "pos_self_order", "static/img", self._self_order_default_image_name()
-        )
-        return base64.b64encode(file_open(image_path, "rb").read())
-
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()
 
@@ -41,34 +32,28 @@ class PosConfig(models.Model):
         compute="_compute_status",
         store=False,
     )
-    self_order_kiosk_url = fields.Char(compute="_compute_self_order_kiosk_url")
-    self_order_kiosk = fields.Boolean(
-        string="Is a Kiosk",
-        help="Enable the kiosk mode for the Point of Sale",
-    )
-    self_order_kiosk_takeaway = fields.Boolean(
-        string="Takeaway",
-        help="Allow customers to order for takeaway",
-    )
-    self_order_kiosk_alternative_fp_id = fields.Many2one(
+    self_ordering_url = fields.Char(compute="_compute_self_ordering_url")
+    self_ordering_takeaway = fields.Boolean("Takeaway")
+    self_ordering_alternative_fp_id = fields.Many2one(
         'account.fiscal.position',
         string='Alternative Fiscal Position',
         help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
     )
-    self_order_kiosk_mode = fields.Selection(
-        [("counter", "Pickup Counter"), ("table", "Service at Table")],
-        string="Kiosk Mode",
+    self_ordering_mode = fields.Selection(
+        [("nothing", "Disable"), ("consultation", "QR menu"), ("mobile", "QR menu + Ordering"), ("kiosk", "Kiosk")],
+        string="Self Ordering Mode",
+        default="nothing",
+        help="Choose the self ordering mode",
+        required=True,
+    )
+    self_ordering_service_mode = fields.Selection(
+        [("counter", "Pickup zone"), ("table", "Table")],
+        string="Service",
         default="counter",
         help="Choose the kiosk mode",
         required=True,
     )
-    self_order_kiosk_available_language_ids = fields.Many2many(
-        "res.lang",
-        string="Available Languages",
-        help="Languages available for the kiosk mode",
-        default=_self_order_kiosk_default_languages,
-    )
-    self_order_kiosk_default_language = fields.Many2one(
+    self_ordering_default_language_id = fields.Many2one(
         "res.lang",
         string="Default Language",
         help="Default language for the kiosk mode",
@@ -76,65 +61,39 @@ class PosConfig(models.Model):
             [("code", "=", self.env.lang)], limit=1
         ),
     )
-    self_order_kiosk_image_home_ids = fields.Many2many(
+    self_ordering_available_language_ids = fields.Many2many(
+        "res.lang",
+        string="Available Languages",
+        help="Languages available for the kiosk mode",
+        default=_self_order_kiosk_default_languages,
+    )
+    self_ordering_image_home_ids = fields.Many2many(
         'ir.attachment',
-        string="Home Images",
+        string="Add images",
         help="Image to display on the self order screen",
     )
-    self_order_kiosk_image_eat = fields.Image(
-        string="Self Order Kiosk Image Eat",
-        help="Image to display on the self order screen",
-        max_width=1080,
-        max_height=1920,
-        default=_self_order_default_image,
-    )
-    self_order_kiosk_image_brand = fields.Image(
-        string="Self Order Kiosk Image Brand",
-        help="Image to display on the self order screen",
-        max_width=1200,
-        max_height=250,
-    )
-    self_order_kiosk_image_eat_name = fields.Char(
-        string="Self Order Kiosk Image Eat Name",
-        help="Name of the image to display on the self order screen",
-        default=_self_order_default_image_name,
-    )
-    self_order_kiosk_image_brand_name = fields.Char(
-        string="Self Order Kiosk Image Brand Name",
-        help="Name of the image to display on the self order screen",
-    )
-    self_order_default_user_id = fields.Many2one(
+    self_ordering_default_user_id = fields.Many2one(
         "res.users",
         string="Default User",
         help="Access rights of this user will be used when visiting self order website when no session is open.",
         default=_self_order_default_user,
     )
-    self_order_view_mode = fields.Boolean(
-        string="QR Code Menu",
-        help="Allow customers to view the menu on their phones by scanning the QR code on the table",
-    )
-    self_order_table_mode = fields.Boolean(
-        string="Self Order",
-        help="Allow customers to Order from their phones",
-    )
-    self_order_pay_after = fields.Selection(
+    self_ordering_pay_after = fields.Selection(
         selection=lambda self: self._compute_selection_pay_after(),
         string="Pay After:",
         default="meal",
         help="Choose when the customer will pay",
         required=True,
     )
-    self_order_image = fields.Image(
-        string="Self Order Image",
+    self_ordering_image_brand = fields.Image(
+        string="Self Order Kiosk Image Brand",
         help="Image to display on the self order screen",
-        max_width=1920,
-        max_height=1080,
-        default=_self_order_default_image,
+        max_width=1200,
+        max_height=250,
     )
-    self_order_image_name = fields.Char(
-        string="Self Order Image Name",
+    self_ordering_image_brand_name = fields.Char(
+        string="Self Order Kiosk Image Brand Name",
         help="Name of the image to display on the self order screen",
-        default=_self_order_default_image_name,
     )
     access_token = fields.Char(
         "Security Token",
@@ -160,12 +119,6 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """
-        We want self ordering to be enabled by default
-        (This would have been nicer to do using a default value
-        directly on the fields, but `module_pos_restaurant` would not be
-        known at the time that the function for this default value would run)
-        """
         pos_config_ids = super().create(vals_list)
 
         for pos_config_id in pos_config_ids:
@@ -178,42 +131,37 @@ class PosConfig(models.Model):
                     'res_id': pos_config_id.id,
                     'type': 'binary',
                 })
-                pos_config_id.self_order_kiosk_image_home_ids = [(4, attachment.id)]
+                pos_config_id.self_ordering_image_home_ids = [(4, attachment.id)]
 
             if pos_config_id.module_pos_restaurant:
-                pos_config_id.self_order_view_mode = True
-                pos_config_id.self_order_table_mode = True
+                pos_config_id.self_ordering_mode = 'mobile'
 
         return pos_config_ids
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
-        """
-        Self ordering will only be enabled for restaurants
-        """
         for record in self:
-            if not record.module_pos_restaurant:
-                record.self_order_view_mode = False
-                record.self_order_table_mode = False
+            if not record.module_pos_restaurant and record.self_ordering_mode != 'kiosk':
+                record.self_ordering_mode = 'nothing'
 
     def _compute_selection_pay_after(self):
-        selection = [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")]
+        selection = [("meal", "Meal"), ("each", "Each Order")]
         version_info = service.common.exp_version()['server_version_info']
         if version_info[-1] == '':
             selection[0] = (selection[0][0], selection[0][1] + ' (require Odoo Enterprise)')
         return selection
 
-    @api.constrains('self_order_default_user_id')
+    @api.constrains('self_ordering_default_user_id')
     def _check_default_user(self):
         for record in self:
-            if record.self_order_table_mode and not record.self_order_default_user_id.has_group("point_of_sale.group_pos_user") and not record.self_order_default_user_id.has_group("point_of_sale.group_pos_manager"):
+            if record.self_ordering_mode == 'mobile' and not record.self_ordering_default_user_id.has_group("point_of_sale.group_pos_user") and not record.self_ordering_default_user_id.has_group("point_of_sale.group_pos_manager"):
                 raise UserError(_("The Self-Order default user must be a POS user"))
 
     def _get_qr_code_data(self):
         self.ensure_one()
 
         table_qr_code = []
-        if self.self_order_table_mode:
+        if self.self_ordering_mode == 'mobile':
             table_qr_code.extend([{
                     'name': floor.name,
                     'type': 'table',
@@ -245,18 +193,19 @@ class PosConfig(models.Model):
 
     def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
-        base_route = f"/menu/{self.id}"
+        base_route = f"/pos-self/{self.id}"
         table_route = ""
 
-        if not self.self_order_table_mode:
+        if self.self_ordering_mode == 'consultation':
             return base_route
 
-        table = self.env["restaurant.table"].search(
-            [("active", "=", True), ("id", "=", table_id)], limit=1
-        )
+        if self.self_ordering_mode == 'mobile':
+            table = self.env["restaurant.table"].search(
+                [("active", "=", True), ("id", "=", table_id)], limit=1
+            )
 
-        if table:
-            table_route = f"&table_identifier={table.identifier}"
+            if table:
+                table_route = f"&table_identifier={table.identifier}"
 
         return f"{base_route}?access_token={self.access_token}{table_route}"
 
@@ -265,10 +214,6 @@ class PosConfig(models.Model):
         return url_quote(self.get_base_url() + self._get_self_order_route(table_id))
 
     def preview_self_order_app(self):
-        """
-        This function is called when the user clicks on the "Preview App" button
-        :return: object representing the action to open the app's url in a new tab
-        """
         self.ensure_one()
         return {
             "type": "ir.actions.act_url",
@@ -276,7 +221,7 @@ class PosConfig(models.Model):
             "target": "new",
         }
 
-    def _get_self_order_custom_links(self) -> List[Dict[str, str]]:
+    def _get_self_order_custom_links(self):
         """
         On the landing page of the app we can have a number of custom links
         that are defined by the restaurant employee in the backend.
@@ -299,10 +244,22 @@ class PosConfig(models.Model):
 
     def _get_available_products(self):
         self.ensure_one()
-        return (
+        combo_product_ids = self.env["product.product"].search([
+            ("detailed_type", "=", 'combo'),
+            *(
+                self.limit_categories
+                and self.iface_available_categ_ids
+                and [("pos_categ_ids", "in", self.iface_available_categ_ids.ids)]
+                or []
+            ),
+        ])
+        product_ids = combo_product_ids.combo_ids.combo_line_ids.product_id
+
+        available_product_ids = (
             self.env["product.product"]
             .search(
                 [
+                    ("id", "not in", product_ids.ids),
                     ("available_in_pos", "=", True),
                     *(
                         self.limit_categories
@@ -313,6 +270,8 @@ class PosConfig(models.Model):
                 ],
             )
         )
+
+        return product_ids + available_product_ids
 
     def _get_available_categories(self):
         self.ensure_one()
@@ -331,20 +290,35 @@ class PosConfig(models.Model):
             )
         )
 
-    def _get_self_order_data(self) -> Dict:
+    def _get_self_ordering_data(self):
         self.ensure_one()
+        payment_search_params = self.current_session_id._loader_params_pos_payment_method()
+        payment_methods = self.payment_method_ids.filtered(lambda p: p.use_payment_terminal == 'adyen').read(payment_search_params['search_params']['fields'])
+        default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
+
         return {
             "pos_config_id": self.id,
-            "iface_start_categ_id": self.iface_start_categ_id.id,
+            "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id else False,
             "company_name": self.company_id.name,
             "company_color": self.company_id.color,
-            "currency_id": self.currency_id.id,
-            "show_prices_with_tax_included": self.iface_tax_included == "total",
             "custom_links": self._get_self_order_custom_links(),
+            "currency_id": self.currency_id.id,
+            "pos_payment_methods": payment_methods,
+            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image"]),
             "products": self._get_available_products()._get_self_order_data(self),
             "combos": self._get_combos_data(),
-            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image"]),
-            "has_active_session": self.has_active_session,
+            "config": {
+                "iface_start_categ_id": self.iface_start_categ_id.id,
+                "iface_tax_included": self.iface_tax_included == "total",
+                "self_ordering_mode": self.self_ordering_mode,
+                "self_ordering_takeaway": self.self_ordering_takeaway,
+                "self_ordering_service_mode": self.self_ordering_service_mode,
+                "self_ordering_default_language_id": default_language[0] if default_language else [],
+                "self_ordering_available_language_ids":  self.self_ordering_available_language_ids.read(["code", "display_name", "iso_code", "flag_image_url"]),
+                "self_ordering_image_home_ids": self._get_self_ordering_attachment(self.self_ordering_image_home_ids),
+                "self_ordering_image_brand": self._get_self_ordering_image(self.self_ordering_image_brand),
+                "self_ordering_pay_after": self.self_ordering_pay_after,
+            },
         }
 
     def _get_combos_data(self):
@@ -357,39 +331,12 @@ class PosConfig(models.Model):
             'combo_line_ids': combo.combo_line_ids.read(['product_id', 'combo_price', 'lst_price', 'combo_id'])
         } for combo in combos]
 
-    def _get_self_order_mobile_data(self):
-        self.ensure_one()
-        return {
-            **self._get_self_order_data(),
-            "mobile_image_home": self._get_kiosk_image(self.self_order_image),
-        }
 
-    def _get_self_order_kiosk_data(self):
-        self.ensure_one()
-        payment_search_params = self.current_session_id._loader_params_pos_payment_method()
-        payment_methods = self.payment_method_ids.filtered(lambda p: p.use_payment_terminal == 'adyen').read(payment_search_params['search_params']['fields'])
-        default_language = self.self_order_kiosk_default_language.read(["code", "name", "iso_code", "flag_image_url"])
-
-        return {
-            **self._get_self_order_data(),
-            "avaiable_payment_methods": self.payment_method_ids.ids,
-            "pos_payment_methods": payment_methods,
-            "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id else [],
-            "kiosk_mode": self.self_order_kiosk_mode,
-            "kiosk_takeaway": self.self_order_kiosk_takeaway,
-            "kiosk_alternative_fp": self.self_order_kiosk_alternative_fp_id.id,
-            "kiosk_image_home":  self._get_kiosk_attachment(self.self_order_kiosk_image_home_ids),
-            "kiosk_image_eat": self._get_kiosk_image(self.self_order_kiosk_image_eat),
-            "kiosk_image_brand": self._get_kiosk_image(self.self_order_kiosk_image_brand),
-            "kiosk_default_language": default_language[0] if default_language else [],
-            "kiosk_available_languages": self.self_order_kiosk_available_language_ids.read(["code", "display_name", "iso_code", "flag_image_url"]),
-        }
-
-    def _get_kiosk_image(self, image):
+    def _get_self_ordering_image(self, image):
         image = Image.open(io.BytesIO(base64.b64decode(image))) if image else False
         return image_to_base64(image, 'PNG').decode('utf-8') if image else False
 
-    def _get_kiosk_attachment(self, images):
+    def _get_self_ordering_attachment(self, images):
         encoded_images = []
         for image in images:
             encoded_images.append({
@@ -412,10 +359,9 @@ class PosConfig(models.Model):
             for floor in floors
         ]
 
-    def _compute_self_order_kiosk_url(self):
+    def _compute_self_ordering_url(self):
         for record in self:
-            domain = self.get_base_url()
-            record.self_order_kiosk_url = '%s/kiosk/%d?access_token=%s' % (domain, record.id, record.access_token)
+            record.self_ordering_url = self.get_base_url() + self._get_self_order_route()
 
     def action_close_kiosk_session(self):
         current_session_id = self.current_session_id
@@ -424,7 +370,7 @@ class PosConfig(models.Model):
             if current_session_id.order_ids:
                 current_session_id.order_ids.filtered(lambda o: o.state not in ['paid', 'invoiced']).unlink()
 
-            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'status', {
+            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {
                 'status': 'closed',
             })
 
@@ -440,7 +386,7 @@ class PosConfig(models.Model):
         return {
             'name': _('Self Kiosk'),
             'type': 'ir.actions.act_url',
-            'url': self.self_order_kiosk_url,
+            'url': self._get_self_order_route(),
         }
 
     def action_open_wizard(self):
@@ -449,7 +395,7 @@ class PosConfig(models.Model):
         if not self.current_session_id:
             pos_session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             pos_session._ensure_access_token()
-            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'status', {
+            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {
                 'status': 'open',
                 'pos_session': pos_session.read(['id', 'access_token'])[0],
             })

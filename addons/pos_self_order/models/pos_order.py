@@ -33,17 +33,11 @@ class PosOrderLine(models.Model):
             del vals['combo_parent_uuid']
         return super().write(vals)
 
-    # FIXME: uuid already pass in pos and move note in pos_restaurant.
     def _export_for_ui(self, orderline):
         return {
-            'uuid': orderline.uuid,
             'note': orderline.note,
             **super()._export_for_ui(orderline),
         }
-
-    def _get_selected_attributes(self) -> Dict:
-        self.ensure_one()
-        return {value.attribute_line_id.id: value.id for value in self.attribute_value_ids}
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
@@ -109,7 +103,7 @@ class PosOrder(models.Model):
                     "price_subtotal": line.price_subtotal,
                     "price_subtotal_incl": line.price_subtotal_incl,
                     "product_id": line.product_id.id,
-                    "selected_attributes": line._get_selected_attributes(),
+                    "selected_attributes": line.attribute_value_ids.ids,
                     "uuid": line.uuid,
                     "qty": line.qty,
                     "customer_note": line.customer_note,
