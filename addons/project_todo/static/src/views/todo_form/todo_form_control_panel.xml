@@ -12,6 +12,7 @@
 
     <t t-name="project_todo.TodoBreadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_last_breadcrumb_item')]//span" position="replace">
+            <t t-slot="control-panel-priority-field" />
             <t t-slot="control-panel-todo-name" />
             <t t-slot="todo-mark-as-done-button" />
         </xpath>
