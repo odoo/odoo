@@ -47,7 +47,7 @@ def test_get_data(self, template_code):
             }
         },
         'account.tax': {
-            xmlid: _tax_vals(name, amount, 'account_tax_tag_1')
+            xmlid: _tax_vals(name, amount)
             for name, xmlid, amount in [
                 ('Tax 1', 'test_tax_1_template', 15),
                 ('Tax 2', 'test_tax_2_template', 0),
@@ -98,8 +98,7 @@ def test_get_data(self, template_code):
         }
     }
 
-def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=True):
-    tag_command = [Command.set([tax_tag_id])] if tax_tag_id else None
+def _tax_vals(name, amount, children_tax_xmlids=None, active=True):
     tax_vals = {
         'name': name,
         'amount': amount,
@@ -109,13 +108,6 @@ def _tax_vals(name, amount, tax_tag_id=None, children_tax_xmlids=None, active=Tr
     }
     if children_tax_xmlids:
         tax_vals.update({'children_tax_ids': [Command.set(children_tax_xmlids)]})
-    else:
-        tax_vals.update({'repartition_line_ids': [
-            Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': tag_command}),
-            Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
-            Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
-            Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
-        ]})
     return tax_vals
 
 
@@ -260,6 +252,9 @@ class TestChartTemplate(TransactionCase):
             data['account.account.tag']['account_tax_tag_1']['name'] += ' [DUP]'
             return data
 
+        tax_existing = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', 'Tax 1')])
+        tag_existing = self.env['account.account.tag'].search([('name', '=', 'tax_tag_name_1')])
+        tax_existing.invoice_repartition_line_ids.tag_ids = tag_existing
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
 
