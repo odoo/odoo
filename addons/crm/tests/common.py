@@ -3,6 +3,7 @@
 
 from ast import literal_eval
 from contextlib import contextmanager
+from datetime import timedelta
 from unittest.mock import patch
 
 from odoo.addons.crm.models.crm_lead import PARTNER_ADDRESS_FIELDS_TO_SYNC
@@ -640,8 +641,12 @@ class TestLeadConvertCommon(TestCrmCommon):
 
     def assertMemberAssign(self, member, count):
         """ Check assign result and that domains are effectively taken into account """
-        self.assertEqual(member.lead_month_count, count)
-        member_leads = self.env['crm.lead'].search(member._get_lead_month_domain())
+        self.assertEqual(member.lead_day_count, count)
+        member_leads = self.env['crm.lead'].search([
+            ('user_id', '=', member.user_id.id),
+            ('team_id', '=', member.crm_team_id.id),
+            ('date_open', '>=', Datetime.now() - timedelta(hours=24)),
+        ])
         self.assertEqual(len(member_leads), count)
         if member.assignment_domain:
             self.assertEqual(
