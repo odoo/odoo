@@ -5846,6 +5846,102 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("onchange returns an error", async function (assert) {
+        registry.category("services").add("error", errorService);
+        registry.category("error_dialogs").add("odoo.exceptions.UserError", WarningDialog);
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        serverData.models.partner.onchanges = { int_field: true };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="int_field"/></form>`,
+            resId: 2,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    const error = new RPCError("Some business message");
+                    error.data = { context: {} };
+                    error.exceptionName = "odoo.exceptions.UserError";
+                    throw error;
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=int_field] input").value,
+            "9"
+        );
+
+        await editInput(target, ".o_field_widget[name=int_field] input", 64);
+        await nextTick();
+
+        assert.containsOnce(document.body, ".modal");
+        assert.strictEqual(
+            document.body.querySelector(".modal-body").textContent,
+            "Some business message"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=int_field] input").value,
+            "9"
+        );
+    });
+
+    QUnit.test("onchange on a date field returns an error", async function (assert) {
+        registry.category("services").add("error", errorService);
+        registry.category("error_dialogs").add("odoo.exceptions.UserError", WarningDialog);
+        // remove the override in qunit.js that swallows unhandledrejection errors
+        // s.t. we let the error service handle them
+        const originalOnUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originalOnUnhandledRejection;
+        });
+
+        serverData.models.partner.onchanges = { date: true };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="date"/></form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    const error = new RPCError("Some business message");
+                    error.data = { context: {} };
+                    error.exceptionName = "odoo.exceptions.UserError";
+                    throw error;
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=date] .o_datepicker_input").value,
+            "01/25/2017"
+        );
+
+        await editInput(target, ".o_field_widget[name=date] .o_datepicker_input", "01/12/2020");
+        await nextTick();
+
+        assert.containsOnce(document.body, ".modal");
+        assert.strictEqual(
+            document.body.querySelector(".modal-body").textContent,
+            "Some business message"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=date] .o_datepicker_input").value,
+            "01/25/2017"
+        );
+    });
+
     QUnit.skip("button box is rendered in create mode", async function (assert) {
         await makeView({
             type: "form",
@@ -12329,6 +12425,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target, "button[name=do_it]");
+        await nextTick();
         assert.containsNone(target, ".o_form_error_dialog");
         assert.containsOnce(target, ".modal");
         assert.strictEqual(

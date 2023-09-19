@@ -310,6 +310,18 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Erreur lors du parsing de la date [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Erreur lors de l'importation d'enregistrements : toutes les lignes doivent "
+"avoir la même taille, mais la ligne de titre a %d entrées alors que la "
+"première ligne en a %d. Vous devez peut-être modifier le séparateur."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format

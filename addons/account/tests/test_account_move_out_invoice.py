@@ -3717,3 +3717,28 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term'), [
             {'account_id': receivable_account.id, 'tax_ids': []},
         ])
+
+    def test_keep_receivable(self):
+        """Duplicating an invoice with a different receivable account should keep the account."""
+        receivable_account = self.partner_a.property_account_receivable_id
+        other_receivable_account = receivable_account.copy()
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'quantity': 1,
+                    'price_unit': 100,
+                })
+            ],
+        })
+
+        invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').account_id = other_receivable_account
+        duplicate_invoice = invoice.copy()
+
+        self.assertEqual(
+            duplicate_invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').account_id,
+            other_receivable_account
+        )

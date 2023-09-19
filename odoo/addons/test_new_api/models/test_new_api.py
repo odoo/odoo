@@ -1742,6 +1742,20 @@ class RelatedTranslation2(models.Model):
     parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
     name = fields.Char('Name Related', related='parent_id.name', readonly=False)
     html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    computed_name = fields.Char('Name Computed', compute='_compute_name')
+    computed_html = fields.Char('HTML Computed', compute='_compute_html')
+
+    @api.depends_context('lang')
+    @api.depends('parent_id.name')
+    def _compute_name(self):
+        for record in self:
+            record.computed_name = record.parent_id.name
+
+    @api.depends_context('lang')
+    @api.depends('parent_id.html')
+    def _compute_html(self):
+        for record in self:
+            record.computed_html = record.parent_id.html
 
 
 class RelatedTranslation3(models.Model):

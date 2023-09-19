@@ -1549,6 +1549,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
+        self.partner1.write({'parent_id': self.env['res.partner'].create({'name': 'Parent'}).id})
 
         #add customer account payment method to pos config
         self.pos_config.write({
@@ -1607,6 +1608,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         reverser_customer_payment_entry = reverse_payment.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
         #check that both use the same account
         self.assertEqual(len(reverser_customer_payment_entry), 2)
+        self.assertTrue(order.account_move.line_ids.partner_id == self.partner1.commercial_partner_id)
         self.assertEqual(reverser_customer_payment_entry[0].balance, -2.0)
         self.assertEqual(reverser_customer_payment_entry[1].balance, -4.0)
         self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
@@ -1696,3 +1698,88 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         aml = session_id.move_id.line_ids.filtered(lambda x: x.account_id == self.account1 and x.tax_ids == self.tax1)
         self.assertEqual(aml.price_total, 220)
         self.assertEqual(aml.price_subtotal, 200)
+
+    def test_multi_exp_account_real_time(self):
+
+        #Create a real time valuation product category
+        self.real_time_categ = self.env['product.category'].create({
+            'name': 'test category',
+            'parent_id': False,
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+
+        #Create 2 accounts to be used for each product
+        self.account1 = self.env['account.account'].create({
+            'name': 'Account 1',
+            'code': 'AC1',
+            'reconcile': True,
+            'account_type': 'expense',
+        })
+        self.account2 = self.env['account.account'].create({
+            'name': 'Account 1',
+            'code': 'AC2',
+            'reconcile': True,
+            'account_type': 'expense',
+        })
+
+        self.product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'categ_id': self.real_time_categ.id,
+            'property_account_expense_id': self.account1.id,
+            'property_account_income_id': self.account1.id,
+        })
+        self.product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.real_time_categ.id,
+            'property_account_expense_id': self.account2.id,
+            'property_account_income_id': self.account2.id,
+        })
+
+        #Create an order with the 2 products
+        self.pos_config.open_ui()
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product_a.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product_b.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 200.0,
+            'amount_total': 200.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'to_ship': True,
+            })
+        #make payment
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        order.picking_ids._action_done()
+
+        moves = self.env['account.move'].search([('ref', '=', f'pos_order_{order.id}')])
+        self.assertEqual(len(moves), 2)

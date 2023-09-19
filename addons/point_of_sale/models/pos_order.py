@@ -271,7 +271,7 @@ class PosOrder(models.Model):
 
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
-        'Status', readonly=True, copy=False, default='draft')
+        'Status', readonly=True, copy=False, default='draft', index=True)
 
     account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index="btree_not_null")
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
@@ -775,7 +775,7 @@ class PosOrder(models.Model):
                 aml_vals_entry_found[0]['balance'] += payment_id.amount
             else:
                 aml_vals_list_per_nature['payment_terms'].append({
-                    'partner_id': self.partner_id.id if is_split_transaction else False,
+                    'partner_id': commercial_partner.id if is_split_transaction else False,
                     'name': f"{reversed_move_receivable_account_id.code} {reversed_move_receivable_account_id.code}",
                     'account_id': reversed_move_receivable_account_id.id,
                     'currency_id': self.currency_id.id,

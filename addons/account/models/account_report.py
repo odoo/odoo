@@ -193,8 +193,18 @@ class AccountReport(models.Model):
         code_mapping = {}
         for line in self.line_ids.filtered(lambda x: not x.parent_id):
             line._copy_hierarchy(copied_report, code_mapping=code_mapping)
+
+        # Replace line codes by their copy in aggregation formulas
+        for expression in copied_report.line_ids.expression_ids:
+            if expression.engine == 'aggregation':
+                copied_formula = f" {expression.formula} " # Add spaces so that the lookahead/lookbehind of the regex can work (we can't do a | in those)
+                for old_code, new_code in code_mapping.items():
+                    copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
+                expression.formula = copied_formula.strip() # Remove the spaces introduced for lookahead/lookbehind
+
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
+
         return copied_report
 
     @api.ondelete(at_uninstall=False)
@@ -329,13 +339,6 @@ class AccountReportLine(models.Model):
         # Update aggregation expressions, so that they use the copied lines
         for expression in self.expression_ids:
             copy_defaults = {'report_line_id': copied_line.id}
-
-            if expression.engine == 'aggregation':
-                copied_formula = f" {expression.formula} " # Add spaces so that the lookahead/lookbehind of the regex can work (we can't do a | in those)
-                for old_code, new_code in code_mapping.items():
-                    copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
-                copy_defaults['formula'] = copied_formula.strip() # Remove the spaces introduced for lookahead/lookbehind
-
             expression.copy(copy_defaults)
 
     def _get_copied_code(self):

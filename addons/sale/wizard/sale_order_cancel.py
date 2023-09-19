@@ -61,7 +61,7 @@ class SaleOrderCancel(models.TransientModel):
     def _compute_subject(self):
         for wizard in self:
             if wizard.template_id:
-                wizard.subject = wizard.template_id.sudo()._render_field(
+                wizard.subject = wizard.template_id._render_field(
                     'subject',
                     wizard.order_id.ids,
                     post_process=True,
@@ -72,7 +72,7 @@ class SaleOrderCancel(models.TransientModel):
     def _compute_body(self):
         for wizard in self:
             if wizard.template_id:
-                wizard.body = wizard.template_id.sudo()._render_field(
+                wizard.body = wizard.template_id._render_field(
                     'body_html',
                     wizard.order_id.ids,
                     post_process=True,

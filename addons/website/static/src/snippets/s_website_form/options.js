@@ -105,13 +105,16 @@ const FormEditor = options.Class.extend({
      * Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
      * all "`" character by `&lsquo;`. This is needed in order to be able to
      * perform querySelector of this type: `querySelector(`[name="${name}"]`)`.
+     * It also encodes the "\\" sequence to avoid having to escape it when doing
+     * a `querySelector`.
      *
      * @param {string} name
      */
     _getQuotesEncodedName(name) {
         return name.replaceAll(/"/g, character => `&quot;`)
                    .replaceAll(/'/g, character => `&apos;`)
-                   .replaceAll(/`/g, character => `&lsquo;`);
+                   .replaceAll(/`/g, character => `&lsquo;`)
+                   .replaceAll("\\", character => `&bsol;`);
     },
     /**
      * @private
