@@ -20,6 +20,15 @@ export function shallowEqual(obj1, obj2, comparisonFn = (a, b) => a === b) {
 }
 
 /**
+ * Deeply compares two objects.
+ *
+ * @template {unknown} T
+ * @param {T} obj1
+ * @param {T} obj2
+ */
+export const deepEqual = (obj1, obj2) => shallowEqual(obj1, obj2, deepEqual);
+
+/**
  * Deep copies an object. As it relies on JSON this function as some limitations
  * - no support for circular objects
  * - no support for specific classes, that will at best be lost and at worst crash (Map, Set etc...)

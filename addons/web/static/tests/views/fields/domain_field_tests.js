@@ -181,13 +181,12 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // As the domain is empty, there should be a button to add the first
-        // domain part
-        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        // As the domain is empty, there should be a button to add a new rule
+        assert.containsOnce(target, ".o_domain_tree a[role=button]");
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
-        await click(target, ".o_domain_add_first_node_button");
+        await click(target, ".o_domain_tree a[role=button]");
         assert.containsOnce(target, ".o_model_field_selector", "there should be a field selector");
 
         // Focusing the field selector input should open the field selector
@@ -242,7 +241,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_domain_add_first_node_button");
+        await click(target, ".o_domain_tree a[role=button]");
         await click(target, ".o_model_field_selector");
         await click(
             document.body.querySelector(
@@ -930,7 +929,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".modal");
         await click(target, ".o_field_domain_dialog_button");
         assert.containsOnce(target, ".modal");
-        await click(target, ".modal .o_domain_add_first_node_button");
+        await click(target, ".modal .o_domain_tree a[role=button]");
         await click(target, ".modal-footer .btn-primary");
         assert.containsOnce(target, ".o_domain_leaf");
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "ID = 1");
@@ -957,7 +956,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_domain_dialog_button");
         assert.containsOnce(target, ".modal");
 
-        await click(target, ".modal .o_domain_add_first_node_button");
+        await click(target, ".modal .o_domain_tree a[role=button]");
         await editInput(target, ".o_domain_debug_input", "[(0, '=', expr)]");
         await click(target, ".modal-footer .btn-primary");
         assert.containsOnce(target, ".modal", "the domain is invalid: the dialog is not closed");
@@ -1027,13 +1026,12 @@ QUnit.module("Fields", (hooks) => {
         // Unfold the domain
         await click(target, ".o_field_domain > div > div");
 
-        // As the domain is empty, there should be a button to add the first
-        // domain part
-        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        // As the domain is empty, there should be a button to add a new rule
+        assert.containsOnce(target, ".o_domain_tree a[role=button]");
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
-        await click(target, ".o_domain_add_first_node_button");
+        await click(target, ".o_domain_tree a[role=button]");
         assert.containsOnce(target, ".o_model_field_selector");
 
         // Focusing the field selector input should open the field selector

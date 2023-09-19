@@ -172,17 +172,16 @@ QUnit.module("Components", (hooks) => {
             isDebugMode: true,
         });
 
-        // As we gave an empty domain, there should be a visible button to add
-        // the first domain part
+        // When we have an empty domain, the "New Rule" button should be available
         assert.containsOnce(
             target,
-            ".o_domain_add_first_node_button",
-            "there should be a button to create first domain element"
+            "a[role=button]",
+            "there should be a button to create a domain element"
         );
 
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        await click(target, ".o_domain_add_first_node_button");
+        await click(target, "a[role=button]");
         assert.containsOnce(target, ".o_model_field_selector");
 
         // Focusing the field selector input should open a field selector popover
@@ -431,7 +430,7 @@ QUnit.module("Components", (hooks) => {
         });
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        await click(target, ".o_domain_add_first_node_button");
+        await click(target, "a[role=button]");
     });
 
     QUnit.test("edit a domain with the debug textarea", async (assert) => {
@@ -756,10 +755,10 @@ QUnit.module("Components", (hooks) => {
         await click(target, ".o_reset_domain_button");
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText.toLowerCase(),
-            "match all records add condition"
+            "match all records\nnew rule"
         );
         assert.containsNone(target, ".o_reset_domain_button");
-        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, "a[role=button]");
         assert.verifySteps(["[]"]);
     });
 
@@ -905,7 +904,7 @@ QUnit.module("Components", (hooks) => {
         });
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText,
-            `Match records with any of the following rules:\ncreate_date\nis between 2023-04-01 00:00:00 and 2023-04-30 23:59:59\n0\n= 1`
+            `Match any of the following rules:\ncreate_date\nis between 2023-04-01 00:00:00 and 2023-04-30 23:59:59\n0\n= 1`
         );
     });
 
@@ -934,99 +933,99 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc`,
+                result: `Match all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc`,
+                result: `Match all of the following rules:\nFoo\n= abc`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc`,
+                result: `Match all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
+                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
             },
             {
                 domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n= def\nFoo\n!= ghi`,
+                result: `Match any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= abc\nall\nof:\nFoo\n!= def\nFoo\n!= ghi`,
+                result: `Match any of the following rules:\nFoo\n!= abc\nall\nof:\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
             },
         ];
 
@@ -1051,99 +1050,99 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc`,
+                result: `Match all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc`,
+                result: `Match all of the following rules:\nFoo\n= abc`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc`,
+                result: `Match all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with not all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match not all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with none of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match none of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
+                result: `Match any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
+                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
+                result: `Match any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match all of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match all of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match any of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match any of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with not all of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match not all of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match none of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with not all of the following rules:\nany\nof:\nFoo\n= abc\nFoo\n!= def\nFoo\n= ghi`,
+                result: `Match not all of the following rules:\nany\nof:\nFoo\n= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nall\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match none of the following rules:\nall\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with not all of the following rules:\nFoo\n= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match not all of the following rules:\nFoo\n= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n= ghi`,
+                result: `Match none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), "!", ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n!= ghi`,
+                result: `Match none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n!= ghi`,
             },
         ];
 
@@ -1268,17 +1267,14 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("button 'New Rule' (edit mode)", async (assert) => {
         await makeDomainSelector();
         assert.containsNone(target, ".o_domain_leaf");
-        assert.containsOnce(target, ".o_domain_add_first_node_button");
-        assert.containsNone(target, "a[role=button]");
+        assert.containsOnce(target, "a[role=button]");
 
-        await click(target, ".o_domain_add_first_node_button");
+        await click(target, "a[role=button]");
         assert.containsOnce(target, ".o_domain_leaf");
-        assert.containsNone(target, ".o_domain_add_first_node_button");
         assert.containsOnce(target, "a[role=button]");
 
         await click(target, "a[role=button]");
         assert.containsN(target, ".o_domain_leaf", 2);
-        assert.containsNone(target, ".o_domain_add_first_node_button");
         assert.containsOnce(target, "a[role=button]");
     });
 
@@ -2080,4 +2076,81 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o_ds_value_cell");
         assert.verifySteps([`[("product_ids", "!=", False)]`]);
     });
+
+    QUnit.test("Include archived button basic use", async (assert) => {
+        serverData.models.partner.fields.active = {
+            string: "Active",
+            type: "boolean",
+            searchable: true,
+        };
+        await makeDomainSelector({
+            isDebugMode: true,
+            domain: `["&", ("foo", "=", "test"), ("bar", "=", True)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.containsOnce(target, '.form-switch label:contains("Include archived")');
+        await click(target, ".form-switch");
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.verifySteps([
+            '["&", "&", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
+        ]);
+        await click(target, ".dropdown-toggle");
+        await click(target, ".dropdown-menu span:nth-child(2)");
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.verifySteps([
+            '["&", "|", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
+        ]);
+        await click(target, ".form-switch");
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.verifySteps(['["|", ("foo", "=", "test"), ("bar", "=", True)]']);
+    });
+
+    QUnit.test("Include archived on empty tree", async (assert) => {
+        serverData.models.partner.fields.active = {
+            string: "Active",
+            type: "boolean",
+            searchable: true,
+        };
+        await makeDomainSelector({
+            isDebugMode: true,
+            domain: `[("foo", "=", "test")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsOnce(target, '.form-switch label:contains("Include archived")');
+        await click(target, ".form-switch");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.verifySteps(['["&", ("foo", "=", "test"), ("active", "in", [True, False])]']);
+        await click(target, ".o_domain_delete_node_button");
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.verifySteps(['[("active", "in", [True, False])]']);
+        await click(target, ".form-switch");
+        assert.verifySteps(["[]"]);
+        await click(target, ".form-switch");
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.verifySteps(['[("active", "in", [True, False])]']);
+        await click(target, "a[role=button]");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.verifySteps(['["&", ("id", "=", 1), ("active", "in", [True, False])]']);
+    });
+
+    QUnit.test(
+        "Include archived not shown when model doesn't have the active field",
+        async (assert) => {
+            await makeDomainSelector({
+                isDebugMode: true,
+                domain: `[("foo", "=", "test")]`,
+                update(domain) {
+                    assert.step(domain);
+                },
+            });
+            assert.containsOnce(target, ".o_domain_leaf");
+            assert.containsNone(target, '.form-switch label:contains("Include archived")');
+        }
+    );
 });
