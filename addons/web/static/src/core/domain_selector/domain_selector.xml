@@ -4,23 +4,31 @@
     <t t-name="web._DomainSelector">
         <div class="o_domain_node o_domain_tree o_domain_selector w-100" aria-atomic="true" t-att-class="className" t-ref="root">
             <t t-if="tree">
-                <t t-set="node" t-value="tree" />
-                <t t-if="node.children.length === 0">
-                    <span>Match <strong>all records</strong></span>
-                    <t t-if="!props.readonly">
-                        <button class="btn btn-sm btn-primary o_domain_add_first_node_button ms-1" t-on-click="() => this.insertRootLeaf(node)">
-                            <i class="fa fa-plus"/> Add condition
-                        </button>
-                    </t>
-                </t>
-                <t t-else="">
-                    <span>Match records with </span>
-                    <t t-call="web._DomainSelector.connector.dropdown" />
-                    <span> of the following rules:</span>
-                    <t t-call="web._DomainSelector.connector.children" />
-                    <t t-if="!props.readonly">
-                        <a href="#" class="pt-1 ms-1" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
-                    </t>
+                <t t-set="node" t-value="tree"/>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <t t-if="node.children.length === 0">
+                            <span>Match <strong>all records</strong></span>
+                        </t>
+                        <t t-else="">
+                            <span>Match </span>
+                            <t t-call="web._DomainSelector.connector.dropdown" />
+                            <span> of the following rules:</span>
+                        </t>
+                    </div>
+                    <CheckBox
+                        t-if="showArchivedCheckbox"
+                        value="includeArchived"
+                        disabled="props.readonly"
+                        className="'form-switch'"
+                        onChange.bind="toggleIncludeArchived"
+                    >
+                        Include archived
+                    </CheckBox>
+                </div>
+                <t t-if="node.children.length" t-call="web._DomainSelector.connector.children" />
+                <t t-if="!props.readonly">
+                    <a href="#" class="pt-1 ms-1" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
                 </t>
             </t>
             <t t-else="">
