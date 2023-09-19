@@ -15,8 +15,10 @@
         <field name="res_model">hr.work.entry</field>
         <field name="view_mode">calendar,tree,form,pivot</field>
         <field name="context">{
+            'search_default_group_start_date': True,
+            'search_default_group_employee': True,
             'search_default_current_month': True,
-            'search_default_work_entries_error': True
+            'search_default_work_entries_error': True,
         }</field>
     </record>
 
@@ -121,10 +123,10 @@
                     ('date_stop', '&gt;=', (context_today()).strftime('%Y-%m-01')),
                     ('date_start', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
                 <separator/>
+                <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start:day'}"/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
                 <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
-                <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
