@@ -24,7 +24,7 @@
                         <div t-attf-class="mb-3 row#{props.needLabel ? '' : ' d-none'}">
                             <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
                             <div class="col-md-9">
-                                <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="this.state.initialContent" t-ref="inputText"/>
+                                <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-ref="inputText"/>
                             </div>
                         </div>
                         <div t-attf-class="mb-3 row o_url_input#{state.isButton ? ' d-none' : ''}">
@@ -129,7 +129,7 @@
                 <we-title>Label</we-title>
                 <we-input class="o_we_user_value_widget">
                     <div>
-                        <input name="label" id="o_link_dialog_label_input" t-att-value="this.state.initialContent" type="text"/>
+                        <input name="label" id="o_link_dialog_label_input" type="text"/>
                     </div>
                 </we-input>
             </we-row>
