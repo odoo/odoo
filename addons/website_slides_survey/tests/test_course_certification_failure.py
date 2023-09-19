@@ -64,6 +64,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
 
         self.assertEqual(1, len(slide_partner.user_input_ids), 'A user input should have been automatically created upon slide view')
 
+        first_attempt_in_first_pool = slide_partner.user_input_ids[0]
         # Step 4: fill in the created user_input with wrong answers
         self.fill_in_answer(slide_partner.user_input_ids[0], certification.question_ids)
 
@@ -71,7 +72,10 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_model()
         self.assertIn(self.user_portal.partner_id, self.channel.partner_ids, 'Portal user should still be a member of the course because they still have attempts left')
-
+        certification_urls = self.slide_certification.with_user(self.user_portal)._generate_certification_url()
+        self.assertEqual(certification_urls[self.slide_certification.id],
+                         slide_partner.user_input_ids[0].get_start_url(),
+                         "Make sure that the url generated is the same even if we enter again the certification without doing retry.")
         # Step 5: simulate a 'retry'
         retry_user_input = self.slide_certification.survey_id.sudo()._create_answer(
             partner=self.user_portal.partner_id,
@@ -81,6 +85,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
             },
             invite_token=slide_partner.user_input_ids[0].invite_token
         )
+        second_attempt_in_first_pool = retry_user_input
         # Step 6: fill in the new user_input with wrong answers again
         self.fill_in_answer(retry_user_input, certification.question_ids)
         # forces recompute of partner_ids as we delete directly in relation
@@ -98,14 +103,21 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
 
         self.slide_certification.with_user(self.user_portal)._generate_certification_url()
         self.assertTrue(channel_partner.active, 'Portal user membership should be a unarchived upon joining the course once again')
-        self.assertEqual(1, len(slide_partner.user_input_ids.filtered(lambda user_input: user_input.state != 'done')), 'A new user input should have been automatically created upon slide view')
-
+        self.assertEqual(1, len(slide_partner.user_input_ids), 'A new user input should have been automatically created upon slide view')
+        first_attempt_in_second_pool = slide_partner.user_input_ids[0]
         # Step 8: fill in the created user_input with correct answers this time
-        self.fill_in_answer(slide_partner.user_input_ids.filtered(lambda user_input: user_input.state != 'done'), certification.question_ids, good_answers=True)
+        self.fill_in_answer(slide_partner.user_input_ids, certification.question_ids, good_answers=True)
         self.assertTrue(slide_partner.survey_scoring_success, 'Quizz should be marked as passed with correct answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_model()
         self.assertIn(self.user_portal.partner_id, self.channel.partner_ids, 'Portal user should still be a member of the course')
+        # Checking the attempts numbers
+        self.assertEqual(1, first_attempt_in_first_pool.attempts_number,
+                         'The first attempt of the first pool should be number 1')
+        self.assertEqual(2, second_attempt_in_first_pool.attempts_number,
+                         'The second attempt of the first pool should be number 2')
+        self.assertEqual(1, first_attempt_in_second_pool.attempts_number,
+                         'The first attempt of the second pool should be number 1')
 
     def fill_in_answer(self, answer, questions, good_answers=False):
         """ Fills in the user_input with answers for all given questions.
