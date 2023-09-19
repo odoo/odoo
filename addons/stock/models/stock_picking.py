@@ -57,9 +57,11 @@ class PickingType(models.Model):
     active = fields.Boolean('Active', default=True)
     use_create_lots = fields.Boolean(
         'Create New Lots/Serial Numbers', default=True,
+        compute='_compute_use_create_lots', store=True, readonly=False,
         help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ")
     use_existing_lots = fields.Boolean(
         'Use Existing Lots/Serial Numbers', default=True,
+        compute='_compute_use_existing_lots', store=True, readonly=False,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     print_label = fields.Boolean(
         'Print Label',
@@ -173,6 +175,18 @@ class PickingType(models.Model):
                 picking_type.display_name = f"{picking_type.warehouse_id.name}: {picking_type.name}"
             else:
                 picking_type.display_name = picking_type.name
+
+    @api.depends('code')
+    def _compute_use_create_lots(self):
+        for picking_type in self:
+            if picking_type.code == 'incoming':
+                picking_type.use_create_lots = True
+
+    @api.depends('code')
+    def _compute_use_existing_lots(self):
+        for picking_type in self:
+            if picking_type.code == 'outgoing':
+                picking_type.use_existing_lots = True
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
