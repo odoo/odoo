@@ -24,8 +24,8 @@ export class ImageUrlField extends Component {
         });
 
         onWillUpdateProps((nextProps) => {
-            if (this.props.record.data[this.props.name] !== nextProps.record.data[nextProps.name]) {
-                this.state.value = nextProps.record.data[nextProps.name];
+            if (this.state.src !== nextProps.record.data[nextProps.name]) {
+                this.state.src = nextProps.record.data[nextProps.name];
             }
         });
     }
