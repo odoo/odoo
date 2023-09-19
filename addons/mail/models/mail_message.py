@@ -848,6 +848,8 @@ class Message(models.Model):
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
+
+            # author
             author = {
                 'id': message_sudo.author_id.id,
                 'name': message_sudo.author_id.name,
@@ -856,6 +858,19 @@ class Message(models.Model):
                 'id': message_sudo.author_guest_id.id,
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
+            # sender: used to display impersonation, mainly for internal users
+            # e.g. when a template is used on behalf of someone else; mail gateway
+            # messages currently consider the author being the sender (as otherwise
+            # it will always be 'Sent by Odoobot')
+            if message_sudo.message_type == 'email':
+                sender = author
+            else:
+                sender = {
+                    'id': message_sudo.create_uid.partner_id.id,
+                    'name': message_sudo.create_uid.name,
+                }
+
+            # other
             if message_sudo.model and message_sudo.res_id:
                 record_name = self.env[message_sudo.model] \
                     .browse(message_sudo.res_id) \
@@ -886,6 +901,7 @@ class Message(models.Model):
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
+                'sender': sender,
             })
 
         return vals_list

@@ -110,6 +110,7 @@ For more specific needs, you may also assign custom-defined actions
     ],
     'demo': [
         'data/mail_channel_demo.xml',
+        'data/res_partner_demo.xml',
     ],
     'installable': True,
     'application': True,

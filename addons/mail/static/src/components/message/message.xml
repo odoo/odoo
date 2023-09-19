@@ -91,8 +91,9 @@
                                         Anonymous
                                     </strong>
                                 </t>
+                                <span t-if="messageView.senderView" class="me-1 small fw-light" t-esc="messageView.senderView"/>
                                 <t t-if="messageView.message.date">
-                                    <small class="o_Message_date o_Message_headerDate text-muted opacity-50" t-att-class="{ 'o-message-selected': messageView.isSelected, 'me-2': !(messageView.isInChatWindowAndIsAlignedRight) }" t-att-title="messageView.message.datetime">
+                                    <small class="o_Message_date o_Message_headerDate text-muted opacity-50" t-att-class="{ 'o-message-selected': messageView.isSelected, 'me-2': !(messageView.isInChatWindowAndIsAlignedRight) }" t-att-title="messageView.dateEnriched">
                                         <span t-if="messageView.isShowingAuthorName">-</span> <t t-esc="messageView.dateFromNow"/>
                                     </small>
                                 </t>
