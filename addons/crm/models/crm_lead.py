@@ -743,7 +743,7 @@ class Lead(models.Model):
             index_name = f'crm_lead_{field_name}_partial_tgm'
             if tools.index_exists(self._cr, index_name):
                 continue
-            regex_expression = "regexp_replace((phone::text), %s::text, ''::text, 'g'::text)"
+            regex_expression = f"regexp_replace(({field_name}::text), %s::text, ''::text, 'g'::text)"
             self._cr.execute(
                 f'CREATE INDEX "{index_name}" ON "{self._table}" ({regex_expression}) WHERE {field_name} IS NOT NULL',
                 (phone_pattern,)
