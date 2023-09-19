@@ -75,12 +75,12 @@
             </div>
 
             <t t-if="!this.isMobile()">
-                <div t-if="props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
+                <div t-if="props.customFontSize or props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
                     <button type="button" class="btn dropdown-toggle"
                         data-bs-toggle="dropdown" tabindex="-1"
                         data-bs-original-title="Font Size" aria-expanded="false">
                         <div id="font-size-input-container">
-                            <input type="text" id="fontSizeCurrentValue" title="Font size" value="13"></input>
+                            <input type="text" id="fontSizeCurrentValue" title="Font size" value="13"  t-att-readonly= "props.showFontSize"></input>
                         </div>
                     </button>
                     <ul class="dropdown-menu">
