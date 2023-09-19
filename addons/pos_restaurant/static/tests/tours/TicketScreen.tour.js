@@ -47,8 +47,7 @@ registry
             Chrome.do.clickTicketButton();
             TicketScreen.do.deleteOrder("-0003");
             Chrome.do.confirmPopup();
-            TicketScreen.do.selectOrder("-0002");
-            TicketScreen.do.loadSelectedOrder();
+            TicketScreen.do.doubleClickOrder("-0002");
             ProductScreen.check.isShown();
             ProductScreen.check.totalAmountIs("2.0");
             Chrome.do.backToFloor();

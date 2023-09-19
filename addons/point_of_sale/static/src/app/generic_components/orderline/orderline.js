@@ -2,9 +2,6 @@
 
 import { Component } from "@odoo/owl";
 
-/**
- * How to extend this component:
- */
 export class Orderline extends Component {
     static template = "point_of_sale.Orderline";
     static props = {

@@ -59,7 +59,8 @@
                                 <div class="col very-narrow p-2" name="delete"></div>
                             </div>
                             <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
+                                <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>
                                     </div>
@@ -88,7 +89,8 @@
                                 </div>
                             </t>
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="mobileOrderList order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
+                                <div class="mobileOrderList order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col p-2 d-flex justify-content-between align-items-center">
                                         <div><t t-esc="order.name"></t></div>
                                         <div><t t-esc="getTotal(order)"></t></div>
