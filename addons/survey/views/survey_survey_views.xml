@@ -79,7 +79,7 @@
                                         invisible="not is_page"/>
                                     <field name="triggering_question_ids" column_invisible="True"/>
                                     <field name="triggering_answer_ids" column_invisible="True" widget="many2many_tags"/> <!-- widget to fetch display_name -->
-                                    <widget name="survey_question_trigger"/>
+                                    <widget name="survey_question_trigger" width="30px"/>
                                     <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
