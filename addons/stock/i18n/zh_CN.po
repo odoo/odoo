@@ -8,12 +8,13 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # 226408 台北 <226408@so8d.com>, 2022
-# 徐 文郁, 2022
+# 徐 文郁 (info@ro-cd.com), 2022
 # digitalliuzg8888, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Chloe Wang, 2023
+# Ryan <ouyang.em@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -383,6 +384,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好！<br><br>\n"
+"       我们很高兴地通知您，您的订单已经发货。\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            跟踪参考编号是\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        详情请见随附的送货单。<br>\n"
+"        谢谢！\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -3858,7 +3892,7 @@ msgstr "完成数量是否可以编辑"
 msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
-msgstr ""
+msgstr "不允许导入已预留的数量，必须直接使用数量。"
 
 #. module: stock
 #. odoo-python
@@ -6392,7 +6426,7 @@ msgstr "量化"
 msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
-msgstr ""
+msgstr "配额会适时自动删除。如果必须手动删除，请让库存经理来做。"
 
 #. module: stock
 #. odoo-python
@@ -7224,7 +7258,7 @@ msgstr "退回单号"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Sequences %s already exist."
-msgstr ""
+msgstr "序列 %s 已存在。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8365,7 +8399,7 @@ msgstr "如果此产品有部分数量属于另一家公司，则不能更改产
 msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
-msgstr ""
+msgstr "如果此产品有部分属于另一家公司，则不能更改产品的所属公司。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8809,7 +8843,7 @@ msgstr "计量单位名称"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "计量单位"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9233,7 +9267,7 @@ msgstr "某包装类型的重量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "重量单位"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9645,7 +9679,7 @@ msgstr "您不能拆分一个草稿移动。您需要先确认它。"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
-msgstr ""
+msgstr "您不能拆分已设置为'完成'或'取消'的库存移动。"
 
 #. module: stock
 #. odoo-python
@@ -9739,7 +9773,7 @@ msgstr "您每次只能退回一次拣货。"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr ""
+msgstr "您可能希望更新此调拨操作的位置。"
 
 #. module: stock
 #. odoo-python

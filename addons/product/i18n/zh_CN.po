@@ -10,6 +10,7 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Chloe Wang, 2023
+# Ryan <ouyang.em@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2476,7 +2477,7 @@ msgstr "如果这条规则只能用于一个产品模板模版，则指定一个
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "指定要添加或减去（如果为负数）到计算出的折扣金额的固定金额。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2671,7 +2672,7 @@ msgstr "供应商要求的最小采购数量。如果不设定单位，将会使
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "舍入方法必须严格为正数。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3199,6 +3200,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"您无法删除值 %s，因为它用于以下产品：\n"
+"%s\n"
+"如果这个值过去曾与某个产品关联，您将无法删除它。"
 
 #. module: product
 #. odoo-python
@@ -3228,7 +3232,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr ""
+msgstr "您无法删除值 %s，因为它曾在某些产品中使用过。"
 
 #. module: product
 #. odoo-python
