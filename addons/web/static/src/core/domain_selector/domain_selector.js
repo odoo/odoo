@@ -12,6 +12,7 @@ import {
 } from "@web/core/domain_selector/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getOperatorInfo, toOperator } from "@web/core/domain_selector/domain_selector_operators";
@@ -26,6 +27,8 @@ import {
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { formatValue } from "@web/core/domain_tree";
+import { deepEqual } from "@web/core/utils/objects";
+import { useService } from "@web/core/utils/hooks";
 
 function collectDifferences(tree, otherTree) {
     // some differences shadow the other differences "below":
@@ -92,6 +95,7 @@ export class DomainSelector extends Component {
         ModelFieldSelector,
         Editor,
         PathEditor,
+        CheckBox,
     };
     static props = {
         domain: String,
@@ -114,9 +118,18 @@ export class DomainSelector extends Component {
     setup() {
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.loadDisplayNames = useLoadDisplayNames();
-        this.loadFieldInfo = useLoadFieldInfo();
+        this.fieldService = useService("field");
+        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
         this.tree = null;
         this.previousTree = null;
+        this.includeArchived = false;
+        this.archivedConnector = {
+            type: "condition",
+            value: [true, false],
+            negate: false,
+            path: "active",
+            operator: "in",
+        };
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((np) => this.onPropsUpdated(np));
     }
@@ -157,6 +170,7 @@ export class DomainSelector extends Component {
         const paths = new Set([
             ...extractPathsFromDomain(domain),
             ...extractPathsFromDomain(defaultLeafDomain),
+            "active",
         ]);
 
         await this.loadFieldDefs(p.resModel, paths);
@@ -177,6 +191,32 @@ export class DomainSelector extends Component {
             options
         ).children[0];
 
+        this.showArchivedCheckbox = Boolean(this.fieldDefs.active);
+        this.includeArchived = false;
+        if (this.showArchivedCheckbox) {
+            if (this.tree.value === "&") {
+                this.tree.children = this.tree.children.filter((child) => {
+                    if (deepEqual(child, this.archivedConnector)) {
+                        this.includeArchived = true;
+                        return false;
+                    }
+                    return true;
+                });
+                if (this.tree.children.length === 1) {
+                    if (this.tree.children[0].type !== "connector") {
+                        this.tree.value = this.props.defaultConnector;
+                    } else {
+                        this.tree = this.tree.children[0];
+                    }
+                }
+            } else if (
+                this.tree.children.length === 1 &&
+                deepEqual(this.tree.children[0], this.archivedConnector)
+            ) {
+                this.includeArchived = true;
+                this.tree = buildDomainSelectorTree(new Domain(`[]`));
+            }
+        }
         if (this.previousTree) {
             // find "first" difference
             restoreVirtualOperators(this.tree, this.previousTree);
@@ -184,9 +224,17 @@ export class DomainSelector extends Component {
         }
     }
 
+    toggleIncludeArchived() {
+        this.includeArchived = !this.includeArchived;
+        this.notifyChanges();
+    }
+
     notifyChanges() {
         this.previousTree = cloneTree(this.tree);
-        const domain = this.tree ? buildDomain(this.tree) : `[]`;
+        const archiveDomain = this.includeArchived ? `[("active", "in", [True, False])]` : `[]`;
+        const domain = this.tree
+            ? Domain.and([buildDomain(this.tree), archiveDomain]).toString()
+            : archiveDomain;
         this.props.update(domain);
     }
 

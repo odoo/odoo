@@ -1476,7 +1476,7 @@ QUnit.module("Search", (hooks) => {
         assert.containsNone(target, ".o_domain_leaf");
         assert.ok(target.querySelector(".modal footer button").disabled);
 
-        await click(target, ".modal .o_domain_add_first_node_button");
+        await click(target, ".modal .o_domain_tree a[role=button]");
         assert.containsOnce(target, ".o_domain_leaf");
         assert.strictEqual(target.querySelector(".o_model_field_selector_value").innerText, "ID");
         assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "=");
