@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "POS Self Order",
-    'version': '1.0.1',
+    'version': '1.0',
     "summary": """
         Addon for the POS App that allows customers to view the menu on their smartphone.
         """,
@@ -13,10 +13,10 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "views/pos_self_order_mobile.index.xml",
-        "views/pos_self_order_kiosk.index.xml",
+        "views/pos_self_order.index.xml",
         "views/qr_code.xml",
         "views/pos_config_view.xml",
+        "views/pos_session_view.xml",
         "views/custom_link_views.xml",
         "data/init_access.xml",
         "views/res_config_settings_views.xml",
@@ -28,8 +28,8 @@
         'web.assets_backend': [
             "pos_self_order/static/src/upgrade_selection_field.js",
         ],
-        "pos_self_order.assets_common": [
-            "pos_self_order/static/src/kiosk/bootstrap_overridden.scss",
+        "pos_self_order.assets": [
+            "pos_self_order/static/src/app/bootstrap_overridden.scss",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
             ("include", "web._assets_primary_variables"),
@@ -50,33 +50,23 @@
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
-            "pos_self_order/static/src/common/**/*",
-        ],
-        "pos_self_order.assets_mobile": [
-            ('include', 'pos_self_order.assets_common'),
-            "pos_self_order/static/src/mobile/**/*",
-        ],
-        "pos_self_order.assets_kiosk": [
             'web/static/lib/bootstrap/js/dist/dom/data.js',
             'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
             'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
             'web/static/lib/bootstrap/js/dist/dom/selector-engine.js',
             'web/static/lib/bootstrap/js/dist/base-component.js',
             "web/static/lib/bootstrap/js/dist/carousel.js",
-            ('include', 'pos_self_order.assets_common'),
-            "pos_self_order/static/src/kiosk/**/*",
+            'web/static/lib/bootstrap/js/dist/scrollspy.js',
+            "pos_self_order/static/src/app/**/*",
         ],
         # Assets tests
-        "pos_self_order.assets_common_tests": [
+        "pos_self_order.assets_tests": [
             "web/static/lib/jquery/jquery.js",
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
         ],
-        "pos_self_order.assets_mobile_tests": [
-            ('include', 'pos_self_order.assets_common_tests'),
-            "pos_self_order/static/tests/tours/**/*",
-        ],
     },
+    'post_init_hook': '_post_self_order_post_init',
     "license": "LGPL-3",
 }

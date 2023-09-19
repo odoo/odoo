@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductListPage" owl="1">
+        <div class="vh-100 overflow-hidden">
+            <!-- Categories selector -->
+            <nav id="listgroup-categories" class="navbar category-list fixed-top d-flex flex-column flex-wrap gap-3 align-content-start py-2 px-3 shadow-sm bg-view" t-ref="categoryList">
+                <a
+                    t-foreach="Array.from(selfOrder.categoryList)"
+                    t-as="category"
+                    t-key="category.id"
+                    t-ref="category_{{category.name}}"
+                    t-attf-class="nav-link btn btn-light d-flex flex-column align-items-center justify-content-center category-item h-100 border px-1 overflow-hidden"
+                    t-attf-href="#scrollspy_{{category.id}}">
+                    <img t-if="category.has_image"
+                        class="rounded w-100 h-75 ratio ratio-1x1"
+                        t-attf-src="/pos-self/get-category-image/{{ category.id }}"
+                        alt="Product image"
+                        loading="lazy"
+                        onerror="this.remove()" />
+                    <span class="w-100 fs-5 text-truncate" t-esc="category.name" />
+                </a>
+            </nav>
+
+            <!-- Products list -->
+            <div
+                id="scrollspy-products"
+                class="product-list position-relative overflow-scroll"
+                t-ref="productsList"
+                data-bs-spy="scroll"
+                data-bs-target="#listgroup-categories"
+                data-bs-offset="10"
+                tabindex="0">
+                <section
+                    t-foreach="Array.from(selfOrder.categoryList)"
+                    t-as="category"
+                    t-key="category.id"
+                    t-attf-id="scrollspy_{{category.id}}"
+                    t-attf-categId="{{category.id}}"
+                    t-ref="productsWithCategory_{{category.name}}"
+                    class="product-list-category row p-3">
+                    <h2 class="pt-3 pb-1 px-4 m-0 fs-3" t-esc="category.name" />
+                    <t t-foreach="selfOrder.productsGroupedByCategory[category.name]" t-as="product" t-key="product.id">
+                        <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard" />
+                    </t>
+                </section>
+            </div>
+
+            <!-- Page buttons -->
+            <OrderWidget t-if="this.selfOrder.ordering" action.bind="review" />
+        </div>
+    </t>
+</templates>

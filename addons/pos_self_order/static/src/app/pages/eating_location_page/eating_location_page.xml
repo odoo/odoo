@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.EatingLocationPage" owl="1">
+        <div class="o_kiosk_eating_location d-flex flex-column align-items-center h-100 bg-100 overflow-hidden">
+            <div class="d-flex align-items-center justify-content-center flex-column w-100 h-100 my-auto px-5 text-center">
+                <h1>Choose your eating location</h1>
+                <div class="d-flex gap-3 h-50 h-lg-25 w-100 mt-5">
+                    <button t-on-click="() => this.selectLocation('in')" class="btn btn-light d-flex flex-column align-items-center h-100 w-50 p-0 border">
+                        <div class="d-flex flex-column flex-grow-1 align-items-center justify-content-center w-100">
+                            <img src="/pos_self_order/static/img/eatin.svg" />
+                        </div>
+                        <span class="w-100 rounded-bottom border-top fs-1">Eat In</span>
+                    </button>
+                    <button t-on-click="() => this.selectLocation('out')" class="btn btn-light d-flex flex-column align-items-center h-100 w-50 p-0 border">
+                        <div class="d-flex flex-column flex-grow-1 align-items-center justify-content-center w-100">
+                            <img src="/pos_self_order/static/img/takeAway.svg" />
+                        </div>
+                        <span class="w-100 rounded-bottom border-top fs-1">Take Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm">
+            <button class="h-100 btn btn-secondary w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="back">
+                <i class="oi oi-chevron-left"/>
+                Back
+            </button>
+        </div>
+    </t>
+</templates>

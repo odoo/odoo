@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductCard" owl="1">
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xxl-2 p-2">
+            <button class="self_order_product_card btn btn-light m-0 overflow-hidden border fw-bolder"
+                t-on-click="selectProduct"
+                t-ref="selfProductCard">
+                <img
+                    class="o_self_order_item_card_image rounded bg-view"
+                    t-attf-src="/menu/get-image/{{ props.product.id }}/512?unique={{props.product.write_date}}"
+                    alt="Product image"
+                    loading="lazy"
+                    onerror="this.remove()" />
+                <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 px-2 mt-3 mb-1">
+                    <span t-esc="props.product.name" class="fs-5 fw-bolder lh-sm" />
+                    <span t-esc="selfOrder.formatMonetary(props.product.prices)" class="py-2 text-muted flex-grow-1" />
+                </div>
+            </button>
+        </div>
+    </t>
+</templates>

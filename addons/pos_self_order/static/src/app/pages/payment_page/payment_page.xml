@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PaymentPage" owl="1">
+        <div t-if="state.selection" class="h-100 d-flex flex-wrap p-5 gap-5 align-items-center justify-content-center">
+            <div
+                t-foreach="paymentMethods"
+                t-as="payment_method"
+                t-key="payment_method.id"
+                class="o_kiosk-card border rounded d-flex flex-column align-items-center justify-content-center"
+                t-on-click="() => this.selectMethod(payment_method.id)">
+                <div class="h-75 fs-1 d-flex flex-column justify-content-center align-items-center">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                </div>
+                <div class="name w-100 d-flex justify-content-center align-items-center h-25">
+                    <span t-esc="payment_method.name" />
+                </div>
+            </div>
+        </div>
+        <div t-else="" class="h-100">
+            <div class="d-flex flex-column gap-5 justify-content-center align-items-center h-100">
+                <t t-if="!this.selfOrder.paymentError">
+                    <h1 class="text-center">Follow instructions<br/>on the terminal</h1>
+                    <i class="fa fa-credit-card-alt fs-1" aria-hidden="true"></i>
+                </t>
+                <t t-else="">
+                    <h1 class="text-center">The payment has failed<br/>please retry</h1>
+                    <i class="fa fa-exclamation-circle fs-1" aria-hidden="true"></i>
+                </t>
+            </div>
+        </div>
+        <div class="d-flex h-100 w-100">
+            <button t-attf-class="{{ this.selfOrder.paymentError ? 'w-50' : 'w-100' }} h-100 btn btn-info p-0 m-0 rounded-0 fs-2 text-uppercase" t-on-click="() => this.router.back()">Back</button>
+            <button t-attf-class="{{ this.selfOrder.paymentError ? 'w-50' : 'w-0' }} h-100 btn btn-success p-0 m-0 rounded-0 fs-2 text-uppercase" t-on-click="startPayment">Retry</button>
+        </div>
+    </t>
+</templates>

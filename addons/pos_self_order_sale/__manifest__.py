@@ -10,11 +10,8 @@
     ],
     "assets": {
         # Assets
-        "pos_self_order.assets_common": [
-            "pos_self_order_sale/static/src/common/**/**",
-        ],
-        "pos_self_order.assets_kiosk": [
-            "pos_self_order_sale/static/src/kiosk/**/**",
+        "pos_self_order.assets": [
+            "pos_self_order_sale/static/src/app/**/**",
         ],
     },
     "license": "LGPL-3",

@@ -16,7 +16,7 @@ class PosSelfOrderCustomLink(models.Model):
     pos_config_ids = fields.Many2many(
         "pos.config",
         string="Points of Sale",
-        domain="[('self_order_view_mode', '=', True)]",
+        domain="[('self_ordering_mode', '!=', 'nothing')]",
         help="Select for which points of sale you want to display this link. Leave empty to display it for all points of sale. You have to select among the points of sale that have the 'QR Code Menu' feature enabled.",
     )
     style = fields.Selection(

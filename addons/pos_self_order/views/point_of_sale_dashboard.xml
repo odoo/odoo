@@ -7,7 +7,7 @@
             <form>
                 <div class="text-center">
                     <div class="fs-2 mb-2">From your Kiosk, open this URL:</div>
-                    <field name="self_order_kiosk_url" readonly="1" />
+                    <field name="self_ordering_url" readonly="1" />
                 </div>
                 <footer class="justify-content-end">
                     <button class="btn btn-secondary" special="cancel">Close</button>
@@ -24,7 +24,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='inactive']" position="after">
                 <filter string="Kiosk" name="filter_kiosk_only"
-                    domain="[('self_order_kiosk', '=', True)]" />
+                    domain="[('self_ordering_mode', '=', 'kiosk')]" />
             </xpath>
         </field>
     </record>
@@ -44,27 +44,27 @@
             <xpath
                 expr="//div[hasclass('dropdown-pos-config')]/div/div[hasclass('o_kanban_manage_view')]"
                 position="inside">
-                <field name="self_order_view_mode" invisible="1" />
+                <field name="self_ordering_mode" invisible="1" />
                 <div role="menuitem">
                     <a name="preview_self_order_app"
                         type="object"
                         style="white-space: nowrap;"
-                        invisible="not self_order_view_mode">
+                        invisible="not self_ordering_mode == 'mobile'">
                         Mobile Menu
                     </a>
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_card_header_title_name')]" position="after">
-                <field name="self_order_table_mode" invisible="1" />
+                <field name="self_ordering_mode" invisible="1" />
                 <div class="badge text-bg-info o_kanban_inline_block me-2"
-                    invisible="not self_order_table_mode">
+                    invisible="not self_ordering_mode == 'mobile'">
                     Self Ordering Enabled
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="after">
-                <field name="self_order_kiosk" invisible="1" />
+                <field name="self_ordering_mode" invisible="1" />
                 <field name="current_session_id" invisible="1" />
-                <div class="col-6 o_kanban_primary_left d-flex flex-column align-items-start" invisible="not self_order_kiosk">
+                <div class="col-6 o_kanban_primary_left d-flex flex-column align-items-start" invisible="not self_ordering_mode == 'kiosk'">
                     <button t-if="!record.current_session_id.raw_value" class="btn btn-primary pos_open_session_btn" name="action_open_wizard" type="object">
                         Start Kiosk
                     </button>
@@ -77,8 +77,8 @@
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="attributes">
-                <field name="self_order_kiosk" invisible="1" />
-                <attribute name="invisible">self_order_kiosk</attribute>
+                <field name="self_ordering_mode" invisible="1" />
+                <attribute name="invisible">self_ordering_mode == 'kiosk'</attribute>
             </xpath>
         </field>
     </record>

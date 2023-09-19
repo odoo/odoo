@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductPage" owl="1">
+        <div class="h-100">
+            <div class="d-flex flex-row align-content-flex-start p-3 gap-3 h-25">
+                <img
+                    class="o_self_order_item_card_image w-25 py-2 rounded shadow-sm bg-view"
+                    style="object-fit: contain;"
+                    t-attf-src="/menu/get-image/{{ product.id }}/512?unique={{product.write_date}}"
+                    alt="Product image"
+                    loading="lazy"
+                    onerror="this.remove()" />
+                <div class="d-flex flex-column flex-grow-1 w-75 justify-content-start p-4 rounded shadow-sm bg-view overflow-auto">
+                    <h1 class="fw-bolder" t-esc="product.name"/>
+                    <span t-if="product.description_sale"
+                        class="o_self_order_main_desc flex-grow-1 pb-3 mb-3 bg-view text-muted "
+                        t-esc="product.description_sale"
+                    />
+                    <span class="fs-3 fw-bolder" t-esc="selfOrder.formatMonetary(product.prices)"/>
+                </div>
+            </div>
+
+            <div t-attf-class="{{ state.showQtyButtons ? 'h-50' : 'h-75' }}">
+                <div class="h-100 px-4 overflow-y-auto">
+                    <AttributeSelection
+                        t-if="this.product.attributes.length"
+                        toggleQtyBtn.bind="toggleQtyBtn"
+                        product="product"/>
+                </div>
+            </div>
+            <div t-if="state.showQtyButtons" class="d-flex flex-column justify-content-center align-items-center w-100 h-25 p-5 bg-view border-top" style="z-index:1">
+                <div class="o_self_order_incr_button d-flex flex-row text-center border-light mb-1" role="group" aria-label="Quantity select">
+                    <button type="button"
+                        t-on-click = "() => this.changeQuantity(false)"
+                        t-attf-class="{{ !this.env.editable ? 'disabled' : '' }} btn btn-secondary px-5 py-3 fs-1 "> - </button>
+                    <div class="d-flex align-items-center px-5 fs-1 fw-bold" t-esc="state.qty"/>
+                    <button type="button"
+                        t-on-click = "() => this.changeQuantity(true)"
+                        class="btn btn-secondary px-5 py-3 fs-1 "> + </button>
+                </div>
+            </div>
+        </div>
+        <div class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm">
+            <button class="btn btn-secondary w-100 h-100 p-0 m-0 fs-2 flex-grow-1 text-uppercase" t-on-click="back">Discard</button>
+            <button t-if="state.showQtyButtons and !props.onValidate" class="btn btn-primary w-100 h-100 p-0 m-0 fs-2 text-uppercase" t-on-click="addToCart">Add to cart</button>
+        </div>
+    </t>
+</templates>

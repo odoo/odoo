@@ -10,7 +10,7 @@ class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-new-order/<device_type>/", auth="public", type="json", website=True)
     def process_new_order(self, order, access_token, table_identifier, device_type):
         lines = order.get('lines')
-        pos_config, table = self._verify_authorization(access_token, table_identifier)
+        pos_config, table = self._verify_authorization(access_token, table_identifier, order.get('take_away'))
         pos_session = pos_config.current_session_id
 
         date_string = fields.Date.today().isoformat()
@@ -102,7 +102,7 @@ class PosSelfOrderController(http.Controller):
     def update_existing_order(self, order, access_token, table_identifier):
         order_id = order.get('id')
         order_access_token = order.get('access_token')
-        pos_config, table = self._verify_authorization(access_token, table_identifier)
+        pos_config, table = self._verify_authorization(access_token, table_identifier, order.get('take_away'))
         session = pos_config.current_session_id
 
         pos_order = session.order_ids.filtered_domain([
@@ -135,7 +135,9 @@ class PosSelfOrderController(http.Controller):
         pos_order.write({
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
+            'table_id': table if table else False,
         })
+
         pos_order.send_table_count_notification(pos_order.table_id)
         return pos_order._export_for_self_order()
 
@@ -192,8 +194,8 @@ class PosSelfOrderController(http.Controller):
         appended_uuid = []
         newLines = []
         pricelist = pos_config.pricelist_id
-        if take_away and pos_config.self_order_kiosk:
-            config_fiscal_pos = pos_config.self_order_kiosk_alternative_fp_id
+        if take_away and pos_config.self_ordering_mode == 'kiosk':
+            config_fiscal_pos = pos_config.self_ordering_alternative_fp_id
         else:
             config_fiscal_pos = pos_config.default_fiscal_position_id
 
@@ -246,7 +248,7 @@ class PosSelfOrderController(http.Controller):
                         'product_id': child.get('product_id'),
                         'qty': child.get('qty'),
                         'customer_note': child.get('customer_note'),
-                        'attribute_value_ids': child.get('selected_attributes') and [int(v) for v in child['selected_attributes'].values()] or [],
+                        'attribute_value_ids': child.get('selected_attributes') or [],
                         'full_product_name': child.get('full_product_name'),
                         'combo_parent_uuid': child.get('combo_parent_uuid'),
                         'combo_id': child.get('combo_id'),
@@ -272,7 +274,7 @@ class PosSelfOrderController(http.Controller):
                 'product_id': line.get('product_id'),
                 'qty': line.get('qty'),
                 'customer_note': line.get('customer_note'),
-                'attribute_value_ids': line.get('selected_attributes') and [int(v) for v in line['selected_attributes'].values()] or [],
+                'attribute_value_ids': line.get('selected_attributes') or [],
                 'full_product_name': line.get('full_product_name'),
                 'combo_parent_uuid': line.get('combo_parent_uuid'),
                 'combo_id': line.get('combo_id'),
@@ -305,13 +307,13 @@ class PosSelfOrderController(http.Controller):
         The record is has no sudo access and is in the context of the record's company and current pos.session's user.
         """
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
-        if not pos_config_sudo or (not pos_config_sudo.self_order_table_mode and not pos_config_sudo.self_order_kiosk) or not pos_config_sudo.has_active_session:
+        if not pos_config_sudo or (not pos_config_sudo.self_ordering_mode == 'mobile' and not pos_config_sudo.self_ordering_mode == 'kiosk') or not pos_config_sudo.has_active_session:
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
-        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_order_default_user_id
+        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user)
 
-    def _verify_authorization(self, access_token, table_identifier):
+    def _verify_authorization(self, access_token, table_identifier, take_away):
         """
         Similar to _verify_pos_config but also looks for the restaurant.table of the given identifier.
         The restaurant.table record is also returned with reduced privileges.
@@ -319,10 +321,10 @@ class PosSelfOrderController(http.Controller):
         pos_config = self._verify_pos_config(access_token)
         table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
 
-        if not table_sudo and not pos_config.self_order_kiosk:
+        if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not take_away:
             raise Unauthorized("Table not found")
 
         company = pos_config.company_id
-        user = pos_config.current_session_id.user_id or pos_config.self_order_default_user_id
+        user = pos_config.current_session_id.user_id or pos_config.self_ordering_default_user_id
         table = table_sudo.sudo(False).with_company(company).with_user(user)
         return pos_config, table

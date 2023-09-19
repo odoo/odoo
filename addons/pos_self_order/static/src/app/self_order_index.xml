@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.selfOrderIndex" owl="1">
+        <Router pos_config_id="selfOrder.pos_config_id">
+            <t t-set-slot="default" route="`/pos-self/${selfOrder.pos_config_id}`">
+                <LandingPage />
+            </t>
+            <t t-set-slot="product_list" route="`/pos-self/${selfOrder.pos_config_id}/products`">
+                <ProductListPage />
+            </t>
+            <t t-set-slot="product" route="`/pos-self/${selfOrder.pos_config_id}/product/{int:id}`" t-slot-scope="url">
+                <ProductPage product="selfOrder.productByIds[url.id]" />
+            </t>
+            <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.pos_config_id}/combo-selection/{int:id}`" t-slot-scope="url">
+                <ComboPage product="selfOrder.productByIds[url.id]" />
+            </t>
+            <t t-set-slot="cart" route="`/pos-self/${selfOrder.pos_config_id}/cart`">
+                <CartPage />
+            </t>
+            <t t-set-slot="payment" route="`/pos-self/${selfOrder.pos_config_id}/payment`">
+                <PaymentPage />
+            </t>
+            <t t-set-slot="payment_success" route="`/pos-self/${selfOrder.pos_config_id}/payment_success`">
+                <PaymentSuccessPage />
+            </t>
+            <t t-set-slot="location" route="`/pos-self/${selfOrder.pos_config_id}/location`">
+                <EatingLocationPage />
+            </t>
+            <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.pos_config_id}/stand_number`">
+                <StandNumberPage />
+            </t>
+            <t t-set-slot="closed" route="`/pos-self/${selfOrder.pos_config_id}/closed`">
+                <ClosedPage />
+            </t>
+            <t t-set-slot="orderHistory" route="`/pos-self/${selfOrder.pos_config_id}/orders`">
+                <OrdersHistoryPage />
+            </t>
+        </Router>
+        <MainComponentsContainer />
+    </t>
+</templates>
