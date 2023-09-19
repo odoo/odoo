@@ -135,7 +135,7 @@ class Base(models.AbstractModel):
                 co_records = self[field_name]
 
                 if 'order' in field_spec and field_spec['order']:
-                    ids_to_read = sorted(co_records.ids, key=lambda k: field_spec['order'])
+                    ids_to_read = sorted(co_records.ids, key=lambda k: field_spec.get(k, 0))
                     co_records = co_records.browse(ids_to_read)
                     order_key = {
                         co_record.id: index
