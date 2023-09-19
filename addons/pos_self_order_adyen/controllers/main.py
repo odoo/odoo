@@ -17,7 +17,7 @@ class PosSelfAdyenContoller(PosAdyenController):
             terminal_identifier = data['SaleToPOIResponse']['MessageHeader']['POIID']
             payment_method = request.env['pos.payment.method'].sudo().search([('adyen_terminal_identifier', '=', terminal_identifier)], limit=1)
 
-            if payment_result == 'Success' and order_sudo.config_id.self_order_kiosk:
+            if payment_result == 'Success' and order_sudo.config_id.self_ordering_mode == 'kiosk':
                 payment_amount = data['SaleToPOIResponse']['PaymentResponse']['PaymentResult']['AmountsResp']['AuthorizedAmount']
                 card_type = data['SaleToPOIResponse']['PaymentResponse']['PaymentResult']['PaymentInstrumentData']['CardData']['PaymentBrand']
                 transaction_id = data['SaleToPOIResponse']['PaymentResponse']['SaleData']['SaleTransactionID']['TransactionID']
@@ -34,8 +34,8 @@ class PosSelfAdyenContoller(PosAdyenController):
                 })
                 order_sudo.action_pos_order_paid()
 
-            if order_sudo.config_id.self_order_kiosk:
-                request.env['bus.bus']._sendone(f'pos_config-{order_sudo.config_id.access_token}', 'payment_status', {
+            if order_sudo.config_id.self_ordering_mode == 'kiosk':
+                request.env['bus.bus']._sendone(f'pos_config-{order_sudo.config_id.access_token}', 'PAYMENT_STATUS', {
                     'payment_result': payment_result,
                     'order': order_sudo._export_for_self_order(),
                 })

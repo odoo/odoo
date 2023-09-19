@@ -1631,6 +1631,7 @@ class PosSession(models.Model):
                 'name': attribute.name,
                 'display_type': attribute.display_type,
                 'values': values,
+                'sequence': attribute.sequence,
             }
 
         return res

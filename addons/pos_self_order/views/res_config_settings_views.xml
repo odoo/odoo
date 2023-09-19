@@ -5,92 +5,66 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <block id="restaurant_section" position="inside">
-                <setting string="QR Code Menu" help="Allow customers to see the menu from their phone" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
-                    <field name="pos_self_order_view_mode"/>
-                    <div class="content-group d-flex gap-5" invisible="not pos_self_order_view_mode">
-                        <div class="d-flex flex-column align-items-start w-50">
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview"/>
-                            <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Print QR Codes"/>
-                            <button groups="base.group_no_one" class="btn-link p-0" icon="oi-arrow-right" name="update_access_tokens" type="object" string="Reset QR Codes"/>
-                        </div>
-                        <div class="d-flex flex-column align-items-start w-50">
-                            <div class="d-flex flex-column align-items-start">
-                                <field name="pos_self_order_image_name" invisible="1" />
-                                <label for="pos_self_order_image" string="Set Background Image"/>
-                                <field name="pos_self_order_image" class="w-75" filename="pos_self_order_image_name"/>
-                            </div>
-                        </div>
-                    </div>
-                </setting>
-                <setting string="Self Order" help="Allow customers to order from their phones" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
-                    <field name="pos_self_order_table_mode"/>
-                    <div class="content-group row" invisible="not pos_self_order_table_mode">
-                        <label for="pos_self_order_default_user_id" class="col-lg-4" string="Default User"/>
-                        <field name="pos_self_order_default_user_id" required="1" />
-                    </div>
-                    <div class="content-group row" invisible="not pos_self_order_table_mode">
-                        <label string="Pay after" for="pos_self_order_pay_after" class="col-lg-4"/>
-                        <field name="pos_self_order_pay_after" widget="upgrade_selection"/>
-                    </div>
-                </setting>
-            </block>
             <xpath expr="//setting[@id='payment_methods_new']" position="before">
                 <div class="o_notification_alert alert alert-warning" role="alert" invisible="not is_kiosk_mode">
                     <span>Please note that the kiosk only works with Adyen terminals</span>
                 </div>
             </xpath>
             <block id="restaurant_section" position="after">
-                <block title="Kiosk Mode" id="self_order_section">
-                    <setting string="Is a Kiosk" help="Allow customers to order from a kiosk">
-                        <field name="pos_self_order_kiosk"/>
-                        <div class="content-group row" invisible="not is_kiosk_mode">
-                            <label for="pos_self_order_kiosk_mode" class="col-lg-3" string="Mode"/>
-                            <field name="pos_self_order_kiosk_mode" />
+                <block title="Mobile self-order &amp; Kiosk" id="self_ordering_section">
+                    <setting string="QR menu &amp; Kiosk activation" help="Let your customers order using their mobile or a kiosk.">
+                        <field name="pos_self_ordering_mode" />
+                        <div class="d-flex flex-column align-items-start w-50" invisible="pos_self_ordering_mode == 'nothing'">
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview Web interface"/>
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="pos_self_order.custom_link_action" type="action" string="Home buttons"/>
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Print QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
+                            <button groups="base.group_no_one" class="btn-link p-0" icon="oi-arrow-right" name="update_access_tokens" type="object" string="Reset QR Codes" invisible="not pos_self_ordering_mode in ['consultation', 'mobile']"/>
                         </div>
                     </setting>
-                    <setting string="Kiosk Mode: Take Away" invisible="not is_kiosk_mode">
-                        <field name="pos_self_order_kiosk_takeaway"/>
-                        <div class="content-group" invisible="not pos_self_order_kiosk_takeaway">
-                            <label string="" for="pos_self_order_kiosk_alternative_fp_id" class="me-2"/>
-                            <field name="pos_self_order_kiosk_alternative_fp_id" placeholder="Alternative Fiscal Position"/>
-                            <div>
-                                <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
-                            </div>
-                        </div>
+                    <setting string="Splash screens" help="Personalize your splash screen by adding one or multiple images to create a slideshow" invisible="pos_self_ordering_mode == 'nothing'">
+                        <field name="pos_self_ordering_image_home_ids" class="w-100" widget="many2many_binary" />
                     </setting>
-                    <setting string="Kiosk Images" help="Allow customers to customize kiosk images" invisible="not is_kiosk_mode">
-                        <div class="content-group mt-3">
-                            <div class="d-flex flex-column align-items-start">
-                                <label for="pos_self_order_image" string="Home background"/>
-                                <field name="pos_self_order_kiosk_image_home_ids" class="w-100" widget="many2many_binary" />
-                            </div>
-                            <div class="d-flex flex-column align-items-start">
-                                <field name="pos_self_order_kiosk_image_eat_name" invisible ="1"/>
-                                <label for="pos_self_order_image" string="Eat mode"/>
-                                <field name="pos_self_order_kiosk_image_eat" class="w-100" filename="pos_self_order_kiosk_image_eat_name"/>
-                            </div>
-                            <div class="d-flex flex-column align-items-start">
-                                <field name="pos_self_order_kiosk_image_brand_name" invisible ="1"/>
-                                <label for="pos_self_order_image" string="Brand Header"/>
-                                <field name="pos_self_order_kiosk_image_brand" class="w-100" filename="pos_self_order_kiosk_image_brand_name"/>
-                            </div>
-                        </div>
-                    </setting>
-                    <setting string="Languages" help="Languages available in the kiosk interface" invisible="not is_kiosk_mode">
+                    <setting string="Language" help="Available interface languages" invisible="pos_self_ordering_mode == 'nothing'">
                         <div class="content-group mt-3">
                             <div class="row">
-                                <label for="pos_self_order_kiosk_default_language" class="col-lg-3" string="Default"/>
-                                <field name="pos_self_order_kiosk_default_language" />
+                                <label for="pos_self_ordering_default_language_id" class="col-lg-3" string="Default"/>
+                                <field name="pos_self_ordering_default_language_id" />
                             </div>
-                            <div class="row mt-3">
-                                <label for="pos_self_order_kiosk_available_language_ids" class="col-lg-3" string="Available"/>
-                                <field widget="many2many_tags" name="pos_self_order_kiosk_available_language_ids" />
+                            <div class="row">
+                                <label for="pos_self_ordering_available_language_ids" class="col-lg-3" string="Available"/>
+                                <field name="pos_self_ordering_available_language_ids" widget="many2many_tags"/>
                             </div>
                         </div>
                         <div>
                             <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
+                        </div>
+                    </setting>
+                    <setting string="Customize Header" help="Add an image to brand your header." invisible="pos_self_ordering_mode == 'nothing'">
+                        <field name="pos_self_ordering_image_brand_name" invisible ="1"/>
+                        <field name="pos_self_ordering_image_brand" class="w-100" filename="pos_self_ordering_image_brand_name"/>
+                    </setting>
+                    <setting string="Options" help="All options for your Self devices" invisible="pos_self_ordering_mode in ['nothing', 'consultation']">
+                        <div class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
+                            <label for="pos_self_ordering_service_mode" class="col-lg-4" string="Service at" />
+                            <field name="pos_self_ordering_service_mode" />
+                        </div>
+                        <div class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
+                            <label for="pos_self_ordering_default_user_id" class="col-lg-4" string="Default User"/>
+                            <field name="pos_self_ordering_default_user_id" />
+                        </div>
+                        <div id="self-payment-after" class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
+                            <label string="Pay after" for="pos_self_ordering_pay_after" class="col-lg-4"/>
+                            <field name="pos_self_ordering_pay_after" readonly="pos_self_ordering_mode == 'kiosk'" widget="upgrade_selection"/>
+                        </div>
+                    </setting>
+                    <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout." invisible="not pos_self_ordering_mode in ['mobile', 'kiosk']">
+                        <field name="pos_self_ordering_takeaway"/>
+                        <div class="content-group" invisible="not pos_self_ordering_takeaway">
+                            <label string="" for="pos_self_ordering_alternative_fp_id" class="me-2"/>
+                            <field name="pos_self_ordering_alternative_fp_id" placeholder="Alternative Fiscal Position"/>
+                            <div>
+                                <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                            </div>
                         </div>
                     </setting>
                 </block>

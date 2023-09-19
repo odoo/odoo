@@ -24,7 +24,7 @@ export class UpgradeSelectionField extends SelectionField {
                 {},
                 {
                     onClose: () => {
-                        newValue.target.value='"meal"'
+                        newValue.target.value = '"meal"';
                     },
                 }
             );

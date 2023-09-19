@@ -9,70 +9,64 @@ from werkzeug.urls import url_unquote
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    pos_self_order_kiosk = fields.Boolean(related="pos_config_id.self_order_kiosk", readonly=False)
-    pos_self_order_kiosk_mode = fields.Selection(related="pos_config_id.self_order_kiosk_mode", readonly=False)
-    pos_self_order_kiosk_takeaway = fields.Boolean(related="pos_config_id.self_order_kiosk_takeaway", readonly=False)
-    pos_self_order_kiosk_alternative_fp_id = fields.Many2one(related="pos_config_id.self_order_kiosk_alternative_fp_id", readonly=False)
-    pos_self_order_kiosk_image_home_ids = fields.Many2many(related="pos_config_id.self_order_kiosk_image_home_ids", readonly=False)
-    pos_self_order_kiosk_image_eat = fields.Image(related="pos_config_id.self_order_kiosk_image_eat", readonly=False)
-    pos_self_order_kiosk_image_brand = fields.Image(related="pos_config_id.self_order_kiosk_image_brand", readonly=False)
-    pos_self_order_kiosk_image_eat_name = fields.Char(related="pos_config_id.self_order_kiosk_image_eat_name", readonly=False)
-    pos_self_order_kiosk_image_brand_name = fields.Char(related="pos_config_id.self_order_kiosk_image_brand_name", readonly=False)
-    pos_self_order_kiosk_available_language_ids = fields.Many2many(related="pos_config_id.self_order_kiosk_available_language_ids", readonly=False)
-    pos_self_order_kiosk_default_language = fields.Many2one(related="pos_config_id.self_order_kiosk_default_language", readonly=False)
-    pos_self_order_view_mode = fields.Boolean(related="pos_config_id.self_order_view_mode", readonly=False)
-    pos_self_order_table_mode = fields.Boolean(related="pos_config_id.self_order_table_mode", readonly=False)
-    pos_self_order_pay_after = fields.Selection(related="pos_config_id.self_order_pay_after", readonly=False)
-    pos_self_order_image = fields.Image(related="pos_config_id.self_order_image", readonly=False)
-    pos_self_order_image_name = fields.Char(related="pos_config_id.self_order_image_name", readonly=False)
-    pos_self_order_default_user_id = fields.Many2one(related="pos_config_id.self_order_default_user_id", readonly=False)
+    pos_self_ordering_takeaway = fields.Boolean(related="pos_config_id.self_ordering_takeaway", readonly=False)
+    pos_self_ordering_service_mode = fields.Selection(related="pos_config_id.self_ordering_service_mode", readonly=False)
+    pos_self_ordering_mode = fields.Selection(related="pos_config_id.self_ordering_mode", readonly=False)
+    pos_self_ordering_alternative_fp_id = fields.Many2one(related="pos_config_id.self_ordering_alternative_fp_id", readonly=False)
+    pos_self_ordering_default_language_id = fields.Many2one(related="pos_config_id.self_ordering_default_language_id", readonly=False)
+    pos_self_ordering_available_language_ids = fields.Many2many(related="pos_config_id.self_ordering_available_language_ids", readonly=False)
+    pos_self_ordering_image_home_ids = fields.Many2many(related="pos_config_id.self_ordering_image_home_ids", readonly=False)
+    pos_self_ordering_image_brand = fields.Image(related="pos_config_id.self_ordering_image_brand", readonly=False)
+    pos_self_ordering_image_brand_name = fields.Char(related="pos_config_id.self_ordering_image_brand_name", readonly=False)
+    pos_self_ordering_pay_after = fields.Selection(related="pos_config_id.self_ordering_pay_after", readonly=False)
+    pos_self_ordering_default_user_id = fields.Many2one(related="pos_config_id.self_ordering_default_user_id", readonly=False)
 
-    @api.onchange("pos_self_order_default_user_id")
+    @api.onchange("pos_self_ordering_default_user_id")
     def _onchange_default_user(self):
         self.ensure_one()
-        if self.pos_self_order_default_user_id and self.pos_self_order_table_mode:
-            user_id = self.pos_self_order_default_user_id
+        if self.pos_self_ordering_default_user_id and self.pos_self_ordering_mode == 'mobile':
+            user_id = self.pos_self_ordering_default_user_id
 
             if not user_id.has_group("point_of_sale.group_pos_user") and not user_id.has_group("point_of_sale.group_pos_manager"):
                 raise UserError(_("The user must be a POS user"))
 
-    @api.onchange("pos_self_order_kiosk_default_language", "pos_self_order_kiosk_available_language_ids")
+    @api.onchange("pos_self_ordering_default_language_id", "pos_self_ordering_available_language_ids")
     def _onchange_pos_self_order_kiosk_default_language(self):
-        if self.pos_self_order_kiosk_default_language not in self.pos_self_order_kiosk_available_language_ids:
-            self.pos_self_order_kiosk_available_language_ids = self.pos_self_order_kiosk_available_language_ids + self.pos_self_order_kiosk_default_language
-        if not self.pos_self_order_kiosk_default_language and self.pos_self_order_kiosk_available_language_ids:
-            self.pos_self_order_kiosk_default_language = self.pos_self_order_kiosk_available_language_ids[0]
+        if self.pos_self_ordering_default_language_id not in self.pos_self_ordering_available_language_ids:
+            self.pos_self_ordering_available_language_ids = self.pos_self_ordering_available_language_ids + self.pos_self_ordering_default_language_id
+        if not self.pos_self_ordering_default_language_id and self.pos_self_ordering_available_language_ids:
+            self.pos_self_ordering_default_language_id = self.pos_self_ordering_available_language_ids[0]
 
-    @api.onchange("pos_self_order_kiosk")
+    @api.onchange("pos_self_ordering_mode")
     def _onchange_pos_self_order_kiosk(self):
-        for record in self:
-            record.is_kiosk_mode = record.pos_self_order_kiosk
+        if self.pos_self_ordering_mode == 'kiosk':
+            self.is_kiosk_mode = True
+            self.pos_self_ordering_pay_after = "each"
 
-            if record.pos_self_order_kiosk:
-                record.pos_config_id.self_order_view_mode = False
-                record.pos_config_id.self_order_table_mode = False
+        elif self.pos_self_ordering_mode == 'mobile' and not self.pos_module_pos_restaurant:
+            raise UserError(_("In Self-Order mode, you must have the Restaurant module"))
+        else:
+            self.is_kiosk_mode = False
 
-    # self_order_table_mode is only available if self_order_view_mode is True
-    @api.onchange("pos_self_order_view_mode")
-    def _onchange_pos_self_order_view_mode(self):
-        if not self.pos_self_order_view_mode:
-            self.pos_self_order_table_mode = False
-
-    @api.onchange("pos_self_order_table_mode")
-    def _onchange_pos_self_order_table_mode(self):
-        if self.pos_self_order_table_mode:
-            self.pos_self_order_view_mode = True
-
-    @api.onchange("pos_self_order_pay_after", "pos_self_order_table_mode")
+    @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
     def _onchange_pos_self_order_pay_after(self):
-        if self.pos_self_order_pay_after == "each" and not self.module_pos_preparation_display:
+        if self.pos_self_ordering_pay_after == "meal" and self.pos_self_ordering_mode == 'kiosk':
+            raise UserError(_("Only pay after each is available with kiosk mode."))
+
+        if self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
             self.module_pos_preparation_display = True
+
+    @api.onchange("pos_self_ordering_service_mode")
+    def _onchange_pos_self_ordering_service_mode(self):
+        table_ids = self.pos_config_id.floor_ids.table_ids
+        if self.pos_self_ordering_service_mode == 'table' and self.pos_self_ordering_mode == 'mobile' and not table_ids:
+            raise UserError(_("In Self-Order mode, you must have at least one table to use the table service mode"))
 
     def generate_qr_codes_page(self):
         """
         Generate the data needed to print the QR codes page
         """
-        if self.pos_self_order_table_mode:
+        if self.pos_self_ordering_mode == 'mobile':
             table_ids = self.pos_config_id.floor_ids.table_ids
 
             if not table_ids:
@@ -95,7 +89,7 @@ class ResConfigSettings(models.TransientModel):
                     }
                     for floor in self.pos_config_id._get_qr_code_data()
                 ],
-                'table_mode': self.pos_self_order_table_mode,
+                'table_mode': self.pos_self_ordering_mode,
                 'table_example': {
                     'name': name,
                     'decoded_url': url or "",

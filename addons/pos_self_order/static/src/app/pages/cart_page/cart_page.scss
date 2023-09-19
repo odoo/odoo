@@ -1,0 +1,31 @@
+.order-cart-content {
+    height: calc(100% - 160px);
+
+    .o_kiosk_product_card {
+        height: 100%
+    }
+    .order-lines {
+        height: 150px;
+    }
+}
+
+
+.upsale-product .o_kiosk_product_card {
+    height: auto;
+}
+
+.upsale-product .o_self_order_item_card_image  {
+    height: 320px;
+}
+
+@media (max-height: 1280px) {
+    .upsale-product .o_self_order_item_card_image  {
+        height: 120px;
+    }
+}
+
+@media (max-height: 1024px) {
+    .upsale-product .o_self_order_item_card_image  {
+        height: 60px;
+    }
+}

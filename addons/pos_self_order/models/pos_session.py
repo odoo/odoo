@@ -10,6 +10,11 @@ class PosSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         sessions = super(PosSession, self).create(vals_list)
+        sessions = self._create_pos_self_sessions_sequence(sessions)
+        return sessions
+
+    @api.model
+    def _create_pos_self_sessions_sequence(self, sessions):
         date_string = fields.Date.today().isoformat()
         ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
         company_id = self.env.company.id

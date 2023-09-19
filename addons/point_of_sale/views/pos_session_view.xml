@@ -7,7 +7,7 @@
             <form string="Point of Sale Session" create="0" edit="0">
                 <header>
                     <button name="open_frontend_cb" type="object" string="Continue Selling"
-                        invisible="rescue or state not in ['opening_control', 'opened'] or config_id.self_order_kiosk"/>
+                        invisible="rescue or state not in ['opening_control', 'opened']"/>
                     <button id="validate_closing_control" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries"
                             invisible="(state != 'closing_control' and not rescue or state == 'closed' and rescue) and state != 'closing_control'"
                     class="oe_highlight"/>
