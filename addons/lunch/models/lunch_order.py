@@ -86,16 +86,19 @@ class LunchOrder(models.Model):
         """
             If called in api.multi then it will pop topping_ids_1,2,3 from values
         """
+        topping_1_values = values.get('topping_ids_1', False)
+        topping_2_values = values.get('topping_ids_2', False)
+        topping_3_values = values.get('topping_ids_3', False)
         if self.ids:
             # TODO This is not taking into account all the toppings for each individual order, this is usually not a problem
             # since in the interface you usually don't update more than one order at a time but this is a bug nonetheless
-            topping_1 = values.pop('topping_ids_1')[0][2] if 'topping_ids_1' in values else self[:1].topping_ids_1.ids
-            topping_2 = values.pop('topping_ids_2')[0][2] if 'topping_ids_2' in values else self[:1].topping_ids_2.ids
-            topping_3 = values.pop('topping_ids_3')[0][2] if 'topping_ids_3' in values else self[:1].topping_ids_3.ids
+            topping_1 = values.pop('topping_ids_1')[0][2] if topping_1_values else self[:1].topping_ids_1.ids
+            topping_2 = values.pop('topping_ids_2')[0][2] if topping_2_values else self[:1].topping_ids_2.ids
+            topping_3 = values.pop('topping_ids_3')[0][2] if topping_3_values else self[:1].topping_ids_3.ids
         else:
-            topping_1 = values['topping_ids_1'][0][2] if 'topping_ids_1' in values else []
-            topping_2 = values['topping_ids_2'][0][2] if 'topping_ids_2' in values else []
-            topping_3 = values['topping_ids_3'][0][2] if 'topping_ids_3' in values else []
+            topping_1 = values['topping_ids_1'][0][2] if topping_1_values else []
+            topping_2 = values['topping_ids_2'][0][2] if topping_2_values else []
+            topping_3 = values['topping_ids_3'][0][2] if topping_3_values else []
 
         return topping_1 + topping_2 + topping_3
 
