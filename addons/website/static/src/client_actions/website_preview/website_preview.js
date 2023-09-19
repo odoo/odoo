@@ -125,7 +125,6 @@ export class WebsitePreview extends Component {
             // OdooFrameContentLoaded event to unblock the iframe, as it is
             // triggered faster than the load event.
             this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
-            this.websiteService.context.isPreviewOpen = true;
         });
 
         onWillUnmount(() => {
@@ -135,7 +134,6 @@ export class WebsitePreview extends Component {
             this.websiteService.currentWebsiteId = null;
             this.websiteService.websiteRootInstance = undefined;
             this.websiteService.pageDocument = null;
-            this.websiteService.context.isPreviewOpen = false;
         });
 
         /**
