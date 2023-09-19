@@ -15,6 +15,7 @@
                     js_class="project_task_kanban"
                     default_order="state, priority desc, date_deadline asc, sequence, id desc">
                 <field name="color"/>
+                <field name="priority"/>
                 <field name="sequence"/>
                 <field name="name"/>
                 <field name="active"/>
@@ -37,9 +38,6 @@
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <div class="d-flex justify-content-start">
-                                            <div>
-                                                <field name="state" widget="todo_done_checkmark"/>
-                                            </div>
                                             <div t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                                 <strong class="o_kanban_record_title align-middle">
                                                     <field name="name" widget="name_with_subtask_count"/>
@@ -54,17 +52,16 @@
                                         <field name="displayed_image_id" widget="attachment_image"/>
                                     </div>
                                 </div>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left"/>
-                                    <div class="oe_kanban_bottom_right"  t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                                        <div t-attf-class="d-flex #{todoHasAssignees ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
-                                            <div class="d-flex align-items-center me-2 mt-2">
-                                                <div t-if="todoHasAssignees">
-                                                    <field name="user_ids" widget="many2many_avatar_user"/>
-                                                </div>
-                                                <field name="activity_ids" widget="kanban_activity"/>
-                                            </div>
+                                <div class="o_kanban_record_bottom mt-2">
+                                    <div class="oe_kanban_bottom_left" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
+                                        <field name="priority" widget="priority"/>
+                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px;"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value), 'o_todo_hide_avatar': !todoHasAssignees}">
+                                            <field name="user_ids" widget="many2many_avatar_user"/>
                                         </div>
+                                        <field name="state" widget="todo_done_checkmark"/>
                                     </div>
                                 </div>
                             </div>
@@ -86,6 +83,7 @@
                   multi_edit="1"
                   open_form_view="True"
                   js_class="todo_list">
+                <field name="priority" widget="priority" nolabel="1"/>
                 <field name="state" widget="todo_done_checkmark" nolabel="1"/>
                 <field name="name"/>
                 <field name="user_ids" optional="show" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
@@ -105,6 +103,7 @@
                   class="o_todo_form_view"
                   js_class="todo_form">
                 <field name="name" invisible="1"/>
+                <field name="priority" invisible="1"/>
                 <header>
                     <div class="py-1 px-2 border rounded bg-view">
                         <field name="tag_ids"
@@ -218,6 +217,8 @@
                 <field name="tag_ids"/>
                 <field name="user_ids"/>
                 <field name="personal_stage_type_ids" string="Stage"/>
+                <filter string="Starred" name="starred_tasks" domain="[('priority', '=', '1')]"/>
+                <separator/>
                 <filter name="open_tasks" string="Open" domain="[('is_closed', '=', False)]"/>
                 <filter name="closed_tasks" string="Closed" domain="[('is_closed', '=', True)]"/>
                 <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
