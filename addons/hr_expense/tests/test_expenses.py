@@ -1041,12 +1041,11 @@ class TestExpenses(TestExpenseCommon):
             'sheet_id': expense.id,
             'analytic_distribution': {
                 self.analytic_account_1.id: 50,
-                self.analytic_account_2.id: 50,
             },
         })
 
         with self.assertRaises(UserError):
-            (self.analytic_account_1 | self.analytic_account_2).unlink()
+            self.analytic_account_1.unlink()
 
         expense.unlink()
         self.analytic_account_1.unlink()
