@@ -25,9 +25,11 @@ SlidesUpload.SlideUploadDialog.include({
         if (ev.added) {
             this.$('.o_error_no_certification').addClass('d-none');
             this.$('#certification_id').parent().find('.select2-container').removeClass('is-invalid');
-            if (ev.added.text && !$inputElement.val().trim()) {
+            if (ev.added.text) {
                 $inputElement.val(ev.added.text);
             }
+        }else {
+            $inputElement.val("");
         }
     },
 

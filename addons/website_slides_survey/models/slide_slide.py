@@ -50,7 +50,7 @@ class Slide(models.Model):
     @api.depends('survey_id')
     def _compute_name(self):
         for slide in self:
-            if not slide.name and slide.survey_id:
+            if slide.survey_id:
                 slide.name = slide.survey_id.title
 
     def _compute_mark_complete_actions(self):
