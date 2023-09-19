@@ -3320,6 +3320,14 @@ class AccountMove(models.Model):
                 exchange_diff_moves.append(partial.exchange_move_id.id)
         return invoice_partials, exchange_diff_moves
 
+    def _prepare_reversal_values(self, default_values):
+        self.ensure_one()
+        default_values.update({
+            'move_type': TYPE_REVERSE_MAP[self.move_type],
+            'reversed_entry_id': self.id,
+            'partner_id': self.partner_id.id,
+        })
+
     def _reverse_moves(self, default_values_list=None, cancel=False):
         ''' Reverse a recordset of account.move.
         If cancel parameter is true, the reconcilable or liquidity lines
@@ -3339,11 +3347,7 @@ class AccountMove(models.Model):
 
         reverse_moves = self.env['account.move']
         for move, default_values in zip(self, default_values_list):
-            default_values.update({
-                'move_type': TYPE_REVERSE_MAP[move.move_type],
-                'reversed_entry_id': move.id,
-                'partner_id': move.partner_id.id,
-            })
+            move._prepare_reversal_values(default_values)
             reverse_moves += move.with_context(
                 move_reverse_cancel=cancel,
                 include_business_fields=True,
