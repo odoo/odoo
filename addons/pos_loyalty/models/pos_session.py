@@ -3,6 +3,8 @@
 
 from odoo import models
 from odoo.osv.expression import OR
+import ast
+import json
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
@@ -54,7 +56,30 @@ class PosSession(models.Model):
         return self.env['loyalty.rule'].search_read(**params['search_params'])
 
     def _get_pos_ui_loyalty_reward(self, params):
-        return self.env['loyalty.reward'].search_read(**params['search_params'])
+        rewards = self.env['loyalty.reward'].search_read(**params['search_params'])
+        for reward in rewards:
+            reward['reward_product_domain'] = self._replace_ilike_with_in(reward['reward_product_domain'])
+        return rewards
+
+    def _replace_ilike_with_in(self, domain_str):
+        if domain_str == "null":
+            return domain_str
+
+        domain = ast.literal_eval(domain_str)
+
+        for index, condition in enumerate(domain):
+            if isinstance(condition, (list, tuple)) and len(condition) == 3:
+                field_name, operator, value = condition
+                field = self.env['product.product']._fields.get(field_name)
+
+                if field and field.type == 'many2one' and operator in ('ilike', 'not ilike'):
+                    comodel = self.env[field.comodel_name]
+                    matching_ids = list(comodel._name_search(value, [], operator, limit=None))
+
+                    new_operator = 'in' if operator == 'ilike' else 'not in'
+                    domain[index] = [field_name, new_operator, matching_ids]
+
+        return json.dumps(domain)
 
     def _get_pos_ui_product_product(self, params):
         result = super()._get_pos_ui_product_product(params)
