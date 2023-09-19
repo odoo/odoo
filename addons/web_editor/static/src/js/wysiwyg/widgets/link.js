@@ -102,6 +102,7 @@ export class Link extends Component {
         this._updateOptionsUI();
 
         this._setUrl({ shouldFocus: this.props.shouldFocusUrl });
+        this.$el[0].querySelector('#o_link_dialog_label_input').value = this.state.originalText;
     }
     /**
      * @override
@@ -526,8 +527,7 @@ export class Link extends Component {
             }
             const linkNode = this.$link[0] || this.state.range.cloneContents();
             const linkText = linkNode.innerText;
-            this.state.initialContent = linkText.replace(/[ \t\r\n]+/g, ' ');
-            this.state.originalText = this.state.initialContent;
+            this.state.originalText = linkText.replace(/[ \t\r\n]+/g, ' ');
             if (linkNode instanceof DocumentFragment) {
                 this.state.originalHTML = $('<fakeEl>').append(linkNode).html();
             } else {
@@ -535,12 +535,12 @@ export class Link extends Component {
             }
             this.state.url = this.$link.attr('href') || '';
         } else {
-            this.state.initialContent = this.state.initialContent ? this.state.initialContent.replace(/[ \t\r\n]+/g, ' ') : '';
+            this.state.originalText = this.state.originalText ? this.state.originalText.replace(/[ \t\r\n]+/g, ' ') : '';
         }
 
 
         if (!this.state.url) {
-            const urls = this.state.initialContent.match(OdooEditorLib.URL_REGEX_WITH_INFOS);
+            const urls = this.state.originalText.match(OdooEditorLib.URL_REGEX_WITH_INFOS);
             if (urls) {
                 this.state.url = urls[0];
             }
