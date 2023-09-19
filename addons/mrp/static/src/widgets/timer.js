@@ -95,10 +95,6 @@ class MrpTimerField extends Component {
             parse: (v) => parseFloatTime(v),
         });
 
-        // duration is expected to be given in minutes
-        this.duration = this.props.record.data[this.props.name];
-        this.ongoing = this.props.record.data.is_user_working;
-
         onWillStart(async () => {
             if (
                 !this.props.record.model.useSampleModel &&
@@ -111,10 +107,6 @@ class MrpTimerField extends Component {
                 );
             }
         });
-        onWillUpdateProps((nextProps) => {
-            this.ongoing = nextProps.record.data.is_user_working;
-            this.duration = nextProps.record.data[nextProps.name];
-        });
 
         onWillDestroy(() => clearTimeout(this.timer));
     }
@@ -124,6 +116,15 @@ class MrpTimerField extends Component {
             this.duration = this.props.record.data[this.props.name];
         }
         return formatMinutes(this.duration);
+    }
+
+    get ongoing() {
+        return this.props.record.data.is_user_working;
+    }
+
+    get duration() {
+        // duration is expected to be given in minutes
+        return this.props.record.data[this.props.name];
     }
 }
 

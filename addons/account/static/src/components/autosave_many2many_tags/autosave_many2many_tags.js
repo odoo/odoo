@@ -1,15 +1,12 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { Many2ManyTagsField, many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
-
-const { onWillUpdateProps } = owl;
 
 export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
     setup() {
         super.setup();
-
-        onWillUpdateProps((nextProps) => this.willUpdateProps(nextProps));
 
         this.lastBalance = this.props.record.data.balance;
         this.lastAccount = this.props.record.data.account_id;
@@ -20,6 +17,7 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
             super_update(recordlist);
             this._saveOnUpdate();
         };
+        useRecordObserver(this.onRecordChange.bind(this));
     }
 
     async deleteTag(id) {
@@ -27,8 +25,8 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
         await this._saveOnUpdate();
     }
 
-    willUpdateProps(nextProps) {
-        const line = this.props.record.data;
+    onRecordChange(record) {
+        const line = record.data;
         if (line.tax_ids.records.length > 0) {
             if (line.balance !== this.lastBalance
                 || line.account_id[0] !== this.lastAccount[0]
@@ -36,7 +34,7 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
                 this.lastBalance = line.balance;
                 this.lastAccount = line.account_id;
                 this.lastPartner = line.partner_id;
-                this._saveOnUpdate();
+                return record.model.root.save();
             }
         }
     }
