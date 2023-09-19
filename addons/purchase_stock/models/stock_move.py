@@ -150,6 +150,7 @@ class StockMove(models.Model):
     def _prepare_extra_move_vals(self, qty):
         vals = super(StockMove, self)._prepare_extra_move_vals(qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
+        vals['created_purchase_line_ids'] = [Command.set(self.created_purchase_line_ids.ids)]
         return vals
 
     def _prepare_move_split_vals(self, uom_qty):
