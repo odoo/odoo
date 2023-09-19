@@ -350,10 +350,10 @@ class Website(models.Model):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
     @api.model
-    def get_theme_snippet_lists(self, theme_name):
+    def get_theme_configurator_snippets(self, theme_name):
         return {
-            **get_manifest('theme_default')['snippet_lists'],
-            **get_manifest(theme_name).get('snippet_lists', {}),
+            **get_manifest('theme_default')['configurator_snippets'],
+            **get_manifest(theme_name).get('configurator_snippets', {}),
         }
 
     def configurator_set_menu_links(self, menu_company, module_data):
@@ -586,7 +586,7 @@ class Website(models.Model):
 
         # Generate text for the pages
         requested_pages = set(pages_views.keys()).union({'homepage'})
-        snippet_lists = website.get_theme_snippet_lists(theme_name)
+        configurator_snippets = website.get_theme_configurator_snippets(theme_name)
         industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
@@ -613,7 +613,7 @@ class Website(models.Model):
 
         generated_content = {}
         for page_code in requested_pages - {'privacy_policy'}:
-            snippet_list = snippet_lists.get(page_code, [])
+            snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
                 render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
                 for placeholder in placeholders:
@@ -634,7 +634,7 @@ class Website(models.Model):
 
         # Configure the pages
         for page_code in requested_pages:
-            snippet_list = snippet_lists.get(page_code, [])
+            snippet_list = configurator_snippets.get(page_code, [])
             if page_code == 'homepage':
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
