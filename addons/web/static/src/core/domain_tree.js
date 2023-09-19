@@ -3,7 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
 
-const TERM_OPERATORS_NEGATION = {
+export const TERM_OPERATORS_NEGATION = {
     "<": ">=",
     ">": "<=",
     "<=": ">",
@@ -117,6 +117,14 @@ export function toAST(value) {
  * @typedef {AND|OR|Condition} Tree
  */
 
+export function addChild(parent, child) {
+    if (child.type === "connector" && !child.negate && child.value === parent.value) {
+        parent.children.push(...child.children);
+    } else {
+        parent.children.push(child);
+    }
+}
+
 /**
  * @param {AST[]} ASTs
  * @param {boolean} distributeNot
@@ -146,6 +154,7 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         const operator = toValue(operatorAST);
         if (negate && typeof operator === "string" && TERM_OPERATORS_NEGATION[operator]) {
             tree.operator = TERM_OPERATORS_NEGATION[operator];
+            tree.negate = false;
         } else {
             tree.operator = operator;
             tree.negate = negate;
@@ -161,11 +170,7 @@ function _construcTree(ASTs, distributeNot, negate = false) {
                 distributeNot && negate
             );
             remaimingASTs = otherASTs;
-            if (child.type === "connector" && !child.negate && child.value === tree.value) {
-                tree.children.push(...child.children);
-            } else {
-                tree.children.push(child);
-            }
+            addChild(tree, child);
         }
     }
     return { tree, remaimingASTs };
@@ -173,17 +178,18 @@ function _construcTree(ASTs, distributeNot, negate = false) {
 
 /**
  * @param {AST[]} initialASTs
- * @param {"&"|"|"} [defaultConnector="&"]
- * @param {boolean} [distributeNot=false]
+ * @param {Object} options
+ * @param {"&"|"|"} [options.defaultConnector="&"]
+ * @param {boolean} [options.distributeNot=false]
  * @returns {Tree}
  */
 function construcTree(initialASTs, options) {
-    const value = options.defaultConnector || "&";
     if (!initialASTs.length) {
-        return { type: "connector", value, negate: false, children: [] };
+        return { type: "connector", value: "&", negate: false, children: [] };
     }
     const { tree } = _construcTree(initialASTs, options.distributeNot);
     if (tree.type === "condition") {
+        const value = options.defaultConnector || "&";
         return { type: "connector", value, negate: false, children: [tree] };
     }
     return tree;
@@ -224,7 +230,7 @@ function getASTs(tree) {
  * @param {boolean} [isRoot=true]
  * @returns {Tree}
  */
-function createBetweenOperators(tree, isRoot = true) {
+export function createBetweenOperators(tree, isRoot = true) {
     if (tree.type === "condition") {
         return tree;
     }
@@ -266,7 +272,7 @@ function createBetweenOperators(tree, isRoot = true) {
  * @param {Tree} tree
  * @returns {Tree}
  */
-function removeBetweenOperators(tree) {
+export function removeBetweenOperators(tree) {
     if (tree.type === "condition") {
         if (tree.operator !== "between") {
             return tree;
@@ -298,17 +304,12 @@ function removeBetweenOperators(tree) {
     if (tree.value === "|") {
         return { ...tree, children: processedChildren };
     }
-    const children = [];
+    const newTree = { ...tree, children: [] };
     // after processing a child might have become a connector "&" --> normalize
     for (let i = 0; i < processedChildren.length; i++) {
-        const child = processedChildren[i];
-        if (child.type === "connector" && !child.negate && child.value === "&") {
-            children.push(...child.children);
-        } else {
-            children.push(child);
-        }
+        addChild(newTree, processedChildren[i]);
     }
-    return { ...tree, children };
+    return newTree;
 }
 
 /**

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TreeEditor">
+        <div class="o_tree_editor w-100" aria-atomic="true">
+            <t t-set="node" t-value="tree" />
+            <t t-if="node.children.length === 0">
+                <span>Match <strong>all records</strong></span>
+            </t>
+            <t t-else="">
+                <span>Match records with </span>
+                <t t-call="web.TreeEditor.connector.dropdown" />
+                <span> of the following rules:</span>
+                <t t-call="web.TreeEditor.connector.children" />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.connector.dropdown.toggler">
+        <t t-if="node.value === '|'">
+            <t t-if="node.negate">none</t>
+            <t t-else="">any</t>
+        </t>
+        <t t-else="">
+            <t t-if="node.negate">not all</t>
+            <t t-else="">all</t>
+        </t>
+    </t>
+
+    <t t-name="web.TreeEditor.connector.dropdown">
+        <div class="d-inline-flex o_domain_tree_connector_selector" aria-atomic="true">
+            <Dropdown showCaret="true" >
+                <t t-set-slot="toggler">
+                    <t t-call="web.TreeEditor.connector.dropdown.toggler" />
+                </t>
+                <DropdownItem onSelected="() => this.updateConnector(node, '&amp;')">all</DropdownItem>
+                <DropdownItem onSelected="() => this.updateConnector(node, '|')">any</DropdownItem>
+            </Dropdown>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.connector.children">
+        <div class="o_tree_editor_node_children_container">
+            <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
+                <t t-call="web.TreeEditor.{{ child.type }}">
+                    <t t-set="parent" t-value="node" />
+                    <t t-set="node" t-value="child" />
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.connector">
+        <div class="d-flex">
+            <t t-call="web.TreeEditor.connector.dropdown" />
+            <t t-call="web.TreeEditor.connector.children" />
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.condition">
+        <div>  
+            <span t-esc="node.path" /> <span t-esc="node.operator" /> <span t-esc="node.value" />
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.atomic_expression">
+        <div>
+            <input class="o_input w-100" t-att-value="node.value" t-on-change="(ev) => this.updateAtomicCondition(node, ev.target.value)" />
+        </div>
+    </t>
+
+</templates>

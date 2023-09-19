@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ExpressionEditor">
+        <div class="o_expression_editor w-100" aria-atomic="true">
+            <t t-if="expressionTree">
+                <TreeEditor resModel="props.resModel" tree="expressionTree" update.bind="update" />
+            </t>
+            <t t-else="">Expression not supported</t>
+            <t t-if="props.isDebugMode">
+                <div class="o_expression_editor_debug_container">
+                    <span class="small"># Code editor</span>
+                    <textarea type="text" class="o_expression_editor_debug_input" spellcheck="false" t-att-value="props.expression" t-on-change="(ev) => this.onExpressionChange(ev.target.value)" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
