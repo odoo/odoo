@@ -828,3 +828,76 @@ class TestSalesTeam(SaleCommon):
         # As we want to determine if the value is set in the DB we need to perform a search
         self.assertFalse(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', False)]))
         self.assertEqual(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', 0.0)]), sale_order.order_line)
+
+    def test_action_recompute_taxes(self):
+        '''
+        This test verifies the taxes recomputation action that can be triggered
+        after updating the fiscal position on a sale order document.
+        '''
+        special_tax = self.env['account.tax'].create({
+            'name': "special_tax_10",
+            'amount_type': 'percent',
+            'amount': 25.0,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+
+        mapped_tax_a = self.env['account.tax'].create({
+            'name': "tax_a",
+            'amount_type': 'percent',
+            'amount': 12.5,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+
+        mapped_tax_b = self.env['account.tax'].create({
+            'name': "tax_b",
+            'amount_type': 'percent',
+            'amount': 5.0,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+
+        sales_tax = self.env['account.tax'].create({
+            'name': "VAT 20%",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'price_include': True,
+        })
+
+        mapping_a = self.env['account.fiscal.position'].create({
+            'name': 'Special Tax Reduction',
+            'tax_ids': [Command.create({'tax_src_id': special_tax.id, 'tax_dest_id': mapped_tax_a.id})],
+        })
+        mapping_b = self.env['account.fiscal.position'].create({
+            'name': 'Special Tax Reduction',
+            'tax_ids': [Command.create({'tax_src_id': special_tax.id, 'tax_dest_id': mapped_tax_b.id})],
+        })
+
+        # taxes and standard price need to be set on the product, as they will be
+        # recomputed when changing the fiscal position.
+        self.consumable_product.write({
+            'lst_price': 300,
+            'taxes_id': [Command.set((special_tax + sales_tax).ids)],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.consumable_product.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+
+        self.assertEqual(order.amount_total, 300)
+        self.assertEqual(order.amount_tax, 100)
+        order.fiscal_position_id = mapping_a
+        order.action_update_taxes()
+        self.assertEqual(order.amount_total, 270)
+        self.assertEqual(order.amount_tax, 70)
+        order.fiscal_position_id = mapping_b
+        order.action_update_taxes()
+        self.assertEqual(order.amount_total, 252)
+        self.assertEqual(order.amount_tax, 52)
