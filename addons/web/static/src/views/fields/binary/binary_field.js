@@ -42,7 +42,7 @@ export class BinaryField extends Component {
         const { fileNameField, record } = this.props;
         const changes = { [this.props.name]: data || false };
         if (fileNameField in record.fields && record.data[fileNameField] !== name) {
-            changes[fileNameField] = name || false;
+            changes[fileNameField] = name || '';
         }
         return this.props.record.update(changes);
     }
