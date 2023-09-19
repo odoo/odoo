@@ -293,11 +293,25 @@ class StockMove(models.Model):
     def write(self, vals):
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
-        if 'product_uom_qty' in vals and 'move_line_ids' in vals:
-            # first update lines then product_uom_qty as the later will unreserve
-            # so possibly unlink lines
-            move_line_vals = vals.pop('move_line_ids')
-            super().write({'move_line_ids': move_line_vals})
+        if 'product_uom_qty' in vals:
+            if 'move_line_ids' in vals:
+                # first update lines then product_uom_qty as the later will unreserve
+                # so possibly unlink lines
+                move_line_vals = vals.pop('move_line_ids')
+                super().write({'move_line_ids': move_line_vals})
+            procurement_requests = []
+            for move in self:
+                if move.raw_material_production_id.state != 'confirmed' \
+                        or not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) \
+                        or move.procure_method != 'make_to_order':
+                    continue
+                values = move._prepare_procurement_values()
+                origin = move._prepare_procurement_origin()
+                procurement_requests.append(self.env['procurement.group'].Procurement(
+                    move.product_id, vals['product_uom_qty'], move.product_uom,
+                    move.location_id, move.rule_id and move.rule_id.name or "/",
+                    origin, move.company_id, values))
+            self.env['procurement.group'].run(procurement_requests)
         return super().write(vals)
 
     def _action_assign(self, force_qty=False):
