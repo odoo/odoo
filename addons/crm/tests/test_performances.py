@@ -51,7 +51,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         with self.with_user('user_sales_manager'):
             self.env.user._is_internal()  # warmup the cache to avoid inconsistency between community an enterprise
             with self.assertQueryCount(user_sales_manager=1171):  # crm 1160 / com 1165
-                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads()
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -62,12 +62,12 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.assertEqual(len(leads_st1) + len(leads_stc), len(leads))  # Make sure all lead are assigned
 
         # salespersons assign
-        self.members.invalidate_model(['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 11)  # 45 max on 2 days (3) + compensation (8.4)
-        self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days (1) + compensation (2.8)
-        self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days (1) + compensation (2.8)
-        self.assertMemberAssign(self.sales_team_convert_m1, 8)  # 30 max on 15 (2) + compensation (5.6)
-        self.assertMemberAssign(self.sales_team_convert_m2, 15)  # 60 max on 15 (4) + compsantion (11.2)
+        self.members.invalidate_model(['lead_month_count', 'lead_day_count'])
+        self.assertMemberAssign(self.sales_team_1_m1, 2)  # 45 max on one month -> 2 daily
+        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_convert_m1, 1)  # 30 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_convert_m2, 2)  # 60 max on one month -> 2 daily
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
     def test_assign_perf_no_duplicates(self):
@@ -96,7 +96,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # randomness: at least 1 query
         with self.with_user('user_sales_manager'):
             with self.assertQueryCount(user_sales_manager=586):  # crm 582
-                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads()
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -105,12 +105,12 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.assertEqual(len(leads_st1) + len(leads_stc), 100)
 
         # salespersons assign
-        self.members.invalidate_model(['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 11)  # 45 max on 2 days (3) + compensation (8.4)
-        self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days (1) + compensation (2.8)
-        self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days (1) + compensation (2.8)
-        self.assertMemberAssign(self.sales_team_convert_m1, 8)  # 30 max on 15 (2) + compensation (5.6)
-        self.assertMemberAssign(self.sales_team_convert_m2, 15)  # 60 max on 15 (4) + compensation (11.2)
+        self.members.invalidate_model(['lead_month_count', 'lead_day_count'])
+        self.assertMemberAssign(self.sales_team_1_m1, 2)  # 45 max on one month -> 2 daily
+        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_convert_m1, 1)  # 30 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_convert_m2, 2)  # 60 max on one month -> 2 daily
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
     def test_assign_perf_populated(self):
@@ -179,7 +179,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # randomness: add 2 queries
         with self.with_user('user_sales_manager'):
             with self.assertQueryCount(user_sales_manager=6066):  # crm 6048 / com 6052 / ent 6055
-                self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
+                self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads()
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])
@@ -187,12 +187,12 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.assertEqual(leads.user_id, sales_teams.member_ids)
 
         # salespersons assign
-        self.members.invalidate_model(['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 45)  # 45 max on one month
-        self.assertMemberAssign(self.sales_team_1_m2, 15)  # 15 max on one month
-        self.assertMemberAssign(self.sales_team_1_m3, 15)  # 15 max on one month
-        self.assertMemberAssign(self.sales_team_convert_m1, 30)  # 30 max on one month
-        self.assertMemberAssign(self.sales_team_convert_m2, 60)  # 60 max on one month
-        self.assertMemberAssign(sales_team_3_m1, 60)  # 60 max on one month
-        self.assertMemberAssign(sales_team_3_m2, 60)  # 60 max on one month
-        self.assertMemberAssign(sales_team_3_m3, 15)  # 15 max on one month
+        self.members.invalidate_model(['lead_month_count', 'lead_day_count'])
+        self.assertMemberAssign(self.sales_team_1_m1, 2)  # 45 max on one month -> 2 daily
+        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_convert_m1, 1)  # 30 max on one month -> 1 daily
+        self.assertMemberAssign(self.sales_team_convert_m2, 2)  # 60 max on one month -> 2 daily
+        self.assertMemberAssign(sales_team_3_m1, 2)  # 60 max on one month -> 2 daily
+        self.assertMemberAssign(sales_team_3_m2, 2)  # 60 max on one month -> 2 daily
+        self.assertMemberAssign(sales_team_3_m3, 1)  # 15 max on one month -> 1 daily
