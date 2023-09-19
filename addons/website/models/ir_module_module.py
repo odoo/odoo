@@ -660,7 +660,7 @@ class IrModuleModule(models.Model):
         # Configurator
         # ------------------------------------------------------------
 
-        configurator_snippets = manifest['snippet_lists']
+        configurator_snippets = manifest['configurator_snippets']
 
         # Generate general configurator snippet templates
         create_values = []

@@ -32,6 +32,7 @@ _DEFAULT_MANIFEST = {
     'author': 'Odoo S.A.',
     'auto_install': False,
     'category': 'Uncategorized',
+    'configurator_snippets': {},  # website themes
     'countries': [],
     'data': [],
     'demo': [],
@@ -52,7 +53,6 @@ _DEFAULT_MANIFEST = {
     'post_load': None,
     'pre_init_hook': '',
     'sequence': 100,
-    'snippet_lists': {},  # website themes
     'summary': '',
     'test': [],
     'update_xml': [],
