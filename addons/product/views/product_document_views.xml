@@ -93,9 +93,8 @@
         <field name="model">product.document</field>
         <field name="arch" type="xml">
             <tree multi_edit="true">
-                <field name="res_id"/>
-                <field name="res_model"/>
                 <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
         </field>
     </record>
