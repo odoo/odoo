@@ -645,10 +645,10 @@ class AccountAccount(models.Model):
         super().copy_translations(new, excluded=tuple(excluded)+('name',))
         if new.name == _('%s (copy)', self.name):
             name_field = self._fields['name']
-            self.env.cache.update_raw(new, name_field, [{
+            name_field.set_cache(new, {
                 lang: _('%s (copy)', tr)
                 for lang, tr in name_field._get_stored_translations(self).items()
-            }], dirty=True)
+            }, dirty=True)
 
     @api.model
     def load(self, fields, data):

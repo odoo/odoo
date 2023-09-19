@@ -120,7 +120,10 @@ class Property(models.Model):
             values.get('res_id') is False and any(record.res_id for record in self)
         ) or any(
             # changing a fallback value
-            not record.res_id and any(record[fname] != self._fields[fname].convert_to_record(value, self) for fname, value in values.items())
+            not record.res_id and any(
+                record[fname] != self._fields[fname].convert_to_record(self._fields[fname].convert_to_cache(value, self), self)
+                for fname, value in values.items()
+            )
             for record in self
         )
         r = super().write(values)

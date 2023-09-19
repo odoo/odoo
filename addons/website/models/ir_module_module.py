@@ -529,7 +529,7 @@ class IrModuleModule(models.Model):
             for lang in langs_update:
                 specific_arch_db[lang] = field.translate(
                     lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
-            cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
+            field.update_cache(View.browse(specific_id), [specific_arch_db], dirty=True)
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:

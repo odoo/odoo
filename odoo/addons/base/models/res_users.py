@@ -488,7 +488,7 @@ class Users(models.Model):
             if self.check_access_rights('write', raise_exception=False):
                 return records
             for fname in USER_PRIVATE_FIELDS:
-                self.env.cache.update(records, self._fields[fname], repeat('********'))
+                self._fields[fname].update_cache(records, repeat('********'))
         return records
 
     @api.constrains('company_id', 'company_ids', 'active')

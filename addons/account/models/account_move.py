@@ -706,7 +706,7 @@ class AccountMove(models.Model):
         journal = None
         # the currency is not a hard dependence, it triggers via manual add_to_compute
         # avoid computing the currency before all it's dependences are set (like the journal...)
-        if self.env.cache.contains(self, self._fields['currency_id']):
+        if len(self) == 1 and 'currency_id' in self._cache:
             currency_id = self.currency_id.id or self._context.get('default_currency_id')
             if currency_id and currency_id != company.currency_id.id:
                 currency_domain = domain + [('currency_id', '=', currency_id)]

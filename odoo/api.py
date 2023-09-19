@@ -16,6 +16,7 @@ __all__ = [
 
 import logging
 import warnings
+import operator
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
@@ -28,7 +29,7 @@ try:
 except ImportError:
     from decorator import decorator
 
-from .exceptions import AccessError, CacheMiss
+from .exceptions import AccessError
 from .tools import frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
 from .tools.translate import _
 
@@ -820,7 +821,7 @@ class Environment(Mapping):
                     else:
                         return val
 
-            result = tuple(get(key) for key in self.registry.field_depends_context[field])
+            result = tuple(get(key) for key in self.registry.field_depends_context[field]) or None
             self._cache_key[field] = result
             return result
 
@@ -868,36 +869,45 @@ class Transaction:
 
 
 # sentinel value for optional parameters
-NOTHING = object()
+class CacheDefault:
+    def __bool__(self):
+        return False
+
+
+NOTHING = CacheDefault()
 EMPTY_DICT = frozendict()
 
 
-class Cache(object):
+class Cache:
     """ Implementation of the cache of records.
 
-    For most fields, the cache is simply a mapping from a record and a field to
-    a value.  In the case of context-dependent fields, the mapping also depends
-    on the environment of the given record.  For the sake of performance, the
-    cache is first partitioned by field, then by record.  This makes some
-    common ORM operations pretty fast, like determining which records have a
-    value for a given field, or invalidating a given field on all possible
-    records.
+    The cache can be treated as a three level nested dictionary with dirty flags
+    self._data: {field: {context_key: {record_id: cache_value}}}
+    self._dirty: {field: set[record_id]}
+
+    The context_key for context-dependent fields is a tuple of their context keys
+    from the environment. For non-context-independent fields, the context_key
+    is ``None``. For the sake of performance, the cache is first  partitioned by
+    field, then by context_key, then by record_id. This makes some common ORM
+    operations pretty fast, like determining which records have a value for a
+    given field, or invalidating a given field on all possible records.
 
     The cache can also mark some entries as "dirty".  Dirty entries essentially
     marks values that are different from the database.  They represent database
     updates that haven't been done yet.  Note that dirty entries only make
-    sense for stored fields.  Note also that if a field is dirty on a given
-    record, and the field is context-dependent, then all the values of the
-    record for that field are considered dirty.  For the sake of consistency,
-    the values that should be in the database must be in a context where all
-    the field's context keys are ``None``.
+    sense for stored fields.
+
+    Note that since the database doesn't have context. The cache value for
+    context_key ``None`` reflects the data in the database. When flushing stored
+    context-dependent fields, the ORM will only flush the cache value for context_key
+    ``None``.
     """
 
     def __init__(self):
-        # {field: {record_id: value}, field: {context_key: {record_id: value}}}
+        # field: {context_key: {record_id: value}}}
         self._data = defaultdict(dict)
 
-        # {field: set[id]} stores the fields and ids that are changed in the
+        # {field: set[record_id]} stores the fields and ids that are changed in the
         # cache, but not yet written in the database; their changed values are
         # in `_data`
         self._dirty = defaultdict(OrderedSet)
@@ -922,63 +932,33 @@ class Cache(object):
                 }
         return repr(data)
 
-    def _get_field_cache(self, model, field):
+    def _get_field_cache(self, field, context):
         """ Return the field cache of the given field, but not for modifying it. """
-        field_cache = self._data.get(field, EMPTY_DICT)
-        if field_cache and model.pool.field_depends_context[field]:
-            field_cache = field_cache.get(model.env.cache_key(field), EMPTY_DICT)
-        return field_cache
+        return self._data.get(field, EMPTY_DICT).get(context, EMPTY_DICT)
 
-    def _set_field_cache(self, model, field):
+    def _set_field_cache(self, field, context):
         """ Return the field cache of the given field for modifying it. """
-        field_cache = self._data[field]
-        if model.pool.field_depends_context[field]:
-            field_cache = field_cache.setdefault(model.env.cache_key(field), {})
-        return field_cache
+        return self._data[field].setdefault(context, {})
 
-    def contains(self, record, field):
+    def contains(self, field, context, id_, validator=None):
         """ Return whether ``record`` has a value for ``field``. """
-        field_cache = self._get_field_cache(record, field)
-        if field.translate:
-            cache_value = field_cache.get(record.id, EMPTY_DICT)
-            if cache_value is None:
-                return True
-            lang = record.env.lang or 'en_US'
-            context = record.env.context
-            if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
-                lang = f'_{lang}'
-            return lang in cache_value
-
-        return record.id in field_cache
+        field_cache = self._get_field_cache(field, context)
+        if id_ not in field_cache:
+            return False
+        if validator:
+            return validator(field_cache[id_])
+        return True
 
     def contains_field(self, field):
         """ Return whether ``field`` has a value for at least one record. """
-        cache = self._data.get(field)
-        if not cache:
-            return False
-        # 'cache' keys are tuples if 'field' is context-dependent, record ids otherwise
-        if isinstance(next(iter(cache)), tuple):
-            return any(value for value in cache.values())
-        return True
+        return any(self._data.get(field, EMPTY_DICT).values())
 
-    def get(self, record, field, default=NOTHING):
+    def get(self, field, context, id_):
         """ Return the value of ``field`` for ``record``. """
-        try:
-            field_cache = self._get_field_cache(record, field)
-            cache_value = field_cache[record._ids[0]]
-            if field.translate and cache_value is not None:
-                lang = record.env.lang or 'en_US'
-                context = record.env.context
-                if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
-                    lang = f'_{lang}'
-                return cache_value[lang]
-            return cache_value
-        except KeyError:
-            if default is NOTHING:
-                raise CacheMiss(record, field)
-            return default
+        field_cache = self._get_field_cache(field, context)
+        return field_cache.get(id_, NOTHING)
 
-    def set(self, record, field, value, dirty=False, check_dirty=True):
+    def set(self, field, context, id_, value, dirty=False, check_dirty=True, setter=None):
         """ Set the value of ``field`` for ``record``.
         One can normally make a clean field dirty but not the other way around.
         Updating a dirty field without ``dirty=True`` is a programming error and
@@ -989,31 +969,22 @@ class Cache(object):
         :param check_dirty: whether updating a dirty field without making it
             dirty must raise an exception
         """
-        field_cache = self._set_field_cache(record, field)
-        if field.translate and value is not None:
-            # only for model translated fields
-            lang = record.env.lang or 'en_US'
-            cache_value = field_cache.get(record._ids[0]) or {}
-            cache_value[lang] = value
-            value = cache_value
-        field_cache[record._ids[0]] = value
+        field_cache = self._set_field_cache(field, context)
+        if setter:
+            setter(field_cache, id_, value)
+        else:
+            # if condition + key lookup is faster than dict.__setitem__
+            field_cache[id_] = value
 
         if not check_dirty:
             return
         if dirty:
-            assert field.column_type and field.store and record.id
-            self._dirty[field].add(record.id)
-            if record.pool.field_depends_context[field]:
-                # put the values under conventional context key values {'context_key': None},
-                # in order to ease the retrieval of those values to flush them
-                context_none = dict.fromkeys(record.pool.field_depends_context[field])
-                record = record.with_env(record.env(context=context_none))
-                field_cache = self._set_field_cache(record, field)
-                field_cache[record._ids[0]] = value
-        elif record.id in self._dirty.get(field, ()):
-            _logger.error("cache.set() removing flag dirty on %s.%s", record, field.name, stack_info=True)
+            assert field.column_type and field.store and id_
+            self._dirty[field].add(id_)
+        elif id_ in self._dirty.get(field, ()):
+            _logger.error("cache.set() removing flag dirty on %s.%s", id_, field.name, stack_info=True)
 
-    def update(self, records, field, values, dirty=False, check_dirty=True):
+    def update(self, field, context, ids, values, dirty=False, check_dirty=True, updater=None):
         """ Set the values of ``field`` for several ``records``.
         One can normally make a clean field dirty but not the other way around.
         Updating a dirty field without ``dirty=True`` is a programming error and
@@ -1024,165 +995,74 @@ class Cache(object):
         :param check_dirty: whether updating a dirty field without making it
             dirty must raise an exception
         """
-        if field.translate:
-            # only for model translated fields
-            lang = records.env.lang or 'en_US'
-            field_cache = self._get_field_cache(records, field)
-            cache_values = []
-            for id_, value in zip(records._ids, values):
-                if value is None:
-                    cache_values.append(None)
-                else:
-                    cache_value = field_cache.get(id_) or {}
-                    cache_value[lang] = value
-                    cache_values.append(cache_value)
-            values = cache_values
+        field_cache = self._set_field_cache(field, context)
+        if updater:
+            for id_, val in zip(ids, values):
+                updater(field_cache, id_, val)
+        else:
+            field_cache.update(zip(ids, values))
 
-        self.update_raw(records, field, values, dirty, check_dirty)
-
-    def update_raw(self, records, field, values, dirty=False, check_dirty=True):
-        """ This is a variant of method :meth:`~update` without the logic for
-        translated fields.
-        """
-        field_cache = self._set_field_cache(records, field)
-        field_cache.update(zip(records._ids, values))
         if not check_dirty:
             return
         if dirty:
-            assert field.column_type and field.store and all(records._ids)
-            self._dirty[field].update(records._ids)
-            if records.pool.field_depends_context[field]:
-                # put the values under conventional context key values {'context_key': None},
-                # in order to ease the retrieval of those values to flush them
-                context_none = dict.fromkeys(records.pool.field_depends_context[field])
-                records = records.with_env(records.env(context=context_none))
-                field_cache = self._set_field_cache(records, field)
-                field_cache.update(zip(records._ids, values))
+            assert field.column_type and field.store and all(ids)
+            self._dirty[field].update(ids)
         else:
             dirty_ids = self._dirty.get(field)
-            if dirty_ids and not dirty_ids.isdisjoint(records._ids):
-                _logger.error("cache.update() removing flag dirty on %s.%s", records, field.name, stack_info=True)
+            if dirty_ids and not dirty_ids.isdisjoint(ids):
+                _logger.error("cache.update() removing flag dirty on %s.%s", str(ids), field.name, stack_info=True)
 
-    def insert_missing(self, records, field, values):
+    def insert_missing(self, field, context, ids, values, inserter=None):
         """ Set the values of ``field`` for the records in ``records`` that
         don't have a value yet.  In other words, this does not overwrite
         existing values in cache.
         """
-        field_cache = self._set_field_cache(records, field)
-        if field.translate:
-            if records.env.context.get('prefetch_langs'):
-                langs = {lang for lang, _ in records.env['res.lang'].get_installed()} | {'en_US'}
-                for id_, val in zip(records._ids, values):
-                    if val is None:
-                        field_cache.setdefault(id_, None)
-                    else:
-                        val_all_en = dict.fromkeys(langs, val['en_US'])
-                        field_cache[id_] = {**val_all_en, **val}
-            else:
-                lang = records.env.lang or 'en_US'
-                context = records.env.context
-                if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
-                    lang = f'_{lang}'
-                for id_, val in zip(records._ids, values):
-                    if val is None:
-                        field_cache.setdefault(id_, None)
-                    else:
-                        cache_value = field_cache.setdefault(id_, {})
-                        if cache_value is not None:
-                            cache_value.setdefault(lang, val)
-        else:
-            for id_, val in zip(records._ids, values):
-                field_cache.setdefault(id_, val)
+        if inserter is None:
+            inserter = dict.setdefault
+        self.update(field, context, ids, values, dirty=False, check_dirty=False, updater=inserter)
 
-    def remove(self, record, field):
+    def remove(self, field, context, id_):
         """ Remove the value of ``field`` for ``record``. """
-        assert record.id not in self._dirty.get(field, ())
-        try:
-            field_cache = self._set_field_cache(record, field)
-            del field_cache[record._ids[0]]
-        except KeyError:
-            pass
+        assert id_ not in self._dirty.get(field, ())
+        field_cache = self._set_field_cache(field, context)
+        field_cache.pop(id_, NOTHING)
 
-    def get_values(self, records, field):
+    def get_values(self, field, context, ids, getter=None, on_cache_miss=None):
         """ Return the cached values of ``field`` for ``records``. """
-        field_cache = self._get_field_cache(records, field)
-        for record_id in records._ids:
-            try:
-                yield field_cache[record_id]
-            except KeyError:
-                pass
-
-    def get_until_miss(self, records, field):
-        """ Return the cached values of ``field`` for ``records`` until a value is not found. """
-        field_cache = self._get_field_cache(records, field)
-        if field.translate:
-            lang = records.env.lang or 'en_US'
-            context = records.env.context
-            if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
-                lang = f'_{lang}'
-
-            def get_value(id_):
-                cache_value = field_cache[id_]
-                return None if cache_value is None else cache_value[lang]
+        field_cache = self._get_field_cache(field, context) if on_cache_miss is None else self._set_field_cache(field, context)
+        if getter is None:
+            getter = dict.get
+        if on_cache_miss is None:
+            for id_ in ids:
+                yield getter(field_cache, id_, NOTHING)
         else:
-            get_value = field_cache.__getitem__
+            for id_ in ids:
+                value = getter(field_cache, id_, NOTHING)
+                if value is NOTHING:
+                    yield on_cache_miss(field_cache, id_)
+                else:
+                    yield value
 
-        vals = []
-        for record_id in records._ids:
-            try:
-                vals.append(get_value(record_id))
-            except KeyError:
-                break
-        return vals
-
-    def get_records_different_from(self, records, field, value):
+    def get_ids_different_from(self, field, context, ids, value, cmp=operator.ne):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
-        field_cache = self._get_field_cache(records, field)
-        if field.translate:
-            lang = records.env.lang or 'en_US'
+        field_cache = self._get_field_cache(field, context)
+        ids_ = []
+        for id_ in ids:
+            val = field_cache.get(id_, NOTHING)
+            if val is NOTHING or cmp(val, value):
+                ids_.append(id_)
+        return ids_
 
-            def get_value(id_):
-                cache_value = field_cache[id_]
-                return None if cache_value is None else cache_value[lang]
-        else:
-            get_value = field_cache.__getitem__
-
-        ids = []
-        for record_id in records._ids:
-            try:
-                val = get_value(record_id)
-            except KeyError:
-                ids.append(record_id)
-            else:
-                if val != value:
-                    ids.append(record_id)
-        return records.browse(ids)
-
-    def get_fields(self, record):
-        """ Return the fields with a value for ``record``. """
-        for name, field in record._fields.items():
-            if name != 'id' and record.id in self._get_field_cache(record, field):
-                yield field
-
-    def get_records(self, model, field):
-        """ Return the records of ``model`` that have a value for ``field``. """
-        field_cache = self._get_field_cache(model, field)
-        return model.browse(field_cache)
-
-    def get_missing_ids(self, records, field):
+    def get_missing_ids(self, field, context, ids, validator=None):
         """ Return the ids of ``records`` that have no value for ``field``. """
-        field_cache = self._get_field_cache(records, field)
-        if field.translate:
-            lang = records.env.lang or 'en_US'
-            context = records.env.context
-            if callable(field.translate) and (context.get('edit_translations') or context.get('check_translations')):
-                lang = f'_{lang}'
-            for record_id in records._ids:
-                cache_value = field_cache.get(record_id, False)
-                if cache_value is False or not (cache_value is None or lang in cache_value):
+        field_cache = self._get_field_cache(field, context)
+        if validator:
+            for record_id in ids:
+                cache_value = field_cache.get(record_id, NOTHING)
+                if cache_value is NOTHING or not validator(cache_value):
                     yield record_id
         else:
-            for record_id in records._ids:
+            for record_id in ids:
                 if record_id not in field_cache:
                     yield record_id
 
@@ -1190,11 +1070,11 @@ class Cache(object):
         """ Return the fields that have dirty records in cache. """
         return self._dirty.keys()
 
-    def get_dirty_records(self, model, field):
+    def get_dirty_ids(self, field):
         """ Return the records that for which ``field`` is dirty in cache. """
-        return model.browse(self._dirty.get(field, ()))
+        return self._dirty.get(field, ())
 
-    def has_dirty_fields(self, records, fields=None):
+    def has_dirty_fields(self, records, fields=None):  # TODO: cwg
         """ Return whether any of the given records has dirty fields.
 
         :param fields: a collection of fields or ``None``; the value ``None`` is
@@ -1242,8 +1122,7 @@ class Cache(object):
                 cache = self._data.get(field)
                 if not cache:
                     continue
-                caches = cache.values() if isinstance(next(iter(cache)), tuple) else [cache]
-                for field_cache in caches:
+                for field_cache in cache.values():
                     for id_ in ids:
                         field_cache.pop(id_, None)
 

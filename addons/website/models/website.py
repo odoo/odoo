@@ -9,6 +9,7 @@ import logging
 import re
 import requests
 
+from itertools import repeat
 from lxml import etree, html
 from psycopg2 import sql
 from werkzeug import urls
@@ -170,12 +171,13 @@ class Website(models.Model):
             menus = self.env['website.menu'].browse(website._get_menu_ids())
 
             # use field parent_id (1 query) to determine field child_id (2 queries by level)"
-            for menu in menus:
-                menu._cache['child_id'] = ()
+
+            child_id_field = menus._fields['child_id']
+            child_id_field.update_cache(menus, repeat(()))
             for menu in menus:
                 # don't add child menu if parent is forbidden
-                if menu.parent_id and menu.parent_id in menus:
-                    menu.parent_id._cache['child_id'] += (menu.id,)
+                if (parent_menu := menu.parent_id) and parent_menu in menus:
+                    child_id_field.set_cache(parent_menu, parent_menu._cache['child_id'] + (menu.id,))
 
             # prefetch every website.page and ir.ui.view at once
             menus.mapped('is_visible')

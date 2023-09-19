@@ -793,7 +793,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def _get_cache_count(self, model_name='account.move', field_name='name'):
         model = self.env[model_name]
         field = model._fields[field_name]
-        return len(self.env.cache.get_records(model, field))
+        return len(field._cache(self.env))
 
     def test_cache_invalidation(self):
         self.env.invalidate_all()

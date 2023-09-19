@@ -605,7 +605,7 @@ class Meeting(models.Model):
             replacement = field.convert_to_cache(
                 _('Busy') if field.name == 'name' else False,
                 others_private_events)
-            self.env.cache.update(others_private_events, field, repeat(replacement))
+            field.update_cache(others_private_events, repeat(replacement))
 
         return events
 

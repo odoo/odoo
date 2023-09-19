@@ -628,8 +628,8 @@ actual arch.
         views = self.browse(row[0] for row in rows)
 
         # optimization: fill in cache of inherit_id and mode
-        self.env.cache.update(views, type(self).inherit_id, [row[1] for row in rows])
-        self.env.cache.update(views, type(self).mode, [row[2] for row in rows])
+        type(self).inherit_id.update_cache(views, [row[1] for row in rows])
+        type(self).mode.update_cache(views, [row[2] for row in rows])
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
