@@ -2,15 +2,16 @@
 <templates>
 
     <t t-name="account.ResequenceRenderer" >
-            <table t-if="data.changeLines.length" class="table table-sm">
+            <t t-set="value" t-value="this.getValue()"/>
+            <table t-if="value.changeLines.length" class="table table-sm">
                 <thead><tr>
                     <th>Date</th>
                     <th>Before</th>
                     <th>After</th>
                 </tr></thead>
                 <tbody>
-                    <t t-foreach="data.changeLines" t-as="changeLine" t-key="changeLine.id">
-                        <ChangeLine changeLine="changeLine" ordering="data.ordering"/>
+                    <t t-foreach="value.changeLines" t-as="changeLine" t-key="changeLine.id">
+                        <ChangeLine changeLine="changeLine" ordering="value.ordering"/>
                     </t>
                 </tbody>
             </table>

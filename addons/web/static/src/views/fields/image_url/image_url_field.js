@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class ImageUrlField extends Component {
     static template = "web.ImageUrlField";
@@ -23,10 +24,8 @@ export class ImageUrlField extends Component {
             src: this.props.record.data[this.props.name],
         });
 
-        onWillUpdateProps((nextProps) => {
-            if (this.props.record.data[this.props.name] !== nextProps.record.data[nextProps.name]) {
-                this.state.value = nextProps.record.data[nextProps.name];
-            }
+        useRecordObserver((record) => {
+            this.state.src = record.data[this.props.name];
         });
     }
 
