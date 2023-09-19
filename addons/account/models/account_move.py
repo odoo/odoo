@@ -3355,10 +3355,7 @@ class AccountMove(models.Model):
             ).copy(default_values)
 
         reverse_moves.with_context(skip_invoice_sync=cancel).write({'line_ids': [
-            Command.update(line.id, {
-                'balance': -line.balance,
-                'amount_currency': -line.amount_currency,
-            })
+            Command.update(line.id, line._prepare_reversal_values())
             for line in reverse_moves.line_ids
             if line.move_id.move_type == 'entry' or line.display_type == 'cogs'
         ]})

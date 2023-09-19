@@ -2778,3 +2778,11 @@ class AccountMoveLine(models.Model):
         This method is overridden in the sale order module.
         '''
         return self.env['account.move.line']
+
+    def _prepare_reversal_values(self):
+        # Hook to prepare reversal line values
+        self.ensure_one()
+        return {
+            'balance': -self.balance,
+            'amount_currency': -self.amount_currency,
+        }
