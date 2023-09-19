@@ -41,6 +41,14 @@ class Do {
             },
         ];
     }
+    doubleClickOrder(orderName) {
+        return [
+            {
+                trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}")`,
+                run: "dblclick",
+            },
+        ];
+    }
     loadSelectedOrder() {
         return [
             {
