@@ -118,9 +118,7 @@ class Slide(models.Model):
         for slide in self.filtered(lambda slide: slide.slide_category == 'certification' and slide.survey_id):
             if slide.channel_id.is_member:
                 user_membership_id_sudo = slide.user_membership_id.sudo()
-                # Users can Rejoin the course and he/she may have the previous Inputs
-                # Don't consider the Completed User input and Pick the only uncompleted one.
-                if user_membership_id_sudo.user_input_ids.filtered(lambda user_input: user_input.state != 'done'):
+                if user_membership_id_sudo.user_input_ids:
                     last_user_input = next(user_input for user_input in user_membership_id_sudo.user_input_ids.sorted(
                         lambda user_input: user_input.create_date, reverse=True
                     ))
