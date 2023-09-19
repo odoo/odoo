@@ -8,7 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from './search_media';
 
-import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
+import { Component, xml, useState, useRef, onWillStart, useEffect } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'];
 export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif', '.webp'];
@@ -143,10 +143,12 @@ export class FileSelector extends Component {
         this.keepLast = new KeepLast();
 
         this.loadMoreButtonRef = useRef('load-more-button');
+        this.existingAttachmentsRef = useRef("existing-attachments");
 
         this.state = useState({
             attachments: [],
-            canLoadMoreAttachments: true,
+            canScrollAttachments: false,
+            canLoadMoreAttachments: false,
             isFetchingAttachments: false,
             needle: '',
         });
@@ -157,7 +159,36 @@ export class FileSelector extends Component {
             this.state.attachments = await this.fetchAttachments(this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, 0);
         });
 
-        this.debouncedScroll = useDebounced(this.scrollToLoadMoreButton, 500);
+        this.debouncedOnScroll = useDebounced(this.updateScroll, 15);
+        this.debouncedScrollUpdate = useDebounced(this.updateScroll, 500);
+
+        useEffect(
+            (modalEl) => {
+                if (modalEl) {
+                    modalEl.addEventListener("scroll", this.debouncedOnScroll);
+                    // Positionning the bottom bar right above the footer.
+                    const footerEl = modalEl.parentElement.querySelector("footer");
+                    const {top, width} = footerEl.getBoundingClientRect();
+                    this.loadMoreButtonRef.el.style.setProperty("--footer-top", `${top}px`);
+                    this.loadMoreButtonRef.el.style.setProperty("--footer-width", `${width}px`);
+                    return () => {
+                        modalEl.removeEventListener("scroll", this.debouncedOnScroll);
+                    };
+                }
+            },
+            () => [this.props.modalRef.el?.querySelector("main.modal-body")]
+        );
+
+        useEffect(
+            () => {
+                // Updating the bottom bar each time the attachments change.
+                this.debouncedScrollUpdate();
+            },
+            () => [this.allAttachments.length]);
+    }
+
+    get canScroll() {
+        return this.state.canScrollAttachments;
     }
 
     get canLoadMore() {
@@ -185,6 +216,10 @@ export class FileSelector extends Component {
         domain.unshift('|', ['public', '=', true]);
         domain.push(['name', 'ilike', this.state.needle]);
         return domain;
+    }
+
+    get allAttachments() {
+        return this.state.attachments;
     }
 
     validateUrl(url) {
@@ -225,9 +260,14 @@ export class FileSelector extends Component {
         return attachments;
     }
 
+    async handleScrollAttachments() {
+        const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
+        const scrollAmount = this.computeScroll();
+        modalEl.scrollBy({top: scrollAmount, behavior: "smooth"});
+    }
+
     async handleLoadMore() {
         await this.loadMore();
-        this.debouncedScroll();
     }
 
     async loadMore() {
@@ -239,7 +279,6 @@ export class FileSelector extends Component {
 
     async handleSearch(needle) {
         await this.search(needle);
-        this.debouncedScroll();
     }
 
     async search(needle) {
@@ -313,13 +352,49 @@ export class FileSelector extends Component {
     }
 
     /**
-     * This is used (debounced) to be called after loading an attachment.
-     * This way, the user can always see the "load more" button.
+     * Updates the scroll button, depending on whether the last attachment is
+     * fully visible or not.
      */
-    scrollToLoadMoreButton() {
-        if (this.state.needle || this.state.attachments.length > this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY) {
-            this.loadMoreButtonRef.el.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
+    updateScroll() {
+        const attachmentEls = [...this.existingAttachmentsRef.el.querySelectorAll(".o_existing_attachment_cell")];
+        if (!attachmentEls.length) {
+            this.state.canScrollAttachments = false;
+        } else {
+            const lastAttachmentEl = attachmentEls[attachmentEls.length - 1];
+            const canScroll = this.isElementHidden(lastAttachmentEl);
+            this.state.canScrollAttachments = canScroll;
+            this.loadMoreButtonRef.el.classList.toggle("o_can_scroll", canScroll);
         }
+    }
+
+    /**
+     * Checks if the element is (partially) hidden by the bottom bar.
+     *
+     * @param {Element} element the element
+     * @returns {Boolean} true if the element is hidden, false otherwise.
+     */
+    isElementHidden(element) {
+        const elementBottom = element.getBoundingClientRect().bottom;
+        const loadMoreTop = this.loadMoreButtonRef.el.getBoundingClientRect().top;
+        return elementBottom >= loadMoreTop;
+    }
+
+    /**
+     * Computes the number of pixels to scroll in order to make the first hidden
+     * attachment fully visible.
+     *
+     * @returns {Number} the amount to scroll
+     */
+    computeScroll() {
+        const attachmentEls = [...this.existingAttachmentsRef.el.querySelectorAll(".o_existing_attachment_cell")];
+        const firstHiddenAttachmentEl = attachmentEls.find(el => this.isElementHidden(el));
+        let scrollAmount = 15; // Safety margin to still scroll if the arrow is displayed.
+        if (firstHiddenAttachmentEl) {
+            const attachmentBottom = firstHiddenAttachmentEl.getBoundingClientRect().bottom;
+            const loadMoreTop = this.loadMoreButtonRef.el.getBoundingClientRect().top;
+            scrollAmount += Math.ceil(attachmentBottom - loadMoreTop);
+        }
+        return scrollAmount;
     }
 }
 FileSelector.template = 'web_editor.FileSelector';

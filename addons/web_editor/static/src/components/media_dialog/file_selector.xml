@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.FileSelectorControlPanel">
-    <div class="d-flex flex-wrap gap-2 mt-4 mb-2 align-items-end">
+    <div class="o_we_file_selector_control_panel sticky-top d-flex flex-wrap gap-2 mb-1 p-3 align-items-end">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
         <div class="d-flex gap-3 justify-content-start align-items-center">
             <div t-if="props.showOptimizedOption" class="flex-shrink-0 form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
@@ -37,7 +37,7 @@
 </t>
 
 <t t-name="web_editor.FileSelector">
-    <div>
+    <div class="o_we_file_selector_container">
         <FileSelectorControlPanel uploadText="uploadText"
             accept="fileMimetypes"
             urlPlaceholder="urlPlaceholder"
@@ -57,9 +57,10 @@
             validateUrl="validateUrl"
             multiSelect="props.multiSelect"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
-        <div name="load_more_attachments" class="mt-4 text-center mx-auto o_we_load_more" t-ref="load-more-button">
-            <button t-if="canLoadMore" class="btn btn-primary o_load_more" type="button" t-on-click="handleLoadMore">Load more...</button>
-            <div t-if="hasContent and !canLoadMore" class="mt-4 o_load_done_msg">
+        <div name="load_more_attachments" class="position-fixed pt-3 text-center mx-auto o_we_load_more" t-ref="load-more-button">
+            <div t-if="canScroll" class="d-flex align-items-center mx-auto btn btn-primary rounded-circle oi oi-chevron-down o_scroll_attachments" t-on-click="handleScrollAttachments"/>
+            <button t-if="canLoadMore and !canScroll" class="btn btn-primary o_load_more" type="button" t-on-click="handleLoadMore">Load more...</button>
+            <div t-if="hasContent and !canLoadMore and !canScroll" class="mt-2 o_load_done_msg">
                 <span><i t-esc="allLoadedText"/></span>
             </div>
         </div>
