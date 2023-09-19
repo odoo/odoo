@@ -7,6 +7,16 @@ import { CharField, charField } from "@web/views/fields/char/char_field";
 
 const { useState } = owl;
 
+export function getGoogleSlideUrl(value, page) {
+    let url = false;
+    const googleRegExp = /(^https:\/\/docs.google.com).*(\/d\/e\/|\/d\/)([A-Za-z0-9-_]+)/;
+    const google = value.match(googleRegExp);
+    if (google && google[3]) {
+        url = `https://docs.google.com/presentation${google[2]}${google[3]}/preview?slide=${page}`;
+    }
+    return url;
+}
+
 export class SlidesViewer extends CharField {
     setup() {
         super.setup();
@@ -26,21 +36,25 @@ export class SlidesViewer extends CharField {
     }
 
     get url() {
-        var src = false;
+        let url = false;
         if (this.props.record.data[this.props.name]) {
             // check given google slide url is valid or not
             var googleRegExp = /(^https:\/\/docs.google.com).*(\/d\/e\/|\/d\/)([A-Za-z0-9-_]+)/;
             var google = this.props.record.data[this.props.name].match(googleRegExp);
             if (google && google[3]) {
-                src =
+                url =
                     "https://docs.google.com/presentation" +
                     google[2] +
                     google[3] +
                     "/preview?slide=" +
                     this._get_slide_page();
             }
+            url = getGoogleSlideUrl(
+                this.props.record.data[this.props.name],
+                this._get_slide_page()
+            );
         }
-        return src || this.props.value;
+        return url || this.props.value;
     }
 
     onLoadFailed() {
