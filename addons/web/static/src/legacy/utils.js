@@ -106,7 +106,7 @@ export function makeLegacyNotificationService(legacyEnv) {
                 }
             }
 
-            legacyEnv.services.notification = { notify, close };
+            legacyEnv.services.notification = { notify, close, add: notification.add };
         },
     };
 }
