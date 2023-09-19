@@ -94,32 +94,15 @@ odoo.define('website.s_website_form', function (require) {
             this.$el.on('input.s_website_form', '.s_website_form_field', this._onFieldInputDebounced);
 
             // Initialize datetimepickers
-            var datepickers_options = {
-                minDate: moment({y: 1000}),
-                maxDate: moment({y: 9999, M: 11, d: 31}),
-                calendarWeeks: true,
-                icons: {
-                    time: 'fa fa-clock-o',
-                    date: 'fa fa-calendar',
-                    next: 'fa fa-chevron-right',
-                    previous: 'fa fa-chevron-left',
-                    up: 'fa fa-chevron-up',
-                    down: 'fa fa-chevron-down',
-                },
-                locale: moment.locale(),
-                format: time.getLangDatetimeFormat(),
-                extraFormats: ['X'],
-            };
-            const $datetimes = this.$target.find('.s_website_form_datetime, .o_website_form_datetime'); // !compatibility
-            $datetimes.datetimepicker(datepickers_options);
+            const $datetimeElements = this.$target.find(
+                '.s_website_form_datetime, .o_website_form_datetime, ' +
+                '.s_website_form_date, .o_website_form_date'
+                ); // !compatibility
+            for (const datetimeElement of $datetimeElements) {
+                this._initializeDateTimePicker(datetimeElement)
+            }
 
-            // Adapt options to date-only pickers
-            datepickers_options.format = time.getLangDateFormat();
-            const $dates = this.$target.find('.s_website_form_date, .o_website_form_date'); // !compatibility
-            $dates.datetimepicker(datepickers_options);
-
-            this.$allDates = $datetimes.add($dates);
-            this.$allDates.addClass('s_website_form_datepicker_initialized');
+            this.$allDates = $datetimeElements;
 
             // Display form values from tag having data-for attribute
             // It's necessary to handle field values generated on server-side
@@ -726,6 +709,52 @@ odoo.define('website.s_website_form', function (require) {
                 // not sent on form submit.
                 inputEl.disabled = !haveToBeVisible;
             }
+        },
+
+        //---------------------------------------------------------------------
+        // Bootstrap datepicker
+        //---------------------------------------------------------------------
+
+        /**
+         * Gets the Datetime picker options given a set of default options and user defined ones
+         *
+         * @param {HTMLElement} date or datetime element
+         */
+        _initializeDateTimePicker(datetimeEl) {
+            var default_options = {
+                minDate: moment({y: 1000}),
+                maxDate: moment({y: 9999, M: 11, d: 31}),
+                calendarWeeks: true,
+                icons: {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    next: 'fa fa-chevron-right',
+                    previous: 'fa fa-chevron-left',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                },
+                locale: moment.locale(),
+                format: time.getLangDatetimeFormat(),
+                extraFormats: ['X'],
+            };
+
+            // Default to date format instead of datetime if element is of type 'date'
+            if (datetimeEl.classList.contains('s_website_form_date') || datetimeEl.classList.contains('o_website_form_date')) {
+                default_options.format = time.getLangDateFormat();
+            }
+
+            // Merge custom options into default ones
+            let customOptions = datetimeEl.getAttribute('options');
+            if (customOptions) {
+                var pickerOptions = JSON.parse(customOptions).datepicker;
+                default_options = {
+                    ...default_options,
+                    ...pickerOptions
+                };
+            }
+
+            $(datetimeEl).datetimepicker(default_options);
+            datetimeEl.classList.add('s_website_form_datepicker_initialized')
         },
 
         //----------------------------------------------------------------------
