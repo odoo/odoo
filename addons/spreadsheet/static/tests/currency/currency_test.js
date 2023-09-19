@@ -2,7 +2,10 @@
 
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { getCell, getCellValue } from "@spreadsheet/../tests/utils/getters";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
+import {
+    createModelWithDataSource,
+    waitForDataSourcesLoaded,
+} from "@spreadsheet/../tests/utils/model";
 
 QUnit.module("spreadsheet > Currency");
 
@@ -19,6 +22,27 @@ QUnit.test("Basic exchange formula", async (assert) => {
     assert.strictEqual(getCellValue(model, "A1"), "Loading...");
     await waitForDataSourcesLoaded(model);
     assert.strictEqual(getCellValue(model, "A1"), 0.9);
+});
+
+QUnit.test("rate formula at a given date(time)", async (assert) => {
+    const model = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "get_rates_for_spreadsheet") {
+                const [A1, A2] = args.args[0];
+                assert.equal(A1.date, "2020-12-31");
+                assert.equal(A2.date, "2020-11-30");
+                assert.step("rate fetched");
+                return [
+                    { ...A1, rate: 0.9 },
+                    { ...A2, rate: 0.9 },
+                ];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD", "12-31-2020")`);
+    setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD", "11-30-2020 00:00:00")`);
+    await waitForDataSourcesLoaded(model);
+    assert.verifySteps(["rate fetched"]);
 });
 
 QUnit.test("Currency rate throw with unknown currency", async (assert) => {
