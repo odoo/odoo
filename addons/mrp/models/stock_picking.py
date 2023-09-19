@@ -16,8 +16,6 @@ class StockPickingType(models.Model):
         compute='_get_mo_count')
     count_mo_late = fields.Integer(string="Number of Manufacturing Orders Late",
         compute='_get_mo_count')
-    use_create_lots = fields.Boolean(compute='_compute_use_create_lots', store=True)
-    use_existing_lots = fields.Boolean(compute='_compute_use_existing_lots', store=True)
     use_create_components_lots = fields.Boolean(
         string="Create New Lots/Serial Numbers for Components",
         help="Allow to create new lot/serial numbers for the components",
