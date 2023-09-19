@@ -4,3 +4,4 @@ from . import common
 from . import test_edi_export
 from . import test_edi_import
 from . import test_edi_reverse_charge
+from . import test_edi_pa
