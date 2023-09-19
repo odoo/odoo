@@ -954,7 +954,6 @@ class Warehouse(models.Model):
             'in_type_id': {
                 'name': _('Receipts'),
                 'code': 'incoming',
-                'use_create_lots': True,
                 'use_existing_lots': False,
                 'default_location_src_id': False,
                 'sequence': max_sequence + 1,
@@ -966,7 +965,6 @@ class Warehouse(models.Model):
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',
                 'use_create_lots': False,
-                'use_existing_lots': True,
                 'default_location_dest_id': False,
                 'sequence': max_sequence + 5,
                 'sequence_code': 'OUT',
