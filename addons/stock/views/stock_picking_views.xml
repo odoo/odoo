@@ -280,9 +280,9 @@
                                     <field name="product_packaging_id" groups="product.group_stock_packaging"/>
                                     <field name="product_uom_qty" string="Demand" attrs="{'column_invisible': [('parent.immediate_transfer', '=', True)], 'readonly': ['|', ('is_initial_demand_editable', '=', False), '&amp;', '&amp;', ('show_operations', '=', True), ('is_locked', '=', True), ('is_initial_demand_editable', '=', False)]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" 
-                                        attrs="{'invisible': ['|', ('forecast_availability', '&lt;=', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+                                        attrs="{'invisible': ['|', '&amp;', ('reserved_availability', '=', 0), ('forecast_availability', '&lt;=', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" 
-                                        attrs="{'invisible': ['|', ('forecast_availability', '&gt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
+                                        attrs="{'invisible': ['|', '|', ('reserved_availability', '!=', 0), ('forecast_availability', '&gt;', 0), '|', ('parent.immediate_transfer', '=', True), '&amp;', ('parent.picking_type_code', '=', 'outgoing'), ('state', '!=', 'draft')]}"/>
                                     <field name="forecast_expected_date" invisible="1"/>
                                     <field name="forecast_availability" string="Reserved"
                                         attrs="{'column_invisible': ['|', '|', ('parent.state', 'in', ['draft', 'done']), ('parent.picking_type_code', '!=', 'outgoing'), ('parent.immediate_transfer', '=', True)]}" widget="forecast_widget"/>
