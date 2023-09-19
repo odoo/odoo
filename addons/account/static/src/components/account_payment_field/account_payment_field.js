@@ -10,7 +10,7 @@ import { parseDate, formatDate } from "@web/core/l10n/dates";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-const { Component, onWillUpdateProps } = owl;
+const { Component } = owl;
 
 class AccountPaymentPopOver extends Component {}
 AccountPaymentPopOver.props = {
@@ -26,30 +26,31 @@ export class AccountPaymentField extends Component {
         this.popover = usePopover(AccountPaymentPopOver, { position });
         this.orm = useService("orm");
         this.action = useService("action");
-
-        this.formatData(this.props);
-        onWillUpdateProps((nextProps) => this.formatData(nextProps));
     }
 
-    formatData(props) {
-        const info = props.record.data[props.name] || {
+    getInfo() {
+        const info = this.props.record.data[this.props.name] || {
             content: [],
             outstanding: false,
             title: "",
             move_id: this.props.record.resId,
         };
-        for (let [key, value] of Object.entries(info.content)) {
+        for (const [key, value] of Object.entries(info.content)) {
             value.index = key;
-            value.amount_formatted = formatMonetary(value.amount, { currencyId: value.currency_id });
+            value.amount_formatted = formatMonetary(value.amount, {
+                currencyId: value.currency_id,
+            });
             if (value.date) {
                 // value.date is a string, parse to date and format to the users date format
                 value.date = formatDate(parseDate(value.date));
             }
         }
-        this.lines = info.content;
-        this.outstanding = info.outstanding;
-        this.title = info.title;
-        this.move_id = info.move_id;
+        return {
+            lines: info.content,
+            outstanding: info.outstanding,
+            title: info.title,
+            moveId: info.move_id,
+        };
     }
 
     onInfoClick(ev, idx) {
@@ -61,8 +62,8 @@ export class AccountPaymentField extends Component {
         });
     }
 
-    async assignOutstandingCredit(id) {
-        await this.orm.call(this.props.record.resModel, 'js_assign_outstanding_line', [this.move_id, id], {});
+    async assignOutstandingCredit(moveId, id) {
+        await this.orm.call(this.props.record.resModel, 'js_assign_outstanding_line', [moveId, id], {});
         await this.props.record.model.root.load();
     }
 

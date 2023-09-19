@@ -4,15 +4,11 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, onWillUpdateProps } = owl;
+const { Component, onWillStart } = owl;
 
 export class JsonPopOver extends Component {
-    
-    setup(){
-        this.jsonValue = JSON.parse(this.props.record.data[this.props.name]);
-        onWillUpdateProps(nextProps => {
-            this.jsonValue = JSON.parse(nextProps.record.data[nextProps.name]);
-        });
+    get jsonValue() {
+        return JSON.parse(this.props.record.data[this.props.name]);
     }
 }
 

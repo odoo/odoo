@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "@mass_mailing/js/mass_mailing_design_constants"
 import { toInline, getCSSRules } from "@web_editor/js/backend/convert_inline";
@@ -15,11 +16,7 @@ import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/ut
 import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 
-const {
-    useSubEnv,
-    onWillUpdateProps,
-    status,
-} = owl;
+const { useSubEnv, status } = owl;
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {
@@ -44,9 +41,9 @@ export class MassMailingHtmlField extends HtmlField {
         this.rpc = useService('rpc');
         this.dialog = useService('dialog');
 
-        onWillUpdateProps(() => {
-            if (this.props.record.data.mailing_model_id && this.wysiwyg) {
-                this._hideIrrelevantTemplates();
+        useRecordObserver((record) => {
+            if (record.data.mailing_model_id && this.wysiwyg) {
+                this._hideIrrelevantTemplates(record);
             }
         });
     }
@@ -453,7 +450,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         this.wysiwyg.$iframeBody.find('.iframe-utils-zone').removeClass('d-none');
         if (this.env.mailingFilterTemplates && this.wysiwyg) {
-            this._hideIrrelevantTemplates();
+            this._hideIrrelevantTemplates(this.props.record);
         }
     }
     _getCodeViewEl() {
@@ -474,10 +471,10 @@ export class MassMailingHtmlField extends HtmlField {
      *
      * @private
      */
-    _hideIrrelevantTemplates() {
+    _hideIrrelevantTemplates(record) {
         const iframeContent = this.wysiwyg.$iframe.contents();
 
-        const mailing_model_id = this.props.record.data.mailing_model_id[0];
+        const mailing_model_id = record.data.mailing_model_id[0];
         iframeContent
             .find(`.o_mail_template_preview[model-id!="${mailing_model_id}"]`)
             .addClass('d-none')
@@ -496,7 +493,7 @@ export class MassMailingHtmlField extends HtmlField {
             iframeContent.find('.o_mailing_template_preview_wrapper').removeClass('d-none');
         } else {
             iframeContent.find('.o_mailing_template_message').removeClass('d-none');
-            iframeContent.find('.o_mailing_template_message span').text(this.props.record.data.mailing_model_id[1]);
+            iframeContent.find('.o_mailing_template_message span').text(record.data.mailing_model_id[1]);
             iframeContent.find('.o_mailing_template_preview_wrapper').addClass('d-none');
         }
     }

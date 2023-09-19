@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-const { Component, onWillUpdateProps } = owl;
+const { Component } = owl;
 
 class ListItem extends Component {}
 ListItem.template = "account.GroupedItemTemplate";
@@ -14,14 +14,10 @@ ListGroup.components = { ListItem };
 ListGroup.props = ["group_vals", "options"];
 
 class ShowGroupedList extends Component {
-    setup() {
-        this.formatData(this.props);
-        onWillUpdateProps((nextProps) => this.formatData(nextProps));
-    }
-
-    formatData(props) {
-        this.data = props.record.data[props.name]
-            ? JSON.parse(props.record.data[props.name])
+    getValue() {
+        const value = this.props.record.data[this.props.name];
+        return value
+            ? JSON.parse(value)
             : { groups_vals: [], options: { discarded_number: "", columns: [] } };
     }
 }
