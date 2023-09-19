@@ -275,25 +275,31 @@ class TestMessageNotify(TestMessagePostCommon):
     def test_notify(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
 
-        with self.mock_mail_gateway():
+        with self.assertSinglePostNotifications(
+            [{'partner': self.partner_1, 'type': 'email',},
+             {'partner': self.partner_admin, 'type': 'email',},
+             {'partner': self.partner_employee_2, 'type': 'email',},
+            ], message_info={
+                'content': '<p>You have received a notification</p>',
+                'message_type': 'user_notification',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'body': '<p>You have received a notification</p>',
+                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'message_type': 'user_notification',
+                    'model': test_record._name,
+                    'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
+                    'res_id': test_record.id,
+                    'subtype_id': self.env.ref('mail.mt_note'),
+                },
+                'subtype': 'mail.mt_note',
+            },
+        ):
             new_notification = test_record.message_notify(
                 body='<p>You have received a notification</p>',
                 partner_ids=[self.partner_1.id, self.partner_admin.id, self.partner_employee_2.id],
                 subject='This should be a subject',
             )
-
-        self.assertMessageFields(
-            new_notification,
-            {'author_id': self.partner_employee,
-             'body': '<p>You have received a notification</p>',
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'message_type': 'user_notification',
-             'model': test_record._name,
-             'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
-             'res_id': test_record.id,
-             'subtype_id': self.env.ref('mail.mt_note'),
-            }
-        )
         self.assertNotIn(new_notification, self.test_record.message_ids)
 
         # notified_partner_ids should be empty after copying the message
@@ -391,18 +397,31 @@ class TestMessageNotify(TestMessagePostCommon):
             self.flush_tracking()
 
         self.assertEqual(len(self._new_msgs), 20, 'Should have 20 messages: 10 tracking and 10 assignments')
+        model_name = self.env['ir.model'].sudo()._get(test_records._name).name
         for test_record in test_records:
             assign_notif = self._new_msgs.filtered(lambda msg: msg.message_type == 'user_notification' and msg.res_id == test_record.id)
             self.assertTrue(assign_notif)
-            self.assertMessageFields(
+            self.assertMailNotifications(
                 assign_notif,
-                {'author_id': self.partner_employee,
-                 'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-                 'model': test_record._name,
-                 'notified_partner_ids': self.partner_employee_2,
-                 'res_id': test_record.id,
-                 'subtype_id': self.env.ref('mail.mt_note'),
-                }
+                [{
+                    'content': f'You have been assigned to the {model_name}',
+                    'email_values': {
+                        # used to distinguished outgoing emails
+                        'subject': f'You have been assigned to {test_record.name}',
+                    },
+                    'message_type': 'user_notification',
+                    'message_values': {
+                        'author_id': self.partner_employee,
+                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'model': test_record._name,
+                        'notified_partner_ids': self.partner_employee_2,
+                        'res_id': test_record.id,
+                    },
+                    'notif': [
+                        {'partner': self.partner_employee_2, 'type': 'email',},
+                    ],
+                    'subtype': 'mail.mt_note',
+                }],
             )
 
     @users('employee')
@@ -417,17 +436,27 @@ class TestMessageNotify(TestMessagePostCommon):
                 subject='This should be a subject',
             )
 
-        self.assertMessageFields(
+        self.assertMailNotifications(
             new_notification,
-            {'author_id': self.partner_employee,
-             'body': '<p>You have received a notification</p>',
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'message_type': 'user_notification',
-             'model': False,
-             'res_id': False,
-             'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
-             'subtype_id': self.env.ref('mail.mt_note'),
-            }
+            [{
+                'content': '<p>You have received a notification</p>',
+                'message_type': 'user_notification',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'body': '<p>You have received a notification</p>',
+                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'model': False,
+                    'res_id': False,
+                    'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
+                    'subtype_id': self.env.ref('mail.mt_note'),
+                },
+                'notif': [
+                    {'partner': self.partner_1, 'type': 'email',},
+                    {'partner': self.partner_employee_2, 'type': 'email',},
+                    {'partner': self.partner_admin, 'type': 'email',},
+                ],
+                'subtype': 'mail.mt_note',
+            }],
         )
 
 
@@ -452,22 +481,29 @@ class TestMessageLog(TestMessagePostCommon):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
         test_record.message_subscribe(self.partner_employee_2.ids)
 
-        new_note = test_record._message_log(
-            body='<p>Labrador</p>',
-        )
-        self.assertMessageFields(
+        with self.mock_mail_gateway():
+            new_note = test_record._message_log(
+                body='<p>Labrador</p>',
+            )
+        self.assertMailNotifications(
             new_note,
-            {'author_id': self.partner_employee,
-             'body': '<p>Labrador</p>',
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': True,
-             'message_type': 'notification',
-             'model': test_record._name,
-             'notified_partner_ids': self.env['res.partner'],
-             'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
-             'res_id': test_record.id,
-             'subtype_id': self.env.ref('mail.mt_note'),
-            }
+            [{
+                'content': '<p>Labrador</p>',
+                'message_type': 'notification',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'body': '<p>Labrador</p>',
+                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'is_internal': True,
+                    'model': test_record._name,
+                    'notified_partner_ids': self.env['res.partner'],
+                    'partner_ids': self.env['res.partner'],
+                    'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
+                    'res_id': test_record.id,
+                },
+                'notif': [],
+                'subtype': 'mail.mt_note',
+            }],
         )
 
     @users('employee')
@@ -475,26 +511,33 @@ class TestMessageLog(TestMessagePostCommon):
         test_records = self.test_records.with_env(self.env)
         test_records.message_subscribe(self.partner_employee_2.ids)
 
-        new_notes = test_records._message_log_batch(
-            bodies=dict(
-                (test_record.id, '<p>Test _message_log_batch</p>')
-                for test_record in test_records
-            ),
-        )
+        with self.mock_mail_gateway():
+            new_notes = test_records._message_log_batch(
+                bodies={
+                    test_record.id: '<p>Test _message_log_batch</p>'
+                    for test_record in test_records
+                },
+            )
         for test_record, new_note in zip(test_records, new_notes):
-            self.assertMessageFields(
+            self.assertMailNotifications(
                 new_note,
-                {'author_id': self.partner_employee,
-                 'body': '<p>Test _message_log_batch</p>',
-                 'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-                 'is_internal': True,
-                 'message_type': 'notification',
-                 'model': test_record._name,
-                 'notified_partner_ids': self.env['res.partner'],
-                 'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
-                 'res_id': test_record.id,
-                 'subtype_id': self.env.ref('mail.mt_note'),
-                }
+                [{
+                    'content': '<p>Test _message_log_batch</p>',
+                    'message_type': 'notification',
+                    'message_values': {
+                        'author_id': self.partner_employee,
+                        'body': '<p>Test _message_log_batch</p>',
+                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'is_internal': True,
+                        'model': test_record._name,
+                        'notified_partner_ids': self.env['res.partner'],
+                        'partner_ids': self.env['res.partner'],
+                        'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
+                        'res_id': test_record.id,
+                    },
+                    'notif': [],
+                    'subtype': 'mail.mt_note',
+                }],
             )
 
     @users('employee')
@@ -502,24 +545,30 @@ class TestMessageLog(TestMessagePostCommon):
         test_records = self.test_records.with_env(self.env)
         test_records.message_subscribe(self.partner_employee_2.ids)
 
-        new_notes = test_records._message_log_with_view(
-            'test_mail.mail_template_simple_test',
-            values={'partner': self.user_employee.partner_id}
-        )
+        with self.mock_mail_gateway():
+            new_notes = test_records._message_log_with_view(
+                'test_mail.mail_template_simple_test',
+                values={'partner': self.user_employee.partner_id}
+            )
         for test_record, new_note in zip(test_records, new_notes):
-            self.assertMessageFields(
+            self.assertMailNotifications(
                 new_note,
-                {'author_id': self.partner_employee,
-                 'body': f'<p>Hello {self.user_employee.name}, this comes from {test_record.name}.</p>',
-                 'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-                 'is_internal': True,
-                 'message_type': 'notification',
-                 'model': test_record._name,
-                 'notified_partner_ids': self.env['res.partner'],
-                 'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
-                 'res_id': test_record.id,
-                 'subtype_id': self.env.ref('mail.mt_note'),
-                }
+                [{
+                    'content': f'<p>Hello {self.user_employee.name}, this comes from {test_record.name}.</p>',
+                    'message_type': 'notification',
+                    'message_values': {
+                        'author_id': self.partner_employee,
+                        'body': f'<p>Hello {self.user_employee.name}, this comes from {test_record.name}.</p>',
+                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'is_internal': True,
+                        'model': test_record._name,
+                        'notified_partner_ids': self.env['res.partner'],
+                        'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
+                        'res_id': test_record.id,
+                    },
+                    'notif': [],
+                    'subtype': 'mail.mt_note',
+                }],
             )
 
 
@@ -540,7 +589,21 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         with self.assertSinglePostNotifications(
                 [{'partner': self.partner_employee_2, 'type': 'inbox'}],
-                {'content': 'Body'}
+                message_info={
+                    'content': 'Body',
+                    'message_values': {
+                        'author_id': self.partner_employee,
+                        'body': '<p>Body</p>',
+                        'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        'is_internal': False,
+                        'message_type': 'comment',
+                        'model': test_record._name,
+                        'notified_partner_ids': self.partner_employee_2,
+                        'reply_to': formataddr(("%s %s" % (self.company_admin.name, test_record.name), '%s@%s' % (self.alias_catchall, self.alias_domain))),
+                        'res_id': test_record.id,
+                        'subtype_id': self.env.ref('mail.mt_comment'),
+                    },
+                }
             ):
             new_message = test_record.message_post(
                 body='Body',
@@ -548,28 +611,19 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_employee_2.id],
             )
-
-        self.assertMessageFields(
-            new_message,
-            {'author_id': self.partner_employee,
-             'body': '<p>Body</p>',
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': False,
-             'message_type': 'comment',
-             'model': test_record._name,
-             'notified_partner_ids': self.partner_employee_2,
-             'reply_to': formataddr(("%s %s" % (self.company_admin.name, test_record.name), '%s@%s' % (self.alias_catchall, self.alias_domain))),
-             'res_id': test_record.id,
-             'subtype_id': self.env.ref('mail.mt_comment'),
-            }
-        )
         self.assertEqual(test_record.message_partner_ids, self.partner_employee)
 
+        # subscribe partner_1, check notifications
         test_record.message_subscribe(self.partner_1.ids)
         with self.assertSinglePostNotifications(
                 [{'partner': self.partner_employee_2, 'type': 'inbox'},
                  {'partner': self.partner_1, 'type': 'email'}],
-                message_info={'content': 'NewBody'},
+                message_info={
+                    'content': 'NewBody',
+                    'message_values': {
+                        'notified_partner_ids': self.partner_1 + self.partner_employee_2,
+                    },
+                },
                 mail_unlink_sent=True
             ):
             new_message = test_record.message_post(
@@ -579,17 +633,15 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 partner_ids=[self.partner_employee_2.id],
             )
 
-        self.assertMessageFields(
-            new_message,
-            {'notified_partner_ids': self.partner_1 + self.partner_employee_2}
-        )
         # notifications emails should have been deleted
         self.assertFalse(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', new_message.id)]))
 
         with self.assertSinglePostNotifications(
                 [{'partner': self.partner_1, 'type': 'email'},
                  {'partner': self.partner_portal, 'type': 'email'}],
-                {'content': 'ToPortal'}
+                message_info={
+                    'content': 'ToPortal',
+                }
             ):
             test_record.message_post(
                 body='ToPortal',
@@ -606,27 +658,35 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         creation_msg = test_record.message_ids
         self.assertEqual(len(creation_msg), 1)
 
-        with self.mock_mail_app():
+        with self.mock_mail_gateway(), self.mock_mail_app():
             new_message = test_record.message_post(
                 body='Body',
                 partner_ids=[self.partner_employee_2.id],
             )
 
-        self.assertMessageFields(
+        self.assertMailNotifications(
             new_message,
-            {'author_id': self.partner_employee,
-             'body': '<p>Body</p>',
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': False,
-             'message_type': 'notification',
-             'model': test_record._name,
-             'notified_partner_ids': self.partner_employee_2,
-             'parent_id': creation_msg,
-             'record_name': test_record.name,
-             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
-             'res_id': test_record.id,
-             'subtype_id': self.env.ref('mail.mt_note'),
-            }
+            [{
+                'content': '<p>Body</p>',
+                'message_type': 'notification',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'body': '<p>Body</p>',
+                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'is_internal': False,
+                    'model': test_record._name,
+                    'notified_partner_ids': self.partner_employee_2,
+                    'parent_id': creation_msg,
+                    'record_name': test_record.name,
+                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'res_id': test_record.id,
+                    'subject': f'Re: {test_record.name}',
+                },
+                'notif': [
+                    {'partner': self.partner_employee_2, 'type': 'email',},
+                ],
+                'subtype': 'mail.mt_note',
+            }],
         )
 
     @users('employee')
@@ -1193,27 +1253,28 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                          'Post with template: should have created partners based on template emails')
 
         # check notifications have been sent
-        self.assertMailNotifications(new_message, [{
-            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
-            'message_type': 'comment',
-            'notif': [
-                {'partner': self.partner_1, 'type': 'email'},
-                {'partner': self.partner_2, 'type': 'email'},
-                {'partner': new_partners[0], 'type': 'email'},
-                {'partner': new_partners[1], 'type': 'email'},
-                {'partner': test_record.customer_id, 'type': 'email'},
-            ],
-            'subtype': 'mail.mt_comment',
-        }])
-        self.assertMessageFields(
+        self.assertMailNotifications(
             new_message,
-            {'author_id': self.partner_employee,
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': False,
-             'model': test_record._name,
-             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
-             'res_id': test_record.id,
-            }
+            [{
+                'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
+                'message_type': 'comment',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                    'is_internal': False,
+                    'model': test_record._name,
+                    'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                    'res_id': test_record.id,
+                },
+                'notif': [
+                    {'partner': self.partner_1, 'type': 'email'},
+                    {'partner': self.partner_2, 'type': 'email'},
+                    {'partner': new_partners[0], 'type': 'email'},
+                    {'partner': new_partners[1], 'type': 'email'},
+                    {'partner': test_record.customer_id, 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_comment',
+            }]
         )
 
     @users('employee')
@@ -1237,6 +1298,14 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         self.assertMailNotifications(new_message, [{
             'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
             'message_type': 'notification',
+            'message_values': {
+                'author_id': self.partner_employee,
+                'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                'is_internal': False,
+                'model': test_record._name,
+                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'res_id': test_record.id,
+             },
             'notif': [
                 {'partner': self.partner_1, 'type': 'email'},
                 {'partner': self.partner_2, 'type': 'email'},
@@ -1246,16 +1315,6 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             ],
             'subtype': 'mail.mt_comment',
         }])
-        self.assertMessageFields(
-            new_message,
-            {'author_id': self.partner_employee,
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': False,
-             'model': test_record._name,
-             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
-             'res_id': test_record.id,
-            }
-        )
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
@@ -1276,22 +1335,20 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         self.assertMailNotifications(new_message, [{
             'content': f'<p>Hello {self.user_employee.partner_id.name}, this comes from {test_record.name}.</p>',
             'message_type': 'comment',
+            'message_values': {
+                'author_id': self.partner_employee,
+                'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                'is_internal': False,
+                'message_type': 'comment',
+                'model': test_record._name,
+                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'res_id': test_record.id,
+             },
             'notif': [
                 {'partner': test_record.customer_id, 'type': 'email'},
             ],
             'subtype': 'mail.mt_comment',
         }])
-        self.assertMessageFields(
-            new_message,
-            {'author_id': self.partner_employee,
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': False,
-             'message_type': 'comment',
-             'model': test_record._name,
-             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
-             'res_id': test_record.id,
-            }
-        )
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
@@ -1312,22 +1369,20 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         self.assertMailNotifications(new_message, [{
             'content': f'<p>Hello {self.user_employee.partner_id.name}, this comes from {test_record.name}.</p>',
             'message_type': 'notification',
+            'message_values': {
+                'author_id': self.partner_employee,
+                'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                'is_internal': False,
+                'message_type': 'notification',
+                'model': test_record._name,
+                'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
+                'res_id': test_record.id,
+            },
             'notif': [
                 {'partner': test_record.customer_id, 'type': 'email'},
             ],
             'subtype': 'mail.mt_comment',
         }])
-        self.assertMessageFields(
-            new_message,
-            {'author_id': self.partner_employee,
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'is_internal': False,
-             'message_type': 'notification',
-             'model': test_record._name,
-             'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
-             'res_id': test_record.id,
-            }
-        )
 
 
 @tagged('mail_post', 'post_install', '-at_install')
