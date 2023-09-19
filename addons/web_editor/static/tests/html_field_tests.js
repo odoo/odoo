@@ -36,7 +36,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     },
                     records: [],
                 },
-                'note.note' : {
+                'note.note': {
                     fields: {
                         display_name: {
                             string: "Displayed name",
@@ -114,10 +114,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     <field name="header" widget="html" style="height: 100px"/>
                 </form>`,
         });
-        // click .o_form_button_save
-        // nextTick
-        // check if notif here
-
         await click(target, '.o_form_button_save');
         assert.containsOnce(target, ".o_notification");
         const notif = target.querySelector(".o_notification");
@@ -126,7 +122,94 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             "Header"
         );
         assert.hasClass(notif, "border-danger");
-        
+
+    });
+
+    QUnit.test('colorpicker', async function (assert) {
+        assert.expect(2);
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "note.note",
+            serverData,
+            arch: `
+                <form>
+                    <field name="body" widget="html" style="height: 100px"/>
+                </form>`,
+        });
+
+        const field = target.querySelector('.o_field_html[name="body"]');
+        const editable = field.querySelector("[contenteditable='true']");
+        await click(editable);
+
+        // select the text
+        const pText = editable.querySelector("p").firstChild
+        console.log('ptext', pText)
+        console.log(Wysiwyg.setRange)
+        Wysiwyg.setRange(pText, 1, pText, 5);
+        // text is selected
+
+        var range = Wysiwyg.getRange();
+
+        assert.strictEqual(range.sc, pText,
+            "should select the text");
+
+        async function openColorpicker() {
+            const colorpicker = document.querySelector('#toolbar')
+            const openingProm = new Promise(resolve => {
+                setTimeout(resolve, 500)
+            });
+            console.log(colorpicker.cloneNode(true))
+            await click(colorpicker.querySelector('button:first-child'));
+            return openingProm;
+        }
+
+        await openColorpicker();
+        let backgroundMenu = document.querySelector('.note-back-color-preview .colorpicker-menu');
+        assert.ok(backgroundMenu && document.querySelector('o_we_color_btn'),
+            "should display the color picker");
+
+        await new Promise((res) => setTimeout(res, 500))
+        await click(document.querySelector('.o_we_color_btn'));
+        assert.ok(!backgroundMenu.querySelector('.note-back-color-preview'),
+            "should close the color picker");
+
+        assert.strictEqual(editable.innerHTML,
+            '<p>t<font style="background-color: rgb(0, 255, 255);">oto toto </font>toto</p><p>tata</p>',
+            "should have rendered the field correctly in edit");
+
+        // var fontElement = $field.find('.note-editable font')[0];
+        // var rangeControl = {
+        //     sc: fontElement,
+        //     so: 0,
+        //     ec: fontElement,
+        //     eo: 1,
+        // };
+        // range = Wysiwyg.getRange();
+        // assert.deepEqual(_.pick(range, 'sc', 'so', 'ec', 'eo'), rangeControl,
+        //     "should select the text after color change");
+
+        // // select the text
+        // pText = $field.find('.note-editable p').first().contents()[2];
+        // Wysiwyg.setRange(fontElement.firstChild, 5, pText, 2);
+        // // text is selected
+
+        // await openColorpicker('#toolbar .note-back-color-preview');
+        // await testUtils.dom.click($('#toolbar .note-back-color-preview .o_we_color_btn.bg-o-color-3'));
+
+        // assert.strictEqual($field.find('.note-editable').html(),
+        //     '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
+        //     "should have rendered the field correctly in edit");
+
+        // form.destroy();
     });
 
     QUnit.module('Sandboxed Preview');
@@ -271,7 +354,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await iframeReady(iframe);
         assert.strictEqual(iframe.contentDocument.body.textContent.trim(), 'Hello');
         assert.strictEqual(iframe.contentDocument.head.querySelector('style').textContent.trim().replace(/\s/g, ''),
-        'body{color:red;}', 'Head nodes should remain unaltered in the head');
+            'body{color:red;}', 'Head nodes should remain unaltered in the head');
         assert.equal(iframe.contentWindow.getComputedStyle(iframe.contentDocument.body).color, 'rgb(255, 0, 0)');
         // check button is there
         assert.containsOnce(target, '#codeview-btn-group > button');
