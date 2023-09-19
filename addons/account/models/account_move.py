@@ -4666,7 +4666,7 @@ class AccountMove(models.Model):
         """ This method need to be inherit by the localizations if they want to print a custom invoice report instead of
         the default one. For example please review the l10n_ar module """
         self.ensure_one()
-        return self._context.get('force_report_invoice_template') or 'account.report_invoice_document'
+        return 'account.report_invoice_document'
 
     def _is_downpayment(self):
         ''' Return true if the invoice is a downpayment.

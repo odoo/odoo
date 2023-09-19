@@ -816,22 +816,6 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # The PDF is generated even in case of error.
         self.assertTrue(invoice.invoice_pdf_report_id)
 
-    def test_get_invoice_pdf_report_to_render(self):
-        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        _get_name_invoice_report = invoice._get_name_invoice_report
-        wizard = self.create_send_and_print(invoice)
-
-        def get_invoice_pdf_report_to_render(record, *args, **kwargs):
-            return 'account.report_invoice_document', {}
-
-        def get_name_invoice_report(record, *args, **kwargs):
-            self.assertEqual(record._context.get('force_report_invoice_template'), 'account.report_invoice_document')
-            return _get_name_invoice_report(*args, **kwargs)
-
-        with patch.object(type(wizard), '_get_invoice_pdf_report_to_render', get_invoice_pdf_report_to_render), \
-            patch.object(type(invoice), '_get_name_invoice_report', get_name_invoice_report):
-            wizard.action_send_and_print(allow_fallback_pdf=True)
-
     def test_with_unlink_invoices(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice)
