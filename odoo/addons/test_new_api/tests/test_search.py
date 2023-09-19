@@ -351,6 +351,433 @@ class TestSubqueries(TransactionCase):
                     ('tags.name', 'like', 'z'),
             ])
 
+    def test_related_simple(self):
+        model = self.env['test_new_api.related'].with_user(self.env.ref('base.user_admin'))
+        self.env['ir.rule'].create({
+            'name': 'related_foo',
+            'model_id': self.env['ir.model']._get('test_new_api.related_foo').id,
+            'domain_force': "[('id', '<', 1000)]",
+        })
+
+        # warmup
+        model.search([('foo_name', '=', 'a')])
+        model.search([('foo_name_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."name" = %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."name" = %s)
+                AND ("test_new_api_related_foo"."id" < %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', '=', 'a')])
+
+    def test_related_multi(self):
+        model = self.env['test_new_api.related'].with_user(self.env.ref('base.user_admin'))
+        self.env['ir.rule'].create({
+            'name': 'related_foo',
+            'model_id': self.env['ir.model']._get('test_new_api.related_foo').id,
+            'domain_force': "[('id', '<', 1000)]",
+        })
+        self.env['ir.rule'].create({
+            'name': 'related_bar',
+            'model_id': self.env['ir.model']._get('test_new_api.related_bar').id,
+            'domain_force': "[('id', '<', 1000)]",
+        })
+
+        # warmup
+        model.search([('foo_bar_name', '=', 'a')])
+        model.search([('foo_bar_name_sudo', '=', 'a')])
+        model.search([('foo_id_bar_name', '=', 'a')])
+        model.search([('foo_bar_id_name', '=', 'a')])
+        model.search([('foo_bar_sudo_id_name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                ))
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_bar_name_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                    AND ("test_new_api_related_bar"."id" < %s)
+                ))
+                AND ("test_new_api_related_foo"."id" < %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_bar_name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                    AND ("test_new_api_related_bar"."id" < %s)
+                ))
+                AND ("test_new_api_related_foo"."id" < %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_id_bar_name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                    AND ("test_new_api_related_bar"."id" < %s)
+                ))
+                AND ("test_new_api_related_foo"."id" < %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_bar_id_name', '=', 'a')])
+
+        # bypass security for foo_id.bar_id, but not for name
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                    AND ("test_new_api_related_bar"."id" < %s)
+                ))
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_bar_sudo_id_name', '=', 'a')])
+
+    def test_related_null(self):
+        model = self.env['test_new_api.related']
+
+        # warmup
+        model.search([('foo_name', '=', 'a')])
+        model.search([('foo_name', '!=', 'a')])
+        model.search([('foo_name', '=', False)])
+        model.search([('foo_name', '!=', False)])
+        model.search([('foo_name', 'in', ['a', 'b'])])
+        model.search([('foo_name', 'not in', ['a', 'b'])])
+        model.search([('foo_name', 'in', ['a', False])])
+        model.search([('foo_name', 'not in', ['a', False])])
+        model.search([('foo_bar_name', '=', False)])
+        model.search([('foo_bar_name', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."name" = %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE (
+                ("test_new_api_related"."foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE (
+                        ("test_new_api_related_foo"."name" != %s)
+                        OR "test_new_api_related_foo"."name" IS NULL
+                    )
+                ))
+                OR "test_new_api_related"."foo_id" IS NULL
+            )
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', '!=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE (
+                ("test_new_api_related"."foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE "test_new_api_related_foo"."name" IS NULL
+                ))
+                OR "test_new_api_related"."foo_id" IS NULL
+            )
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE "test_new_api_related_foo"."name" IS NOT NULL
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."name" IN %s)
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', 'in', ['a', 'b'])])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE (
+                ("test_new_api_related"."foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE (
+                        ("test_new_api_related_foo"."name" NOT IN %s)
+                        OR "test_new_api_related_foo"."name" IS NULL
+                    )
+                ))
+                OR "test_new_api_related"."foo_id" IS NULL
+            )
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', 'not in', ['a', 'b'])])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE (
+                ("test_new_api_related"."foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE (
+                        ("test_new_api_related_foo"."name" IN %s)
+                        OR "test_new_api_related_foo"."name" IS NULL
+                    )
+                ))
+                OR "test_new_api_related"."foo_id" IS NULL
+            )
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', 'in', ['a', False])])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE (
+                    ("test_new_api_related_foo"."name" NOT IN %s)
+                    AND "test_new_api_related_foo"."name" IS NOT NULL
+                )
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_name', 'not in', ['a', False])])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE (
+                ("test_new_api_related"."foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE (
+                        ("test_new_api_related_foo"."bar_id" IN (
+                            SELECT "test_new_api_related_bar"."id"
+                            FROM "test_new_api_related_bar"
+                            WHERE "test_new_api_related_bar"."name" IS NULL
+                        ))
+                        OR "test_new_api_related_foo"."bar_id" IS NULL
+                    )
+                ))
+                OR "test_new_api_related"."foo_id" IS NULL
+            )
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_bar_name', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE ("test_new_api_related"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE "test_new_api_related_bar"."name" IS NOT NULL
+                ))
+            ))
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search([('foo_bar_name', '!=', False)])
+
+    def test_related_inherited(self):
+        model = self.env['test_new_api.related_inherits'].with_user(self.env.ref('base.user_admin'))
+        self.env['ir.rule'].create({
+            'name': 'related',
+            'model_id': self.env['ir.model']._get('test_new_api.related').id,
+            'domain_force': "[('id', '<', 1000)]",
+        })
+        self.env['ir.rule'].create({
+            'name': 'related_foo',
+            'model_id': self.env['ir.model']._get('test_new_api.related_foo').id,
+            'domain_force': "[('id', '<', 1000)]",
+        })
+        self.env['ir.rule'].create({
+            'name': 'related_bar',
+            'model_id': self.env['ir.model']._get('test_new_api.related_bar').id,
+            'domain_force': "[('id', '<', 1000)]",
+        })
+
+        # warmup
+        model.search([('name', '=', 'a')])
+        model.search([('foo_name', '=', 'a')])
+        model.search([('foo_name_sudo', '=', 'a')])
+        model.search([('foo_bar_name', '=', 'a')])
+        model.search([('foo_bar_name_sudo', '=', 'a')])
+
+        # search on inherited fields
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_inherits"."id"
+            FROM "test_new_api_related_inherits"
+            LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
+                ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
+            WHERE ("test_new_api_related_inherits__base_id"."name" = %s)
+            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+            ORDER BY "test_new_api_related_inherits"."id"
+        """]):
+            model.search([('name', '=', 'a')])
+
+        # search on inherited related fields
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_inherits"."id"
+            FROM "test_new_api_related_inherits"
+            LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
+                ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
+            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."name" = %s)
+            ))
+            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+            ORDER BY "test_new_api_related_inherits"."id"
+        """]):
+            model.search([('foo_name_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_inherits"."id"
+            FROM "test_new_api_related_inherits"
+            LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
+                ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
+            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."name" = %s)
+                AND ("test_new_api_related_foo"."id" < %s)
+            ))
+            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+            ORDER BY "test_new_api_related_inherits"."id"
+        """]):
+            model.search([('foo_name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_inherits"."id"
+            FROM "test_new_api_related_inherits"
+            LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
+                ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
+            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                ))
+            ))
+            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+            ORDER BY "test_new_api_related_inherits"."id"
+        """]):
+            model.search([('foo_bar_name_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_inherits"."id"
+            FROM "test_new_api_related_inherits"
+            LEFT JOIN "test_new_api_related" AS "test_new_api_related_inherits__base_id"
+                ON ("test_new_api_related_inherits"."base_id" = "test_new_api_related_inherits__base_id"."id")
+            WHERE ("test_new_api_related_inherits__base_id"."foo_id" IN (
+                SELECT "test_new_api_related_foo"."id"
+                FROM "test_new_api_related_foo"
+                WHERE ("test_new_api_related_foo"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE ("test_new_api_related_bar"."name" = %s)
+                    AND ("test_new_api_related_bar"."id" < %s)
+                ))
+                AND ("test_new_api_related_foo"."id" < %s)
+            ))
+            AND ("test_new_api_related_inherits__base_id"."id" < %s)
+            ORDER BY "test_new_api_related_inherits"."id"
+        """]):
+            model.search([('foo_bar_name', '=', 'a')])
+
 
 class TestFlushSearch(TransactionCase):
 

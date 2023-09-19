@@ -723,7 +723,40 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
-        return [(self.related, operator, value)]
+
+        # This should never happen to avoid bypassing security checks
+        # and should already be converted to (..., 'in', subquery)
+        assert operator not in ('any', 'not any')
+
+        # determine whether the related field can be null
+        if isinstance(value, (list, tuple)):
+            value_is_null = any(val is False or val is None for val in value)
+        else:
+            value_is_null = value is False or value is None
+
+        can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
+            (operator not in expression.NEGATIVE_TERM_OPERATORS and value_is_null)
+            or (operator in expression.NEGATIVE_TERM_OPERATORS and not value_is_null)
+        )
+
+        def make_domain(path, model):
+            if '.' not in path:
+                return [(path, operator, value)]
+
+            prefix, suffix = path.split('.', 1)
+            field = model._fields[prefix]
+            comodel = model.env[field.comodel_name]
+
+            domain = [(prefix, 'in', comodel._search(make_domain(suffix, comodel)))]
+            if can_be_null and field.type == 'many2one' and not field.required:
+                return expression.OR([domain, [(prefix, '=', False)]])
+
+            return domain
+
+        model = records.env[self.model_name].with_context(active_test=False)
+        model = model.sudo(records.env.su or self.compute_sudo)
+
+        return make_domain(self.related, model)
 
     # properties used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))

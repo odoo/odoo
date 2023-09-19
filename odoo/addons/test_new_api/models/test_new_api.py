@@ -440,6 +440,43 @@ class Related(models.Model):
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
+    foo_id = fields.Many2one('test_new_api.related_foo')
+
+    foo_name = fields.Char('foo_name', related='foo_id.name', related_sudo=False)
+    foo_name_sudo = fields.Char('foo_name_sudo', related='foo_id.name', related_sudo=True)
+
+    foo_bar_name = fields.Char('foo_bar_name', related='foo_id.bar_id.name', related_sudo=False)
+    foo_bar_name_sudo = fields.Char('foo_bar_name_sudo', related='foo_id.bar_id.name', related_sudo=True)
+
+    foo_id_bar_name = fields.Char('foo_id_bar_name', related='foo_id.bar_name', related_sudo=False)
+
+    foo_bar_id = fields.Many2one(string='foo_bar_id', related='foo_id.bar_id', related_sudo=False)
+    foo_bar_id_name = fields.Char('foo_bar_id_name', related='foo_bar_id.name', related_sudo=False)
+
+    foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
+    foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
+
+
+class RelatedFoo(models.Model):
+    _name = _description = 'test_new_api.related_foo'
+
+    name = fields.Char()
+    bar_id = fields.Many2one('test_new_api.related_bar')
+    bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
+
+
+class RelatedBar(models.Model):
+    _name = _description = 'test_new_api.related_bar'
+
+    name = fields.Char()
+
+
+class RelatedInherits(models.Model):
+    _name = _description = 'test_new_api.related_inherits'
+    _inherits = {'test_new_api.related': 'base_id'}
+
+    base_id = fields.Many2one('test_new_api.related', required=True, ondelete='cascade')
+
 
 class ComputeReadonly(models.Model):
     _name = 'test_new_api.compute.readonly'

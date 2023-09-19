@@ -1124,7 +1124,7 @@ class expression(object):
             elif operator in ('any', 'not any') and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
-            elif operator in ('any', 'not any') and field.store and field.type == 'many2one':
+            elif operator in ('any', 'not any') and field.type == 'many2one':
                 right_ids = comodel.with_context(active_test=False)._search(right)
                 if operator == 'any':
                     push((left, 'in', right_ids), model, alias)
@@ -1133,7 +1133,7 @@ class expression(object):
                         push(dom_leaf, model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
-            elif operator in ('any', 'not any') and field.store and field.type in ('many2many', 'one2many'):
+            elif operator in ('any', 'not any') and field.type in ('many2many', 'one2many'):
                 right_ids = comodel.with_context(**field.context)._search(right)
                 push((left, ANY_IN[operator], right_ids), model, alias)
 
