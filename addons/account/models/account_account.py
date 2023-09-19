@@ -552,10 +552,10 @@ class AccountAccount(models.Model):
             {join} account_move_line aml
                 ON aml.account_id  = account.id
                 AND aml.partner_id = %s
-                AND account.deprecated = FALSE
                 AND account.company_id = aml.company_id
                 AND aml.date >= now() - interval '2 years'
               WHERE account.company_id = %s
+                AND account.deprecated = FALSE
                    {where_internal_group}
             GROUP BY account.id
             ORDER BY COUNT(aml.id) DESC, account.code
