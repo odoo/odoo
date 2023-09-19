@@ -117,32 +117,14 @@ export class TicketScreen extends Component {
         }
     }
     onClickOrder(clickedOrder) {
-        if (!clickedOrder || clickedOrder.locked) {
-            this._state.ui.selectedOrder = clickedOrder;
-            if (!this.getSelectedOrderlineId()) {
-                // Automatically select the first orderline of the selected order.
-                const firstLine = this._state.ui.selectedOrder.get_orderlines()[0];
-                if (firstLine) {
-                    this._state.ui.selectedOrderlineIds[clickedOrder.backendId] = firstLine.id;
-                }
+        this._state.ui.selectedOrder = clickedOrder;
+        this.numberBuffer.reset();
+        if ((!clickedOrder || clickedOrder.locked) && !this.getSelectedOrderlineId()) {
+            // Automatically select the first orderline of the selected order.
+            const firstLine = this._state.ui.selectedOrder.get_orderlines()[0];
+            if (firstLine) {
+                this._state.ui.selectedOrderlineIds[clickedOrder.backendId] = firstLine.id;
             }
-            this.numberBuffer.reset();
-        } else {
-            if (
-                !this._state.ui.selectedOrder ||
-                clickedOrder.uid !== this._state.ui.selectedOrder.uid
-            ) {
-                this.dbclk_time = new Date().getTime();
-            } else if (!this.dbclk_time) {
-                this.dbclk_time = new Date().getTime();
-            } else if (this.dbclk_time + 500 > new Date().getTime()) {
-                this._setOrder(clickedOrder);
-                this.dbclk_time = 0;
-            } else {
-                this.dbclk_time = new Date().getTime();
-            }
-            this._state.ui.selectedOrder = clickedOrder;
-            this.numberBuffer.reset();
         }
     }
     onCreateNewOrder() {
@@ -191,9 +173,6 @@ export class TicketScreen extends Component {
         if (this.pos.isOpenOrderShareable()) {
             this.pos._removeOrdersFromServer();
         }
-        // When deleting an order, the double click time should be reset, so that it's not taken into account
-        // when clicking on another order.
-        this.dbclk_time = 0;
     }
     async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
@@ -650,8 +629,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) =>
-                    deserializeDate(order.date_order).toFormat("yyyy-MM-dd HH:mm a"),
+                repr: (order) => deserializeDate(order.date_order).toFormat("yyyy-MM-dd HH:mm a"),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },
