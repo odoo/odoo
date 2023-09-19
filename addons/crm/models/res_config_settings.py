@@ -167,4 +167,4 @@ class ResConfigSettings(models.TransientModel):
 
     def action_crm_assign_leads(self):
         self.ensure_one()
-        return self.env['crm.team'].search([('assignment_optout', '=', False)]).action_assign_leads(work_days=2, log=False)
+        return self.env['crm.team'].search([('assignment_optout', '=', False)]).action_assign_leads(log=False)
