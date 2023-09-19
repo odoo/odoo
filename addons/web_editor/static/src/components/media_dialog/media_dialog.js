@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from '@web/core/utils/hooks';
+import { useService, useChildRef } from '@web/core/utils/hooks';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Notebook } from '@web/core/notebook/notebook';
 import { ImageSelector } from './image_selector';
@@ -9,7 +9,7 @@ import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
 export const TABS = {
     IMAGES: {
@@ -37,8 +37,9 @@ export const TABS = {
 export class MediaDialog extends Component {
     setup() {
         this.size = 'xl';
-        this.contentClass = 'o_select_media_dialog';
+        this.contentClass = 'o_select_media_dialog h-100';
         this.title = _t("Select a media");
+        this.modalRef = useChildRef();
 
         this.rpc = useService('rpc');
         this.orm = useService('orm');
@@ -46,6 +47,8 @@ export class MediaDialog extends Component {
 
         this.tabs = [];
         this.selectedMedia = useState({});
+
+        this.addButtonRef = useRef('add-button');
 
         this.initialIconClasses = [];
 
@@ -55,6 +58,15 @@ export class MediaDialog extends Component {
         this.state = useState({
             activeTab: this.initialActiveTab,
         });
+
+        useEffect(
+            (nbSelectedAttachments) => {
+                // Disable/enable the add button depending on whether some media
+                // are selected or not.
+                this.addButtonRef.el.toggleAttribute("disabled", !nbSelectedAttachments);
+            },
+            () => [this.selectedMedia[this.state.activeTab].length]
+        );
     }
 
     get initialActiveTab() {
@@ -87,6 +99,7 @@ export class MediaDialog extends Component {
                 save: this.save.bind(this),
                 onAttachmentChange: this.props.onAttachmentChange,
                 errorMessages: (errorMessage) => this.errorMessages[tab.id] = errorMessage,
+                modalRef: this.modalRef,
             },
         });
     }

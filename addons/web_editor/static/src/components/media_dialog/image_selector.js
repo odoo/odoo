@@ -98,6 +98,10 @@ export class ImageSelector extends FileSelector {
         return this.props.selectedMedia[this.props.id].filter(media => media.mediaType === 'libraryMedia').map(({ id }) => id);
     }
 
+    get allAttachments() {
+        return [...super.allAttachments, ...this.state.libraryMedia];
+    }
+
     get attachmentsDomain() {
         const domain = super.attachmentsDomain;
         domain.push(['mimetype', 'in', IMAGE_MIMETYPES]);
@@ -307,7 +311,7 @@ export class ImageSelector extends FileSelector {
     }
 
     async onImageLoaded(imgEl, attachment) {
-        this.debouncedScroll();
+        this.debouncedScrollUpdate();
         if (attachment.mediaType === 'libraryMedia' && !imgEl.src.startsWith('blob')) {
             // This call applies the theme's color palette to the
             // loaded illustration. Upon replacement of the image,
