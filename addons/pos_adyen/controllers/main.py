@@ -76,5 +76,5 @@ class PosAdyenController(http.Controller):
         pos_session_id = int(transaction_id_parts[1])
         pos_session_sudo = request.env["pos.session"].sudo().browse(pos_session_id)
         adyen_pm_sudo.adyen_latest_response = json.dumps(data)
-        request.env['bus.bus'].sudo()._sendone(pos_session_sudo._get_bus_channel_name(), 'ADYEN_LATEST_RESPONSE', pos_session_sudo.config_id.id)
+        pos_session_sudo.config_id._notify("ADYEN_LATEST_RESPONSE", pos_session_sudo.config_id.id)
         return request.make_json_response('[accepted]') # https://docs.adyen.com/point-of-sale/design-your-integration/choose-your-architecture/cloud/#guarantee

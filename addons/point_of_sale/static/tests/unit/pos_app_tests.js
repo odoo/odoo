@@ -45,7 +45,7 @@ QUnit.module("Chrome", {
             })
             .add("bus_service", {
                 start() {
-                    return { addChannel: () => {}, addEventListener: () => {} };
+                    return { addChannel: () => {}, subscribe: () => {} };
                 },
             })
             .add("printer", {

@@ -16,8 +16,8 @@ import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/printer/printer_service";
+import { qrCodeSrc, getOnNotified, constructFullProductName } from "@point_of_sale/utils";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { constructFullProductName, qrCodeSrc } from "@point_of_sale/utils";
 import { Line } from "./models/line";
 
 export class SelfOrder extends Reactive {
@@ -26,7 +26,7 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { notification, router, printer, renderer, barcode }) {
+    async setup(env, { notification, router, printer, renderer, barcode, bus_service }) {
         // services
         this.notification = notification;
         this.router = router;
@@ -34,6 +34,7 @@ export class SelfOrder extends Reactive {
         this.printer = printer;
         this.renderer = renderer;
         this.barcode = barcode;
+        this.bus = bus_service;
 
         // data
         Object.assign(this, {
@@ -62,6 +63,47 @@ export class SelfOrder extends Reactive {
             this.initKioskData();
         } else {
             await this.initMobileData();
+        }
+        effect(
+            batched((orders) => {
+                for (const order of orders) {
+                    if (!order.access_token) {
+                        return;
+                    }
+                    const onNotified = getOnNotified(this.bus, order.access_token);
+                    onNotified("ORDER_STATE_CHANGED", ({ access_token, state }) => {
+                        this.changeOrderState(access_token, state);
+                    });
+                    onNotified("ORDER_CHANGED", ({ order }) => {
+                        this.updateOrdersFromServer([order], [order.access_token]);
+                    });
+                }
+            }),
+            [this.orders]
+        );
+        this.onNotified = getOnNotified(this.bus, this.access_token);
+        this.onNotified("PRODUCT_CHANGED", (payload) => {
+            this.handleProductChanges(payload);
+        });
+        if (this.config.self_ordering_mode === "kiosk") {
+            this.onNotified("STATUS", ({ status }) => {
+                if (status === "closed") {
+                    this.pos_session = [];
+                    this.ordering = false;
+                } else {
+                    // reload to get potential new settings
+                    // more easier than RPC for now
+                    window.location.reload();
+                }
+            });
+            this.onNotified("PAYMENT_STATUS", ({ payment_result, order }) => {
+                if (payment_result === "Success") {
+                    this.updateOrderFromServer(order);
+                    this.router.navigate("payment_success");
+                } else {
+                    this.paymentError = true;
+                }
+            });
         }
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
             if (!this.ordering) {
@@ -697,9 +739,10 @@ export class SelfOrder extends Reactive {
 }
 
 export const selfOrderService = {
-    dependencies: ["notification", "router", "printer", "renderer", "barcode"],
-    async start(env, { notification, router, printer, renderer, barcode }) {
-        return new SelfOrder(env, { notification, router, printer, renderer, barcode }).ready;
+    dependencies: ["notification", "router", "printer", "renderer", "barcode", "bus_service"],
+    async start(env, { notification, router, printer, renderer, barcode, bus_service }) {
+        return new SelfOrder(env, { notification, router, printer, renderer, barcode, bus_service })
+            .ready;
     },
 };
 

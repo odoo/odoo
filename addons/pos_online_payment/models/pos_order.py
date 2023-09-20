@@ -59,14 +59,6 @@ class PosOrder(models.Model):
 
         return return_data
 
-    def _send_online_payments_notification_via_bus(self):
-        self.ensure_one()
-        # The bus communication is only protected by the name of the channel.
-        # Therefore, no sensitive information is sent through it, only a
-        # notification to invite the local browser to do a safe RPC to
-        # the server to check the new state of the order.
-        self.env['bus.bus']._sendone(self.session_id._get_bus_channel_name(), 'ONLINE_PAYMENTS_NOTIFICATION', {'id': self.id})
-
     def _check_next_online_payment_amount(self, amount):
         self.ensure_one()
         return tools.float_compare(amount, 0.0, precision_rounding=self.currency_id.rounding) >= 0 and tools.float_compare(amount, self.get_amount_unpaid(), precision_rounding=self.currency_id.rounding) <= 0

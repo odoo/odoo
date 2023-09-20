@@ -105,12 +105,12 @@ class PosOrder(models.Model):
     def _send_notification(self, order_ids):
         for order in order_ids:
             if order.access_token and order.state != 'draft':
-                self.env['bus.bus']._sendone(f'self_order-{order.access_token}', 'ORDER_STATE_CHANGED', {
+                order._notify('ORDER_STATE_CHANGED', {
                     'access_token': order.access_token,
                     'state': order.state
                 })
             else:
-                self.env['bus.bus']._sendone(f'self_order-{order.access_token}', 'ORDER_CHANGED', {
+                order._notify('ORDER_CHANGED', {
                     'order': order._export_for_self_order()
                 })
 

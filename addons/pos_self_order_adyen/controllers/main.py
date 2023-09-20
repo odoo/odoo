@@ -46,7 +46,7 @@ class PosSelfAdyenController(PosAdyenController):
             order._send_order()
 
         if order.config_id.self_ordering_mode == 'kiosk':
-            order.env['bus.bus']._sendone(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
+            order.config_id._notify('PAYMENT_STATUS', {
                 'payment_result': payment_result,
                 'order': order._export_for_self_order(),
             })

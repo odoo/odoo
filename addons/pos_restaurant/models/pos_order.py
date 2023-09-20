@@ -31,12 +31,15 @@ class PosOrder(models.Model):
 
     def send_table_count_notification(self, table_ids):
         messages = []
+        a_config = None
         for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
-            config_cur_session = config.current_session_id
-            if config_cur_session:
+            if config.current_session_id:
+                a_config = config
                 order_count = config.get_tables_order_count_and_printing_changes()
-                messages.append((config_cur_session._get_bus_channel_name(), 'TABLE_ORDER_COUNT', order_count))
-        self.env['bus.bus']._sendmany(messages)
+                messages.append(('TABLE_ORDER_COUNT', order_count))
+        if messages:
+            a_config._notify(*messages, private=False)
+
 
     def set_tip(self, tip_line_vals):
         """Set tip to `self` based on values in `tip_line_vals`."""
