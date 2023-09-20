@@ -22,7 +22,7 @@ Note also that in order for Chorus Pro to automatically detect the "PDF/A-3 (Fac
 the "Factur-X PDF/A-3" option on the journal. This option will also validate the xml against the Factur-X and Chorus
 Pro rules and show the errors.
     """,
-    'depends': ['account', 'base_vat'],
+    'depends': ['account'],
     'data': [
         'data/cii_22_templates.xml',
         'data/ubl_20_templates.xml',
