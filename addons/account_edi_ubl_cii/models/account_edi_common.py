@@ -377,12 +377,9 @@ class AccountEdiCommon(models.AbstractModel):
 
             # get the name
             name = ""
-            reason_code_node = allow_el.find('./{*}AllowanceChargeReasonCode' if is_ubl else './{*}ReasonCode')
-            if reason_code_node is not None:
-                name += reason_code_node.text + " "
             reason_node = allow_el.find('./{*}AllowanceChargeReason' if is_ubl else './{*}Reason')
             if reason_node is not None:
-                name += reason_node.text
+                name = reason_node.text
 
             # get quantity and price unit
             quantity = 1
