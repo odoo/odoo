@@ -16,10 +16,10 @@
                                 <t t-set="withholding_base" t-value="o.line_ids.filtered(lambda x: line.tax_line_id.id in x.tax_ids.ids)"/>
                                 <tr>
                                     <td>
-                                        <span t-field='line.tax_line_id.name'/> 
+                                        <span t-field='line.tax_line_id.name'/>
                                     </td>
                                     <td>
-                                        <span t-field='line.name'/> 
+                                        <span t-field='line.name'/>
                                     </td>
                                     <td class="text-end">
                                         <span t-field='withholding_base.amount_currency' t-options="{'widget': 'monetary', 'display_currency': currencyPayment}"/> 
