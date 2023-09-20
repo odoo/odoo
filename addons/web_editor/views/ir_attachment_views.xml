@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attachment_form_inherit_web_editor" model="ir.ui.view">
+        <field name="name">ir.attachment.form.inherit.web_editor</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field class="me-2" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_attachment_tree_inherit_web_editor" model="ir.ui.view">
+        <field name="name">ir.attachment.tree.inherit.web_editor</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_attachment_search_inherit_web_editor" model="ir.ui.view">
+        <field name="name">ir.attachment.search.inherit.web_editor</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_documents_filter']" position="after">
+                <filter name="is_favorite" string="Favorite" domain="[('is_favorite', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

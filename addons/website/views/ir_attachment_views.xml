@@ -11,13 +11,26 @@
         </field>
     </record>
     <record id="view_attachment_tree_inherit_website" model="ir.ui.view">
-       <field name="name">ir.attachment.tree.inherit.website</field>
-       <field name="model">ir.attachment</field>
-       <field name="inherit_id" ref="base.view_attachment_tree"/>
-       <field name="arch" type="xml">
-           <field name="name" position="after">
-               <field name="website_id" groups="website.group_multi_website"/>
-           </field>
-       </field>
-   </record>
+        <field name="name">ir.attachment.tree.inherit.website</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+    <!-- This should be in a web_editor_mail bridge module but that would be overkill -->
+    <record id="view_attachment_kanban_inherit_website" model="ir.ui.view">
+        <field name="name">ir.attachment.kanban.inherit.website</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="mail.view_document_file_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_image')]" position="before">
+                <div class="float-start me-1">
+                    <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" />
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>
