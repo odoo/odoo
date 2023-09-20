@@ -85,6 +85,11 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         Chrome.do.clickTicketButton();
         TicketScreen.do.selectFilter("Paid");
         TicketScreen.check.nthRowContains(2, "-0005");
+        TicketScreen.do.selectOrder("-0005");
+        TicketScreen.do.clickControlButton("Print Receipt");
+        TicketScreen.check.receiptTotalIs("8.00");
+        ReceiptScreen.do.clickBack();
+        TicketScreen.do.clickBackToMainTicketScreen();
         // Pay the order that was in PaymentScreen.
         TicketScreen.do.selectFilter("Payment");
         TicketScreen.do.selectOrder("-0004");

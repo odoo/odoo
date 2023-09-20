@@ -81,7 +81,6 @@ export class TicketScreen extends Component {
     //#region EVENT HANDLERS
     async onFilterSelected(selectedFilter) {
         this._state.ui.filter = selectedFilter;
-        this._state.ui.selectedOrder = null;
         if (this._state.ui.filter == "ACTIVE_ORDERS" || this._state.ui.filter === null) {
             this._state.ui.selectedOrder = this.pos.get_order();
         }

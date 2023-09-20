@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
-            <t t-if="receiptData.receipt.is_gcc_country and !receipt.is_settlement">
+            <t t-if="receiptData.receipt.is_gcc_country and !receiptData.receipt.is_settlement">
                 <img t-if="receiptData.receipt.qr_code" id="qrcode" t-att-src="receiptData.receipt.qr_code" class="pos-receipt-logo"/>
                 <br/>
             </t>
