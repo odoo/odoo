@@ -45,19 +45,6 @@
             <div class="orderlines">
                 <t t-call="point_of_sale.OrderLinesReceipt"/>
             </div>
-            <!-- Subtotal -->
-
-            <t t-if="!isTaxIncluded">
-                <div class="pos-receipt-right-align">--------</div>
-                <br/>
-                <div>Subtotal<span t-esc="env.utils.formatCurrency(receiptData.receipt.subtotal)" class="pos-receipt-right-align"/></div>
-                <t t-foreach="receiptData.receipt.tax_details" t-as="tax" t-key="tax.name">
-                    <div class="responsive-price">
-                        <t t-esc="tax.name" />
-                        <span t-esc='env.utils.formatCurrency(tax.amount, false)' class="pos-receipt-right-align"/>
-                    </div>
-                </t>
-            </t>
 
             <!-- Total -->
             <div class="pos-receipt-right-align">--------</div>
@@ -102,7 +89,7 @@
                     <span t-esc="env.utils.formatCurrency(receiptData.receipt.total_discount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
-            <div t-if="receiptData.isTaxIncluded" class="pos-receipt-taxes">
+            <div t-if="receiptData.receipt.tax_details.length > 0" class="pos-receipt-taxes">
                 <span />
                 <span>VAT%</span>
                 <span>VAT</span>
@@ -110,7 +97,7 @@
                 <span>Total</span>
                 <t t-foreach="receiptData.receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                     <span />
-                    <span><t t-esc="tax.tax.amount"/> %</span> 
+                    <span><t t-esc="tax.tax.amount"/> %</span>
                     <span t-esc="env.utils.formatCurrency(tax.amount, false)" />
                     <span t-esc="env.utils.formatCurrency(tax.base, false)" />
                     <span t-esc="env.utils.formatCurrency(tax.amount + tax.base, false)" />

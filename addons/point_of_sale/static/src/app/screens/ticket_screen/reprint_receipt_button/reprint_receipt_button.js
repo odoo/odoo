@@ -22,7 +22,7 @@ export class ReprintReceiptButton extends Component {
         if (this.hardwareProxy.printer) {
             const orderReceipt = renderToElement("point_of_sale.OrderReceipt", {
                 receiptData: {
-                    ...this.pos.get_order().getOrderReceiptEnv(),
+                    ...this.props.order.getOrderReceiptEnv(),
                 },
                 pos: this.pos,
                 env: this.env,

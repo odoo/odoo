@@ -256,9 +256,9 @@ export class PaymentScreen extends Component {
         }
 
         this.currentOrder.date_order = luxon.DateTime.now();
-        for (let line of this.paymentLines) {
+        for (const line of this.paymentLines) {
             if (!line.amount === 0) {
-                 this.currentOrder.remove_paymentline(line);
+                this.currentOrder.remove_paymentline(line);
             }
         }
         this.currentOrder.finalized = true;
@@ -350,9 +350,7 @@ export class PaymentScreen extends Component {
 
             if (this.hardwareProxy.printer && invoiced_finalized) {
                 const orderReceipt = renderToElement("point_of_sale.OrderReceipt", {
-                    receiptData: {
-                        ...this.pos.get_order().getOrderReceiptEnv(),
-                    },
+                    receiptData: this.pos.get_order().getOrderReceiptEnv(),
                     pos: this.pos,
                     env: this.env,
                 });

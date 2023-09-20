@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(ReceiptScreen.prototype, {
-    get receiptData() {
-        const receiptData = super.receiptData;
+patch(Order.prototype, {
+    getOrderReceiptEnv() {
+        const receiptData = super.getOrderReceiptEnv();
         const receipt = receiptData.receipt;
         const country = receiptData.order.pos.company.country;
         receipt.is_gcc_country = country

@@ -252,6 +252,14 @@ class Check {
             },
         ];
     }
+    receiptTotalIs(amount) {
+        return [
+            {
+                trigger: `.receipt-screen .pos-receipt-amount:contains("${amount}")`,
+                run: () => {},
+            },
+        ];
+    }
 }
 
 class Execute {}

@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(ReceiptScreen.prototype, {
-    get receiptData() {
-        const receiptData = super.receiptData;
+patch(Order.prototype, {
+    getOrderReceiptEnv() {
+        const receiptData = super.getOrderReceiptEnv();
 
         receiptData.hasPosMercurySignature = receiptData.paymentlines.some((line) => {
             if (line.mercury_data) {

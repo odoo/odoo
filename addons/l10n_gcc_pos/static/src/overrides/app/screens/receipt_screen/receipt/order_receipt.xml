@@ -24,16 +24,6 @@
             </div>
         </xpath>
 
-        <xpath expr="//span[@t-esc='env.utils.formatCurrency(receiptData.receipt.subtotal)']/.." position="attributes">
-            <attribute name="t-if">!receiptData.receipt.is_gcc_country</attribute>
-        </xpath>
-        <xpath expr="//span[@t-esc='env.utils.formatCurrency(receiptData.receipt.subtotal)']/.." position="after">
-            <div t-if="receiptData.receipt.is_gcc_country" t-translation="off">
-                Subtotal / الإجمالي الفرعي
-                <span t-esc="env.utils.formatCurrency(receiptData.receipt.subtotal)" class="pos-receipt-right-align"/>
-            </div>
-        </xpath>
-
         <xpath expr="//span[@t-esc='env.utils.formatCurrency(receiptData.receipt.total_with_tax)']/.." position="attributes">
             <attribute name="t-if">!receiptData.receipt.is_gcc_country</attribute>
         </xpath>
