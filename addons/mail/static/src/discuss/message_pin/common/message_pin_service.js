@@ -2,26 +2,38 @@
 
 import { Message } from "@mail/core/common/message";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
+import { Message as MessageModel } from "@mail/core/common/message_model";
+import { Thread } from "@mail/core/common/thread_model";
 
 import { markup, reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 export const OTHER_LONG_TYPING = 60000;
 
+patch(Thread.prototype, {
+    setup() {
+        super.setup();
+        /** @type {'loaded'|'loading'|'error'|undefined} */
+        this.pinnedMessagesState = undefined;
+        this.pinnedMessages = Thread.Set("Message");
+    },
+});
+
+patch(MessageModel.prototype, {
+    setup() {
+        super.setup();
+        /** @type {string} */
+        this.pinnedAt = undefined;
+    },
+});
+
 export class MessagePin {
     busService;
-    /** @type {Map<number, string>} */
-    loadStateByChannelId = new Map();
-    /** @type {Map<number, Set<number>>} */
-    messageIdsByChannelId = new Map();
-    /** @type {Map<number, number>} */
-    channelIdByMessageId = new Map();
-    /** @type {Map<number, string>} */
-    pinnedAtByMessageId = new Map();
     /** @type {import("@mail/core/common/store_service").Store} */
-    storeService;
+    store;
 
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -33,47 +45,27 @@ export class MessagePin {
         this.dialogService = services.dialog;
         this.ormService = services.orm;
         this.rpcService = services.rpc;
-        this.storeService = services["mail.store"];
+        this.store = services["mail.store"];
     }
 
     setup() {
         this.env.bus.addEventListener("mail.message/onUpdate", ({ detail: { message, data } }) => {
             this.onMessageUpdate(message, data);
         });
-        this.busService.subscribe("mail.message/delete", ({ message_ids }) => {
-            for (const messageId of message_ids) {
-                this.removePinnedMessage(messageId);
-            }
-        });
         this.busService.start();
     }
 
     /**
-     * @param {number} channelId
-     * @param {number} messageId
-     * @param {string} pinnedAt
-     */
-    addPinnedMessage(channelId, messageId, pinnedAt) {
-        if (!this.messageIdsByChannelId.has(channelId)) {
-            this.messageIdsByChannelId.set(channelId, new Set());
-        }
-        const messageIds = this.messageIdsByChannelId.get(channelId);
-        messageIds.add(messageId);
-        this.channelIdByMessageId.set(messageId, channelId);
-        this.pinnedAtByMessageId.set(messageId, pinnedAt);
-    }
-
-    /**
-     * @param {import("@mail/core/common/thread_model").Thread} channel
+     * @param {import("models").Models["Thread"]} channel
      */
     async fetchPinnedMessages(channel) {
         if (
             channel.model !== "discuss.channel" ||
-            ["loaded", "loading"].includes(this.loadStateByChannelId.get(channel.id))
+            ["loaded", "loading"].includes(channel.pinnedMessagesState)
         ) {
             return;
         }
-        this.loadStateByChannelId.set(channel.id, "loading");
+        channel.pinnedMessagesState = "loading";
         try {
             const messagesData = await this.rpcService("/discuss/channel/pinned_messages", {
                 channel_id: channel.id,
@@ -83,11 +75,11 @@ export class MessagePin {
                     messageData.parentMessage.body = markup(messageData.parentMessage.body);
                 }
                 messageData.body = markup(messageData.body);
-                this.storeService.Message.insert(messageData);
+                this.store.Message.insert(messageData);
             });
-            this.loadStateByChannelId.set(channel.id, "loaded");
+            channel.pinnedMessagesState = "loaded";
         } catch (e) {
-            this.loadStateByChannelId.set(channel.id, "error");
+            channel.pinnedMessagesState = "error";
             throw e;
         }
     }
@@ -97,25 +89,21 @@ export class MessagePin {
      * @returns {string|null}
      */
     getPinnedAt(messageId) {
-        const pinnedAt = this.pinnedAtByMessageId.get(messageId);
+        const pinnedAt = this.store.Message.get(messageId)?.pinnedAt;
         return pinnedAt ? luxon.DateTime.fromISO(new Date(pinnedAt).toISOString()) : null;
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} channel
-     * @returns {import("@mail/core/common/message_model").Message[]}
+     * @param {import("models").Models["Thread"]} channel
+     * @returns {import("models").Models["Message"][]}
      */
     getPinnedMessages(channel) {
-        return [...(this.messageIdsByChannelId.get(channel.id) ?? new Set())]
-            .map((id) => this.storeService.Message.insert({ id }))
-            .sort((a, b) => {
-                const aPinnedAt = this.pinnedAtByMessageId.get(a.id);
-                const bPinnedAt = this.pinnedAtByMessageId.get(b.id);
-                if (aPinnedAt === bPinnedAt) {
-                    return b.id - a.id;
-                }
-                return aPinnedAt < bPinnedAt ? 1 : -1;
-            });
+        return [...channel.pinnedMessages].sort((a, b) => {
+            if (a.pinnedAt === b.pinnedAt) {
+                return b.id - a.id;
+            }
+            return a.pinnedAt < b.pinnedAt ? 1 : -1;
+        });
     }
 
     /**
@@ -136,9 +124,11 @@ export class MessagePin {
             (pinnedAt !== undefined || message.isEmpty)
         ) {
             if (pinnedAt && !message.isEmpty) {
-                this.addPinnedMessage(message.originThread.id, message.id, pinnedAt);
+                message.originThread.pinnedMessages.add(message);
+                message.pinnedAt = pinnedAt;
             } else {
-                this.removePinnedMessage(message.id);
+                delete message.pinnedAt;
+                message.originThread.pinnedMessages.delete(message);
             }
         }
     }
@@ -161,25 +151,6 @@ export class MessagePin {
             title: _t("Pin It"),
             onConfirm: () => this.setPin(message, true),
         });
-    }
-
-    /**
-     * @param {number} messageId
-     */
-    removePinnedMessage(messageId) {
-        const channelId = this.channelIdByMessageId.get(messageId);
-        if (!channelId) {
-            return;
-        }
-        const messageIds = this.messageIdsByChannelId.get(channelId);
-        if (messageIds) {
-            messageIds.delete(messageId);
-            if (messageIds.size === 0) {
-                this.messageIdsByChannelId.delete(channelId);
-            }
-        }
-        this.channelIdByMessageId.delete(messageId);
-        this.pinnedAtByMessageId.delete(messageId);
     }
 
     /**

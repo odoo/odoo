@@ -23,18 +23,18 @@ import { Deferred } from "@web/core/utils/concurrency";
 
 export class Thread extends Record {
     static id = AND("model", "id");
-    /** @type {Object.<string, Thread>} */
+    /** @type {Object.<string, import("models").Models["Thread"]>} */
     static records = {};
-    /** @returns {Thread} */
+    /** @returns {import("models").Models["Thread"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {Thread} */
+    /** @returns {import("models").Models["Thread"]} */
     static get(data) {
         return super.get(data);
     }
     /**
-     * @param {Thread.localId} localId
+     * @param {string} localId
      * @returns {string}
      */
     static localIdToActiveId(localId) {
@@ -46,7 +46,7 @@ export class Thread extends Record {
     }
     /**
      * @param {Object} data
-     * @returns {Thread}
+     * @returns {import("models").Models["Thread"]}
      */
     static insert(data) {
         if (!("id" in data)) {

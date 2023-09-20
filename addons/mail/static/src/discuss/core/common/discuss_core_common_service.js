@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-
 import { markup, reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -226,7 +224,6 @@ export class DiscussCoreCommon {
         if (!channel.is_pinned) {
             this.threadService.pin(channel);
         }
-        removeFromArrayWithPredicate(channel.messages, ({ id }) => id === messageData.temporary_id);
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
         if ("parentMessage" in messageData && messageData.parentMessage.body) {

@@ -1,5 +1,6 @@
 /* add this file in jsconfig.json, in typeRoots array */
 declare module "models" {
+    import { Activity } from "@mail/core/web/activity_model";
     import { Attachment } from "@mail/core/common/attachment_model";
     import { CannedResponse } from "@mail/core/common/canned_response_model";
     import { ChannelMember } from "@mail/core/common/channel_member_model";
@@ -14,18 +15,28 @@ declare module "models" {
     import { Thread } from "@mail/core/common/thread_model";
 
     export interface Models {
+        "Activity": Activity,
         "Attachment": Attachment,
         "CannedResponse": CannedResponse,
         "ChannelMember": ChannelMember,
         "Composer": Composer,
         "Follower": Follower,
         "LinkPreview": LinkPreview,
-        "Message": Message,
+        "Message": Message & Partial<Message_Patch>,
         "MessageReactions": MessageReactions,
         "Notification": Notification,
         "Persona": Persona,
         "RtcSession": RtcSession,
-        "Thread": Thread,
+        "Thread": Thread & Partial<Thread_Patch>,
+    }
+
+    export interface Message_Patch {
+        pinnedAt: string,
+    }
+
+    export interface Thread_Patch {
+        pinnedMessages: RecordSet<Models["Message"]>,
+        pinnedMessagesState: "loaded"|"loading"|"error"|undefined,
     }
 
     import { RecordList, RecordSet } from "@mail/core/common/record";

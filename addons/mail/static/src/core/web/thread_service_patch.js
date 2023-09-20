@@ -237,13 +237,6 @@ patch(ThreadService.prototype, {
             [follower.followedThread.id],
             [follower.partner.id],
         ]);
-        const thread = follower.followedThread;
-        if (follower.eq(thread.selfFollower)) {
-            thread.selfFollower = undefined;
-        } else {
-            thread.followers.delete(follower);
-        }
-        this.removeRecipient(follower);
         follower.delete();
     },
     unpin(thread) {

@@ -14,19 +14,19 @@ const { DateTime } = luxon;
 
 export class Message extends Record {
     static id = "id";
-    /** @type {Object.<number, Message>} */
+    /** @type {Object.<number, import("models").Models["Message"]>} */
     static records = {};
-    /** @returns {Message} */
+    /** @returns {import("models").Models["Message"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {Message} */
+    /** @returns {import("models").Models["Message"]} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {Message}
+     * @returns {import("models").Models["Message"]}
      */
     static insert(data) {
         if (data.res_id) {
