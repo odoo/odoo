@@ -1217,7 +1217,7 @@ var BasicModel = AbstractModel.extend({
                             record.saveInProgress = false;
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record).then(function () {
+                                self._fetchRecord(record, { viewType: options.viewType }).then(function () {
                                     resolve(changedFields);
                                 });
                             } else {
