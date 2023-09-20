@@ -4235,11 +4235,8 @@ class BaseModel(metaclass=MetaModel):
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
-        # set magic fields
+        # filter magic fields
         vals = {key: val for key, val in vals.items() if key not in bad_names}
-        if self._log_access:
-            vals.setdefault('write_uid', self.env.uid)
-            vals.setdefault('write_date', self.env.cr.now())
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
