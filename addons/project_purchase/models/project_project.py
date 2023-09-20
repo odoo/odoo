@@ -130,7 +130,9 @@ class Project(models.Model):
                 '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
             ], order=self.env['purchase.order.line']._order)
             query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit', 'purchase_order_line.currency_id', '"purchase_order_line".analytic_distribution')
+            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty',
+                'price_unit', 'COALESCE(purchase_order_line.discount, 0.0) as discount', 'purchase_order_line.currency_id', \
+                '"purchase_order_line".analytic_distribution')
             self._cr.execute(query_string, query_param)
             purchase_order_line_read = [{
                 **pol,
@@ -148,11 +150,15 @@ class Project(models.Model):
                     currency = self.env['res.currency'].browse(pol_read['currency_id']).with_prefetch(currency_ids)
                     price_unit = currency._convert(pol_read['price_unit'], self.currency_id, self.company_id)
                     analytic_contribution = pol_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
-                    amount_invoiced -= price_unit * pol_read['qty_invoiced'] * analytic_contribution if pol_read['qty_invoiced'] > 0 else 0.0
+                    if pol_read['qty_invoiced'] > 0:
+                        bill_amount = sum(pol_read['invoice_lines'].mapped('price_subtotal')) / sum(pol_read['invoice_lines'].mapped('quantity'))
+                        amount_invoiced -= bill_amount *  pol_read['qty_invoiced'] * analytic_contribution
+                    product_qty = 0
                     if pol_read['qty_to_invoice'] > 0:
-                        amount_to_invoice -= price_unit * pol_read['qty_to_invoice'] * analytic_contribution
+                        product_qty = pol_read['qty_to_invoice']
                     else:
-                        amount_to_invoice -= price_unit * (pol_read['product_uom_qty'] - pol_read['qty_invoiced']) * analytic_contribution
+                        product_qty = pol_read['product_uom_qty'] - pol_read['qty_invoiced']
+                    amount_to_invoice -= ((price_unit * product_qty) - ((price_unit * product_qty) * (pol_read['discount'] / 100))) * analytic_contribution
                     purchase_order_line_ids.append(pol_read['id'])
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'

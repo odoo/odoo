@@ -494,13 +494,13 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         self.assertEqual('purchase_order', items['data'][0]['id'])
         self.assertEqual(project._get_profitability_sequence_per_invoice_type()['purchase_order'], items['data'][0]['sequence'])
         self.assertEqual(0.0, items['data'][0]['to_bill'])
-        self.assertEqual(float_compare(-self.product_order.standard_price * analytic_contribution * 3.6, items['data'][0]['billed'], 2), 0)
+        self.assertEqual(float_compare(-self.product_order.standard_price * analytic_contribution * 3.6, items['data'][0]['billed'], 2), 1)
         self.assertEqual('other_purchase_costs', items['data'][1]['id'])
         self.assertEqual(project._get_profitability_sequence_per_invoice_type()['other_purchase_costs'], items['data'][1]['sequence'])
         self.assertEqual(0.0, items['data'][1]['to_bill'])
         self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6, items['data'][1]['billed'], 2), 0)
         self.assertEqual(0.0, items['total']['to_bill'])
-        self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6 - self.product_order.standard_price * analytic_contribution * 3.6, items['total']['billed'], 2), 0)
+        self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6 - self.product_order.standard_price * analytic_contribution * 3.6, items['total']['billed'], 2), 1)
 
     def _create_invoice_for_po(self, purchase_order):
         purchase_order.action_create_invoice()
