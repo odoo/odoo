@@ -49,7 +49,7 @@ export class GenerateDialog extends Component {
         for (const values of move_line_vals) {
             newlines.push(
                 lines._createRecordDatapoint(values, {
-                    mode: 'edit',
+                    mode: 'readonly',
                     virtualId: getId("virtual"),
                     manuallyAdded: false,
                 })
