@@ -216,6 +216,7 @@
                                                     class="form-control s_website_form_input"
                                                     name="email_from" required=""
                                                     data-fill-with="email"/>
+                                                <div class="alert alert-warning mt-2" id="email-message" style="display:none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -241,13 +242,14 @@
                                                 <span class="s_website_form_label_content">LinkedIn Profile</span>
                                             </label>
                                             <div class="col-sm" style="position: relative">
-                                                <i class="fa fa-linkedin fa-2x m-1 o_linkedin_icon"></i>
+                                                <i class="fa fa-linkedin fa-2x m-1 o_linkedin_icon" style="max-height: 37px;"></i>
                                                 <input id="recruitment4" type="text"
                                                     class="form-control s_website_form_input pl64"
                                                     placeholder="e.g. https://www.linkedin.com/in/fpodoo/"
                                                     style="padding-left: 40px"
                                                     name="linkedin_profile"
                                                     data-fill-with="linkedin_profile"/>
+                                                <div class="alert alert-warning mt-2" id="linkedin-message" style="display:none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -261,11 +263,9 @@
                                                 <input id="recruitment6" type="file"
                                                     class="form-control s_website_form_input o_resume_input"
                                                     name="Resume"/>
-                                                <span class="text-muted" style="font-size: 0.8rem">Optional if you provided a Linkedin profile</span>
+                                                <span class="text-muted small">Provide either a resume file or a linkedin profile</span>
                                             </div>
                                         </div>
-                                        <!-- TODO: remove in master -->
-                                        <span class="d-none text-muted" style="margin-left: 200px; font-size: 0.8rem">The resume is optional if you have a Linkedin profile</span>
                                     </div>
                                     <div class="col-12 mb-0 py-2 s_website_form_field"
                                         data-type="text" data-name="Field">
@@ -291,6 +291,9 @@
                                                     class="form-control s_website_form_input"
                                                     name="job_id"/>
                                             </div>
+                                            <div class="col-sm">
+                                                <input id="csrf_token" type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_dnone">
@@ -307,7 +310,7 @@
                                     </div>
                                     <div class="col-12 s_website_form_submit mb64" data-name="Submit Button">
                                         <div style="width: 200px" class="s_website_form_label"/>
-                                        <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">I'm feeling lucky</a>
+                                        <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send" id="apply-btn">I'm feeling lucky</a>
                                         <span id="s_website_form_result"></span>
                                     </div>
                                 </div>
