@@ -41,6 +41,8 @@ const HOUR_FORMATS = {
     },
 };
 
+const { DateTime } = luxon;
+
 export class CalendarCommonRenderer extends Component {
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);
@@ -238,6 +240,9 @@ export class CalendarCommonRenderer extends Component {
             }
             if (record.duration <= 0.25) {
                 el.classList.add("o_event_oneliner");
+            }
+            if (DateTime.now() >= record.end) {
+                el.classList.add("opacity-75");
             }
         }
 
