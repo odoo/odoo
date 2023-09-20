@@ -3994,7 +3994,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".o_calendar_renderer .fc-day-header").textContent,
-            "January 30, 2016",
+            "Sat 30",
             "should display day passed in the context"
         );
     });
@@ -4030,12 +4030,12 @@ QUnit.module("Views", ({ beforeEach }) => {
         const dayHeaders = target.querySelectorAll(".fc-day-header");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Sunday",
+            "Sun 1",
             "The first day of the week should be Sunday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Saturday",
+            "Sat 7",
             "The last day of the week should be Saturday"
         );
 
@@ -4085,12 +4085,12 @@ QUnit.module("Views", ({ beforeEach }) => {
         const dayHeaders = target.querySelectorAll(".fc-day-header");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Monday",
+            "Mon 26",
             "The first day of the week should be Monday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Sunday",
+            "Sun 1",
             "The last day of the week should be Sunday"
         );
 

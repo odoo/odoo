@@ -113,6 +113,7 @@ export class CalendarCommonRenderer extends Component {
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
             windowResize: this.onWindowResizeDebounced,
+            columnHeaderHtml: this.getHeaderHtml,
         };
     }
 
@@ -309,6 +310,11 @@ export class CalendarCommonRenderer extends Component {
     }
     onWindowResize() {
         this.updateSize();
+    }
+
+    getHeaderHtml(date) {
+        const { weekdayShort: weekday, day } = DateTime.fromJSDate(date);
+        return renderToString("web.CalendarCommonRendererHeader", { weekday, day });
     }
 }
 CalendarCommonRenderer.components = {
