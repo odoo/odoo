@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
@@ -65,22 +64,6 @@ export class AttachmentService {
             URL.revokeObjectURL(attachment.tmpUrl);
         }
         attachment.delete();
-        if (attachment.originThread) {
-            removeFromArrayWithPredicate(attachment.originThread.attachments, (att) =>
-                att.eq(attachment)
-            );
-        }
-        for (const message of Object.values(this.store.Message.records)) {
-            removeFromArrayWithPredicate(message.attachments, (att) => att.eq(attachment));
-            if (message.composer) {
-                removeFromArrayWithPredicate(message.composer.attachments, (att) =>
-                    att.eq(attachment)
-                );
-            }
-        }
-        for (const thread of Object.values(this.store.Thread.records)) {
-            removeFromArrayWithPredicate(thread.composer.attachments, (att) => att.eq(attachment));
-        }
     }
 
     /**

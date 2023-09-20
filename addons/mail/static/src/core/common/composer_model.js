@@ -8,17 +8,17 @@ import { OR, Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
-    /** @returns {Composer} */
+    /** @returns {import("models").Models["Composer"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {Composer} */
+    /** @returns {import("models").Models["Composer"]} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {Composer}
+     * @returns {import("models").Models["Composer"]}
      */
     static insert(data) {
         const { message, thread } = data;

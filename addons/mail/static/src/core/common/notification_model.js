@@ -6,19 +6,19 @@ import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends Record {
     static id = "id";
-    /** @type {Object.<number, Notification>} */
+    /** @type {Object.<number, import("models").Models["Notification"]>} */
     static records = {};
-    /** @returns {Notification} */
+    /** @returns {import("models").Models["Notification"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {Notification} */
+    /** @returns {import("models").Models["Notification"]} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {Notification}
+     * @returns {import("models").Models["Notification"]}
      */
     static insert(data) {
         const notification = this.get(data) ?? this.new(data);

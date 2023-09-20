@@ -14,19 +14,19 @@ import { AND, Record } from "@mail/core/common/record";
 
 export class Persona extends Record {
     static id = AND("type", "id");
-    /** @type {Object.<number, Persona>} */
+    /** @type {Object.<number, import("models").Models["Persona"]>} */
     static records = {};
-    /** @returns {Persona} */
+    /** @returns {import("models").Models["Persona"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {Persona} */
+    /** @returns {import("models").Models["Persona"]} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Data} data
-     * @returns {Persona}
+     * @returns {import("models").Models["Persona"]}
      */
     static insert(data) {
         const persona = this.get(data) ?? this.new(data);

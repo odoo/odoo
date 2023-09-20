@@ -37,10 +37,12 @@ QUnit.test("messaging menu should have topbar buttons", async () => {
 QUnit.test("counter is taking into account failure notification", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({});
+    const channelId = pyEnv["discuss.channel"].create({ display_name: "general" });
     const messageId = pyEnv["mail.message"].create({
         model: "discuss.channel",
         res_id: channelId,
+        record_name: "general",
+        res_model_name: "Channel",
     });
     const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],

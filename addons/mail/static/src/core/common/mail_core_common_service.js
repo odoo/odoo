@@ -50,11 +50,6 @@ export class MailCoreCommon {
                         continue;
                     }
                     message.delete();
-                    if (message.originThread) {
-                        removeFromArrayWithPredicate(message.originThread.messages, (msg) =>
-                            msg.eq(message)
-                        );
-                    }
                     this.env.bus.trigger("mail.message/delete", { message });
                 }
             });

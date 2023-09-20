@@ -8,19 +8,19 @@ import { url } from "@web/core/utils/urls";
 
 export class Attachment extends Record {
     static id = "id";
-    /** @type {Object.<number, Attachment>} */
+    /** @type {Object.<number, import("models").Models["Attachment"]>} */
     static records = {};
-    /** @returns {Attachment} */
+    /** @returns {import("models").Models["Attachment"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {Attachment} */
+    /** @returns {import("models").Models["Attachment"]} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {Attachment}
+     * @returns {import("models").Models["Attachment"]}
      */
     static insert(data) {
         if (!("id" in data)) {

@@ -47,26 +47,10 @@ export class MailCoreWeb {
             });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
                 if (message.isNeedaction) {
-                    removeFromArrayWithPredicate(
-                        this.store.discuss.inbox.messages,
-                        ({ id }) => id === message.id
-                    );
                     this.store.discuss.inbox.counter--;
                 }
                 if (message.isStarred) {
-                    removeFromArrayWithPredicate(
-                        this.store.discuss.starred.messages,
-                        ({ id }) => id === message.id
-                    );
                     this.store.discuss.starred.counter--;
-                }
-                if (message.originThread) {
-                    if (message.isNeedaction) {
-                        removeFromArrayWithPredicate(
-                            message.originThread.needactionMessages,
-                            ({ id }) => id === message.id
-                        );
-                    }
                 }
             });
             this.busService.subscribe("mail.message/inbox", (payload) => {

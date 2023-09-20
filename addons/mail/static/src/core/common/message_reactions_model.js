@@ -4,17 +4,17 @@ import { AND, Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {
     static id = AND("message", "content");
-    /** @returns {MessageReactions} */
+    /** @returns {import("models").Models["MessageReactions"]} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {MessageReactions} */
+    /** @returns {import("models").Models["MessageReactions"]} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {MessageReactions}
+     * @returns {import("models").Models["MessageReactions"]}
      */
     static insert(data) {
         let reaction = this.store.Message.get(data.message.id)?.reactions.find(
@@ -48,7 +48,7 @@ export class MessageReactions extends Record {
         Object.assign(reaction, {
             count: data.count,
             content: data.content,
-            message: data.message,
+            message: this.store.Message.insert(data.message),
             personas: reaction.personas.filter((p) => !personasToUnlink.has(p)),
         });
         return reaction;

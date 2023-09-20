@@ -298,7 +298,7 @@ export class MessagingMenu extends Component {
                 (thread) => thread.is_pinned && thread.message_unread_counter > 0
             ).length +
             Object.values(this.store.NotificationGroup.records).reduce(
-                (acc, ng) => acc + parseInt(Object.values(ng.notifications).length),
+                (acc, ng) => acc + parseInt(ng.notifications.length),
                 0
             );
         if (this.notification.permission === "prompt") {
