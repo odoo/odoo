@@ -682,7 +682,7 @@ AnalyticDistribution.props = {
 
 export const analyticDistribution = {
     component: AnalyticDistribution,
-    supportedTypes: ["char", "text"],
+    supportedTypes: ["char", "text", "json"],
     fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
     extractProps: ({ attrs, options }) => ({
         business_domain: options.business_domain,
