@@ -4906,6 +4906,21 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.strictEqual(target.querySelector(".modal [name='properties']").textContent, "Hello");
     });
 
+    QUnit.test("calendar show past events with background blur", async (assert) => {
+        assert.expect(2);
+        patchDate(2016, 11, 14, 9, 0, 0);
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" mode="week"/>
+            `,
+        });
+        assert.containsN(target, ".fc-event", 5, "should show 5 events");
+        assert.containsN(target, ".fc-event.o_past_event", 4, "should show 4 past events");
+    });
+
     QUnit.module("CalendarView - DatePicker", ({ beforeEach }) => {
         beforeEach(() => {
             target = getFixture();
