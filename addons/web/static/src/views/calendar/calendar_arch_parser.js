@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
@@ -26,7 +27,8 @@ export class CalendarArchParser extends XMLParser {
         let jsClass = null;
         let eventLimit = 5;
         let scales = [...SCALES];
-        let scale = "week";
+        const sessionScale = browser.sessionStorage.getItem("calendar-scale");
+        let scale = sessionScale || "week";
         let canCreate = true;
         let canDelete = true;
         let quickCreate = true;

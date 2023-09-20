@@ -5076,5 +5076,40 @@ QUnit.module("Views", ({ beforeEach }) => {
                 "4"
             );
         });
+
+        QUnit.test("Scale: scale default is fetched from sessionStorage", async (assert) => {
+            assert.expect(4);
+
+            patchWithCleanup(browser, {
+                sessionStorage: {
+                    setItem(key, value) {
+                        if (key === "calendar-scale") {
+                            assert.step(`scale_${value}`);
+                        }
+                    },
+                    getItem(key) {
+                        if (key === "calendar-scale") {
+                            return "month";
+                        }
+                    },
+                },
+            });
+
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" attendee="partner_ids">
+                    <field name="partner_ids" write_field="partner_id" />
+                </calendar>
+                `,
+            });
+
+            assert.equal(target.querySelector(".scale_button_selection").textContent, "Month");
+            await changeScale(target, "year");
+            assert.equal(target.querySelector(".scale_button_selection").textContent, "Year");
+            assert.verifySteps(["scale_year"]);
+        });
     });
 });
