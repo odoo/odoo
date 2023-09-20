@@ -2683,12 +2683,10 @@ export class Order extends PosModel {
     getOrderReceiptEnv() {
         // Formerly get_receipt_render_env defined in ScreenWidget.
         const receipt = this.export_for_printing();
-        const isTaxIncluded = Math.abs(receipt.subtotal - receipt.total_with_tax) <= 0.000001;
         const getOrderlineTaxes = (line) =>
             Object.keys(line.tax_details).map((taxId) => this.pos.taxes_by_id[taxId]);
         return {
             getOrderlineTaxes: getOrderlineTaxes,
-            isTaxIncluded: isTaxIncluded,
             order: this,
             receipt: receipt,
             orderlines: this.get_orderlines(),

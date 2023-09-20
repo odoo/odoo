@@ -77,7 +77,6 @@ export class TicketScreen extends Component {
     //#region EVENT HANDLERS
     async onFilterSelected(selectedFilter) {
         this._state.ui.filter = selectedFilter;
-        this._state.ui.selectedOrder = null;
         if (this._state.ui.filter == "ACTIVE_ORDERS" || this._state.ui.filter === null) {
             this._state.ui.selectedOrder = this.pos.get_order();
         }
@@ -646,8 +645,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) =>
-                    deserializeDate(order.date_order).toFormat("yyyy-MM-dd HH:mm a"),
+                repr: (order) => deserializeDate(order.date_order).toFormat("yyyy-MM-dd HH:mm a"),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },

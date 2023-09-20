@@ -21,7 +21,7 @@ export class ReprintReceiptScreen extends AbstractReceiptScreen {
     }
 
     get receiptData() {
-        return this.pos.get_order().getOrderReceiptEnv();
+        return this.props.order.getOrderReceiptEnv();
     }
 }
 
