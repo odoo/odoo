@@ -6,6 +6,7 @@ import { parse } from "web.field_utils";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { Component, useState } from "@odoo/owl";
 
+<<<<<<< HEAD
 patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     _getScreenToStatusMap() {
         return Object.assign(this._super(...arguments), {
@@ -18,6 +19,64 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     getTable(order) {
         if (order.getTable()) {
             return `${order.getTable().floor.name} (${order.getTable().name})`;
+||||||| parent of 8c64e185124 (temp)
+const { useState } = owl;
+
+const PosResTicketScreen = (TicketScreen) =>
+    class extends TicketScreen {
+        close() {
+            if (!this.env.pos.config.iface_floorplan) {
+                super.close();
+            } else {
+                const order = this.env.pos.get_order();
+                if (order) {
+                    const { name: screenName } = order.get_screen_data();
+                    this.showScreen(screenName);
+                } else {
+                    this.showScreen("FloorScreen");
+                }
+            }
+        }
+        _getScreenToStatusMap() {
+            return Object.assign(super._getScreenToStatusMap(), {
+                PaymentScreen: this.env.pos.config.set_tip_after_payment
+                    ? "OPEN"
+                    : super._getScreenToStatusMap().PaymentScreen,
+                TipScreen: "TIPPING",
+            });
+        }
+        getTable(order) {
+            return `${order.getTable().floor.name} (${order.getTable().name})`;
+=======
+const { useState } = owl;
+
+const PosResTicketScreen = (TicketScreen) =>
+    class extends TicketScreen {
+        close() {
+            if (!this.env.pos.config.iface_floorplan) {
+                super.close();
+            } else {
+                const order = this.env.pos.get_order();
+                if (order) {
+                    const { name: screenName } = order.get_screen_data();
+                    this.showScreen(screenName);
+                } else {
+                    this.showScreen("FloorScreen");
+                }
+            }
+        }
+        _getScreenToStatusMap() {
+            return Object.assign(super._getScreenToStatusMap(), {
+                PaymentScreen: this.env.pos.config.set_tip_after_payment
+                    ? "OPEN"
+                    : super._getScreenToStatusMap().PaymentScreen,
+                TipScreen: "TIPPING",
+            });
+        }
+        getTable(order) {
+            const table = order.getTable();
+            return table ? `${table.floor.name} (${table.name})` : '';
+>>>>>>> 8c64e185124 (temp)
         }
     },
     //@override
