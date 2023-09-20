@@ -5,7 +5,7 @@
         <field name="name">payment.provider.form</field>
         <field name="model">payment.provider</field>
         <field name="arch" type="xml">
-            <form string="Payment provider" create="0">
+            <form string="Payment provider">
                 <field name="company_id" invisible="1"/>
                 <field name="is_published" invisible="1"/>
                 <field name="main_currency_id" invisible="1"/>
@@ -59,6 +59,10 @@
                             <a invisible="not module_to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info" role="button">Upgrade</a>
                             <button invisible="module_to_buy" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
                         </div>
+                    </div>
+                    <div id="provider_creation_warning" invisible="id" class="alert alert-warning" role="alert">
+                        <strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.
+                        Please use the <em>Duplicate</em> action instead.
                     </div>
                     <group>
                         <group name="payment_state" invisible="module_state not in ('installed', False)">
