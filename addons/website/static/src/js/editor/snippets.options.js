@@ -676,7 +676,51 @@ options.Class.include({
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
-
+    /**
+     * @see this.selectClass for parameters
+     */
+    previewPalette: async function (previewMode, widgetValue, params) {
+        const [primaryColor, , secondaryColor, bgColor, fgColor, primaryText, secondaryText] =
+            widgetValue.split(";");
+        const headingEl = document.querySelectorAll(
+            "we-title.o_we_cc_preview_wrapper .o_we_color_combination_btn_title"
+        )[1];
+        const bgEl = document.querySelectorAll(
+            "we-title.o_we_cc_preview_wrapper.o_we_collapse_toggler"
+        )[1];
+        const primaryBtnEl = document.querySelectorAll(
+            "we-title.o_we_cc_preview_wrapper .o_we_color_combination_btn_btn.btn-primary"
+        )[1];
+        const secondaryBtnEl = document.querySelectorAll(
+            "we-title.o_we_cc_preview_wrapper .o_we_color_combination_btn_btn.btn-secondary"
+        )[1];
+        const styleIframe = getComputedStyle(this.$target[0]);
+        if (previewMode === true) {
+            bgEl.style.backgroundColor = bgColor;
+            bgEl.style.color = fgColor;
+            headingEl.style.color = fgColor;
+            if (weUtils.getCSSVariableValue("btn-secondary-outline", styleIframe) === "true") {
+                secondaryBtnEl.style.backgroundColor = "transparent";
+                secondaryBtnEl.style.color = secondaryColor;
+            } else {
+                secondaryBtnEl.style.backgroundColor = secondaryColor;
+                secondaryBtnEl.style.color = secondaryText;
+            }
+            if (weUtils.getCSSVariableValue("btn-primary-outline", styleIframe) === "true") {
+                primaryBtnEl.style.backgroundColor = "transparent";
+                primaryBtnEl.style.color = primaryColor;
+            } else {
+                primaryBtnEl.style.backgroundColor = primaryColor;
+                primaryBtnEl.style.color = primaryText;
+            }
+            secondaryBtnEl.style.borderColor = secondaryColor;
+            primaryBtnEl.style.borderColor = primaryColor;
+        } else if (previewMode === "reset") {
+            [bgEl, headingEl, secondaryBtnEl, primaryBtnEl].forEach((el) =>
+                el.removeAttribute("style")
+            );
+        }
+    },
     /**
      * @see this.selectClass for parameters
      */
@@ -1529,10 +1573,13 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
      * @see this.selectClass for parameters
      */
     async customizeButtonStyle(previewMode, widgetValue, params) {
-        await this._customizeWebsiteVariables({
-            [`btn-${params.button}-outline`]: widgetValue === 'outline',
-            [`btn-${params.button}-flat`]: widgetValue === 'flat',
-        }, params.nullValue);
+        await this._customizeWebsiteVariables(
+            {
+                [`btn-${params.button}-outline`]: widgetValue === "outline" ? "true" : "false",
+                [`btn-${params.button}-flat`]: widgetValue === "flat" ? "true" : "false",
+            },
+            params.nullValue
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -1615,7 +1662,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         if (methodName === 'customizeButtonStyle') {
             const isOutline = weUtils.getCSSVariableValue(`btn-${params.button}-outline`);
             const isFlat = weUtils.getCSSVariableValue(`btn-${params.button}-flat`);
-            return isFlat === "'True'" ? 'flat' : isOutline === "'True'" ? 'outline' : 'fill';
+            return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
         }
         return this._super(...arguments);
     },
@@ -1683,13 +1730,26 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             const btnEl = document.createElement('we-button');
             btnEl.classList.add('o_palette_color_preview_button');
             btnEl.dataset.customizeWebsiteVariable = `'${paletteName}'`;
-            [1, 3, 2].forEach(c => {
-                const colorPreviewEl = document.createElement('span');
-                colorPreviewEl.classList.add('o_palette_color_preview');
-                const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
-                colorPreviewEl.style.backgroundColor = color;
-                btnEl.appendChild(colorPreviewEl);
+            btnEl.dataset.previewPalette = "";
+            [1, 3, 2, 4, 5].forEach((c) => {
+                const color = weUtils.getCSSVariableValue(
+                    `o-palette-${paletteName}-o-color-${c}`,
+                    style
+                );
+                if (c < 4) {
+                    const colorPreviewEl = document.createElement("span");
+                    colorPreviewEl.classList.add("o_palette_color_preview");
+                    colorPreviewEl.style.backgroundColor = color;
+                    btnEl.appendChild(colorPreviewEl);
+                }
+                btnEl.dataset.previewPalette += color + ";";
             });
+            btnEl.dataset.previewPalette +=
+                weUtils.getCSSVariableValue(`o-palette-${paletteName}-btn-primary-text`, style) +
+                ";";
+            btnEl.dataset.previewPalette +=
+                weUtils.getCSSVariableValue(`o-palette-${paletteName}-btn-secondary-text`, style) +
+                ";";
             paletteSelectorEl.appendChild(btnEl);
         }
 
@@ -1697,8 +1757,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         let ccPreviewEls = [];
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
-            const ccPreviewEl = $(renderToElement('web_editor.color.combination.preview.legacy'))[0];
-            ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_colored_level', 'o_we_collapse_toggler');
+            const ccPreviewEl = $(renderToElement('web_editor.color.combination.preview.legacy', { number: i }))[0];
+            ccPreviewEl.classList.add(`o_cc${i}`, "o_colored_level", "o_we_collapse_toggler");
             collapseEl.appendChild(ccPreviewEl);
             collapseEl.appendChild(renderToFragment('website.color_combination_edition', {number: i}));
             ccPreviewEls.push(ccPreviewEl);

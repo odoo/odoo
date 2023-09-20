@@ -64,7 +64,7 @@ wTourUtils.goToTheme(),
     trigger: '.o_we_theme_presets_collapse we-toggler',
 }, {
     content: "Open a color combination",
-    trigger: '.o_we_cc_preview_wrapper',
+    trigger: "div.o_we_cc_preview_wrapper",
 }, {
     content: "Edit the background color of that color combination",
     trigger: '.o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0)',

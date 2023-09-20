@@ -1707,21 +1707,39 @@ export class Wysiwyg extends Component {
      * @param {HTMLElement} element
      */
     setCSSVariables(element) {
-        const stylesToCopy = weUtils.EDITOR_COLOR_CSS_VARIABLES;
+        const stylesToCopy = [
+            ...weUtils.EDITOR_COLOR_CSS_VARIABLES,
+            ...weUtils.EDITOR_FONT_CSS_VARIABLES,
+        ];
 
         for (const style of stylesToCopy) {
             let value = weUtils.getCSSVariableValue(style);
-            if (value.startsWith("'") && value.endsWith("'")) {
+            if (value === "'SYSTEM_FONTS'") {
+                value = "var(--o-system-fonts)";
+            } else if (value.startsWith("'") && value.endsWith("'")) {
                 // Gradient values are recovered within a string.
                 value = value.substring(1, value.length - 1);
             }
             element.style.setProperty(`--we-cp-${style}`, value);
         }
-
+        element.style.setProperty("--we-cp-btn-outline-primary-border-width",
+            weUtils.getCSSVariableValue("btn-primary-outline-border-width"));
+        element.style.setProperty("--we-cp-btn-outline-secondary-border-width",
+            weUtils.getCSSVariableValue("btn-secondary-outline-border-width"));
+        element.style.setProperty("--we-cp-btn-border-radius",
+            weUtils.getCSSVariableValue("btn-border-radius"));
         element.classList.toggle('o_we_has_btn_outline_primary',
             weUtils.getCSSVariableValue('btn-primary-outline') === 'true');
         element.classList.toggle('o_we_has_btn_outline_secondary',
             weUtils.getCSSVariableValue('btn-secondary-outline') === 'true');
+        element.classList.toggle(
+            "o_we_has_btn_flat_primary",
+            weUtils.getCSSVariableValue("btn-primary-flat") === "true"
+        );
+        element.classList.toggle(
+            "o_we_has_btn_flat_secondary",
+            weUtils.getCSSVariableValue("btn-secondary-flat") === "true"
+        );
     }
     /**
      * Detached function to allow overriding.

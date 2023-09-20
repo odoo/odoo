@@ -11,6 +11,10 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
 }, () => [
     wTourUtils.goToTheme(),
     {
+        content: "Open the theme colors collapse snippet option",
+        trigger: ".o_we_cc_preview_wrapper",
+    },
+    {
         content: "Open colorpicker to change website main color",
         trigger: 'we-select[data-color="o-color-1"] .o_we_color_preview',
     },

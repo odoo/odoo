@@ -37,7 +37,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         THEME: 'theme',
     });
     static optionsTabStructure = [
-        ['theme-colors', _t("Colors")],
+        ['theme-colors', _t("Theme Colors")],
         ['website-settings', _t("Website")],
         ['theme-paragraph', _t("Paragraph")],
         ['theme-headings', _t("Headings")],

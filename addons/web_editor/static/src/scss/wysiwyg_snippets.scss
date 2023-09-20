@@ -1970,7 +1970,6 @@
 }
 .o_we_cc_preview_wrapper > * {
     margin-bottom: 0 !important;
-    line-height: 1 !important;
 }
 .o_we_color_combination_btn_text {
     color: inherit !important;
@@ -1981,9 +1980,10 @@
 .o_we_color_combination_btn_title {
     margin-top: 0 !important;
     font-size: 1.3em !important;
+    font-family: var(--headings-font) !important;
 }
 .o_we_color_combination_btn_btn {
-    padding: 0.2em 3px 0.3em !important;
+    padding: 0.1em 0px 0em !important;
     border-radius: 2px !important;
     font-size: 0.8em !important;
 }
@@ -2036,26 +2036,18 @@ we-select.o_we_border_preview_aligned_select {
 
             // Borders instead of margins so that the user smoothly goes from
             // one button to another without leaving them.
-            border-top: $o-we-sidebar-content-field-spacing solid transparent;
-            border-bottom: $o-we-sidebar-content-field-spacing solid transparent;
+            border-top: $o-we-sidebar-content-field-spacing * .85 solid transparent;
+            border-bottom: $o-we-sidebar-content-field-spacing * .85 solid transparent;
 
             + .o_we_color_combination_btn {
                 margin-top: $o-we-sidebar-content-field-spacing * -.5;
-            }
-
-            &.selected {
-                > .o_we_cc_preview_wrapper {
-                    box-shadow: 0 0 0 1px $o-we-color-success !important;
-                }
-                .o_we_color_combination_btn_title::before {
-                    content: "\f00c";
-                    margin-right: $o-we-sidebar-content-field-spacing;
-                    font-size: 0.8em;
-                    font-family: FontAwesome;
-                    color: $o-we-color-success;
+                &.selected {
+                    > .o_we_cc_preview_wrapper {
+                        border: 4px solid $o-we-color-success !important;
+                        border-radius: 2px;
+                    }
                 }
             }
-
             .o_we_cc_preview_wrapper:after {
                 // For some reasons, in this specific context we have to
                 // compensate a 1px gap between the flex container and the

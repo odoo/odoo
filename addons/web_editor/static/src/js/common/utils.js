@@ -11,6 +11,7 @@ const _setEditableWindow = (ew) => editableWindow = ew;
 let editableDocument = document;
 const _setEditableDocument = (ed) => editableDocument = ed;
 
+const EDITOR_FONT_CSS_VARIABLES = ["headings-font", "navbar-font", "buttons-font", "font"];
 const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
 
 /**
@@ -323,7 +324,12 @@ function _getCSSVariableValue(key, htmlStyle) {
     // quoted for strings or non quoted for colors, numbers, etc. However,
     // Chrome has the annoying behavior of changing the single-quotes to
     // double-quotes when reading them through getPropertyValue...
-    return value.replace(/"/g, "'");
+    value = value.replace(/"/g, "'");
+    // Prevent Python boolean style and keep safe retro-compatibility
+    if (["'True'", "'False'"].includes(value)) {
+        value = value.replace(/'/g, "").toLowerCase();
+    }
+    return value;
 }
 /**
  * Normalize a color in case it is a variable name so it can be used outside of
@@ -494,6 +500,7 @@ export default {
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
     DEFAULT_PALETTE: DEFAULT_PALETTE,
     EDITOR_COLOR_CSS_VARIABLES: EDITOR_COLOR_CSS_VARIABLES,
+    EDITOR_FONT_CSS_VARIABLES: EDITOR_FONT_CSS_VARIABLES,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,

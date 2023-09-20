@@ -21,7 +21,8 @@
             @each $key, $value in $-palette {
                 @include print-variable('o-palette-#{$-selected-palette-name}-#{$key}', $value);
             }
-
+            @include print-variable('o-palette-#{$-selected-palette-name}-btn-primary-text', color-contrast(map_get($-palette, 'o-color-1'), map_get($o-base-gray-color-palette, '900'), #FFFFFF, 3, #FFFFFF));
+            @include print-variable('o-palette-#{$-selected-palette-name}-btn-secondary-text', color-contrast(map_get($-palette, 'o-color-2'), map_get($o-base-gray-color-palette, '900'), #FFFFFF, 3, #FFFFFF));
             @each $attr-name, $default-cc-idx in $-default-cc {
                 $-cc-idx: $default-cc-idx;
                 @if map-has-key($-palette, $attr-name) {
