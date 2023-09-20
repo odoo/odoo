@@ -797,7 +797,7 @@ export class StaticList extends DataPoint {
     }
 
     _getCommands({ withReadonly } = {}) {
-        const { CREATE, UPDATE } = x2ManyCommands;
+        const { CREATE, UPDATE, LINK } = x2ManyCommands;
         const commands = [];
         for (const command of this._commands) {
             if (command[0] === UPDATE && command[1] in this._unknownRecordCommands) {
@@ -814,9 +814,16 @@ export class StaticList extends DataPoint {
                 }
             } else if (command[0] === CREATE || command[0] === UPDATE) {
                 const record = this._cache[command[1]];
-                const values = record._getChanges(record._changes, { withReadonly });
-                if (command[0] === CREATE || Object.keys(values).length) {
-                    commands.push([command[0], command[1], values]);
+                if (command[0] === CREATE && record.resId) {
+                    // we created a new record, but it has already been saved (e.g. because we clicked
+                    // on a view button in the x2many dialog), so replace the CREATE command by a
+                    // LINK
+                    commands.push([LINK, record.resId]);
+                } else {
+                    const values = record._getChanges(record._changes, { withReadonly });
+                    if (command[0] === CREATE || Object.keys(values).length) {
+                        commands.push([command[0], command[1], values]);
+                    }
                 }
             } else {
                 commands.push(command);

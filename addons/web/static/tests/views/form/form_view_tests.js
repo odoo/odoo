@@ -127,6 +127,7 @@ QUnit.module("Views", (hooks) => {
                                 ["partner", "Partner"],
                             ],
                         },
+                        user_id: { string: "User", type: "many2one", relation: "user" },
                     },
                     records: [
                         {
@@ -14299,4 +14300,90 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, "[name='int_field'] input", "42");
         assert.verifySteps(["get_special_data 9", "get_special_data 42"]);
     });
+
+    QUnit.test(
+        "x2many field in form dialog view is correctly saved when using a view button",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Partner",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                    view_mode: "form",
+                    res_id: 6,
+                },
+            };
+
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                    </form>`,
+                "partner,false,search": `<search/>`,
+                "user,false,form": `
+                    <form>
+                        <field name="partner_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                            <form>
+                                <header>
+                                    <button type="action" name="1" string="test"/>
+                                </header>
+                                <field name="display_name"/>
+                            </form>
+                        </field>
+                    </form>
+                `,
+                "user,false,search": `<search/>`,
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC: (route, { method, args, model }) => {
+                    if (method === "web_save") {
+                        if (model === "partner") {
+                            assert.step(`web_save_partner`);
+                            assert.deepEqual(args[1], {
+                                display_name: "new value",
+                            });
+                        } else if (model === "user") {
+                            assert.step(`web_save_user`);
+                            assert.deepEqual(
+                                args[1],
+                                {
+                                    partner_ids: [[4, 6]],
+                                },
+                                "Should be a LINK_TO command"
+                            );
+                        }
+                    }
+                },
+            });
+            await doAction(webClient, {
+                res_id: 19,
+                type: "ir.actions.act_window",
+                res_model: "user",
+                view_mode: "form",
+                views: [[false, "form"]],
+            });
+
+            assert.containsNone(target, ".o_data_cell");
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
+            await editInput(target, ".o_field_widget[name=display_name] input", "new value");
+            await click(target, ".modal-dialog .o_form_button_save");
+            await click(target.querySelector(".o_data_cell"));
+            await click(target, "[name='1']");
+            assert.verifySteps(
+                ["web_save_partner", "web_save_user"],
+                "Verify that the x2many record is saved (partner is saved, then user is saved with a link to"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=display_name] input").value,
+                "new value"
+            );
+        }
+    );
 });
