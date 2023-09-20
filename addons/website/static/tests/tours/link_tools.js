@@ -216,8 +216,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated and link content is synced with URL",
         trigger: "iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
+        run: () => null,
     },
     // 9.Test that UI stays up-to-date.
+    {
+        content: "Click on link to open popover",
+        trigger: "iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
+    },
     {
         content: "Popover should be shown",
         trigger: "iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
@@ -226,15 +231,15 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Edit link label",
         trigger: "iframe .s_text_image p a",
-        run() {
-            // Simulating text input.
-            const link = this.$anchor[0];
-            link.textContent = "callmemaybe.com/shop";
-            // Trick the editor into keyboardType === 'PHYSICAL'
-            link.dispatchEvent(new KeyboardEvent('keydown', { key: 'o', bubbles: true }));
-            // Trigger editor's '_onInput' handler, which leads to a history step.
-            link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}))
-        },
+        async run(actions) {
+            // Wait for the popover to finish its opening animation and turn the
+            // observer back on.
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // This does not trigger a historyStep...
+            actions.text("callmemaybe.com/shops");
+            // ... but this does.
+            this.$anchor[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
+        }
     },
     {
         content: "Check that links's href was updated",
