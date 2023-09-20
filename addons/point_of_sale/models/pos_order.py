@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _inherit = ["portal.mixin"]
+    _inherit = ["portal.mixin", "pos.bus.mixin"]
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 

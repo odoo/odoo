@@ -98,27 +98,10 @@ class PosConfig(models.Model):
         string="Self Order Kiosk Image Brand Name",
         help="Name of the image to display on the self order screen",
     )
-    access_token = fields.Char(
-        "Security Token",
-        copy=False,
-        required=True,
-        readonly=True,
-        default=lambda self: self._get_access_token(),
-    )
-
-    @staticmethod
-    def _get_access_token():
-        return uuid.uuid4().hex[:16]
 
     def _update_access_token(self):
-        self.access_token = self._get_access_token()
+        self.access_token = uuid.uuid4().hex[:16]
         self.floor_ids.table_ids._update_identifier()
-
-    @api.model
-    def _init_access_token(self):
-        pos_config_ids = self.env["pos.config"].search([])
-        for pos_config_id in pos_config_ids:
-            pos_config_id.access_token = self._get_access_token()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -402,17 +385,11 @@ class PosConfig(models.Model):
             record.self_ordering_url = self.get_base_url() + self._get_self_order_route()
 
     def action_close_kiosk_session(self):
-        current_session_id = self.current_session_id
+        if self.current_session_id and self.current_session_id.order_ids:
+            self.current_session_id.order_ids.filtered(lambda o: o.state not in ['paid', 'invoiced']).unlink()
 
-        if current_session_id:
-            if current_session_id.order_ids:
-                current_session_id.order_ids.filtered(lambda o: o.state not in ['paid', 'invoiced']).unlink()
-
-            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {
-                'status': 'closed',
-            })
-
-            return current_session_id.action_pos_session_closing_control()
+        self._notify('STATUS', {'status': 'closed'})
+        return self.current_session_id.action_pos_session_closing_control()
 
     def _compute_status(self):
         for record in self:
@@ -431,12 +408,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
-            pos_session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
-            pos_session._ensure_access_token()
-            self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {
-                'status': 'open',
-                'pos_session': pos_session.read(['id', 'access_token'])[0],
-            })
+            self._notify('STATUS', {'status': 'open'})
 
         return {
             'name': _('Self Kiosk'),

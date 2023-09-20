@@ -17,7 +17,7 @@ class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
     _description = 'Point of Sale Session'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', "pos.bus.mixin"]
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -33,7 +33,6 @@ class PosSession(models.Model):
         required=True,
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
-    access_token = fields.Char('Security Token', copy=False)
     user_id = fields.Many2one(
         'res.users', string='Opened By',
         required=True,
@@ -1944,15 +1943,6 @@ class PosSession(models.Model):
         record = self.env['barcode.nomenclature'].search(domain=domain, limit=1)
 
         return record.id if record else None
-
-    def _ensure_access_token(self):
-        # Code taken from addons/portal/models/portal_mixin.py
-        if not self.access_token:
-            self.sudo().write({'access_token': secrets.token_hex(16)})
-        return self.access_token
-
-    def _get_bus_channel_name(self):
-        return f'pos_session-{self.id}-{self._ensure_access_token()}'
 
     def _get_partners_domain(self):
         return []

@@ -37,8 +37,41 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
+            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+            // Sync the number of orders on each table with other PoS
+            const result = await this.data.call(
+                "pos.config",
+                "get_tables_order_count_and_printing_changes",
+                [this.config.id]
+            );
+
+            this.ws_syncTableCount(result);
+
+            this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
         }
-        this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+    },
+    // using the same floorplan.
+    async ws_syncTableCount(data) {
+        const missingTable = data.find(
+            (table) => !(table.id in this.models["restaurant.table"].getAllBy("id"))
+        );
+
+        if (missingTable) {
+            const response = await this.data.searchRead("restaurant.floor", [
+                ["pos_config_ids", "in", this.config.id],
+            ]);
+
+            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
+            await this.data.read("restaurant.table", table_ids);
+        }
+
+        for (const table of data) {
+            this.tableNotifications[table.id] = {
+                order_count: table.orders,
+                changes_count: table.changes,
+                skip_changes: table.skip_changes,
+            };
+        }
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);

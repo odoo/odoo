@@ -8,7 +8,7 @@ import { markRaw, reactive } from "@odoo/owl";
 import { roundPrecision as round_pr, floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl } from "@point_of_sale/utils";
+import { deduceUrl, getOnNotified } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
@@ -86,6 +86,7 @@ export class PosStore extends Reactive {
     mainScreen = { name: null, component: null };
 
     static serviceDependencies = [
+        "bus_service",
         "number_buffer",
         "barcode_reader",
         "hardware_proxy",
@@ -101,15 +102,24 @@ export class PosStore extends Reactive {
     // use setup instead of constructor because setup can be patched.
     async setup(
         env,
-        { popup, number_buffer, hardware_proxy, barcode_reader, ui, pos_data, dialog, printer }
+        {
+            number_buffer,
+            hardware_proxy,
+            barcode_reader,
+            ui,
+            dialog,
+            printer,
+            bus_service,
+            pos_data,
+        }
     ) {
         this.env = env;
-        this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
         this.ui = ui;
         this.dialog = dialog;
         this.printer = printer;
+        this.bus = bus_service;
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.data = pos_data;
         this.unwatched = markRaw({});
@@ -187,6 +197,7 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
+        this.onNotified = getOnNotified(this.bus, this.config.access_token);
         return await this.afterProcessServerData();
     }
 
@@ -422,7 +433,6 @@ export class PosStore extends Reactive {
                 return;
             }
         }
-
         if (product.combo_ids.length) {
             // { combo_line_id: {}, configuration: {}}
             const payload = await makeAwaitable(this.env.services.dialog, ComboConfiguratorPopup, {
@@ -1416,14 +1426,14 @@ export class PosStore extends Reactive {
      * @param {float} tax_base_amount
      * @param {float} currency_round
      * @returns {Object}
-    */
+     */
     _prepare_tax_vals_data(tax, sign, factorized_tax_amount, tax_base_amount, currency_rounding) {
         return {
-            'id': tax.id,
-            'name': tax.name,
-            'amount': sign * factorized_tax_amount,
-            'base': sign * round_pr(tax_base_amount, currency_rounding),
-        }
+            id: tax.id,
+            name: tax.name,
+            amount: sign * factorized_tax_amount,
+            base: sign * round_pr(tax_base_amount, currency_rounding),
+        };
     }
 
     /**
@@ -1571,7 +1581,15 @@ export class PosStore extends Reactive {
                 cumulated_tax_included_amount += factorized_tax_amount;
             }
 
-            taxes_vals.push(self._prepare_tax_vals_data(tax, sign, factorized_tax_amount, tax_base_amount, currency_rounding));
+            taxes_vals.push(
+                self._prepare_tax_vals_data(
+                    tax,
+                    sign,
+                    factorized_tax_amount,
+                    tax_base_amount,
+                    currency_rounding
+                )
+            );
 
             if (tax.include_base_amount) {
                 base += factorized_tax_amount;
