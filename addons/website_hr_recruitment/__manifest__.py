@@ -28,6 +28,7 @@
     'assets': {
         'web.assets_frontend': [
             'website_hr_recruitment/static/src/scss/**/*',
+            'website_hr_recruitment/static/src/js/website_hr_applicant_form.js',
         ],
         'website.assets_wysiwyg': [
             'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',

@@ -23,6 +23,10 @@
             trigger: "input[name=partner_mobile]",
             run: `text ${application.phone}`,
         }, {
+            content: "Complete LinkedIn profile",
+            trigger: "input[name=linkedin_profile]",
+            run: `text linkedin.com/in/${application.name.toLowerCase().replace(' ', '-')}`,
+        }, {
             content: "Complete Subject",
             trigger: "textarea[name=description]",
             run: `text ${application.subject}`,
