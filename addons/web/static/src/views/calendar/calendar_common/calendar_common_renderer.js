@@ -83,6 +83,7 @@ export class CalendarCommonRenderer extends Component {
             eventDrop: this.onEventDrop,
             eventLimit: this.props.model.eventLimit,
             eventLimitClick: this.onEventLimitClick,
+            eventLimitText: this.env.isSmall ? "" : "more",
             eventMouseEnter: this.onEventMouseEnter,
             eventMouseLeave: this.onEventMouseLeave,
             eventRender: this.onEventRender,
@@ -113,6 +114,7 @@ export class CalendarCommonRenderer extends Component {
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
             windowResize: this.onWindowResizeDebounced,
+            columnHeaderHtml: this.getHeaderHtml,
         };
     }
 
@@ -175,7 +177,12 @@ export class CalendarCommonRenderer extends Component {
         );
     }
     updateSize() {
-        const height = window.innerHeight - this.fc.el.getBoundingClientRect().top;
+        let headerHeight = 0;
+        if (!this.env.isSmall) {
+            headerHeight =
+                document.querySelector(".o_calendar_header")?.getBoundingClientRect()?.height ?? 0;
+        }
+        const height = window.innerHeight - this.fc.el.getBoundingClientRect().top - headerHeight;
         this.fc.el.style.height = `${height}px`;
         this.fc.api.updateSize();
     }
@@ -205,6 +212,7 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventClick(info) {
         this.click(info);
+        info.el.classList.toggle("o_calendar_popover_open");
     }
     onEventRender(info) {
         const { el, event } = info;
@@ -310,9 +318,25 @@ export class CalendarCommonRenderer extends Component {
     onWindowResize() {
         this.updateSize();
     }
+
+    getHeaderHtml(date) {
+        const scale = this.props.model.scale;
+        const {
+            weekdayShort: weekdayShort,
+            weekdayLong: weekdayLong,
+            day,
+        } = DateTime.fromJSDate(date);
+        return renderToString(this.constructor.headerTemplate, {
+            weekdayShort,
+            weekdayLong,
+            day,
+            scale,
+        });
+    }
 }
 CalendarCommonRenderer.components = {
     Popover: CalendarCommonPopover,
 };
 CalendarCommonRenderer.template = "web.CalendarCommonRenderer";
 CalendarCommonRenderer.eventTemplate = "web.CalendarCommonRenderer.event";
+CalendarCommonRenderer.headerTemplate = "web.CalendarCommonRendererHeader";

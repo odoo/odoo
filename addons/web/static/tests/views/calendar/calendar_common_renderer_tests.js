@@ -67,7 +67,7 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
     QUnit.test("Day: check date", async (assert) => {
         await start({ model: { scale: "day" } });
         assert.containsOnce(target, ".fc-day-header");
-        assert.strictEqual(target.querySelector(".fc-day-header").textContent, "July 16, 2021");
+        assert.strictEqual(target.querySelector(".fc-day-header").textContent, "Fri 16");
     });
 
     QUnit.test("Day: click all day slot", async (assert) => {
