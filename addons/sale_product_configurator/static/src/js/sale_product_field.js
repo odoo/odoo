@@ -100,7 +100,7 @@ patch(SaleOrderLineProductField.prototype, {
              * no_variant and custom attribute don't need to be given to the configurator for new
              * products.
              */
-            ptavIds.concat(this.props.record.data.product_no_variant_attribute_value_ids.records.map(
+            ptavIds = ptavIds.concat(this.props.record.data.product_no_variant_attribute_value_ids.records.map(
                 record => record.resId
             ));
             /**
