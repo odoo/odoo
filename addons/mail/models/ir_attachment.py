@@ -45,7 +45,8 @@ class IrAttachment(models.Model):
         self.ensure_one()
         if not self.res_model:
             return
-        related_record = self.env[self.res_model].browse(self.res_id)
+        res_model = self.env.context.get("res_model", self.res_model)
+        related_record = self.env[res_model].browse(self.res_id)
         if not related_record.check_access_rights('write', raise_exception=False):
             return
         # message_main_attachment_id field can be empty, that's why we compare to False;

@@ -907,6 +907,11 @@ registerModel({
                 model: 'ir.attachment',
                 method: 'register_as_main_attachment',
                 args: [[this.mainAttachment.id]],
+                kwargs: {
+                    context: {
+                        res_model: this.model,
+                    }
+                },
             });
         },
         /**
