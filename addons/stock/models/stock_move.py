@@ -960,19 +960,19 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _push_apply(self):
         new_moves = []
-        for move in self:
-            # if the move is already chained, there is no need to check push rules
-            if move.move_dest_ids:
-                continue
+        # if the move is already chained, there is no need to check push rules
+        check_moves = self.filtered(lambda m: not m.move_dest_ids)
+        rules = self.env['stock.rule'].search([('location_src_id', 'in', check_moves.location_dest_id.ids)])
+        for move in check_moves:
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
             if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+                rule = rules._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             else:
-                rule = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+                rule = rules.sudo()._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
@@ -1510,8 +1510,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             is performed and reservation is done on the passed quants set
         """
         self.ensure_one()
-        if not quant_ids:
+        if quant_ids is None:
             quant_ids = self.env['stock.quant']
+        elif not quant_ids:  # empty set passed
+            return 0
         if not lot_id:
             lot_id = self.env['stock.lot']
         if not package_id:
@@ -2101,7 +2103,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 ('location_dest_id', '=', move.location_dest_id.id),
                 ('action', '!=', 'push')
             ]
-            rules = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
+            rules = self.env['stock.rule']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
             if rules:
                 if rules.procure_method in ['make_to_order', 'make_to_stock']:
                     move.procure_method = rules.procure_method
@@ -2139,15 +2141,19 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         orderpoints_context_by_company = defaultdict(dict)
+        orderpoints = self.env['stock.warehouse.orderpoint'].search_fetch([
+            ('product_id', 'in', self.product_id.ids),
+            ('trigger', '=', 'auto'),
+            ('location_id', 'parent_of', self.location_id.ids),
+            ('company_id', 'in', self.company_id.ids),
+        ], ['product_id', 'location_id', 'company_id', 'product_min_qty'])
         for move in self:
-            orderpoint = self.env['stock.warehouse.orderpoint'].search([
-                ('product_id', '=', move.product_id.id),
-                ('trigger', '=', 'auto'),
-                ('location_id', 'parent_of', move.location_id.id),
-                ('company_id', '=', move.company_id.id),
-                '!', ('location_id', 'parent_of', move.location_dest_id.id),
-            ], limit=1)
+            orderpoint = orderpoints.filtered(lambda o: o.product_id == move.product_id and
+                                              str(o.location_id.id) in move.location_id.parent_path and
+                                              o.company_id == move.company_id and
+                                              not str(o.location_id.id) in move.location_dest_id.parent_path)
             if orderpoint:
+                orderpoint = orderpoint[0]
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint
             if orderpoint and move.product_qty > orderpoint.product_min_qty and move.origin:
                 orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
