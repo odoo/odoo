@@ -87,7 +87,7 @@ describe('Link', () => {
         testUrlRegex('https://www.google.com/');
         testNotUrlRegex('google.shop/');
         testUrlRegex('http://google.com/foo#test');
-        testUrlRegex('a.bcd.ef');
+        testNotUrlRegex('a.bcd.ef');
         testUrlRegex('a.bc.de');
         testNotUrlRegex('a.bc.d');
         testNotUrlRegex('a.b.bc');
