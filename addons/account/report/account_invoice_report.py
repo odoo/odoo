@@ -94,15 +94,15 @@ class AccountInvoiceReport(models.Model):
                 template.categ_id                                           AS product_categ_id,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
-                -line.balance * currency_table.rate                         AS price_subtotal,
-                line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
+                -line.balance * currency_table_company_curr.rate            AS price_subtotal,
+                line.price_total * currency_table_line_curr.rate * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS price_total,
                 -COALESCE(
                    -- Average line price
                    (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                    -- convert to template uom
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
-                   0.0) * currency_table.rate                               AS price_average,
+                   0.0) * currency_table_company_curr.rate                  AS price_average,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
         '''
 
@@ -118,9 +118,11 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-                JOIN {currency_table} ON currency_table.company_id = line.company_id
+                JOIN {currency_table_company_curr} ON currency_table_company_curr.company_id = line.company_id AND currency_table_company_curr.currency_id = line.company_currency_id
+                JOIN {currency_table_line_curr} ON currency_table_line_curr.company_id = line.company_id AND currency_table_line_curr.currency_id = line.currency_id
         '''.format(
-            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
+            currency_table_company_curr=self.env['res.currency']._get_query_all_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}, 'currency_table_company_curr'),
+            currency_table_line_curr=self.env['res.currency']._get_query_all_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}, 'currency_table_line_curr'),
         )
 
     @api.model

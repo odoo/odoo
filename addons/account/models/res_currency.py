@@ -64,3 +64,33 @@ class ResCurrency(models.Model):
             ))
         query = '(VALUES %s) AS currency_table(company_id, rate, precision)' % ','.join('(%s, %s, %s)' for i in companies)
         return self.env.cr.mogrify(query, conversion_rates).decode(self.env.cr.connection.encoding)
+
+    @api.model
+    def _get_query_all_currency_table(self, options, name='currency_table'):
+        ''' Basically the same as _get_query_currency_table() but returns a table with all active currencies.
+        :param options: The report options.
+        :return:        The query representing the currency table.
+        '''
+
+        user_company = self.env.company
+        user_currency = user_company.currency_id
+        if options.get('multi_company', False):
+            companies = self.env.companies
+        else:
+            companies = user_company
+
+        conversion_date = options['date']['date_to']
+        active_currencies = self.env['res.currency'].search([('active', '=', True)])
+        currency_rates = active_currencies._get_rates(user_company, conversion_date)
+
+        conversion_rates = []
+        for currency in active_currencies:
+            for company in companies:
+                conversion_rates.extend((
+                    company.id,
+                    currency_rates[user_company.currency_id.id] / currency_rates[currency.id],
+                    user_currency.decimal_places,
+                    currency.id,
+                    ))
+        query = '(VALUES %s) AS %s(company_id, rate, precision, currency_id)' % (','.join('(%s, %s, %s, %s)' for i in range(len(companies) * len(active_currencies))), name)
+        return self.env.cr.mogrify(query, conversion_rates).decode(self.env.cr.connection.encoding)
