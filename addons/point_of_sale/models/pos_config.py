@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError, UserError
 
 class PosConfig(models.Model):
     _name = 'pos.config'
+    _inherit = ['pos.bus.mixin']
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
 
@@ -183,6 +184,7 @@ class PosConfig(models.Model):
     trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
                                           column2="is_trusted", string="Trusted Point of Sale Configurations",
                                           domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False)]")
+    access_token = fields.Char("Access Token", default=lambda self: uuid4().hex[:16])
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

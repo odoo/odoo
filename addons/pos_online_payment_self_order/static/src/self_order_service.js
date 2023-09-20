@@ -7,6 +7,13 @@ patch(SelfOrder.prototype, {
     async setup(...args) {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
+        this.onNotified("ONLINE_PAYMENT_STATUS", ({ status, order }) => {
+            this.onlinePaymentStatus = status;
+            this.paymentError = status === "fail";
+            if (status === "success" && this.currentOrder.access_token === order.access_token) {
+                this.finalizeOrder();
+            }
+        });
     },
     finalizeOrder() {
         const order = this.currentOrder;
