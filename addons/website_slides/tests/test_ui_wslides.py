@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import tests
 from odoo.fields import Datetime
 from odoo.modules.module import get_module_resource
+from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 
@@ -97,6 +98,33 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
 @tests.common.tagged('post_install', '-at_install')
 class TestUi(TestUICommon):
+
+    @mute_logger("odoo.http", "odoo.addons.base.models.ir_rule", "werkzeug")
+    def test_course_access_fail_redirection(self):
+        """Test that the user is redirected to /slides with en error displayed instead of the standard error page."""
+        self.channel.visibility = "members"
+        urls = (
+            f"/slides/aaa-{self.channel.id}",
+            f"/slides/{self.channel.id}",
+            f"/slides/{self.channel.id}/page/1",
+            f"/slides/aaa-{self.channel.id}/page/1",
+            f"/slides/slide/{self.channel.slide_ids[0].id}",
+            f"/slides/slide/aaa-{self.channel.slide_ids[0].id}",
+            f"/slides/slide/{self.channel.slide_ids[0].id}/pdf_content",
+            f"/slides/slide/aaa-{self.channel.slide_ids[0].id}/pdf_content",
+        )
+        for url in urls:
+            response = self.url_open(url, allow_redirects=False)
+            self.assertTrue(response.headers.get("Location", "").endswith("/slides?invite_error=no_rights"))
+
+        # auth="user" has priority
+        urls = (
+            f"/slides/slide/aaa-{self.channel.slide_ids[0].id}/set_completed",
+            f"/slides/slide/{self.channel.slide_ids[0].id}/set_completed",
+        )
+        for url in urls:
+            response = self.url_open(url, allow_redirects=False)
+            self.assertIn("/web/login", response.headers.get("Location", ""))
 
     def test_course_member_employee(self):
         user_demo = self.user_demo
