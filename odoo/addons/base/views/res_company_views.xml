@@ -6,7 +6,16 @@
             <field name="model">res.company</field>
             <field name="arch" type="xml">
                 <form string="Company" duplicate="0">
+                  <field name="all_child_ids" invisible="1"/>
                   <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                name="action_all_company_branches"
+                                type="object"
+                                attrs="{'invisible': [('all_child_ids', '=', [])]}"
+                                icon="fa-sitemap"
+                                string="Branches"/>
+                    </div>
                     <field name="logo" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name"/>
@@ -57,11 +66,12 @@
             <field name="name">res.company.tree</field>
             <field name="model">res.company</field>
             <field name="arch" type="xml">
-                <tree string="Companies">
+                <tree string="Companies" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="active" invisible="True"/>
                 </tree>
             </field>
         </record>
