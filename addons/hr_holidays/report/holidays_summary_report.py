@@ -146,18 +146,23 @@ class HrHolidaySummaryReport(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        if not data.get('form'):
-            raise UserError(_("Form content is missing, this report cannot be printed."))
 
         holidays_report = self.env['ir.actions.report']._get_report_from_name('hr_holidays.report_holidayssummary')
         holidays = self.env['hr.leave'].browse(self.ids)
+        if data and data.get('form'):
+            return {
+                'doc_ids': self.ids,
+                'doc_model': holidays_report.model,
+                'docs': holidays,
+                'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
+                'get_day': self._get_day(data['form']['date_from']),
+                'get_months': self._get_months(data['form']['date_from']),
+                'get_data_from_report': self._get_data_from_report(data['form']),
+                'get_holidays_status': self._get_holidays_status(data['form']),
+            }
+
         return {
             'doc_ids': self.ids,
             'doc_model': holidays_report.model,
-            'docs': holidays,
-            'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
-            'get_day': self._get_day(data['form']['date_from']),
-            'get_months': self._get_months(data['form']['date_from']),
-            'get_data_from_report': self._get_data_from_report(data['form']),
-            'get_holidays_status': self._get_holidays_status(data['form']),
+            'docs': holidays
         }
