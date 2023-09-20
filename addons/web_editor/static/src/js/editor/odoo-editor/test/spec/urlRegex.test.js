@@ -19,6 +19,18 @@ describe('urlRegex', () => {
         const match = text.match(URL_REGEX);
         chai.expect(match[0]).to.be.equal(url);
     });
+    it('should match abc.abc.com', () => {
+        const url = 'abc.abc.com';
+        const text = `abc ${url} abc`;
+        const match = text.match(URL_REGEX);
+        chai.expect(match[0]).to.be.equal(url);
+    });
+    it('should not match abc.abc.abc', () => {
+        const url = 'abc.abc.abc';
+        const text = `abc ${url} abc`;
+        const match = text.match(URL_REGEX);
+        chai.expect(match).to.be.equal(null);
+    });
     it('should match http://abc.abc.abc', () => {
         const url = 'http://abc.abc.abc';
         const text = `abc ${url} abc`;
