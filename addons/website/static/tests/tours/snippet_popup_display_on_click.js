@@ -43,14 +43,14 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         },
     },
     wTourUtils.clickOnElement("button to close the popup", "iframe .s_popup_close"),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-primary"),
+    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
     {
         content: "Paste the popup anchor in the URL input",
         trigger: "#o_link_dialog_url_input",
         run: "text #Win-%2420"
     },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-primary"),
+    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens after clicked the button.",
         in_modal: false,
@@ -68,14 +68,14 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.dragNDrop({id: "s_text_image", name: "Image - Text"}),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-primary"),
+    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
     {
         content: "Add a link to the homepage popup in the URL input",
         trigger: "#o_link_dialog_url_input",
         run: "text /#Win-%2420"
     },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-primary"),
+    wTourUtils.clickOnElement("text image snippet button", "iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens when the homepage page loads.",
         in_modal: false,
