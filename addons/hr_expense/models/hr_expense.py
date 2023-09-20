@@ -25,7 +25,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id')
+        return self.env['product.product'].search([('can_be_expensed', '=', True)],limit = 1).uom_id
 
     @api.model
     def _default_account_id(self):
