@@ -67,6 +67,7 @@ class MrpConsumptionWarning(models.TransientModel):
                         'product_uom_qty': line.product_expected_qty_uom,
                         'quantity_done': line.product_expected_qty_uom,
                         'raw_material_production_id': line.mrp_production_id.id,
+                        'additional': True,
                     })
         if problem_tracked_products:
             raise UserError(
