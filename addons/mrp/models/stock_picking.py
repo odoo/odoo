@@ -56,12 +56,14 @@ class StockPickingType(models.Model):
 
     @api.depends('code')
     def _compute_use_create_lots(self):
+        super()._compute_use_create_lots()
         for picking_type in self:
             if picking_type.code == 'mrp_operation':
                 picking_type.use_create_lots = True
 
     @api.depends('code')
     def _compute_use_existing_lots(self):
+        super()._compute_use_existing_lots()
         for picking_type in self:
             if picking_type.code == 'mrp_operation':
                 picking_type.use_existing_lots = True
