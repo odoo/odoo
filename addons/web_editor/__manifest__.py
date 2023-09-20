@@ -186,6 +186,7 @@ Odoo Web Editor widget.
 
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
+            'web_editor/static/src/components/history_dialog/**/*',
         ],
         "web.assets_web_dark": [
             'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
