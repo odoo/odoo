@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 from lxml import etree
 
 from odoo import models, _
@@ -162,7 +163,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_invoice_payment_terms_vals_list(self, invoice):
         payment_term = invoice.invoice_payment_term_id
         if payment_term:
-            return [{'note_vals': [payment_term.name]}]
+            # The payment term's note is automatically embedded in a <p> tag in Odoo
+            return [{'note_vals': [html2plaintext(payment_term.note)]}]
         else:
             return []
 
@@ -173,16 +175,30 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_amount': taxes_vals['tax_amount_currency'],
             'tax_subtotal_vals': [],
         }
+        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
         for grouping_key, vals in taxes_vals['tax_details'].items():
             if grouping_key['tax_amount_type'] != 'fixed':
-                tax_totals_vals['tax_subtotal_vals'].append({
+                subtotal = {
                     'currency': invoice.currency_id,
                     'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
                     'taxable_amount': vals['base_amount_currency'],
                     'tax_amount': vals['tax_amount_currency'],
                     'percent': vals['_tax_category_vals_']['percent'],
                     'tax_category_vals': vals['_tax_category_vals_'],
-                })
+                }
+                if epd_tax_to_discount:
+                    # early payment discounts: need to recompute the tax/taxable amounts
+                    taxable_amount_after_epd = subtotal['taxable_amount'] - epd_tax_to_discount.get(subtotal['percent'], 0)
+                    tax_amount_after_epd = taxable_amount_after_epd * subtotal['tax_category_vals']['percent'] / 100
+                    subtotal.update({
+                        'taxable_amount': taxable_amount_after_epd,
+                        'tax_amount': tax_amount_after_epd,
+                    })
+                tax_totals_vals['tax_subtotal_vals'].append(subtotal)
+
+        if epd_tax_to_discount:
+            # early payment discounts: hence, need to recompute the total tax amount
+            tax_totals_vals['tax_amount'] = sum([subtot['tax_amount'] for subtot in tax_totals_vals['tax_subtotal_vals']])
         return [tax_totals_vals]
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -216,8 +232,45 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_document_allowance_charge_vals_list(self, invoice):
         """
         https://docs.peppol.eu/poacc/billing/3.0/bis/#_document_level_allowance_or_charge
+        Usage for early payment discounts:
+        * Add one document level Allowance per tax rate (VAT included)
+        * Add one document level Charge (VAT excluded) with amount = the total sum of the early payment discount
+        The difference between these is the cash discount in case of early payment.
         """
-        return []
+        vals_list = []
+        # Early Payment Discount
+        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+        if epd_tax_to_discount:
+            # One Allowance per tax rate (VAT included)
+            for tax_amount, discount_amount in epd_tax_to_discount.items():
+                vals_list.append({
+                    'charge_indicator': 'false',
+                    'allowance_charge_reason_code': '66',
+                    'allowance_charge_reason': _("Conditional cash/payment discount"),
+                    'amount': discount_amount,
+                    'currency_dp': 2,
+                    'currency_name': invoice.currency_id.name,
+                    'tax_category_vals': [{
+                        'id': 'S',
+                        'percent': tax_amount,
+                        'tax_scheme_id': 'VAT',
+                    }],
+                })
+            # One global Charge (VAT exempted)
+            vals_list.append({
+                'charge_indicator': 'true',
+                'allowance_charge_reason_code': 'ZZZ',
+                'allowance_charge_reason': _("Conditional cash/payment discount"),
+                'amount': sum(epd_tax_to_discount.values()),
+                'currency_dp': 2,
+                'currency_name': invoice.currency_id.name,
+                'tax_category_vals': [{
+                    'id': 'E',
+                    'percent': 0.0,
+                    'tax_scheme_id': 'VAT',
+                }],
+            })
+        return vals_list
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         """ Method used to fill the cac:InvoiceLine>cac:AllowanceCharge node.
@@ -332,7 +385,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'price_vals': self._get_invoice_line_price_vals(line),
         }
 
-    def _get_invoice_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount):
+    def _get_invoice_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
         """ Method used to fill the cac:LegalMonetaryTotal node"""
         return {
             'currency': invoice.currency_id,
@@ -341,6 +394,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_exclusive_amount': taxes_vals['base_amount_currency'],
             'tax_inclusive_amount': invoice.amount_total,
             'allowance_total_amount': allowance_total_amount or None,
+            'charge_total_amount': charge_total_amount or None,
             'prepaid_amount': invoice.amount_total - invoice.amount_residual,
             'payable_amount': invoice.amount_residual,
         }
@@ -356,6 +410,19 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             To be overridden to apply a specific invoice line filter
         """
         return True
+
+    def _get_early_payment_discount_grouped_by_tax_rate(self, invoice):
+        """
+        Get the early payment discounts grouped by the tax rate of the product it is linked to
+        :returns {float: float}: mapping tax amounts to early payment discount amounts
+        """
+        if invoice.invoice_payment_term_id.early_pay_discount_computation != 'mixed':
+            return {}
+        tax_to_discount = defaultdict(lambda: 0)
+        for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd'):
+            for tax in line.tax_ids:
+                tax_to_discount[tax.amount] += line.amount_currency
+        return tax_to_discount
 
     def _export_invoice_vals(self, invoice):
         def grouping_key_generator(base_line, tax_values):
@@ -410,9 +477,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # Compute the total allowance/charge amounts.
         allowance_total_amount = 0.0
+        charge_total_amount = 0.0
         for allowance_charge_vals in document_allowance_charge_vals_list:
             if allowance_charge_vals['charge_indicator'] == 'false':
                 allowance_total_amount += allowance_charge_vals['amount']
+            else:
+                charge_total_amount += allowance_charge_vals['amount']
 
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.commercial_partner_id
@@ -463,7 +533,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 # allowances at the document level, the allowances on invoices (eg. discount) are on invoice_line_vals
                 'allowance_charge_vals': document_allowance_charge_vals_list,
                 'tax_total_vals': self._get_invoice_tax_totals_vals_list(invoice, taxes_vals),
-                'legal_monetary_total_vals': self._get_invoice_legal_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount),
+                'legal_monetary_total_vals': self._get_invoice_legal_monetary_total_vals(
+                    invoice,
+                    taxes_vals,
+                    line_extension_amount,
+                    allowance_total_amount,
+                    charge_total_amount,
+                ),
                 'invoice_line_vals': invoice_line_vals_list,
                 'currency_dp': self._get_currency_decimal_places(invoice.currency_id),  # currency decimal places
             },
@@ -577,11 +653,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         narration = ""
         note_node = tree.find('./{*}Note')
         if note_node is not None and note_node.text:
-            narration += note_node.text + "\n"
+            narration += f"<p>{note_node.text}</p>"
 
         payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
         if payment_terms_node is not None and payment_terms_node.text:
-            narration += payment_terms_node.text + "\n"
+            narration += f"<p>{payment_terms_node.text}</p>"
 
         invoice.narration = narration
 
