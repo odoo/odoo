@@ -148,14 +148,14 @@ export class RecordList extends Array {
         return this.__list__.length;
     }
     /**
-     * @param {Function} func
+     * @param {(a: R, b: R) => boolean} func
      * @returns {R[]}
      */
     map(func) {
         return this.__list__.map((localId) => func(this.__store__.get(localId)));
     }
     /**
-     * @param {Function} predicate
+     * @param {(a: R, b: R) => boolean} predicate
      * @returns {R[]}
      */
     filter(predicate) {
@@ -163,16 +163,16 @@ export class RecordList extends Array {
             .filter((localId) => predicate(this.__store__.get(localId)))
             .map((localId) => this.__store__.get(localId));
     }
-    /** @param {Function} predicate */
+    /** @param {(a: R, b: R) => boolean} predicate */
     some(predicate) {
         return this.__list__.some((localId) => predicate(this.__store__.get(localId)));
     }
-    /** @param {Function} predicate */
+    /** @param {(a: R, b: R) => boolean} predicate */
     every(predicate) {
         return this.__list__.every((localId) => predicate(this.__store__.get(localId)));
     }
     /**
-     * @param {Function} predicate
+     * @param {(a: R, b: R) => boolean} predicate
      * @returns {R}
      */
     find(predicate) {
@@ -180,7 +180,7 @@ export class RecordList extends Array {
             this.__list__.find((localId) => predicate(this.__store__.get(localId)))
         );
     }
-    /** @param {Function} predicate */
+    /** @param {(a: R, b: R) => boolean} predicate */
     findIndex(predicate) {
         return this.__list__.findIndex((localId) => predicate(this.__store__.get(localId)));
     }
@@ -215,7 +215,7 @@ export class RecordList extends Array {
             this.__addInverse__(r);
         }
     }
-    /** @param {Function} func */
+    /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
         this.__list__.sort((a, b) => func(this.__store__.get(a), this.__store__.get(b)));
     }
@@ -225,6 +225,7 @@ export class RecordList extends Array {
             .map((localId) => this.__store__.get(localId))
             .concat(...collections.map((c) => [...c]));
     }
+    /** @yields {R} */
     *[Symbol.iterator]() {
         for (const localId of this.__list__) {
             yield this.__store__.get(localId);
@@ -275,16 +276,19 @@ export class RecordSet extends Set {
     has(record) {
         return this.__set__.has(record?.localId);
     }
+    /** @yields {R} */
     *values() {
         for (const localId of this.__set__) {
             yield this.__store__.get(localId);
         }
     }
+    /** @yields {R} */
     *keys() {
         for (const localId of this.__set__) {
             yield this.__store__.get(localId);
         }
     }
+    /** @yields {R} */
     *[Symbol.iterator]() {
         for (const localId of this.__set__) {
             yield this.__store__.get(localId);
@@ -454,6 +458,12 @@ export class Record {
     /** @type {string} */
     localId;
 
+    constructor() {
+        this.setup();
+    }
+
+    setup() {}
+
     delete() {
         const r1 = this;
         for (const [name, l1] of r1.__rels__.entries()) {
@@ -468,6 +478,11 @@ export class Record {
         for (const [localId, names] of r1.__invs__.__map__.entries()) {
             for (const [name2, count] of names.entries()) {
                 const r2 = this._store.get(localId);
+                if (!r2) {
+                    // record already deleted, clean inverses
+                    r1.__invs__.__map__.delete(localId);
+                    continue;
+                }
                 const l2 = r2.__rels__.get(name2);
                 if (l2 instanceof RecordList) {
                     for (let c = 0; c < count; c++) {

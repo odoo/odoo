@@ -2,11 +2,7 @@
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
-import {
-    removeFromArray,
-    removeFromArrayWithPredicate,
-    replaceArrayWithCompare,
-} from "@mail/utils/common/arrays";
+import { removeFromArray, replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined, nullifyClearCommands } from "@mail/utils/common/misc";
 
@@ -868,10 +864,7 @@ export class ThreadService {
             thread.seen_message_id = tmpMsg.id;
         }
         const data = await this.rpc(this.getMessagePostRoute(thread), params);
-        if (thread.type !== "chatter") {
-            removeFromArrayWithPredicate(thread.messages, (msg) => msg.eq(tmpMsg));
-            tmpMsg.delete();
-        }
+        tmpMsg?.delete();
         if (!data) {
             return;
         }
