@@ -1839,16 +1839,16 @@ class _String(Field):
         : return: {'en_US': 'value_en_US', 'fr_FR': 'French'}
         """
         # assert (self.translate and self.store and record)
-        record.flush_recordset([self.name])
-        cr = record.env.cr
-        cr.execute(SQL(
-            "SELECT %s FROM %s WHERE id = %s",
-            SQL.identifier(self.name),
-            SQL.identifier(record._table),
-            record.id,
-        ))
-        res = cr.fetchone()
-        return res[0] if res else None
+        context_key = record.env.cache_key(self)
+        cache_value = record.env.cache.get(self, context_key, record._ids[0])
+        if not (cache_value is None or isinstance(cache_value, TranslatedCacheValue)):
+            # invalidate prefetch_ids records so the data will be flushed and the in_cache_without will miss
+            record.browse(record._prefetch_ids).invalidate_recordset([self.name])
+            try:
+                cache_value = self._get(record.with_context(prefetch_langs=True))
+            except MissingError:
+                return None
+        return dict(cache_value) if cache_value else None
 
     def get_translation_fallback_langs(self, env):
         lang = self._lang(env)

@@ -522,6 +522,16 @@ class TestTranslation(TransactionCase):
             self.assertEqual(category_en.name, 'Customers')
             self.assertEqual(category_zh.name, 'Customers')
 
+        categories = category_en + category_en.copy() + category_en.copy()
+        categories.invalidate_recordset()
+
+        with self.assertQueryCount(1):
+            for category in categories:
+                self.assertDictEqual(
+                    category._fields['name']._get_stored_translations(category),
+                    {'en_US': 'Customers', 'nl_NL': 'Klanten', 'fr_FR': 'Clients'}
+                )
+
 
     # TODO Currently, the unique constraint doesn't work for translatable field
     # def test_111_unique_en(self):
