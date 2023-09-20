@@ -3212,6 +3212,11 @@ export class Wysiwyg extends Component {
     }
     _attachHistoryIds(editable = this.odooEditor.editable) {
         if (this.options.collaborative) {
+            // clean existig 'data-last-history-steps' attributes
+            editable.querySelectorAll('[data-last-history-steps]').forEach(
+                el => el.removeAttribute('data-last-history-steps')
+            );
+
             const historyIds = this.odooEditor.historyGetBranchIds().join(',');
             const firstChild = editable.children[0];
             if (firstChild) {
