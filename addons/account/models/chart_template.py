@@ -175,7 +175,7 @@ class AccountChartTemplate(models.AbstractModel):
         if not reload_template and (not company._existing_accounting() or self.env.ref('base.module_account').demo):
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
-                    self.env[model].sudo().search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
