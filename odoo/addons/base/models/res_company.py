@@ -33,6 +33,7 @@ class Company(models.Model):
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Branches')
+    all_child_ids = fields.One2many('res.company', 'parent_id', context={'active_test': False})
     parent_path = fields.Char(index=True, unaccent=False)
     parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
     root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
@@ -393,3 +394,17 @@ class Company(models.Model):
             len(self.env.companies.root_id) == 1
             and self.env.companies == self.env['res.company'].sudo().search([('id', 'child_of', self.env.company.root_id.ids)])
         )
+
+    def action_all_company_branches(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Branches'),
+            'res_model': 'res.company',
+            'domain': [('parent_id', '=', self.id)],
+            'context': {
+                'active_test': False,
+                'default_parent_id': self.id,
+            },
+            'views': [[False, 'tree'], [False, 'kanban'], [False, 'form']],
+        }
