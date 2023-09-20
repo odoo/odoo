@@ -301,7 +301,7 @@ export function findEvent(target, eventId) {
     return target.querySelector(`.o_event[data-event-id="${eventId}"]`);
 }
 
-function findDateCol(target, date) {
+export function findDateCol(target, date) {
     return target.querySelector(`.fc-day-header[data-date="${date}"]`);
 }
 
@@ -309,7 +309,7 @@ export function findTimeRow(target, time) {
     return target.querySelector(`.fc-slats [data-time="${time}"] .fc-widget-content`);
 }
 
-async function triggerEventForCalendar(el, type, position = {}) {
+export async function triggerEventForCalendar(el, type, position = {}) {
     const rect = el.getBoundingClientRect();
     const x = position.x || rect.x + rect.width / 2;
     const y = position.y || rect.y + rect.height / 2;
