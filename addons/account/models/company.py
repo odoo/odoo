@@ -356,7 +356,8 @@ class ResCompany(models.Model):
         if self.user_has_groups('account.group_account_manager'):
             lock_date = self.fiscalyear_lock_date or date.min
         if self.parent_id:
-            lock_date = max(lock_date, self.parent_id._get_user_fiscal_lock_date())
+            # We need to use sudo, since we might not have access to a parent company.
+            lock_date = max(lock_date, self.sudo().parent_id._get_user_fiscal_lock_date())
         return lock_date
 
     def _get_violated_lock_dates(self, accounting_date, has_tax):
