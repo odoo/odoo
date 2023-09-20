@@ -11,7 +11,7 @@ import { SmoothScrollOnDrag } from "@web_editor/js/editor/smooth_scroll_on_drag"
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
-const ALLOWED_ELEMENTS = 'h1, h2, h3, p, hr, pre, blockquote, ul, ol, table, .o_knowledge_behavior_anchor, .o_text_columns';
+const ALLOWED_ELEMENTS = 'h1, h2, h3, p, hr, pre, blockquote, ul, ol, table, .o_knowledge_behavior_anchor, .o_text_columns, .o_editor_banner';
 
 export class MoveNodePlugin {
     constructor(options = {}) {
@@ -408,7 +408,7 @@ export class MoveNodePlugin {
 }
 
 function isNodeMovable(node) {
-    return node.parentElement?.getAttribute('contentEditable') === 'true';
+    return node.parentElement?.getAttribute('contentEditable') === 'true' && !node.parentElement.closest('.o_editor_banner');
 }
 
 function isPointInside(rect, x, y) {
