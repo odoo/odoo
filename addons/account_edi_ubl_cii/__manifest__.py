@@ -32,6 +32,6 @@ Pro rules and show the errors.
         'views/res_partner_views.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': ['account'],
     'license': 'LGPL-3',
 }
