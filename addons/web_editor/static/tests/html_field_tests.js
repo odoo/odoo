@@ -12,8 +12,92 @@ import Wysiwyg from 'web_editor.wysiwyg';
 // Legacy
 import legacyEnv from 'web.commonEnv';
 
+const COLOR_PICKER_TEMPLATE = `
+    <colorpicker>
+        <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+            <button data-color="o-color-1"/>
+            <button data-color="o-color-2"/>
+            <button data-color="o-color-3"/>
+            <button data-color="o-color-4"/>
+            <button data-color="o-color-5"/>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
+            <button class="o_btn_transparent"/>
+            <button data-color="black-25"/>
+            <button data-color="black-50"/>
+            <button data-color="black-75"/>
+            <button data-color="white-25"/>
+            <button data-color="white-50"/>
+            <button data-color="white-75"/>
+        </div>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
+        </div>
+    </colorpicker>
+`;
+const SNIPPETS_TEMPLATE = `
+    <h2 id="snippets_menu">Add blocks</h2>
+    <div id="o_scroll">
+        <div id="snippet_structure" class="o_panel">
+            <div class="o_panel_header">First Panel</div>
+            <div class="o_panel_body">
+                <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg">
+                    <div class="s_hr pt32 pb32">
+                        <hr class="s_hr_1px s_hr_solid w-100 mx-auto"/>
+                    </div>
+                </div>
+                <div name="Content" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png">
+                    <section name="Content+Options" class="test_option_all pt32 pb32" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-10 offset-lg-1 pt32 pb32">
+                                    <h2>Title</h2>
+                                    <p class="lead o_default_snippet_text">Content</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="snippet_options" class="d-none">
+        <div data-js="many2one" data-selector="[data-oe-many2one-model]:not([data-oe-readonly])" data-no-check="true"/>
+        <div data-js="content"
+            data-selector=".s_hr, .test_option_all"
+            data-drop-in=".note-editable"
+            data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
+        <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"/>
+        <div data-selector=".test_option_all">
+            <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>
+        </div>
+        <div data-js="BackgroundImage" data-selector=".test_option_all">
+            <we-button data-choose-image="true" data-no-preview="true">
+                <i class="fa fa-picture-o"/> Background Image
+            </we-button>
+        </div>
+        <div data-js="option_test" data-selector=".s_hr">
+            <we-select string="Alignment">
+                <we-button data-select-class="align-items-start">Top</we-button>
+                <we-button data-select-class="align-items-center">Middle</we-button>
+                <we-button data-select-class="align-items-end">Bottom</we-button>
+                <we-button data-select-class="align-items-stretch">Equal height</we-button>
+            </we-select>
+        </div>
+    </div>`;
+
 const wait = async (ms=150) => {
-    await new Promise((res) => setTimeout(res(), ms))
+    await new Promise((res) => setTimeout(res, ms))
 }
 
 async function iframeReady(iframe) {
@@ -130,7 +214,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     });
 
     QUnit.test('colorpicker', async function (assert) {
-        assert.expect(2);
+        assert.expect(10);
 
         serverData.models['note.note'].records = [{
             id: 1,
@@ -138,6 +222,25 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             header: "<p>  &nbsp;&nbsp;  <br>   </p>",
             body: "<p>toto toto toto</p><p>tata</p>",
         }];
+
+        // Add the ajax service (legacy), because wysiwyg RPCs use it.
+        patchWithCleanup(legacyEnv, {
+            services: {
+                ...legacyEnv.services,
+                ajax: {
+                    rpc: async (route, args) => {
+                        if (args.model === "ir.ui.view" && args.method === 'render_public_asset') {
+                            if (args.args[0] === "web_editor.colorpicker") {
+                                return COLOR_PICKER_TEMPLATE;
+                            }
+                            if (args.args[0] === "web_editor.snippets") {
+                                return SNIPPETS_TEMPLATE;
+                            }
+                        }
+                    },
+                },
+            }
+        });
 
         await makeView({
             type: "form",
@@ -161,63 +264,58 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // select the text
         const pText = editable.querySelector("p").firstChild
-        Wysiwyg.setRange(pText, 1, pText, 5);
+        Wysiwyg.setRange(pText, 1, pText, 10);
         // text is selected
 
         var range = Wysiwyg.getRange();
 
         assert.strictEqual(range.sc, pText,
             "should select the text");
-        await wait(1000);
+
+        await wait(1);
         assert.strictEqual(
             window.getComputedStyle(document.querySelector("#toolbar")).getPropertyValue("visibility"),
             "visible",
-            "should show the toolbar")
+            "should show the toolbar");
 
 
-        // async function openColorpicker() {
-        //     await click(document.querySelector(".note-back-color-preview"))
-        // }
+        assert.ok(!document.querySelector(".colorpicker-menu.show"),
+            "should hide the color picker");
+        await click(document.querySelector("#oe-fore-color"), undefined, true);
+        assert.ok(document.querySelector('.o_we_color_btn'),
+            "should display some button");
+        assert.ok(document.querySelector(".colorpicker-menu.show"),
+            "should show the color picker");
+        await click(document.querySelector('.o_we_color_btn[style="background-color:#F7C6CE;"]'), undefined, true);
+        await wait(100)
+        assert.ok(!document.querySelector(".colorpicker-menu.show"),
+            "should close the color picker");
+        assert.strictEqual(editable.innerHTML,
+            "<p>t<font style=\"background-color: rgb(247, 198, 206);\">oto toto </font>toto</p><p>tata</p>",
+            "should have rendered the field correctly");
 
-        // await openColorpicker();
-        // await wait(500);
-        // let backgroundMenu = document.querySelector('.note-back-color-preview .colorpicker-menu');
-        // assert.ok(document.querySelector('.o_we_color_btn'),
-        //     "should display some button");
+        var fontElement = document.querySelector('.note-editable font');
+        var rangeControl = {
+            sc: fontElement,
+            so: 0,
+            ec: fontElement,
+            eo: 1,
+        };
+        range = Wysiwyg.getRange();
+        assert.deepEqual(_.pick(range, 'sc', 'so', 'ec', 'eo'), rangeControl,
+            "should keep the selected the selected text after color change");
 
-        // await new Promise((res) => setTimeout(res, 500))
-        // await click(document.querySelector('.o_we_color_btn'));
-        // assert.ok(!backgroundMenu.querySelector('.note-back-color-preview'),
-        //     "should close the color picker");
+        // select the text
+        const pText2 = [...document.querySelector('.note-editable p').childNodes][2];
+        Wysiwyg.setRange(fontElement.firstChild, 3, pText2, 2);
+        // text is selected
 
-        // assert.strictEqual(editable.innerHTML,
-        //     '<p>t<font style="background-color: rgb(0, 255, 255);">oto toto </font>toto</p><p>tata</p>',
-        //     "should have rendered the field correctly in edit");
-
-        // var fontElement = $field.find('.note-editable font')[0];
-        // var rangeControl = {
-        //     sc: fontElement,
-        //     so: 0,
-        //     ec: fontElement,
-        //     eo: 1,
-        // };
-        // range = Wysiwyg.getRange();
-        // assert.deepEqual(_.pick(range, 'sc', 'so', 'ec', 'eo'), rangeControl,
-        //     "should select the text after color change");
-
-        // // select the text
-        // pText = $field.find('.note-editable p').first().contents()[2];
-        // Wysiwyg.setRange(fontElement.firstChild, 5, pText, 2);
-        // // text is selected
-
-        // await openColorpicker('#toolbar .note-back-color-preview');
-        // await testUtils.dom.click($('#toolbar .note-back-color-preview .o_we_color_btn.bg-o-color-3'));
-
-        // assert.strictEqual($field.find('.note-editable').html(),
-        //     '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
-        //     "should have rendered the field correctly in edit");
-
-        // form.destroy();
+        await wait(1);
+        await click(document.querySelector('.o_we_color_btn[data-color="800"]'), undefined, true);
+        await wait(100)
+        assert.strictEqual(document.querySelector('.note-editable').innerHTML,
+            '<p>t<font style="background-color: rgb(247, 198, 206);">oto</font><font style=\"\" class=\"bg-800\"> toto to</font>to</p><p>tata</p>',
+            "should have rendered the field correctly");
     });
 
     QUnit.module('Sandboxed Preview');
