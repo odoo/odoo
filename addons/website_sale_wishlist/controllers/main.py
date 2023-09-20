@@ -48,12 +48,13 @@ class WebsiteSaleWishlist(WebsiteSale):
 
         return request.render("website_sale_wishlist.product_wishlist", dict(wishes=values))
 
-    @route(['/shop/wishlist/remove/<model("product.wishlist"):wish>'], type='json', auth="public", website=True)
-    def rm_from_wishlist(self, wish, **kw):
+    @route('/shop/wishlist/remove/<int:wish_id>', type='json', auth='public', website=True)
+    def rm_from_wishlist(self, wish_id, **kw):
+        wish = request.env['product.wishlist'].browse(wish_id)
         if request.website.is_public_user():
             wish_ids = request.session.get('wishlist_ids') or []
-            if wish.id in wish_ids:
-                request.session['wishlist_ids'].remove(wish.id)
+            if wish_id in wish_ids:
+                request.session['wishlist_ids'].remove(wish_id)
                 request.session.touch()
                 wish.sudo().unlink()
         else:

@@ -696,6 +696,9 @@ def route(route=None, **routing):
     :param bool csrf: Whether CSRF protection should be enabled for the
         route. Enabled by default for ``'http'``-type requests, disabled
         by default for ``'json'``-type requests.
+    :param Callable[[Exception], Response] handle_params_access_error:
+        Implement a custom behavior if an error occurred when retrieving the record
+        from the URL parameters (access error or missing error).
     """
     def decorator(endpoint):
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"

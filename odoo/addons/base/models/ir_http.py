@@ -186,6 +186,23 @@ class IrHttp(models.AbstractModel):
         env = request.env if request.env.uid else request.env['base'].with_user(SUPERUSER_ID).env
         request.update_context(lang=get_lang(env)._get_cached('code'))
 
+        for key, val in list(args.items()):
+            if not isinstance(val, models.BaseModel):
+                continue
+
+            try:
+                # explicitly crash now, instead of crashing later
+                args[key].check_access_rights('read')
+                args[key].check_access_rule('read')
+            except (odoo.exceptions.AccessError, odoo.exceptions.MissingError) as e:
+                # custom behavior in case a record is not accessible / has been removed
+                if handle_error := rule.endpoint.original_routing.get('handle_params_access_error'):
+                    if response := handle_error(e):
+                        werkzeug.exceptions.abort(response)
+                if isinstance(e, odoo.exceptions.MissingError):
+                    raise werkzeug.exceptions.NotFound() from e
+                raise
+
     @classmethod
     def _dispatch(cls, endpoint):
         result = endpoint(**request.params)
