@@ -5,7 +5,6 @@ import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from "@web/core/domain";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
@@ -66,18 +65,15 @@ export class ActivityMenu extends Component {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
+            search_default_activities_my: true,
         };
-        let domain = [["has_user_visible_activities", "=", true]];
-        if (group.domain) {
-            domain = Domain.and([domain, group.domain]).toList();
-        }
         const views = this.availableViews(group);
 
         const viewType = this.getActivityGroupViewType(group.model);
         this.action.doAction(
             {
                 context,
-                domain,
+                domain: group.domain,
                 name: group.name,
                 res_model: group.model,
                 search_view_id: [false],

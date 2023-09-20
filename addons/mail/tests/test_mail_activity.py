@@ -99,7 +99,7 @@ class TestMailActivity(MailCommon):
                     definition.append(activity)
                     if date_done:
                         with freezegun.freeze_time(date_done):
-                            activity.action_done()
+                            activity.with_user(definition[cls.col_responsible]).action_done()
                         definition.append(
                             cls.env['mail.message'].search(
                                 [('mail_activity_type_id', '=', activity_type.id)], limit=1, order='id desc').id
@@ -192,3 +192,118 @@ class TestMailActivity(MailCommon):
                                  self.call_activity_def[self.record2_call_closest_done_line][self.col_date_done])
             else:
                 self.assertTrue(self.call_activity_type.id not in grouped_activities[self.record2.id])
+
+    def test_get_activity_data_filters_and_search_fields(self):
+        """ Test activity filters """
+        self.todo_activity_type.display_done = True
+        self.call_activity_type.display_done = True
+
+        for responsible, assertions in (
+                (self.responsible1, (
+                        (self.record1, self.todo_activity_type, {'today': 1, 'done': 1}),
+                        (self.record1, self.call_activity_type, {'done': 1}),
+                        (self.record2, self.todo_activity_type, False),
+                        (self.record2, self.call_activity_type, {'done': 1})),
+                 ),
+                (self.responsible2, (
+                        (self.record1, self.todo_activity_type, {'planned': 1, 'done': 1}),
+                        (self.record1, self.call_activity_type, {'done': 1}),
+                        (self.record2, self.todo_activity_type, False),
+                        (self.record2, self.call_activity_type, {'done': 1})),
+                 ),
+                (self.responsible3, (
+                        (self.record1, self.todo_activity_type, {'overdue': 1}),
+                        (self.record1, self.call_activity_type, {'planned': 1}),
+                        (self.record2, self.todo_activity_type, {'planned': 1}),
+                        (self.record2, self.call_activity_type, False)),
+                 ),
+        ):
+            # Test with only "activities_my" filter
+            activity_data = self.env['mail.activity'].with_user(responsible).get_activity_data(
+                'res.partner', domain=[('has_visible_activities', '=', True)], activity_filters=('activities_my',))
+            grouped_activities = activity_data['grouped_activities']
+            for record, activity_type, expected in assertions:
+                self.assertEqual(
+                    grouped_activities.get(record.id, {}).get(activity_type.id, {}).get('count_by_state', False),
+                    expected
+                )
+            # Test with one and 2 combined state filter and state search field on top of the "activities_my" filter
+            cases = [(state_filter, activity_search_field_state)
+                     for state_filter in ({'overdue'}, {'planned', 'today'})
+                     for activity_search_field_state in [None, *state_filter]]
+            for state_filter, activity_search_field_state in cases:
+                activity_filters = ['activities_my', *[f'activities_state_{state}' for state in state_filter]]
+                activity_search_fields = [
+                    ('activity_state', activity_search_field_state)] if activity_search_field_state else None
+                activity_data = self.env['mail.activity'].with_user(responsible).get_activity_data(
+                    'res.partner',
+                    domain=[('has_visible_activities', '=', True)],
+                    activity_filters=activity_filters, activity_search_fields=activity_search_fields)
+                grouped_activities = activity_data['grouped_activities']
+                for record, activity_type, expected_without_state_filter in assertions:
+                    expected = {state: state_count
+                                for state, state_count in expected_without_state_filter.items()
+                                if state in state_filter and (activity_search_field_state is None or
+                                                              state == activity_search_field_state)
+                                } or False if expected_without_state_filter else False
+                    self.assertEqual(
+                        grouped_activities.get(record.id, {}).get(activity_type.id, {}).get('count_by_state', False),
+                        expected,
+                        f'{expected} for activity_filters={activity_filters}, '
+                        f'activity_search_fields={activity_search_fields}'
+                    )
+        # Test state filters and search state field without "activities_my" filter
+        for record, activity_type, expected_without_state_filter in (
+                (self.record1, self.todo_activity_type, {'done': 2, 'overdue': 1, 'planned': 1, 'today': 1}),
+                (self.record1, self.call_activity_type, {'done': 2, 'planned': 1}),
+                (self.record2, self.todo_activity_type, {'planned': 1}),
+                (self.record2, self.call_activity_type, {'done': 2}),
+            ):
+            # Test with one and 2 combined state filter and state search field on top of the "activities_my" filter
+            cases = [(state_filter, activity_search_field_state)
+                     for state_filter in ({'overdue'}, {'planned', 'today'})
+                     for activity_search_field_state in [None, *state_filter]]
+            for state_filter, activity_search_field_state in cases:
+                activity_filters = [f'activities_state_{state}' for state in state_filter]
+                activity_search_fields = [
+                    ('activity_state', activity_search_field_state)] if activity_search_field_state else None
+                activity_data = self.env['mail.activity'].with_user(responsible).get_activity_data(
+                    'res.partner',
+                    domain=[('has_visible_activities', '=', True)],
+                    activity_filters=activity_filters, activity_search_fields=activity_search_fields)
+                grouped_activities = activity_data['grouped_activities']
+                expected = {state: state_count
+                            for state, state_count in expected_without_state_filter.items()
+                            if state in state_filter and (activity_search_field_state is None or
+                                                          state == activity_search_field_state)
+                            } or False if expected_without_state_filter else False
+                self.assertEqual(
+                    grouped_activities.get(record.id, {}).get(activity_type.id, {}).get('count_by_state', False),
+                    expected
+                )
+        # Test activity_user_id
+        for responsible, assertions in (
+                (self.responsible1, (
+                        (self.record1, self.todo_activity_type, {'done': 1, 'today': 1}),
+                        (self.record2, self.todo_activity_type, False),
+                )),
+                (self.responsible2, (
+                        (self.record1, self.call_activity_type, {'done': 1}),
+                        (self.record2, self.call_activity_type, {'done': 1}),
+                ))
+                ,
+                (self.responsible3, (
+                        (self.record1, self.todo_activity_type, {'overdue': 1}),
+                        (self.record2, self.todo_activity_type, {'planned': 1}),
+                )),
+        ):
+            activity_data = self.env['mail.activity'].get_activity_data(
+                'res.partner',
+                domain=[('has_visible_activities', '=', True)],
+                activity_filters=None, activity_search_fields=[('activity_user_id', responsible.name)])
+            grouped_activities = activity_data['grouped_activities']
+            for record, activity_type, expected_count_by_state in assertions:
+                self.assertEqual(
+                    grouped_activities.get(record.id, {}).get(activity_type.id, {}).get('count_by_state', False),
+                    expected_count_by_state
+                )

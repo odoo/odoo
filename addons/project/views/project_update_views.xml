@@ -10,6 +10,9 @@
                 <field name="user_id"/>
                 <field name="description"/>
                 <field name="status"/>
+                <field name="activity_user_id" string="Activity assigned to"/>
+                <field name="activity_create_uid" string="Activity created by"/>
+                <field name="activity_state" string="Activity state"/>
                 <filter string="My Updates" name="my_updates" domain="[('user_id', '=', uid)]"/>
                 <filter string="Followed Updates" name="followed_updates" domain="[('message_is_follower', '=', True)]"/>
                 <separator/>
@@ -19,6 +22,16 @@
                 <filter string="On Hold" name="on_hold" domain="[('status', '=', 'on_hold')]"/>
                 <separator/>
                 <filter name="date" string="Date" date="date"/>
+                <separator/>
+                <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
             </search>
         </field>
     </record>

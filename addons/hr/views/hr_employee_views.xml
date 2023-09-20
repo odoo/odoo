@@ -17,15 +17,20 @@
                     <field name="coach_id"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="private_car_plate" />
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
-                    <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>

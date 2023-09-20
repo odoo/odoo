@@ -581,6 +581,9 @@
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="workcenter_id" string="Work Center" filter_domain="[('workorder_ids.workcenter_id', 'ilike', self)]"/>
                     <field name="origin"/>
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
@@ -600,13 +603,15 @@
                     <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
                     <separator/>
-                    <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="filter_date_start" string="Date" date="date_start"/>
                     <filter name="filter_plan_date" invisible="1" string="Date: Last 365 Days" domain="[('date_start', '>', (datetime.datetime.now() + relativedelta(days=-365)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <separator/>

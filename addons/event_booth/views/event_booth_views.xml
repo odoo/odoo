@@ -161,10 +161,23 @@
                 <field name="contact_name" string="Renter Name" filter_domain="[('contact_name', 'ilike', self)]"/>
                 <field name="contact_email" string="Renter Email" filter_domain="[('contact_email', 'ilike', self)]"/>
                 <field name="event_id"/>
+                <field name="activity_user_id" string="Activity assigned to"/>
+                <field name="activity_create_uid" string="Activity created by"/>
+                <field name="activity_state" string="Activity state"/>
                 <filter string="Available" name="filter_booth_available"
                     domain="[('state', '=', 'available')]"/>
                 <filter string="Unavailable" name="filter_booth_unavailable"
                     domain="[('state', '=', 'unavailable')]"/>
+                <separator/>
+                <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_state" context="{'group_by': 'state'}"/>
                     <filter name="group_by_partner_id" context="{'group_by': 'partner_id'}"/>

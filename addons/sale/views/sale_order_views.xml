@@ -752,18 +752,23 @@
                 <field name="team_id" string="Sales Team"/>
                 <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="activity_user_id" string="Activity assigned to"/>
+                <field name="activity_create_uid" string="Activity created by"/>
+                <field name="activity_state" string="Activity state"/>
                 <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
                     will not be searched as often, and if they need to be searched it's usually in the context of products
                     and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
                 -->
                 <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_sale_orders_filter"/>
-                <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
-                <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}"/>

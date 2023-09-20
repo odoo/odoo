@@ -8,6 +8,9 @@
                <search string="Mailings">
                     <field name="name" string="Mailing" filter_domain="['|', ('name', 'ilike', self), ('subject', 'ilike', self)]"/>
                     <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <filter string="My Mailings" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
                             help="Mailings that are assigned to me"/>
@@ -19,6 +22,16 @@
                         domain="[('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_completed', '=', False)]"/>
                     <separator/>
                     <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                            domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                            domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                            domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                         <filter string="Sent By" name="sent_by" domain="[]" context="{'group_by': 'email_from'}"/>

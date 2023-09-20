@@ -123,6 +123,19 @@
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
                 <field name="product_id"/>
                 <field name="lot_properties"/>
+                <field name="activity_user_id" string="Activity assigned to"/>
+                <field name="activity_create_uid" string="Activity created by"/>
+                <field name="activity_state" string="Activity state"/>
+                <separator/>
+                <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}"/>

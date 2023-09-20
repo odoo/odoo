@@ -68,9 +68,14 @@ class MailActivityMixin(models.AbstractModel):
         help='Status based on activities\nOverdue: Due date is already passed\n'
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
-        'res.users', 'Responsible User',
+        'res.users', 'Activity assigned to',
         related='activity_ids.user_id', readonly=False,
         search='_search_activity_user_id',
+        groups="base.group_user")
+    activity_create_uid = fields.Many2one(
+        'res.users', 'Activity created by',
+        related='activity_ids.create_uid', readonly=True,
+        search='_search_activity_create_uid',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',

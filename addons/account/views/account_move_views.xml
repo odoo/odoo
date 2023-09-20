@@ -1367,6 +1367,9 @@
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
                     <field name="date" string="Period"/>
                     <field name="line_ids" string="Invoice Line"/>
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
@@ -1390,13 +1393,15 @@
                     <filter name="date" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')" string="Accounting Date" date="date"/>
                     <filter name="due_date" string="Due Date" date="invoice_date_due"/>
                     <separator/>
-                    <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>

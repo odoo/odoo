@@ -588,7 +588,51 @@ class MailActivity(models.Model):
         }
 
     @api.model
-    def get_activity_data(self, res_model, domain, limit=None, offset=0):
+    def get_activity_data(self, res_model, domain, limit=None, offset=0,
+                          activity_filters=None, activity_search_fields=None):
+        """ Get records along with their activity data according to the search criterion.
+
+        The records to fetch is controlled by the parameters: res_model, domain, limit
+        and offset. If the activity_filters is None, all the activities related to the
+        records are retrieved otherwise only the activities that also match those filters
+        are retrieved.
+        Note that the filters: activities_state_overdue, activities_state_today,
+        activities_state_planned are combined with an OR to match how they are used in
+        the interface (they are grouped in the same section).
+
+        :param str res_model: model of the records to fetch
+        :param list domain: record search domain
+        :param int limit: maximum number of records to fetch
+        :param int offset: offset of the first record to fetch
+        :param list|None activity_filters: list of activated filters among activities_my,
+            activities_state_overdue, activities_state_today, activities_state_planned.
+        :param list|None activity_search_fields: list of search on field to applies on
+            activities. Each item is a couple defining the field followed by the value
+            to search.
+            Supported fields: activity_user_id, activity_create_uid, activity_state
+        """
+        user_tz = self.user_id.sudo().tz
+
+        # 1. Retrieve all ongoing and completed activities according to the parameters
+        activity_filters = set(activity_filters) if activity_filters else set()
+        activity_filter_states = {filter_name[len('activities_state_'):]
+                                  for filter_name in activity_filters if filter_name.startswith('activities_state_')}
+        activity_search_fields = dict(activity_search_fields) if activity_search_fields else dict()
+        # Integrate activity state search field in activity filter state (both are combined with a "and")
+        if 'activity_state' in activity_search_fields:
+            search_activity_state = activity_search_fields['activity_state']
+            if search_activity_state in activity_filter_states:
+                if len(activity_filter_states) > 1:
+                    # Ex.: state in {state1, state2} and state == state1 --> state in {state1}
+                    activity_filter_states = {search_activity_state}
+                # else: Ex.: state in {state1} and state == state1 --> state in {state1} (nothing to change)
+            elif len(activity_filter_states) == 0:
+                # no state filter --> Ex.: state == state1 --> state in {state1}
+                activity_filter_states.add(search_activity_state)
+            else:
+                # Ex.: state in {state1, state2} and state == state3 --> state in {non_exist_state}
+                activity_filter_states = {'non_exist_state'}
+
         activity_types = self.env['mail.activity.type'].search(
             ['|', ('res_model', '=', res_model), ('res_model', '=', False)])
         display_done_activity_type_ids = [a.id for a in activity_types if a.display_done]
@@ -597,17 +641,33 @@ class MailActivity(models.Model):
         if domain or limit or offset:
             res = self.env[res_model].search(domain or [], limit=limit, offset=offset)
             activity_domain.append(('res_id', 'in', res.ids))
+        if 'activities_my' in activity_filters:
+            activity_domain.append(('user_id', '=', self.env.uid))
+        if 'activity_user_id' in activity_search_fields:
+            activity_domain.append(('user_id.name', 'ilike', activity_search_fields['activity_user_id']))
+        if 'activity_create_uid' in activity_search_fields:
+            activity_domain.append(('create_uid.name', 'ilike', activity_search_fields['activity_create_uid']))
         all_ongoing_activities = self.env['mail.activity'].search_read(
             activity_domain,
             ['activity_type_id', 'res_id', 'date_deadline', 'user_id'],
         )
-        grouped_ongoing_activities = dict(groupby(all_ongoing_activities,
-                                                  key=lambda a: (a['res_id'], a['activity_type_id'][0])))
-        if display_done_activity_type_ids:
+        if activity_filter_states:
+            # filter further the activities (state would be hard to include in the domain in an efficient way)
+            all_ongoing_activities = [
+                activity
+                for activity in all_ongoing_activities
+                if self._compute_state_from_date(activity['date_deadline'], user_tz) in activity_filter_states]
+        # Don't display activity done if activity_state_filters because state filter are only about ongoing activities
+        if display_done_activity_type_ids and not activity_filter_states:
             mail_domain = [('mail_activity_type_id', 'in', display_done_activity_type_ids),
                            ('model', '=', res_model)]
             if domain:
                 mail_domain.append(('res_id', 'in', domain_res_ids))
+            if 'activities_my' in activity_filters:
+                mail_domain.append(('author_id', '=', self.env.user.partner_id.id))
+            # Ignore search field activity_create_uid because we don't have the information for completed activities
+            if 'activity_user_id' in activity_search_fields:
+                mail_domain.append(('author_id.name', 'ilike', activity_search_fields['activity_user_id']))
             all_completed_activities = list(map(lambda a: {
                 'activity_type_id': a['mail_activity_type_id'],
                 'attachment_ids': a['attachment_ids'],
@@ -617,8 +677,11 @@ class MailActivity(models.Model):
             }, self.env['mail.message'].search_read(
                 mail_domain,
                 ['attachment_ids', 'date', 'mail_activity_type_id', 'res_id'])))
-            grouped_completed_activities = dict(groupby(all_completed_activities,
-                                                        key=lambda a: (a['res_id'], a['activity_type_id'][0])))
+        else:
+            all_completed_activities = []
+
+        # 2. Get attachment of completed activities
+        if all_completed_activities:
             all_attachment_ids = [
                 attachment_id
                 for completed_activity in all_completed_activities if completed_activity['attachment_ids']
@@ -629,10 +692,15 @@ class MailActivity(models.Model):
                                                                ['create_date', 'name'])
             } if all_attachment_ids else {}
         else:
-            grouped_completed_activities = {}
-            attachments_by_id = {}
+            attachments_by_id = dict()
 
-        # filter out unreadable records
+        # 3. Group activities per records
+        grouped_ongoing_activities = dict(groupby(all_ongoing_activities,
+                                                  key=lambda a: (a['res_id'], a['activity_type_id'][0])))
+        grouped_completed_activities = dict(groupby(all_completed_activities,
+                                                    key=lambda a: (a['res_id'], a['activity_type_id'][0])))
+
+        # 4. Filter out unreadable records
         all_res_id_activity_type_id = grouped_ongoing_activities.keys() | grouped_completed_activities.keys()
         if not domain:
             res_ids = list({res_id for res_id, __ in all_res_id_activity_type_id})
@@ -641,10 +709,10 @@ class MailActivity(models.Model):
                                            for res_id, activity_type_id in all_res_id_activity_type_id
                                            if res_id in res_ids_set]
 
+        # 5. Format data
         res_id_to_date_done = {}
         res_id_to_deadline = {}
         grouped_activities = defaultdict(dict)
-        user_tz = self.user_id.sudo().tz
         for res_id, activity_type_id in all_res_id_activity_type_id:
             ongoing_activities = grouped_ongoing_activities.get((res_id, activity_type_id), [])
             completed_activities = grouped_completed_activities.get((res_id, activity_type_id), [])

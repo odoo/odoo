@@ -186,6 +186,9 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="stage_id" groups="project.group_project_stages"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <filter string="My Projects" name="own_projects" domain="[('user_id', '=', uid)]"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
@@ -197,13 +200,15 @@
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
-                    <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" name="groupby_stage" context="{'group_by': 'stage_id'}" groups="project.group_project_stages"/>

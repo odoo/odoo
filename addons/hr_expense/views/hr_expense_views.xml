@@ -343,6 +343,9 @@
                     <field string="Expense" name="name" filter_domain="['|', '|', ('employee_id', 'ilike', self), ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
                     <field name="date"/>
                     <field name="employee_id"/>
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
@@ -353,13 +356,15 @@
                     <separator />
                     <filter string="Former Employees" name="inactive" domain="[('employee_id.active', '=', False)]" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
                     <separator/>
-                    <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Category" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
@@ -957,6 +962,9 @@
                     <field name="employee_id"/>
                     <field string="Department" name="department_id" operator="child_of"/>
                     <field string="Journal" name="journal_id"/>
+                    <field name="activity_user_id" string="Activity assigned to"/>
+                    <field name="activity_create_uid" string="Activity created by"/>
+                    <field name="activity_state" string="Activity state"/>
                     <filter string="My Reports" name="my_reports" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <separator invisible="1"/>
@@ -965,14 +973,16 @@
                     <filter string="Date" name="filter_accounting_date" date="accounting_date"/>
                     <separator/>
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
-                    <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                        help="Show all records which has next action date is before today"/>
-                    <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                            domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                            ]"/>
+                    <separator/>
+                    <filter string="My activities" name="activities_my" domain="[('has_user_visible_activities', '=', True)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                            domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                            domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                            domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By" name="group_filters">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
