@@ -1427,8 +1427,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 			// Support: Firefox <=3.6 - 5 only
 			// Old Firefox doesn't throw on a badly-escaped identifier.
-			el.querySelectorAll( "\\\f" );
-			rbuggyQSA.push( "[\\r\\n\\f]" );
+			// el.querySelectorAll( "\\\f" );
+			// rbuggyQSA.push( "[\\r\\n\\f]" );
 		} );
 
 		assert( function( el ) {
@@ -1462,8 +1462,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 			// Support: Opera 10 - 11 only
 			// Opera 10-11 does not throw on post-comma invalid pseudos
-			el.querySelectorAll( "*,:x" );
-			rbuggyQSA.push( ",.*:" );
+			// el.querySelectorAll( "*,:x" );
+			// rbuggyQSA.push( ",.*:" );
 		} );
 	}
 
@@ -1481,8 +1481,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 			// This should fail with an exception
 			// Gecko does not error, returns false instead
-			matches.call( el, "[s!='']:x" );
-			rbuggyMatches.push( "!=", pseudos );
+			// matches.call( el, "[s!='']:x" );
+			// rbuggyMatches.push( "!=", pseudos );
 		} );
 	}
 
