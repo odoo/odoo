@@ -689,9 +689,7 @@ class SurveyQuestionAnswer(models.Model):
         then we elide it, leaving the rest of the space for the answer.
         """
         for answer in self:
-            # _origin (or fallback title) is (likely temporarily) needed to support survey snapshot
-            # during onchange for a deleted answer used as trigger in another question.
-            title = answer._origin.question_id.title
+            title = answer.question_id.title
             n_extra_characters = len(title) + len(answer.value) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
             if n_extra_characters <= 0:
                 answer.display_name = f'{title} : {answer.value}'
