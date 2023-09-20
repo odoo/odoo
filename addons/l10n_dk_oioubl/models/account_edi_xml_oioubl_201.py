@@ -199,9 +199,9 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
 
         return vals_list
 
-    def _get_invoice_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount):
+    def _get_invoice_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
         # EXTENDS account.edi.xml.ubl_20
-        vals = super()._get_invoice_legal_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount)
+        vals = super()._get_invoice_legal_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
         # In OIOUBL context, tax_exclusive_amount means "tax only"
         vals['tax_exclusive_amount'] = taxes_vals['tax_amount_currency']
         if invoice.currency_id.is_zero(vals['prepaid_amount']):
