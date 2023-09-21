@@ -250,19 +250,19 @@ QUnit.test(
         });
         await openDiscuss(channelId);
 
-        await triggerEvent(getFixture(), null, "mousedown");
+        await triggerEvent(getFixture(), null, "pointerdown");
         await click("button[aria-label='Emojis']");
         $(".o-EmojiPicker-content")[0].scrollTop = 150;
 
-        await triggerEvent(getFixture(), null, "mousedown");
+        await triggerEvent(getFixture(), null, "pointerdown");
         await click("[title='Add a Reaction']");
         $(".o-EmojiPicker-content")[0].scrollTop = 200;
 
-        await triggerEvent(getFixture(), null, "mousedown");
+        await triggerEvent(getFixture(), null, "pointerdown");
         await click("button[aria-label='Emojis']");
         assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 150);
 
-        await triggerEvent(getFixture(), null, "mousedown");
+        await triggerEvent(getFixture(), null, "pointerdown");
         await click("[title='Add a Reaction']");
         assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 200);
     }
