@@ -57,10 +57,11 @@ class ReportMoOverview(models.AbstractModel):
         res = super()._get_resupply_data(rules, rules_delay, quantity, uom_id, product, warehouse)
         if any(rule for rule in rules if rule.action == 'buy' and product.seller_ids):
             supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id)
-            return {
-                'delay': supplier.delay + rules_delay,
-                'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom),
-            }
+            if supplier:
+                return {
+                    'delay': supplier.delay + rules_delay,
+                    'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom),
+                }
         return res
 
     def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):

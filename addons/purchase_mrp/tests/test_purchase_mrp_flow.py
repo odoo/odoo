@@ -744,3 +744,48 @@ class TestPurchaseMrpFlow(TransactionCase):
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(mo.product_uom_qty, 5)
         self.assertEqual(mo.date_start.date(), fields.Date.today())
+
+    def test_mo_overview(self):
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'standard_price': 80,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.env['res.partner'].create({'name': 'super vendor'}).id,
+                'min_qty': 3,
+                'price': 10,
+            })],
+        })
+        finished_product = self.env['product.product'].create({
+            'name': 'finished_product',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 2,
+                'product_uom_id': component.uom_id.id
+            })],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'product_qty': 1,
+            'product_uom_id': finished_product.uom_id.id,
+        })
+        self.env.flush_all()  # flush to correctly build report
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo.id)['components'][0]['summary']
+        self.assertEqual(report_values['name'], component.name)
+        self.assertEqual(report_values['quantity'], 2)
+        self.assertEqual(report_values['mo_cost'], 160)
+        # Create a second MO with the minimum seller quantity to check that the cost is correctly calculated using the seller's price
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'product_qty': 2,
+            'product_uom_id': finished_product.uom_id.id,
+        })
+        self.env.flush_all()
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo_2.id)['components'][0]['summary']
+        self.assertEqual(report_values['quantity'], 4)
+        self.assertEqual(report_values['mo_cost'], 40)
