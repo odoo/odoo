@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     click as webClick,
@@ -9,6 +10,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { file } from "@web/../tests/legacy/helpers/test_utils";
 import { createFile as createFile2 } from "@web/../tests/legacy/helpers/test_utils_file";
+
 const { inputFiles: webInputFiles } = file;
 
 export const createFile = createFile2;
@@ -135,7 +137,7 @@ export async function scroll(selector, scrollTop, options) {
  * `options.target` and then triggers `event` on it.
  *
  * @param {string} selector
- * @param {string[]} events
+ * @param {(import("@web/../tests/helpers/utils").EventType|[import("@web/../tests/helpers/utils").EventType, EventInit])[]} events
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
 export async function triggerEvents(selector, events, options) {
@@ -179,6 +181,7 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  * @property {string} [text] if provided, the textContent of the found element(s) must match.
  * @property {string} [value] if provided, the input value of the found element(s) must match.
  *  Note: value changes are not observed directly, another mutation must happen to catch them.
+ * @property {boolean} [visible] if provided, the found element(s) must be (in)visible
  */
 class Contains {
     /**
@@ -192,6 +195,11 @@ class Contains {
         this.options.targetParam = this.options.target;
         this.options.target ??= getFixture();
         let selectorMessage = `${this.options.count} of "${this.selector}"`;
+        if (this.options.visible !== undefined) {
+            selectorMessage = `${selectorMessage} ${
+                this.options.visible ? "visible" : "invisible"
+            }`;
+        }
         if (this.options.targetParam) {
             selectorMessage = `${selectorMessage} inside a specific target`;
         }
@@ -455,16 +463,25 @@ class Contains {
                     (this.options.scroll === "bottom"
                         ? Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 1
                         : Math.abs(el.scrollTop - this.options.scroll) <= 1));
-            for (const param of this.options.containsMulti) {
-                const childContains = new Contains(param[0], { ...param[1], target: el });
-                if (
-                    !childContains.runOnce(`as child of el ${currentIndex + 1})`, {
-                        executeOnSuccess: false,
-                    })
-                ) {
+            if (condition) {
+                // avoid checking if condition already failed to avoid uncessary slowness
+                for (const param of this.options.containsMulti) {
+                    const childContains = new Contains(param[0], { ...param[1], target: el });
+                    if (
+                        !childContains.runOnce(`as child of el ${currentIndex + 1})`, {
+                            executeOnSuccess: false,
+                        })
+                    ) {
+                        condition = false;
+                    }
+                    this.childrenContains.push(childContains);
+                }
+            }
+            if (condition && this.options.visible !== undefined) {
+                // avoid checking if condition already failed to avoid uncessary slowness
+                if (isVisible(el) !== this.options.visible) {
                     condition = false;
                 }
-                this.childrenContains.push(childContains);
             }
             if (condition && this.options.after) {
                 // avoid checking if condition already failed to avoid uncessary slowness

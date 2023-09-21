@@ -138,8 +138,11 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
 
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem:contains(Partner) .badge", { text: "2" });
-    await click(".o-mail-NotificationItem");
+    await click(".o-mail-NotificationItem", {
+        containsMulti: [
+            [".o-mail-NotificationItem-name", { text: "Partner" }],
+            [".badge", { text: "2" }],
+        ],
+    });
     assert.verifySteps(["do_action"]);
 });

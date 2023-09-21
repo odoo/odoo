@@ -264,12 +264,14 @@ QUnit.test(
                 view_mode: "list",
                 views: [[false, "list"]],
             });
-            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(0)", {
-                text: "Luigi",
-            });
-            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(1)", {
-                text: "Mario",
-            });
+            await contains(
+                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                { text: "Luigi" }
+            );
+            await contains(
+                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                { text: "Mario" }
+            );
             // Select all
             await click(".o_list_table > thead .o_list_controller input");
             await triggerHotkey("control+k");
@@ -281,12 +283,14 @@ QUnit.test(
             await contains(".o_dialog");
             // Cancel
             await click(".o_dialog .modal-footer button:nth-child(2)");
-            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(0)", {
-                text: "Luigi",
-            });
-            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(1)", {
-                text: "Mario",
-            });
+            await contains(
+                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                { text: "Luigi" }
+            );
+            await contains(
+                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                { text: "Mario" }
+            );
 
             // Assign me (Luigi)
             await triggerHotkey("alt+shift+i");
@@ -295,12 +299,14 @@ QUnit.test(
             // Confirm
             await click(".o_dialog .modal-footer button:nth-child(1)");
             await contains(".o_dialog", { count: 0 });
-            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(0)", {
-                text: "Luigi",
-            });
-            await contains(".o_field_many2one_avatar_user .o_form_uri span:eq(1)", {
-                text: "Luigi",
-            });
+            await contains(
+                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                { text: "Luigi" }
+            );
+            await contains(
+                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                { text: "Luigi" }
+            );
 
             // Select all
             await click(".o_list_table > thead .o_list_controller input");
@@ -442,9 +448,9 @@ QUnit.test("avatar card preview", async (assert) => {
     // Open card
     await click(".o_m2o_avatar > img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span:contains(Mario)");
-    await contains(".o_card_user_infos > a:contains(Mario@odoo.test)");
-    await contains(".o_card_user_infos > a:contains(+78786987)");
+    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "+78786987" });
     assert.verifySteps(["setTimeout of 250ms", "user read"]);
     // Close card
     await click(".o_action_manager");
@@ -493,9 +499,9 @@ QUnit.test("many2one_avatar_user widget in list view", async () => {
     });
     await click(".o_data_cell .o_m2o_avatar > img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span:contains(Mario)");
-    await contains(".o_card_user_infos > a:contains(Mario@partner.com)");
-    await contains(".o_card_user_infos > a:contains(+45687468)");
+    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+    await contains(".o_card_user_infos > a", { text: "+45687468" });
 });
 
 QUnit.test("many2many_avatar_user widget in form view", async () => {
@@ -522,7 +528,7 @@ QUnit.test("many2many_avatar_user widget in form view", async () => {
     });
     await click(".o_field_many2many_avatar_user .o_avatar img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span:contains(Mario)");
-    await contains(".o_card_user_infos > a:contains(Mario@partner.com)");
-    await contains(".o_card_user_infos > a:contains(+45687468)");
+    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+    await contains(".o_card_user_infos > a", { text: "+45687468" });
 });

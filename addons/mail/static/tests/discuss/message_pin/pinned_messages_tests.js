@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("pinned messages");
@@ -20,9 +20,9 @@ QUnit.test("Pin message", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
-    await contains(
-        ".o-discuss-PinnedMessagesPanel:contains(This channel doesn't have any pinned messages.)"
-    );
+    await contains(".o-discuss-PinnedMessagesPanel p", {
+        text: "This channel doesn't have any pinned messages.",
+    });
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
@@ -88,7 +88,7 @@ QUnit.test("Open pinned panel from notification", async () => {
     await contains(".o-discuss-PinnedMessagesPanel");
 });
 
-QUnit.test("Jump to message", async (assert) => {
+QUnit.test("Jump to message", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -115,8 +115,7 @@ QUnit.test("Jump to message", async (assert) => {
     openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel button", { text: "Jump" });
-    await nextTick();
-    assert.isVisible($(".o-mail-Message:contains(Hello world!)"));
+    await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
 });
 
 QUnit.skip("Jump to message from notification", async () => {

@@ -33,14 +33,19 @@ QUnit.test("basic layout", async () => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name", { text: "Channel" });
-    await contains(".o-mail-NotificationItem-counter", { text: "2" });
-    await contains(
-        ".o-mail-NotificationItem:contains(Channel) .o-mail-NotificationItem-date:contains(now)"
-    );
-    await contains(
-        ".o-mail-NotificationItem-text:contains(An error occurred when sending an email)"
-    );
+    await contains(".o-mail-NotificationItem", {
+        containsMulti: [
+            [".o-mail-NotificationItem-name", { text: "Channel" }],
+            [".o-mail-NotificationItem-counter", { text: "2" }],
+            [".o-mail-NotificationItem-date", { text: "now" }],
+            [
+                ".o-mail-NotificationItem-text",
+                {
+                    text: "An error occurred when sending an email",
+                },
+            ],
+        ],
+    });
 });
 
 QUnit.test("mark as read", async () => {

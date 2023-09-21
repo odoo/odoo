@@ -14,9 +14,9 @@ QUnit.test("openChat: display notification for partner without user", async () =
     const partnerId = pyEnv["res.partner"].create({});
     const { env } = await start();
     await env.services["mail.thread"].openChat({ partnerId });
-    await contains(
-        ".o_notification.border-info:contains(You can only chat with partners that have a dedicated user.)"
-    );
+    await contains(".o_notification.border-info", {
+        text: "You can only chat with partners that have a dedicated user.",
+    });
 });
 
 QUnit.test("openChat: display notification for wrong user", async () => {
@@ -25,9 +25,9 @@ QUnit.test("openChat: display notification for wrong user", async () => {
     const { env } = await start();
     // userId not in the server data
     await env.services["mail.thread"].openChat({ userId: 4242 });
-    await contains(
-        ".o_notification.border-warning:contains(You can only chat with existing users.)"
-    );
+    await contains(".o_notification.border-warning", {
+        text: "You can only chat with existing users.",
+    });
 });
 
 QUnit.test("openChat: open new chat for user", async () => {
