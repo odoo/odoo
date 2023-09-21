@@ -382,6 +382,58 @@ export class SelfOrder extends Reactive {
     formatMonetary(price) {
         return formatMonetary(price, { currencyId: this.currency_id });
     }
+
+    handleProductChanges(payload) {
+        const product = new Product(payload.product, this.show_prices_with_tax_included);
+        this.productByIds[payload.product.id] = product;
+        for (const categ_name of payload.product.pos_categ_ids) {
+            if (!this.pos_category.map((c) => c.name).includes(categ_name)) {
+                continue;
+            }
+            const index = this.productsGroupedByCategory[categ_name].findIndex(
+                (p) => p.id === product.id
+            );
+            if (index >= 0) {
+                this.productsGroupedByCategory[categ_name][index] = product;
+            } else {
+                this.productsGroupedByCategory[categ_name].push(product);
+            }
+        }
+    }
+
+    verifyCart() {
+        let result = true;
+        for (const line of this.currentOrder.hasNotAllLinesSent()) {
+            if (line.combo_parent_uuid) {
+                continue;
+            }
+            const alreadySent = this.currentOrder.lastChangesSent
+                ? this.currentOrder.lastChangesSent[line.uuid]
+                : false;
+            const wrongChild = line.child_lines.find(
+                (l) => !this.productByIds[l.product_id]?.self_order_available
+            );
+            if (wrongChild || !this.productByIds[line.product_id]?.self_order_available) {
+                if (alreadySent) {
+                    line.qty = alreadySent.qty;
+                    line.customer_note = alreadySent.customer_note;
+                    line.selected_attributes = alreadySent.selected_attributes;
+                } else {
+                    this.currentOrder.removeLine(line.uuid);
+                }
+                this.notification.add(
+                    _t(
+                        "%s is not available anymore, it has thus been removed from your order. Please review your order and validate it again.",
+                        line.full_product_name
+                    ),
+                    { type: "danger" }
+                );
+                result = false;
+            }
+        }
+
+        return result;
+    }
 }
 
 export const selfOrderService = {

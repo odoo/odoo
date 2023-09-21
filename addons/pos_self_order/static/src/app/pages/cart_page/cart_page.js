@@ -55,6 +55,10 @@ export class CartPage extends Component {
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const order = this.selfOrder.currentOrder;
 
+        if (!this.selfOrder.verifyCart()) {
+            return;
+        }
+
         if (mode === "meal" && !order.isSavedOnServer) {
             this.sendInProgress = true;
             await this.selfOrder.sendDraftOrderToServer();

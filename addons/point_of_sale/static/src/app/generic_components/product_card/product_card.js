@@ -10,7 +10,9 @@ export class ProductCard extends Component {
         productId: Number,
         price: String,
         imageUrl: String,
+        productInfo: { Boolean, optional: true },
         onClick: { type: Function, optional: true },
+        onProductInfoClick: { type: Function, optional: true },
     };
     static defaultProps = {
         onClick: () => {},

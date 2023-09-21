@@ -74,11 +74,11 @@ export class ProductCard extends Component {
     }
 
     async selectProduct() {
-        if (!this.selfOrder.ordering) {
+        const product = this.props.product;
+
+        if (!this.selfOrder.ordering || !product.self_order_available) {
             return;
         }
-
-        const product = this.props.product;
 
         if (product.isCombo) {
             this.router.navigate("combo_selection", { id: product.id });
