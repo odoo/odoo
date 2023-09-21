@@ -33,8 +33,12 @@ class SaleOrderLine(models.Model):
     def _compute_price_unit(self):
         # Avoid recomputing the price with pricelist rules, use the initial price
         # used in the optional product line.
-        optional_product_lines = self.filtered('sale_order_option_ids')
-        super(SaleOrderLine, self - optional_product_lines)._compute_price_unit()
+        lines_without_price_recomputation = self._lines_without_price_recomputation()
+        super(SaleOrderLine, self - lines_without_price_recomputation)._compute_price_unit()
+
+    def _lines_without_price_recomputation(self):
+        """ Hook to allow filtering the lines to avoid the recomputation of the price. """
+        return self.filtered('sale_order_option_ids')
 
     #=== TOOLING ===#
 
