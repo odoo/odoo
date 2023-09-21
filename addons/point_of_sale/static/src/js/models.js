@@ -2576,7 +2576,7 @@ class Order extends PosModel {
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 
-                return qweb.render('subreceipt',{'pos':self.pos,'order':self, 'receipt': receipt}) ;
+                return Markup(qweb.render('subreceipt',{'pos':self.pos,'order':self, 'receipt': receipt}));
             }
         }
 
