@@ -27,7 +27,7 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
             old_base_amount = rec.base_amount
             amount_total = sum(rec.payment_register_id.mapped('line_ids.move_id.amount_total'))
             conversion_rate = rec.payment_register_id._get_conversion_rate()
-            real_amount = min(rec.payment_register_id.amount, rec.payment_register_id.source_amount)
+            real_amount = min(rec.payment_register_id.amount, rec.payment_register_id.source_amount / conversion_rate)
             factor = min((real_amount * conversion_rate) / amount_total, 1)
             if not rec.tax_id:
                 base_amount = 0.0
