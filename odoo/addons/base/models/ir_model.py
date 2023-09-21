@@ -2012,9 +2012,12 @@ class IrModelData(models.Model):
                            self._table, ['model', 'res_id'])
         return res
 
-    @api.depends('res_id', 'model')
+    @api.depends('res_id', 'model', 'complete_name')
     def _compute_display_name(self):
-        for model, model_data_records in self.grouped('model').items():
+        invalid_records = self.filtered(lambda r: not r.res_id or r.model not in self.env)
+        for invalid_record in invalid_records:
+            invalid_record.display_name = invalid_record.complete_name
+        for model, model_data_records in (self - invalid_records).grouped('model').items():
             records = self.env[model].browse(model_data_records.mapped('res_id'))
             for xid, target_record in zip(model_data_records, records):
                 try:
