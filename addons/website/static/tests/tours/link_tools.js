@@ -285,7 +285,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Check Link tools URL input content is up-to-date",
         trigger: "#o_link_dialog_url_input",
         run() {
-            if (this.$anchor[0].value !== 'http://callmemaybe.com/shop') {
+            if (this.$anchor[0].value !== 'callmemaybe.com/shop') {
                 throw new Error("Tour step failed");
             }
         }
