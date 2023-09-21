@@ -20,6 +20,7 @@ import {
     ancestors,
     EMAIL_REGEX,
     URL_REGEX_WITH_INFOS,
+    PHONE_REGEX,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -76,13 +77,17 @@ export function areSimilarElements(node, node2) {
 }
 
 /**
-* Returns a URL if link's label is a valid email of http URL, null otherwise.
+* Returns a complete URL if text is a valid email address, http URL or telephone
+* number, null otherwise.
+* The optional link parameter is used to prevent protocol switching between
+* 'http' and 'https'.
 *
-* @param {HTMLAnchorElement} link
+* @param {String} text
+* @param {HTMLAnchorElement} [link]
 * @returns {String|null}
 */
-function deduceURLfromLabel(link) {
-   const label = link.innerText.trim();
+export function deduceURLfromText(text, link) {
+   const label = text.replace(/\u200b/g, '').trim();
    // Check first for e-mail.
    let match = label.match(EMAIL_REGEX);
    if (match) {
@@ -95,7 +100,7 @@ function deduceURLfromLabel(link) {
    match = URL_REGEX_WITH_INFOS.exec(label);
    URL_REGEX_WITH_INFOS.lastIndex = 0;
    if (match && match[0] === label) {
-       const currentHttpProtocol = (link.href.match(/^http(s)?:\/\//gi) || [])[0];
+       const currentHttpProtocol = (link?.href.match(/^http(s)?:\/\//gi) || [])[0];
        if (match[2]) {
            return match[0];
        } else if (currentHttpProtocol) {
@@ -104,6 +109,11 @@ function deduceURLfromLabel(link) {
        } else {
            return 'https://' + match[0];
        }
+   }
+   // Check for telephone url.
+   match = label.match(PHONE_REGEX);
+   if (match) {
+       return match[1] ? match[0] : 'tel://' + match[0];
    }
    return null;
 }
@@ -242,7 +252,8 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         // Update link URL if label is a new valid link.
         const startEl = start && closestElement(start, 'a');
         if (startEl && root.contains(startEl)) {
-            const url = deduceURLfromLabel(startEl);
+            const label = startEl.innerText;
+            const url = deduceURLfromText(label, startEl);
             if (url) {
                 startEl.setAttribute('href', url);
             }
