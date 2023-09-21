@@ -82,6 +82,7 @@ _ref_vat = {
 
 _region_specific_vat_codes = {
     'xi',
+    't',
 }
 
 
@@ -100,7 +101,14 @@ class ResPartner(models.Model):
     vies_vat_to_check = fields.Char(compute='_compute_vies_vat_to_check')
 
     def _split_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        '''
+        Splits the VAT Number to get the country code in a first place and the code itself in a second place.
+        This has to be done because some countries' code are one character long instead of two (i.e. "T" for Japan)
+        '''
+        if vat[1].isalpha():
+            vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        else:
+            vat_country, vat_number = vat[:1].lower(), vat[1:].replace(' ', '')
         return vat_country, vat_number
 
     @api.model
@@ -689,6 +697,10 @@ class ResPartner(models.Model):
         '''
         check_func = stdnum.util.get_cc_module('nz', 'ird').is_valid
         return check_func(vat)
+
+    def check_vat_t(self, vat):
+        if self.country_id.code == 'JP':
+            return self.simple_vat_check('jp', vat)
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
