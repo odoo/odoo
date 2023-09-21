@@ -148,3 +148,5 @@ class SaleOrderOption(models.Model):
         self.write({'line_id': order_line.id})
         if sale_order:
             sale_order.add_option_to_order_with_taxcloud()
+
+        return order_line
