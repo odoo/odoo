@@ -4,11 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { editInput } from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
-import { click, contains } from "@web/../tests/utils";
-
-const { createFile } = file;
+import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 
 QUnit.module("file upload");
 
@@ -29,23 +25,23 @@ QUnit.test("no conflicts between file uploads", async () => {
         views: [[false, "form"]],
     });
     await click("button", { text: "Send message" });
-    const file1 = await createFile({
-        name: "text1.txt",
-        content: "hello, world",
-        contentType: "text/plain",
-    });
-    await contains(".o-mail-Chatter .o-mail-Composer input[type=file]");
-    editInput(document.body, ".o-mail-Chatter .o-mail-Composer input[type=file]", file1);
+    await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [
+        await createFile({
+            name: "text1.txt",
+            content: "hello, world",
+            contentType: "text/plain",
+        }),
+    ]);
     // Uploading file in the second thread: discuss.channel in chatWindow.
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    const file2 = await createFile({
-        name: "text2.txt",
-        content: "hello, world",
-        contentType: "text/plain",
-    });
-    await contains(".o-mail-ChatWindow .o-mail-Composer input[type=file]");
-    editInput(document.body, ".o-mail-ChatWindow input[type=file]", file2);
+    await inputFiles(".o-mail-ChatWindow .o-mail-Composer input[type=file]", [
+        await createFile({
+            name: "text2.txt",
+            content: "hello, world",
+            contentType: "text/plain",
+        }),
+    ]);
     await contains(".o-mail-Chatter .o-mail-AttachmentCard");
     await contains(".o-mail-ChatWindow .o-mail-AttachmentCard");
 });
@@ -62,11 +58,12 @@ QUnit.test("Attachment shows spinner during upload", async () => {
         },
     });
     await openDiscuss(channelId);
-    const file = await createFile({
-        name: "text2.txt",
-        content: "hello, world",
-        contentType: "text/plain",
-    });
-    editInput(document.body, ".o-mail-Composer input[type=file]", file);
+    await inputFiles(".o-mail-Composer input[type=file]", [
+        await createFile({
+            name: "text2.txt",
+            content: "hello, world",
+            contentType: "text/plain",
+        }),
+    ]);
     await contains(".o-mail-AttachmentCard .fa-spinner");
 });

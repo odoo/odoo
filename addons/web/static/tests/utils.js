@@ -8,12 +8,39 @@ import {
     makeDeferred,
     triggerEvents as webTriggerEvents,
 } from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
-import { createFile as createFile2 } from "@web/../tests/legacy/helpers/test_utils_file";
 
-const { inputFiles: webInputFiles } = file;
-
-export const createFile = createFile2;
+/**
+ * Create a file object, which can be used for drag-and-drop.
+ *
+ * @param {Object} data
+ * @param {string} data.name
+ * @param {string} data.content
+ * @param {string} data.contentType
+ * @returns {Promise<Object>} resolved with file created
+ */
+export function createFile(data) {
+    // Note: this is only supported by Chrome, and does not work in Incognito mode
+    return new Promise(function (resolve, reject) {
+        var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+        if (!requestFileSystem) {
+            throw new Error("FileSystem API is not supported");
+        }
+        requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
+            fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
+                fileEntry.createWriter(function (fileWriter) {
+                    fileWriter.onwriteend = function (e) {
+                        fileSystem.root.getFile(data.name, {}, function (fileEntry) {
+                            fileEntry.file(function (file) {
+                                resolve(file);
+                            });
+                        });
+                    };
+                    fileWriter.write(new Blob([data.content], { type: data.contentType }));
+                });
+            });
+        });
+    });
+}
 
 /**
  * Create a fake object 'dataTransfer', linked to some files,
@@ -48,7 +75,7 @@ export async function click(selector, options = {}) {
 
 /**
  * Waits until exactly one element matching the given `selector` is present in
- * `options.target` and then drags `files` on it.
+ * `options.target` and then dragenters `files` on it.
  *
  * @param {string} selector
  * @param {Object[]} files
@@ -56,6 +83,18 @@ export async function click(selector, options = {}) {
  */
 export async function dragenterFiles(selector, files, options) {
     await contains(selector, { dragenterFiles: files, ...options });
+}
+
+/**
+ * Waits until exactly one element matching the given `selector` is present in
+ * `options.target` and then dragovers `files` on it.
+ *
+ * @param {string} selector
+ * @param {Object[]} files
+ * @param {ContainsOptions} [options] forwarded to `contains`
+ */
+export async function dragoverFiles(selector, files, options) {
+    await contains(selector, { dragoverFiles: files, ...options });
 }
 
 /**
@@ -144,8 +183,22 @@ export async function triggerEvents(selector, events, options) {
     await contains(selector, { triggerEvents: events, ...options });
 }
 
+function log(ok, message) {
+    if (window.QUnit) {
+        QUnit.assert.ok(ok, message);
+    } else {
+        if (ok) {
+            console.log(message);
+        } else {
+            console.error(message);
+        }
+    }
+}
+
 let hasUsedContainsPositively = false;
-QUnit.testStart(() => (hasUsedContainsPositively = false));
+if (window.QUnit) {
+    QUnit.testStart(() => (hasUsedContainsPositively = false));
+}
 /**
  * @typedef {Object} ContainsOptions
  * @property {[string, ContainsOptions]} [after] if provided, the found element(s) must be after the
@@ -161,7 +214,8 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  *  multiple rules that have to match at the same time.
  * @property {number} [count=1] numbers of elements to be found to declare the contains check
  *  as successful. Elements are counted after applying all other filters.
- * @property {Object[]} [dragenterFiles] if provided, drags the given files on the found element
+ * @property {Object[]} [dragenterFiles] if provided, dragenters the given files on the found element
+ * @property {Object[]} [dragoverFiles] if provided, dragovers the given files on the found element
  * @property {Object[]} [dropFiles] if provided, drops the given files on the found element
  * @property {Object[]} [inputFiles] if provided, inputs the given files on the found element
  * @property {{content:string, replace:boolean}} [insertText] if provided, adds to (or replace) the
@@ -322,16 +376,16 @@ class Contains {
                     : `${message} Parent not found.`;
                 if (this.parentContains) {
                     if (this.parentContains.successMessage) {
-                        QUnit.assert.ok(true, this.parentContains.successMessage);
+                        log(true, this.parentContains.successMessage);
                     } else {
                         this.parentContains.executeError();
                     }
                 }
-                QUnit.assert.ok(false, message);
+                log(false, message);
                 this.def?.reject(new Error(message));
                 for (const childContains of this.childrenContains || []) {
                     if (childContains.successMessage) {
-                        QUnit.assert.ok(true, childContains.successMessage);
+                        log(true, childContains.successMessage);
                     } else {
                         childContains.executeError();
                     }
@@ -360,10 +414,18 @@ class Contains {
             });
         }
         if (this.options.dragenterFiles) {
-            message = `${message} and dragged ${this.options.dragenterFiles.length} file(s)`;
+            message = `${message} and dragentered ${this.options.dragenterFiles.length} file(s)`;
             const ev = new Event("dragenter", { bubbles: true });
             Object.defineProperty(ev, "dataTransfer", {
                 value: createFakeDataTransfer(this.options.dragenterFiles),
+            });
+            el.dispatchEvent(ev);
+        }
+        if (this.options.dragoverFiles) {
+            message = `${message} and dragovered ${this.options.dragoverFiles.length} file(s)`;
+            const ev = new Event("dragover", { bubbles: true });
+            Object.defineProperty(ev, "dataTransfer", {
+                value: createFakeDataTransfer(this.options.dragoverFiles),
             });
             el.dispatchEvent(ev);
         }
@@ -377,7 +439,24 @@ class Contains {
         }
         if (this.options.inputFiles) {
             message = `${message} and inputted ${this.options.inputFiles.length} file(s)`;
-            webInputFiles(el, this.options.inputFiles);
+            // could not use _createFakeDataTransfer as el.files assignation will only
+            // work with a real FileList object.
+            const dataTransfer = new window.DataTransfer();
+            for (const file of this.options.inputFiles) {
+                dataTransfer.items.add(file);
+            }
+            el.files = dataTransfer.files;
+            /**
+             * Changing files programatically is not supposed to trigger the event but
+             * it does in Chrome versions before 73 (which is on runbot), so in that
+             * case there is no need to make a manual dispatch, because it would lead to
+             * the files being added twice.
+             */
+            const versionRaw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+            const chromeVersion = versionRaw ? parseInt(versionRaw[2], 10) : false;
+            if (!chromeVersion || chromeVersion >= 73) {
+                el.dispatchEvent(new Event("change"));
+            }
         }
         if (this.options.insertText !== undefined) {
             message = `${message} and inserted text "${this.options.insertText.content}" (replace: ${this.options.insertText.replace})`;
@@ -421,11 +500,11 @@ class Contains {
             });
         }
         if (this.parentContains) {
-            QUnit.assert.ok(true, this.parentContains.successMessage);
+            log(true, this.parentContains.successMessage);
         }
-        QUnit.assert.ok(true, message);
+        log(true, message);
         for (const childContains of this.childrenContains) {
-            QUnit.assert.ok(true, childContains.successMessage);
+            log(true, childContains.successMessage);
         }
         this.def?.resolve();
     }
