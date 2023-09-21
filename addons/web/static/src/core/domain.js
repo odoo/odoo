@@ -3,6 +3,7 @@
 import { shallowEqual } from "@web/core/utils/arrays";
 import { evaluate, formatAST, parseExpr } from "./py_js/py";
 import { toPyValue } from "./py_js/py_utils";
+import { escapeRegExp } from "./utils/strings";
 
 /**
  * @typedef {import("./py_js/py_parser").AST} AST
@@ -298,7 +299,11 @@ function matchCondition(record, condition) {
             return matchCondition(record[names[0]], [names.slice(1).join("."), operator, value]);
         }
     }
-
+    let likeRegexp, ilikeRegexp;
+    if (["like", "not like", "ilike", "not ilike"].includes(operator)) {
+        likeRegexp = new RegExp(`.*${escapeRegExp(value).replaceAll("%", ".*")}.*`, "g");
+        ilikeRegexp = new RegExp(`.*${escapeRegExp(value).replaceAll("%", ".*")}.*`, "gi");
+    }
     const fieldValue = typeof field === "number" ? field : record[field];
     switch (operator) {
         case "=?":
@@ -337,12 +342,12 @@ function matchCondition(record, condition) {
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.indexOf(value) >= 0;
+            return likeRegexp.test(fieldValue);
         case "not like":
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.indexOf(value) === -1;
+            return !likeRegexp.test(fieldValue);
         case "=like":
             if (fieldValue === false) {
                 return false;
@@ -352,12 +357,12 @@ function matchCondition(record, condition) {
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+            return ilikeRegexp.test(fieldValue);
         case "not ilike":
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.toLowerCase().indexOf(value.toLowerCase()) === -1;
+            return !ilikeRegexp.test(fieldValue);
         case "=ilike":
             if (fieldValue === false) {
                 return false;
