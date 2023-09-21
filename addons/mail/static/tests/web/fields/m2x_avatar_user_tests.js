@@ -265,11 +265,11 @@ QUnit.test(
                 views: [[false, "list"]],
             });
             await contains(
-                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span",
                 { text: "Luigi" }
             );
             await contains(
-                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span",
                 { text: "Mario" }
             );
             // Select all
@@ -284,11 +284,11 @@ QUnit.test(
             // Cancel
             await click(".o_dialog .modal-footer button:nth-child(2)");
             await contains(
-                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span",
                 { text: "Luigi" }
             );
             await contains(
-                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span",
                 { text: "Mario" }
             );
 
@@ -300,11 +300,11 @@ QUnit.test(
             await click(".o_dialog .modal-footer button:nth-child(1)");
             await contains(".o_dialog", { count: 0 });
             await contains(
-                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                ":nth-child(1 of .o_data_row) .o_field_many2one_avatar_user span > span",
                 { text: "Luigi" }
             );
             await contains(
-                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user .o_form_uri span",
+                ":nth-child(2 of .o_data_row) .o_field_many2one_avatar_user span > span",
                 { text: "Luigi" }
             );
 
