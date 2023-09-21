@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
-import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/utils/timing";
+import { setRecurringAnimationFrame } from "@web/core/utils/timing";
 import { browser } from "../browser/browser";
 import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection";
 
@@ -17,6 +16,14 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  * @property {EdgeScrollingOptions} [edgeScrolling]
  * @property {Record<string, string[]>} [acceptedParams]
  * @property {Record<string, any>} [defaultParams]
+ * Setup hooks
+ * @property {{
+ *  addListener: typeof import("@odoo/owl")["useExternalListener"];
+ *  setup: typeof import("@odoo/owl")["useEffect"];
+ *  teardown: typeof import("@odoo/owl")["onWillUnmount"];
+ *  throttle: typeof import("./timing")["useThrottleForAnimation"];
+ *  wrapState: typeof import("@odoo/owl")["reactive"];
+ * }} setupHooks
  * Build hooks
  * @property {(params: DraggableBuildHandlerParams) => any} onComputeParams
  * Runtime hooks
@@ -427,6 +434,7 @@ export function makeDraggableHook(hookParams) {
     hookParams = getReturnValue(hookParams);
 
     const hookName = hookParams.name || "useAnonymousDraggable";
+    const { setupHooks } = hookParams;
     const allAcceptedParams = { ...DEFAULT_ACCEPTED_PARAMS, ...hookParams.acceptedParams };
     const defaultParams = { ...DEFAULT_DEFAULT_PARAMS, ...hookParams.defaultParams };
 
@@ -869,7 +877,7 @@ export function makeDraggableHook(hookParams) {
             };
 
             // Component infos
-            const state = reactive({ dragging: false });
+            const state = setupHooks.wrapState({ dragging: false });
 
             // Basic error handling asserting that the parameters are valid.
             for (const prop in allAcceptedParams) {
@@ -907,7 +915,7 @@ export function makeDraggableHook(hookParams) {
             };
 
             // Effect depending on the params to update them.
-            useEffect(
+            setupHooks.setup(
                 (...deps) => {
                     const actualParams = { ...defaultParams, ...Object.fromEntries(deps) };
                     if (!ctx.ref.el) {
@@ -955,7 +963,7 @@ export function makeDraggableHook(hookParams) {
                 () => computeParams(params)
             );
             // Effect depending on the `ref.el` to add triggering pointer events listener.
-            useEffect(
+            setupHooks.setup(
                 (el) => {
                     if (el) {
                         const { add, cleanup } = makeCleanupManager();
@@ -980,12 +988,14 @@ export function makeDraggableHook(hookParams) {
                 () => [ctx.ref.el]
             );
             // Other global event listeners.
-            const throttledOnPointerMove = useThrottleForAnimation(onPointerMove);
-            useExternalListener(window, "pointermove", throttledOnPointerMove, { passive: false });
-            useExternalListener(window, "pointerup", onPointerUp);
-            useExternalListener(window, "pointercancel", onPointerCancel);
-            useExternalListener(window, "keydown", onKeyDown, { capture: true });
-            onWillUnmount(() => dragEnd(null));
+            const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
+            setupHooks.addListener(window, "pointermove", throttledOnPointerMove, {
+                passive: false,
+            });
+            setupHooks.addListener(window, "pointerup", onPointerUp);
+            setupHooks.addListener(window, "pointercancel", onPointerCancel);
+            setupHooks.addListener(window, "keydown", onKeyDown, { capture: true });
+            setupHooks.teardown(() => dragEnd(null));
 
             return state;
         },
