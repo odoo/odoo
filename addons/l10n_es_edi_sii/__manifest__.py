@@ -31,7 +31,6 @@
     ],
     'data': [
         'data/account_edi_data.xml',
-        'data/res_partner_data.xml',
 
         'security/ir.model.access.csv',
         'security/l10n_es_edi_certificate.xml',
