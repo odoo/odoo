@@ -21,7 +21,7 @@ class SaleOrderTemplateOption(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         required=True, check_company=True,
-        domain="[('sale_ok', '=', True)]")
+        domain=lambda self: self._product_id_domain())
 
     name = fields.Text(
         string="Description",
@@ -58,6 +58,11 @@ class SaleOrderTemplateOption(models.Model):
             option.uom_id = option.product_id.uom_id
 
     #=== BUSINESS METHODS ===#
+
+    @api.model
+    def _product_id_domain(self):
+        """Returns the domain of the products that can be added as a template option."""
+        return [('sale_ok', '=', True)]
 
     def _prepare_option_line_values(self):
         """ Give the values to create the corresponding option line.

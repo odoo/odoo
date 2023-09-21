@@ -36,7 +36,7 @@ class SaleOrderTemplateLine(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         check_company=True,
-        domain="[('sale_ok', '=', True)]")
+        domain=lambda self: self._product_id_domain())
 
     name = fields.Text(
         string="Description",
@@ -91,6 +91,11 @@ class SaleOrderTemplateLine(models.Model):
         return super().write(values)
 
     #=== BUSINESS METHODS ===#
+
+    @api.model
+    def _product_id_domain(self):
+        """ Returns the domain of the products that can be added to the template. """
+        return [('sale_ok', '=', True)]
 
     def _prepare_order_line_values(self):
         """ Give the values to create the corresponding order line.
