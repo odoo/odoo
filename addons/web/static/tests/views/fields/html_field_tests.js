@@ -28,8 +28,9 @@ QUnit.module("Fields", ({ beforeEach }) => {
                 partner: {
                     fields: {
                         txt: { string: "txt", type: "html", trim: true },
+                        txt_computed: { string: "txt_computed", type: "html", store: false },
                     },
-                    records: [{ id: 1, txt: RED_TEXT }],
+                    records: [{ id: 1, txt: RED_TEXT, txt_computed: false }],
                 },
             },
         };
@@ -351,6 +352,47 @@ QUnit.module("Fields", ({ beforeEach }) => {
 
             await editInput(target, ".o_field_widget[name=txt] textarea", "");
             await clickSave(target);
+        }
+    );
+
+    QUnit.test(
+        "Invisible attribute on div element based on html field correctly rendered the element",
+        async function (assert) {
+            assert.expect(3);
+            serverData.models.partner.onchanges = {
+                txt: (obj) => {
+                    obj.txt_computed = obj.txt.length ? false : RED_TEXT;
+                },
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <div class="alert alert-info" invisible="not txt_computed">
+                                <field name="txt_computed" readonly="1"/>
+                            </div>
+                            <group>
+                                <field name="txt"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 1,
+            });
+
+            assert.containsNone(target, ".alert",
+                "No alert should be displayed as txt_computed is false");
+
+            await editInput(target, ".o_field_widget[name=txt] textarea", "");
+            assert.containsOnce(target, ".alert",
+                "Alert is displayed as txt_computed is now set to RED_TEXT");
+
+            await editInput(target, ".o_field_widget[name=txt] textarea", RED_TEXT);
+            assert.containsNone(target, ".alert",
+                "No alert should be displayed as txt_computed is now set to false");
         }
     );
 });

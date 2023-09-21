@@ -581,7 +581,7 @@ export class Record extends DataPoint {
                 continue;
             }
             if (["char", "text", "html"].includes(this.fields[fieldName].type)) {
-                textValues[fieldName] = values[fieldName];
+                textValues[fieldName] = values[fieldName].length ? values[fieldName] : false;
             }
         }
         return textValues;
