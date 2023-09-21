@@ -26,8 +26,9 @@ Spanish charts of accounts (PGCE 2008).
         'base_vat',
     ],
     'data': [
+        'data/res_partner_data.xml',
         'data/account_tax_data.xml',
-
+        'views/account_move_views.xml',
         'views/report_invoice.xml',
     ],
     'demo': [
