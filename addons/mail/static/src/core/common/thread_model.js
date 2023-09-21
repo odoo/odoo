@@ -15,7 +15,7 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @property {{id: number}} partner
  * @typedef SuggestedRecipient
  * @property {string} email
- * @property {import("@mail/core/common/persona_model").Persona|false} persona
+ * @property {import("models").Persona|false} persona
  * @property {string} lang
  * @property {string} reason
  * @property {boolean} checked
@@ -23,13 +23,13 @@ import { Deferred } from "@web/core/utils/concurrency";
 
 export class Thread extends Record {
     static id = AND("model", "id");
-    /** @type {Object.<string, import("models").Models["Thread"]>} */
+    /** @type {Object.<string, import("models").Thread>} */
     static records = {};
-    /** @returns {import("models").Models["Thread"]} */
+    /** @returns {import("models").Thread} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["Thread"]} */
+    /** @returns {import("models").Thread} */
     static get(data) {
         return super.get(data);
     }
@@ -46,7 +46,7 @@ export class Thread extends Record {
     }
     /**
      * @param {Object} data
-     * @returns {import("models").Models["Thread"]}
+     * @returns {import("models").Thread}
      */
     static insert(data) {
         if (!("id" in data)) {
@@ -97,7 +97,7 @@ export class Thread extends Record {
     /** @type {object|undefined} */
     channel;
     channelMembers = Record.List("ChannelMember");
-    /** @type {Object<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
+    /** @type {Object<number, import("models").RtcSession>} */
     rtcSessions = {};
     rtcInvitingSession = Record.one("RtcSession");
     /** @type {Set<number>} */
@@ -152,7 +152,7 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      *
-     * @type {import("@mail/core/common/message_model").Message[]}
+     * @type {import("models").Message[]}
      */
     needactionMessages = Record.List("Message");
     /** @type {string} */
@@ -264,7 +264,7 @@ export class Thread extends Record {
         return this.name;
     }
 
-    /** @type {import("@mail/core/common/persona_model").Persona[]} */
+    /** @type {import("models").Persona[]} */
     get correspondents() {
         return this.channelMembers
             .map((member) => member.persona)
@@ -275,7 +275,7 @@ export class Thread extends Record {
             );
     }
 
-    /** @type {import("@mail/core/common/persona_model").Persona|undefined} */
+    /** @type {import("models").Persona|undefined} */
     get correspondent() {
         if (this.type === "channel") {
             return undefined;
@@ -318,7 +318,7 @@ export class Thread extends Record {
         return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
     }
 
-    /** @returns {import("@mail/core/common/message_model").Message | undefined} */
+    /** @returns {import("models").Message | undefined} */
     get newestMessage() {
         return [...this.messages].reverse().find((msg) => !msg.isEmpty);
     }
@@ -346,7 +346,7 @@ export class Thread extends Record {
     }
 
     /**
-     * @param {import("@mail/core/common/message_model").Message} message
+     * @param {import("models").Message} message
      */
     hasMessage(message) {
         return message.in(this.messages);
@@ -459,7 +459,7 @@ export class Thread extends Record {
 
     /**
      *
-     * @param {import("@mail/core/common/persona_model").Persona} persona
+     * @param {import("models").Persona} persona
      */
     getMemberName(persona) {
         return persona.name;

@@ -9,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 patch(ThreadService.prototype, {
     /**
      * @override
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {boolean} pushState
      */
     setDiscussThread(thread, pushState) {
@@ -85,8 +85,8 @@ patch(ThreadService.prototype, {
     },
 
     /**
-     * @param {import("@mail/core/common/persona_model").Persona} persona
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Persona} persona
+     * @param {import("models").Thread} thread
      */
     avatarUrl(author, thread) {
         if (thread?.type === "livechat" && author?.type === "guest") {

@@ -32,7 +32,7 @@ export const PRESENT_THRESHOLD = 2500;
  * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {"asc"|"desc"} [order="asc"]
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Thread} thread
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {

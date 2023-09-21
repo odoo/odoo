@@ -72,6 +72,7 @@ export class RecordList extends Array {
     constructor() {
         super();
         return new Proxy(this, {
+            /** @param {RecordList<R>} receiver */
             get(target, name, receiver) {
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index]" syntax
@@ -83,6 +84,7 @@ export class RecordList extends Array {
                 }
                 return Reflect.get(target, name, receiver);
             },
+            /** @param {RecordList<R>} receiver */
             set(target, name, val, receiver) {
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index] = r3" syntax
@@ -241,6 +243,7 @@ export class RecordSet extends Set {
     constructor() {
         super();
         return new Proxy(this, {
+            /** @param {RecordSet<R>} receiver */
             get(target, name, receiver) {
                 if (name === "size") {
                     return receiver.__set__.size;
@@ -409,7 +412,7 @@ export class Record {
     /**
      * @template {keyof import("model").Models} M
      * @param {M} modelName
-     * @returns {import("models").Collection<import("models").Models[M]>["List"]}
+     * @returns {import("models").Models[M][]}
      */
     static List(modelName) {
         return MANY_LIST_SYM;
@@ -417,7 +420,7 @@ export class Record {
     /**
      * @template {keyof import("model").Models} M
      * @param {M} modelName
-     * @returns {import("models").Collection<import("models").Models[M]>["Set"]}
+     * @returns {Set<import("models").Models[M]>}
      */
     static Set(modelName) {
         return MANY_SET_SYM;

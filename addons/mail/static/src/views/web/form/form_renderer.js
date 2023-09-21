@@ -20,7 +20,7 @@ patch(FormRenderer.prototype, {
             Chatter,
         };
         this.messagingState = useState({
-            /** @type {import("@mail/core/common/thread_model").Thread} */
+            /** @type {import("models").Thread} */
             thread: undefined,
         });
         if (this.env.services["mail.store"]) {

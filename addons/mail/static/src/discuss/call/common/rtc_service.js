@@ -340,7 +340,7 @@ export class Rtc {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} [channel]
+     * @param {import("models").Thread} [channel]
      */
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSessionId = undefined;
@@ -532,7 +532,7 @@ export class Rtc {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} channel
+     * @param {import("models").Thread} channel
      * @param {Object} [param1={}]
      * @param {boolean} [param1.video]
      */
@@ -774,7 +774,7 @@ export class Rtc {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread}
+     * @param {import("models").Thread}
      */
     async joinCall(channel, { video = false } = {}) {
         if (!IS_CLIENT_RTC_COMPATIBLE) {
@@ -1472,7 +1472,7 @@ export class Rtc {
     }
 
     /**
-     * @param {import("@mail/discuss/call/common/rtc_session_model").id} id
+     * @param {import("models").id} id
      */
     deleteSession(id) {
         const session = this.store.RtcSession.get(id);

@@ -57,7 +57,7 @@ export class AttachmentService {
     /**
      * Remove the given attachment globally.
      *
-     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     * @param {import("models").Attachment} attachment
      */
     remove(attachment) {
         if (attachment.tmpUrl) {

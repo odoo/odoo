@@ -117,7 +117,7 @@ export class Messaging {
     // -------------------------------------------------------------------------
 
     /**
-     * @return {import("@mail/core/common/persona_model").Persona[]}
+     * @return {import("models").Persona[]}
      */
     async searchPartners(searchStr = "", limit = 10) {
         let partners = [];

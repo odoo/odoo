@@ -95,7 +95,7 @@ patch(Thread.prototype, {
 
     /**
      *
-     * @param {import("@mail/core/common/persona_model").Persona} persona
+     * @param {import("models").Persona} persona
      */
     getMemberName(persona) {
         if (this.type !== "livechat") {

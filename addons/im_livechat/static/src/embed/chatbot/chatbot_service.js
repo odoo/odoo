@@ -243,7 +243,7 @@ export class ChatBotService {
     /**
      * Process the user answer and trigger the next step.
      *
-     * @param {import("@mail/core/common/message_model").Message} message
+     * @param {import("models").Message} message
      */
     async _processUserAnswer(message) {
         if (
@@ -293,7 +293,7 @@ export class ChatBotService {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      */
     isChatbotThread(thread) {
         return thread?.operator.id === this.chatbot?.partnerId;

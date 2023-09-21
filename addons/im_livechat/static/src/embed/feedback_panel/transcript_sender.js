@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread}
+ * @property {import("models").Thread}
  * @extends {Component<Props, Env>}
  */
 export class TranscriptSender extends Component {

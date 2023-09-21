@@ -203,7 +203,7 @@ export class MessageService {
     }
 
     /**
-     * @param {import("@mail/core/common/message_model").Message} message
+     * @param {import("models").Message} message
      * @param {Object} data
      */
     update(message, data) {

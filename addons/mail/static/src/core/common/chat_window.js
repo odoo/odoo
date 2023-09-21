@@ -24,7 +24,7 @@ import { Typing } from "@mail/discuss/typing/common/typing";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/chat_window_model").ChatWindow} chatWindow
+ * @property {import("models").ChatWindow} chatWindow
  * @property {boolean} [right]
  * @extends {Component<Props, Env>}
  */

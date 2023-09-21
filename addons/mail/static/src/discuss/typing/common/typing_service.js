@@ -39,7 +39,7 @@ export class Typing {
     }
 
     /**
-     * @param {import("@mail/core/common/channel_member_model").ChannelMember} member
+     * @param {import("models").ChannelMember} member
      */
     addTypingMember(member) {
         if (!this.memberIdsByChannelId.has(member.thread.id)) {
@@ -55,8 +55,8 @@ export class Typing {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} channel
-     * @returns {import("@mail/core/common/channel_member_model").ChannelMember[]}
+     * @param {import("models").Thread} channel
+     * @returns {import("models").ChannelMember[]}
      */
     getTypingMembers(channel) {
         return [...(this.memberIdsByChannelId.get(channel.id) ?? new Set())]
@@ -65,7 +65,7 @@ export class Typing {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} channel
+     * @param {import("models").Thread} channel
      * @returns {boolean}
      */
     hasTypingMembers(channel) {
@@ -73,7 +73,7 @@ export class Typing {
     }
 
     /**
-     * @param {import("@mail/core/common/channel_member_model").ChannelMember} member
+     * @param {import("models").ChannelMember} member
      */
     removeTypingMember(member) {
         const memberIds = this.memberIdsByChannelId.get(member.thread.id);

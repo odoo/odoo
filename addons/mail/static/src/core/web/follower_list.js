@@ -51,7 +51,7 @@ export class FollowerList extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("@mail/core/common/follower_model").Follower} follower
+     * @param {import("models").Follower} follower
      */
     onClickDetails(ev, follower) {
         this.messaging.openDocument({ id: follower.partner.id, model: "res.partner" });
@@ -60,7 +60,7 @@ export class FollowerList extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("@mail/core/common/follower_model").Follower} follower
+     * @param {import("models").Follower} follower
      */
     async onClickEdit(ev, follower) {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
@@ -72,7 +72,7 @@ export class FollowerList extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("@mail/core/common/follower_model").Follower} follower
+     * @param {import("models").Follower} follower
      */
     async onClickRemove(ev, follower) {
         await this.threadService.removeFollower(follower);

@@ -102,7 +102,7 @@ export class Chatter extends Component {
             scrollToAttachments: 0,
             showActivities: true,
             showAttachmentLoading: false,
-            /** @type {import("@mail/core/common/thread_model").Thread} */
+            /** @type {import("models").Thread} */
             thread: undefined,
         });
         this.unfollowHover = useHover("unfollow");
@@ -200,7 +200,7 @@ export class Chatter extends Component {
     }
 
     /**
-     * @returns {import("@mail/core/web/activity_model").Activity[]}
+     * @returns {import("models").Activity[]}
      */
     get activities() {
         return this.state.thread.activities;

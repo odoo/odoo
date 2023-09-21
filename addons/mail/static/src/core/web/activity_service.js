@@ -24,7 +24,7 @@ export class ActivityService {
     }
 
     /**
-     * @param {import("@mail/core/web/activity_model").Activity} activity
+     * @param {import("models").Activity} activity
      * @param {number[]} attachmentIds
      */
     async markAsDone(activity, attachmentIds = []) {
