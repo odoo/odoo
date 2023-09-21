@@ -177,11 +177,7 @@ class SaleReport(models.Model):
             LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
             JOIN {currency_table} ON currency_table.company_id = s.company_id
             """.format(
-            currency_table=self.env['res.currency']._get_query_currency_table(
-                {
-                    'multi_company': True,
-                    'date': {'date_to': fields.Date.today()}
-                }),
+            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
             )
 
     def _where_sale(self):
