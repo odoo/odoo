@@ -3592,8 +3592,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
                 exchange_move = line_receivable.full_reconcile_id.partial_reconcile_ids.exchange_move_id
 
-                # Date of the exchange move should be the date of the payment
-                self.assertEqual(exchange_move.date, fields.Date.to_date('2017-01-20'))
+                # Date of the exchange move should be the last day of the month/year depending on the sequence format
+                self.assertEqual(exchange_move.date, fields.Date.to_date(expected_date))
 
                 line_receivable.remove_move_reconcile()
 
