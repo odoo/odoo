@@ -312,7 +312,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await deleteBackward(editor);
                     },
-                    contentAfter: '<p>a<a href="https://hellomoto.com">hello[]moto.com</a></p>',
+                    contentAfter: '<p>a<a href="http://hellomoto.com">hello[]moto.com</a></p>',
                 });
             });
             it('should change the url in one step', async () => {
