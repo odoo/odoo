@@ -53,7 +53,7 @@ class LeaveReport(models.Model):
                     employee.active as active_employee,
                     CASE
                         WHEN allocation.id = min_allocation_id.min_id
-                            THEN aggregate_allocation.number_of_days - aggregate_leave.number_of_days
+                            THEN aggregate_allocation.number_of_days - COALESCE(aggregate_leave.number_of_days, 0)
                             ELSE 0
                     END as number_of_days,
                     allocation.department_id as department_id,
@@ -72,16 +72,21 @@ class LeaveReport(models.Model):
                     FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) min_allocation_id
                 on (allocation.employee_id=min_allocation_id.employee_id and allocation.holiday_status_id=min_allocation_id.holiday_status_id)
 
-                /* Obtain the sum of allocations */
+                /* Obtain the sum of allocations (validated) */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id, sum(number_of_days) as number_of_days
-                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) aggregate_allocation
+                    (SELECT employee_id, holiday_status_id,
+                        sum(CASE WHEN state = 'validate' and active = True THEN number_of_days ELSE 0 END) as number_of_days
+                    FROM hr_leave_allocation
+                    GROUP BY employee_id, holiday_status_id) aggregate_allocation
                 on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
 
-                /* Obtain the sum of requested leaves (validated and confirmed) */
+                /* Obtain the sum of requested leaves (validated) */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id, sum(number_of_days) as number_of_days 
-                    FROM hr_leave GROUP BY employee_id, holiday_status_id) aggregate_leave
+                    (SELECT employee_id, holiday_status_id,
+                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_days ELSE 0 END) as number_of_days
+                    FROM hr_leave
+
+                    GROUP BY employee_id, holiday_status_id) aggregate_leave
                 on (allocation.employee_id=aggregate_leave.employee_id and allocation.holiday_status_id = aggregate_leave.holiday_status_id)
 
                 UNION ALL SELECT
@@ -99,7 +104,8 @@ class LeaveReport(models.Model):
                     END as holiday_status,
                     request.employee_company_id as company_id
                 FROM hr_leave as request
-                INNER JOIN hr_employee as employee ON (request.employee_id = employee.id)) leaves
+                INNER JOIN hr_employee as employee ON (request.employee_id = employee.id)
+                WHERE request.state IN ('confirm', 'validate', 'validate1')) leaves
             );
         """)
 

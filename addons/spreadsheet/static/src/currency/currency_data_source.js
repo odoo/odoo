@@ -30,7 +30,7 @@ export class CurrencyDataSource {
         const data = this.serverData.batch.get("res.currency.rate", "get_rates_for_spreadsheet", {
             from,
             to,
-            date: toServerDateString(date),
+            date: date ? toServerDateString(date) : undefined,
         });
         const rate = data !== undefined ? data.rate : undefined;
         if (rate === false) {
