@@ -232,7 +232,7 @@ Contracts:
             where he has a new contract working only 3 days/week. This should be taken into
             account when computing the number of days for the leave (2 weeks leave = 6 days).
             Override this method to get number of days according to the contract's calendar
-            at the time of the leave. 
+            at the time of the leave.
         """
         employee = self.env['hr.employee'].browse(employee_ids)
         # Use sudo otherwise base users can't compute number of days
@@ -240,8 +240,7 @@ Contracts:
         contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
         calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
         # We force the company in the domain as we are more than likely in a compute_sudo
-        domain = [('time_type', '=', 'leave'),
-                  ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+        domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
         result = employee._get_work_days_data_batch(date_from, date_to, calendar=calendar, domain=domain)
         for employee_id in result:
