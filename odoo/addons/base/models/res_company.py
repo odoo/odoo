@@ -7,6 +7,7 @@ import warnings
 
 from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
+from odoo.index import unique
 from odoo.tools import html2plaintext, file_open, ormcache
 
 _logger = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ class Company(models.Model):
     def _default_currency_id(self):
         return self.env.user.company_id.currency_id
 
-    name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
+    name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False, index=unique(message='The company name must be unique!'))
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
@@ -73,9 +74,6 @@ class Company(models.Model):
     color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
     layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The company name must be unique!')
-    ]
 
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):

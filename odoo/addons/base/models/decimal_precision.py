@@ -6,6 +6,9 @@ import odoo.addons
 
 import logging
 import sys
+
+from odoo.index import unique
+
 _logger = logging.getLogger(__name__)
 
 
@@ -18,12 +21,8 @@ class DecimalPrecision(models.Model):
     _name = 'decimal.precision'
     _description = 'Decimal Precision'
 
-    name = fields.Char('Usage', required=True)
+    name = fields.Char('Usage', required=True, index=unique(message="Only one value can be defined for each given usage!"))
     digits = fields.Integer('Digits', required=True, default=2)
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', """Only one value can be defined for each given usage!"""),
-    ]
 
     @api.model
     @tools.ormcache('application')

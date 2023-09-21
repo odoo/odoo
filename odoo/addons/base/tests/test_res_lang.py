@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from psycopg2 import IntegrityError
 
 from odoo.tests.common import TransactionCase
+from odoo.tools import translate_sql_constraint, mute_logger
+
 
 class test_res_lang(TransactionCase):
 
@@ -40,3 +43,22 @@ class test_res_lang(TransactionCase):
         assert intersperse("abc12", [3], '.') == ('abc12', 0)
         assert intersperse("abc12", [2], '.') == ('abc12', 0)
         assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
+
+    @mute_logger('odoo.sql_db')
+    def test_unique(self):
+        lang = self.env['res.lang']
+        for field_name, msg in [
+            ('name', "The name of the language must be unique!"),
+            ('code', "The code of the language must be unique!"),
+            ('url_code', "The URL code of the language must be unique!"),
+        ]:
+            try:
+                with self.env.cr.savepoint():
+                    lang.create({'name': 'l1', 'code': 'l1', 'url_code': 'l1', field_name: 'XXX'})
+                    lang.create({'name': 'l2', 'code': 'l2', 'url_code': 'l2', field_name: 'XXX'})
+            except IntegrityError as e:
+                self.assertIn(e.diag.constraint_name, self.env.registry._sql_constraints)
+                e = translate_sql_constraint(self.env.cr, e.diag.constraint_name, 'en_US')
+                self.assertEqual(str(e), msg)
+            else:
+                self.fail("Should have raised an integrity error")

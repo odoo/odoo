@@ -4,9 +4,9 @@
 import re
 import logging
 from odoo import api, fields, models, tools
+from odoo.index import unique
 from odoo.osv import expression
 from odoo.exceptions import UserError
-from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
@@ -34,11 +34,11 @@ class Country(models.Model):
     _description = 'Country'
     _order = 'name'
 
-    name = fields.Char(
-        string='Country Name', required=True, translate=True)
+    name = fields.Char(string='Country Name', required=True, translate=True)
     code = fields.Char(
         string='Country Code', size=2,
         required=True,
+        index=unique(message="The code of the country must be unique!"),
         help='The ISO country code in two chars. \nYou can use this field for quick search.')
     address_format = fields.Text(string="Layout in Reports",
         help="Display format to use for addresses belonging to this country.\n\n"
@@ -74,13 +74,6 @@ class Country(models.Model):
 
     state_required = fields.Boolean(default=False)
     zip_required = fields.Boolean(default=True)
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)',
-            'The name of the country must be unique!'),
-        ('code_uniq', 'unique (code)',
-            'The code of the country must be unique!')
-    ]
 
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
         if domain is None:

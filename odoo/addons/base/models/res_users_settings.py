@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.index import unique
 
 
 class ResUsersSettings(models.Model):
@@ -9,11 +10,7 @@ class ResUsersSettings(models.Model):
     _description = 'User Settings'
     _rec_name = 'user_id'
 
-    user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
-
-    _sql_constraints = [
-        ('unique_user_id', 'UNIQUE(user_id)', 'One user should only have one user settings.')
-    ]
+    user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade', index=unique(message='One user should only have one user settings.'))
 
     @api.model
     def _find_or_create_for_user(self, user):

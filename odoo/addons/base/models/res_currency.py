@@ -4,10 +4,9 @@
 import logging
 import math
 
-from lxml import etree
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.index import unique
 from odoo.tools import parse_date
 
 _logger = logging.getLogger(__name__)
@@ -25,8 +24,7 @@ class Currency(models.Model):
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
 
-    # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
-    name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
+    name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)", index=unique(message="The currency code must be unique!"))
     full_name = fields.Char(string='Name')
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
     rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=0,
@@ -48,7 +46,6 @@ class Currency(models.Model):
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
 
     _sql_constraints = [
-        ('unique_name', 'unique (name)', 'The currency code must be unique!'),
         ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
 

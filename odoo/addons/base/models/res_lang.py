@@ -10,6 +10,7 @@ from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.index import unique
 
 _logger = logging.getLogger(__name__)
 
@@ -25,10 +26,10 @@ class Lang(models.Model):
     _disallowed_datetime_patterns = list(tools.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
-    name = fields.Char(required=True)
-    code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
+    name = fields.Char(required=True, index=unique(message="The name of the language must be unique!"))
+    code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user', index=unique(message="The code of the language must be unique!"))
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
+    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL', index=unique(message="The URL code of the language must be unique!"))
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
@@ -58,12 +59,6 @@ class Lang(models.Model):
 
     flag_image = fields.Image("Image")
     flag_image_url = fields.Char(compute=_compute_field_flag_image_url)
-
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'The name of the language must be unique!'),
-        ('code_uniq', 'unique(code)', 'The code of the language must be unique!'),
-        ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique!'),
-    ]
 
     @api.constrains('active')
     def _check_active(self):

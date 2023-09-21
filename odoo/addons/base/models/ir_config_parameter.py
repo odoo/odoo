@@ -9,6 +9,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.index import unique
 from odoo.tools import config, ormcache, mute_logger
 
 _logger = logging.getLogger(__name__)
@@ -33,12 +34,8 @@ class IrConfigParameter(models.Model):
     _rec_name = 'key'
     _order = 'key'
 
-    key = fields.Char(required=True)
+    key = fields.Char(required=True, index=unique(message='Key must be unique.'))
     value = fields.Text(required=True)
-
-    _sql_constraints = [
-        ('key_uniq', 'unique (key)', 'Key must be unique.')
-    ]
 
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):

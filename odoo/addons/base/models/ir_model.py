@@ -14,11 +14,12 @@ from psycopg2 import sql
 from psycopg2.extras import Json
 from psycopg2.sql import Identifier, SQL, Placeholder
 
-from odoo import api, fields, models, tools, _, _lt, Command
+from odoo import api, fields, models, tools, _, _lt, Command, index
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
+from odoo.tools.sql import make_index_name
 
 _logger = logging.getLogger(__name__)
 
@@ -1738,6 +1739,22 @@ class IrModelConstraint(models.Model):
             if record:
                 xml_id = '%s.constraint_%s' % (module, conname)
                 data_list.append(dict(xml_id=xml_id, record=record))
+
+        for name, field in model._fields.items():
+            if not isinstance(field.index, index.unique):
+                continue
+
+            conname = make_index_name(model._table, name)
+            module = field._module
+            definition = field.index.to_sql(model, field)
+            record = self._reflect_constraint(
+                model, conname, 'u', definition, module,
+                field.index.message or f'The {field.string.lower()} must be unique.'
+            )
+            if record:
+                xml_id = f'{module}.constraint_{conname}'
+                data_list.append({'xml_id': xml_id, 'record': record})
+
         if data_list:
             self.env['ir.model.data']._update_xmlids(data_list)
 

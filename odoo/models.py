@@ -52,15 +52,13 @@ import psycopg2.extensions
 from psycopg2.extras import Json
 
 import odoo
-from . import SUPERUSER_ID
-from . import api
-from . import tools
+from . import SUPERUSER_ID, api, tools, index
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
     clean_context, config, CountingStream, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
-    partition, populate, Query, ReversedIterable, split_every, unique, SQL,
+    partition, populate, Query, ReversedIterable, split_every, unique, SQL, sql,
 )
 from .tools.lru import LRU
 from .tools.translate import _, _lt
@@ -833,6 +831,9 @@ class BaseModel(metaclass=MetaModel):
         # store list of sql constraint qualified names
         for (key, _, _) in cls._sql_constraints:
             cls.pool._sql_constraints.add(cls._table + '_' + key)
+        for name, f in cls._fields.items():
+            if isinstance(f.index, index.unique):
+                cls.pool._sql_constraints.add(sql.make_index_name(cls._table, name))
 
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
