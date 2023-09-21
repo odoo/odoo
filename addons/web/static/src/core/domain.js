@@ -298,7 +298,11 @@ function matchCondition(record, condition) {
             return matchCondition(record[names[0]], [names.slice(1).join("."), operator, value]);
         }
     }
-
+    let likeRegexp, ilikeRegexp;
+    if (["like", "not like", "ilike", "not ilike"].includes(operator)) {
+        likeRegexp = new RegExp(`(.*)${value.replaceAll("%", "(.*)")}(.*)`, "g");
+        ilikeRegexp = new RegExp(`(.*)${value.replaceAll("%", "(.*)")}(.*)`, "gi");
+    }
     const fieldValue = typeof field === "number" ? field : record[field];
     switch (operator) {
         case "=?":
@@ -337,12 +341,12 @@ function matchCondition(record, condition) {
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.indexOf(value) >= 0;
+            return Boolean(fieldValue.match(likeRegexp));
         case "not like":
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.indexOf(value) === -1;
+            return Boolean(!fieldValue.match(likeRegexp));
         case "=like":
             if (fieldValue === false) {
                 return false;
@@ -352,12 +356,12 @@ function matchCondition(record, condition) {
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+            return Boolean(fieldValue.match(ilikeRegexp));
         case "not ilike":
             if (fieldValue === false) {
                 return false;
             }
-            return fieldValue.toLowerCase().indexOf(value.toLowerCase()) === -1;
+            return Boolean(!fieldValue.match(ilikeRegexp));
         case "=ilike":
             if (fieldValue === false) {
                 return false;
