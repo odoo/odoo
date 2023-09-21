@@ -287,13 +287,16 @@ export const useNestedSortable = makeDraggableHook({
             // place the placeholder as the last child of the previous sibling
             // instead.
             if (currentTop - eRect.y < 10) {
-                if (pos === 2 || pos === 10) {
+                if (
+                    pos === Node.DOCUMENT_POSITION_PRECEDING ||
+                    pos === (Node.DOCUMENT_POSITION_PRECEDING | Node.DOCUMENT_POSITION_CONTAINS)
+                ) {
                     element.before(ctx.current.placeHolder);
                     onMove(position);
                     // Recenter the pointer coordinates to this step
                     ctx.prevNestX = ctx.pointer.x;
                 }
-            } else if (currentTop - eRect.y > 15 && pos === 4) {
+            } else if (currentTop - eRect.y > 15 && pos === Node.DOCUMENT_POSITION_FOLLOWING) {
                 // Place placeholder after the hovered element in its parent's
                 // list if the cursor is not in the upper part of the
                 // element and if the placeholder is currently before the
@@ -320,7 +323,10 @@ export const useNestedSortable = makeDraggableHook({
         } else {
             const group = closestEl.closest(ctx.groupSelector);
             if (group && group !== position.group) {
-                if (group.compareDocumentPosition(position.group) === 2) {
+                if (
+                    group.compareDocumentPosition(position.group) ===
+                    Node.DOCUMENT_POSITION_PRECEDING
+                ) {
                     getChildList(group).prepend(ctx.current.placeHolder);
                     onMove(position);
                 } else {
