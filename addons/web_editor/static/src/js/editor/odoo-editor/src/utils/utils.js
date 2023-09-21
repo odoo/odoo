@@ -48,11 +48,9 @@ const tldWhitelist = [
     'vu', 'wf', 'ws', 'ye', 'yt', 'yu', 'za', 'zm', 'zr', 'zw', 'co\\.uk'];
 
 const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})\\b))(?:\\/[^\\s.,'")}\\]]*[?#.,)}\\]'"]?[^\\s.,'")}\\]]+|(?:[^!(){}.,\\[\\]'"\\s]+)|\\/[^\\s.,'")}\\]]*[^\\s?#.,'")}\\]]*)?`;
-const httpRegex = `(?:https?:\\/\\/)`;
 const httpCapturedRegex= `(https?:\\/\\/)`;
 
-export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase})`, 'i');
-export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, 'i');
+export const URL_REGEX = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, 'i');
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;

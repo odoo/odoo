@@ -47,7 +47,6 @@ import {
     fillEmpty,
     isEmptyBlock,
     URL_REGEX,
-    URL_REGEX_WITH_INFOS,
     isSelectionFormat,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
@@ -4594,7 +4593,7 @@ export class OdooEditor extends EventTarget {
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
-            const match = potentialUrl.match(URL_REGEX_WITH_INFOS);
+            const match = potentialUrl.match(URL_REGEX);
 
             if (match && match[0] === potentialUrl && !EMAIL_REGEX.test(potentialUrl)) {
                 const url = match[2] ? match[0] : 'http://' + match[0];
@@ -4703,6 +4702,9 @@ export class OdooEditor extends EventTarget {
             // Avoid transforming dynamic placeholder pattern to url.
             if(!text.match(/\${.*}/gi)) {
                 splitAroundUrl = text.split(URL_REGEX);
+                // Remove 'http(s)://' capturing group from the result (indexes
+                // 2, 5, 8, ...).
+                splitAroundUrl = splitAroundUrl.filter((_, index) => ((index + 1) % 3));
             }
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
                 // Pasted content is a single URL.
