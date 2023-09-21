@@ -99,8 +99,10 @@ QUnit.module("domain", {}, () => {
     });
 
     QUnit.test("like, =like, ilike, =ilike, not like and not ilike", function (assert) {
-        assert.expect(28);
+        assert.expect(36);
 
+        assert.ok(new Domain([["a", "like", "test%value"]]).contains({ a: "test value" }));
+        assert.notOk(new Domain([["a", "like", "test%value"]]).contains({ a: "value test" }));
         assert.ok(new Domain([["a", "like", "value"]]).contains({ a: "value" }));
         assert.ok(new Domain([["a", "like", "value"]]).contains({ a: "some value" }));
         assert.notOk(new Domain([["a", "like", "value"]]).contains({ a: "Some Value" }));
@@ -111,6 +113,8 @@ QUnit.module("domain", {}, () => {
         assert.notOk(new Domain([["a", "=like", "%value"]]).contains({ a: "Some Value" }));
         assert.notOk(new Domain([["a", "=like", "%value"]]).contains({ a: false }));
 
+        assert.ok(new Domain([["a", "ilike", "test%value"]]).contains({ a: "test value" }));
+        assert.notOk(new Domain([["a", "ilike", "test%value"]]).contains({ a: "value test" }));
         assert.ok(new Domain([["a", "ilike", "value"]]).contains({ a: "value" }));
         assert.ok(new Domain([["a", "ilike", "value"]]).contains({ a: "some value" }));
         assert.ok(new Domain([["a", "ilike", "value"]]).contains({ a: "Some Value" }));
@@ -121,11 +125,15 @@ QUnit.module("domain", {}, () => {
         assert.ok(new Domain([["a", "=ilike", "%value"]]).contains({ a: "Some Value" }));
         assert.notOk(new Domain([["a", "=ilike", "%value"]]).contains({ a: false }));
 
+        assert.notOk(new Domain([["a", "not like", "test%value"]]).contains({ a: "test value" }));
+        assert.ok(new Domain([["a", "not like", "test%value"]]).contains({ a: "value test" }));
         assert.notOk(new Domain([["a", "not like", "value"]]).contains({ a: "value" }));
         assert.notOk(new Domain([["a", "not like", "value"]]).contains({ a: "some value" }));
         assert.ok(new Domain([["a", "not like", "value"]]).contains({ a: "Some Value" }));
         assert.ok(new Domain([["a", "not like", "value"]]).contains({ a: "something" }));
         assert.ok(new Domain([["a", "not like", "value"]]).contains({ a: "Something" }));
+        assert.notOk(new Domain([["a", "not ilike", "test%value"]]).contains({ a: "test value" }));
+        assert.ok(new Domain([["a", "not ilike", "test%value"]]).contains({ a: "value test" }));
         assert.notOk(new Domain([["a", "not like", "value"]]).contains({ a: false }));
 
         assert.notOk(new Domain([["a", "not ilike", "value"]]).contains({ a: "value" }));
