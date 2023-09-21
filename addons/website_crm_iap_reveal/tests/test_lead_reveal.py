@@ -14,7 +14,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
         super(TestLeadMine, cls).setUpClass()
         cls.registry.enter_test_mode(cls.cr)
 
-        cls.test_industry_tags = cls.env.ref('crm_iap_mine.crm_iap_mine_industry_33') + cls.env.ref('crm_iap_mine.crm_iap_mine_industry_148')
+        cls.test_industry_ids = cls.env.ref('crm_iap_mine.crm_iap_mine_industry_33') + cls.env.ref('crm_iap_mine.crm_iap_mine_industry_8')
         cls.test_roles = cls.env.ref('crm_iap_mine.crm_iap_mine_role_11') + cls.env.ref('crm_iap_mine.crm_iap_mine_role_19')
         cls.test_seniority = cls.env.ref('crm_iap_mine.crm_iap_mine_seniority_2')
 
@@ -25,7 +25,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
         cls.test_request_1 = cls.env['crm.reveal.rule'].create({
             'contact_filter_type': 'role',
             'extra_contacts': 3,
-            'industry_tag_ids': cls.test_industry_tags.ids,
+            'industry_ids': cls.test_industry_ids.ids,
             'lead_for': 'people',
             'lead_type': 'lead',
             'name': 'Test Reveal People',
@@ -40,7 +40,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
         })
         cls.test_request_2 = cls.env['crm.reveal.rule'].create({
             'contact_filter_type': 'role',
-            'industry_tag_ids': cls.test_industry_tags.ids,
+            'industry_ids': cls.test_industry_ids.ids,
             'lead_for': 'companies',
             'lead_type': 'opportunity',
             'name': 'Test Reveal Companies',

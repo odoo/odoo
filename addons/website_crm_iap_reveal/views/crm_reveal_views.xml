@@ -52,7 +52,7 @@
                     </div>
                     <group>
                         <group string="Opportunity Generation Conditions">
-                            <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="industry_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"/>
                             <field name="filter_on_size"/>
                             <label for="company_size_min" invisible="not filter_on_size"/>
                             <div invisible="not filter_on_size">

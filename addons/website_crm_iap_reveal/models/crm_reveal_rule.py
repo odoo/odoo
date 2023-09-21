@@ -36,7 +36,7 @@ class CRMRevealRule(models.Model):
                                    'Rules with a lower sequence number will be processed first.')
 
     # Company Criteria Filter
-    industry_tag_ids = fields.Many2many('crm.iap.lead.industry', string='Industries', help='Leave empty to always match. Odoo will not create lead if no match')
+    industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries', help='Leave empty to always match. Odoo will not create lead if no match')
     filter_on_size = fields.Boolean(string="Filter on Size", default=True, help="Filter companies based on their size.")
     company_size_min = fields.Integer(string='Company Size', default=0)
     company_size_max = fields.Integer(default=1000)
@@ -284,14 +284,7 @@ class CRMRevealRule(models.Model):
         company_country = self.env.company.country_id
         rule_payload = {}
         for rule in self:
-            # accumulate all reveal_ids (separated by ',') into one list
-            # eg: 3 records with values: "175,176", "177" and "190,191"
-            # will become ['175','176','177','190','191']
-            reveal_ids = [
-                reveal_id.strip()
-                for reveal_ids in rule.mapped('industry_tag_ids.reveal_ids')
-                for reveal_id in reveal_ids.split(',')
-            ]
+            industry_names = self.industry_ids.mapped('name')
             data = {
                 'rule_id': rule.id,
                 'lead_for': rule.lead_for,
@@ -299,7 +292,7 @@ class CRMRevealRule(models.Model):
                 'filter_on_size': rule.filter_on_size,
                 'company_size_min': rule.company_size_min,
                 'company_size_max': rule.company_size_max,
-                'industry_tags': reveal_ids,
+                'industry_names': industry_names,
                 'user_country': company_country and company_country.code or False
             }
             if rule.lead_for == 'people':

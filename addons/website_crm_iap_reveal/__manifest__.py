@@ -4,7 +4,7 @@
 {
     'name': 'Lead Generation From Website Visits',
     'summary': 'Generate Leads/Opportunities from your website\'s traffic',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Sales/CRM',
     'depends': [
         'iap_crm',

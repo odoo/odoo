@@ -211,15 +211,9 @@ class CRMLeadMiningRequest(models.Model):
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
         if self.industry_ids:
-            # accumulate all reveal_ids (separated by ',') into one list
-            # eg: 3 records with values: "175,176", "177" and "190,191"
-            # will become ['175','176','177','190','191']
-            all_industry_ids = [
-                reveal_id.strip()
-                for reveal_ids in self.mapped('industry_ids.reveal_ids')
-                for reveal_id in reveal_ids.split(',')
-            ]
-            payload['industry_ids'] = all_industry_ids
+            # return a list of all industry names
+            payload['industry_names'] = self.industry_ids.mapped('name')
+
         if self.search_type == 'people':
             payload.update({'contact_number': self.contact_number,
                             'contact_filter_type': self.contact_filter_type})
@@ -259,7 +253,7 @@ class CRMLeadMiningRequest(models.Model):
             raise UserError(_("Your request could not be executed: %s", e))
 
     def _iap_contact_mining(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/2/lead_mining_request'
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/api/directory/2/lead/mining_request'
         return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
 
     def _create_leads_from_response(self, result):
