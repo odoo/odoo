@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { localization } from "@web/core/l10n/localization";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 
 /** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
 /** @typedef {DraggableHandlerParams & { group: HTMLElement | null }} NestedSortableHandlerParams */
