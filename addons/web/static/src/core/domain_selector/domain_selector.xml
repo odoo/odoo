@@ -134,7 +134,7 @@
 
     <t t-name="web._DomainSelector.leaf:readonly" owl="1">
         <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="true" />
-        <t t-if="typeof node.value === 'boolean'">is<t t-if="node.value ? ['is_not', 'not_equal'].includes(node.operatorInfo.key) : ['is', 'equal'].includes(node.operatorInfo.key)"> not</t> set</t>
+        <t t-if="typeof node.value === 'boolean'">is<t t-if="node.value ? ['is_not', 'not_equal', 'set'].includes(node.operatorInfo.key) : ['is', 'equal', 'not_set'].includes(node.operatorInfo.key)"> not</t> set</t>
         <t t-else="">
             <span class="o_domain_leaf_operator"> <t t-esc="node.operatorInfo.label" /></span>
             <t t-set="values" t-value="Array.isArray(node.value) ? node.value : [node.value]" />
