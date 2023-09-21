@@ -44,9 +44,9 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models).Thread} thread
      * @param {number} id
-     * @returns {Promise<Thread>}
+     * @returns {Promise<import("models").Thread>}
      */
     async fetchChannel(id) {
         const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
@@ -80,7 +80,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     async markAsRead(thread) {
         if (!thread.isLoaded && thread.status === "loading") {
@@ -143,7 +143,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     async markAsFetched(thread) {
         await this.orm.silent.call("discuss.channel", "channel_fetched", [[thread.id]]);
@@ -177,7 +177,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      * @param {{after: Number, before: Number}}
      */
     async fetchMessages(thread, { after, before } = {}) {
@@ -214,7 +214,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     async fetchNewMessages(thread) {
         if (
@@ -293,7 +293,7 @@ export class ThreadService {
      * messages around the message to jump to if required, and update the thread
      * messages accordingly.
      *
-     * @param {Message} [messageId] if not provided, load around newest message
+     * @param {import("models").Message} [messageId] if not provided, load around newest message
      */
     async loadAround(thread, messageId) {
         if (!thread.messages.some(({ id }) => id === messageId)) {
@@ -360,7 +360,7 @@ export class ThreadService {
     });
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      * @param {"older"|"newer"} epoch
      */
     async fetchMoreMessages(thread, epoch = "older") {
@@ -449,7 +449,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      * @param {boolean} replaceNewMessageChatWindow
      */
     open(thread, replaceNewMessageChatWindow) {
@@ -468,7 +468,7 @@ export class ThreadService {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import { Persona } from "@mail/core/common/persona_model";> | undefined}
+     * @returns {Promise<import("models").Persona> | undefined}
      */
     async getPartner({ userId, partnerId }) {
         if (userId) {
@@ -521,8 +521,8 @@ export class ThreadService {
     }
 
     /**
-     * @param {import { Persona } from "@mail/core/common/persona_model";} partner
-     * @returns {Thread | undefined}
+     * @param {import("model ").Persona} partner
+     * @returns {import("models").Thread | undefined}
      */
     searchChat(partner) {
         if (!partner) {
@@ -538,7 +538,7 @@ export class ThreadService {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<Thread | undefined>}
+     * @returns {Promise<import("models").Thread | undefined>}
      */
     async getChat({ userId, partnerId }) {
         const partner = await this.getPartner({ userId, partnerId });
@@ -590,7 +590,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models).Thread} thread
      * @param {string} name
      */
     async renameThread(thread, name) {
@@ -636,7 +636,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {boolean} pushState
      */
     setDiscussThread(thread, pushState = true) {
@@ -664,7 +664,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {Object} data
      */
     update(thread, data) {
@@ -798,7 +798,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      * @param {string} body
      */
     async post(
@@ -932,14 +932,14 @@ export class ThreadService {
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     getMessagePostRoute(thread) {
         return "/mail/message/post";
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     canLeave(thread) {
         return (
@@ -950,14 +950,14 @@ export class ThreadService {
     }
     /**
      *
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     canUnpin(thread) {
         return thread.type === "chat" && this.getCounter(thread) === 0;
     }
 
     /**
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     getCounter(thread) {
         if (thread.type === "mailbox") {
@@ -981,7 +981,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {number} index
      */
     async setMainAttachmentFromIndex(thread, index) {
@@ -992,7 +992,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/common/composer_model").Composer} composer
+     * @param {import("models").Composer} composer
      */
     clearComposer(composer) {
         composer.attachments.length = 0;
@@ -1005,8 +1005,8 @@ export class ThreadService {
     }
 
     /**
-     * @param {import("@mail/core/common/persona_model").Persona} persona
-     * @param {import("@mail/core/common/thread_model").Thread} [thread]
+     * @param {import("models").Persona} persona
+     * @param {import("models").Thread} [thread]
      */
     avatarUrl(persona, thread) {
         if (!persona) {
@@ -1058,7 +1058,7 @@ export class ThreadService {
      * Transient messages are missing, so this function puts known transient messages at the
      * right place in message list of thread.
      *
-     * @param {Thread} thread
+     * @param {import("models").Thread} thread
      */
     _enrichMessagesWithTransient(thread) {
         for (const message of thread.transientMessages) {

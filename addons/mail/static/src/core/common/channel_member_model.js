@@ -6,8 +6,8 @@ import { Record } from "@mail/core/common/record";
  * @class ChannelMember
  * @typedef Data
  * @property {number} id
- * @property {import("@mail/core/common/persona_model").Persona} persona
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Persona} persona
+ * @property {import("models").Thread} thread
  */
 export class ChannelMember extends Record {
     static id = "id";

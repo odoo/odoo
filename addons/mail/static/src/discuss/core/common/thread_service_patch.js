@@ -10,7 +10,7 @@ const commandRegistry = registry.category("discuss.channel_commands");
 patch(ThreadService.prototype, {
     /**
      * @override
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {string} body
      */
     async post(thread, body) {

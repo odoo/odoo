@@ -248,8 +248,8 @@ export function useMessageHighlight(duration = 2000) {
     const threadService = useService("mail.thread");
     const state = useState({
         /**
-         * @param {import("@mail/core/message_model").Message} message
-         * @param {import("@mail/core/thread_model").Thread} thread
+         * @param {import("models").Message} message
+         * @param {import("models").Thread} thread
          */
         async highlightMessage(message, thread) {
             if (thread.notEq(message.originThread)) {
@@ -403,8 +403,8 @@ export function useMessageEdition() {
  * @property {function} cancel
  * @property {function} isNotSelected
  * @property {function} isSelected
- * @property {import("@mail/core/common/message_model").Message|null} message
- * @property {import("@mail/core/common/thread_model").Thread|null} thread
+ * @property {import("models").Message|null} message
+ * @property {import("models").Thread|null} thread
  * @property {function} toggle
  * @returns {MessageToReplyTo}
  */
@@ -414,28 +414,28 @@ export function useMessageToReplyTo() {
             Object.assign(this, { message: null, thread: null });
         },
         /**
-         * @param {import("@mail/core/common/thread_model").Thread} thread
-         * @param {import("@mail/core/common/message_model").Message} message
+         * @param {import("models").Thread} thread
+         * @param {import("models").Message} message
          * @returns {boolean}
          */
         isNotSelected(thread, message) {
             return thread.eq(this.thread) && message.notEq(this.message);
         },
         /**
-         * @param {import("@mail/core/common/thread_model").Thread} thread
-         * @param {import("@mail/core/common/message_model").Message} message
+         * @param {import("models").Thread} thread
+         * @param {import("models").Message} message
          * @returns {boolean}
          */
         isSelected(thread, message) {
             return thread.eq(this.thread) && message.eq(this.message);
         },
-        /** @type {import("@mail/core/common/message_model").Message|null} */
+        /** @type {import("models").Message|null} */
         message: null,
-        /** @type {import("@mail/core/common/thread_model").Thread|null} */
+        /** @type {import("models").Thread|null} */
         thread: null,
         /**
-         * @param {import("@mail/core/common/thread_model").Thread} thread
-         * @param {import("@mail/core/common/message_model").Message} message
+         * @param {import("models").Thread} thread
+         * @param {import("models").Message} message
          */
         toggle(thread, message) {
             if (message.eq(this.message)) {

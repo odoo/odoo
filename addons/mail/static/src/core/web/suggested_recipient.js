@@ -8,7 +8,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Thread} thread
  * @property {import("@mail/core/web/suggested_recipient").SuggestedRecipient} recipient
  * @extends {Component<Props, Env>}
  */

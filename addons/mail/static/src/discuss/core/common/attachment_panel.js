@@ -10,7 +10,7 @@ import { useVisible } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Thread} thread
  */
 export class AttachmentPanel extends Component {
     static components = { ActionPanel, AttachmentList, DateSection };
@@ -36,7 +36,7 @@ export class AttachmentPanel extends Component {
     }
 
     /**
-     * @return {Object<string, import("@mail/core/common/attachment_model").Attachment[]>}
+     * @return {Object<string, import("models").Attachment[]>}
      */
     get attachmentsByDate() {
         const attachmentsByDate = {};

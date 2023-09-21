@@ -21,7 +21,7 @@ export class AttachmentView extends Component {
         this.store = useState(useService("mail.store"));
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
-            /** @type {import("@mail/core/common/thread_model").Thread|undefined} */
+            /** @type {import("models").Thread|undefined} */
             thread: undefined,
         });
         useEffect(() => {

@@ -5,7 +5,7 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 
-/** @typedef {{ thread?: import("@mail/core/common/thread_model").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
+/** @typedef {{ thread?: import("models").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
 
 export class ChatWindow extends Record {
     static id = "thread";

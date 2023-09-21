@@ -13,7 +13,7 @@ patch(Thread.prototype, {
         return this.recipientsCount === this.recipients.size;
     },
     /**
-     * @returns {import("@mail/core/web/activity_model").Activity[]}
+     * @returns {import("models").Activity[]}
      */
     get activities() {
         return Object.values(this._store.Activity.records)

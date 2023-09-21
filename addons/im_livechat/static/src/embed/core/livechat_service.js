@@ -140,7 +140,7 @@ export class LivechatService {
      * Persist the livechat thread if it is not done yet and swap it with the
      * temporary thread.
      *
-     * @returns {Promise<import("@mail/core/common/thread_model").Thread|undefined>}
+     * @returns {Promise<import("models").Thread|undefined>}
      */
     async persistThread() {
         if (this.state === SESSION_STATE.PERSISTED) {
@@ -173,7 +173,7 @@ export class LivechatService {
     /**
      *
      * @param {{ persist: boolean}} [param0]
-     * @returns {Promise<import("@mail/core/common/thread_model").Thread>|undefined"}
+     * @returns {Promise<import("models").Thread>|undefined"}
      */
     async getOrCreateThread({ persist = false } = {}) {
         let threadData = this.sessionCookie;
@@ -254,7 +254,7 @@ export class LivechatService {
     }
 
     /**
-     * @returns {import("@mail/core/common/thread_model").Thread|undefined}
+     * @returns {import("models").Thread|undefined}
      */
     get thread() {
         return Object.values(this.store.Thread.records).find(

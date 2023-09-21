@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/message_model").Message} message
+ * @property {import("models").Message} message
  * @extends {Component<Props, Env>}
  */
 export class MessageReactionButton extends Component {

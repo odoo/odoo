@@ -40,10 +40,10 @@ import { useMessageActions } from "./message_actions";
  * @property {boolean} [hasActions=true]
  * @property {boolean} [highlighted]
  * @property {function} [onParentMessageClick]
- * @property {import("@mail/core/common/message_model").Message} message
+ * @property {import("models").Message} message
  * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {boolean} [squashed]
- * @property {import("@mail/core/common/thread_model").Thread} [thread]
+ * @property {import("models").Thread} [thread]
  * @extends {Component<Props, Env>}
  */
 export class Message extends Component {

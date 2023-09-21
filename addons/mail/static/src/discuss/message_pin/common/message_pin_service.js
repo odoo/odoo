@@ -56,7 +56,7 @@ export class MessagePin {
     }
 
     /**
-     * @param {import("models").Models["Thread"]} channel
+     * @param {import("models").Thread} channel
      */
     async fetchPinnedMessages(channel) {
         if (
@@ -94,8 +94,8 @@ export class MessagePin {
     }
 
     /**
-     * @param {import("models").Models["Thread"]} channel
-     * @returns {import("models").Models["Message"][]}
+     * @param {import("models").Thread} channel
+     * @returns {import("models").Message[]}
      */
     getPinnedMessages(channel) {
         return [...channel.pinnedMessages].sort((a, b) => {
@@ -107,7 +107,7 @@ export class MessagePin {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} channel
+     * @param {import("models).Thread} channel
      * @returns {boolean}
      */
     hasPinnedMessages(channel) {
@@ -115,7 +115,7 @@ export class MessagePin {
     }
 
     /**
-     * @param {import("@mail/core/common/message_model").Message}
+     * @param {import("models").Message}
      * @param {Object} data
      */
     onMessageUpdate(message, { pinned_at: pinnedAt }) {
@@ -136,7 +136,7 @@ export class MessagePin {
     /**
      * Prompts the user for confirmation, then sets pinned to true.
      *
-     * @param {import("@mail/core/common/message_model").Message}
+     * @param {import("models").Message}
      */
     pin(message) {
         const thread = message.originThread;
@@ -154,7 +154,7 @@ export class MessagePin {
     }
 
     /**
-     * @param {import("@mail/core/common/message_model").Message}
+     * @param {import("models").Message}
      * @param {boolean} pinned
      */
     setPin(message, pinned) {
@@ -167,7 +167,7 @@ export class MessagePin {
     /**
      * Prompts the user for confirmation, then sets pinned to false.
      *
-     * @param {import("@mail/core/common/message_model").Message}
+     * @param {import("models").Message}
      */
     unpin(message) {
         this.dialogService.add(MessageConfirmDialog, {

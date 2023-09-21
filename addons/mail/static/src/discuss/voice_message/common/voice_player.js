@@ -8,7 +8,7 @@ const WAVE_COLOR = "#7775";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/attachments/attachment_model").Attachment} attachment
+ * @property {import("models").Attachment} attachment
  * @extends {Component<Props, Env>}
  */
 export class VoicePlayer extends Component {

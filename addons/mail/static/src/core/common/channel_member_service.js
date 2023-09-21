@@ -55,7 +55,7 @@ export class ChannelMemberService {
     }
 
     /**
-     * @param {import("@mail/core/common/channel_member_model").ChannelMember} member
+     * @param {import("models").ChannelMember} member
      * @returns {string}
      */
     getName(member) {

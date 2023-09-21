@@ -8,7 +8,7 @@ import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_ser
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/composer/composer_model").Composer} composer
+ * @property {import("models").Composer} composer
  * @property {function} [attachmentUploader]
  * @property {function} [onchangeRecording]
  * @extends {Component<Props, Env>}
@@ -57,7 +57,7 @@ export class VoiceRecorder extends Component {
                 this.notification.add(_t("Voice recording stopped"), { type: "warning" });
                 this.stopRecording();
             } else {
-                this.cleanUp({unmounting: true});
+                this.cleanUp({ unmounting: true });
             }
         });
     }

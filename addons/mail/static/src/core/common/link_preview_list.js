@@ -6,7 +6,7 @@ import { Component } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/link_preview_model").LinkPreview[]} linkPreviews
+ * @property {import("models").LinkPreview[]} linkPreviews
  * @property {boolean} [deletable]
  * @extends {Component<Props, Env>}
  */

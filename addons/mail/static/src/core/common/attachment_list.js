@@ -10,7 +10,7 @@ import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/attachment_model").Attachment[]} attachments
+ * @property {import("models").Attachment[]} attachments
  * @property {function} unlinkAttachment
  * @property {number} imagesHeight
  * @extends {Component<Props, Env>}
@@ -27,21 +27,21 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @return {import("@mail/core/common/attachment_model").Attachment[]}
+     * @return {import("models").Attachment[]}
      */
     get nonImagesAttachments() {
         return this.props.attachments.filter((attachment) => !attachment.isImage);
     }
 
     /**
-     * @return {import("@mail/core/common/attachment_model").Attachment[]}
+     * @return {import("models").Attachment[]}
      */
     get imagesAttachments() {
         return this.props.attachments.filter((attachment) => attachment.isImage);
     }
 
     /**
-     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     * @param {import("models").Attachment} attachment
      */
     getImageUrl(attachment) {
         if (attachment.uploading && attachment.tmpUrl) {
@@ -55,14 +55,14 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     * @param {import("models").Attachment} attachment
      */
     canDownload(attachment) {
         return !attachment.uploading && !this.env.inComposer;
     }
 
     /**
-     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     * @param {import("models").Attachment} attachment
      */
     onClickDownload(attachment) {
         const downloadLink = document.createElement("a");
@@ -75,7 +75,7 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     * @param {import("models").Attachment} attachment
      */
     onClickUnlink(attachment) {
         if (this.env.inComposer) {
@@ -89,7 +89,7 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import("@mail/core/common/attachment_model").Attachment} attachment
+     * @param {import("models").Attachment} attachment
      */
     onConfirmUnlink(attachment) {
         this.props.unlinkAttachment(attachment);
