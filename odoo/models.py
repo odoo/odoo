@@ -3583,6 +3583,7 @@ class BaseModel(metaclass=MetaModel):
                 raise UserError(_("Translations for model translated fields only accept falsy values and str"))
             value_en = translations.get('en_US', True)
             if not value_en and value_en != '':
+                # en_US is not allowed to fallback
                 translations.pop('en_US')
             translations = {
                 lang: translation if isinstance(translation, str) else None
@@ -3591,24 +3592,19 @@ class BaseModel(metaclass=MetaModel):
             if not translations:
                 return False
 
-            translation_fallback = translations['en_US'] if translations.get('en_US') is not None \
-                else translations[self.env.lang] if translations.get(self.env.lang) is not None \
-                else next((v for v in translations.values() if v is not None), None)
-            self.invalidate_recordset([field_name])
-            self._cr.execute(SQL(
-                """ UPDATE %(table)s
-                    SET %(field)s = NULLIF(
-                        jsonb_strip_nulls(%(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s),
-                        '{}'::jsonb)
-                    WHERE id = %(id)s
-                """,
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(field_name),
-                fallback=Json({'en_US': translation_fallback}),
-                value=Json(translations),
-                id=self.id,
-            ))
-            self.modified([field_name])
+            new_translations = field._get_stored_translations(self) or {}
+            new_translations.update(translations)
+            new_translations = {k: v for k, v in new_translations.items() if v is not None}
+            if not new_translations:
+                new_cache_value = None
+            else:
+                if 'en_US' not in new_translations:
+                    lang = self.env.lang
+                    new_translations['en_US'] = new_translations[lang] if lang in new_translations else next(iter(new_translations.values()))
+                new_cache_value = odoo.fields.TranslatedCacheValue(new_translations)
+            context_key = self.env.cache_key(field)
+            # directly set cache to replace the cache value instead of update it using field.set_cache
+            self.env.cache.set(field, context_key, self._ids[0], new_cache_value, dirty=True)
         else:
             # Note:
             # update terms in 'en_US' will not change its value other translated values
@@ -4458,7 +4454,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields[name]
             assert field.store
             assert field.column_type
-            if field.translate is True and val:
+            if field.translate is True and val and not isinstance(val, odoo.fields.TranslatedCacheValue):
                 # The first param is for the fallback value {'en_US': 'first_written_value'}
                 # which fills the 'en_US' key of jsonb only when the old column value is NULL.
                 # The second param is for the real value {'fr_FR': 'French', 'nl_NL': 'Dutch'}
