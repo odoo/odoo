@@ -5,7 +5,7 @@ import { useActiveElement } from "../ui/ui_service";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { Component, onWillDestroy, useChildSubEnv, useExternalListener, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { makeDraggableHook } from "../utils/draggable_hook_builder";
+import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 
 const useDialogDraggable = makeDraggableHook({
     name: "useDialogDraggable",

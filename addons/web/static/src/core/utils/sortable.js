@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
 
 /** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
