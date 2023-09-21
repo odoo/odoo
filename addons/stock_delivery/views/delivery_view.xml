@@ -50,7 +50,7 @@
                     <button name="print_return_label" string="Print Return Label" type="object" invisible="not is_return_picking or state == 'done' or picking_type_code != 'incoming'" data-hotkey="shift+o"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="required">delivery_type and delivery_type not in ['fixed', 'base_on_rule']</attribute>
+                    <attribute name="required">carrier_id and carrier_id.integration_level == 'rate_and_ship'</attribute>
                 </xpath>
               </data>
             </field>
