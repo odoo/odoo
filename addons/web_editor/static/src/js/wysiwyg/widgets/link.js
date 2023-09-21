@@ -196,8 +196,8 @@ export class Link extends Component {
      */
     _setUrl({ shouldFocus } = {}) {
         if (this.state.url) {
-            var match = /mailto:(.+)/.exec(this.state.url);
-            this.$el.find('input[name="url"]').val(match ? match[1] : this.state.url);
+            const protocolLessUrl = this.state.url.replace(/^(https?|mailto|tel):(\/\/)?/i, '');
+            this.$el.find('input[name="url"]').val(protocolLessUrl);
             this._onURLInput();
             this._savedURLInputOnDestroy = false;
         }
