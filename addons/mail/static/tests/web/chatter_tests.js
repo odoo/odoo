@@ -7,17 +7,15 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { file } from "@web/../tests/legacy/helpers/test_utils";
 import {
     click,
     contains,
+    createFile,
     dragenterFiles,
     dropFiles,
     insertText,
     scroll,
 } from "@web/../tests/utils";
-
-const { createFile } = file;
 
 QUnit.module("chatter");
 

@@ -9,7 +9,6 @@
 
     import testUtilsDom from "@web/../tests/legacy/helpers/test_utils_dom";
     import testUtilsFields from "@web/../tests/legacy/helpers/test_utils_fields";
-    import testUtilsFile from "@web/../tests/legacy/helpers/test_utils_file";
     import testUtilsMock from "@web/../tests/legacy/helpers/test_utils_mock";
 
     function deprecated(fn, type) {
@@ -107,19 +106,10 @@
         triggerKeydown: testUtilsFields.triggerKeydown,
     };
 
-    export const file = {
-        createFile: testUtilsFile.createFile,
-        dragoverFile: testUtilsFile.dragoverFile,
-        dropFile: testUtilsFile.dropFile,
-        dropFiles: testUtilsFile.dropFiles,
-        inputFiles: testUtilsFile.inputFiles,
-    };
-
     export default {
         mock,
         dom,
         fields,
-        file,
 
         makeTestPromise: makeTestPromise,
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,

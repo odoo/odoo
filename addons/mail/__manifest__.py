@@ -152,7 +152,9 @@ For more specific needs, you may also assign custom-defined actions
             # scss not needed in tests and depends on scss variables that are not in this bundle
             ('remove', 'web_tour/static/src/tour_pointer/**/*.scss'),
             'web_tour/static/src/tour_service/**/*',
-            'web/static/tests/legacy/helpers/test_utils_file.js',
+            'web/static/tests/helpers/cleanup.js',
+            'web/static/tests/helpers/utils.js',
+            'web/static/tests/utils.js',
             'mail/static/tests/tours/discuss_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
         ],

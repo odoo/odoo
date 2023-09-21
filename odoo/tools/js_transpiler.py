@@ -101,7 +101,7 @@ def wrap_with_qunit_module(url, content):
     """
     Wraps the test file content (source code) with the QUnit.module('module_name', function() {...}).
     """
-    if "tests" in url and re.search(r'QUnit\.(test|debug|only)', content):
+    if "tests" in url and re.search(r'QUnit\.(test|debug|only)\(', content):
         match = URL_RE.match(url)
         return f"""QUnit.module("{match["module"]}", function() {{{content}}});"""
     else:

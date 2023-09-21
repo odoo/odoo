@@ -7,9 +7,8 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { registry } from "@web/core/registry";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { click, contains, createFile, inputFiles } from "@web/../tests/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 addModelNamesToFetch(["mrp.document"]);
@@ -85,24 +84,6 @@ QUnit.module('MrpDocumentsKanbanView', {
     });
 
     QUnit.test('mrp: upload multiple files', async function (assert) {
-        assert.expect(4);
-
-        const file1 = await testUtils.file.createFile({
-            name: 'text1.txt',
-            content: 'hello, world',
-            contentType: 'text/plain',
-        });
-        const file2 = await testUtils.file.createFile({
-            name: 'text2.txt',
-            content: 'hello, world',
-            contentType: 'text/plain',
-        });
-        const file3 = await testUtils.file.createFile({
-            name: 'text3.txt',
-            content: 'hello, world',
-            contentType: 'text/plain',
-        });
-
         const mockedXHRs = [];
         this.patchDocumentXHR(mockedXHRs, data => assert.step('xhrSend'));
 
@@ -122,31 +103,30 @@ QUnit.module('MrpDocumentsKanbanView', {
             views: [[false, 'kanban']],
         });
 
-        const fileInput = target.querySelector(".o_input_file");
-
-        let dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file1);
-        fileInput.files = dataTransfer.files;
-        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
-        assert.verifySteps(['xhrSend']);
-
-        dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file2);
-        dataTransfer.items.add(file3);
-        fileInput.files = dataTransfer.files;
-        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
-        assert.verifySteps(['xhrSend']);
+        await inputFiles(".o_control_panel_collapsed_create .o_input_file", [
+            await createFile({
+                name: "text1.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+        ]);
+        assert.verifySteps(["xhrSend"]);
+        await inputFiles(".o_control_panel_collapsed_create .o_input_file", [
+            await createFile({
+                name: "text2.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+            await createFile({
+                name: "text3.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+        ]);
+        assert.verifySteps(["xhrSend"]);
     });
 
     QUnit.test('mrp: upload progress bars', async function (assert) {
-        assert.expect(4);
-
-        const file1 = await testUtils.file.createFile({
-            name: 'text1.txt',
-            content: 'hello, world',
-            contentType: 'text/plain',
-        });
-
         const mockedXHRs = [];
         this.patchDocumentXHR(mockedXHRs, data => assert.step('xhrSend'));
 
@@ -166,13 +146,14 @@ QUnit.module('MrpDocumentsKanbanView', {
             views: [[false, 'kanban']],
         });
 
-        const fileInput = target.querySelector(".o_input_file");
-
-        let dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file1);
-        fileInput.files = dataTransfer.files;
-        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
-        assert.verifySteps(['xhrSend']);
+        await inputFiles(".o_control_panel_collapsed_create .o_input_file", [
+            await createFile({
+                name: "text1.txt",
+                content: "hello, world",
+                contentType: "text/plain",
+            }),
+        ]);
+        assert.verifySteps(["xhrSend"]);
 
         const progressEvent = new Event('progress', { bubbles: true });
         progressEvent.loaded = 250000000;

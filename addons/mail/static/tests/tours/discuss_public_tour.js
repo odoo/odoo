@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { createFile, inputFiles } from "@web/../tests/legacy/helpers/test_utils_file";
+import { createFile, inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_tour.js", {
     test: true,
@@ -43,13 +43,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
             content: "Add one file in composer",
             trigger: ".o-mail-Composer button[aria-label='Attach files']",
             async run() {
-                const file = await createFile({
-                    content: "hello, world",
-                    contentType: "text/plain",
-                    name: "text.txt",
-                });
-                inputFiles(document.querySelector(".o-mail-Composer-coreMain .o_input_file"), [
-                    file,
+                await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+                    await createFile({
+                        content: "hello, world",
+                        contentType: "text/plain",
+                        name: "text.txt",
+                    }),
                 ]);
             },
         },
@@ -90,17 +89,13 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
             content: "Add one more file in composer",
             trigger: ".o-mail-Message .o-mail-Composer button[aria-label='Attach files']",
             async run() {
-                const file = await createFile({
-                    content: "hello 2",
-                    contentType: "text/plain",
-                    name: "extra.txt",
-                });
-                inputFiles(
-                    document.querySelector(
-                        ".o-mail-Message .o-mail-Composer-coreMain .o_input_file"
-                    ),
-                    [file]
-                );
+                inputFiles(".o-mail-Message .o-mail-Composer-coreMain .o_input_file", [
+                    await createFile({
+                        content: "hello 2",
+                        contentType: "text/plain",
+                        name: "extra.txt",
+                    }),
+                ]);
             },
         },
         {

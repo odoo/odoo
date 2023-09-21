@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { createFile, inputFiles } from "@web/../tests/legacy/helpers/test_utils_file";
+import { createFile, inputFiles } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -25,13 +25,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
             content: "Add one file in composer",
             trigger: ".o-mail-Composer button[aria-label='Attach files']",
             async run() {
-                const file = await createFile({
-                    content: "hello, world",
-                    contentType: "text/plain",
-                    name: "text.txt",
-                });
-                inputFiles(document.querySelector(".o-mail-Composer-coreMain .o_input_file"), [
-                    file,
+                await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+                    await createFile({
+                        content: "hello, world",
+                        contentType: "text/plain",
+                        name: "text.txt",
+                    }),
                 ]);
             },
         },
