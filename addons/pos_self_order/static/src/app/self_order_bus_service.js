@@ -45,6 +45,8 @@ export class SelfOrderBus {
             this.ws_status(message);
         } else if (message.type === "PAYMENT_STATUS" && mode === "kiosk") {
             this.ws_paymentStatus(message);
+        } else if (message.type === "PRODUCT_CHANGED") {
+            this.ws_productChanged(message);
         }
     }
 
@@ -79,6 +81,10 @@ export class SelfOrderBus {
         }
 
         this.selfOrder.isSession();
+    }
+
+    ws_productChanged(message) {
+        this.selfOrder.handleProductChanges(message.payload);
     }
 }
 

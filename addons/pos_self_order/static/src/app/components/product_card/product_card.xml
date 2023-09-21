@@ -12,8 +12,13 @@
                     loading="lazy"
                     onerror="this.remove()" />
                 <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 px-2 mt-3 mb-1">
-                    <span t-esc="props.product.name" class="fs-5 fw-bolder lh-sm" />
-                    <span t-esc="selfOrder.formatMonetary(props.product.prices)" class="py-2 text-muted flex-grow-1" />
+                    <span t-esc="props.product.name" class="fs-3 fw-bolder flex-grow-1 lh-sm" />
+                    <div class="d-flex justify-content-between align-items-end gap-3">
+                        <span t-esc="selfOrder.formatMonetary(props.product.prices)" class="fs-4 text-muted flex-grow-1" />
+                        <div class="text-center ms-2 fs-lighter">
+                            <div t-if="!props.product.self_order_available" class="fs-lighter bg-secondary rounded">Out of stock</div>
+                        </div>
+                    </div>
                 </div>
             </button>
         </div>

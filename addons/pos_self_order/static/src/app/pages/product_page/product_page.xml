@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <div t-attf-class="{{ state.showQtyButtons ? 'h-50' : 'h-75' }}">
+            <div t-attf-class="{{ showQtyButtons ? 'h-50' : 'h-75' }}">
                 <div class="h-100 px-4 overflow-y-auto">
                     <AttributeSelection
                         t-if="this.product.attributes.length"
@@ -28,7 +28,7 @@
                         product="product"/>
                 </div>
             </div>
-            <div t-if="state.showQtyButtons" class="d-flex flex-column justify-content-center align-items-center w-100 h-25 p-5 bg-view border-top" style="z-index:1">
+            <div t-if="showQtyButtons" class="d-flex flex-column justify-content-center align-items-center w-100 h-25 p-5 bg-view border-top" style="z-index:1">
                 <div class="o_self_order_incr_button d-flex flex-row text-center border-light mb-1" role="group" aria-label="Quantity select">
                     <button type="button"
                         t-on-click = "() => this.changeQuantity(false)"
@@ -42,7 +42,7 @@
         </div>
         <div class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm">
             <button class="btn btn-secondary w-100 h-100 p-0 m-0 fs-2 flex-grow-1 text-uppercase" t-on-click="back">Discard</button>
-            <button t-if="state.showQtyButtons and !props.onValidate" class="btn btn-primary w-100 h-100 p-0 m-0 fs-2 text-uppercase" t-on-click="addToCart">Add to cart</button>
+            <button t-if="showQtyButtons and !props.onValidate" class="btn btn-primary w-100 h-100 p-0 m-0 fs-2 text-uppercase" t-on-click="addToCart">Add to cart</button>
         </div>
     </t>
 </templates>

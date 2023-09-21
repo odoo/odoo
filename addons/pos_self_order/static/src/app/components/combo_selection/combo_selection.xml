@@ -26,6 +26,9 @@
                                         <span t-if="line.combo_price" class="position-absolute top-0 end-0 m-1 px-2 rounded border border-white text-bg-primary bg-opacity-75 fs-4">
                                             + <t t-esc="selfOrder.formatMonetary(line.combo_price)" />
                                         </span>
+                                        <div class="text-center ms-2 fs-lighter" t-if="!this.selfOrder.productByIds[line.product_id[0]].self_order_available">
+                                            <div class="fs-lighter bg-secondary rounded">Out of stock</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

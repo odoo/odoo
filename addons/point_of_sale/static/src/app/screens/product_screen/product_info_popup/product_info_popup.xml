@@ -4,9 +4,12 @@
             <div class="popup product-info-popup">
                 <div class="modal-header">
                     <h4 class="modal-title">Product information</h4>
+                    <div class="btn" t-on-click="cancel">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
                 </div>
                 <main class="body modal-body overflow-auto">
-                    <div class="section-product-info-title d-flex flex-column flex-sm-row text-start gap-3 bg-info text-info bg-opacity-25 mx-n3 mt-n3 p-3">
+                    <div class="section-product-info-title d-flex flex-column flex-sm-row text-start gap-3 text-info bg-opacity-25 mx-n3 mt-n3 p-3 bg-info">
                         <div class="d-flex flex-column flex-grow-1 text-start w-100 w-sm-25">
                             <span t-esc="props.product.display_name" class="global-info-title fs-2 fw-bolder text-truncate"/>
                             <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
@@ -132,11 +135,6 @@
                         </div>
                     </div>
                 </main>
-                <footer class="footer modal-footer">
-                    <div class="button cancel btn btn-lg btn-primary" t-on-click="cancel">
-                        Close
-                    </div>
-                </footer>
             </div>
     </t>
 </templates>

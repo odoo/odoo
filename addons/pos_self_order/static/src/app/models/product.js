@@ -14,6 +14,7 @@ export class Product extends Reactive {
             pos_combo_ids,
             is_pos_groupable,
             write_date,
+            self_order_available,
         },
         showPriceTaxIncluded
     ) {
@@ -33,6 +34,7 @@ export class Product extends Reactive {
         this.pos_combo_ids = product.pos_combo_ids;
         this.is_pos_groupable = product.is_pos_groupable;
         this.write_date = product.write_date;
+        this.self_order_available = product.self_order_available;
 
         // data
         this.showPriceTaxIncluded = showPriceTaxIncluded;

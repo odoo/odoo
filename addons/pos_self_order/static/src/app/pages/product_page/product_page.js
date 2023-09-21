@@ -143,4 +143,8 @@ export class ProductPage extends Component {
             this.router.back();
         }
     }
+
+    get showQtyButtons() {
+        return this.state.showQtyButtons && this.props.product.self_order_available;
+    }
 }

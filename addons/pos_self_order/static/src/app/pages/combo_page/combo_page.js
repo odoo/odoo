@@ -173,4 +173,8 @@ export class ComboPage extends Component {
         this.state.editMode = true;
         this.state.showQtyButtons = false;
     }
+
+    get showQtyButtons() {
+        return this.state.showQtyButtons && this.props.product.self_order_available;
+    }
 }

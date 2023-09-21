@@ -53,7 +53,7 @@
                             </div>
                             <div class="line-price d-flex flex-column align-items-end justify-content-between h-auto w-25">
                                 <span class="fw-bolder" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
-                                <button t-if="!selfOrder.currentOrder.isSavedOnServer and this.selfOrder.productByIds[line.product_id].attributes.length > 0 || line.child_lines.length > 0"
+                                <button t-if="!selfOrder.currentOrder.isSavedOnServer and this.selfOrder.productByIds[line.product_id]?.attributes.length > 0 || line.child_lines.length > 0"
                                     type="button"
                                     t-on-click="() => this.clickOnLine(line)"
                                     class="btn btn-secondary rounded" >Modify</button>

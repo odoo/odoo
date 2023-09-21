@@ -2,10 +2,32 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from typing import List, Dict, Optional
 
-from odoo import models
+from odoo import api, models, fields
 
 from odoo.addons.point_of_sale.models.pos_config import PosConfig
 
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    self_order_available = fields.Boolean(
+        string="Available in Self Order",
+        help="If this product is available in the Self Order screens",
+        default=True,
+    )
+
+    @api.constrains('available_in_pos')
+    def _check_combo_inclusions(self):
+        super()._check_combo_inclusions()
+        self.self_order_available = False
+
+    def write(self, vals_list):
+        res = super().write(vals_list)
+        if 'self_order_available' in vals_list:
+            for record in self:
+                for product in record.product_variant_ids:
+                    product._send_availability_status()
+        return res
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -100,6 +122,7 @@ class ProductProduct(models.Model):
                 "pos_combo_ids": self.combo_ids.mapped("id") or False,
                 "is_pos_groupable": self.uom_id.is_pos_groupable,
                 "write_date": self.write_date.timestamp(),
+                "self_order_available": self.self_order_available,
             }
 
     def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
@@ -107,3 +130,18 @@ class ProductProduct(models.Model):
             product._get_product_for_ui(pos_config)
             for product in self
         ]
+
+    def write(self, vals_list):
+        res = super().write(vals_list)
+        if 'self_order_available' in vals_list:
+            for record in self:
+                record._send_availability_status()
+        return res
+
+    def _send_availability_status(self):
+        config_self = self.env['pos.config'].sudo().search([('self_ordering_mode', '!=', 'nothing')])
+        for config in config_self:
+            if config.current_session_id and config.access_token:
+                self.env['bus.bus']._sendone(f'pos_config-{config.access_token}', 'PRODUCT_CHANGED', {
+                    'product': self._get_product_for_ui(config)
+                })

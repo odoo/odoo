@@ -10,6 +10,7 @@ import { ProductCard } from "@point_of_sale/app/generic_components/product_card/
 import { Component, useState } from "@odoo/owl";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/input/input";
 
@@ -211,5 +212,9 @@ export class ProductsWidget extends Component {
 
     createNewProducts() {
         window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
+    }
+    async onProductInfoClick(product) {
+        const info = await this.pos.getProductInfo(product, 1);
+        this.popup.add(ProductInfoPopup, { info: info, product: product });
     }
 }
