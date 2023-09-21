@@ -289,7 +289,8 @@ export class FormController extends Component {
     /**
      * onRecordSaved is a callBack that will be executed after the save
      * if it was done. It will therefore not be executed if the record
-     * is invalid or if a server error is thrown.
+     * is invalid, if a server error is thrown, or if there are no
+     * changes to save.
      * @param {Record} record
      */
     async onRecordSaved(record, changes) {
