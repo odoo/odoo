@@ -46,7 +46,6 @@ import {
     isUnremovable,
     fillEmpty,
     isEmptyBlock,
-    getUrlsInfosInString,
     URL_REGEX,
     URL_REGEX_WITH_INFOS,
     isSelectionFormat,
@@ -4594,16 +4593,15 @@ export class OdooEditor extends EventTarget {
         ) {
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
-            let potentialUrl = textNodeSplitted.pop();
-            const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS) && !potentialUrl.match(EMAIL_REGEX);
+            const potentialUrl = textNodeSplitted.pop();
+            const match = potentialUrl.match(URL_REGEX_WITH_INFOS);
 
-            if (lastWordMatch) {
-                const matches = getUrlsInfosInString(textSliced);
-                const match = matches[matches.length - 1];
+            if (match && match[0] === potentialUrl && !EMAIL_REGEX.test(potentialUrl)) {
+                const url = match[2] ? match[0] : 'http://' + match[0];
                 const range = this.document.createRange();
-                range.setStart(selection.anchorNode, match.index);
-                range.setEnd(selection.anchorNode, match.index + match.length);
-                const link = this._createLink(range.extractContents().textContent, match.url);
+                range.setStart(selection.anchorNode, selection.anchorOffset - match[0].length);
+                range.setEnd(selection.anchorNode, selection.anchorOffset);
+                const link = this._createLink(range.extractContents().textContent, url);
                 range.insertNode(link);
                 const container = link.parentElement;
                 const offset = childNodeIndex(link) + 1;

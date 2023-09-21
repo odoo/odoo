@@ -51,8 +51,8 @@ const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~
 const httpRegex = `(?:https?:\\/\\/)`;
 const httpCapturedRegex= `(https?:\\/\\/)`;
 
-export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase})`, 'gi');
-export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, 'gi');
+export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase})`, 'i');
+export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, 'i');
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
@@ -1518,26 +1518,6 @@ export function makeContentsInline(node) {
         }
         childIndex += 1;
     }
-}
-
-/**
- * Returns an array of url infos for url matched in the given string.
- *
- * @param {String} string
- * @returns {Array}
- */
-export function getUrlsInfosInString(string) {
-    let infos = [],
-        match;
-    while ((match = URL_REGEX_WITH_INFOS.exec(string))) {
-        infos.push({
-            url: match[2] ? match[0] : 'http://' + match[0],
-            label: match[0],
-            index: match.index,
-            length: match[0].length,
-        });
-    }
-    return infos;
 }
 
 // optimize: use the parent Oid to speed up detection
