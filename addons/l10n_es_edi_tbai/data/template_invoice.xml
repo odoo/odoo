@@ -72,7 +72,7 @@
         </template>
 
         <template id="template_invoice_factura">
-            <t t-set="is_simplified" t-value="invoice._is_l10n_es_tbai_simplified()"/>
+            <t t-set="is_simplified" t-value="invoice.l10n_es_is_simplified"/>
             <CabeceraFactura>
                 <t t-set="seq_and_num" t-value="invoice._get_l10n_es_tbai_sequence_and_number()"/>
                 <SerieFactura t-out="seq_and_num[0]"/>

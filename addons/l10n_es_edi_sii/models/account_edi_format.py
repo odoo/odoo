@@ -249,12 +249,10 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_edi_get_invoices_info(self, invoices):
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
 
-        simplified_partner = self.env.ref("l10n_es_edi_sii.partner_simplified")
-
         info_list = []
         for invoice in invoices:
             com_partner = invoice.commercial_partner_id
-            is_simplified = invoice.partner_id == simplified_partner
+            is_simplified = invoice.l10n_es_is_simplified
 
             info = {
                 'PeriodoLiquidacion': {

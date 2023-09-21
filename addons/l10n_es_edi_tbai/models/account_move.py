@@ -221,6 +221,3 @@ class AccountMove(models.Model):
             self.l10n_es_tbai_cancel_xml = b64_doc
         else:
             self.l10n_es_tbai_post_xml = b64_doc
-
-    def _is_l10n_es_tbai_simplified(self):
-        return self.commercial_partner_id == self.env.ref("l10n_es_edi_sii.partner_simplified")

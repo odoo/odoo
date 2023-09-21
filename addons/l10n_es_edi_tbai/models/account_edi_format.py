@@ -89,7 +89,7 @@ class AccountEdiFormat(models.Model):
         if invoice.move_type == 'out_refund':
             if not invoice.l10n_es_tbai_refund_reason:
                 raise ValidationError(_('Refund reason must be specified (TicketBAI)'))
-            if invoice._is_l10n_es_tbai_simplified():
+            if invoice.l10n_es_is_simplified:
                 if invoice.l10n_es_tbai_refund_reason != 'R5':
                     raise ValidationError(_('Refund reason must be R5 for simplified invoices (TicketBAI)'))
             else:
@@ -265,7 +265,7 @@ class AccountEdiFormat(models.Model):
 
         # NOTE: TicketBai supports simplified invoices WITH recipients but we don't for now (we should for POS)
         # NOTE: TicketBAI credit notes for simplified invoices are ALWAYS simplified BUT can have a recipient even if invoice doesn't
-        if invoice._is_l10n_es_tbai_simplified():
+        if invoice.l10n_es_is_simplified:
             return values  # do not set 'recipient' unless there is an actual recipient (used as condition in template)
 
         # === RECIPIENTS (DESTINATARIOS) ===
@@ -347,7 +347,7 @@ class AccountEdiFormat(models.Model):
         else:
             values['regime_key'] = ['02']
 
-        if invoice._is_l10n_es_tbai_simplified():
+        if invoice.l10n_es_is_simplified:
             values['regime_key'].append(52)  # code for simplified invoices
 
         return values
