@@ -5,14 +5,19 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 
-function parseCompanyIds(cidsFromHash) {
-    const cids = [];
-    if (typeof cidsFromHash === "string") {
-        cids.push(...cidsFromHash.split(",").map(Number));
-    } else if (typeof cidsFromHash === "number") {
-        cids.push(cidsFromHash);
+const CIDS_HASH_SEPARATOR = "-";
+
+function parseCompanyIds(cids, separator = ",") {
+    if (typeof cids === "string") {
+        return cids.split(separator).map(Number);
+    } else if (typeof cids === "number") {
+        return [cids];
     }
-    return cids;
+    return [];
+}
+
+function formatCompanyIds(cids, separator = ",") {
+    return cids.join(separator);
 }
 
 function computeAllowedCompanyIds(cids) {
@@ -34,30 +39,30 @@ export const companyService = {
     start(env, { user, router, cookie, action }) {
         let cids;
         if ("cids" in router.current.hash) {
-            cids = parseCompanyIds(router.current.hash.cids);
+            cids = parseCompanyIds(router.current.hash.cids, CIDS_HASH_SEPARATOR);
         } else if ("cids" in cookie.current) {
             cids = parseCompanyIds(cookie.current.cids);
         }
 
         const availableCompanies = session.user_companies.allowed_companies;
         const allowedCompanyIds = computeAllowedCompanyIds(cids);
-        const nextAvailableCompanies = allowedCompanyIds.slice();  // not using a Set because order is important
+        const nextAvailableCompanies = allowedCompanyIds.slice(); // not using a Set because order is important
         nextAvailableCompanies.add = (companyId) => {
             if (!nextAvailableCompanies.includes(companyId)) {
                 nextAvailableCompanies.push(companyId);
                 availableCompanies[companyId].child_ids.map(nextAvailableCompanies.add);
             }
-        }
+        };
         nextAvailableCompanies.remove = (companyId) => {
             if (nextAvailableCompanies.includes(companyId)) {
                 nextAvailableCompanies.splice(nextAvailableCompanies.indexOf(companyId), 1);
                 availableCompanies[companyId].child_ids.map(nextAvailableCompanies.remove);
             }
-        }
+        };
 
-        const stringCIds = allowedCompanyIds.join(",");
-        router.replaceState({ cids: stringCIds }, { lock: true });
-        cookie.setCookie("cids", stringCIds);
+        const cidsHash = formatCompanyIds(allowedCompanyIds, CIDS_HASH_SEPARATOR);
+        router.replaceState({ cids: cidsHash }, { lock: true });
+        cookie.setCookie("cids", formatCompanyIds(allowedCompanyIds));
         user.updateContext({ allowed_company_ids: allowedCompanyIds });
 
         // reload the page if changes are being done to `res.company`
@@ -92,15 +97,20 @@ export const companyService = {
                     }
                 } else if (mode === "loginto") {
                     nextAvailableCompanies.splice(0, nextAvailableCompanies.length);
-                    nextAvailableCompanies.add(companyId)
+                    nextAvailableCompanies.add(companyId);
                 }
             },
             logNextCompanies() {
-                const next = nextAvailableCompanies.length ? nextAvailableCompanies : [allowedCompanyIds[0]]
-                router.pushState({ cids: next }, { lock: true });
-                cookie.setCookie("cids", next);
+                const next = nextAvailableCompanies.length
+                    ? nextAvailableCompanies
+                    : [allowedCompanyIds[0]];
+                router.pushState(
+                    { cids: formatCompanyIds(next, CIDS_HASH_SEPARATOR) },
+                    { lock: true }
+                );
+                cookie.setCookie("cids", formatCompanyIds(next));
                 browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
-            }
+            },
         };
     },
 };

@@ -119,7 +119,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.containsN(scMenuEl, "[data-company-id] .fa-check-square", 2);
         assert.containsN(scMenuEl, "[data-company-id] .fa-square-o", 1);
         await prom;
-        assert.verifySteps(["cids=1%2C2"]);
+        assert.verifySteps(["cids=1-2"]);
     });
 
     QUnit.test("can toggle multiple companies at once", async (assert) => {
@@ -157,7 +157,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
 
         assert.verifySteps([]);
         await prom; // await toggle promise
-        assert.verifySteps(["cids=2%2C3"]);
+        assert.verifySteps(["cids=2-3"]);
     });
 
     QUnit.test("single company selected: toggling it off will keep it", async (assert) => {
@@ -231,7 +231,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=3%2C1" });
+        Object.assign(browser.location, { hash: "cids=3-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
@@ -261,7 +261,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=2%2C3" });
+        Object.assign(browser.location, { hash: "cids=2-3" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
