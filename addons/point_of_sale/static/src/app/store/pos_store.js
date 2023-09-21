@@ -1089,7 +1089,6 @@ export class PosStore extends Reactive {
             } else {
                 for (const order of orders) {
                     const reactiveOrder = this.orders.find((o) => o.uid === order.id);
-                    reactiveOrder.date_order = null;
                     reactiveOrder.finalized = false;
                     this.db.remove_order(reactiveOrder.uid);
                     this.db.save_unpaid_order(reactiveOrder);
