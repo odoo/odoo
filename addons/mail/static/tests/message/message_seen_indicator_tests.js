@@ -343,14 +343,12 @@ QUnit.test(
         pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await contains(".o-mail-Message-content", { text: "Message before last seen" });
-        await contains(
-            ".o-mail-Message:contains(Message before last seen) .o-mail-MessageSeenIndicator"
-        );
-        await contains(
-            ".o-mail-Message:contains(Message before last seen) .o-mail-MessageSeenIndicator i",
-            { count: 0 }
-        );
+        await contains(".o-mail-Message", {
+            containsMulti: [
+                [".o-mail-Message-content", { text: "Message before last seen" }],
+                [".o-mail-MessageSeenIndicator", { contains: ["i", { count: 0 }] }],
+            ],
+        });
     }
 );
 

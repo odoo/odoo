@@ -51,14 +51,12 @@ QUnit.test("can invite users in channel from chat window", async () => {
     await click("[title='Open Actions Menu']");
     await click("[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation");
-    await click(
-        ".o-discuss-ChannelInvitation-selectable:contains(TestPartner) input[type='checkbox']"
-    );
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
-    await contains(
-        ".o-mail-Thread .o-mail-NotificationMessage:contains(Mitchell Admin invited TestPartner to the channel)"
-    );
+    await contains(".o-mail-Thread .o-mail-NotificationMessage", {
+        text: "Mitchell Admin invited TestPartner to the channel",
+    });
 });
 
 QUnit.test("should be able to search for a new user to invite from an existing chat", async () => {
@@ -107,7 +105,10 @@ QUnit.test("Invitation form should display channel group restriction", async () 
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
-    await contains('.o-discuss-ChannelInvitation:contains(Access restricted to group "testGroup")');
+    await contains(".o-discuss-ChannelInvitation div", {
+        text: 'Access restricted to group "testGroup"',
+        after: ["button .fa.fa-copy"],
+    });
 });
 
 QUnit.test("should be able to create a new group chat from an existing chat", async () => {
@@ -136,7 +137,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
     await click("button[title='Create Group Chat']:enabled");
-    await contains(
-        ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin, TestPartner, and TestPartner2)"
-    );
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "Mitchell Admin, TestPartner, and TestPartner2",
+    });
 });

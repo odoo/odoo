@@ -5,7 +5,6 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { nextTick } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("attachment list");
@@ -288,7 +287,7 @@ QUnit.test("DOCX file is not viewable", async () => {
 
 QUnit.test(
     "should not view attachment from click on non-viewable attachment in list containing a viewable attachment",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
@@ -313,15 +312,11 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss(channelId);
-        await contains(".o-mail-AttachmentImage[title='test.png']");
-        await contains(".o-mail-AttachmentCard div", { text: "test.odt" });
-        assert.hasClass($(".o-mail-AttachmentImage[title='test.png'] img"), "o-viewable");
-        assert.doesNotHaveClass($(".o-mail-AttachmentCard:contains(test.odt)"), "o-viewable");
-
-        click(".o-mail-AttachmentCard:contains(test.odt)").catch(() => {});
-        await nextTick();
+        await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
+        await contains(".o-mail-AttachmentCard:not(.o-viewable) div", { text: "test.odt" });
+        await click(".o-mail-AttachmentCard", { contains: ["div", { text: "test.odt" }] });
+        // weak test, no guarantee that we waited long enough for the potential file viewer to show
         await contains(".o-FileViewer", { count: 0 });
-
         await click(".o-mail-AttachmentImage[title='test.png']");
         await contains(".o-FileViewer");
     }

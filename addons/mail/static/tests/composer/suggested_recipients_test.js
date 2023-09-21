@@ -70,14 +70,14 @@ QUnit.test(
             },
         });
         await click("button", { text: "Send message" });
-        await contains(".o-mail-SuggestedRecipient", { text: "john@test.be (john@test.be)" });
-        await contains(".o-mail-SuggestedRecipient", { text: "John Jane" });
-        assert.ok(
-            $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
-        );
-        assert.ok(
-            $(".o-mail-SuggestedRecipient:contains(John Jane) input[type=checkbox]")[0].checked
-        );
+        await contains(".o-mail-SuggestedRecipient", {
+            text: "john@test.be (john@test.be)",
+            contains: ["input[type=checkbox]:checked"],
+        });
+        await contains(".o-mail-SuggestedRecipient", {
+            text: "John Jane",
+            contains: ["input[type=checkbox]:checked"],
+        });
         await click("button[title='Full composer']");
         await def;
         assert.verifySteps(["do-action"]);
@@ -110,14 +110,14 @@ QUnit.test(
             },
         });
         await click("button", { text: "Send message" });
-        await contains(".o-mail-SuggestedRecipient", { text: "john@test.be (john@test.be)" });
-        await contains(".o-mail-SuggestedRecipient", { text: "John Jane" });
-        assert.ok(
-            $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
-        );
-        assert.ok(
-            $(".o-mail-SuggestedRecipient:contains(John Jane) input[type=checkbox]")[0].checked
-        );
+        await contains(".o-mail-SuggestedRecipient", {
+            text: "john@test.be (john@test.be)",
+            contains: ["input[type=checkbox]:checked"],
+        });
+        await contains(".o-mail-SuggestedRecipient", {
+            text: "John Jane",
+            contains: ["input[type=checkbox]:checked"],
+        });
         await click("button", { text: "Log note" });
         await click("button[title='Full composer']");
         await def;

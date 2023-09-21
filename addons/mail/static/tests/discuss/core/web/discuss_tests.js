@@ -190,10 +190,6 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     await insertText(".o-discuss-ChannelSelector input", "Jer", { target: tab1.target });
     await click(".o-discuss-ChannelSelector-suggestion", { target: tab1.target });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", {
-        target: tab1.target,
-    });
-    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", {
-        target: tab2.target,
-    });
+    await contains(".o-mail-DiscussSidebarChannel", { target: tab1.target, text: "Jerry Golay" });
+    await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Jerry Golay" });
 });

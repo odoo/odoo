@@ -7,9 +7,8 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { commandService } from "@web/core/commands/command_service";
 import { registry } from "@web/core/registry";
-import { editSearchBar } from "@web/../tests/core/commands/command_service_tests";
-import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 const serviceRegistry = registry.category("services");
 const commandSetupRegistry = registry.category("command_setup");
@@ -28,9 +27,8 @@ QUnit.module("command palette", {
 QUnit.test("open the chatWindow of a user from the command palette", async () => {
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
-    await nextTick();
     // Switch to partners
-    await editSearchBar("@");
+    await insertText(".o_command_palette_search input", "@", { replace: true });
     advanceTime(commandSetupRegistry.get("@").debounceDelay);
     await click(".o_command.focused");
     await contains(".o-mail-ChatWindow");
@@ -42,9 +40,8 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
     pyEnv["discuss.channel"].create({ name: "project" });
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
-    await nextTick();
     // Switch to channels
-    await editSearchBar("#");
+    await insertText(".o_command_palette_search input", "#", { replace: true });
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
     await contains(".o_command", { text: "general" });
     await contains(".o_command", { text: "project" });
@@ -78,20 +75,20 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     });
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
-    await nextTick();
-    await editSearchBar("@");
+    await insertText(".o_command_palette_search input", "@", { replace: true });
     advanceTime(commandSetupRegistry.get("@").debounceDelay);
-    await contains(".o_command_palette span.fw-bold", { text: "Mentions" });
-    await contains(
-        ".o_command_category:contains('Mentions') .o_command:contains('Mitchell Admin and Mario')"
-    );
-    await contains(".o_command_category:not(:contains('Mentions')) .o_command", {
-        text: "Mario",
+    await contains(".o_command_palette .o_command_category", {
+        containsMulti: [
+            ["span.fw-bold", { text: "Mentions" }],
+            [".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" }],
+        ],
     });
-    await contains(
-        ".o_command_category:not(:contains('Mentions')) .o_command:contains('Mitchell Admin')"
-    );
-    await contains(".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" });
+    await contains(".o_command_palette .o_command_category", {
+        containsMulti: [
+            [".o_command_name", { text: "Mario" }],
+            [".o_command_name", { text: "Mitchell Admin" }],
+        ],
+    });
     await click(".o_command.focused");
     await contains(".o-mail-ChatWindow-name", { text: "Mitchell Admin and Mario" });
 });
@@ -104,9 +101,12 @@ QUnit.test("Max 3 most recent channels in command palette of Discuss app with #"
     pyEnv["discuss.channel"].create({ name: "channel_4" });
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
-    await nextTick();
-    await editSearchBar("#");
+    await insertText(".o_command_palette_search input", "#", { replace: true });
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
-    await contains(".o_command_palette span.fw-bold", { text: "Recent" });
-    await contains(".o_command_category:contains('Recent') .o_command", { count: 3 });
+    await contains(".o_command_palette .o_command_category", {
+        containsMulti: [
+            ["span.fw-bold", { text: "Recent" }],
+            [".o_command", { count: 3 }],
+        ],
+    });
 });
