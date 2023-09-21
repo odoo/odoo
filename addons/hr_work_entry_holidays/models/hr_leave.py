@@ -232,7 +232,7 @@ Contracts:
             where he has a new contract working only 3 days/week. This should be taken into
             account when computing the number of days for the leave (2 weeks leave = 6 days).
             Override this method to get number of days according to the contract's calendar
-            at the time of the leave.
+            at the time of the leave. 
         """
         employee = self.env['hr.employee'].browse(employee_ids)
         # Use sudo otherwise base users can't compute number of days
