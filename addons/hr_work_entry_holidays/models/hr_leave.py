@@ -227,28 +227,27 @@ Contracts:
             vals_list += work_entry.contract_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
         self.env['hr.work.entry'].create(vals_list)
 
-    def _get_number_of_days(self, date_from, date_to, employee_id):
+    def _get_number_of_days_batch(self, date_from, date_to, employee_ids):
         """ If an employee is currently working full time but asks for time off next month
             where he has a new contract working only 3 days/week. This should be taken into
             account when computing the number of days for the leave (2 weeks leave = 6 days).
             Override this method to get number of days according to the contract's calendar
             at the time of the leave.
         """
-        days = super(HrLeave, self)._get_number_of_days(date_from, date_to, employee_id)
-        if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
-            # Use sudo otherwise base users can't compute number of days
-            contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
-            contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
-            calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
-            # We force the company in the domain as we are more than likely in a compute_sudo
-            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
-            result = employee._get_work_days_data_batch(date_from, date_to, calendar=calendar, domain=domain)[employee.id]
-            if self.request_unit_half and result['hours'] > 0:
-                result['days'] = 0.5
-            return result
+        employee = self.env['hr.employee'].browse(employee_ids)
+        # Use sudo otherwise base users can't compute number of days
+        contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
+        contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)
+        calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
+        # We force the company in the domain as we are more than likely in a compute_sudo
+        domain = [('time_type', '=', 'leave'),
+                  ('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
-        return days
+        result = employee._get_work_days_data_batch(date_from, date_to, calendar=calendar, domain=domain)
+        for employee_id in result:
+            if self.request_unit_half and result[employee_id]['hours'] > 0:
+                result[employee_id]['days'] = 0.5
+        return result
 
     def _get_calendar(self):
         self.ensure_one()
