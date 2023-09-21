@@ -4,19 +4,19 @@ import { Record } from "@mail/core/common/record";
 
 export class CannedResponse extends Record {
     static id = "id";
-    /** @type {Object.<number, import("models").Models["CannedResponse"]>} */
+    /** @type {Object.<number, import("models").CannedResponse>} */
     static records = {};
-    /** @returns {import("models").Models["CannedResponse"]} */
+    /** @returns {import("models").CannedResponse} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["CannedResponse"]} */
+    /** @returns {import("models").CannedResponse} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {import("models").Models["CannedResponse"]}
+     * @returns {import("models").CannedResponse}
      */
     static insert(data) {
         const cannedResponse = this.get(data) ?? this.new(data);

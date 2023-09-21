@@ -314,7 +314,7 @@ export class MessageService {
     }
 
     /**
-     * @param {import("models").Models["Message"]} message
+     * @param {import("models").Message} message
      */
     _updateReactions(message, reactionGroups) {
         const reactionContentToUnlink = new Set();

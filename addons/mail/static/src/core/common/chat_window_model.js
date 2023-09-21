@@ -9,19 +9,19 @@ import { _t } from "@web/core/l10n/translation";
 
 export class ChatWindow extends Record {
     static id = "thread";
-    /** @type {import("models").Models["ChatWindow"][]} */
+    /** @type {import("models").ChatWindow[]} */
     static records = [];
-    /** @returns {import("models").Models["ChatWindow"]} */
+    /** @returns {import("models").ChatWindow} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["ChatWindow"]} */
+    /** @returns {import("models").ChatWindow} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {ChatWindowData} [data]
-     * @returns {import("models").Models["ChatWindow"]}
+     * @returns {import("models").ChatWindow}
      */
     static insert(data = {}) {
         const chatWindow = this.records.find((c) => c.thread?.eq(data.thread));

@@ -1,13 +1,12 @@
-declare module "models" {
 
-    import { Message } from "models"
+declare module "models" {
 
     export interface Message {
         pinnedAt: string,
     }
 
     export interface Thread {
-        pinnedMessages: Set<Message>,
+        pinnedMessages: Message[],
         pinnedMessagesState: "loaded"|"loading"|"error"|undefined,
     }
 

@@ -8,17 +8,17 @@ import { OR, Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
-    /** @returns {import("models").Models["Composer"]} */
+    /** @returns {import("models").Composer} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["Composer"]} */
+    /** @returns {import("models").Composer} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {import("models").Models["Composer"]}
+     * @returns {import("models").Composer}
      */
     static insert(data) {
         const { message, thread } = data;
@@ -55,14 +55,14 @@ export class Composer extends Record {
         return composer;
     }
 
-    attachments = Record.List("Attachment");
+    attachments = Record.many("Attachment");
     message = Record.one("Message");
     /** @type {RawMentions} */
     rawMentions = {
         partnerIds: new Set(),
         threadIds: new Set(),
     };
-    cannedResponses = Record.Set("CannedResponse");
+    cannedResponses = Record.many("CannedResponse");
     /** @type {string} */
     textInputContent;
     thread = Record.one("Thread");

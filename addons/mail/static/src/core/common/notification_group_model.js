@@ -8,19 +8,19 @@ import { _t } from "@web/core/l10n/translation";
 let nextId = 1;
 export class NotificationGroup extends Record {
     static id = "id";
-    /** @type {import("models").Models["NotificationGroup"][]} */
+    /** @type {import("models").NotificationGroup[]} */
     static records = [];
-    /** @returns {import("models").Models["NotificationGroup"]} */
+    /** @returns {import("models").NotificationGroup} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["NotificationGroup"]} */
+    /** @returns {import("models").NotificationGroup} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {import("models").Models["NotificationGroup"]}
+     * @returns {import("models").NotificationGroup}
      */
     static insert(data) {
         let group = this.records.find((group) => {
@@ -45,7 +45,7 @@ export class NotificationGroup extends Record {
         return group;
     }
 
-    notifications = Record.List("Notification");
+    notifications = Record.many("Notification");
     /** @type {string} */
     modelName;
     /** @type {string} */
