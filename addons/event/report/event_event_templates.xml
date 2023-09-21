@@ -159,9 +159,14 @@
                     <div class="o_event_full_page_ticket_barcode">
                     
                         <div class="o_event_full_page_ticket_barcode_container px-2">
-                            <div class="pb-3"><img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/></div>
-                            <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'">
-                                <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee else '12345678901234567890'}}&amp;width=168&amp;height=84&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
+                            <t t-if="not attendee or (attendee and attendee.barcode)"> 
+                                <div class="pb-3">
+                                    <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
+                                </div>
+
+                                <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'">
+                                    <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}&amp;width=168&amp;height=84&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
+                                </t>
                             </t>
                         </div>
                     </div>
