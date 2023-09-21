@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+
+    <record id="survey_demo_test_onchange" model="survey.survey">
+        <field name="title">Test Onchange</field>
+        <field name="access_token">onchange-quiz-1234-abcd-344ca2tgb31e</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="access_mode">public</field>
+        <field name="users_can_go_back" eval="True"/>
+        <field name="scoring_type">no_scoring</field>
+    </record>
+
+    <!-- Page 1: Start -->
+    <record id="survey_demo_test_onchange_q1" model="survey.question">
+        <field name="title">Start</field>
+        <field name="survey_id" ref="survey_demo_test_onchange"/>
+        <field name="sequence">1</field>
+        <field name="title">Question 1 - Open me</field>
+        <field name="question_type">multiple_choice</field>
+    </record>
+    <record id="survey_demo_test_onchange_q1_sug1" model="survey.question.answer">
+        <field name="question_id" ref="survey_demo_test_onchange_q1"/>
+        <field name="sequence">1</field>
+        <field name="value">Answer 1 - Delete me, then save</field>
+    </record>
+    <record id="survey_demo_test_onchange_q1_sug2" model="survey.question.answer">
+        <field name="question_id" ref="survey_demo_test_onchange_q1"/>
+        <field name="sequence">2</field>
+        <field name="value">Answer 2</field>
+    </record>
+
+    <record id="survey_demo_test_onchange_q2" model="survey.question">
+        <field name="title">Start</field>
+        <field name="survey_id" ref="survey_demo_test_onchange"/>
+        <field name="sequence">2</field>
+        <field name="title">Question 2</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="triggering_answer_ids" eval="[Command.link(ref('survey_demo_test_onchange_q1_sug1'))]"></field>
+    </record>
+    <record id="survey_demo_test_onchange_q2_sug1" model="survey.question.answer">
+        <field name="question_id" ref="survey_demo_test_onchange_q2"/>
+        <field name="sequence">1</field>
+        <field name="value">Answer 1</field>
+    </record>
+    <record id="survey_demo_test_onchange_q2_sug2" model="survey.question.answer">
+        <field name="question_id" ref="survey_demo_test_onchange_q2"/>
+        <field name="sequence">2</field>
+        <field name="value">Answer 2</field>
+    </record>
+
+</data></odoo>
