@@ -35,7 +35,7 @@ export class SuggestionService {
 
     /**
      * @param {string} term
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      */
     async fetchPartners(term, thread) {
         const kwargs = { search: term };
@@ -157,10 +157,10 @@ export class SuggestionService {
     }
 
     /**
-     * @param {[import("@mail/core/common/persona_model").Persona]} [partners]
+     * @param {[import("models").Persona]} [partners]
      * @param {String} [searchTerm]
-     * @param {import("@mail/core/common/thread_model").Thread} thread
-     * @returns {[import("@mail/core/common/persona_model").Persona]}
+     * @param {import("models").Thread} thread
+     * @returns {[import("models").Persona]}
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);

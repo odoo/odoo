@@ -32,9 +32,9 @@ export class AttachmentUploader {
 }
 
 /**
- * @param {import("@mail/core/common/thread_model").Thread} thread
+ * @param {import("models").Thread} thread
  * @param {Object} [param1={}]
- * @param {import("@mail/core/common/composer_model").Composer} [param1.composer]
+ * @param {import("models").Composer} [param1.composer]
  * @param {function} [param1.onFileUploaded]
  */
 export function useAttachmentUploader(thread, { composer, onFileUploaded } = {}) {

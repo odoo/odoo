@@ -28,12 +28,12 @@ patch(ThreadService.prototype, {
         this.chatWindowService = services["mail.chat_window"];
         this.chatbotService = services["im_livechat.chatbot"];
         this.notification = services.notification;
-        /** @type {Promise<import("@mail/core/common/thread_model").Thread>?} */
+        /** @type {Promise<import("models").Thread>?} */
         this.persistPromise = null;
     },
 
     /**
-     * @returns {Promise<import("@mail/core/common/message_model").Message}
+     * @returns {Promise<import("models").Message}
      */
     async post(thread, body, params) {
         thread = thread.type === "livechat" ? await this.livechatService.persistThread() : thread;

@@ -24,7 +24,7 @@ export class DiscussSidebarMailboxes extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");

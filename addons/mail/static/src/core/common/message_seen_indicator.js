@@ -5,8 +5,8 @@ import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/message_model").Message} message
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Message} message
+ * @property {import("models").Thread} thread
  * @extends {Component<Props, Env>}
  */
 export class MessageSeenIndicator extends Component {

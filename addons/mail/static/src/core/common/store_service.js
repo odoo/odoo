@@ -98,13 +98,13 @@ export class Store {
     /**
      * This is the current logged partner
      *
-     * @type {import("@mail/core/common/persona_model").Persona}
+     * @type {import("models").Persona}
      */
     user = null;
     /**
      * This is the current logged guest
      *
-     * @type {import("@mail/core/common/persona_model").Persona}
+     * @type {import("models").Persona}
      */
     guest = null;
 
@@ -126,7 +126,7 @@ export class Store {
 
     companyName = "";
 
-    /** @type {import("@mail/core/common/persona_model").Persona} */
+    /** @type {import("models").Persona} */
     odoobot = null;
     odoobotOnboarding;
     users = {};
@@ -171,11 +171,11 @@ export class Store {
             threads: [], // list of ids
         },
         // mailboxes in sidebar
-        /** @type {import("@mail/core/common/thread_model").Thread} */
+        /** @type {import("models").Thread} */
         inbox: null,
-        /** @type {import("@mail/core/common/thread_model").Thread} */
+        /** @type {import("models").Thread} */
         starred: null,
-        /** @type {import("@mail/core/common/thread_model").Thread} */
+        /** @type {import("models").Thread} */
         history: null,
     };
 

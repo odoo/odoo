@@ -33,7 +33,7 @@ const EDIT_CLICK_TYPE = {
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/composer_model").Composer} composer
+ * @property {import("models").Composer} composer
  * @property {import("@mail/utils/common/hooks").MessageToReplyTo} messageToReplyTo
  * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'

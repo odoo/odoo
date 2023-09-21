@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/web/activity_model").Activity} activity
+ * @property {import("models").Activity} activity
  * @property {function} [onClickButtons]
  * @property {function} [onUpdate]
  * @extends {Component<Props, Env>}

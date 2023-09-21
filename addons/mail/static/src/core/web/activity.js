@@ -16,7 +16,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/web/activity_model").Activity} data
+ * @property {import("models").Activity} data
  * @property {function} [onUpdate]
  * @property {function} reloadParentView
  * @extends {Component<Props, Env>}

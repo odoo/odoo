@@ -100,7 +100,7 @@ export class DiscussSidebarCategories extends Component {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      */
     async leaveChannel(thread) {
         if (thread.type !== "group" && thread.isAdmin) {
@@ -134,7 +134,7 @@ export class DiscussSidebarCategories extends Component {
     }
 
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      */
     openSettings(thread) {
         if (thread.type === "channel") {
@@ -150,7 +150,7 @@ export class DiscussSidebarCategories extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");

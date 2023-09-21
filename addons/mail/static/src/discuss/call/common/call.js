@@ -21,14 +21,14 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef CardData
  * @property {string} key
- * @property {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
+ * @property {import("models").RtcSession} session
  * @property {MediaStream} videoStream
- * @property {import("@mail/core/common/channel_member_model").ChannelMember} [member]
+ * @property {import("models").ChannelMember} [member]
  */
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Thread} thread
  * @property {boolean} [compact]
  * @extends {Component<Props, Env>}
  */

@@ -22,7 +22,7 @@ patch(ThreadService.prototype, {
         this.chatWindowService = services["mail.chat_window"];
     },
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
      */
     async fetchData(
@@ -140,7 +140,7 @@ patch(ThreadService.prototype, {
         return thread;
     },
     /**
-     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {import("models").Thread} thread
      * @param {import("@mail/core/web/suggested_recipient").SuggestedRecipient[]} dataList
      */
     async insertSuggestedRecipients(thread, dataList) {
@@ -224,13 +224,13 @@ patch(ThreadService.prototype, {
         super.open(thread, replaceNewMessageChatWindow);
     },
     /**
-     * @param {import("@mail/core/common/follower_model").Follower} follower
+     * @param {import("models").Follower} follower
      */
     removeRecipient(recipient) {
         recipient.followedThread.recipients.delete(recipient);
     },
     /**
-     * @param {import("@mail/core/common/follower_model").Follower} follower
+     * @param {import("models").Follower} follower
      */
     async removeFollower(follower) {
         await this.orm.call(follower.followedThread.model, "message_unsubscribe", [

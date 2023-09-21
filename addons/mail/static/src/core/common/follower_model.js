@@ -4,10 +4,10 @@ import { Record } from "@mail/core/common/record";
 
 /**
  * @typedef Data
- * @property {import("@mail/core/common/thread_model").Thread} followedThread
+ * @property {import("models").Thread} followedThread
  * @property {number} id
  * @property {Boolean} is_active
- * @property {import("@mail/core/common/partner_model").Data} partner
+ * @property {import("@mail/core/common/persona_model").Data} partner
  */
 
 export class Follower extends Record {

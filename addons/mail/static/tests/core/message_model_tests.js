@@ -12,7 +12,7 @@ QUnit.test("Message model properties", async (assert) => {
         model: "res.partner",
         name: "general",
     });
-    /** @type {import("@mail/core/common/message_model").Message} */
+    /** @type {import("models").Message} */
     const message = env.services["mail.store"].Message.insert({
         attachment_ids: [
             {

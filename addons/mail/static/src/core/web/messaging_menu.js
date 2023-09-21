@@ -93,7 +93,7 @@ export class MessagingMenu extends Component {
     }
 
     get threads() {
-        /** @type {import("@mail/core/common/thread_model").Thread[]} */
+        /** @type {import("models").Thread[]} */
         let threads = Object.values(this.store.Thread.records).filter(
             (thread) =>
                 thread.is_pinned || (thread.hasNeedactionMessages && thread.type !== "mailbox")
@@ -208,7 +208,7 @@ export class MessagingMenu extends Component {
 
     /**
      *
-     * @param {import("@mail/core/common/notification_group_model").NotificationGroup} failure
+     * @param {import("models").NotificationGroup} failure
      */
     onClickFailure(failure) {
         const originThreadIds = new Set(

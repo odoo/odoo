@@ -17,8 +17,8 @@ patch(ThreadService.prototype, {
         assignDefined(thread, data, ["requested_by_operator"]);
     },
     /**
-     * @param {import('@mail/core/common/persona_model').Persona} persona
-     * @param {import("@mail/core/common/thread_model").Thread} [thread]
+     * @param {import("models").Persona} persona
+     * @param {import("models").Thread} [thread]
      */
     avatarUrl(persona, thread) {
         if (persona?.type === "visitor" && thread?.id) {

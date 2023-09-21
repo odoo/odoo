@@ -6,7 +6,7 @@ import { Component, useState } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {import("models").Thread} thread
  * @property {string} size
  * @property {string} className
  * @extends {Component<Props, Env>}

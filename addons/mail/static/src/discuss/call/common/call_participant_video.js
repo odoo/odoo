@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
+ * @property {import("models").RtcSession} session
  * @property {MediaStream} [videoStream]
  * @extends {Component<Props, Env>}
  */
