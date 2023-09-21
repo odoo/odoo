@@ -32,7 +32,13 @@ export class Many2OneAvatarField extends Component {
 export const many2OneAvatarField = {
     ...many2OneField,
     component: Many2OneAvatarField,
+    extractProps(fieldInfo) {
+        const props = many2OneField.extractProps(...arguments);
+        props.canOpen = fieldInfo.viewType === "form";
+        return props;
+    },
 };
+
 export class Many2OneFieldPopover extends Many2OneField {
     static props = {
         ...Many2OneField.props,
@@ -96,7 +102,7 @@ export const kanbanMany2OneAvatarField = {
     component: KanbanMany2OneAvatarField,
     additionalClasses: ["o_field_many2one_avatar_kanban"],
     extractProps(fieldInfo, dynamicInfo) {
-        const props = many2OneField.extractProps(...arguments);
+        const props = many2OneAvatarField.extractProps(...arguments);
         props.isEditable = !dynamicInfo.readonly;
         return props;
     },

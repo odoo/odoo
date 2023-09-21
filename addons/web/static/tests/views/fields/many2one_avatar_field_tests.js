@@ -309,17 +309,34 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["openRecord"]);
     });
 
-    QUnit.test("readonly many2one_avatar should contain a link", async function (assert) {
-        await makeView({
-            type: "form",
-            serverData,
-            resModel: "partner",
-            resId: 1,
-            arch: `<form><field name="user_id" widget="many2one_avatar" readonly="1"/></form>`,
-        });
+    QUnit.test(
+        "readonly many2one_avatar in form view should contain a link",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: `<form><field name="user_id" widget="many2one_avatar" readonly="1"/></form>`,
+            });
 
-        assert.containsOnce(target, "[name='user_id'] a");
-    });
+            assert.containsOnce(target, "[name='user_id'] a");
+        }
+    );
+
+    QUnit.test(
+        "readonly many2one_avatar in list view should not contain a link",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                serverData,
+                resModel: "partner",
+                arch: `<tree><field name="user_id" widget="many2one_avatar"/></tree>`,
+            });
+
+            assert.containsNone(target, "[name='user_id'] a");
+        }
+    );
 
     QUnit.test("cancelling create dialog should clear value in the field", async function (assert) {
         serverData.views = {
