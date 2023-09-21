@@ -106,7 +106,7 @@ class PurchaseReport(models.Model):
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join {currency_table} ON currency_table.company_id = po.company_id
         """.format(
-            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
+            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
         )
         return from_str
 
