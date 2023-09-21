@@ -11,19 +11,19 @@ import { Record } from "@mail/core/common/record";
  */
 export class ChannelMember extends Record {
     static id = "id";
-    /** @type {Object.<number, import("models").Models["ChannelMember"]>} */
+    /** @type {Object.<number, import("models").ChannelMember>} */
     static records = {};
-    /** @returns {import("models").Models["ChannelMember"]} */
+    /** @returns {import("models").ChannelMember} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["ChannelMember"]} */
+    /** @returns {import("models").ChannelMember} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object|Array} data
-     * @returns {import("models").Models["ChannelMember"]}
+     * @returns {import("models").ChannelMember}
      */
     static insert(data) {
         const memberData = Array.isArray(data) ? data[1] : data;

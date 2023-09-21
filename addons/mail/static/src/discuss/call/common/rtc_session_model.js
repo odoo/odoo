@@ -4,19 +4,19 @@ import { Record } from "@mail/core/common/record";
 
 export class RtcSession extends Record {
     static id = "id";
-    /** @type {Object.<number, import("models").Models["RtcSession"]>} */
+    /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
-    /** @returns {import("models").Models["RtcSession"]} */
+    /** @returns {import("models").RtcSession} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["RtcSession"]} */
+    /** @returns {import("models").RtcSession} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {number, import("models").Models["RtcSession"]}
+     * @returns {number, import("models").RtcSession}
      */
     static insert(data) {
         const session = this.get(data) ?? this.new(data);

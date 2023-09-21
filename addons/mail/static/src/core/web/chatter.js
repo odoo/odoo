@@ -239,7 +239,7 @@ export class Chatter extends Component {
             this.store.env.services["user"].lang?.replace("_", "-"),
             { type: "unit" }
         );
-        if (this.state.thread.recipients.size > 5) {
+        if (this.state.thread.recipients.length > 5) {
             recipients.push("…");
         }
         return markup(formatter.format(recipients));
