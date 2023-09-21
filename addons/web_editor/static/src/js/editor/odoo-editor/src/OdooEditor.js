@@ -4703,7 +4703,7 @@ export class OdooEditor extends EventTarget {
             }
             if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
                 // Pasted content is a single URL.
-                const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
+                const url = /^https?:\/\//i.test(text) ? text : 'http://' + text;
                 const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(urlFileExtention.toLowerCase());
@@ -4797,7 +4797,7 @@ export class OdooEditor extends EventTarget {
                 for (let i = 0; i < splitAroundUrl.length; i++) {
                     const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                         ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
+                        : 'http://' + splitAroundUrl[i];
                     // Even indexes will always be plain text, and odd indexes will always be URL.
                     // A url cannot be transformed inside an existing link.
                     if (i % 2 && !selectionIsInsideALink) {

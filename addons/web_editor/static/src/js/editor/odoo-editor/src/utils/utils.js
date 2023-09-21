@@ -1524,7 +1524,7 @@ export function getUrlsInfosInString(string) {
         match;
     while ((match = URL_REGEX_WITH_INFOS.exec(string))) {
         infos.push({
-            url: match[2] ? match[0] : 'https://' + match[0],
+            url: match[2] ? match[0] : 'http://' + match[0],
             label: match[0],
             index: match.index,
             length: match[0].length,

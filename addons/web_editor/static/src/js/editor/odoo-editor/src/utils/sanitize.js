@@ -107,7 +107,7 @@ export function deduceURLfromText(text, link) {
            // Avoid converting a http link to https.
            return currentHttpProtocol + match[0];
        } else {
-           return 'https://' + match[0];
+           return 'http://' + match[0];
        }
    }
    // Check for telephone url.
