@@ -223,7 +223,7 @@ export const PosDB = core.Class.extend({
                 }
             }
             this.product_by_id[product.id] = product;
-            if (product.barcode) {
+            if (product.barcode && product.active) {
                 this.product_by_barcode[product.barcode] = product;
             }
         }
