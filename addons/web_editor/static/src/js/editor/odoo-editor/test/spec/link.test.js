@@ -680,14 +680,14 @@ describe('Link', () => {
                     window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await deleteBackward(editor);
                     window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await insertText(editor, '1');
+                    await insertText(editor, 'a');
                     window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await insertText(editor, '2');
+                    await insertText(editor, 'b');
                     window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await insertText(editor, '3');
+                    await insertText(editor, 'c');
                     window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
-                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
+                contentAfter: '<p>a<a href="#/">abc[]</a>c</p>',
             });
         });
         it('should delete the content from the link when popover is active', async () => {

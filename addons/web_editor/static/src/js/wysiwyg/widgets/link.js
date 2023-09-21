@@ -13,10 +13,9 @@ import {
     useState,
     useRef,
 } from "@odoo/owl";
+import { deduceURLfromText } from "@web_editor/js/editor/odoo-editor/src/utils/sanitize";
 
-const getDeepRange = OdooEditorLib.getDeepRange;
-const getInSelection = OdooEditorLib.getInSelection;
-const EMAIL_REGEX = OdooEditorLib.EMAIL_REGEX;
+const { getDeepRange, getInSelection, EMAIL_REGEX, PHONE_REGEX } = OdooEditorLib;
 
 /**
  * Allows to customize link content and style.
@@ -249,6 +248,15 @@ export class Link extends Component {
         }
         return url;
     }
+    _deduceUrl(text) {
+        text = text.trim();
+        if (/^(https?:|mailto:|tel:)/.test(text)) {
+            // Text begins with a known protocol, accept it as valid URL.
+            return text;
+        } else {
+            return deduceURLfromText(text, this.linkEl) || '';
+        }
+    }
     /**
      * Abstract method: return true if the URL should be stripped of its domain.
      *
@@ -291,17 +299,14 @@ export class Link extends Component {
             (type && size ? (' btn-' + size) : '');
         var isNewWindow = this._isNewWindow(url);
         var doStripDomain = this._doStripDomain();
-        const emailMatch = url.match(EMAIL_REGEX);
-        if (emailMatch) {
-            url = emailMatch[1] ? emailMatch[0] : 'mailto:' + emailMatch[0];
-        } else if (url.indexOf(location.origin) === 0 && doStripDomain) {
-            url = url.slice(location.origin.length);
+        if (this.state.url.indexOf(location.origin) === 0 && doStripDomain) {
+            this.state.url = this.state.url.slice(location.origin.length);
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
         return {
             content: content,
-            url: this._correctLink(url),
+            url: this._correctLink(this.state.url),
             classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
             customTextColor: customTextColor,
             customFill: customFill,
@@ -538,13 +543,7 @@ export class Link extends Component {
             this.state.originalText = this.state.originalText ? this.state.originalText.replace(/[ \t\r\n]+/g, ' ') : '';
         }
 
-
-        if (!this.state.url) {
-            const urls = this.state.originalText.match(OdooEditorLib.URL_REGEX_WITH_INFOS);
-            if (urls) {
-                this.state.url = urls[0];
-            }
-        }
+        this.state.url ||= this._deduceUrl(this.state.originalText, this.linkEl);
 
         if (this.linkEl) {
             this.initialNewWindow = this.initialNewWindow || this.linkEl.target === '_blank';
@@ -625,6 +624,8 @@ export class Link extends Component {
      * @private
      */
     __onURLInput() {
+        const inputValue = this.$el[0].querySelector('#o_link_dialog_url_input').value;
+        this.state.url = this._deduceUrl(inputValue, this.linkEl) || inputValue;
         this._onURLInput(...arguments);
     }
     /**
@@ -634,7 +635,7 @@ export class Link extends Component {
         this._savedURLInputOnDestroy = true;
         var $linkUrlInput = this.$el.find('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
-        let isLink = !EMAIL_REGEX.test(value);
+        let isLink = !EMAIL_REGEX.test(value) && !PHONE_REGEX.test(value);
         this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
         this.$el.find('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
     }
