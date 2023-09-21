@@ -7,7 +7,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { modelRegistry, Record, RecordInverses, RecordList, RecordSet } from "./record";
+import { modelRegistry, Record, RecordInverses, RecordList } from "./record";
 
 export class Store {
     /** @type {typeof import("@mail/core/web/activity_model").Activity} */
@@ -218,18 +218,13 @@ export const storeService = {
                             // Relational fields contain symbols for detection in original class.
                             // This constructor is called on genuine records:
                             // - 'one' fields => undefined
-                            // - 'many' fields => RecordList or RecordSet
+                            // - 'many' fields => RecordList
                             let newVal;
                             if (this[name] === Record.one()) {
                                 newVal = undefined;
                             }
-                            if (this[name] === Record.List()) {
+                            if (this[name] === Record.many()) {
                                 newVal = new RecordList();
-                            }
-                            if (this[name] === Record.Set()) {
-                                newVal = new RecordSet();
-                            }
-                            if ([Record.Set(), Record.List()].includes(this[name])) {
                                 newVal.__store__ = res;
                                 newVal.name = name;
                                 newVal.owner = this;
@@ -243,7 +238,7 @@ export const storeService = {
                             get(target, name, receiver) {
                                 if (name !== "__rels__" && receiver.__rels__.has(name)) {
                                     const l1 = receiver.__rels__.get(name);
-                                    if (l1 instanceof RecordList || l1 instanceof RecordSet) {
+                                    if (l1 instanceof RecordList) {
                                         return l1;
                                     }
                                     return res.get(l1);
@@ -270,7 +265,7 @@ export const storeService = {
                                         const r1 = receiver;
                                         /** @type {RecordList<Record>} */
                                         const l1 = r1.__rels__.get(name);
-                                        /** @type {Record[]|Set<Record>|RecordList<Record>|RecordSet<Record>} */
+                                        /** @type {Record[]|Set<Record>|RecordList<Record>} */
                                         const collection = val;
                                         const oldRecords = l1.slice();
                                         l1.__list__ = [];
@@ -280,30 +275,6 @@ export const storeService = {
                                         for (const r3 of collection) {
                                             l1.__list__.push(r3.localId);
                                             r3.__invs__.add(r1.localId, name);
-                                        }
-                                    } else if (oldVal instanceof RecordSet) {
-                                        const r1 = receiver;
-                                        /** @type {RecordSet<Record>} */
-                                        const l1 = r1.__rels__.get(name);
-                                        /** @type {Record[]|Set<Record>|RecordList<Record>|RecordSet<Record>} */
-                                        const collection = val;
-                                        const oldRecords = new Set();
-                                        const newRecords = new Set();
-                                        for (const r of collection) {
-                                            if (!l1.__set__.has(r?.localId)) {
-                                                newRecords.add(r);
-                                            }
-                                        }
-                                        for (const r of r1) {
-                                            if (r.notIn(oldRecords)) {
-                                                oldRecords.add(r);
-                                            }
-                                        }
-                                        for (const r of oldRecords) {
-                                            r1.delete(r);
-                                        }
-                                        for (const r of newRecords) {
-                                            r1.add(r);
                                         }
                                     } else {
                                         const r1 = receiver;
@@ -338,7 +309,7 @@ export const storeService = {
             const obj = new Model();
             detecting = false;
             for (const [name, val] of Object.entries(obj)) {
-                if (![Record.one(), Record.List(), Record.Set()].includes(val)) {
+                if (![Record.one(), Record.many()].includes(val)) {
                     continue;
                 }
                 Class.__rels__.add(name);

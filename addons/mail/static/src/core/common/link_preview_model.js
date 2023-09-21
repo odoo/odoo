@@ -4,17 +4,17 @@ import { Record } from "@mail/core/common/record";
 
 export class LinkPreview extends Record {
     static id = "id";
-    /** @returns {import("models").Models["LinkPreview"]} */
+    /** @returns {import("models").LinkPreview} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["LinkPreview"]} */
+    /** @returns {import("models").LinkPreview} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {import("models").Models["LinkPreview"]}
+     * @returns {import("models").LinkPreview}
      */
     static insert(data) {
         const message = this.store.Message.get(data.message_id);

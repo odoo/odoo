@@ -35,13 +35,13 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {
     static id = "id";
-    /** @type {Object.<number, import("models").Models["Activity"]>} */
+    /** @type {Object.<number, import("models").Activity>} */
     static records = {};
-    /** @returns {import("models").Models["Activity"]} */
+    /** @returns {import("models").Activity} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["Activity"]} */
+    /** @returns {import("models").Activity} */
     static get(data) {
         return super.get(data);
     }
@@ -49,7 +49,7 @@ export class Activity extends Record {
      * @param {Data} data
      * @param {Object} [param1]
      * @param {boolean} param1.broadcast
-     * @returns {import("models").Models["Activity"]}
+     * @returns {import("models").Activity}
      */
     static insert(data, { broadcast = true } = {}) {
         const activity = this.get(data) ?? this.new(data);

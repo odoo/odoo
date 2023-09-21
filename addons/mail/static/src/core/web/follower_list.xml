@@ -6,15 +6,15 @@
         <a class="dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
             Add Followers
         </a>
-        <div t-if="props.thread.followers.size > 0" role="separator" class="dropdown-divider"/>
+        <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
     </t>
     <t t-if="props.thread.selfFollower">
         <t t-call="mail.Follower">
             <t t-set="follower" t-value="props.thread.selfFollower"/>
         </t>
-        <div t-if="props.thread.followers.size > 0" role="separator" class="dropdown-divider"/>
+        <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
     </t>
-    <t t-if="props.thread.followers.size > 0">
+    <t t-if="props.thread.followers.length > 0">
         <t t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
             <t t-call="mail.Follower">
                 <t t-set="follower" t-value="follower"/>

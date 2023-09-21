@@ -5,8 +5,7 @@ import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
 
-const MANY_LIST_SYM = Symbol("many-list");
-const MANY_SET_SYM = Symbol("many-set");
+const MANY_SYM = Symbol("many");
 const ONE_SYM = Symbol("one");
 const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
@@ -63,9 +62,23 @@ export class RecordInverses {
 
 /**
  * @template {Record} R
- * @augments RecordCollection
  */
 export class RecordList extends Array {
+    /** @type {Record} */
+    owner;
+    /** @type {string} */
+    name;
+    /** @type {import("@mail/core/common/store_service").Store} */
+    __store__;
+    /** @param {Record} r3 */
+    __addInverse__(r3) {
+        r3.__invs__.add(this.owner.localId, this.name);
+    }
+    /** @param {Record} r2 */
+    __deleteInverse__(r2) {
+        r2.__invs__.delete(this.owner.localId, this.name);
+    }
+
     /** @type {string[]} */
     __list__ = [];
 
@@ -113,6 +126,13 @@ export class RecordList extends Array {
         });
     }
 
+    /**
+     * @param {number} index
+     * @returns {R}
+     */
+    at(index) {
+        return this.__store__.get(this.__list__.at(index));
+    }
     /** @param {R[]} records */
     push(...records) {
         this.__list__.push(...records.map((r3) => r3.localId));
@@ -227,6 +247,14 @@ export class RecordList extends Array {
             .map((localId) => this.__store__.get(localId))
             .concat(...collections.map((c) => [...c]));
     }
+    /** @param {R}  */
+    delete(r) {
+        const index = this.indexOf(r);
+        if (index === -1) {
+            return;
+        }
+        this.splice(index, 1);
+    }
     /** @yields {R} */
     *[Symbol.iterator]() {
         for (const localId of this.__list__) {
@@ -234,97 +262,6 @@ export class RecordList extends Array {
         }
     }
 }
-
-/**
- * @template {Record} R
- * @augments RecordCollection
- */
-export class RecordSet extends Set {
-    constructor() {
-        super();
-        return new Proxy(this, {
-            /** @param {RecordSet<R>} receiver */
-            get(target, name, receiver) {
-                if (name === "size") {
-                    return receiver.__set__.size;
-                }
-                return Reflect.get(target, name, receiver);
-            },
-        });
-    }
-
-    /** @type {Set<string>} */
-    __set__ = new Set();
-    /** @param {R} r3 */
-    add(r3) {
-        this.__set__.add(r3?.localId);
-        if (r3) {
-            this.__addInverse__(r3);
-        }
-    }
-    /** @param {R} r2 */
-    delete(r2) {
-        this.__set__.delete(r2?.localId);
-        if (r2) {
-            this.__deleteInverse__(r2);
-        }
-    }
-    clear() {
-        for (const r of this) {
-            this.__deleteInverse__(r);
-        }
-        this.__set__.clear();
-    }
-    /** @param {R} record */
-    has(record) {
-        return this.__set__.has(record?.localId);
-    }
-    /** @yields {R} */
-    *values() {
-        for (const localId of this.__set__) {
-            yield this.__store__.get(localId);
-        }
-    }
-    /** @yields {R} */
-    *keys() {
-        for (const localId of this.__set__) {
-            yield this.__store__.get(localId);
-        }
-    }
-    /** @yields {R} */
-    *[Symbol.iterator]() {
-        for (const localId of this.__set__) {
-            yield this.__store__.get(localId);
-        }
-    }
-}
-
-class RecordCollection {
-    /** @type {Record} */
-    owner;
-    /** @type {string} */
-    name;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    __store__;
-    /** @param {Record} r3 */
-    __addInverse__(r3) {
-        r3.__invs__.add(this.owner.localId, this.name);
-    }
-    /** @param {Record} r2 */
-    __deleteInverse__(r2) {
-        r2.__invs__.delete(this.owner.localId, this.name);
-    }
-}
-
-delete RecordCollection.prototype.constructor;
-const RecordCollectionMixin = Object.fromEntries(
-    Object.getOwnPropertyNames(RecordCollection.prototype).map((name) => [
-        name,
-        RecordCollection.prototype[name],
-    ])
-);
-Object.assign(RecordList.prototype, RecordCollectionMixin);
-Object.assign(RecordSet.prototype, RecordCollectionMixin);
 
 export class Record {
     static id;
@@ -414,16 +351,8 @@ export class Record {
      * @param {M} modelName
      * @returns {import("models").Models[M][]}
      */
-    static List(modelName) {
-        return MANY_LIST_SYM;
-    }
-    /**
-     * @template {keyof import("model").Models} M
-     * @param {M} modelName
-     * @returns {Set<import("models").Models[M]>}
-     */
-    static Set(modelName) {
-        return MANY_SET_SYM;
+    static many(modelName) {
+        return MANY_SYM;
     }
     /**
      * @param {Object} data
@@ -436,7 +365,7 @@ export class Record {
      * rather than the record(s). This allows data in store and models being normalized,
      * which eases handling relations notably in when a record gets deleted.
      *
-     * @type {Map<string, string|RecordList|RecordSet>}
+     * @type {Map<string, string|RecordList>}
      */
     __rels__ = new Map();
     /** Track inverse relations of current record. */
@@ -472,8 +401,6 @@ export class Record {
         for (const [name, l1] of r1.__rels__.entries()) {
             if (l1 instanceof RecordList) {
                 r1[name] = [];
-            } else if (l1 instanceof RecordSet) {
-                r1[name].clear();
             } else {
                 r1[name] = undefined;
             }
@@ -489,11 +416,8 @@ export class Record {
                 const l2 = r2.__rels__.get(name2);
                 if (l2 instanceof RecordList) {
                     for (let c = 0; c < count; c++) {
-                        const index = r2[name2].findIndex((i) => i.eq(r1));
-                        r2[name2].splice(index, 1);
+                        r2[name2].delete(r1);
                     }
-                } else if (l2 instanceof RecordSet) {
-                    r2[name2].delete(r1);
                 } else {
                     r2[name2] = undefined;
                 }
@@ -513,7 +437,7 @@ export class Record {
         return !this.eq(record);
     }
 
-    /** @param {Record[]|RecordList|RecordSet} collection */
+    /** @param {Record[]|RecordList} collection */
     in(collection) {
         if (!collection) {
             return false;
@@ -521,14 +445,11 @@ export class Record {
         if (collection instanceof RecordList) {
             return collection.includes(this);
         }
-        if (collection instanceof RecordSet) {
-            return collection.has(this);
-        }
         // Array
         return collection.some((record) => record.eq(this));
     }
 
-    /** @param {Record[]|RecordList|RecordSet} collection */
+    /** @param {Record[]|RecordList} collection */
     notIn(collection) {
         return !this.in(collection);
     }

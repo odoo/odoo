@@ -90,18 +90,19 @@ patch(ThreadService.prototype, {
                     followedThread: thread,
                     ...followerData,
                 });
-                if (follower.notEq(thread.selfFollower)) {
-                    thread.followers.add(follower);
+                if (follower.notEq(thread.selfFollower) && follower.notIn(thread.followers)) {
+                    thread.followers.push(follower);
                 }
             }
             thread.recipientsCount = result.recipientsCount;
             for (const recipientData of result.recipients) {
-                thread.recipients.add(
-                    this.store.Follower.insert({
-                        followedThread: thread,
-                        ...recipientData,
-                    })
-                );
+                const recipient = this.store.Follower.insert({
+                    followedThread: thread,
+                    ...recipientData,
+                });
+                if (recipient.notIn(thread.recipients)) {
+                    thread.recipients.push(recipient);
+                }
             }
         }
         if ("suggestedRecipients" in result) {
@@ -172,18 +173,19 @@ patch(ThreadService.prototype, {
         }
         super.leaveChannel(...arguments);
     },
+    /** @param {import("models").Thread} thread */
     async loadMoreFollowers(thread) {
         const followers = await this.orm.call(thread.model, "message_get_followers", [
             [thread.id],
-            Array.from(thread.followers).at(-1).id,
+            thread.followers.at(-1).id,
         ]);
         for (const data of followers) {
             const follower = this.store.Follower.insert({
                 followedThread: thread,
                 ...data,
             });
-            if (follower.notEq(thread.selfFollower)) {
-                thread.followers.add(follower);
+            if (follower.notEq(thread.selfFollower) && follower.notIn(thread.followers)) {
+                thread.followers.push(follower);
             }
         }
     },
@@ -191,16 +193,17 @@ patch(ThreadService.prototype, {
         const recipients = await this.orm.call(
             thread.model,
             "message_get_followers",
-            [[thread.id], Array.from(thread.recipients).at(-1).id],
+            [[thread.id], thread.recipients.at(-1).id],
             { filter_recipients: true }
         );
         for (const data of recipients) {
-            thread.recipients.add(
-                this.store.Follower.insert({
-                    followedThread: thread,
-                    ...data,
-                })
-            );
+            const recipient = this.store.Follower.insert({
+                followedThread: thread,
+                ...data,
+            });
+            if (recipient.notIn(thread.recipients)) {
+                thread.recipients.push(recipient);
+            }
         }
     },
     open(thread, replaceNewMessageChatWindow) {
@@ -223,9 +226,7 @@ patch(ThreadService.prototype, {
         }
         super.open(thread, replaceNewMessageChatWindow);
     },
-    /**
-     * @param {import("models").Follower} follower
-     */
+    /** @param {import("models").Follower} recipient */
     removeRecipient(recipient) {
         recipient.followedThread.recipients.delete(recipient);
     },

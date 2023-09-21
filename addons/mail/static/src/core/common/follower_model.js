@@ -12,19 +12,19 @@ import { Record } from "@mail/core/common/record";
 
 export class Follower extends Record {
     static id = "id";
-    /** @type {Object.<number, import("models").Models["Follower"]>} */
+    /** @type {Object.<number, import("models").Follower>} */
     static records = {};
-    /** @returns {import("models").Models["Follower"]} */
+    /** @returns {import("models").Follower} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["Follower"]} */
+    /** @returns {import("models").Follower} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Data} data
-     * @returns {import("models").Models["Follower"]}
+     * @returns {import("models").Follower}
      */
     static insert(data) {
         const follower = this.get(data) ?? this.new(data);

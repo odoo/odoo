@@ -3,6 +3,7 @@
 import { Message } from "@mail/core/common/message";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { Message as MessageModel } from "@mail/core/common/message_model";
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { markup, reactive } from "@odoo/owl";
@@ -18,7 +19,7 @@ patch(Thread.prototype, {
         super.setup();
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;
-        this.pinnedMessages = Thread.Set("Message");
+        this.pinnedMessages = Record.many("Message");
     },
 });
 
@@ -124,7 +125,9 @@ export class MessagePin {
             (pinnedAt !== undefined || message.isEmpty)
         ) {
             if (pinnedAt && !message.isEmpty) {
-                message.originThread.pinnedMessages.add(message);
+                if (message.notIn(message.originThread.pinnedMessages)) {
+                    message.originThread.pinnedMessages.push(message);
+                }
                 message.pinnedAt = pinnedAt;
             } else {
                 delete message.pinnedAt;

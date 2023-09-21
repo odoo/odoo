@@ -92,11 +92,11 @@ export class Thread extends Record {
     model;
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    attachments = Record.List("Attachment");
+    attachments = Record.many("Attachment");
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
-    channelMembers = Record.List("ChannelMember");
+    channelMembers = Record.many("ChannelMember");
     /** @type {Object<number, import("models").RtcSession>} */
     rtcSessions = {};
     rtcInvitingSession = Record.one("RtcSession");
@@ -109,7 +109,7 @@ export class Thread extends Record {
     customName;
     /** @type {string} */
     description;
-    followers = Record.Set("Follower");
+    followers = Record.many("Follower");
     selfFollower = Record.one("Follower");
     /** @type {integer|undefined} */
     followersCount;
@@ -132,7 +132,7 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      */
-    messages = Record.List("Message");
+    messages = Record.many("Message");
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -142,7 +142,7 @@ export class Thread extends Record {
      * `messages` list. This is a temporary storage to ensure nothing is lost
      * when fetching newer messages.
      */
-    pendingNewMessages = Record.List("Message");
+    pendingNewMessages = Record.many("Message");
     /**
      * Contains continuous sequence of needaction messages to show in messaging menu.
      * Messages are ordered from older to most recent.
@@ -154,7 +154,7 @@ export class Thread extends Record {
      *
      * @type {import("models").Message[]}
      */
-    needactionMessages = Record.List("Message");
+    needactionMessages = Record.many("Message");
     /** @type {string} */
     name;
     /** @type {number|false} */
@@ -181,7 +181,6 @@ export class Thread extends Record {
     lastServerMessage = Record.one("Message");
     /** @type {Boolean} */
     is_editable;
-    recipients = Record.Set("Follower");
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -199,7 +198,7 @@ export class Thread extends Record {
     get followersFullyLoaded() {
         return (
             this.followersCount ===
-            (this.selfFollower ? this.followers.size + 1 : this.followers.size)
+            (this.selfFollower ? this.followers.length + 1 : this.followers.length)
         );
     }
 

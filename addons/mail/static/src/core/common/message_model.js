@@ -14,19 +14,19 @@ const { DateTime } = luxon;
 
 export class Message extends Record {
     static id = "id";
-    /** @type {Object.<number, import("models").Models["Message"]>} */
+    /** @type {Object.<number, import("models").Message>} */
     static records = {};
-    /** @returns {import("models").Models["Message"]} */
+    /** @returns {import("models").Message} */
     static new(data) {
         return super.new(data);
     }
-    /** @returns {import("models").Models["Message"]} */
+    /** @returns {import("models").Message} */
     static get(data) {
         return super.get(data);
     }
     /**
      * @param {Object} data
-     * @returns {import("models").Models["Message"]}
+     * @returns {import("models").Message}
      */
     static insert(data) {
         if (data.res_id) {
@@ -40,7 +40,7 @@ export class Message extends Record {
         return message;
     }
 
-    attachments = Record.List("Attachment");
+    attachments = Record.many("Attachment");
     author = Record.one("Persona");
     /** @type {string} */
     body;
@@ -56,15 +56,15 @@ export class Message extends Record {
     isStarred;
     /** @type {boolean} */
     isTransient;
-    linkPreviews = Record.List("LinkPreview");
+    linkPreviews = Record.many("LinkPreview");
     /** @type {number[]} */
     needaction_partner_ids = [];
     /** @type {number[]} */
     history_partner_ids = [];
     parentMessage = Record.one("Message");
-    reactions = Record.List("MessageReactions");
-    notifications = Record.List("Notification");
-    recipients = Record.List("Persona");
+    reactions = Record.many("MessageReactions");
+    notifications = Record.many("Notification");
+    recipients = Record.many("Persona");
     /** @type {number|string} */
     resId;
     /** @type {string|undefined} */

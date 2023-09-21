@@ -16,7 +16,7 @@ export function useSuggestion() {
             comp.props.composer.rawMentions.threadIds.length = 0;
         },
         clearCannedReponses() {
-            comp.props.composer.cannedResponses.clear();
+            comp.props.composer.cannedResponses = [];
         },
         clearSearch() {
             Object.assign(self.search, {
@@ -104,7 +104,7 @@ export function useSuggestion() {
                 comp.props.composer.rawMentions.threadIds.add(option.thread.id);
             }
             if (option.cannedResponse) {
-                comp.props.composer.cannedResponses.add(
+                comp.props.composer.cannedResponses.push(
                     store.CannedResponse.insert(option.cannedResponse)
                 );
             }
