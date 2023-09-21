@@ -94,9 +94,8 @@ contract_costs AS (
         AND date_trunc('month', com.expiration_date) >= date_trunc('month', d)
         AND com.cost_frequency = 'monthly'
     LEFT JOIN fleet_vehicle_log_contract coy ON coy.vehicle_id = ve.id
-        AND date_trunc('month', coy.date) = date_trunc('month', d)
-        AND date_trunc('month', coy.start_date) <= date_trunc('month', d)
-        AND date_trunc('month', coy.expiration_date) >= date_trunc('month', d)
+        AND d BETWEEN coy.start_date and coy.expiration_date
+        AND date_part('month', coy.date) = date_part('month', d)
         AND coy.cost_frequency = 'yearly'
     WHERE
         ve.active
