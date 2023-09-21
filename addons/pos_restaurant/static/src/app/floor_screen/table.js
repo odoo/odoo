@@ -59,6 +59,14 @@ export class Table extends Component {
 
         return `bottom: ${bottom}px; left: ${left}px;`;
     }
+    computePosition(index, nbrHorizontal, widthTable) {
+        const position_h = widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
+        const position_v =
+            widthTable * Math.floor(index / nbrHorizontal) +
+            10 +
+            Math.floor(index / nbrHorizontal) * 10;
+        return { position_h, position_v };
+    }
     get style() {
         const table = this.props.table;
         let style = "";
@@ -86,15 +94,15 @@ export class Table extends Component {
         if (this.pos.floorPlanStyle == "kanban") {
             const floor = table.floor;
             const index = floor.tables.indexOf(table);
-            const minWidth = 100 + 20;
+            const minWidth = 120;
             const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
             const widthTable = (window.innerWidth - nbrHorizontal * 10) / nbrHorizontal;
-            const position_h =
-                widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
-            const position_v =
-                (widthTable + 25) * Math.floor(index / nbrHorizontal) +
-                10 +
-                Math.floor(index / nbrHorizontal) * 10;
+            const { position_h, position_v } = this.computePosition(
+                index,
+                nbrHorizontal,
+                widthTable
+            );
+
             this.state.containerHeight = widthTable;
             this.state.containerWidth = widthTable;
 
@@ -156,7 +164,12 @@ export class Table extends Component {
         return countClass;
     }
     get customerCountDisplay() {
-        return `${this.pos.getCustomerCount(this.props.table.id)}/${this.props.table.seats}`;
+        const customerCount = this.pos.getCustomerCount(this.props.table.id);
+        if (customerCount == 0) {
+            return `${this.props.table.seats}`;
+        } else {
+            return `${customerCount}/${this.props.table.seats}`;
+        }
     }
     _getNotifications() {
         const table = this.props.table;
