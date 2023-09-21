@@ -5,6 +5,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field string="POS Product Category" name="pos_categ_ids" filter_domain="[('pos_categ_ids', 'child_of', raw_value)]"/>
+            </field>
             <filter name="filter_to_sell" position="before">
                <filter name="filter_to_availabe_pos" string="Available in POS" domain="[('available_in_pos', '=', True)]"/>
             </filter>
@@ -172,6 +175,9 @@
         <field name="arch" type="xml">
             <field name="categ_id" position="before">
                 <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" optional="hide" string="POS Product Category"/>
+            </field>
+            <field name="pos_categ_ids" position="after">
+                <field name="available_in_pos" groups="point_of_sale.group_pos_user" optional="hide"/>
             </field>
         </field>
     </record>

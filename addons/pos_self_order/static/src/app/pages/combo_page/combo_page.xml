@@ -80,7 +80,7 @@
         </div>
         <div class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm">
             <button class="btn btn-secondary h-100  w-100 p-0 m-0 fs-2 flex-grow-1 text-uppercase" t-on-click="back">Discard</button>
-            <button t-if="!state.showResume and state.showQtyButtons" class="btn btn-primary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="next">Next</button>
+            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="next">Next</button>
             <button t-if="state.showResume" class="btn btn-primary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="addToCart">Add to cart</button>
         </div>
     </t>

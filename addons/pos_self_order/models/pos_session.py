@@ -40,3 +40,8 @@ class PosSession(models.Model):
             })
 
         return sessions
+
+    def _loader_params_product_product(self):
+        res = super()._loader_params_product_product()
+        res['search_params']['fields'].append('self_order_available')
+        return res

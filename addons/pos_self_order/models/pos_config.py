@@ -261,6 +261,7 @@ class PosConfig(models.Model):
                 [
                     ("id", "not in", product_ids.ids),
                     ("available_in_pos", "=", True),
+                    ("self_order_available", "=", True),
                     *(
                         self.limit_categories
                         and self.iface_available_categ_ids

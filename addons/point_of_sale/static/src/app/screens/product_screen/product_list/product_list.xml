@@ -25,6 +25,8 @@
                             price="product.getFormattedUnitPrice()"
                             imageUrl="product.getImageUrl()"
                             onClick="() =>this.pos.addProductToCurrentOrder(product)"
+                            productInfo="true"
+                            onProductInfoClick="() => this.onProductInfoClick(product)"
                         />
                     </t>
                 </div>

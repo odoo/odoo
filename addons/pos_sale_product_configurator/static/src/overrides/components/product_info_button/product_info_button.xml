@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="pos_sale_product_configurator.ProductInfoButton" t-inherit="point_of_sale.ProductInfoButton" t-inherit-mode="extension">
-        <xpath expr="//button[hasclass('control-button')]" position="attributes">
-            <attribute name="t-att-class">{ 'highlight text-bg-primary': this.hasOptionalProduct() }</attribute>
-        </xpath>
-    </t>
-</templates>
