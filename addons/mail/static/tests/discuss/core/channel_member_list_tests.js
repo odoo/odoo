@@ -64,7 +64,7 @@ QUnit.test("should have correct members in member list", async () => {
     openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { count: 2 });
-    await contains(`.o-discuss-ChannelMember:contains("${pyEnv.currentPartner.name}")`);
+    await contains(".o-discuss-ChannelMember", { text: pyEnv.currentPartner.name });
     await contains(".o-discuss-ChannelMember", { text: "Demo" });
 });
 

@@ -709,7 +709,7 @@ QUnit.test("composer: paste attachments", async () => {
     ];
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { count: 0 });
-    pasteFiles($(".o-mail-Composer-input")[0], files);
+    await pasteFiles(".o-mail-Composer-input", files);
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 

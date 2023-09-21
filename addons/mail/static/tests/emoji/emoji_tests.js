@@ -68,16 +68,16 @@ QUnit.test("Basic keyboard navigation", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].o-active");
+    await contains(".o-EmojiPicker-content .o-Emoji[data-index='0'].o-active");
     triggerHotkey("ArrowRight");
-    await contains(".o-EmojiPicker-content .o-Emoji[data-index=1].o-active");
+    await contains(".o-EmojiPicker-content .o-Emoji[data-index='1'].o-active");
     triggerHotkey("ArrowDown");
-    await contains(`.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW + 1}].o-active`);
+    await contains(`.o-EmojiPicker-content .o-Emoji[data-index='${EMOJI_PER_ROW + 1}'].o-active`);
     triggerHotkey("ArrowLeft");
-    await contains(`.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].o-active`);
+    await contains(`.o-EmojiPicker-content .o-Emoji[data-index='${EMOJI_PER_ROW}'].o-active`);
     triggerHotkey("ArrowUp");
-    await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].o-active");
-    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].o-active").data(
+    await contains(".o-EmojiPicker-content .o-Emoji[data-index='0'].o-active");
+    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index='0'].o-active").data(
         "codepoints"
     );
     triggerHotkey("Enter");
@@ -95,9 +95,11 @@ QUnit.test("recent category (basic)", async () => {
     await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
-    await contains(
-        "span:contains(Frequently used) ~ .o-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
-    );
+    await contains(".o-Emoji", {
+        text: "😀",
+        after: ["span", { text: "Frequently used" }],
+        before: ["span", { text: "Smileys & Emotion" }],
+    });
 });
 
 QUnit.test("emoji usage amount orders frequent emojis", async () => {
@@ -112,15 +114,18 @@ QUnit.test("emoji usage amount orders frequent emojis", async () => {
     await click("button[aria-label='Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji", { text: "👽" });
     await click("button[aria-label='Emojis']");
-    await contains(
-        "span:contains(Frequently used) ~ .o-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
-    );
-    await contains(
-        "span:contains(Frequently used) ~ .o-Emoji:contains(👽) ~ span:contains(Smileys & Emotion)"
-    );
-    await contains(
-        "span:contains(Frequently used) ~ .o-Emoji:contains(👽) ~ .o-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
-    );
+    await contains(".o-Emoji", {
+        text: "👽",
+        after: ["span", { text: "Frequently used" }],
+        before: [
+            ".o-Emoji",
+            {
+                text: "😀",
+                after: ["span", { text: "Frequently used" }],
+                before: ["span", { text: "Smileys & Emotion" }],
+            },
+        ],
+    });
 });
 
 QUnit.test("posting :wink: in message should impact recent", async () => {
@@ -131,9 +136,11 @@ QUnit.test("posting :wink: in message should impact recent", async () => {
     await insertText(".o-mail-Composer-input", ":wink:");
     await click(".o-mail-Composer-send:enabled");
     await click("button[aria-label='Emojis']");
-    await contains(
-        "span:contains(Frequently used) ~ .o-Emoji:contains(😉) ~ span:contains(Smileys & Emotion)"
-    );
+    await contains(".o-Emoji", {
+        text: "😉",
+        after: ["span", { text: "Frequently used" }],
+        before: ["span", { text: "Smileys & Emotion" }],
+    });
 });
 
 QUnit.test("posting :snowman: in message should impact recent", async () => {
@@ -145,9 +152,11 @@ QUnit.test("posting :snowman: in message should impact recent", async () => {
     await insertText(".o-mail-Composer-input", ":snowman:");
     await click(".o-mail-Composer-send:enabled");
     await click("button[aria-label='Emojis']");
-    await contains(
-        "span:contains(Frequently used) ~ .o-Emoji:contains(☃️) ~ span:contains(Smileys & Emotion)"
-    );
+    await contains(".o-Emoji", {
+        text: "☃️",
+        after: ["span", { text: "Frequently used" }],
+        before: ["span", { text: "Smileys & Emotion" }],
+    });
 });
 
 QUnit.test("first category should be highlighted by default", async () => {

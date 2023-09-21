@@ -56,8 +56,7 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async () => 
     }
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains("button:contains(Load More) ~ .o-mail-Message", { count: 30 });
-    await contains(".o-mail-Message", { count: 30 });
+    await contains("button", { text: "Load More", before: [".o-mail-Message", { count: 30 }] });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", { count: 60 });
@@ -574,7 +573,8 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
+        { text: "@Pynya's spokesman" }
     );
 });
 
@@ -608,10 +608,12 @@ QUnit.test("mention 2 different partners that have the same name", async () => {
     await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]`,
+        { text: "@TestPartner" }
     );
     await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]:contains("@TestPartner")`
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]`,
+        { text: "@TestPartner" }
     );
 });
 
@@ -668,10 +670,12 @@ QUnit.test("mention 2 different channels that have the same name", async () => {
     await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
     await click(".o-mail-Composer-send:enabled");
     await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:contains("#my channel")`
+        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]`,
+        { text: "#my channel" }
     );
     await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]:contains("#my channel")`
+        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]`,
+        { text: "#my channel" }
     );
 });
 
@@ -697,7 +701,8 @@ QUnit.test(
         await contains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
         await click(".o-mail-Composer-send:enabled");
         await contains(
-            `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@TestPartner")`
+            `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
+            { text: "@TestPartner" }
         );
     }
 );
@@ -931,10 +936,20 @@ QUnit.test(
             [messageId],
         ]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", formattedMessage);
-        await contains("button:contains(Inbox) .badge", { text: "1" });
+        await contains("button", {
+            containsMulti: [
+                ["div", { text: "Inbox" }],
+                [".badge", { text: "1" }],
+            ],
+        });
         await click("button span", { text: "General" });
         await contains(".o-discuss-badge", { count: 0 });
-        await contains("button:contains(Inbox) .badge", { count: 0 });
+        await contains("button", {
+            containsMulti: [
+                ["div", { text: "Inbox" }],
+                [".badge", { count: 0 }],
+            ],
+        });
         assert.verifySteps(["mark-all-messages-as-read"]);
     }
 );

@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains } from "@web/../tests/utils";
+import { click, contains, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("follow button");
 
@@ -35,7 +35,7 @@ QUnit.test("hover following button", async () => {
     });
     await contains(".fa-check + span", { text: "Following" });
     await contains(".fa-times + span", { count: 0, text: "Following" });
-    $("button:contains(Following)")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
+    await triggerEvents("button .fa-check + span", ["mouseenter"], { text: "Following" });
     await contains(".fa-times + span", { text: "Unfollow" });
     await contains(".fa-check + span", { count: 0, text: "Unfollow" });
 });

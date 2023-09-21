@@ -202,7 +202,7 @@ QUnit.test(
         await click("span", { text: "General" });
         await click("button[aria-label='Emojis']");
         await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");
-        await click("button:contains('GIFs')");
+        await click("button", { text: "GIFs" });
         await contains(".popover .o-discuss-GifPicker", { count: 0 });
         await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
     }

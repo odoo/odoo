@@ -432,16 +432,34 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     ]);
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button:contains(Inbox) .badge", { text: "2" });
-    await contains(".o-mail-DiscussSidebarChannel:contains(General) .badge", { text: "2" });
+    await contains("button", {
+        containsMulti: [
+            ["div", { text: "Inbox" }],
+            [".badge", { text: "2" }],
+        ],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        containsMulti: [
+            ["span", { text: "General" }],
+            [".badge", { text: "2" }],
+        ],
+    });
     await contains(".o-mail-Discuss-content .o-mail-Message", { count: 2 });
-    assert.notOk($("button:contains(Mark all read)")[0].disabled);
-
-    await click(".o-mail-Discuss-header button", { text: "Mark all read" });
-    await contains("button:contains(Inbox) .badge", { count: 0 });
-    await contains(".o-mail-DiscussSidebarChannel:contains(General) .badge", { count: 0 });
+    await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
+    await contains("button", {
+        containsMulti: [
+            ["div", { text: "Inbox" }],
+            [".badge", { count: 0 }],
+        ],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        containsMulti: [
+            ["span", { text: "General" }],
+            [".badge", { count: 0 }],
+        ],
+    });
     await contains(".o-mail-Message", { count: 0 });
-    assert.ok($("button:contains(Mark all read)")[0].disabled);
+    await contains("button:disabled", { text: "Mark all read" });
 });
 
 QUnit.test(
@@ -588,9 +606,9 @@ QUnit.test("error notifications should not be shown in Inbox", async () => {
     openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Demo User" });
-    await contains(
-        `.o-mail-Message-header a:contains(Demo User)[href*='/web#model=res.partner&id=${partnerId}']`
-    );
+    await contains(`.o-mail-Message-header a[href*='/web#model=res.partner&id=${partnerId}']`, {
+        text: "Demo User",
+    });
     await contains(".o-mail-Message-notification", { count: 0 });
 });
 
@@ -615,7 +633,6 @@ QUnit.test("emptying inbox displays rainbow man in inbox", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click("button", { text: "Mark all read" });
-    await contains("button:contains(Inbox) .badge", { count: 0 });
     await contains(".o_reward_rainbow");
 });
 
@@ -639,12 +656,22 @@ QUnit.test("emptying inbox doesn't display rainbow man in another thread", async
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains("button:contains(Inbox) .badge", { text: "1" });
+    await contains("button", {
+        containsMulti: [
+            ["div", { text: "Inbox" }],
+            [".badge", { text: "1" }],
+        ],
+    });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/mark_as_read", {
         message_ids: [messageId],
         needaction_inbox_counter: 0,
     });
-    await contains("button:contains(Inbox) .badge", { count: 0 });
+    await contains("button", {
+        containsMulti: [
+            ["div", { text: "Inbox" }],
+            [".badge", { count: 0 }],
+        ],
+    });
     // weak test, no guarantee that we waited long enough for the potential rainbow man to show
     await contains(".o_reward_rainbow", { count: 0 });
 });

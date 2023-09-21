@@ -177,7 +177,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     await contains(".o-mail-Composer-input", { value: "Hello world !" });
 });
 
-QUnit.test("Composer type is kept when switching from aside to bottom", async (assert) => {
+QUnit.test("Composer type is kept when switching from aside to bottom", async () => {
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -186,12 +186,8 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    assert.hasClass(
-        $("button:contains(Log note)"),
-        "btn-primary",
-        "Active button should be the log note button"
-    );
-    assert.doesNotHaveClass($("button:contains(Send message)"), "btn-primary");
+    await contains("button.btn-primary", { text: "Log note" });
+    await contains("button:not(.btn-primary)", { text: "Send message" });
 });
 
 QUnit.test("chatter: drop attachments", async () => {
@@ -839,7 +835,7 @@ QUnit.test("Mentions in composer should still work when using pager", async () =
         { resIds: [partnerId_1, partnerId_2] }
     );
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await click(".o_pager_next");
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion");

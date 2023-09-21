@@ -54,9 +54,7 @@ QUnit.test('"New channel" item selection opens channel (new)', async () => {
 
 QUnit.test("new message [REQUIRE FOCUS]", async () => {
     await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await click('.o-mail-MessagingMenu button:contains("New Message")');
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector");
-    await contains(".o-discuss-ChannelSelector input:focus");
+    await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
+    await click(".o-mail-MessagingMenu button", { text: "New Message" });
+    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
 });

@@ -20,5 +20,5 @@ QUnit.test("auto-select 'Inbox' when discuss had channel as active thread", asyn
 
     await click("button", { text: "Mailboxes" });
     await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Mailboxes" });
-    await contains("button:contains(Inbox).active");
+    await contains("button.active", { text: "Inbox" });
 });

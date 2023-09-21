@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("message reply");
@@ -27,11 +27,16 @@ QUnit.test("click on message in reply to highlight the parent message", async ()
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await click(".o-mail-Message:contains(Reply to Hey) .o-mail-MessageInReply-message");
-    await contains(".o-mail-Message:contains(Hey lol).o-highlighted");
+    await click(".o-mail-MessageInReply-message", {
+        parent: [
+            ".o-mail-Message",
+            { contains: [".o-mail-Message-content", { text: "Reply to Hey" }] },
+        ],
+    });
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "Hey lol" });
 });
 
-QUnit.test("click on message in reply to scroll to the parent message", async (assert) => {
+QUnit.test("click on message in reply to scroll to the parent message", async () => {
     // make scroll behavior instantaneous.
     patchWithCleanup(Element.prototype, {
         scrollIntoView() {
@@ -59,11 +64,13 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await click(
-        ".o-mail-Message:contains(Response to first message) .o-mail-MessageInReply-message"
-    );
-    await nextTick();
-    assert.isVisible(document.querySelector(".o-mail-Message"));
+    await click(".o-mail-MessageInReply-message", {
+        parent: [
+            ".o-mail-Message",
+            { contains: [".o-mail-Message-content", { text: "Response to first message" }] },
+        ],
+    });
+    await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
 });
 
 QUnit.test("reply shows correct author avatar", async (assert) => {
