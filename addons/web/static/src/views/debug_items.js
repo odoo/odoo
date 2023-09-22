@@ -190,6 +190,49 @@ export function viewMetadata({ component, env }) {
 debugRegistry.category("form").add("viewMetadata", viewMetadata);
 
 // -----------------------------------------------------------------------------
+// View Raw Record Data
+// -----------------------------------------------------------------------------
+
+class RawRecordDialog extends Component {
+    get content() {
+        const record = this.props.record;
+        return JSON.stringify(record, Object.keys(record).sort(), 2);
+    }
+}
+RawRecordDialog.template = xml`
+<Dialog title="props.title">
+    <pre t-esc="content"/>
+</Dialog>`;
+RawRecordDialog.components = { Dialog };
+RawRecordDialog.props = {
+    record: { type: Object },
+    title: { type: String },
+    close: { type: Function },
+};
+
+export function viewRawRecord({ component, env }) {
+    const { resId, resModel } = component.model.config;
+    if (!resId) {
+        return null;
+    }
+    const description = _t("View Raw Record Data");
+    return {
+        type: "item",
+        description,
+        callback: async () => {
+            const records = await component.model.orm.read(resModel, [resId]);
+            env.services.dialog.add(RawRecordDialog, {
+                title: _t("Raw Record Data: %s(%s)", resModel, resId),
+                record: records[0],
+            });
+        },
+        sequence: 325,
+    };
+}
+
+debugRegistry.category("form").add("viewRawRecord", viewRawRecord);
+
+// -----------------------------------------------------------------------------
 // Set Defaults
 // -----------------------------------------------------------------------------
 

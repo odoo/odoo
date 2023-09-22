@@ -28,7 +28,13 @@ import {
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
-import { editSearchView, editView, setDefaults, viewMetadata } from "@web/views/debug_items";
+import {
+    editSearchView,
+    editView,
+    setDefaults,
+    viewMetadata,
+    viewRawRecord,
+} from "@web/views/debug_items";
 import { fieldService } from "@web/core/field_service";
 
 import { Component, xml } from "@odoo/owl";
@@ -660,6 +666,47 @@ QUnit.module("DebugMenu", (hooks) => {
         await nextTick();
         await click(target.querySelectorAll(".modal .modal-footer button")[1]);
         assert.containsNone(target, ".modal");
+    });
+
+    QUnit.test("fetch raw data: basic rendering", async (assert) => {
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("viewRawRecord", viewRawRecord);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 27,
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        };
+        serverData.models.partner.records = [{ id: 27, display_name: "p1" }];
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal-title").textContent,
+            "Raw Record Data: partner(27)"
+        );
+        assert.strictEqual(
+            target.querySelector(".modal-body pre").textContent,
+            '{\n  "bar": false,\n  "display_name": "p1",\n  "foo": false,\n  "id": 27,\n  "m2o": false,\n  "name": "name",\n  "o2m": [],\n  "write_date": false\n}'
+        );
     });
 
     QUnit.test("view metadata: basic rendering", async (assert) => {
