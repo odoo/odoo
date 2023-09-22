@@ -4671,7 +4671,7 @@ registry.sizing = SnippetOptionWidget.extend({
         this.$overlay.find('.o_handle:not(.o_grid_handle)').filter(".n, .s").toArray().forEach(handle => {
             var $handle = $(handle);
             var direction = $handle.hasClass('n') ? 'top' : 'bottom';
-            $handle.height(self.$target.css('padding-' + direction));
+            $handle.outerHeight(self.$target.css('padding-' + direction));
         });
     },
     /**
