@@ -258,6 +258,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onKarmaRequiredClick: function (ev) {
+        let translatedText;
         const karma = parseInt(ev.currentTarget.dataset.karma);
         if (!karma) {
             return;
@@ -270,17 +271,19 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             return;
         }
         const forumId = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
+        translatedText = _t("Read the guidelines to know how to gain karma.");
         const additionalInfoWithForumID = forumId
             ? Markup`<br/>
                 <a class="alert-link" href="/forum/${forumId}/faq">
-                    ${_t("Read the guidelines to know how to gain karma.")}
+                    ${translatedText}
                 </a>`
             : "";
+        translatedText = _t("karma is required to perform this action. ");
         this.displayNotification({
             type: "warning",
             sticky: false,
             title: _t("Karma Error"),
-            message: Markup`${karma} ${_t("karma is required to perform this action. ")}${additionalInfoWithForumID}`
+            message: Markup`${karma} ${translatedText}${additionalInfoWithForumID}`
         });
     },
     /**
