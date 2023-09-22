@@ -38,6 +38,6 @@ class ChannelMember(models.Model):
                     'code': self.partner_id.country_id.code,
                     'id': self.partner_id.country_id.id,
                     'name': self.partner_id.country_id.name,
-                } if self.partner_id.country_id else [('clear',)]
+                } if self.partner_id.country_id else False
             return data
         return super()._get_partner_data(fields=fields)

@@ -56,7 +56,7 @@ class DiscussChannel(models.Model):
                 'code': channel.country_id.code,
                 'id': channel.country_id.id,
                 'name': channel.country_id.name,
-            } if channel.country_id else [('clear',)]
+            } if channel.country_id else False
             if channel.livechat_operator_id:
                 display_name = channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.display_name
                 channel_infos_dict[channel.id]['operator_pid'] = (channel.livechat_operator_id.id, display_name.replace(',', ''))

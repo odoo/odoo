@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { assignDefined, nullifyClearCommands } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -37,7 +37,6 @@ export class Persona extends Record {
     }
 
     update(data) {
-        nullifyClearCommands(data);
         assignDefined(this, { ...data });
         if (
             this.type === "partner" &&

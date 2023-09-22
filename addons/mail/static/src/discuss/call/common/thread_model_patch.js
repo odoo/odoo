@@ -19,7 +19,7 @@ patch(Thread.prototype, {
         let rtcContinue = true;
         if ("rtcInvitingSession" in data) {
             if (Array.isArray(data.rtcInvitingSession)) {
-                if (data.rtcInvitingSession[0][0] === "unlink") {
+                if (data.rtcInvitingSession[0][0] === "DELETE") {
                     this.rtcInvitingSession = undefined;
                     this._store.discuss.ringingThreads.delete(this);
                 }
@@ -36,12 +36,12 @@ patch(Thread.prototype, {
             for (const command of data.rtcSessions) {
                 const sessionsData = command[1];
                 switch (command[0]) {
-                    case "insert-and-unlink":
+                    case "DELETE":
                         for (const rtcSessionData of sessionsData) {
                             this.Model.env.services["discuss.rtc"].deleteSession(rtcSessionData.id);
                         }
                         break;
-                    case "insert":
+                    case "ADD":
                         for (const rtcSessionData of sessionsData) {
                             const session = this._store.RtcSession.insert(rtcSessionData);
                             if (session.notIn(this.rtcSessions)) {

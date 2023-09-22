@@ -149,7 +149,7 @@ patch(MockServer.prototype, {
                 partnerFormat["persona"] = {
                     channelMembers: [
                         [
-                            "insert",
+                            "ADD",
                             this._mockDiscussChannelMember_DiscussChannelMemberFormat([
                                 member.id,
                             ])[0],
@@ -279,7 +279,7 @@ patch(MockServer.prototype, {
                             ? {
                                   id: mainUser.id,
                               }
-                            : [["clear"]],
+                            : false,
                     },
                 ];
             })

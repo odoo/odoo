@@ -21,7 +21,7 @@ class ResUsersSettings(models.Model):
         res = super()._format_settings(fields_to_format)
         if 'volume_settings_ids' in fields_to_format:
             volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
-            res['volume_settings_ids'] = [('insert', volume_settings)]
+            res['volume_settings_ids'] = [('ADD', volume_settings)]
         return res
 
     def set_res_users_settings(self, new_settings):

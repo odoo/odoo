@@ -28,20 +28,20 @@ export class MessageReactions extends Record {
         for (const rawPartner of data.partners) {
             const [command, partnerData] = Array.isArray(rawPartner)
                 ? rawPartner
-                : ["insert", rawPartner];
+                : ["ADD", rawPartner];
             const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
+            if (command === "ADD" && !alreadyKnownPersonaIds.has(persona.localId)) {
                 reaction.personas.push(persona);
-            } else if (command !== "insert") {
+            } else if (command !== "ADD") {
                 personasToUnlink.add(persona.localId);
             }
         }
         for (const rawGuest of data.guests) {
-            const [command, guestData] = Array.isArray(rawGuest) ? rawGuest : ["insert", rawGuest];
+            const [command, guestData] = Array.isArray(rawGuest) ? rawGuest : ["ADD", rawGuest];
             const persona = this.store.Persona.insert({ ...guestData, type: "guest" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
+            if (command === "ADD" && !alreadyKnownPersonaIds.has(persona.localId)) {
                 reaction.personas.push(persona);
-            } else if (command !== "insert") {
+            } else if (command !== "ADD") {
                 personasToUnlink.add(persona.localId);
             }
         }

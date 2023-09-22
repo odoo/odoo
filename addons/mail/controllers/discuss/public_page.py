@@ -112,7 +112,6 @@ class PublicPageController(http.Controller):
                     "channelData": channel_sudo._channel_info()[0],
                     "discussPublicViewData": dict(
                         {
-                            "channel": [("insert", {"id": channel_sudo.id, "model": "discuss.channel"})],
                             "shouldDisplayWelcomeViewInitially": channel_sudo.default_display_mode
                             == "video_full_screen",
                         },

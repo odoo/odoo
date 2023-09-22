@@ -3,7 +3,7 @@
 import { AND, Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
 import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
-import { assignDefined, nullifyClearCommands, onChange } from "@mail/utils/common/misc";
+import { assignDefined, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -129,7 +129,6 @@ export class Thread extends Record {
                 });
             }
             if (this.model === "discuss.channel" && serverData.channel) {
-                nullifyClearCommands(serverData.channel);
                 this.channel = assignDefined(this.channel ?? {}, serverData.channel);
             }
 
@@ -163,7 +162,7 @@ export class Thread extends Record {
                 const command = serverData.invitedMembers[0][0];
                 const members = serverData.invitedMembers[0][1];
                 switch (command) {
-                    case "insert":
+                    case "ADD":
                         if (members) {
                             for (const member of members) {
                                 const record = this._store.ChannelMember.insert(member);
@@ -173,9 +172,7 @@ export class Thread extends Record {
                             }
                         }
                         break;
-                    case "unlink":
-                    case "insert-and-unlink":
-                        // eslint-disable-next-line no-case-declarations
+                    case "DELETE":
                         for (const member of members) {
                             const record = this._store.ChannelMember.insert(member);
                             this.invitedMembers.delete(record);
