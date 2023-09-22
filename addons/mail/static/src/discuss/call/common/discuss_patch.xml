@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//Thread" position="before">
-            <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread"/>
+            <Call t-if="thread.rtcSessions.length > 0" thread="thread"/>
         </xpath>
     </t>
 </templates>

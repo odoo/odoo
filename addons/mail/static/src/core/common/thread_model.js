@@ -228,8 +228,7 @@ export class Thread extends Record {
     /** @type {object|undefined} */
     channel;
     channelMembers = Record.many("ChannelMember");
-    /** @type {Object<number, import("models").RtcSession>} */
-    rtcSessions = {};
+    rtcSessions = Record.many("RtcSession");
     rtcInvitingSession = Record.one("RtcSession");
     invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");

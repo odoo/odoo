@@ -31,8 +31,11 @@ export class RtcSession extends Record {
             const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
             channelMemberRecord.rtcSession = session;
             session.channelMemberId = channelMemberRecord.id;
-            if (channelMemberRecord.thread) {
-                channelMemberRecord.thread.rtcSessions[session.id] = session;
+            if (
+                channelMemberRecord.thread &&
+                session.notIn(channelMemberRecord.thread.rtcSessions)
+            ) {
+                channelMemberRecord.thread.rtcSessions.push(session);
             }
         }
         return session;
