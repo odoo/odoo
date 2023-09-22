@@ -2064,6 +2064,7 @@ class TestStockFlow(TestStockCommon):
         })
         # Creates two receipts using some lot names in common.
         picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
+        picking_type.show_reserved = True
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = picking_type
         with picking_form.move_ids_without_package.new() as move:

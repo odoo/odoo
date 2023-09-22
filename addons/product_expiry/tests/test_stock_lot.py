@@ -313,7 +313,7 @@ class TestStockLot(TestStockCommon):
 
         # Defines a date during the receipt.
         move_form = Form(receipt.move_ids_without_package, view="stock.view_stock_move_operations")
-        with move_form.move_line_ids.new() as line:
+        with move_form.move_line_nosuggest_ids.new() as line:
             line.lot_name = 'Apple Box #2'
             line.expiration_date = expiration_date
             line.qty_done = 4
