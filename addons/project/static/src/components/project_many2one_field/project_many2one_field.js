@@ -19,8 +19,8 @@ export class ProjectMany2OneField extends Many2OneField {
     }
 
     updateRecord(value) {
-        const { project_id, display_in_project } = this.props.record.data;
-        if (!display_in_project && value && value[0] === project_id[0]) {
+        const { display_in_project } = this.props.record.data;
+        if (!display_in_project && value) {
             this.props.record.update({ "display_in_project": true });
         }
         super.updateRecord(value);
