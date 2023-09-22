@@ -5,7 +5,7 @@ import {descendants, preserveCursor} from "@web_editor/js/editor/odoo-editor/src
 export const rowSize = 50; // 50px.
 // Maximum number of rows that can be added when dragging a grid item.
 export const additionalRowLimit = 10;
-const defaultGridPadding = 10; // 10px (see `--grid-item-padding-(x|y)` CSS variables).
+export const defaultGridPadding = 10; // 10px (see `--grid-item-padding-(x|y)` CSS variables).
 
 /**
  * Returns the grid properties: rowGap, rowSize, columnGap and columnSize.
