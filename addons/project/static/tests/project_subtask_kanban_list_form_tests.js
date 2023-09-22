@@ -5,7 +5,12 @@ import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_he
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    clickOpenedDropdownItem,
+    clickDropdown,
+} from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 addModelNamesToFetch(["project.project", "project.task"]);
@@ -18,6 +23,9 @@ QUnit.module('Subtask Kanban List tests', {
         const projectId = pyEnv['project.project'].create([
             { name: "Project One" },
         ]);
+        const projectId2 = pyEnv['project.project'].create([
+            { name: "Project Two" },
+        ]);
         const userId = pyEnv['res.users'].create([
             { name: "User One", login: 'one', password: 'one' },
         ]);
@@ -29,6 +37,9 @@ QUnit.module('Subtask Kanban List tests', {
             { name: 'task five', closed_subtask_count: 0, subtask_count: 1, child_ids: [6], state: '03_approved' },
             { name: 'task six', parent_id: 5, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '1_canceled' },
             { name: 'task seven', parent_id: 1, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '01_in_progress', user_ids: [userId] },
+        ]);
+        this.task = pyEnv['project.task'].create([
+            { name: "task's Project Two", project_id: projectId2, child_ids: [] }
         ]);
         this.views = {
             "project.task,false,kanban":
@@ -51,6 +62,15 @@ QUnit.module('Subtask Kanban List tests', {
                         </t>
                     </templates>
                 </kanban>`,
+            "project.task,false,form":
+                `<form>
+                    <field name="child_ids" widget="subtasks_one2many">
+                        <tree editable="bottom">
+                            <field name="display_in_project" force_save="1"/>
+                            <field name="project_id" widget="project"/>
+                        </tree>
+                    </field>
+                </form>`
         };
         target = getFixture();
         setupViewRegistries();
@@ -112,4 +132,22 @@ QUnit.module('Subtask Kanban List tests', {
             "project.task/web_read", // read the parent task to recompute the subtask count
         ]);
     });
+
+    QUnit.test("Check that the sub task of another project can be added", async function (assert) {
+        assert.expect(1);
+        const { openView } = await start({
+            serverData: { views: this.views },
+        });
+        await openView({
+            res_model: "project.task",
+            views: [[false, "form"]],
+            res_id: this.task,
+        });
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await clickDropdown(target, 'project_id');
+        await clickOpenedDropdownItem(target, 'project_id', 'Project One');
+        await click(target, ".o_form_button_save");
+        assert.equal(target.querySelector('.o_field_project').textContent.trim(), 'Project One')
+    });
+
 });
