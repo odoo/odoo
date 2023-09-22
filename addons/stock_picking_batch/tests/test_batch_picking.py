@@ -217,48 +217,9 @@ class TestBatchPicking(TransactionCase):
         self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_batch_with_backorder_wizard(self):
-        """ Test a simple batch picking with all quantities fully available but only one fully
-        processed. The user will set by himself the quantity reserved for each picking and
-        run the picking batch. There should be a wizard asking for a backorder.
-        """
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
-        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
-
-        # Confirm batch, pickings should not be automatically assigned.
-        self.batch.action_confirm()
-        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
-        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
-        # Ask to assign, so pickings should be assigned now.
-        self.batch.action_assign()
-        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
-        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
-
-        self.picking_client_1.move_ids.quantity_done = 6
-        self.picking_client_2.move_ids.quantity_done = 10
-
-        # There should be a wizard asking to process picking without quantity done
-        back_order_wizard_dict = self.batch.action_done()
-        self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
-        self.assertEqual(len(back_order_wizard.pick_ids), 1)
-        back_order_wizard.process()
-
-        self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
-        self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
-        self.assertEqual(self.picking_client_1.move_ids.product_uom_qty, 6, 'initial demand should be 6 after picking split')
-        self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', self.picking_client_1.id)]), 'no back order created')
-
-        quant_A = self.env['stock.quant']._gather(self.productA, self.stock_location)
-        quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
-
-        # ensure that quantity for picking has been moved
-        self.assertEqual(sum(quant_A.mapped('quantity')), 4)
-        self.assertFalse(sum(quant_B.mapped('quantity')))
-
-    def test_batch_without_backorder_wizard(self):
         """ Test a simple batch picking with only one quantity fully available.
         The user will set by himself the quantity reserved for each picking and
-        run the picking batch. A backorder should be automatically created.
+        run the picking batch. There should be a wizard asking for a backorder.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
@@ -274,12 +235,13 @@ class TestBatchPicking(TransactionCase):
 
         self.picking_client_1.move_ids.quantity_done = 5
         self.picking_client_2.move_ids.quantity_done = 10
-        self.batch.action_done()
 
-        # Checks a backorder was created for `picking_client_1`.
-        backorder = self.env['stock.picking'].search([('backorder_id', 'in', self.batch.picking_ids.ids)])
-        self.assertEqual(len(backorder), 1)
-        self.assertEqual(backorder.backorder_id.id, self.picking_client_1.id)
+        # There should be a wizard asking to process picking without quantity done
+        back_order_wizard_dict = self.batch.action_done()
+        self.assertTrue(back_order_wizard_dict)
+        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        back_order_wizard.process()
 
         self.assertEqual(self.picking_client_2.state, 'done', 'Picking 2 should be done')
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
@@ -293,11 +255,11 @@ class TestBatchPicking(TransactionCase):
         self.assertFalse(sum(quant_A.mapped('quantity')))
         self.assertFalse(sum(quant_B.mapped('quantity')))
 
-    def test_batch_with_immediate_transfer_and_backorder(self):
+    def test_batch_with_immediate_transfer_and_backorder_wizard(self):
         """ Test a simple batch picking with only one product fully available.
-        Everything should be automatically. The immediate transfer wizard should asking to set
-        quantity_done to reserved quantity. A backorder should be created without wizard as the
-        reserved quantity was fully processed.
+        Everything should be automatically. First one backorder in order to set quantity_done
+        to reserved quantity. After a second wizard asking for a backorder for the quantity that
+        has not been fully transfered.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
@@ -316,12 +278,11 @@ class TestBatchPicking(TransactionCase):
         self.assertTrue(immediate_transfer_wizard_dict)
         immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
         self.assertEqual(len(immediate_transfer_wizard.pick_ids), 2)
-        immediate_transfer_wizard.process()
-
-        # Checks a backorder was created for `picking_client_1`.
-        backorder = self.env['stock.picking'].search([('backorder_id', 'in', self.batch.picking_ids.ids)])
-        self.assertEqual(len(backorder), 1)
-        self.assertEqual(backorder.backorder_id.id, self.picking_client_1.id)
+        back_order_wizard_dict = immediate_transfer_wizard.process()
+        self.assertTrue(back_order_wizard_dict)
+        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_ids.product_uom_qty, 5, 'initial demand should be 5 after picking split')
@@ -335,12 +296,12 @@ class TestBatchPicking(TransactionCase):
         self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_batch_with_immediate_transfer_and_backorder_wizard_with_manual_operations(self):
-        """ Test a simple batch picking with a quantity not fully processed.
-        The user set the quantity done only for the first picking.
-        The test should run the immediate transfer for the second picking and then
-        the backorder wizard for the first picking.
+        """ Test a simple batch picking with only one quantity fully available.
+        The user set the quantity done only for the partially available picking.
+        The test should run the immediate transfer for the first picking and then
+        the backorder wizard for the second picking.
         """
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
 
         # Confirm batch, pickings should not be automatically assigned.
@@ -352,7 +313,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
         self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
-        self.picking_client_1.move_ids.quantity_done = 6
+        self.picking_client_1.move_ids.quantity_done = 5
         # There should be a wizard asking to make a backorder
         back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
@@ -363,9 +324,8 @@ class TestBatchPicking(TransactionCase):
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
-        self.assertEqual(self.picking_client_1.move_ids.product_uom_qty, 6, 'initial demand should be 5 after picking split')
+        self.assertEqual(self.picking_client_1.move_ids.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertFalse(self.picking_client_2.batch_id)
-
     def test_put_in_pack(self):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
