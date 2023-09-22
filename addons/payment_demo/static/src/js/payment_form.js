@@ -51,13 +51,10 @@ paymentForm.include({
 
         const customerInput = document.getElementById('customer_input').value;
         const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
-        this._rpc({
-            route: '/payment/demo/simulate_payment',
-            params: {
-                'reference': processingValues.reference,
-                'payment_details': customerInput,
-                'simulated_state': simulatedPaymentState,
-            },
+        this.rpc('/payment/demo/simulate_payment', {
+            'reference': processingValues.reference,
+            'payment_details': customerInput,
+            'simulated_state': simulatedPaymentState,
         }).then(() => {
             window.location = '/payment/status';
         }).guardedCatch(error => {

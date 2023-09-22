@@ -138,14 +138,11 @@ paymentForm.include({
         }
 
         // Initiate the payment
-        this._rpc({
-            route: '/payment/authorize/payment',
-            params: {
-                'reference': processingValues.reference,
-                'partner_id': processingValues.partner_id,
-                'opaque_data': response.opaqueData,
-                'access_token': processingValues.access_token,
-            }
+        this.rpc('/payment/authorize/payment', {
+            'reference': processingValues.reference,
+            'partner_id': processingValues.partner_id,
+            'opaque_data': response.opaqueData,
+            'access_token': processingValues.access_token,
         }).then(() => {
             window.location = '/payment/status';
         }).guardedCatch((error) => {

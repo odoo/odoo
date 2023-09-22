@@ -45,6 +45,8 @@ var Quiz = publicWidget.Widget.extend({
         this.isMember = data.isMember || false;
         this.userId = session.user_id;
         this.redirectURL = encodeURIComponent(document.URL);
+
+        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -208,13 +210,10 @@ var Quiz = publicWidget.Widget.extend({
     _submitQuiz: function () {
         var self = this;
 
-        return this._rpc({
-            route: '/event_track/quiz/submit',
-            params: {
-                event_id: self.track.eventId,
-                track_id: self.track.id,
-                answer_ids: this._getQuizAnswers(),
-            }
+        return this.rpc('/event_track/quiz/submit', {
+            event_id: self.track.eventId,
+            track_id: self.track.id,
+            answer_ids: this._getQuizAnswers(),
         }).then(function (data) {
             if (data.error) {
                 self._alertShow(data.error);
@@ -257,12 +256,9 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _onClickReset: function () {
-        this._rpc({
-            route: '/event_track/quiz/reset',
-            params: {
-                event_id: this.track.eventId,
-                track_id: this.track.id
-            }
+        this.rpc('/event_track/quiz/reset', {
+            event_id: this.track.eventId,
+            track_id: this.track.id
         }).then(this._resetQuiz.bind(this));
     },
 

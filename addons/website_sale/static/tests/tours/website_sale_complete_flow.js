@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+    import { jsonrpc } from "@web/core/network/rpc_service";
     import { registry } from "@web/core/registry";
-    import rpc from "@web/legacy/js/core/rpc";
     import tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
@@ -173,19 +173,21 @@
         extra_trigger: '.o_frontend_to_backend_nav', // Check if the user is connected
         trigger: '#wrapwrap',
         run: function () {
-            var def1 = rpc.query({
-                model: 'res.config.settings',
-                method: 'create',
+            var def1 = jsonrpc(`/web/dataset/call_kw/res.config.settings/create`, {
+                model: "res.config.settings",
+                method: "create",
                 args: [{
                     'auth_signup_uninvited': 'b2b',
                     'show_line_subtotals_tax_selection': 'tax_included',
                 }],
+                kwargs: {},
             });
             var def2 = def1.then(function (resId) {
-                return rpc.query({
-                    model: 'res.config.settings',
-                    method: 'execute',
+                return jsonrpc(`/web/dataset/call_kw/res.config.settings/execute`, {
+                    model: "res.config.settings",
+                    method: "execute",
                     args: [[resId]],
+                    kwargs: {},
                 });
             });
             def2.then(function () {

@@ -447,10 +447,7 @@ export async function loadImageInfo(img, rpc, attachmentSrc = '') {
         return;
     }
 
-    const {original} = await rpc({
-        route: '/web_editor/get_image_info',
-        params: {src: src.split(/[?#]/)[0]},
-    });
+    const {original} = await rpc('/web_editor/get_image_info', {src: src.split(/[?#]/)[0]});
     // Check that url is local.
     const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin
         && !/\/web\/image\/\d+-redirect\//.test(original.image_src);

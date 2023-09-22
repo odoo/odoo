@@ -24,6 +24,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     init: function (parent) {
         this._super.apply(this, arguments);
         this.wishlistProductIDs = JSON.parse(sessionStorage.getItem('website_sale_wishlist_product_ids') || '[]');
+        this.rpc = this.bindService("rpc");
     },
     /**
      * Gets the current wishlist items.
@@ -97,11 +98,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             productId = parseInt(productId, 10);
 
             if (productId && !self.wishlistProductIDs.includes(productId)) {
-                return self._rpc({
-                    route: '/shop/wishlist/add',
-                    params: {
-                        product_id: productId,
-                    },
+                return self.rpc('/shop/wishlist/add', {
+                    product_id: productId,
                 }).then(function () {
                     var $navButton = $('header .o_wsale_my_wish').first();
                     self.wishlistProductIDs.push(productId);
@@ -145,9 +143,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         var product = tr.data('product-id');
         var self = this;
 
-        this._rpc({
-            route: '/shop/wishlist/remove/' + wish,
-        }).then(function () {
+        this.rpc('/shop/wishlist/remove/' + wish).then(function () {
             $(tr).hide();
         });
 
@@ -189,12 +185,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             $tr.trigger('add_to_cart_event', [productTrackingInfo]);
         }
         const callService = this.call.bind(this)
-        return this._rpc({
-            route: "/shop/cart/update_json",
-            params: {
-                ...this._getCartUpdateJsonParams(productID, qty),
-                display: false,
-            },
+        return this.rpc("/shop/cart/update_json", {
+            ...this._getCartUpdateJsonParams(productID, qty),
+            display: false,
         }).then(function (data) {
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showCartNotification(callService, data.notification_info);

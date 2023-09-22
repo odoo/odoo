@@ -8,6 +8,11 @@ publicWidget.registry.testError = publicWidget.Widget.extend({
         'click a': '_onRpcErrorClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //----------------------------------------------------------------------
     // Handlers
     //----------------------------------------------------------------------
@@ -21,8 +26,6 @@ publicWidget.registry.testError = publicWidget.Widget.extend({
     _onRpcErrorClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        return this._rpc({
-            route: $link.attr('href'),
-        });
+        return this.rpc($link.attr('href'));
     }
 });

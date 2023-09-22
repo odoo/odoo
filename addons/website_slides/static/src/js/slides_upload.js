@@ -65,6 +65,9 @@ var SlideUploadDialog = Dialog.extend({
 
         this.file = {};
         this.isValidUrl = true;
+
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
     },
     start: function () {
         var self = this;
@@ -105,33 +108,24 @@ var SlideUploadDialog = Dialog.extend({
         var self = this;
         this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false,
             function () {
-                return self._rpc({
-                    route: '/slides/category/search_read',
-                    params: {
-                        fields: ['name'],
-                        domain: [['channel_id', '=', self.channelID]],
-                    }
+                return self.rpc('/slides/category/search_read', {
+                    fields: ['name'],
+                    domain: [['channel_id', '=', self.channelID]],
                 });
             })
         );
         this.$('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
-            return self._rpc({
-                route: '/slides/tag/search_read',
-                params: {
-                    fields: ['name'],
-                    domain: [],
-                }
+            return self.rpc('/slides/tag/search_read', {
+                fields: ['name'],
+                domain: [],
             });
         }));
     },
     _fetchUrlPreview: function (url, slideCategory) {
-        return this._rpc({
-            route: '/slides/prepare_preview/',
-            params: {
-                'url': url,
-                'slide_category': slideCategory,
-                'channel_id': this.channelID
-            },
+        return this.rpc('/slides/prepare_preview/', {
+            'url': url,
+            'slide_category': slideCategory,
+            'channel_id': this.channelID
         });
     },
     _formSetFieldValue: function (fieldId, value) {
@@ -680,11 +674,10 @@ var SlideUploadDialog = Dialog.extend({
         $el.text(_t('Installing "%s".', this.modulesToInstallStatus.name));
         this.modulesToInstallStatus.installing = true;
         this._resetModalButton();
-        this._rpc({
-            model: 'ir.module.module',
-            method: 'button_immediate_install',
-            args: [[this.modulesToInstallStatus.id]],
-        }).then(function () {
+        this.orm.call("ir.module.module", "button_immediate_install", [
+            [this.modulesToInstallStatus.id],
+        ]).then(
+            function () {
             let redirectUrl = window.location.origin + window.location.pathname + '?enable_slide_upload';
             if (self.modulesToInstallStatus.default_slide_category) {
                 redirectUrl += '=';
@@ -722,10 +715,7 @@ var SlideUploadDialog = Dialog.extend({
         var oldType = this.get('state');
         this.set('state', '_upload');
 
-        const data = await this._rpc({
-            route: '/slides/add_slide',
-            params: values,
-        });
+        const data = await this.rpc('/slides/add_slide', values);
         this._onFormSubmitDone(data, oldType);
     },
 

@@ -50,18 +50,15 @@ paymentForm.include({
 
         // Create the checkout object if not already done for another payment method.
         if (!this.adyenCheckout) {
-            await this._rpc({ // Await the RPC to let it create AdyenCheckout before using it.
-                route: '/payment/adyen/payment_methods',
-                params: {
-                    'provider_id': providerId,
-                    'partner_id': parseInt(this.paymentContext['partnerId']),
-                    'amount': this.paymentContext['amount']
-                        ? parseFloat(this.paymentContext['amount'])
-                        : undefined,
-                    'currency_id': this.paymentContext['currencyId']
-                        ? parseInt(this.paymentContext['currencyId'])
-                        : undefined,
-                },
+            await this.rpc('/payment/adyen/payment_methods', { // Await the RPC to let it create AdyenCheckout before using it.
+                'provider_id': providerId,
+                'partner_id': parseInt(this.paymentContext['partnerId']),
+                'amount': this.paymentContext['amount']
+                    ? parseFloat(this.paymentContext['amount'])
+                    : undefined,
+                'currency_id': this.paymentContext['currencyId']
+                    ? parseInt(this.paymentContext['currencyId'])
+                    : undefined,
             }).then(async response => {
                 // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
@@ -161,24 +158,21 @@ paymentForm.include({
      */
     _adyenOnSubmit(state, component) {
         // Create the transaction and retrieve the processing values.
-        this._rpc({
-            route: this.paymentContext['transactionRoute'],
-            params: this._prepareTransactionRouteParams(),
-        }).then(processingValues => {
+        this.rpc(
+            this.paymentContext['transactionRoute'],
+            this._prepareTransactionRouteParams(),
+        ).then(processingValues => {
             component.reference = processingValues.reference; // Store final reference.
             // Initiate the payment.
-            return this._rpc({
-                route: '/payment/adyen/payments',
-                params: {
-                    'provider_id': processingValues.provider_id,
-                    'reference': processingValues.reference,
-                    'converted_amount': processingValues.converted_amount,
-                    'currency_id': processingValues.currency_id,
-                    'partner_id': processingValues.partner_id,
-                    'payment_method': state.data.paymentMethod,
-                    'access_token': processingValues.access_token,
-                    'browser_info': state.data.browserInfo,
-                },
+            return this.rpc('/payment/adyen/payments', {
+                'provider_id': processingValues.provider_id,
+                'reference': processingValues.reference,
+                'converted_amount': processingValues.converted_amount,
+                'currency_id': processingValues.currency_id,
+                'partner_id': processingValues.partner_id,
+                'payment_method': state.data.paymentMethod,
+                'access_token': processingValues.access_token,
+                'browser_info': state.data.browserInfo,
             });
         }).then(paymentResponse => {
             if (paymentResponse.action) { // An additional action is required from the shopper.
@@ -204,13 +198,10 @@ paymentForm.include({
      * @return {void}
      */
     _adyenOnSubmitAdditionalDetails(state, component) {
-        this._rpc({
-            route: '/payment/adyen/payments/details',
-            params: {
-                'provider_id': this.paymentContext['providerId'],
-                'reference': component.reference,
-                'payment_details': state.data,
-            },
+        this.rpc('/payment/adyen/payments/details', {
+            'provider_id': this.paymentContext['providerId'],
+            'reference': component.reference,
+            'payment_details': state.data,
         }).then(paymentDetails => {
             if (paymentDetails.action) { // Additional action required from the shopper.
                 component.handleAction(paymentDetails.action);

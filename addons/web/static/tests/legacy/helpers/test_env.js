@@ -39,7 +39,6 @@
                 },
                 hotkey: { add: () => () => {} }, // fake service
                 notification: { notify() {} },
-                ajax: { rpc },
                 rpc,
                 ui: { activeElement: document }, // fake service
                 ...env.services,

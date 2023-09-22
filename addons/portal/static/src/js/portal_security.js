@@ -13,6 +13,12 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
         click: '_onClick'
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+        this.dialog = this.bindService("dialog");
+    },
+
     async _onClick(e){
         e.preventDefault();
         // This call is done just so it asks for the password confirmation before starting displaying the
@@ -20,11 +26,11 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
         // displaying the wizard.
         // The result of the call is unused. But it's required to call a method with the decorator `@check_identity`
         // in order to use `handleCheckIdentity`.
-        await handleCheckIdentity(this.proxy('_rpc'), this._rpc({
-            model: 'res.users',
-            method: 'api_key_wizard',
-            args: [session.user_id],
-        }), (...args) => this.call("dialog", "add", ...args));
+        await handleCheckIdentity(
+            this.orm.call("res.users", "api_key_wizard", [session.user_id]),
+            this.orm,
+            this.dialog
+        );
 
         this.call("dialog", "add", InputConfirmationDialog, {
             title: _t("New API Key"),
@@ -32,19 +38,11 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
             confirmLabel: _t("Confirm"),
             confirm: async ({ inputEl }) => {
                 const description = inputEl.value;
-                const wizard_id = await this._rpc({
-                    model: "res.users.apikeys.description",
-                    method: "create",
-                    args: [{ name: description }],
-                });
+                const wizard_id = await this.orm.create("res.users.apikeys.description", [{ name: description }]);
                 const res = await handleCheckIdentity(
-                    this.proxy('_rpc'),
-                    this._rpc({
-                        model: 'res.users.apikeys.description',
-                        method: 'make_key',
-                        args: [wizard_id],
-                    }),
-                    (...args) => this.call("dialog", "add", ...args)
+                    this.orm.call("res.users.apikeys.description", "make_key", [wizard_id]),
+                    this.orm,
+                    this.dialog
                 );
 
                 this.call("dialog", "add", ConfirmationDialog, {
@@ -67,16 +65,18 @@ publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
         click: '_onClick'
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+        this.dialog = this.bindService("dialog");
+    },
+
     async _onClick(e){
         e.preventDefault();
         await handleCheckIdentity(
-            this.proxy('_rpc'),
-            this._rpc({
-                model: 'res.users.apikeys',
-                method: 'remove',
-                args: [parseInt(this.el.id)]
-            }),
-            (...args) => this.call("dialog", "add", ...args)
+            this.orm.call("res.users.apikeys", "remove", [parseInt(this.el.id)]),
+            this.orm,
+            this.dialog
         );
         window.location = window.location;
     }
@@ -116,12 +116,15 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
         click: '_onClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     async _onClick() {
-        const { res_id: checkId } = await this._rpc({
-            model: 'res.users',
-            method: 'api_key_wizard',
-            args: [session.user_id],
-        });
+        const { res_id: checkId } = await this.orm.call("res.users", "api_key_wizard", [
+            session.user_id,
+        ]);
         this.call("dialog", "add", InputConfirmationDialog, {
             title: _t("Log out from all devices?"),
             body: renderToMarkup("portal.revoke_all_devices_popup_template"),
@@ -132,17 +135,13 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
                     return false;
                 }
 
-                await this._rpc({
-                    model: "res.users.identitycheck",
-                    method: "write",
-                    args: [checkId, { password: inputEl.value }],
-                });
+                await this.orm.write("res.users.identitycheck", [checkId], { password: inputEl.value });
                 try {
-                    await this._rpc({
-                        model: "res.users.identitycheck",
-                        method: "revoke_all_devices",
-                        args: [checkId],
-                    });
+                    await this.orm.call(
+                        "res.users.identitycheck",
+                        "revoke_all_devices",
+                        [checkId]
+                    );
                 } catch {
                     inputEl.classList.add("is-invalid");
                     inputEl.setCustomValidity(_t("Check failed"));
@@ -171,19 +170,19 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
  * Warning: does not in and of itself trigger an identity check, a promise which
  * never triggers and identity check internally will do nothing of use.
  *
- * @param {Function} rpc Widget#_rpc bound do the widget
  * @param {Promise} wrapped promise to check for an identity check request
- * @param {Function} addDialog add a dialog to the dialog service
+ * @param {Function} ormService bound do the widget
+ * @param {Function} dialogService dialog service
  * @returns {Promise} result of the original call
  */
-export async function handleCheckIdentity(rpc, wrapped, addDialog) {
+export async function handleCheckIdentity(wrapped, ormService, dialogService) {
     return wrapped.then((r) => {
         if (!(r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
             return r;
         }
         const checkId = r.res_id;
         return new Promise((resolve) => {
-            addDialog(InputConfirmationDialog, {
+            dialogService.add(InputConfirmationDialog, {
                 title: _t("Security Control"),
                 body: renderToMarkup("portal.identitycheck"),
                 confirmLabel: _t("Confirm Password"),
@@ -193,17 +192,9 @@ export async function handleCheckIdentity(rpc, wrapped, addDialog) {
                         return false;
                     }
                     let result;
-                    await rpc({
-                        model: "res.users.identitycheck",
-                        method: "write",
-                        args: [checkId, { password: inputEl.value }],
-                    });
+                    await ormService.write("res.users.identitycheck", [checkId], { password: inputEl.value });
                     try {
-                        result = await rpc({
-                            model: "res.users.identitycheck",
-                            method: "run_check",
-                            args: [checkId],
-                        });
+                        result = await ormService.call("res.users.identitycheck", "run_check", [checkId]);
                     } catch {
                         inputEl.classList.add("is-invalid");
                         inputEl.setCustomValidity(_t("Check failed"));

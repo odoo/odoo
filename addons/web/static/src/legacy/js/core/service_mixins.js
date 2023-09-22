@@ -1,12 +1,59 @@
 /** @odoo-module **/
 
-import rpc from "@web/legacy/js/core/rpc";
+import { SERVICES_METADATA } from "@web/env";
+import {
+    ConnectionAbortedError,
+    ConnectionLostError,
+    RPCError,
+} from "@web/core/network/rpc_service";
 
-/**
- * @mixin
- * @name ServicesMixin
- */
+function protectMethod(widget, fn) {
+    return function (...args) {
+        return new Promise((resolve, reject) => {
+            Promise.resolve(fn.call(this, ...args))
+                .then((result) => {
+                    if (!widget.isDestroyed()) {
+                        resolve(result);
+                    }
+                })
+                .catch((reason) => {
+                    if (!widget.isDestroyed()) {
+                        if (reason instanceof RPCError || reason instanceof ConnectionLostError) {
+                            // we do not reject an error here because we want to pass through
+                            // the legacy guardedCatch code
+                            reject({ message: reason, event: $.Event(), legacy: true });
+                        } else if (reason instanceof ConnectionAbortedError) {
+                            reject({ message: reason.message, event: $.Event("abort") });
+                        } else {
+                            reject(reason);
+                        }
+                    }
+                });
+        });
+    };
+}
+
 var ServicesMixin = {
+    bindService: function (serviceName) {
+        const { services } = owl.Component.env;
+        const service = services[serviceName];
+        if (!service) {
+            throw new Error(`Service ${serviceName} is not available`);
+        }
+        if (serviceName in SERVICES_METADATA) {
+            if (service instanceof Function) {
+                return protectMethod(this, service);
+            } else {
+                const methods = SERVICES_METADATA[serviceName];
+                const result = Object.create(service);
+                for (const method of methods) {
+                    result[method] = protectMethod(this, service[method]);
+                }
+                return result;
+            }
+        }
+        return service;
+    },
     /**
      * @param  {string} service
      * @param  {string} method
@@ -24,97 +71,6 @@ var ServicesMixin = {
             },
         });
         return result;
-    },
-    /**
-     * Builds and executes RPC query. Returns a promise resolved with
-     * the RPC result.
-     *
-     * @param {string} params either a route or a model
-     * @param {string} options if a model is given, this argument is a method
-     * @returns {Promise}
-     */
-    _rpc: function (params, options) {
-        var query = rpc.buildQuery(params);
-        var prom = this.call('ajax', 'rpc', query.route, query.params, options, this);
-        if (!prom) {
-            prom = new Promise(function () {});
-            prom.abort = function () {};
-        }
-        var abort = prom.abort ? prom.abort : prom.reject;
-        if (abort) {
-            prom.abort = abort.bind(prom);
-        }
-        return prom;
-    },
-    loadFieldView: function (modelName, context, view_id, view_type, options) {
-        return this.loadViews(modelName, context, [[view_id, view_type]], options).then(function (result) {
-            return result[view_type];
-        });
-    },
-    loadViews: function (modelName, context, views, options) {
-        var self = this;
-        return new Promise(function (resolve) {
-            self.trigger_up('load_views', {
-                modelName: modelName,
-                context: context,
-                views: views,
-                options: options,
-                on_success: resolve,
-            });
-        });
-    },
-    loadFilters: function (modelName, actionId, context) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.trigger_up('load_filters', {
-                modelName: modelName,
-                actionId: actionId,
-                context: context,
-                on_success: resolve,
-            });
-        });
-    },
-    createFilter: function (filter) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.trigger_up('create_filter', {
-                filter: filter,
-                on_success: resolve,
-            });
-        });
-    },
-    deleteFilter: function (filterId) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.trigger_up('delete_filter', {
-                filterId: filterId,
-                on_success: resolve,
-            });
-        });
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that the action
-     * manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return an unresolved
-     * promise.
-     *
-     * @param {any} action
-     * @param {any} options
-     * @returns {Promise}
-     */
-    do_action: function (action, options) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.trigger_up('do_action', {
-                action: action,
-                options: options,
-                on_success: resolve,
-                on_fail: (reason) => {
-                    reject(reason);
-                    return "alreadyThrown"
-                },
-            });
-        });
     },
     /**
      * Displays a notification.

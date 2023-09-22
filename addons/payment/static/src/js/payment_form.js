@@ -20,6 +20,15 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
     /**
      * @override
      */
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
+    },
+
+    /**
+     * @override
+     */
     async start() {
         // Synchronously initialize paymentContext before any await.
         this.paymentContext = {};
@@ -76,11 +85,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         const linkedRadio = document.getElementById(ev.currentTarget.dataset['linkedRadio']);
         const tokenId = this._getPaymentOptionId(linkedRadio);
-        this._rpc({
-            model: 'payment.token',
-            method: 'get_linked_records_info',
-            args: [tokenId],
-        }).then(linkedRecordsInfo => {
+        this.orm.call(
+            'payment.token',
+            'get_linked_records_info',
+            [tokenId],
+        ).then(linkedRecordsInfo => {
             this._challengeTokenDeletion(tokenId, linkedRecordsInfo);
         }).guardedCatch(error => {
             error.event.preventDefault();
@@ -342,12 +351,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _assignToken(tokenId) {
-        this._rpc({
-            route: this.paymentContext['assignTokenRoute'],
-            params: {
-                'token_id': tokenId,
-                'access_token': this.paymentContext['accessToken'],
-            }
+        this.rpc(this.paymentContext['assignTokenRoute'], {
+            'token_id': tokenId,
+            'access_token': this.paymentContext['accessToken'],
         }).then(() => {
             window.location = this.paymentContext['landingRoute'];
         }).guardedCatch(error => {
@@ -376,10 +382,10 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         // Create a transaction and retrieve its processing values.
-        this._rpc({
-            route: this.paymentContext['transactionRoute'],
-            params: this._prepareTransactionRouteParams(),
-        }).then(processingValues => {
+        this.rpc(
+            this.paymentContext['transactionRoute'],
+            this._prepareTransactionRouteParams(),
+        ).then(processingValues => {
             if (flow === 'redirect') {
                 this._processRedirectFlow(
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
@@ -490,11 +496,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     _archiveToken(tokenId) {
-        this._rpc({
-            route: '/payment/archive_token',
-            params: {
-                'token_id': tokenId,
-            },
+        this.rpc('/payment/archive_token', {
+            'token_id': tokenId,
         }).then(() => {
             browser.location.reload();
         }).guardedCatch(error => {

@@ -26,6 +26,12 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         'click .o_survey_session_close': '_onEndSessionClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * Overridden to set a few properties that come from the python template rendering.
      *
@@ -242,11 +248,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         var self = this;
         ev.preventDefault();
 
-        this._rpc({
-            model: 'survey.survey',
-            method: 'action_end_session',
-            args: [[this.surveyId]],
-        }).then(function () {
+        this.orm.call(
+            "survey.survey",
+            "action_end_session",
+            [[this.surveyId]]
+        ).then(function () {
             if ($(ev.currentTarget).data('showResults')) {
                 document.location = `/survey/results/${encodeURIComponent(self.surveyId)}`;
             } else {
@@ -353,12 +359,12 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             delete this.resultsRefreshInterval;
         }
 
-        var nextQuestionPromise = this._rpc({
-            route: `/survey/session/next_question/${self.surveyAccessToken}`,
-            params: {
+        var nextQuestionPromise = this.rpc(
+            `/survey/session/next_question/${self.surveyAccessToken}`,
+            {
                 'go_back': goBack,
             }
-        }).then(function (result) {
+        ).then(function (result) {
             self.nextQuestion = result;
             if (self.refreshBackground && result.background_image_url) {
                 return self._preloadBackground(result.background_image_url);
@@ -466,9 +472,9 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     _refreshResults: function () {
         var self = this;
 
-        return this._rpc({
-            route: `/survey/session/results/${self.surveyAccessToken}`,
-        }).then(function (questionResults) {
+        return this.rpc(
+            `/survey/session/results/${self.surveyAccessToken}`
+        ).then(function (questionResults) {
             if (questionResults) {
                 self.attendeesCount = questionResults.attendees_count;
 
@@ -506,11 +512,10 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     _refreshAttendeesCount: function () {
         var self = this;
 
-        return self._rpc({
-            model: 'survey.survey',
-            method: 'read',
-            args: [[self.surveyId], ['session_answer_count']],
-        }).then(function (result) {
+        return self.orm.read(
+            "survey.survey",
+            [[self.surveyId], ['session_answer_count']]
+        ).then(function (result) {
             if (result && result.length === 1){
                 self.$('.o_survey_session_attendees_count').text(
                     result[0].session_answer_count

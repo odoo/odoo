@@ -19,6 +19,11 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         'change #new-opp-dialog .contact_name': '_onChangeContactName',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -41,14 +46,10 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _confirmInterestedPartner: function () {
-        return this._rpc({
-            model: 'crm.lead',
-            method: 'partner_interested',
-            args: [
-                [parseInt($('.interested_partner_assign_form .assign_lead_id').val())],
-                $('.interested_partner_assign_form .comment_interested').val()
-            ],
-        }).then(function () {
+        return this.orm.call("crm.lead", "partner_interested", [
+            [parseInt($('.interested_partner_assign_form .assign_lead_id').val())],
+            $('.interested_partner_assign_form .comment_interested').val()
+        ]).then(function () {
             window.location.href = '/my/leads';
         });
     },
@@ -57,16 +58,12 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _confirmDesinterestedPartner: function () {
-        return this._rpc({
-            model: 'crm.lead',
-            method: 'partner_desinterested',
-            args: [
-                [parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
-                $('.desinterested_partner_assign_form .comment_desinterested').val(),
-                $('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
-                $('.desinterested_partner_assign_form .customer_mark_spam').prop('checked'),
-            ],
-        }).then(function () {
+        return this.orm.call("crm.lead", "partner_desinterested", [
+            [parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
+            $('.desinterested_partner_assign_form .comment_desinterested').val(),
+            $('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
+            $('.desinterested_partner_assign_form .customer_mark_spam').prop('checked'),
+        ]).then(function () {
             window.location.href = '/my/leads';
         });
     },
@@ -76,12 +73,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _changeOppStage: function (leadID, stageID) {
-        return this._rpc({
-            model: 'crm.lead',
-            method: 'write',
-            args: [[leadID], {
-                stage_id: stageID,
-            }],
+        return this.orm.write("crm.lead", [leadID], { stage_id: stageID }, {
             context: Object.assign({website_partner_assign: 1}),
         }).then(function () {
             window.location.reload();
@@ -92,10 +84,9 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _editContact: function () {
-        return this._rpc({
-            model: 'crm.lead',
-            method: 'update_contact_details_from_portal',
-            args: [[parseInt($('.edit_contact_form .opportunity_id').val())], {
+        return this.orm.call("crm.lead", "update_contact_details_from_portal", [
+            [parseInt($('.edit_contact_form .opportunity_id').val())],
+            {
                 partner_name: $('.edit_contact_form .partner_name').val(),
                 phone: $('.edit_contact_form .phone').val(),
                 mobile: $('.edit_contact_form .mobile').val(),
@@ -106,8 +97,8 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
                 zip: $('.edit_contact_form .zip').val(),
                 state_id: parseInt($('.edit_contact_form .state_id').find(':selected').attr('value')),
                 country_id: parseInt($('.edit_contact_form .country_id').find(':selected').attr('value')),
-            }],
-        }).then(function () {
+            },
+        ]).then(function () {
             window.location.reload();
         });
     },
@@ -116,15 +107,11 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _createOpportunity: function () {
-        return this._rpc({
-            model: 'crm.lead',
-            method: 'create_opp_portal',
-            args: [{
-                contact_name: $('.new_opp_form .contact_name').val(),
-                title: $('.new_opp_form .title').val(),
-                description: $('.new_opp_form .description').val(),
-            }],
-        }).then(function (response) {
+        return this.orm.call("crm.lead", "create_opp_portal", [{
+            contact_name: $('.new_opp_form .contact_name').val(),
+            title: $('.new_opp_form .title').val(),
+            description: $('.new_opp_form .description').val(),
+        }]).then(function (response) {
             if (response.errors) {
                 $('#new-opp-dialog .alert').remove();
                 $('#new-opp-dialog div:first').prepend('<div class="alert alert-danger">' + response.errors + '</div>');
@@ -139,10 +126,9 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _editOpportunity: function () {
-        return this._rpc({
-            model: 'crm.lead',
-            method: 'update_lead_portal',
-            args: [[parseInt($('.edit_opp_form .opportunity_id').val())], {
+        return this.orm.call("crm.lead", "update_lead_portal", [
+            [parseInt($('.edit_opp_form .opportunity_id').val())],
+            {
                 date_deadline: this._parse_date($('.edit_opp_form .date_deadline').val()),
                 expected_revenue: parseFloat($('.edit_opp_form .expected_revenue').val()),
                 probability: parseFloat($('.edit_opp_form .probability').val()),
@@ -150,8 +136,8 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
                 activity_summary: $('.edit_opp_form .activity_summary').val(),
                 activity_date_deadline: this._parse_date($('.edit_opp_form .activity_date_deadline').val()),
                 priority: $('input[name="PriorityRadioOptions"]:checked').val(),
-            }],
-        }).then(function () {
+            },
+        ]).then(function () {
             window.location.reload();
         });
     },

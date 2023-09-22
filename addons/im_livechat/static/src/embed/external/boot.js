@@ -30,12 +30,11 @@ import { session } from "@web/session";
         {
             async: true,
             start(env) {
-                let rpcId = 0;
-                return function rpc(route, params = {}, settings) {
+                return function rpc(route, params = {}, settings = {}) {
                     if (!route.match(/^(?:https?:)?\/\//)) {
                         route = session.origin + route;
                     }
-                    return jsonrpc(env, rpcId++, route, params, settings);
+                    return jsonrpc(route, params, { bus: env.bus, ...settings });
                 };
             },
         },

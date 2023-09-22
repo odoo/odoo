@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import ajax from "@web/legacy/js/core/ajax";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
@@ -47,7 +47,7 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         var $button = $(ev.currentTarget).closest('[type="submit"]');
         const post = this._getPost();
         $button.attr('disabled', true);
-        return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
+        return jsonrpc($form.attr('action'), post).then(function (modal) {
             var $modal = $(modal);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
             $modal.appendTo(document.body);

@@ -28,6 +28,8 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
 
         this._onInput = debounce(this._onInput, 400);
         this._onFocusOut = debounce(this._onFocusOut, 100);
+
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -111,16 +113,13 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
      * @private
      */
     async _fetch() {
-        const res = await this._rpc({
-            route: '/website/snippet/autocomplete',
-            params: {
-                'search_type': this.searchType,
-                'term': this.$input.val(),
-                'order': this.order,
-                'limit': this.limit,
-                'max_nb_chars': Math.round(Math.max(this.autocompleteMinWidth, parseInt(this.$el.width())) * 0.22),
-                'options': this.options,
-            },
+        const res = await this.rpc('/website/snippet/autocomplete', {
+            'search_type': this.searchType,
+            'term': this.$input.val(),
+            'order': this.order,
+            'limit': this.limit,
+            'max_nb_chars': Math.round(Math.max(this.autocompleteMinWidth, parseInt(this.$el.width())) * 0.22),
+            'options': this.options,
         });
         const fieldNames = this._getFieldsNames();
         res.results.forEach(record => {

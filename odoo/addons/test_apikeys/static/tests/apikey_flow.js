@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { jsonrpc } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
-import ajax from "@web/legacy/js/core/ajax";
 
 registry.category("web_tour.tours").add('apikeys_tour_setup', {
     test: true,
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     trigger: 'p:contains("Here is your new API key")',
     run: async () => {
         const key = $('code [name=key] span').text();
-        await ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        await jsonrpc('/web/dataset/call_kw', {
             model: 'ir.logging', method: 'send_key',
             args: [key],
             kwargs: {},

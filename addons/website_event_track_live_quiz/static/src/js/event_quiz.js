@@ -36,11 +36,8 @@ var WebsiteEventTrackSuggestionQuiz = Quiz.include({
 
     _getTrackSuggestion: function () {
         var self = this;
-        return this._rpc({
-            route: '/event_track/get_track_suggestion',
-            params: {
-                track_id: this.track.id,
-            }
+        return this.rpc('/event_track/get_track_suggestion', {
+            track_id: this.track.id,
         }).then(function (suggestion) {
             self.nextSuggestion = suggestion;
             return Promise.resolve();

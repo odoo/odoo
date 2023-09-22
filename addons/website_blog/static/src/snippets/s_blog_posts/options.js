@@ -37,14 +37,7 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
      * @returns {Promise}
      */
     _fetchBlogs: function () {
-        return this._rpc({
-            model: 'blog.blog',
-            method: 'search_read',
-            kwargs: {
-                domain: wUtils.websiteDomain(this),
-                fields: ['id', 'name'],
-            }
-        });
+        return this.orm.searchRead("blog.blog", wUtils.websiteDomain(this), ["id", "name"]);
     },
     /**
      *

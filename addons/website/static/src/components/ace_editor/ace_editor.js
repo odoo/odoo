@@ -26,6 +26,12 @@ export const WebsiteAceEditor = AceEditor.extend({
     /**
      * @override
      */
+    _getContext() {
+        return this.options.getContext();
+    },
+    /**
+     * @override
+     */
     _saveResources() {
         return this._super.apply(this, arguments).then(() => {
             const defs = [];
@@ -38,12 +44,17 @@ export const WebsiteAceEditor = AceEditor.extend({
                 // got copy/unlink).
                 const selectedView = Object.values(this.views).find(view => view.id === this._getSelectedResource());
                 const context = this.options.getContext();
-                defs.push(this._rpc({
-                    model: 'ir.ui.view',
-                    method: 'search_read',
-                    fields: ['id'],
-                    domain: [['key', '=', selectedView.key], ['website_id', '=', context.website_id]],
-                }));
+                defs.push(
+                    this.orm.searchRead(
+                        "ir.ui.view",
+                        [
+                            ["key", "=", selectedView.key],
+                            ["website_id", "=", context.website_id],
+                        ],
+                        ["id"],
+                        { context: this.options.getContext() }
+                    )
+                );
             }
             return Promise.all(defs).then((async () => {
                 await this._updateEditor();
@@ -87,12 +98,6 @@ export const WebsiteAceEditor = AceEditor.extend({
             await this._loadResources();
             return this._displayResource(this._getSelectedResource());
         }
-    },
-    /**
-     * @override
-     */
-    _rpc(options) {
-        return this._super({ ...options, context: this.options.getContext() });
     },
 });
 

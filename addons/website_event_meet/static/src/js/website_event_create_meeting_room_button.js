@@ -9,15 +9,18 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
         'click': '_onClickCreate',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     _onClickCreate: async function () {
         if (!this.$createModal) {
-            const langs = await this._rpc({
-                route: "/event/active_langs",
-            });
+            const langs = await this.rpc("/event/active_langs");
 
             this.$createModal = $(renderToElement(
                 'event_meet_create_room_modal',

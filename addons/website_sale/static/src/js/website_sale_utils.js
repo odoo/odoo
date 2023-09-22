@@ -28,14 +28,11 @@ export const cartHandlerMixin = {
      * @private
      */
     async _addToCartInPage(params) {
-        const data = await this._rpc({
-            route: "/shop/cart/update_json",
-            params: {
-                ...params,
-                display: false,
-                force_create: true,
-            },
-        })
+        const data = await this.rpc("/shop/cart/update_json", {
+            ...params,
+            display: false,
+            force_create: true,
+        });
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
             updateCartNavBar(data);
             showCartNotification(this.call.bind(this), data.notification_info);

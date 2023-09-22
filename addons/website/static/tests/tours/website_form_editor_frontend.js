@@ -1,6 +1,6 @@
 /** @odoo-module **/
+import { jsonrpc } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
-import rpc from '@web/legacy/js/core/rpc';
 
 registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     test: true,
@@ -165,17 +165,18 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
         content: "Check mail.mail records have been created",
         trigger: "body",
         run: function () {
-            var mailDef = rpc.query({
-                    model: 'mail.mail',
-                    method: 'search_count',
-                    args: [[
-                        ['email_to', '=', 'test@test.test'],
-                        ['body_html', 'like', 'A useless message'],
-                        ['body_html', 'like', 'Service : Development Service'],
-                        ['body_html', 'like', 'State : 44 - UK'],
-                        ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
-                    ]],
-                });
+            var mailDef = jsonrpc(`/web/dataset/call_kw/mail.mail/search_count`, {
+                model: "mail.mail",
+                method: "search_count",
+                args: [[
+                    ['email_to', '=', 'test@test.test'],
+                    ['body_html', 'like', 'A useless message'],
+                    ['body_html', 'like', 'Service : Development Service'],
+                    ['body_html', 'like', 'State : 44 - UK'],
+                    ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
+                ]],
+                kwargs: {},
+            });
             var success = function(model, count) {
                 if (count > 0) {
                     $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
