@@ -374,7 +374,7 @@ class PaymentTransaction(models.Model):
         # Create the token.
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
-            'payment_details': notification_data['id'],
+            'payment_details': notification_data['token_id'],
             'partner_id': self.partner_id.id,
             'provider_ref': notification_data['customer_id'],
             'verified': True,
@@ -394,7 +394,7 @@ class PaymentTransaction(models.Model):
         )
 
     def _send_payment_request(self):
-        """ Override of payment to send a payment request to Stripe with a confirmed PaymentIntent.
+        """ Override of payment to send a payment request to Razorpay for reccuring payment with a token.
 
         Note: self.ensure_one()
 
@@ -408,16 +408,7 @@ class PaymentTransaction(models.Model):
         if not self.token_id:
             raise UserError("Razorpay: " + _("The transaction is not linked to a token."))
 
-        # Get data from payment id
-        payment_response = self.provider_id._razorpay_make_request(
-            endpoint=f"payments/{self.token_id.payment_details}", payload={'id': self.token_id.payment_details}, method="GET"
-        )
-        _logger.info(
-            "Payload of '/payments/:payment_id' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payment_response)
-        )
         order_response = self._create_order(is_payment_capture=True)
-
         # Create recurring payment
         phone = self._validate_and_sanatize_phone_number(self.partner_id.phone)
         recurring_payment_payload = {
@@ -427,7 +418,7 @@ class PaymentTransaction(models.Model):
             'currency': self.currency_id.name,
             'order_id': order_response['id'],
             'customer_id': self.token_id.provider_ref,
-            'token': payment_response['token_id'],
+            'token': self.token_id.payment_details,
             'description': self.reference,
             'recurring': "1",
         }
