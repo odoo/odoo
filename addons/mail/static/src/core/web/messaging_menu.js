@@ -55,7 +55,7 @@ export class MessagingMenu extends Component {
     }
 
     markAsRead(thread) {
-        if (thread.hasNeedactionMessages) {
+        if (thread.needactionMessages.length > 0) {
             this.threadService.markAllMessagesAsRead(thread);
         }
         if (thread.model === "discuss.channel") {
@@ -96,7 +96,8 @@ export class MessagingMenu extends Component {
         /** @type {import("models").Thread[]} */
         let threads = Object.values(this.store.Thread.records).filter(
             (thread) =>
-                thread.is_pinned || (thread.hasNeedactionMessages && thread.type !== "mailbox")
+                thread.is_pinned ||
+                (thread.needactionMessages.length > 0 && thread.type !== "mailbox")
         );
         const tab = this.store.discuss.activeTab;
         if (tab !== "all") {
@@ -124,10 +125,10 @@ export class MessagingMenu extends Component {
             ) {
                 return -1;
             }
-            if (a.hasNeedactionMessages && !b.hasNeedactionMessages) {
+            if (a.needactionMessages.length > 0 && b.needactionMessages.length === 0) {
                 return -1;
             }
-            if (b.hasNeedactionMessages && !a.hasNeedactionMessages) {
+            if (b.needactionMessages.length > 0 && a.needactionMessages.length === 0) {
                 return 1;
             }
             if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {

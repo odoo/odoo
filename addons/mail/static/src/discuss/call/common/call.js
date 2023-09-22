@@ -108,10 +108,10 @@ export class Call extends Component {
             }
         }
         if (!filterVideos) {
-            for (const memberId of this.props.thread.invitedMemberIds) {
+            for (const member of this.props.thread.invitedMembers) {
                 invitationCards.push({
-                    key: "member_" + memberId,
-                    member: this.store.ChannelMember.get(memberId),
+                    key: "member_" + member.id,
+                    member,
                 });
             }
         }
