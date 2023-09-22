@@ -172,7 +172,7 @@ class AccountPayment(models.Model):
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.destination_journal_id):
                     # check outbound payment and transfer or inbound transfer
                     msgs.append(_(
-                        'Check "%s" is not anymore in journal "%s", it seems it has been moved by another payment.',
+                        'Check "%s" is not anymore in journal "%s", is already used on another payment.',
                         rec.l10n_latam_check_id.display_name, rec.journal_id.name
                         if rec.payment_type == 'outbound' else rec.destination_journal_id.name))
                 elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and \
@@ -255,15 +255,17 @@ class AccountPayment(models.Model):
         return super().action_unmark_sent()
 
     def action_post(self):
-        msgs = self._get_blocking_l10n_latam_warning_msg()
-        if msgs:
-            raise ValidationError('* %s' % '\n* '.join(msgs))
+        check_payments = self.filtered('l10n_latam_check_id')
+        for check_payment in check_payments:
+            msgs = check_payment._get_blocking_l10n_latam_warning_msg()
+            if msgs:
+                raise ValidationError('* %s' % '\n* '.join(msgs))
+            super(AccountPayment, check_payment).action_post()
 
-        res = super().action_post()
+        super(AccountPayment, self - check_payments).action_post()
 
         # mark own checks that are not printed as sent
         self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks).write({'is_move_sent': True})
-        return res
 
     @api.model
     def _get_trigger_fields_to_synchronize(self):
