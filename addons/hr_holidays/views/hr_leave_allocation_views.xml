@@ -70,7 +70,7 @@
                 <field name="can_approve" invisible="1"/>
                 <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
                 <header>
-                    <button string="Confirm" name="action_confirm" invisible="state != 'draft' and 'allocation_type' != 'accrual' and not employee_id" type="object" class="oe_highlight"/>
+                    <button string="Confirm" name="action_confirm" invisible="state != 'draft' or 'allocation_type' != 'accrual' and not employee_id" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                 </header>
                 <sheet>
