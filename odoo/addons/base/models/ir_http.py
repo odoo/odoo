@@ -236,7 +236,8 @@ class IrHttp(models.AbstractModel):
                 "time_format": langs.time_format,
                 "grouping": langs.grouping,
                 "decimal_point": langs.decimal_point,
-                "thousands_sep": langs.thousands_sep,
+                # A0 is the unicode codepoint for a non-breaking space
+                "thousands_sep": langs.thousands_sep.replace(' ', '\xa0'),
                 "week_start": langs.week_start,
             }
             lang_params['week_start'] = int(lang_params['week_start'])
