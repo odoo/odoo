@@ -151,7 +151,7 @@ export class ChatBotService {
                 ...rawMessage,
                 body: markup(rawMessage.body),
             });
-            if (!this.livechatService.thread?.hasMessage(message)) {
+            if (message.notIn(!this.livechatService.thread?.messages)) {
                 this.livechatService.thread?.messages.push(message);
             }
         }
@@ -186,7 +186,7 @@ export class ChatBotService {
                     ...stepMessage,
                     body: markup(stepMessage.body),
                 });
-                if (!this.livechatService.thread?.hasMessage(message)) {
+                if (message.notIn(this.livechatService.thread?.messages)) {
                     this.livechatService.thread?.messages.push(message);
                 }
             }
