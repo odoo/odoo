@@ -158,6 +158,7 @@
                     <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="has_tracking" invisible="1"/>
+                    <field name="show_reserved" invisible="1"/>
                     <field name="show_quant" invisible="1"/>
                     <field name="show_lots_text" invisible="1"/>
                     <field name="show_lots_m2o" invisible="1"/>
@@ -183,8 +184,14 @@
                         <widget class="btn btn-link btn-group" name="generate_serials" invisible="not display_assign_serial"/>
                         <widget class="btn btn-link btn-group" name="import_lots" invisible="not display_import_lot"/>
                     </div>
+                    <field name="move_line_nosuggest_ids"
+                           readonly="state == 'cancel' or (state == 'done' and is_locked)"
+                           invisible="show_reserved"
+                           context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"
+                           widget="sml_x2_many"/>
                     <field name="move_line_ids"
                            readonly="state == 'cancel' or (state == 'done' and is_locked)"
+                           invisible="not show_reserved"
                            context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"
                            widget="sml_x2_many"/>
                 </form>

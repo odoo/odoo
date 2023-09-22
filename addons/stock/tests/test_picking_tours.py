@@ -57,3 +57,25 @@ class TestStockPickingTour(HttpCase):
             ('product_id', '=', product_serial.id),
         ])
         self.assertEqual(len(serial), 5)
+
+    def test_generate_serial_2(self):
+        """generate some serial numbers in the detailed operation modal on a planned picking"""
+        self.receipt.action_reset_draft()
+        product_serial = self.env['product.product'].create({
+            'name': 'Product Serial',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        url = self._get_picking_url(self.receipt.id)
+
+        self.start_tour(url, 'test_generate_serial_2', login='admin', timeout=60)
+        self.assertEqual(self.receipt.state, 'done')
+        self.assertEqual(self.receipt.move_ids.product_uom_qty, 0)
+        self.assertEqual(self.receipt.move_ids.quantity_done, 5)
+        self.assertEqual(len(self.receipt.move_ids.move_line_ids), 5)
+
+        serial = self.env['stock.lot'].search([
+            ('name', 'ilike', 'serial_n_%'),
+            ('product_id', '=', product_serial.id),
+        ])
+        self.assertEqual(len(serial), 5)
