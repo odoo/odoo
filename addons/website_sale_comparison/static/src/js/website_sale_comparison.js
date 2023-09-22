@@ -29,6 +29,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this.comparelist_product_ids = JSON.parse(getCookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
         this.guard = new Mutex();
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -135,12 +136,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     _loadProducts: function (product_ids) {
         var self = this;
-        return this._rpc({
-            route: '/shop/get_product_data',
-            params: {
-                product_ids: product_ids,
-                cookies: JSON.parse(getCookie('comparelist_product_ids') || '[]'),
-            },
+        return this.rpc('/shop/get_product_data', {
+            product_ids: product_ids,
+            cookies: JSON.parse(getCookie('comparelist_product_ids') || '[]'),
         }).then(function (data) {
             self.comparelist_product_ids = JSON.parse(data.cookies);
             delete data.cookies;
@@ -267,6 +265,10 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
     /**
      * @override
      */

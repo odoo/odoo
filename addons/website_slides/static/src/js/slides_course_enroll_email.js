@@ -10,6 +10,10 @@ export const WebsiteSlidesEnroll = publicWidget.Widget.extend({
     events: {
         "click .o_wslides_js_channel_enroll": "_onSendRequestClick",
     },
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
     async _onSendRequestClick(ev) {
         ev.preventDefault();
         const clickedEl = ev.currentTarget;
@@ -23,11 +27,11 @@ export const WebsiteSlidesEnroll = publicWidget.Widget.extend({
                 cancel: () => {}, // show cancel button
             })
         );
-        const { error, done } = await this._rpc({
-            model: "slide.channel",
-            method: "action_request_access",
-            args: [channelId],
-        });
+        const { error, done } = await this.orm.call(
+            "slide.channel",
+            "action_request_access",
+            [channelId],
+        );
         const $alert = $(clickedEl.closest(".alert"));
         const message = done ? _t("Request sent!") : error || _t("Unknown error, try again.");
         $alert.replaceWith(`

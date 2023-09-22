@@ -59,11 +59,8 @@ SlidesUpload.SlideUploadDialog.include({
         var self = this;
         this.$('#certification_id').select2(this._select2Wrapper(_t('Certification'), false,
             function () {
-                return self._rpc({
-                    route: '/slides_survey/certification/search_read',
-                    params: {
-                        fields: ['title'],
-                    }
+                return self.rpc('/slides_survey/certification/search_read', {
+                    fields: ['title'],
                 });
             }, 'title')
         );

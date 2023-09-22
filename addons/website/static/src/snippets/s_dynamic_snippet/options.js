@@ -33,6 +33,8 @@ const dynamicSnippetOptions = options.Class.extend({
         this.dynamicFilterTemplates = {};
         // Indicates that some current options are a default selection.
         this.isOptionDefault = {};
+
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -149,10 +151,10 @@ const dynamicSnippetOptions = options.Class.extend({
      * @returns {Promise}
      */
     async _fetchDynamicFilters() {
-        const dynamicFilters = await this._rpc({route: '/website/snippet/options_filters', params: {
+        const dynamicFilters = await this.rpc('/website/snippet/options_filters', {
             model_name: this.modelNameFilter,
             search_domain: this.contextualFilterDomain,
-        }});
+        });
         if (!dynamicFilters.length) {
             // Additional modules are needed for dynamic filters to be defined.
             return;
@@ -174,9 +176,9 @@ const dynamicSnippetOptions = options.Class.extend({
         if (!filter) {
             return [];
         }
-        const dynamicFilterTemplates = await this._rpc({route: '/website/snippet/filter_templates', params: {
+        const dynamicFilterTemplates = await this.rpc('/website/snippet/filter_templates', {
             filter_name: filter.model_name.replaceAll('.', '_'),
-        }});
+        });
         for (let index in dynamicFilterTemplates) {
             this.dynamicFilterTemplates[dynamicFilterTemplates[index].key] = dynamicFilterTemplates[index];
         }

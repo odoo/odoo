@@ -1602,13 +1602,8 @@ export class PosStore extends Reactive {
         }
         const payload = ev.data;
         if (ev.name === "call_service") {
-            let args = payload.args || [];
-            if (payload.service === "ajax" && payload.method === "rpc") {
-                // ajax service uses an extra 'target' argument for rpc
-                args = args.concat(ev.target);
-            }
             const service = this.env.services[payload.service];
-            const result = service[payload.method].apply(service, args);
+            const result = service[payload.method].apply(service, ev.data.args || []);
             payload.callback(result);
         }
     }

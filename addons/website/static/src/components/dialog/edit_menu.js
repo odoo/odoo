@@ -44,21 +44,16 @@ export class MenuDialog extends Component {
 
         useEffect(() => {
             const $input = $(this.urlInputRef.el);
-            // wUtils.autocompleteWithPages rely on a widget that has a _rpc and
-            // trigger_up method.
-            const fakeWidget = {
-                _rpc: ({ route, params }) => this.rpc(route, params),
-                trigger_up: () => {
-                    this.url.input.value = this.urlInputRef.el.value;
-                },
-            };
             const options = {
                 body: this.website.pageDocument.body,
                 classes: {
                     'ui-autocomplete': 'o_edit_menu_autocomplete'
                 },
+                urlChosen: () => {
+                    this.url.input.value = this.urlInputRef.el.value;
+                },
             };
-            wUtils.autocompleteWithPages(fakeWidget, $input, options);
+            wUtils.autocompleteWithPages(this.rpc.bind(this), $input, options);
             return () => $input.urlcomplete('destroy');
         }, () => []);
     }

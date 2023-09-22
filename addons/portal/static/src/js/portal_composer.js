@@ -2,10 +2,10 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
-import ajax from "@web/legacy/js/core/ajax";
 import core from "@web/legacy/js/services/core";
 import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { post } from "@web/core/network/http_service";
 
 /**
  * Widget PortalComposer
@@ -36,6 +36,7 @@ var PortalComposer = publicWidget.Widget.extend({
             'res_id': false,
         }, options || {});
         this.attachments = [];
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -84,12 +85,9 @@ var PortalComposer = publicWidget.Widget.extend({
 
         this.$sendButton.prop('disabled', true);
 
-        return this._rpc({
-            route: '/portal/attachment/remove',
-            params: {
-                'attachment_id': attachmentId,
-                'access_token': accessToken,
-            },
+        return this.rpc('/portal/attachment/remove', {
+            'attachment_id': attachmentId,
+            'access_token': accessToken,
         }).then(function () {
             self.attachments = self.attachments.filter(attachment => attachment.id !== attachmentId);
             self._updateAttachments();
@@ -117,7 +115,10 @@ var PortalComposer = publicWidget.Widget.extend({
         return Promise.all([...this.$fileInput[0].files].map((file) => {
             return new Promise(function (resolve, reject) {
                 var data = self._prepareAttachmentData(file);
-                ajax.post('/portal/attachment/add', data).then(function (attachment) {
+                if (odoo.csrf_token) {
+                    data.csrf_token = odoo.csrf_token;
+                }
+                post('/portal/attachment/add', data).then(function (attachment) {
                     attachment.state = 'pending';
                     self.attachments.push(attachment);
                     self._updateAttachments();
@@ -195,10 +196,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @returns {Promise}
      */
     _chatterPostMessage: async function (route) {
-        const result = await this._rpc({
-            route: route,
-            params: this._prepareMessageData(),
-        });
+        const result = await this.rpc(route, this._prepareMessageData());
         core.bus.trigger('reload_chatter_content', result);
         return result;
     },

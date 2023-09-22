@@ -16,11 +16,6 @@ import {
 } from "@odoo/owl";
 import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import {
-    ConnectionAbortedError,
-    ConnectionLostError,
-    RPCError,
-} from "@web/core/network/rpc_service";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 
@@ -116,46 +111,6 @@ export function makeLegacyNotificationService(legacyEnv) {
     };
 }
 
-export function makeLegacyRPC(wowlRPC) {
-    return function rpc(route, args, options, target) {
-        let rpcPromise = null;
-        const promise = new Promise(function (resolve, reject) {
-            rpcPromise = wowlRPC(route, args, options);
-            rpcPromise
-                .then(function (result) {
-                    if (!target.isDestroyed()) {
-                        resolve(result);
-                    }
-                })
-                .catch(function (reason) {
-                    if (!target.isDestroyed()) {
-                        if (reason instanceof RPCError || reason instanceof ConnectionLostError) {
-                            // we do not reject an error here because we want to pass through
-                            // the legacy guardedCatch code
-                            reject({ message: reason, event: $.Event(), legacy: true });
-                        } else if (reason instanceof ConnectionAbortedError) {
-                            reject({ message: reason.message, event: $.Event("abort") });
-                        } else {
-                            reject(reason);
-                        }
-                    }
-                });
-        });
-        promise.abort = rpcPromise.abort.bind(rpcPromise);
-        return promise;
-    };
-}
-
-export function makeLegacyRPCService(legacyEnv) {
-    return {
-        dependencies: ["rpc"],
-        start(_, { rpc: wowlRPC }) {
-            const rpc = makeLegacyRPC(wowlRPC);
-            legacyEnv.services.ajax = { rpc };
-        },
-    };
-}
-
 /**
  * This hook allows legacy owl Components to use services coming from the wowl env.
  * @param {string} serviceName
@@ -175,13 +130,8 @@ export function createWidgetParent(env) {
         env,
         _trigger_up: (ev) => {
             if (ev.name === "call_service") {
-                let args = ev.data.args || [];
-                if (ev.data.service === "ajax" && ev.data.method === "rpc") {
-                    // ajax service uses an extra 'target' argument for rpc
-                    args = args.concat(ev.target);
-                }
                 const service = env.services[ev.data.service];
-                const result = service[ev.data.method].apply(service, args);
+                const result = service[ev.data.method].apply(service, ev.data.args || []);
                 ev.data.callback(result);
             }
         },

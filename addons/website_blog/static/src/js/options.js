@@ -58,6 +58,11 @@ options.registry.CoverProperties.include({
 });
 
 options.registry.BlogPostTagSelection = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -66,11 +71,11 @@ options.registry.BlogPostTagSelection = options.Class.extend({
 
         this.blogPostID = parseInt(this.$target[0].dataset.blogId);
         this.isEditingTags = false;
-        const tags = await this._rpc({
-            model: 'blog.tag',
-            method: 'search_read',
-            args: [[], ['id', 'name', 'display_name', 'post_ids']],
-        });
+        const tags = await this.orm.searchRead(
+            "blog.tag",
+            [],
+            ["id", "name", "display_name", "post_ids"]
+        );
         this.allTagsByID = {};
         this.tagIDs = [];
         for (const tag of tags) {

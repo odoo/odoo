@@ -72,6 +72,9 @@
             this.userId = session.user_id;
             this.redirectURL = encodeURIComponent(document.URL);
             this.channel = channel_data;
+
+            this.rpc = this.bindService("rpc");
+            this.orm = this.bindService("orm");
         },
 
         /**
@@ -175,12 +178,9 @@
          * @private
          */
         _reorderQuestions: function () {
-            this._rpc({
-                route: '/web/dataset/resequence',
-                params: {
-                    model: "slide.question",
-                    ids: this._getQuestionsIds()
-                }
+            this.rpc('/web/dataset/resequence', {
+                model: "slide.question",
+                ids: this._getQuestionsIds()
             }).then(this._modifyQuestionsSequence.bind(this))
         },
         /*
@@ -189,11 +189,8 @@
          */
         _fetchQuiz: function () {
             var self = this;
-            return self._rpc({
-                route:'/slides/slide/quiz/get',
-                params: {
-                    'slide_id': self.slide.id,
-                }
+            return self.rpc('/slides/slide/quiz/get', {
+                'slide_id': self.slide.id,
             }).then(function (quiz_data) {
                 self.slide.sessionAnswers = quiz_data.session_answers;
                 self.quiz = {
@@ -357,12 +354,9 @@
          * @private
          */
          async _submitQuiz() {
-            const data = await this._rpc({
-                route: '/slides/slide/quiz/submit',
-                params: {
-                    slide_id: this.slide.id,
-                    answer_ids: this._getQuizAnswers(),
-                }
+            const data = await this.rpc('/slides/slide/quiz/submit', {
+                slide_id: this.slide.id,
+                answer_ids: this._getQuizAnswers(),
             });
             if (data.error) {
                 this._showErrorMessage(data.error);
@@ -470,11 +464,8 @@
          * @private
          */
         _onClickReset: function () {
-            this._rpc({
-                route: '/slides/slide/quiz/reset',
-                params: {
-                    slide_id: this.slide.id
-                }
+            this.rpc('/slides/slide/quiz/reset', {
+                slide_id: this.slide.id
             }).then(function () {
                 window.location.reload();
             });
@@ -488,11 +479,8 @@
         _saveQuizAnswersToSession: function () {
             this._hideErrorMessage();
 
-            return this._rpc({
-                route: '/slides/slide/quiz/save_to_session',
-                params: {
-                    'quiz_answers': {'slide_id': this.slide.id, 'slide_answers': this._getQuizAnswers()},
-                }
+            return this.rpc('/slides/slide/quiz/save_to_session', {
+                'quiz_answers': {'slide_id': this.slide.id, 'slide_answers': this._getQuizAnswers()},
             });
         },
         /**
@@ -665,11 +653,7 @@
          */
         _onConfirmClick: function () {
             var self = this;
-            this._rpc({
-                model: 'slide.question',
-                method: 'unlink',
-                args: [this.questionId],
-            }).then(function () {
+            this.orm.unlink("slide.question", [this.questionId]).then(function () {
                 self.trigger_up('delete_question', { questionId: self.questionId });
                 self.close();
             });

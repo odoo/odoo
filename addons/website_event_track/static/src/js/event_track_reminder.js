@@ -17,6 +17,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._onReminderToggleClick = debounce(this._onReminderToggleClick, 500, true);
+        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -39,12 +40,9 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
 
         var reminderOnValue = !this.reminderOn;
 
-        this._rpc({
-            route: '/event/track/toggle_reminder',
-            params: {
-                track_id: $trackLink.data('trackId'),
-                set_reminder_on: reminderOnValue,
-            },
+        this.rpc('/event/track/toggle_reminder', {
+            track_id: $trackLink.data('trackId'),
+            set_reminder_on: reminderOnValue,
         }).then(function (result) {
             if (result.error && result.error === 'ignored') {
                 self.displayNotification({

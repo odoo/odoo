@@ -39,6 +39,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     // Widget
     //--------------------------------------------------------------------------
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
     * @override
     */
@@ -326,9 +331,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.preventEnterSubmit = false;
             this.readonly = false;
             this._nextScreen(
-                this._rpc({
-                    route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
-                }), {
+                this.rpc(
+                    `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`
+                ), {
                     initTimer: true,
                     isFinish: nextPageEvent.type === 'end_session'
                 }
@@ -392,10 +397,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this.readonly = true;
         }
 
-        var submitPromise = self._rpc({
-            route: `${route}/${self.options.surveyToken}/${self.options.answerToken}`,
-            params: params,
-        });
+        var submitPromise = self.rpc(
+            `${route}/${self.options.surveyToken}/${self.options.answerToken}`,
+            params
+        );
         this._nextScreen(submitPromise, options);
     },
 

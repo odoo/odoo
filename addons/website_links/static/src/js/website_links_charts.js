@@ -126,6 +126,11 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         'click .copy-to-clipboard': '_onCopyToClipboardClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -221,33 +226,29 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
      * @private
      */
     _totalClicks: function () {
-        return this._rpc({
-            model: 'link.tracker.click',
-            method: 'search_count',
-            args: [[this.links_domain]],
-        });
+        return this.orm.searchCount("link.tracker.click", [this.links_domain]);
     },
     /**
      * @private
      */
     _clicksByDay: function () {
-        return this._rpc({
-            model: 'link.tracker.click',
-            method: 'read_group',
-            args: [[this.links_domain], ['create_date']],
-            kwargs: {groupby: 'create_date:day'},
-        });
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain],
+            ["create_date"],
+            ["create_date:day"]
+        );
     },
     /**
      * @private
      */
     _clicksByCountry: function () {
-        return this._rpc({
-            model: 'link.tracker.click',
-            method: 'read_group',
-            args: [[this.links_domain], ['country_id']],
-            kwargs: {groupby: 'country_id'},
-        });
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain],
+            ["country_id"],
+            ["country_id"]
+        );
     },
     /**
      * @private
@@ -257,12 +258,12 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         const aWeekAgoDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
         // get the date in the format YYYY-MM-DD.
         const aWeekAgoString = aWeekAgoDate.toISOString().split("T")[0];
-        return this._rpc({
-            model: 'link.tracker.click',
-            method: 'read_group',
-            args: [[this.links_domain, ["create_date", ">", aWeekAgoString]], ["country_id"]],
-            kwargs: {groupby: 'country_id'},
-        });
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain, ["create_date", ">", aWeekAgoString]],
+            ["country_id"],
+            ["country_id"]
+        );
     },
     /**
      * @private
@@ -272,12 +273,12 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         const aMonthAgoDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         // get the date in the format YYYY-MM-DD.
         const aMonthAgoString = aMonthAgoDate.toISOString().split("T")[0];
-        return this._rpc({
-            model: 'link.tracker.click',
-            method: 'read_group',
-            args: [[this.links_domain, ["create_date", ">", aMonthAgoString]], ["country_id"]],
-            kwargs: {groupby: 'country_id'},
-        });
+        return this.orm.readGroup(
+            "link.tracker.click",
+            [this.links_domain, ["create_date", ">", aMonthAgoString]],
+            ["country_id"],
+            ["country_id"]
+        );
     },
 
     //--------------------------------------------------------------------------

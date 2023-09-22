@@ -78,6 +78,7 @@ export var NameAndSignature = Widget.extend({
         this.drawTimeout = null;
         this.drawPreviewTimeout = null;
         this.signatureAreaHidden = false;
+        this.rpc = this.bindService("rpc");
     },
     /**
      * Loads the fonts.
@@ -94,7 +95,7 @@ export var NameAndSignature = Widget.extend({
         }
         return Promise.all([
             this._super.apply(this, arguments),
-            this._rpc({route: '/web/sign/get_fonts/' + this.defaultFont}).then(data => {
+            this.rpc('/web/sign/get_fonts/' + this.defaultFont).then(data => {
                 this.fonts = data;
             })
         ]);

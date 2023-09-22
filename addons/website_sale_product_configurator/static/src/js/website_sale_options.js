@@ -104,12 +104,9 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal.getAndCreateSelectedProducts()
             .then((products) => {
                 const productAndOptions = JSON.stringify(products);
-                this._rpc({
-                    route: '/shop/cart/update_option',
-                    params: {
-                        product_and_options: productAndOptions,
-                        ...this._getOptionalCombinationInfoParam(),
-                    },
+                this.rpc('/shop/cart/update_option', {
+                    product_and_options: productAndOptions,
+                    ...this._getOptionalCombinationInfoParam(),
                 }).then(function (values) {
                     if (goToShop) {
                         window.location.pathname = "/shop/cart";
@@ -119,7 +116,7 @@ publicWidget.registry.WebsiteSale.include({
                     }
                 }).then(() => {
                     this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
-                });;
+                });
             });
     },
 });

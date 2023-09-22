@@ -9,6 +9,11 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         'click .o_mg_subscribe_btn': '_onSubscribeBtnClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
      * @override
      */
@@ -42,13 +47,10 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
 
         const action = (this.isMember || this.forceUnsubscribe) ? 'unsubscribe' : 'subscribe';
 
-        const response = await this._rpc({
-            route: '/group/' + action,
-            params: {
-                'group_id': this.mailgroupId,
-                'email': email,
-                'token': this.token,
-            },
+        const response = await this.rpc('/group/' + action, {
+            'group_id': this.mailgroupId,
+            'email': email,
+            'token': this.token,
         });
 
         this.$el.find('.o_mg_alert').remove();

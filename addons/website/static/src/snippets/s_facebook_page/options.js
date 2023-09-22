@@ -4,6 +4,11 @@ import { pick } from "@web/core/utils/objects";
 import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.facebookPage = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * Initializes the required facebook page data to create the iframe.
      *
@@ -25,10 +30,7 @@ options.registry.facebookPage = options.Class.extend({
         if (!this.fbData.href) {
             // Fetches the default url for facebook page from website config
             var self = this;
-            defs.push(this._rpc({
-                model: 'website',
-                method: 'search_read',
-                args: [[], ['social_facebook']],
+            defs.push(this.orm.searchRead("website", [], ["social_facebook"], {
                 limit: 1,
             }).then(function (res) {
                 if (res) {

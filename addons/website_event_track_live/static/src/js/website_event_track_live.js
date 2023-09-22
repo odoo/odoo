@@ -11,6 +11,11 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
         'video-ended': '_onVideoEnded'
     }),
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     start: function () {
         var self = this;
         return this._super(...arguments).then(function () {
@@ -45,11 +50,8 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
             class: 'owevent_track_suggestion_loading position-absolute w-100'
         }));
         var self = this;
-        this._rpc({
-            route: '/event_track/get_track_suggestion',
-            params: {
-                track_id: this.$el.data('trackId'),
-            }
+        this.rpc('/event_track/get_track_suggestion', {
+            track_id: this.$el.data('trackId'),
         }).then(function (suggestion) {
             self.nextSuggestion = suggestion;
             self._showSuggestion();

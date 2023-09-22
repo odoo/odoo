@@ -10,6 +10,11 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         'click .o_wjitsi_room_link': '_onChatRoomClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
       * Manage the chat room (Jitsi), update the participant count...
       *
@@ -59,12 +64,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         if (this.checkFull) {
             // maybe we didn't refresh the page for a while and so we might join a room
             // which is full, so we perform a RPC call to verify that we can really join
-            let isChatRoomFull = await this._rpc({
-                route: '/jitsi/is_full',
-                params: {
-                    room_name: this.roomName,
-                },
-            });
+            let isChatRoomFull = await this.rpc('/jitsi/is_full', { room_name: this.roomName });
 
             if (isChatRoomFull) {
                 window.location.reload();
@@ -204,13 +204,10 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * @param {boolean} joined, true if someone joined the room
       */
     _updateParticipantCount: async function (count, joined) {
-        await this._rpc({
-            route: '/jitsi/update_status',
-            params: {
-                room_name: this.roomName,
-                participant_count: count,
-                joined: joined,
-            },
+        await this.rpc('/jitsi/update_status', {
+            room_name: this.roomName,
+            participant_count: count,
+            joined: joined,
         });
     },
 

@@ -17,6 +17,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
     init: function () {
         this._super.apply(this, arguments);
         this._onProductChange = debounce(this._onProductChange, this.debounceValue);
+        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -40,11 +41,8 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
         if ($(this.el).find('.js_product.css_not_available').length) {
             return; // Variant not possible
         }
-        this._rpc({
-            route: '/shop/products/recently_viewed_update',
-            params: {
-                product_id: productId,
-            }
+        this.rpc('/shop/products/recently_viewed_update', {
+            product_id: productId,
         }).then(function (res) {
             setCookie(cookieName, productId, 30 * 60, 'optional');
         });

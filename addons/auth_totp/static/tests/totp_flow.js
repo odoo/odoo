@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ajax from "@web/legacy/js/core/ajax";
+import { jsonrpc } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -98,7 +98,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
         const $secret = this.$anchor.closest('div').find('[name=secret] span:first-child');
         const $copyBtn = $secret.find('button');
         $copyBtn.remove();
-        const token = await ajax.jsonRpc('/totphook', 'call', {
+        const token = await jsonrpc('/totphook', {
             secret: $secret.text()
         });
         helpers.text(token, '[name=code] input');
@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
         //       content of the HTML element, not the JS value property. We
         //       could set a class but that's really no better than
         //       procedurally clicking the button after we've set the input.
-        const token = await ajax.jsonRpc('/totphook', 'call', {});
+        const token = await jsonrpc('/totphook');
         helpers.text(token);
         helpers.click('button:contains("Log in")');
     }
@@ -185,7 +185,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "input code",
     trigger: 'input[name=totp_token]',
     async run(helpers) {
-        const token = await ajax.jsonRpc('/totphook', 'call', {})
+        const token = await jsonrpc('/totphook')
         helpers.text(token);
         helpers.click('button:contains("Log in")');
     }

@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import ajax from '@web/legacy/js/core/ajax';
 import Dialog from '@web/legacy/js/core/dialog';
-import ServicesMixin from '@web/legacy/js/core/service_mixins';
 import VariantMixin from '@website_sale/js/sale_variant_mixin';
 import { uniqueId } from '@web/core/utils/functions';
+import { jsonrpc } from '@web/core/network/rpc_service';
 
-export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
+export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     events:  Object.assign({}, Dialog.prototype.events, VariantMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
         'click button.js_add_cart_json': 'onClickAddCartJSON',
@@ -73,6 +72,8 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
                 self.$el.closest('.modal-content').css('min-height', self.previousModalHeight + 'px');
             }
         });
+
+        this.rpc = this.bindService("rpc");
     },
      /**
      * @override
@@ -80,22 +81,19 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
     willStart: function () {
         var self = this;
 
-        var getModalContent = ajax.jsonRpc(
-            '/sale_product_configurator/show_advanced_configurator',
-            'call',
-            {
-                mode: self.mode,
-                product_id: self.rootProduct.product_id,
-                variant_values: self.rootProduct.variant_values,
-                product_custom_attribute_values: self.rootProduct.product_custom_attribute_values,
-                pricelist_id: self.pricelistId || false,
-                add_qty: self.rootProduct.quantity,
-                force_dialog: self.forceDialog,
-                no_attribute: self.rootProduct.no_variant_attribute_values,
-                custom_attribute: self.rootProduct.product_custom_attribute_values,
-                context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
-            }
-        ).then(function (modalContent) {
+        var getModalContent = jsonrpc("/sale_product_configurator/show_advanced_configurator", {
+            mode: self.mode,
+            product_id: self.rootProduct.product_id,
+            variant_values: self.rootProduct.variant_values,
+            product_custom_attribute_values: self.rootProduct.product_custom_attribute_values,
+            pricelist_id: self.pricelistId || false,
+            add_qty: self.rootProduct.quantity,
+            force_dialog: self.forceDialog,
+            no_attribute: self.rootProduct.no_variant_attribute_values,
+            custom_attribute: self.rootProduct.product_custom_attribute_values,
+            context: Object.assign({'quantity': self.rootProduct.quantity}, this.context),
+        })
+        .then(function (modalContent) {
             if (modalContent) {
                 var $modalContent = $(modalContent);
                 $modalContent = self._postProcessContent($modalContent);
@@ -394,14 +392,10 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
         ).then(function (productId) {
             $parent.find('.product_id').val(productId);
 
-            ajax.jsonRpc(
-                '/sale_product_configurator/optional_product_items',
-                'call',
-                {
-                    'product_id': productId,
-                    'pricelist_id': self.pricelistId || false,
-                }
-            ).then(function (addedItem) {
+            jsonrpc("/sale_product_configurator/optional_product_items", {
+                'product_id': productId,
+                'pricelist_id': self.pricelistId || false,
+            }).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);
 

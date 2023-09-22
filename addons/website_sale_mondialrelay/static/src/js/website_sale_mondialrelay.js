@@ -110,11 +110,8 @@ WebsiteSaleDeliveryWidget.include({
         if (!this.lastRelaySelected) {
             return;
         }
-        this._rpc({
-            route: '/website_sale_mondialrelay/update_shipping',
-            params: {
-                ...this.lastRelaySelected,
-            },
+        this.rpc('/website_sale_mondialrelay/update_shipping', {
+            ...this.lastRelaySelected,
         }).then((o) => {
             $('#address_on_payment').html(o.address);
             this.$modal_mondialrelay.modal('hide');

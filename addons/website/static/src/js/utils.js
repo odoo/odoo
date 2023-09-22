@@ -45,10 +45,10 @@ function loadAnchors(url, body) {
 /**
  * Allows the given input to propose existing website URLs.
  *
- * @param {ServicesMixin|Widget} self - an element capable to trigger an RPC
+ * @param {Function} rpc
  * @param {jQuery} $input
  */
-function autocompleteWithPages(self, $input, options) {
+function autocompleteWithPages(rpc, $input, options) {
     $.widget("website.urlcomplete", $.ui.autocomplete, {
         options: options || {},
         _create: function () {
@@ -88,15 +88,12 @@ function autocompleteWithPages(self, $input, options) {
                 // avoid useless call to /website/get_suggested_links
                 response();
             } else {
-                if (self.isDestroyed?.()) {
-                    return ;
+                if (options.isDestroyed?.()) {
+                    return;
                 }
-                return self._rpc({
-                    route: '/website/get_suggested_links',
-                    params: {
-                        needle: request.term,
-                        limit: 15,
-                    }
+                return rpc('/website/get_suggested_links', {
+                    needle: request.term,
+                    limit: 15,
                 }).then(function (res) {
                     let choices = res.matching_pages;
                     res.others.forEach(other => {
@@ -115,7 +112,7 @@ function autocompleteWithPages(self, $input, options) {
             // choose url in dropdown with arrow change ev.target.value without trigger_up
             // so cannot check here if value has been updated
             ev.target.value = ui.item.value;
-            self.trigger_up('website_url_chosen');
+            options?.urlChosen();
             ev.preventDefault();
         },
     });

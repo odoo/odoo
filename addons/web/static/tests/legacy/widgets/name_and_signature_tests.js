@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
     import { NameAndSignature } from "@web/legacy/js/widgets/name_and_signature";
-    import testUtils from "@web/../tests/legacy/helpers/test_utils";
+    import makeTestEnvironment from "../helpers/test_env";
+    import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
     const MockedNameAndSignature = NameAndSignature.extend({
         events: {
@@ -14,14 +15,14 @@
 
     async function MockedNameAndSignatureGenerator (options) {
         const parent = $("#qunit-fixture");
-        const mockedNameAndSignature = new MockedNameAndSignature(parent, options);
-        testUtils.mock.intercept(mockedNameAndSignature, 'call_service', function ({ data }) {
-            if (data.service === "ajax" && data.method === "rpc") {
-                if (data.args[0] === "/web/sign/get_fonts/") {
-                    data.callback(Promise.resolve());
+        patchWithCleanup(owl.Component, {
+            env: await makeTestEnvironment({}, (route) => {
+                if (route === "/web/sign/get_fonts/") {
+                    return Promise.resolve();
                 }
-            }
+            }),
         });
+        const mockedNameAndSignature = new MockedNameAndSignature(parent, options);
         await mockedNameAndSignature.appendTo(parent);
         await mockedNameAndSignature.resetSignature();
         return mockedNameAndSignature;

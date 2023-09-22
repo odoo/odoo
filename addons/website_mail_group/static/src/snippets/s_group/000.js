@@ -12,13 +12,10 @@ MailGroup.include({
         // Because it's rendered only once when the admin add the snippets
         // for the first time, we make a RPC call to setup the widget properly
         const email = (new URL(document.location.href)).searchParams.get('email');
-        const response = await this._rpc({
-            route: '/group/is_member',
-            params: {
-                'group_id': this.mailgroupId,
-                'email': email,
-                'token': this.token,
-            },
+        const response = await this.rpc('/group/is_member', {
+            'group_id': this.mailgroupId,
+            'email': email,
+            'token': this.token,
         });
 
         if (!response) {

@@ -22,6 +22,8 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
 
         this._onChangeStreet = debounce(this._onChangeStreet, 200);
         this._super.apply(this, arguments);
+
+        this.rpc = this.bindService("rpc");
     },
 
      /**
@@ -47,12 +49,9 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         const inputContainer = ev.currentTarget.parentNode;
         if (ev.currentTarget.value.length >= 5) {
             this.keepLast.add(
-                this._rpc({
-                    route: '/autocomplete/address',
-                    params: {
-                        partial_address: ev.currentTarget.value,
-                        session_id: this.sessionId || null
-                    }
+                this.rpc('/autocomplete/address', {
+                    partial_address: ev.currentTarget.value,
+                    session_id: this.sessionId || null
                 })).then((response) => {
                     this._hideAutocomplete(inputContainer);
                     inputContainer.appendChild(renderToElement("website_sale_autocomplete.AutocompleteDropDown", {
@@ -77,13 +76,10 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         spinner.classList.add('spinner-border', 'text-warning', 'text-center', 'm-auto');
         dropDown.appendChild(spinner);
 
-        const address = await this._rpc({
-            route: '/autocomplete/address_full',
-            params: {
-                address: ev.currentTarget.innerText,
-                google_place_id: ev.currentTarget.dataset.googlePlaceId,
-                session_id: this.sessionId || null
-            }
+        const address = await this.rpc('/autocomplete/address_full', {
+            address: ev.currentTarget.innerText,
+            google_place_id: ev.currentTarget.dataset.googlePlaceId,
+            session_id: this.sessionId || null
         });
         if (address.formatted_street_number) {
             this.streetAndNumberInput.value = address.formatted_street_number;

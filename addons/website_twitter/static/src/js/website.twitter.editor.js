@@ -5,6 +5,10 @@ import dom from "@web/legacy/js/core/dom";
 import sOptions from "@web_editor/js/editor/snippets.options";
 
 sOptions.registry.twitter = sOptions.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
     /**
      * @override
      */
@@ -22,7 +26,7 @@ sOptions.registry.twitter = sOptions.Class.extend({
         $configuration.appendTo(div).on('click', function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            self._rpc({route: '/website_twitter/reload'});
+            self.rpc('/website_twitter/reload');
         });
         this.$target.on('mouseover.website_twitter', function () {
             var $selected = $(this);

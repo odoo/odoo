@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import rpc from "@web/legacy/js/core/rpc";
 import { registry } from "@web/core/registry";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     test: true,
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Create a product with dynamic attribute and its values.",
             trigger: 'body',
             run: function () {
-                rpc.query({
+                jsonrpc("/web/dataset/call_kw/product.attribute/create", {
                     model: 'product.attribute',
                     method: 'create',
                     args: [{
@@ -136,8 +136,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                         'display_type': 'color',
                         'create_variant': 'dynamic'
                     }],
+                    kwargs: {},
                 }).then(function (attributeId) {
-                    return rpc.query({
+                    return jsonrpc("/web/dataset/call_kw/product.template/create", {
                         model: 'product.template',
                         method: 'create',
                         args: [{
@@ -161,6 +162,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                                 ]
                             }]],
                         }],
+                        kwargs: {},
                     });
                 }).then(function () {
                     window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
@@ -239,16 +241,18 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Archive the first variant",
             trigger: '#top_menu:contains("Mitchell Admin")',
             run: function () {
-                rpc.query({
+                jsonrpc("/web/dataset/call_kw/product.product/search", {
                     model: 'product.product',
                     method: 'search',
                     args: [[['name', '=', "Bottle"]]],
+                    kwargs: {},
                 })
                 .then(function (productIds) {
-                    return rpc.query({
+                    return jsonrpc("/web/dataset/call_kw/product.product/write", {
                         model: 'product.product',
                         method: 'write',
                         args: [productIds[0], {active: false}],
+                        kwargs: {},
                     });
                 })
                 .then(function () {
@@ -305,16 +309,18 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Archive all variants",
             trigger: '#top_menu:contains("Mitchell Admin")',
             run: function () {
-                rpc.query({
+                jsonrpc("/web/dataset/call_kw/product.product/search", {
                     model: 'product.product',
                     method: 'search',
                     args: [[['name', '=', "Bottle"]]],
+                    kwargs: {},
                 })
                 .then(function (productIds) {
-                    return rpc.query({
+                    return jsonrpc("/web/dataset/call_kw/product.product/write", {
                         model: 'product.product',
                         method: 'write',
                         args: [productIds, {active: false}],
+                        kwargs: {},
                     });
                 })
                 .then(function () {

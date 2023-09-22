@@ -60,6 +60,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
+
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -202,14 +204,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         });
         $input.data('update_change', true);
 
-        this._rpc({
-            route: "/shop/cart/update_json",
-            params: {
-                line_id: line_id,
-                product_id: parseInt($input.data('product-id'), 10),
-                set_qty: value,
-                display: true,
-            },
+        this.rpc("/shop/cart/update_json", {
+            line_id: line_id,
+            product_id: parseInt($input.data('product-id'), 10),
+            set_qty: value,
+            display: true,
         }).then(function (data) {
             $input.data('update_change', false);
             var check_value = parseInt($input.val() || 0, 10);
@@ -239,11 +238,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         if (!$("#country_id").val()) {
             return;
         }
-        this._rpc({
-            route: "/shop/country_infos/" + $("#country_id").val(),
-            params: {
-                mode: $("#country_id").attr('mode'),
-            },
+        this.rpc("/shop/country_infos/" + $("#country_id").val(), {
+            mode: $("#country_id").attr('mode'),
         }).then(function (data) {
             // placeholder phone_code
             $("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
@@ -772,11 +768,8 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         var clickedValue = $(ev.target).val();
         var isList = clickedValue === 'list';
         if (!this.editableMode) {
-            this._rpc({
-                route: '/shop/save_shop_layout_mode',
-                params: {
-                    'layout_mode': isList ? 'list' : 'grid',
-                },
+            this.rpc('/shop/save_shop_layout_mode', {
+                'layout_mode': isList ? 'list' : 'grid',
             });
         }
 

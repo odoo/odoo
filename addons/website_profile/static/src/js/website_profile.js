@@ -10,6 +10,11 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
         'click .validated_email_close': '_onCloseValidatedEmailClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -20,9 +25,8 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
         var $element = $(ev.currentTarget);
-        this._rpc({
-            route: '/profile/send_validation_email',
-            params: {'redirect_url': $element.data('redirect_url')},
+        this.rpc('/profile/send_validation_email', {
+            'redirect_url': $element.data('redirect_url'),
         }).then(function (data) {
             if (data) {
                 window.location = $element.data('redirect_url');
@@ -34,9 +38,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
      * @private
      */
     _onCloseValidatedEmailClick: function () {
-        this._rpc({
-            route: '/profile/validate_email/close',
-        });
+        this.rpc('/profile/validate_email/close');
     },
 });
 

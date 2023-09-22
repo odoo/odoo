@@ -47,6 +47,11 @@ options.UserValueWidget.include({
 });
 
 Many2oneUserValueWidget.include({
+    init() {
+        this._super(...arguments);
+        this.fields = this.bindService("field");
+    },
+
     /**
      * @override
      */
@@ -54,10 +59,8 @@ Many2oneUserValueWidget.include({
         // Add the current website's domain if the model has a website_id field.
         // Note that the `_rpc` method is cached in Many2X user value widget,
         // see `_rpcCache`.
-        const websiteIdField = await this._rpc({
-            model: this.options.model,
-            method: "fields_get",
-            args: [["website_id"]],
+        const websiteIdField = await this.fields.loadFields(this.options.model, {
+            fieldNames: ["website_id"],
         });
         const modelHasWebsiteId = !!websiteIdField["website_id"];
         if (modelHasWebsiteId && !this.options.domain.find(arr => arr[0] === "website_id")) {
@@ -69,12 +72,14 @@ Many2oneUserValueWidget.include({
 });
 
 const UrlPickerUserValueWidget = InputUserValueWidget.extend({
-    custom_events: Object.assign({}, InputUserValueWidget.prototype.custom_events || {}, {
-        'website_url_chosen': '_onWebsiteURLChosen',
-    }),
     events: Object.assign({}, InputUserValueWidget.prototype.events || {}, {
         'click .o_we_redirect_to': '_onRedirectTo',
     }),
+
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
     /**
      * @override
@@ -98,8 +103,9 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
             body: this.getParent().$target[0].ownerDocument.body,
+            urlChosen: this._onWebsiteURLChosen.bind(this),
         };
-        wUtils.autocompleteWithPages(this, $(this.inputEl), options);
+        wUtils.autocompleteWithPages(this.rpc.bind(this), $(this.inputEl), options);
     },
 
     //--------------------------------------------------------------------------
@@ -627,6 +633,9 @@ options.Class.include({
         // triggers a custom event, only that same jQuery instance will
         // trigger handlers set with `.on`.
         this.$bsTarget = this.ownerDocument.defaultView.$(this.$target[0]);
+
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
     },
 
     //--------------------------------------------------------------------------
@@ -831,14 +840,11 @@ options.Class.include({
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
-        return this._rpc({
-            route: '/website/theme_customize_data',
-            params: {
-                'is_view_data': isViewData,
-                'enable': enableDataKeys,
-                'disable': disableDataKeys,
-                'reset_view_arch': resetViewArch,
-            },
+        return this.rpc('/website/theme_customize_data', {
+            'is_view_data': isViewData,
+            'enable': enableDataKeys,
+            'disable': disableDataKeys,
+            'reset_view_arch': resetViewArch,
         });
     },
     /**
@@ -859,12 +865,9 @@ options.Class.include({
      */
     async _getEnabledCustomizeValues(possibleValues, isViewData) {
         const allDataKeys = this._getDataKeysFromPossibleValues(possibleValues);
-        const enabledValues = await this._rpc({
-            route: '/website/theme_customize_data_get',
-            params: {
-                'keys': allDataKeys,
-                'is_view_data': isViewData,
-            },
+        const enabledValues = await this.rpc('/website/theme_customize_data_get', {
+            'keys': allDataKeys,
+            'is_view_data': isViewData,
         });
         let mostValuesStr = '';
         let mostValuesNb = 0;
@@ -885,11 +888,7 @@ options.Class.include({
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        return this._rpc({
-            model: 'web_editor.assets',
-            method: 'make_scss_customization',
-            args: [url, values],
-        });
+        return this.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
     },
     /**
      * Refreshes all public widgets related to the given element.
@@ -1206,6 +1205,7 @@ options.registry.OptionsTab = options.Class.extend({
         this._super(...arguments);
         this.grayParams = {};
         this.grays = {};
+        this.orm = this.bindService("orm");
     },
 
     //--------------------------------------------------------------------------
@@ -1369,11 +1369,11 @@ options.registry.OptionsTab = options.Class.extend({
         });
 
         let website;
-        const dataProm = this._rpc({
-            model: 'website',
-            method: 'read',
-            args: [[websiteId], ['custom_code_head', 'custom_code_footer']],
-        }).then(websites => {
+        const dataProm = this.orm.read(
+            "website",
+            [websiteId],
+            ['custom_code_head', 'custom_code_footer']
+        ).then(websites => {
             website = websites[0];
         });
 
@@ -1403,13 +1403,8 @@ options.registry.OptionsTab = options.Class.extend({
                         text: _t("Save"),
                         classes: 'btn-primary',
                         click: async () => {
-                            await this._rpc({
-                                model: 'website',
-                                method: 'write',
-                                args: [
-                                    [websiteId],
-                                    {[fieldName]: aceEditor.getValue()},
-                                ],
+                            await this.orm.write("website", [websiteId], {
+                                [fieldName]: aceEditor.getValue(),
                             });
                         },
                         close: true,
@@ -1657,6 +1652,12 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 });
 
 options.registry.menu_data = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.user = this.bindService("user");
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * When the users selects a menu, a popover is shown with 4 possible
      * actions: follow the link in a new tab, copy the menu link, edit the menu,
@@ -1674,11 +1675,7 @@ options.registry.menu_data = options.Class.extend({
             wysiwyg,
             container: popoverContainer,
             notify: this.displayNotification.bind(this),
-            checkIsWebsiteDesigner: () => this._rpc({
-                'model': 'res.users',
-                'method': 'has_group',
-                'args': ['website.group_website_designer'],
-            }),
+            checkIsWebsiteDesigner: () => this.user.hasGroup("website.group_website_designer"),
             onEditLinkClick: (widget) => {
                 var $menu = widget.$target.find('[data-oe-id]');
                 this.trigger_up('menu_dialog', {
@@ -1694,11 +1691,11 @@ options.registry.menu_data = options.Class.extend({
                             name,
                             url,
                         };
-                        return this._rpc({
-                            model: 'website.menu',
-                            method: 'save',
-                            args: [websiteId, {'data': [data]}],
-                        }).then(function () {
+                        return this.orm.call(
+                            "website.menu",
+                            "save",
+                            [websiteId, {'data': [data]}]
+                        ).then(function () {
                             widget.wysiwyg.odooEditor.observerUnactive();
                             widget.$target.attr('href', url);
                             $menu.text(name);
@@ -1731,6 +1728,12 @@ options.registry.menu_data = options.Class.extend({
 });
 
 options.registry.company_data = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * Fetches data to determine the URL where the user can edit its company
      * data. Saves the info in the prototype to do this only once.
@@ -1742,12 +1745,8 @@ options.registry.company_data = options.Class.extend({
         var prom;
         var self = this;
         if (proto.__link === undefined) {
-            prom = this._rpc({route: '/web/session/get_session_info'}).then(function (session) {
-                return self._rpc({
-                    model: 'res.users',
-                    method: 'read',
-                    args: [session.uid, ['company_id']],
-                });
+            prom = this.rpc('/web/session/get_session_info').then(function (session) {
+                return self.orm.read("res.users", [session.uid], ["company_id"]);
             }).then(function (res) {
                 proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + encodeURIComponent(res && res[0] && res[0].company_id[0] || 1);
             });

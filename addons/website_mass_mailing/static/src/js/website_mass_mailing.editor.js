@@ -6,6 +6,11 @@ import { renderToElement } from "@web/core/utils/render";
 import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.mailing_list_subscribe = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -80,12 +85,12 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        this.mailingLists = await this._rpc({
-            model: 'mailing.list',
-            method: 'name_search',
-            args: ['', [['is_public', '=', true]]],
-            context: this.options.recordInfo.context,
-        });
+        this.mailingLists = await this.orm.call(
+            "mailing.list",
+            "name_search",
+            ["", [["is_public", "=", true]]],
+            { context: this.options.recordInfo.context }
+        );
         if (this.mailingLists.length) {
             const selectEl = uiFragment.querySelector('we-select[data-attribute-name="listId"]');
             for (const mailingList of this.mailingLists) {

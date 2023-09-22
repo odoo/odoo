@@ -383,6 +383,8 @@
             this._super(parent, options);
             this.slide = slide;
             this.session = session;
+
+            this.rpc = this.bindService("rpc");
         },
 
         //--------------------------------------------------------------------------
@@ -408,13 +410,10 @@
             if (input.val()) {
                 form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
                 var slideID = form.find('button').data('slide-id');
-                this._rpc({
-                    route: '/slides/slide/send_share_email',
-                    params: {
-                        slide_id: slideID,
-                        emails: input.val(),
-                        fullscreen: true
-                    },
+                this.rpc('/slides/slide/send_share_email', {
+                    slide_id: slideID,
+                    emails: input.val(),
+                    fullscreen: true
                 }).then((action) => {
                     if (action) {
                         form.find('.alert-info').removeClass('d-none');
@@ -565,11 +564,8 @@
         _fetchHtmlContent: function (){
             var self = this;
             var currentSlide = this.get('slide');
-            return self._rpc({
-                route:"/slides/slide/get_html_content",
-                params: {
-                    'slide_id': currentSlide.id
-                }
+            return self.rpc("/slides/slide/get_html_content", {
+                'slide_id': currentSlide.id
             }).then(function (data){
                 if (data.html_content) {
                     currentSlide.htmlContent = data.html_content;

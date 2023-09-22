@@ -18,6 +18,8 @@ var SelectBox = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.obj = obj;
         this.placeholder = placeholder;
+
+        this.orm = this.bindService("orm");
     },
     /**
      * @override
@@ -25,13 +27,7 @@ var SelectBox = publicWidget.Widget.extend({
     willStart: function () {
         var self = this;
         var defs = [this._super.apply(this, arguments)];
-        defs.push(this._rpc({
-            model: this.obj,
-            method: 'search_read',
-            kwargs: {
-                fields: ['id', 'name'],
-            },
-        }).then(function (result) {
+        defs.push(this.orm.searchRead(this.obj, [], ["id", "name"]).then(function (result) {
             self.objects = result.map((val) => {
                 return {id: val.id, text: val.name};
             });
@@ -82,11 +78,7 @@ var SelectBox = publicWidget.Widget.extend({
         if (this.obj === "utm.campaign"){
             args.is_auto_campaign = true;
         }
-        return this._rpc({
-            model: this.obj,
-            method: 'create',
-            args: [args],
-        }).then(function (record) {
+        return this.orm.create(this.obj, [args]).then(function (record) {
             self.$el.attr('value', record);
             self.objects.push({'id': record, 'text': name});
         });
@@ -127,6 +119,7 @@ var RecentLinkBox = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.link_obj = obj;
         this.animating_copy = false;
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -236,12 +229,9 @@ var RecentLinkBox = publicWidget.Widget.extend({
         if (initCode === newCode) {
             showNewCode(newCode);
         } else {
-            this._rpc({
-                route: '/website_links/add_code',
-                params: {
-                    init_code: initCode,
-                    new_code: newCode,
-                },
+            this.rpc('/website_links/add_code', {
+                init_code: initCode,
+                new_code: newCode,
             }).then(function (result) {
                 showNewCode(result[0].code);
             }, function () {
@@ -282,6 +272,10 @@ var RecentLinkBox = publicWidget.Widget.extend({
 });
 
 var RecentLinks = publicWidget.Widget.extend({
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -292,12 +286,9 @@ var RecentLinks = publicWidget.Widget.extend({
      */
     getRecentLinks: function (filter) {
         var self = this;
-        return this._rpc({
-            route: '/website_links/recent_links',
-            params: {
-                filter: filter,
-                limit: 20,
-            },
+        return this.rpc('/website_links/recent_links', {
+            filter: filter,
+            limit: 20,
         }).then(function (result) {
             result.reverse().forEach((link) => {
                 self._addLink(link);
@@ -352,6 +343,11 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         'keyup #url': '_onUrlKeyUp',
         'click #btn_shorten_url': '_onShortenUrlButtonClick',
         'submit #o_website_links_link_tracker_form': '_onFormSubmit',
+    },
+
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -493,10 +489,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         $('#btn_shorten_url').text(_t("Generating link..."));
 
-        this._rpc({
-            route: '/website_links/new',
-            params: params,
-        }).then(function (result) {
+        this.rpc('/website_links/new', params).then(function (result) {
             if ('error' in result) {
                 // Handle errors
                 if (result.error === 'empty_url') {

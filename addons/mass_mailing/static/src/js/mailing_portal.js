@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import ajax from "@web/legacy/js/core/ajax";
 import { escape } from "@web/core/utils/strings";
 import { whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 whenReady(() => {
     var email = $("input[name='email']").val();
@@ -13,7 +13,7 @@ whenReady(() => {
 
     if ($('.o_unsubscribe_form').length) {
             if (email != '' && email != undefined){
-                ajax.jsonRpc('/mailing/blacklist/check', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
+                jsonrpc('/mailing/blacklist/check', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                     .then(function (result) {
                         if (result == 'unauthorized'){
                             $('#button_add_blacklist').hide();
@@ -67,7 +67,7 @@ whenReady(() => {
                 unchecked_ids[i] = parseInt($(this).val());
             });
 
-            ajax.jsonRpc('/mailing/list/update', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
+            jsonrpc('/mailing/list/update', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
                         $('#subscription_info').text(_t('You are not authorized to do this!'));
@@ -94,7 +94,7 @@ whenReady(() => {
         $('#button_add_blacklist').click(function (e) {
             e.preventDefault();
 
-            ajax.jsonRpc('/mailing/blacklist/add', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
+            jsonrpc('/mailing/blacklist/add', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
                         $('#subscription_info').text(_t('You are not authorized to do this!'));
@@ -126,7 +126,7 @@ whenReady(() => {
         $('#button_remove_blacklist').click(function (e) {
             e.preventDefault();
 
-            ajax.jsonRpc('/mailing/blacklist/remove', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
+            jsonrpc('/mailing/blacklist/remove', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
                         $('#subscription_info').text(_t('You are not authorized to do this!'));
@@ -161,7 +161,7 @@ whenReady(() => {
         $('#button_feedback').click(function (e) {
             var feedback = $("textarea[name='opt_out_feedback']").val();
             e.preventDefault();
-            ajax.jsonRpc('/mailing/feedback', 'call', {'mailing_id': mailing_id, 'res_id': res_id, 'email': email, 'feedback': feedback, 'token': token})
+            jsonrpc('/mailing/feedback', {'mailing_id': mailing_id, 'res_id': res_id, 'email': email, 'feedback': feedback, 'token': token})
                 .then(function (result) {
                     if (result == 'unauthorized'){
                         $('#subscription_info').text(_t('You are not authorized to do this!'));

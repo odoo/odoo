@@ -115,6 +115,7 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
     init(root, options) {
         const parent = options.parent || root;
         this._super(parent, options);
+        this.rpc = this.bindService("rpc");
     },
 
     start() {
@@ -132,13 +133,10 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      */
     async _onClickAddToCart(ev) {
         const $card = $(ev.currentTarget).closest('.card');
-        const data = await this._rpc({
-            route: "/shop/cart/update_json",
-            params: {
-                product_id: $card.find('input[data-product-id]').data('product-id'),
-                add_qty: 1,
-                display: false,
-            },
+        const data = await this.rpc("/shop/cart/update_json", {
+            product_id: $card.find('input[data-product-id]').data('product-id'),
+            add_qty: 1,
+            display: false,
         });
         wSaleUtils.updateCartNavBar(data);
         wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
@@ -156,11 +154,8 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      */
     async _onRemoveFromRecentlyViewed(ev) {
         const $card = $(ev.currentTarget).closest('.card');
-        await this._rpc({
-            route: "/shop/products/recently_viewed_delete",
-            params: {
-                product_id: $card.find('input[data-product-id]').data('product-id'),
-            },
+        await this.rpc("/shop/products/recently_viewed_delete", {
+            product_id: $card.find('input[data-product-id]').data('product-id'),
         });
         this.trigger_up('widgets_start_request', {
             $target: this.$el.closest('.s_dynamic'),

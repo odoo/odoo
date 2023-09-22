@@ -11,6 +11,11 @@ publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
     timeout: 0,
     pollCount: 0,
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     async start() {
         this.call('ui', 'block', {
             'message': _t("We are processing your payment. Please wait."),
@@ -24,11 +29,8 @@ publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
         setTimeout(() => {
             // Fetch the post-processing values from the server.
             const self = this;
-            this._rpc({
-                route: '/payment/status/poll',
-                params: {
-                    'csrf_token': odoo.csrf_token,
-                }
+            this.rpc('/payment/status/poll', {
+                'csrf_token': odoo.csrf_token,
             }).then(postProcessingValues => {
                 let { state, display_message, landing_route } = postProcessingValues;
 

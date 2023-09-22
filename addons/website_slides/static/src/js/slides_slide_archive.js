@@ -10,6 +10,11 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
         click: "_onArchiveSlideClick",
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -24,11 +29,8 @@ publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
                 /**
                  * Calls 'archive' on slide controller and then visually removes the slide dom element
                  */
-                const isArchived = await this._rpc({
-                    route: "/slides/slide/archive",
-                    params: {
-                        slide_id: slideId,
-                    },
+                const isArchived = await this.rpc("/slides/slide/archive", {
+                    slide_id: slideId,
                 });
                 if (isArchived) {
                     $slideTarget.closest(".o_wslides_slides_list_slide").remove();

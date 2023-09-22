@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import rpc from "@web/legacy/js/core/rpc";
 import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,
@@ -14,22 +14,24 @@ registry.category("web_tour.tours").add('shop_mail', {
         run: function () {
             // We change the domain of the website to test that the email that
             // will be sent uses the correct domain for its links.
-            var def1 = rpc.query({
+            var def1 = jsonrpc("/web/dataset/call_kw/website/write", {
                 'model': 'website',
                 'method': 'write',
                 'args': [[1], {
                     'domain': "my-test-domain.com",
                 }],
+                kwargs: {},
             });
             // We need to change the domain of all the websites otherwise the
             // website selector will return the website 2 since the domain we
             // set on website 1 doesn't actually match our test server.
-            var def2 = rpc.query({
+            var def2 = jsonrpc("/web/dataset/call_kw/website/write", {
                 'model': 'website',
                 'method': 'write',
                 'args': [[2], {
                     'domain': "https://domain-not-used.fr",
                 }],
+                kwargs: {},
             });
             Promise.all([def1, def2]).then(function (data) {
                 window.location.href = '/shop?search=Acoustic Bloc Screens';

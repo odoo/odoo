@@ -13,6 +13,11 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         'click .o_wbooth_registration_confirm': '_onConfirmRegistrationClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     start() {
         this.eventId = parseInt(this.el.dataset.eventId);
         this.activeBoothCategoryId = false;
@@ -35,11 +40,8 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     _check_booths_availability(eventBoothIds) {
         const self = this;
-        return this._rpc({
-            route: "/event/booth/check_availability",
-            params: {
-                event_booth_ids: eventBoothIds,
-            },
+        return this.rpc("/event/booth/check_availability", {
+            event_booth_ids: eventBoothIds,
         }).then(function (result) {
             if (result.unavailable_booths.length) {
                 self.$('input[name="event_booth_ids"]').each(function (i, el) {
@@ -162,12 +164,9 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     _fetchBoothsAndUpdateUI() {
         if (this.boothCache[this.activeBoothCategoryId] === undefined) {
             var self = this;
-            this._rpc({
-                route: '/event/booth_category/get_available_booths',
-                params: {
-                    event_id: this.eventId,
-                    booth_category_id: this.activeBoothCategoryId,
-                },
+            this.rpc('/event/booth_category/get_available_booths', {
+                event_id: this.eventId,
+                booth_category_id: this.activeBoothCategoryId,
             }).then(function (result) {
                 self.boothCache[self.activeBoothCategoryId] = result;
                 self._updateUiAfterBoothCategoryChange();

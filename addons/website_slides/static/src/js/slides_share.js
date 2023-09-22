@@ -10,6 +10,11 @@ export const ShareMail = publicWidget.Widget.extend({
         'keypress input': '_onKeypress',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -47,10 +52,7 @@ export const ShareMail = publicWidget.Widget.extend({
                 params.channel_id = channelID;
             }
             this.$el.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
-            this._rpc({
-                route,
-                params
-            }).then((action) => {
+            this.rpc(route, params).then((action) => {
                 if (action) {
                     this.$('.alert-info').removeClass('d-none');
                     this.$('.input-group').addClass('d-none');

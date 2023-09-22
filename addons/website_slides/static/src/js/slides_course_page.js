@@ -19,6 +19,11 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         'slide_mark_completed': '_onSlideMarkCompleted',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
      * Collapse the next category when the current one has just been completed
      */
@@ -116,10 +121,10 @@ export const SlideCoursePage = publicWidget.Widget.extend({
             return;
         }
 
-        const data = await this._rpc({
-            route: `/slides/slide/${completed ? 'set_completed' : 'set_uncompleted'}`,
-            params: {slide_id: slide.id},
-        });
+        const data = await this.rpc(
+            `/slides/slide/${completed ? 'set_completed' : 'set_uncompleted'}`,
+            {slide_id: slide.id},
+        );
 
         this.toggleCompletionButton(slide, completed);
         this.updateProgressbar(data.channel_completion);

@@ -25,11 +25,8 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
         if (visitorChoice) {
             this._handleAdd($(ev.currentTarget.closest('div')));
         } else {
-            const isAddToCartAllowed = await this._rpc({
-                route: `/shop/product/is_add_to_cart_allowed`,
-                params: {
-                    product_id: productId,
-                },
+            const isAddToCartAllowed = await this.rpc(`/shop/product/is_add_to_cart_allowed`, {
+                product_id: productId,
             });
             if (!isAddToCartAllowed) {
                 this.displayNotification({

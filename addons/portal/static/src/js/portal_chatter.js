@@ -37,6 +37,8 @@ var PortalChatter = publicWidget.Widget.extend({
         this.set('pager', {});
         this.set('domain', this.options['domain']);
         this._currentPage = this.options['pager_start'];
+
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -83,10 +85,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     messageFetch: function (domain) {
         var self = this;
-        return this._rpc({
-            route: '/mail/chatter_fetch',
-            params: self._messageFetchPrepareParams(),
-        }).then(function (result) {
+        return this.rpc('/mail/chatter_fetch', self._messageFetchPrepareParams()).then(function (result) {
             self.set('messages', self.preprocessMessages(result['messages']));
             self.set('message_count', result['message_count']);
             return result;
@@ -177,10 +176,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _chatterInit: function () {
         var self = this;
-        return this._rpc({
-            route: '/mail/chatter_init',
-            params: this._messageFetchPrepareParams()
-        }).then(function (result) {
+        return this.rpc('/mail/chatter_init', this._messageFetchPrepareParams()).then(function (result) {
             self.result = result;
             self.options = Object.assign(self.options, self.result['options'] || {});
             return result;
@@ -300,12 +296,9 @@ var PortalChatter = publicWidget.Widget.extend({
         ev.preventDefault();
 
         var $elem = $(ev.currentTarget);
-        return this._rpc({
-            route: '/mail/update_is_internal',
-            params: {
-                message_id: $elem.data('message-id'),
-                is_internal: ! $elem.data('is-internal'),
-            },
+        return this.rpc('/mail/update_is_internal', {
+            message_id: $elem.data('message-id'),
+            is_internal: ! $elem.data('is-internal'),
         }).then(function (result) {
             $elem.data('is-internal', result);
             if (result === true) {

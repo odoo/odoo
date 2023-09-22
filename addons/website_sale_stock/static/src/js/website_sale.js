@@ -38,12 +38,9 @@ WebsiteSale.include({
             return this._displayEmailIncorrectMessage(stockNotificationEl);
         }
 
-        this._rpc({
-            route: "/shop/add/stock_notification",
-            params: {
-                product_id: productId,
-                email,
-            },
+        this.rpc("/shop/add/stock_notification", {
+            product_id: productId,
+            email,
         }).then((data) => {
             const message = stockNotificationEl.querySelector('#stock_notification_success_message');
 

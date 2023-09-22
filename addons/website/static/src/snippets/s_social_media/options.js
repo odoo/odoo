@@ -13,6 +13,11 @@ const clearDbSocialValuesCache = () => {
 };
 
 options.registry.SocialMedia = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -55,11 +60,7 @@ options.registry.SocialMedia = options.Class.extend({
                 websiteId = ctx['website_id'];
             },
         });
-        await this._rpc({
-            model: 'website',
-            method: 'write',
-            args: [[websiteId], dbSocialValues],
-        });
+        await this.orm.write("website", [websiteId], dbSocialValues);
     },
     /**
      * @override
@@ -251,12 +252,15 @@ options.registry.SocialMedia = options.Class.extend({
                 },
             });
             // Fetch URLs for db links.
-            dbSocialValuesProm = this._rpc({
-                model: 'website',
-                method: 'read',
-                args: [websiteId, ['social_facebook', 'social_twitter', 'social_linkedin',
-                    'social_youtube', 'social_instagram', 'social_github', 'social_tiktok']],
-            }).then(function (values) {
+            dbSocialValuesProm = this.orm.read("website", [websiteId], [
+                "social_facebook",
+                "social_twitter",
+                "social_linkedin",
+                "social_youtube",
+                "social_instagram",
+                "social_github",
+                "social_tiktok",
+            ]).then(function (values) {
                 [dbSocialValues] = values;
                 delete dbSocialValues.id;
             });

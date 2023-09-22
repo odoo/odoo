@@ -43,6 +43,8 @@ var SignatureForm = publicWidget.Widget.extend({
 
         this.nameAndSignature = new NameAndSignature(this,
             options.nameAndSignatureOptions || {});
+
+        this.rpc = this.bindService("rpc");
     },
     /**
      * Overridden to get the DOM elements
@@ -107,13 +109,13 @@ var SignatureForm = publicWidget.Widget.extend({
         var name = this.nameAndSignature.getName();
         var signature = this.nameAndSignature.getSignatureImage()[1];
 
-        return this._rpc({
-            route: this.callUrl,
-            params: Object.assign(this.rpcParams, {
+        return this.rpc(
+            this.callUrl,
+            Object.assign(this.rpcParams, {
                 'name': name,
                 'signature': signature,
-            }),
-        }).then(function (data) {
+            })
+        ).then(function (data) {
             if (data.error) {
                 self.$('.o_portal_sign_error_msg').remove();
                 self.$controls.prepend(renderToElement('portal.portal_signature_error', {widget: data}));

@@ -39,6 +39,11 @@ function _getDomain(formEl, name, type, relation) {
 }
 
 const FormEditor = options.Class.extend({
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     //----------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------
@@ -66,14 +71,7 @@ const FormEditor = options.Class.extend({
                 display_name: el[1],
             }));
         } else if (field.relation && field.relation !== 'ir.attachment') {
-            field.records = await this._rpc({
-                model: field.relation,
-                method: 'search_read',
-                args: [
-                    field.domain,
-                    ['display_name']
-                ],
-            });
+            field.records = await this.orm.searchRead(field.relation, field.domain, ["display_name"]);
         }
         return field.records;
     },
@@ -376,10 +374,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         }
 
         // Get list of website_form compatible models.
-        this.models = await this._rpc({
-            model: 'ir.model',
-            method: 'get_compatible_form_models',
-        });
+        this.models = await this.orm.call("ir.model", "get_compatible_form_models");
 
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
         this.activeForm = this.models.find(m => m.model === targetModelName);
@@ -430,11 +425,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             if (fields.length) {
                 // ideally we'd only do this if saving the form
                 // succeeds... but no idea how to do that
-                this._rpc({
-                    model: 'ir.model.fields',
-                    method: 'formbuilder_whitelist',
-                    args: [model, unique(fields)],
-                });
+                this.orm.call("ir.model.fields", "formbuilder_whitelist", [model, unique(fields)]);
             }
         }
         if (this.$message.length) {
@@ -887,11 +878,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (model in authorizedFieldsCache) {
             getFields = authorizedFieldsCache[model];
         } else {
-            getFields = this._rpc({
-                model: "ir.model",
-                method: "get_authorized_fields",
-                args: [model],
-            });
+            getFields = this.orm.call("ir.model", "get_authorized_fields", [model]);
             authorizedFieldsCache[model] = getFields;
         }
 

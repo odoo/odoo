@@ -8,12 +8,14 @@
             'click': '_onPreviewSlideClick',
         },
 
+        init() {
+            this._super(...arguments);
+            this.rpc = this.bindService("rpc");
+        },
+
         _toggleSlidePreview: function($slideTarget) {
-            this._rpc({
-                route: '/slides/slide/toggle_is_preview',
-                params: {
-                    slide_id: $slideTarget.data('slideId')
-                },
+            this.rpc('/slides/slide/toggle_is_preview', {
+                slide_id: $slideTarget.data('slideId')
             }).then(function (isPreview) {
                 if (isPreview) {
                     $slideTarget.removeClass('bg-light bg-hide border');

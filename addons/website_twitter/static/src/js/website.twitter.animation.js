@@ -15,6 +15,11 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         'click .twitter_timeline .tweet': '_onTweetClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
      * @override
      */
@@ -23,7 +28,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         var $timeline = this.$('.twitter_timeline');
 
         $timeline.append('<center><div><img src="/website_twitter/static/src/img/loadtweet.gif"></div></center>');
-        var def = this._rpc({route: '/website_twitter/get_favorites'}).then(function (data) {
+        var def = this.rpc('/website_twitter/get_favorites').then(function (data) {
             $timeline.empty();
 
             if (data.error) {

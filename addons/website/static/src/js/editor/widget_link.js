@@ -38,15 +38,10 @@ patch(LinkTools.prototype, {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
             body: this.$editable[0].ownerDocument.body,
-        };
-        // wUtils.autocompleteWithPages rely on a widget that has a _rpc and
-        // trigger_up method.
-        const fakeWidget = {
-            _rpc: ({ route, params }) => this.rpc(route, params),
-            trigger_up: this._onAutocompleteClose.bind(this),
+            urlChosen: this._onAutocompleteClose.bind(this),
             isDestroyed: () => status(this) === 'destroyed',
         };
-        wUtils.autocompleteWithPages(fakeWidget, this.$el.find('input[name="url"]'), options);
+        wUtils.autocompleteWithPages(this.rpc.bind(this), this.$el.find('input[name="url"]'), options);
         this._adaptPageAnchor();
         return def;
     },

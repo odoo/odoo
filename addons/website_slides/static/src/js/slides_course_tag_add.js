@@ -36,6 +36,7 @@ var TagCourseDialog = Dialog.extend({
         // Open with a tag name as default
         this.defaultTag = options.defaultTag;
         this._super(parent, options);
+        this.rpc = this.bindService("rpc");
     },
     start: function () {
         var self = this;
@@ -61,23 +62,17 @@ var TagCourseDialog = Dialog.extend({
         var self = this;
         this.$('#tag_id').select2(this._select2Wrapper(_t('Tag'),
             function () {
-                return self._rpc({
-                    route: '/slides/channel/tag/search_read',
-                    params: {
-                        fields: ['name'],
-                        domain: [['id', 'not in', self.tagIds], ['color', '!=', 0]],
-                    }
+                return self.rpc('/slides/channel/tag/search_read', {
+                    fields: ['name'],
+                    domain: [['id', 'not in', self.tagIds], ['color', '!=', 0]],
                 });
             })
         );
         this.$('#tag_group_id').select2(this._select2Wrapper(_t('Tag Group (required for new tags)'),
             function () {
-                return self._rpc({
-                    route: '/slides/channel/tag/group/search_read',
-                    params: {
-                        fields: ['name'],
-                        domain: [],
-                    }
+                return self.rpc('/slides/channel/tag/group/search_read', {
+                    fields: ['name'],
+                    domain: [],
                 });
             })
         );
@@ -286,11 +281,10 @@ var TagCourseDialog = Dialog.extend({
         var $form = this.$('#slides_channel_tag_add_form');
         if (this._formValidate($form)) {
             var values = this._getSelect2DropdownValues();
-            return this._rpc({
-                route: '/slides/channel/tag/add',
-                params: {'channel_id': this.channelID,
-                         'tag_id': values.tag_id,
-                         'group_id': values.group_id},
+            return this.rpc('/slides/channel/tag/add', {
+                'channel_id': this.channelID,
+                'tag_id': values.tag_id,
+                'group_id': values.group_id,
             }).then(function (data) {
                 if (data.error) {
                     self._alertDisplay(data.error);
@@ -309,12 +303,9 @@ var TagCourseDialog = Dialog.extend({
         this.$('#tag_id').select2('readonly', true);
         if (valid) {
             var values = this._getSelect2DropdownValues();
-            return this._rpc({
-                route: '/slide_channel_tag/add',
-                params: {
-                    'tag_id': values.tag_id,
-                    'group_id': values.group_id
-                },
+            return this.rpc('/slide_channel_tag/add', {
+                'tag_id': values.tag_id,
+                'group_id': values.group_id
             }).then(function (data) {
                 self.trigger_up('tag_refresh', { tag_id: data.tag_id });
                 self.close();

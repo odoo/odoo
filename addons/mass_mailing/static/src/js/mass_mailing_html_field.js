@@ -9,7 +9,6 @@ import { toInline, getCSSRules } from "@web_editor/js/backend/convert_inline";
 import { loadBundle } from "@web/core/assets";
 import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
-import { buildQuery } from "@web/legacy/js/core/rpc";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
@@ -39,6 +38,7 @@ export class MassMailingHtmlField extends HtmlField {
         });
         this.action = useService('action');
         this.rpc = useService('rpc');
+        this.orm = useService('orm');
         this.dialog = useService('dialog');
 
         useRecordObserver((record) => {
@@ -217,13 +217,8 @@ export class MassMailingHtmlField extends HtmlField {
             ? [[['mailing_model_id', '=', this.props.record.data.mailing_model_id[0]]]]
             : [];
 
-        const rpcQuery = buildQuery({
-            model: 'mailing.mailing',
-            method: 'action_fetch_favorites',
-            args: args,
-        })
         // Templates taken from old mailings
-        const result = await this.rpc(rpcQuery.route, rpcQuery.params);
+        const result = await this.orm.call('mailing.mailing', 'action_fetch_favorites', args);
         if (status(this) === 'destroyed') return;
         const templatesParams = result.map(values => {
             return {
@@ -416,13 +411,7 @@ export class MassMailingHtmlField extends HtmlField {
             const $target = $(ev.currentTarget);
             const mailingId = $target.data('id');
 
-            const rpcQuery = buildQuery({
-                model: 'mailing.mailing',
-                method: 'action_remove_favorite',
-                args: [mailingId],
-            })
-            const action = await this.rpc(rpcQuery.route, rpcQuery.params);
-
+            const action = await this.orm.call('mailing.mailing', 'action_remove_favorite', [mailingId]);
             this.action.doAction(action);
 
             $target.parents('.o_mail_template_preview').remove();

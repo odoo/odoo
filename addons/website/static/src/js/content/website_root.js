@@ -28,6 +28,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     init() {
         this.isFullscreen = false;
+        this.rpc = this.bindService("rpc");
         return this._super(...arguments);
     },
     /**
@@ -71,9 +72,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _getGMapAPIKey(refetch) {
         if (refetch || !this._gmapAPIKeyProm) {
             this._gmapAPIKeyProm = new Promise(async resolve => {
-                const data = await this._rpc({
-                    route: '/website/google_maps_api_key',
-                });
+                const data = await this.rpc('/website/google_maps_api_key');
                 resolve(JSON.parse(data).google_maps_api_key || '');
             });
         }
@@ -227,12 +226,9 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         }
 
         var $data = $(ev.currentTarget).parents(".js_publish_management:first");
-        this._rpc({
-            route: $data.data('controller') || '/website/publish',
-            params: {
-                id: +$data.data('id'),
-                object: $data.data('object'),
-            },
+        this.rpc($data.data('controller') || '/website/publish', {
+            id: +$data.data('id'),
+            object: $data.data('object'),
         })
         .then(function (result) {
             $data.toggleClass("css_published", result).toggleClass("css_unpublished", !result);

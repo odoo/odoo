@@ -11,6 +11,11 @@ var SlideLikeWidget = publicWidget.Widget.extend({
         'click .o_wslides_js_slide_like_down': '_onClickDown',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -42,12 +47,9 @@ var SlideLikeWidget = publicWidget.Widget.extend({
      */
     _onClick: function (slideId, voteType) {
         var self = this;
-        this._rpc({
-            route: '/slides/slide/like',
-            params: {
-                slide_id: slideId,
-                upvote: voteType === 'like',
-            },
+        this.rpc('/slides/slide/like', {
+            slide_id: slideId,
+            upvote: voteType === 'like',
         }).then(function (data) {
             if (! data.error) {
                 const $likesBtn = self.$('span.o_wslides_js_slide_like_up');

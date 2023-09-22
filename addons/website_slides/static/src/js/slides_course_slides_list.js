@@ -77,12 +77,9 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
     },
     _reorderSlides: function (){
         var self = this;
-        self._rpc({
-            route: '/web/dataset/resequence',
-            params: {
-                model: "slide.slide",
-                ids: self._getSlides()
-            }
+        self.rpc('/web/dataset/resequence', {
+            model: "slide.slide",
+            ids: self._getSlides(),
         }).then(function (res) {
             self._checkForEmptySections();
         });

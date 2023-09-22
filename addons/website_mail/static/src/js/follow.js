@@ -6,6 +6,11 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.js_follow)',
     disabledInEditableMode: false,
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
      * @override
      */
@@ -34,11 +39,8 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
             records[model].push(parseInt(el.dataset.id));
         }
 
-        this._rpc({
-            route: '/website_mail/is_follower',
-            params: {
-                records: records,
-            },
+        this.rpc('/website_mail/is_follower', {
+            records: records,
         }).then(always).guardedCatch(always);
 
         // not if editable mode to allow designer to edit
@@ -111,14 +113,11 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
 
         var email = $email.length ? $email.val() : false;
         if (email || this.isUser) {
-            this._rpc({
-                route: '/website_mail/follow',
-                params: {
-                    'id': +$jsFollow.data('id'),
-                    'object': $jsFollow.data('object'),
-                    'message_is_follower': $jsFollow.attr("data-follow") || "off",
-                    'email': email,
-                },
+            this.rpc('/website_mail/follow', {
+                'id': +$jsFollow.data('id'),
+                'object': $jsFollow.data('object'),
+                'message_is_follower': $jsFollow.attr("data-follow") || "off",
+                'email': email,
             }).then(function (follow) {
                 self._toggleSubscription(follow, email, $jsFollow);
             });
