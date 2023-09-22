@@ -1,5 +1,4 @@
 .din_page {
-    margin-left: -1rem;
     font-size: 9pt;
 
     .container-fluid & { // center the invoice in portal preview
@@ -25,7 +24,6 @@
         }
     }
     &.invoice_note {
-        padding-top: 20px;
         tr {
             td {
                 vertical-align: bottom;
@@ -111,6 +109,11 @@
             }
         }
     }
+}
+
+.din_page_pdf {
+    width: 180mm;
+    margin-left: -1rem;
 }
 
 
