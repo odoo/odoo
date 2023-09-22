@@ -280,11 +280,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     ${_t("Read the guidelines to know how to gain karma.")}
                 </a>`)
             : "";
+        const translatedText = _t("karma is required to perform this action. ");
         this.displayNotification({
             type: "warning",
             sticky: false,
             title: _t("Karma Error"),
-            message: markup(`${karma} ${_t("karma is required to perform this action. ")}${additionalInfoWithForumID}`)
+            message: markup(`${karma} ${translatedText}${additionalInfoWithForumID}`)
         });
     },
     /**
