@@ -35,7 +35,7 @@
             </div>
             <span t-ref="displayName" class="ms-2 text-truncate" t-esc="channelMemberService.getName(member)"/>
             <span class="ms-auto">
-                <span t-if="props.thread.invitedMemberIds.has(member.id)" class="p-1 fa fa-user-plus"/>
+                <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus"/>
                 <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash"/>
                 <span t-elif="member.rtcSession?.isDeaf" class="p-1 fa fa-deaf"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>

@@ -59,10 +59,6 @@ patch(Thread.prototype, {
         }
     },
 
-    get isChannel() {
-        return this.type === "livechat" || super.isChannel;
-    },
-
     get isChatChannel() {
         return this.type === "livechat" || super.isChatChannel;
     },

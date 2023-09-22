@@ -157,7 +157,7 @@ export class Thread extends Record {
             }
             if ("invitedMembers" in serverData) {
                 if (!serverData.invitedMembers) {
-                    this.invitedMemberIds.clear();
+                    this.invitedMembers = [];
                     return;
                 }
                 const command = serverData.invitedMembers[0][0];
@@ -167,7 +167,9 @@ export class Thread extends Record {
                         if (members) {
                             for (const member of members) {
                                 const record = this._store.ChannelMember.insert(member);
-                                this.invitedMemberIds.add(record.id);
+                                if (record.notIn(this.invitedMembers)) {
+                                    this.invitedMembers.push(record);
+                                }
                             }
                         }
                         break;
@@ -175,7 +177,8 @@ export class Thread extends Record {
                     case "insert-and-unlink":
                         // eslint-disable-next-line no-case-declarations
                         for (const member of members) {
-                            this.invitedMemberIds.delete(member.id);
+                            const record = this._store.ChannelMember.insert(member);
+                            this.invitedMembers.delete(record);
                         }
                         break;
                 }
@@ -228,8 +231,7 @@ export class Thread extends Record {
     /** @type {Object<number, import("models").RtcSession>} */
     rtcSessions = {};
     rtcInvitingSession = Record.one("RtcSession");
-    /** @type {Set<number>} */
-    invitedMemberIds = new Set();
+    invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");
     composer = Record.one("Composer");
     counter = 0;
@@ -341,11 +343,7 @@ export class Thread extends Record {
     }
 
     get isUnread() {
-        return this.message_unread_counter > 0 || this.hasNeedactionMessages;
-    }
-
-    get isChannel() {
-        return ["chat", "channel", "group"].includes(this.type);
+        return this.message_unread_counter > 0 || this.needactionMessages.length > 0;
     }
 
     get typesAllowingCalls() {
@@ -369,10 +367,6 @@ export class Thread extends Record {
 
     get isChatChannel() {
         return ["chat", "group"].includes(this.type);
-    }
-
-    get allowSetLastSeenMessage() {
-        return ["chat", "group", "channel"].includes(this.type);
     }
 
     get displayName() {
@@ -450,14 +444,6 @@ export class Thread extends Record {
         return [...this.messages].reverse().find((msg) => !msg.isEmpty);
     }
 
-    get newestNeedactionMessage() {
-        return this.needactionMessages[this.needactionMessages.length - 1];
-    }
-
-    get oldestNeedactionMessage() {
-        return this.needactionMessages[0];
-    }
-
     get newestPersistentMessage() {
         return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
     }
@@ -470,13 +456,6 @@ export class Thread extends Record {
         return this.channelMembers.some((channelMember) =>
             channelMember.persona?.eq(this._store.self)
         );
-    }
-
-    /**
-     * @param {import("models").Message} message
-     */
-    hasMessage(message) {
-        return message.in(this.messages);
     }
 
     get invitationLink() {
@@ -567,10 +546,6 @@ export class Thread extends Record {
         return this.memberCount - this.channelMembers.length;
     }
 
-    get hasNeedactionMessages() {
-        return this.needactionMessages.length > 0;
-    }
-
     get videoCount() {
         return Object.values(this._store.RtcSession.records).filter(
             (session) => session.videoStreams.size
@@ -584,10 +559,7 @@ export class Thread extends Record {
         return deserializeDateTime(this.last_interest_dt);
     }
 
-    /**
-     *
-     * @param {import("models").Persona} persona
-     */
+    /** @param {import("models").Persona} persona */
     getMemberName(persona) {
         return persona.name;
     }
