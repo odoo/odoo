@@ -37,5 +37,5 @@ class MailMainAttachmentMixin(models.AbstractModel):
     def _get_mail_thread_data(self, request_list):
         res = super()._get_mail_thread_data(request_list)
         if 'attachments' in request_list:
-            res['mainAttachment'] = {'id': self.message_main_attachment_id.id} if self.message_main_attachment_id else [('clear',)]
+            res['mainAttachment'] = {'id': self.message_main_attachment_id.id} if self.message_main_attachment_id else False
         return res

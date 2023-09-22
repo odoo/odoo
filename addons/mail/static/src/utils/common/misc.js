@@ -2,18 +2,6 @@
 
 import { reactive } from "@odoo/owl";
 
-export function nullifyClearCommands(data) {
-    for (const key in data) {
-        if (!Array.isArray(data[key])) {
-            continue;
-        }
-        data[key] = data[key].filter((val) => val[0] !== "clear");
-        if (data[key].length === 0) {
-            data[key] = null;
-        }
-    }
-}
-
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
         if (data[key] !== undefined) {

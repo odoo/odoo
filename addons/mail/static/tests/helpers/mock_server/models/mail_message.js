@@ -71,17 +71,14 @@ patch(MockServer.prototype, {
             id: messageId,
             messageReactionGroups: [
                 [
-                    reactions.length > 0 ? "insert" : "insert-and-unlink",
+                    reactions.length > 0 ? "ADD" : "DELETE",
                     {
                         content,
                         count: reactions.length,
                         guests: [],
                         message: { id: messageId },
                         partners: [
-                            [
-                                "insert",
-                                { id: this.pyEnv.currentPartnerId, name: currentPartner.name },
-                            ],
+                            ["ADD", { id: this.pyEnv.currentPartnerId, name: currentPartner.name }],
                         ],
                     },
                 ],
@@ -212,7 +209,7 @@ patch(MockServer.prototype, {
                     formattedAuthor["user"] = { id: user.id };
                 }
             } else {
-                formattedAuthor = [["clear"]];
+                formattedAuthor = false;
             }
             const attachments = this.getRecords("ir.attachment", [
                 ["id", "in", message.attachment_ids],

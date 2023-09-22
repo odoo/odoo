@@ -51,7 +51,7 @@ export class Notification extends Record {
             resModel: thread?.model,
             status: this.notification_status,
             type: this.notification_type,
-            notifications: [[this.isFailure ? "insert" : "insert-and-unlink", this]],
+            notifications: [[this.isFailure ? "ADD" : "DELETE", this]],
         });
     }
 

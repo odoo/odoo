@@ -33,7 +33,7 @@ class MailRtcSession(models.Model):
         rtc_sessions = super().create(vals_list)
         self.env['bus.bus']._sendmany([(channel, 'discuss.channel/rtc_sessions_update', {
             'id': channel.id,
-            'rtcSessions': [('insert', sessions_data)],
+            'rtcSessions': [('ADD', sessions_data)],
         }) for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items()])
         return rtc_sessions
 
@@ -47,7 +47,7 @@ class MailRtcSession(models.Model):
                 channel._rtc_cancel_invitations()
         notifications = [(channel, 'discuss.channel/rtc_sessions_update', {
             'id': channel.id,
-            'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
+            'rtcSessions': [('DELETE', [{'id': session_data['id']} for session_data in sessions_data])],
         }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
         for rtc_session in self:
             target = rtc_session.guest_id or rtc_session.partner_id

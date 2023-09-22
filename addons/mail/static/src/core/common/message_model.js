@@ -95,12 +95,6 @@ export class Message extends Record {
                 this._store.Attachment.insert({ message: this, ...attachment })
             )
         );
-        if (
-            Array.isArray(this.author) &&
-            this.author.some((command) => command.includes("clear"))
-        ) {
-            this.author = undefined;
-        }
         if (data.author?.id) {
             this.author = this._store.Persona.insert({
                 ...data.author,
@@ -144,9 +138,9 @@ export class Message extends Record {
             for (const rawReaction of data.messageReactionGroups) {
                 const [command, reactionData] = Array.isArray(rawReaction)
                     ? rawReaction
-                    : ["insert", rawReaction];
+                    : ["ADD", rawReaction];
                 const reaction = this._store.MessageReactions.insert(reactionData);
-                if (command === "insert") {
+                if (command === "ADD") {
                     reactionsToInsert.push(reaction);
                 } else {
                     reactionContentToUnlink.add(reaction.content);

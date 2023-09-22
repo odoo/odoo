@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { removeFromArray } from "@mail/utils/common/arrays";
 
 /**
  * @class ChannelMember
@@ -34,7 +33,7 @@ export class ChannelMember extends Record {
     }
 
     update(data) {
-        const [command, memberData] = Array.isArray(data) ? data : ["insert", data];
+        const [command, memberData] = Array.isArray(data) ? data : ["ADD", data];
         this.id = memberData.id;
         if ("persona" in memberData) {
             this.persona = this._store.Persona.insert({
@@ -55,20 +54,15 @@ export class ChannelMember extends Record {
             this.thread = thread;
         }
         switch (command) {
-            case "insert":
+            case "ADD":
                 {
                     if (this.thread && this.notIn(this.thread.channelMembers)) {
                         this.thread.channelMembers.push(this);
                     }
                 }
                 break;
-            case "unlink":
-                removeFromArray(this._store.ChannelMember.records, this);
-            // eslint-disable-next-line no-fallthrough
-            case "insert-and-unlink":
-                if (this.thread) {
-                    removeFromArray(this.thread.channelMembers, this);
-                }
+            case "DELETE":
+                this.delete();
                 break;
         }
     }

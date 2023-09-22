@@ -232,7 +232,7 @@ patch(MockServer.prototype, {
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Channel: {
                 id: channel.id,
-                channelMembers: [["insert-and-unlink", { id: channelMember.id }]],
+                channelMembers: [["DELETE", { id: channelMember.id }]],
                 memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                     ["channel_id", "=", channel.id],
                 ]),
@@ -265,7 +265,7 @@ patch(MockServer.prototype, {
         const partners = this.getRecords("res.partner", [["id", "in", partner_ids]]);
         for (const partner of partners) {
             if (partner.id === this.pyEnv.currentPartnerId) {
-                continue;  // adding 'yourself' to the conversation is handled below
+                continue; // adding 'yourself' to the conversation is handled below
             }
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
@@ -305,7 +305,7 @@ patch(MockServer.prototype, {
                     id: channel.id,
                     channelMembers: [
                         [
-                            "insert",
+                            "ADD",
                             this._mockDiscussChannelMember_DiscussChannelMemberFormat(
                                 insertedChannelMembers
                             ),
@@ -648,7 +648,7 @@ patch(MockServer.prototype, {
                 }
                 channelData["channelMembers"] = [
                     [
-                        "insert",
+                        "ADD",
                         this._mockDiscussChannelMember_DiscussChannelMemberFormat([
                             memberOfCurrentUser.id,
                         ]),
@@ -667,7 +667,7 @@ patch(MockServer.prototype, {
                     });
                 channelData["channelMembers"] = [
                     [
-                        "insert",
+                        "ADD",
                         this._mockDiscussChannelMember_DiscussChannelMemberFormat(
                             members.map((member) => member.id)
                         ),
@@ -689,7 +689,7 @@ patch(MockServer.prototype, {
             res.is_editable = is_editable;
             res["rtcSessions"] = [
                 [
-                    "insert",
+                    "ADD",
                     (channel.rtc_session_ids || []).map((rtcSessionId) =>
                         this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
                             rtcSessionId
@@ -1016,7 +1016,7 @@ patch(MockServer.prototype, {
             });
         }
         return {
-            channelMembers: [["insert", membersData]],
+            channelMembers: [["ADD", membersData]],
             memberCount,
         };
     },

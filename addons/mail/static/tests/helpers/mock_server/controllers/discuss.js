@@ -450,7 +450,7 @@ patch(MockServer.prototype, {
             iceServers: false,
             rtcSessions: [
                 [
-                    "insert",
+                    "ADD",
                     rtcSessions.map((rtcSession) =>
                         this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
                             rtcSession.id
@@ -491,7 +491,7 @@ patch(MockServer.prototype, {
                 "discuss.channel/rtc_sessions_update",
                 {
                     id: Number(channelId), // JS object keys are strings, but the type from the server is number
-                    rtcSessions: [["insert-and-unlink", notificationRtcSessions]],
+                    rtcSessions: [["DELETE", notificationRtcSessions]],
                 },
             ]);
         }
@@ -546,7 +546,7 @@ patch(MockServer.prototype, {
             if (this.models[thread_model].fields["message_main_attachment_id"]) {
                 res["mainAttachment"] = thread.message_main_attachment_id
                     ? { id: thread.message_main_attachment_id[0] }
-                    : [["clear"]];
+                    : false;
             }
         }
         if (request_list.includes("followers")) {

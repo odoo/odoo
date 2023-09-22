@@ -33,7 +33,7 @@ patch(MockServer.prototype, {
                           id: country.id,
                           name: country.name,
                       }
-                    : [["clear"]];
+                    : false;
             }
             return data;
         }

@@ -60,7 +60,7 @@ export class Activity extends Record {
         assignDefined(activity, data);
         if (broadcast) {
             this.env.services["mail.activity"].broadcastChannel?.postMessage({
-                type: "insert",
+                type: "INSERT",
                 payload: this.env.services["mail.activity"]._serialize(activity),
             });
         }

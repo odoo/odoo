@@ -861,9 +861,9 @@ class Message(models.Model):
         # format result
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         count = self.env["mail.message.reaction"].search_count(group_domain)
-        group_command = "insert" if count > 0 else "insert-and-unlink"
-        guests = [("insert" if action == "add" else "insert-and-unlink", {"id": guest.id})] if guest else []
-        partners = [("insert" if action == "add" else "insert-and-unlink", {"id": partner.id})] if partner else []
+        group_command = "ADD" if count > 0 else "DELETE"
+        guests = [("ADD" if action == "add" else "DELETE", {"id": guest.id})] if guest else []
+        partners = [("ADD" if action == "add" else "DELETE", {"id": partner.id})] if partner else []
         group_values = {
             "content": content,
             "count": count,
@@ -887,11 +887,11 @@ class Message(models.Model):
                 thread_ids_by_model_name[message.model].add(message.res_id)
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id) if message_sudo.author_id else [('clear',)]
+            author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id) if message_sudo.author_id else False
             guestAuthor = {
                 'id': message_sudo.author_guest_id.id,
                 'name': message_sudo.author_guest_id.name,
-            } if message_sudo.author_guest_id else [('clear',)]
+            } if message_sudo.author_guest_id else False
             if message_sudo.model and message_sudo.res_id:
                 record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
                 record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name

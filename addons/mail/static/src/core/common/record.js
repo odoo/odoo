@@ -427,8 +427,17 @@ export class Record {
                 }
             }
         }
-        delete this.Model?.records[r1.localId];
-        this.Model = null;
+        if (this.Model) {
+            if (Array.isArray(this.Model.records)) {
+                const index = this.Model.records.findIndex((r) => r.eq(r1));
+                if (index !== -1) {
+                    this.Model.records.splice(index, 1);
+                }
+            } else {
+                delete this.Model.records[r1.localId];
+            }
+            delete this.Model;
+        }
     }
 
     /** @param {Record} record */

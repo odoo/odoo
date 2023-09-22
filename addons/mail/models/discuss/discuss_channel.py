@@ -341,7 +341,7 @@ class Channel(models.Model):
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
             'Channel': {
-                'channelMembers': [('insert-and-unlink', {'id': member_id})],
+                'channelMembers': [('DELETE', {'id': member_id})],
                 'id': self.id,
                 'memberCount': self.member_count,
             }
@@ -417,7 +417,7 @@ class Channel(models.Model):
                     }))
             notifications.append((channel, 'mail.record/insert', {
                 'Channel': {
-                    'channelMembers': [('insert', list(new_members._discuss_channel_member_format().values()))],
+                    'channelMembers': [('ADD', list(new_members._discuss_channel_member_format().values()))],
                     'id': channel.id,
                     'memberCount': channel.member_count,
                 }
@@ -428,7 +428,7 @@ class Channel(models.Model):
                 # create channel from form view, and then join from discuss without refreshing the page.
                 notifications.append((current_partner or current_guest, 'mail.record/insert', {
                     'Channel': {
-                        'channelMembers': [('insert', list(existing_members._discuss_channel_member_format().values()))],
+                        'channelMembers': [('ADD', list(existing_members._discuss_channel_member_format().values()))],
                         'id': channel.id,
                         'memberCount': channel.member_count,
                     }
@@ -489,13 +489,13 @@ class Channel(models.Model):
                 'Thread': {
                     'id': self.id,
                     'model': 'discuss.channel',
-                    'rtcInvitingSession': [('unlink',)],
+                    'rtcInvitingSession': False,
                 }
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         channel_data = {'id': self.id, 'model': 'discuss.channel'}
         if members:
-            channel_data['invitedMembers'] = [('insert-and-unlink', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
+            channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
             self.env['bus.bus']._sendone(self, 'mail.record/insert', {'Thread': channel_data})
         return channel_data
 
@@ -854,7 +854,7 @@ class Channel(models.Model):
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
-                    channel_data['channelMembers'] = [('insert', list(member._discuss_channel_member_format().values()))]
+                    channel_data['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'
                     channel_data['message_unread_counter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
@@ -869,7 +869,7 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                channel_data['channelMembers'] = [('insert', list(members_by_channel[channel]._discuss_channel_member_format().values()))]
+                channel_data['channelMembers'] = [('ADD', list(members_by_channel[channel]._discuss_channel_member_format().values()))]
                 info['seen_partners_info'] = sorted([{
                     'id': cp.id,
                     'partner_id': cp.partner_id.id,
@@ -878,8 +878,8 @@ class Channel(models.Model):
                 } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner_id'])
             # add RTC sessions info
             info.update({
-                'invitedMembers': [('insert', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))],
-                'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
+                'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))],
+                'rtcSessions': [('ADD', rtc_sessions_by_channel.get(channel, []))],
             })
 
             info['channel'] = channel_data
@@ -1236,7 +1236,7 @@ class Channel(models.Model):
             domain=[('channel_id', '=', self.id)],
         )
         return {
-            'channelMembers': [('insert', list(unknown_members._discuss_channel_member_format().values()))],
+            'channelMembers': [('ADD', list(unknown_members._discuss_channel_member_format().values()))],
             'memberCount': count,
         }
 
