@@ -658,7 +658,7 @@ class ResPartner(models.Model):
 
     def _has_invoice(self):
         self.ensure_one()
-        invoice = self.env['account.move'].search([
+        invoice = self.env['account.move'].sudo().search([
             ('move_type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', '=', 'posted')
