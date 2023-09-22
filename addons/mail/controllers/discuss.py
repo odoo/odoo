@@ -443,6 +443,7 @@ class DiscussController(http.Controller):
     @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
         thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        request.session['lesson_thread_id'] = thread_id
         return thread._get_mail_thread_data(request_list)
 
     @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
