@@ -28,8 +28,43 @@ export class Attachment extends Record {
         }
         const attachment = this.get(data) ?? this.new(data);
         Object.assign(attachment, { id: data.id });
-        this.env.services["mail.attachment"].update(attachment, data);
+        attachment.update(data);
         return attachment;
+    }
+
+    update(data) {
+        assignDefined(this, data, [
+            "checksum",
+            "create_date",
+            "filename",
+            "mimetype",
+            "name",
+            "type",
+            "url",
+            "uploading",
+            "extension",
+            "accessToken",
+            "tmpUrl",
+            "message",
+            "res_name",
+        ]);
+        if (!("extension" in data) && data["name"]) {
+            this.extension = this.name.split(".").pop();
+        }
+        if (data.originThread !== undefined) {
+            const threadData = Array.isArray(data.originThread)
+                ? data.originThread[0][1]
+                : data.originThread;
+            this.originThread = this._store.Thread.insert({
+                model: threadData.model,
+                id: threadData.id,
+            });
+            const thread = this.originThread;
+            if (this.notIn(thread.attachments)) {
+                thread.attachments.push(this);
+                thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
+            }
+        }
     }
 
     accessToken;
