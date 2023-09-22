@@ -443,14 +443,31 @@ class dragAndDropHelper {
     _handleGridItemCreation(dropzoneEl) {
         const rowEl = dropzoneEl.parentNode;
         if (!this.dragState.columnWidth || !this.dragState.columnHeight) {
-            // This is hacky: The idea is that the snippet is dropped on the
-            // grid, however, as it is on the grid, it will try to fit in one
-            // box. This is a problem to define the dimensions of the drag
-            // helper. The hack is to temporarily insert the snippet on the DOM
-            // but not on the grid in order to extract its correct dimensions.
-            rowEl.after(this.draggedItemEl);
-            this.storeItemWidthAndHeight(gridUtils._getGridProperties(rowEl));
-            dropzoneEl.after(this.draggedItemEl);
+            // The item comes from the right panel and did not go over
+            // a dropzone yet. Stores its height and width
+            // characteristics.
+            let nbrColGrid = this.dragState.oeSnippet.getAttribute("data-oe-width-grid");
+            let nbrRowGrid = this.dragState.oeSnippet.getAttribute("data-oe-height-grid");
+            if (nbrColGrid || nbrRowGrid) {
+                // The grid dimensions of some snippets (for example
+                // snippets that are dynamically built) are stored and
+                // do not have to be computed.
+                nbrColGrid = nbrColGrid ? parseFloat(nbrColGrid) : 6;
+                nbrRowGrid = nbrRowGrid ? parseFloat(nbrRowGrid) : 2;
+                const gridProp = gridUtils._getGridProperties(rowEl);
+                this.dragState.columnWidth = nbrColGrid * (gridProp.columnSize + gridProp.columnGap) - gridProp.columnGap;
+                this.dragState.columnHeight = nbrRowGrid * (gridProp.rowSize + gridProp.rowGap) - gridProp.rowGap;
+            } else {
+                // This is hacky: The idea is that the snippet is dropped on the
+                // grid, however, as it is on the grid, it will try to fit in
+                // one box. This is a problem to define the dimensions of the
+                // drag helper. The hack is to temporarily insert the snippet on
+                // the DOM but not on the grid in order to extract its correct
+                // dimensions.
+                rowEl.after(this.draggedItemEl);
+                this.storeItemWidthAndHeight(gridUtils._getGridProperties(rowEl));
+                dropzoneEl.after(this.draggedItemEl);
+            }
         }
         if (this.draggedItemEl.dataset.snippet) {
             // Wrap the dragged snippet into a div to create a column
@@ -3331,6 +3348,8 @@ class SnippetsMenu extends Component {
                     baseBody: snippetEl.children[0],
                     data: {...snippetEl.dataset, ...snippetEl.children[0].dataset},
                     isCustom: !!snippetEl.closest('#snippet_custom'),
+                    heightGrid: snippetEl.dataset.oeHeightGrid || '',
+                    widthGrid:  snippetEl.dataset.oeWidthGrid || '',
                 };
 
                 [...snippet.content].forEach(el => {
@@ -3671,6 +3690,7 @@ class SnippetsMenu extends Component {
                 this.dragAndDropHelper.dragState.mousePositionXOnElement = args.x - targetRect.x;
                 this.dragAndDropHelper.draggedItemEl = $toInsert[0];
                 this.dragAndDropHelper.dragState.isItemUnwrappable = $toInsert[0].dataset.snippet;
+                this.dragAndDropHelper.dragState.oeSnippet = $snippet[0];
                 this._onDropZoneStart();
             },
             onDrag: ({x, y}) => {
