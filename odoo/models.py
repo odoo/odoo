@@ -2755,75 +2755,100 @@ class BaseModel(metaclass=MetaModel):
         :param fname: name of inherited field to reach
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
+
+        .. deprecated:: 17.0
+            Deprecated method, use _field_to_sql() instead
         """
+        warnings.warn("Deprecated method _inherits_join_calc(), _field_to_sql() instead", DeprecationWarning, 2)
+        sql = self._field_to_sql(alias, fname, query)
+        return self.env.cr.mogrify(sql).decode()
+
+    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None) -> SQL:
+        """ Return an :class:`SQL` object that represents the value of the given
+        field from the given table alias, in the context of the given query.
+        The query object is necessary for inherited fields, many2one fields and
+        properties fields, where joins are added to the query.
+        """
+        full_fname = fname
         property_name = None
         if '.' in fname:
             fname, property_name = fname.split('.', 1)
-            check_property_field_value_name(property_name)
 
-        # INVARIANT: alias is the SQL alias of model._table in query
-        model, field = self, self._fields[fname]
-        while field.inherited:
+        field = self._fields[fname]
+        if field.inherited:
             # retrieve the parent model where field is inherited from
             parent_model = self.env[field.related_field.model_name]
             parent_fname = field.related.split('.')[0]
-            # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
-            parent_alias = query.left_join(
-                alias, parent_fname, parent_model._table, 'id', parent_fname,
-            )
-            model, alias, field = parent_model, parent_alias, field.related_field
+            # LEFT JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
+            parent_alias = query.make_alias(alias, parent_fname)
+            query.add_join('LEFT JOIN', parent_alias, parent_model._table, SQL(
+                "%s = %s",
+                self._field_to_sql(alias, parent_fname, query),
+                SQL.identifier(parent_alias, 'id'),
+            ))
+            # delegate to the parent model
+            return parent_model._field_to_sql(parent_alias, full_fname, query)
+
+        if not field.store:
+            raise ValueError(f"Cannot convert field {field} to SQL")
 
         if field.type == 'many2many':
             # special case for many2many fields: prepare a query on the comodel
             # in order to reuse the mechanism _apply_ir_rules, then inject the
             # query as an extra condition of the left join
             comodel = self.env[field.comodel_name]
-            subquery = Query(self.env.cr, comodel._table)
-            comodel._apply_ir_rules(subquery)
-            # LEFT JOIN field_relation ON
-            #     alias.id = field_relation.field_column1
-            #     AND field_relation.field_column2 IN (subquery)
+            coquery = comodel._where_calc([], active_test=False)
+            comodel._apply_ir_rules(coquery)
+            # LEFT JOIN {field.relation} AS rel_alias ON
+            #     alias.id = rel_alias.{field.column1}
+            #     AND rel_alias.{field.column2} IN ({coquery})
             rel_alias = query.make_alias(alias, field.name)
             condition = SQL(
                 "%s = %s",
                 SQL.identifier(alias, 'id'),
                 SQL.identifier(rel_alias, field.column1),
             )
-            if subquery.where_clause:
+            if coquery.where_clause:
                 condition = SQL(
                     "%s AND %s IN %s",
                     condition,
                     SQL.identifier(rel_alias, field.column2),
-                    subquery.subselect(),
+                    coquery.subselect(),
                 )
             query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
-            return '"%s"."%s"' % (rel_alias, field.column2)
+            return SQL.identifier(rel_alias, field.column2)
+
         elif field.translate and not self.env.context.get('prefetch_langs'):
+            sql_field = SQL.identifier(alias, fname)
             lang = self.env.lang or 'en_US'
             if lang == 'en_US':
-                return f'"{alias}"."{fname}"->>\'en_US\''
-            return f'COALESCE("{alias}"."{fname}"->>\'{lang}\', "{alias}"."{fname}"->>\'en_US\')'
-        elif field.type == 'properties' and property_name:
-            return self._inherits_join_calc_properties(alias, fname, query, property_name)
-        else:
-            return '"%s"."%s"' % (alias, fname)
+                return SQL("%s->>'en_US'", sql_field)
+            return SQL("COALESCE(%s->>%s, %s->>'en_US')", sql_field, lang, sql_field)
 
-    @api.model
-    def _inherits_join_calc_properties(self, alias, fname, query, property_name):
+        elif field.type == 'properties' and property_name:
+            return self._field_properties_to_sql(alias, fname, property_name, query)
+
+        return SQL.identifier(alias, fname)
+
+    def _field_properties_to_sql(self, alias: str, fname: str, property_name: str,
+                                 query: Query) -> SQL:
         definition = self.get_property_definition(f"{fname}.{property_name}")
-        property_sql = f""""{alias}"."{fname}" -> '{property_name}'"""
         property_type = definition.get('type')
-        property_alias = query.make_alias(alias, f'{fname}_{property_name}')
+
+        sql_field = self._field_to_sql(alias, fname, query)
+        sql_property = SQL("%s -> %s", sql_field, property_name)
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
-            property_sql = f'''
-                CASE
-                     WHEN jsonb_typeof({property_sql}) = 'array'
-                     THEN {property_sql}
-                     ELSE '[]'::jsonb
-                 END
-            '''
+            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
+            sql_property = SQL(
+                """ CASE
+                        WHEN jsonb_typeof(%(property)s) = 'array'
+                        THEN %(property)s
+                        ELSE '[]'::jsonb
+                     END """,
+                property=sql_property,
+            )
             if property_type == 'tags':
                 # ignore invalid tags
                 tags = [tag[0] for tag in definition.get('tags') or []]
@@ -2848,61 +2873,66 @@ class BaseModel(metaclass=MetaModel):
             query.add_join(
                 "LEFT JOIN",
                 property_alias,
-                SQL(f"jsonb_array_elements({property_sql})"),
+                SQL("jsonb_array_elements(%s)", sql_property),
                 condition,
             )
 
-            return property_alias
+            return SQL.identifier(property_alias)
 
         elif property_type == 'selection':
             options = [option[0] for option in definition.get('selection') or ()]
 
             # check the existence of the option
+            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
             query.add_join(
                 "LEFT JOIN",
                 property_alias,
                 SQL("(SELECT unnest(%s::text[]) %s)", options, SQL.identifier(property_alias)),
-                SQL(f"{property_sql}->>0 = %s", SQL.identifier(property_alias)),
+                SQL("%s->>0 = %s", sql_property, SQL.identifier(property_alias)),
             )
 
-            return property_alias
+            return SQL.identifier(property_alias)
 
         elif property_type == 'many2one':
             comodel = self.env.get(definition.get('comodel'))
             if comodel is None or comodel._transient or comodel._abstract:
                 # all value are false, because the model does not exist anymore
                 # (or is a transient model e.g.)
-                return 'FALSE'
+                return SQL('FALSE')
 
-            return f'''
-                CASE
-                    WHEN jsonb_typeof({property_sql}) = 'number'
-                     AND ({property_sql})::int IN (SELECT id FROM {comodel._table})
-                    THEN {property_sql}
-                    ELSE NULL
-                 END
-            '''
+            return SQL(
+                """ CASE
+                        WHEN jsonb_typeof(%(property)s) = 'number'
+                         AND (%(property)s)::int IN (SELECT id FROM %(table)s)
+                        THEN %(property)s
+                        ELSE NULL
+                     END """,
+                property=sql_property,
+                table=SQL.identifier(comodel._table),
+            )
 
         elif property_type == 'date':
-            return f'''
-                CASE
-                    WHEN jsonb_typeof({property_sql}) = 'string'
-                    THEN ({property_sql}->>0)::DATE
-                    ELSE NULL
-                 END
-            '''
+            return SQL(
+                """ CASE
+                        WHEN jsonb_typeof(%(property)s) = 'string'
+                        THEN (%(property)s->>0)::DATE
+                        ELSE NULL
+                     END """,
+                property=sql_property,
+            )
 
         elif property_type == 'datetime':
-            return f'''
-                CASE
-                    WHEN jsonb_typeof({property_sql}) = 'string'
-                    THEN to_timestamp({property_sql}->>0, 'YYYY-MM-DD HH24:MI:SS')
-                    ELSE NULL
-                 END
-            '''
+            return SQL(
+                """ CASE
+                        WHEN jsonb_typeof(%(property)s) = 'string'
+                        THEN to_timestamp(%(property)s->>0, 'YYYY-MM-DD HH24:MI:SS')
+                        ELSE NULL
+                     END """,
+                property=sql_property,
+            )
 
         # if the key is not present in the dict, fallback to false instead of none
-        return f"COALESCE({property_sql}, 'false')"
+        return SQL("COALESCE(%s, 'false')", sql_property)
 
     @api.model
     def get_property_definition(self, full_name):
@@ -3847,17 +3877,17 @@ class BaseModel(metaclass=MetaModel):
 
         if column_fields:
             # the query may involve several tables: we need fully-qualified names
-            select_terms = [f'"{self._table}"."id"']
+            sql_terms = [SQL.identifier(self._table, 'id')]
             for field in column_fields:
-                qname = self._inherits_join_calc(self._table, field.name, query)
+                sql = self._field_to_sql(self._table, field.name, query)
                 if field.type == 'binary' and (
                         context.get('bin_size') or context.get('bin_size_' + field.name)):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
-                    qname = f'pg_size_pretty(length({qname})::bigint)'
-                select_terms.append(qname)
+                    sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
+                sql_terms.append(sql)
 
             # select the given columns from the rows in the query
-            self.env.cr.execute(query.select(*select_terms))
+            self.env.cr.execute(query.select(*sql_terms))
             rows = self.env.cr.fetchall()
 
             if not rows:
