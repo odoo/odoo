@@ -492,6 +492,26 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(len(mo), 1)
 
+    def test_flow_partial_receipt(self):
+        """Receipts partially only one line, having several subcontracted ones."""
+        # Create a receipt picking from the subcontractor with 2 lines
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        for _ in range(2):
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 1
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        # Receive only one of them, and no error should raise
+        picking_receipt.move_line_ids[0].qty_done = 1
+        action = picking_receipt.with_context(cancel_backorder=False).button_validate()
+        if isinstance(action, dict):
+            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+            wizard.process()
+        self.assertEqual(picking_receipt.state, "done")
+
     def test_flow_flexible_bom_1(self):
         """ Record Component for a bom subcontracted with a flexible and flexible + warning consumption """
         self.bom.consumption = 'flexible'
