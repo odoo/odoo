@@ -214,6 +214,10 @@ export class RecordList extends Array {
     includes(record) {
         return this.__list__.includes(record.localId);
     }
+    /** @param {(acc: any, r: R) => any} fn */
+    reduce(fn, init) {
+        return this.__list__.reduce((acc, localId) => fn(acc, this.__store__.get(localId)), init);
+    }
     /**
      * @param {number} [start]
      * @param {number} [end]

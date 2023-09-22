@@ -60,13 +60,10 @@ export class DiscussCoreCommon {
                     ...payload,
                     model: "discuss.channel",
                 });
-                this.threadService.remove(thread);
-                if (thread.localId === this.store.discuss.threadLocalId) {
-                    this.store.discuss.threadLocalId = undefined;
-                }
                 this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
                     type: "info",
                 });
+                thread.delete();
             });
             this.busService.subscribe("discuss.channel/legacy_insert", (payload) => {
                 this.store.Thread.insert({

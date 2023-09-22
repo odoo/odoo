@@ -30,13 +30,12 @@
             <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
                 <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true"/>
             </div>
-            <t t-foreach="filteredThreads(category)" t-as="threadLocalId" t-key="threadLocalId" t-call="mail.DiscussSidebarChannel">
-                <t t-set="thread" t-value="store.Thread.records[threadLocalId]"/>
+            <t t-foreach="filteredThreads(category)" t-as="thread" t-key="thread.localId" t-call="mail.DiscussSidebarChannel">
+                <t t-set="thread" t-value="thread"/>
             </t>
         </t>
-        <t t-elif="category.threads.includes(store.discuss.threadLocalId)" t-call="mail.DiscussSidebarChannel">
-            <t t-set="threadLocalId" t-value="store.discuss.threadLocalId"/>
-            <t t-set="thread" t-value="store.Thread.records[threadLocalId]"/>
+        <t t-elif="category.threads.includes(store.discuss.thread)" t-call="mail.DiscussSidebarChannel">
+            <t t-set="thread" t-value="store.discuss.thread"/>
         </t>
     </t>
 
@@ -44,8 +43,8 @@
         <t t-set="counter" t-value="threadService.getCounter(thread)"/>
         <button class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
             t-att-class="{
-                'o-bg-inherit': threadLocalId !== store.discuss.threadLocalId,
-                'o-active': threadLocalId === store.discuss.threadLocalId,
+                'o-bg-inherit': thread.notEq(store.discuss.thread),
+                'o-active': thread.eq(store.discuss.thread),
                 'o-unread': thread.message_unread_counter > 0,
             }"
             t-on-click="(ev) => this.openThread(ev, thread)"

@@ -2,7 +2,6 @@
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
-import { removeFromArray } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { markup } from "@odoo/owl";
@@ -413,7 +412,7 @@ export class ThreadService {
     }
 
     unpin(thread) {
-        if (this.store.discuss.threadLocalId === thread.localId) {
+        if (thread.eq(this.store.discuss.thread)) {
             this.router.replaceState({ active_id: undefined });
         }
         if (thread.model !== "discuss.channel") {
@@ -435,16 +434,12 @@ export class ThreadService {
     }
 
     sortChannels() {
-        this.store.discuss.channels.threads.sort((id1, id2) => {
-            const thread1 = this.store.Thread.records[id1];
-            const thread2 = this.store.Thread.records[id2];
-            return String.prototype.localeCompare.call(thread1.name, thread2.name);
-        });
-        this.store.discuss.chats.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.Thread.records[localId_1];
-            const thread2 = this.store.Thread.records[localId_2];
-            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
-        });
+        this.store.discuss.channels.threads.sort((t1, t2) =>
+            String.prototype.localeCompare.call(t1.name, t2.name)
+        );
+        this.store.discuss.chats.threads.sort(
+            (t1, t2) => t2.lastInterestDateTime.ts - t1.lastInterestDateTime.ts
+        );
     }
 
     /**
@@ -626,10 +621,10 @@ export class ThreadService {
 
     async leaveChannel(channel) {
         await this.orm.call("discuss.channel", "action_unfollow", [channel.id]);
-        this.remove(channel);
+        channel.delete();
         this.setDiscussThread(
             this.store.discuss.channels.threads[0]
-                ? this.store.Thread.records[this.store.discuss.channels.threads[0]]
+                ? this.store.discuss.channels.threads[0]
                 : this.store.discuss.inbox
         );
     }
@@ -639,7 +634,7 @@ export class ThreadService {
      * @param {boolean} pushState
      */
     setDiscussThread(thread, pushState = true) {
-        this.store.discuss.threadLocalId = thread.localId;
+        this.store.discuss.thread = thread;
         const activeId =
             typeof thread.id === "string"
                 ? `mail.box_${thread.id}`
@@ -654,12 +649,6 @@ export class ThreadService {
         if (pushState) {
             this.router.pushState({ active_id: activeId });
         }
-    }
-
-    remove(thread) {
-        removeFromArray(this.store.discuss.chats.threads, thread.localId);
-        removeFromArray(this.store.discuss.channels.threads, thread.localId);
-        thread.delete();
     }
 
     /**
@@ -835,8 +824,7 @@ export class ThreadService {
     }
 
     getDiscussSidebarCategoryCounter(categoryId) {
-        return this.store.discuss[categoryId].threads.reduce((acc, threadLocalId) => {
-            const channel = this.store.Thread.records[threadLocalId];
+        return this.store.discuss[categoryId].threads.reduce((acc, channel) => {
             if (categoryId === "channels") {
                 return channel.message_needaction_counter > 0 ? acc + 1 : acc;
             } else {

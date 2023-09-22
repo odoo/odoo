@@ -279,15 +279,14 @@ export class MessagingMenu extends Component {
         this.store.discuss.activeTab = tabId;
         if (
             this.store.discuss.activeTab === "mailbox" &&
-            (!this.store.discuss.threadLocalId ||
-                this.store.Thread.records[this.store.discuss.threadLocalId].type !== "mailbox")
+            (!this.store.discuss.thread || this.store.discuss.thread.type !== "mailbox")
         ) {
             this.threadService.setDiscussThread(
                 Object.values(this.store.Thread.records).find((thread) => thread.id === "inbox")
             );
         }
         if (this.store.discuss.activeTab !== "mailbox") {
-            this.store.discuss.threadLocalId = null;
+            delete this.store.discuss.thread;
         }
     }
 

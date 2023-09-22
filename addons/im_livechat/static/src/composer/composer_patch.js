@@ -30,11 +30,9 @@ patch(Composer.prototype, {
         return (
             this.thread?.type === "livechat" &&
             !this.env.inChatWindow &&
-            Object.values(this.store.discuss.livechat.threads).some((localId) => {
-                return (
-                    localId !== this.thread.localId && this.store.Thread.records[localId].isUnread
-                );
-            })
+            this.store.discuss.livechat.threads.some(
+                (thread) => thread.notEq(this.thread) && thread.isUnread
+            )
         );
     },
 });

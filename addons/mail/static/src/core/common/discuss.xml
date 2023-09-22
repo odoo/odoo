@@ -93,7 +93,7 @@
 <t t-name="mail.MobileMailbox">
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
-            'active o-active shadow-none': store.discuss.threadLocalId === mailbox.localId,
+            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
         }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
     />
 </t>

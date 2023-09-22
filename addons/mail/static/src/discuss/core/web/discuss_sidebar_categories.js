@@ -81,8 +81,7 @@ export class DiscussSidebarCategories extends Component {
     }
 
     filteredThreads(category) {
-        return category.threads.filter((threadLocalId) => {
-            const thread = this.store.Thread.records[threadLocalId];
+        return category.threads.filter((thread) => {
             return (
                 (thread.is_pinned || thread.group_based_subscription) &&
                 (!this.state.quickSearchVal ||

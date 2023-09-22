@@ -3,6 +3,8 @@ declare module "models" {
     import { CannedResponse as CannedResponseClass } from "@mail/core/common/canned_response_model";
     import { ChannelMember as ChannelMemberClass } from "@mail/core/common/channel_member_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
+    import { DiscussApp as DiscussAppClass } from "@mail/core/common/discuss_app_model";
+    import { DiscussAppCategory as DiscussAppCategoryClass } from "@mail/core/common/discuss_app_category_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
@@ -16,6 +18,8 @@ declare module "models" {
     export interface Attachment extends CannedResponseClass {}
     export interface ChannelMember extends ChannelMemberClass {}
     export interface Composer extends ComposerClass {}
+    export interface DiscussApp extends DiscussAppClass {}
+    export interface DiscussAppCategory extends DiscussAppCategoryClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface Message extends MessageClass {}
@@ -30,6 +34,8 @@ declare module "models" {
         "CannedResponse": CannedResponse,
         "ChannelMember": ChannelMember,
         "Composer": Composer,
+        "DiscussApp": DiscussApp,
+        "DiscussAppCategory": DiscussAppCategory,
         "Follower": Follower,
         "LinkPreview": LinkPreview,
         "Message": Message,
