@@ -45,6 +45,7 @@ class StockMoveLine(TestStockCommon):
             'package_id': cls.pack.id,
             'owner_id': cls.partner.id,
         })
+        cls.picking_type_internal = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_internal')
 
     def test_pick_from_1(self):
         """ test quant display_name """
@@ -60,7 +61,7 @@ class StockMoveLine(TestStockCommon):
             'location_dest_id': self.stock_location,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
-        with move_form.move_line_ids.new() as ml:
+        with move_form.move_line_nosuggest_ids.new() as ml:
             ml.quant_id = self.quant
 
         move = move_form.save()
@@ -79,6 +80,7 @@ class StockMoveLine(TestStockCommon):
             'product_uom': self.product.uom_id.id,
             'location_id': self.stock_location,
             'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_internal,
             'state': 'draft',
             'product_uom_qty': 5,
         })

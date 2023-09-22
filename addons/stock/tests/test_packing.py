@@ -18,6 +18,7 @@ class TestPackingCommon(TransactionCase):
         cls.pack_location = cls.warehouse.wh_pack_stock_loc_id
         cls.ship_location = cls.warehouse.wh_output_stock_loc_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
+        cls.picking_type_in = cls.env.ref('stock.picking_type_in')
 
         cls.productA = cls.env['product.product'].create({'name': 'Product A', 'type': 'product'})
         cls.productB = cls.env['product.product'].create({'name': 'Product B', 'type': 'product'})
@@ -1053,6 +1054,7 @@ class TestPacking(TestPackingCommon):
         """
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
+        self.picking_type_in.show_reserved = True
         self.productA.weight = 1.0
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
@@ -1167,6 +1169,7 @@ class TestPacking(TestPackingCommon):
         """
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
+        self.picking_type_in.show_reserved = True
         self.productA.weight = 1.0
         self.productB.weight = 1.0
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
