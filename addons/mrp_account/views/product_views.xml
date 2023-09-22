@@ -72,7 +72,7 @@
             <field name="inherit_id" ref="stock_account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <field name="property_stock_account_output_categ_id" position="after">
-                    <field name="property_stock_account_production_cost_id" options="{'no_create': True}" required="property_valuation == 'real_time'" />
+                    <field name="property_stock_account_production_cost_id" options="{'no_create': True}"/>
                 </field>
             </field>
         </record>
