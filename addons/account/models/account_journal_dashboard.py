@@ -386,15 +386,15 @@ class account_journal(models.Model):
 
         # To check
         to_check = {
-            res['journal_id'][0]: (res['amount'], res['journal_id_count'])
-            for res in self.env['account.bank.statement.line'].read_group(
+            journal: (amount, count)
+            for journal, amount, count in self.env['account.bank.statement.line']._read_group(
                 domain=[
                     ('journal_id', 'in', bank_cash_journals.ids),
                     ('move_id.to_check', '=', True),
                     ('move_id.state', '=', 'posted'),
                 ],
-                fields=['amount'],
                 groupby=['journal_id'],
+                aggregates=['amount:sum', '__count'],
             )
         }
 
@@ -402,7 +402,7 @@ class account_journal(models.Model):
             # User may have read access on the journal but not on the company
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
-            to_check_balance, number_to_check = to_check.get(journal.id, (0, 0))
+            to_check_balance, number_to_check = to_check.get(journal, (0, 0))
             misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
 
             dashboard_data[journal.id].update({
@@ -449,11 +449,11 @@ class account_journal(models.Model):
         late_query_results = group_by_journal(self.env.cr.dictfetchall())
 
         to_check_vals = {
-            vals['journal_id'][0]: vals
-            for vals in self.env['account.move'].read_group(
+            journal: (amount_total_signed_sum, count)
+            for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
                 domain=[('journal_id', 'in', sale_purchase_journals.ids), ('to_check', '=', True)],
-                fields=['amount_total_signed'],
-                groupby='journal_id',
+                groupby=['journal_id'],
+                aggregates=['amount_total_signed:sum', '__count'],
             )
         }
 
@@ -465,10 +465,10 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay[journal.id], currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency, curr_cache=curr_cache)
-            to_check = to_check_vals.get(journal.id, {})
+            amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
             dashboard_data[journal.id].update({
-                'number_to_check': to_check.get('journal_id_count', 0),
-                'to_check_balance': to_check.get('amount_total_signed', 0),
+                'number_to_check': count,
+                'to_check_balance': amount_total_signed_sum,
                 'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
@@ -486,19 +486,18 @@ class account_journal(models.Model):
         if not general_journals:
             return
         to_check_vals = {
-            vals['journal_id'][0]: vals
-            for vals in self.env['account.move'].read_group(
+            journal: (amount_total_signed_sum, count)
+            for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
                 domain=[('journal_id', 'in', general_journals.ids), ('to_check', '=', True)],
-                fields=['amount_total_signed'],
-                groupby='journal_id',
-                lazy=False,
+                groupby=['journal_id'],
+                aggregates=['amount_total_signed:sum', '__count'],
             )
         }
         for journal in general_journals:
-            vals = to_check_vals.get(journal.id, {})
+            amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
             dashboard_data[journal.id].update({
-                'number_to_check': vals.get('__count', 0),
-                'to_check_balance': vals.get('amount_total_signed', 0),
+                'number_to_check': count,
+                'to_check_balance': amount_total_signed_sum,
             })
 
     def _get_open_bills_to_pay_query(self):

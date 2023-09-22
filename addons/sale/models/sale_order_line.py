@@ -718,7 +718,7 @@ class SaleOrderLine(models.Model):
             analytic lines.
             :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
         """
-        result = {}
+        result = defaultdict(float)
 
         # avoid recomputation if no SO lines concerned
         if not self:
@@ -726,32 +726,24 @@ class SaleOrderLine(models.Model):
 
         # group analytic lines by product uom and so line
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
-        data = self.env['account.analytic.line'].read_group(
+        data = self.env['account.analytic.line']._read_group(
             domain,
-            ['so_line', 'unit_amount', 'product_uom_id', 'move_line_id:count_distinct'], ['product_uom_id', 'so_line'], lazy=False
+            ['product_uom_id', 'so_line'],
+            ['unit_amount:sum', 'move_line_id:count_distinct', '__count'],
         )
 
         # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
-        # browse so lines and product uoms here to make them share the same prefetch
-        lines = self.browse([item['so_line'][0] for item in data])
-        lines_map = {line.id: line for line in lines}
-        product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
-        product_uom_map = {uom.id: uom for uom in self.env['uom.uom'].browse(product_uom_ids)}
-        for item in data:
-            if not item['product_uom_id']:
+        for uom, so_line, unit_amount_sum, move_line_id_count_distinct, count in data:
+            if not uom:
                 continue
-            so_line_id = item['so_line'][0]
-            so_line = lines_map[so_line_id]
-            result.setdefault(so_line_id, 0.0)
-            uom = product_uom_map.get(item['product_uom_id'][0])
             # avoid counting unit_amount twice when dealing with multiple analytic lines on the same move line
-            if item['move_line_id'] == 1 and item['__count'] > 1:
-                qty = item['unit_amount'] / item['__count']
+            if move_line_id_count_distinct == 1 and count > 1:
+                qty = unit_amount_sum / count
             else:
-                qty = item['unit_amount']
+                qty = unit_amount_sum
             if so_line.product_uom.category_id == uom.category_id:
                 qty = uom._compute_quantity(qty, so_line.product_uom, rounding_method='HALF-UP')
-            result[so_line_id] += qty
+            result[so_line.id] += qty
 
         return result
 
