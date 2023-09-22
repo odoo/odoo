@@ -29,6 +29,24 @@ patch(MessageModel.prototype, {
         /** @type {string} */
         this.pinnedAt = undefined;
     },
+    update(data) {
+        super.update(data);
+        const { pinned_at: pinnedAt } = data;
+        if (
+            this.originThread?.model === "discuss.channel" &&
+            (pinnedAt !== undefined || this.isEmpty)
+        ) {
+            if (pinnedAt && !this.isEmpty) {
+                if (this.notIn(this.originThread.pinnedMessages)) {
+                    this.originThread.pinnedMessages.push(this);
+                }
+                this.pinnedAt = pinnedAt;
+            } else {
+                delete this.pinnedAt;
+                this.originThread.pinnedMessages.delete(this);
+            }
+        }
+    },
 });
 
 export class MessagePin {
@@ -47,13 +65,6 @@ export class MessagePin {
         this.ormService = services.orm;
         this.rpcService = services.rpc;
         this.store = services["mail.store"];
-    }
-
-    setup() {
-        this.env.bus.addEventListener("mail.message/onUpdate", ({ detail: { message, data } }) => {
-            this.onMessageUpdate(message, data);
-        });
-        this.busService.start();
     }
 
     /**
@@ -116,27 +127,6 @@ export class MessagePin {
     }
 
     /**
-     * @param {import("models").Message}
-     * @param {Object} data
-     */
-    onMessageUpdate(message, { pinned_at: pinnedAt }) {
-        if (
-            message.originThread?.model === "discuss.channel" &&
-            (pinnedAt !== undefined || message.isEmpty)
-        ) {
-            if (pinnedAt && !message.isEmpty) {
-                if (message.notIn(message.originThread.pinnedMessages)) {
-                    message.originThread.pinnedMessages.push(message);
-                }
-                message.pinnedAt = pinnedAt;
-            } else {
-                delete message.pinnedAt;
-                message.originThread.pinnedMessages.delete(message);
-            }
-        }
-    }
-
-    /**
      * Prompts the user for confirmation, then sets pinned to true.
      *
      * @param {import("models").Message}
@@ -196,7 +186,6 @@ export const messagePinService = {
      */
     start(env, services) {
         const messagePin = reactive(new MessagePin(env, services));
-        messagePin.setup();
         return messagePin;
     },
 };

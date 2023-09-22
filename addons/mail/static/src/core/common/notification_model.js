@@ -23,8 +23,36 @@ export class Notification extends Record {
     static insert(data) {
         const notification = this.get(data) ?? this.new(data);
         Object.assign(notification, { id: data.id });
-        this.env.services["mail.message"].updateNotification(notification, data);
+        notification.update(data);
         return notification;
+    }
+
+    update(data) {
+        Object.assign(this, {
+            message: data.message,
+            notification_status: data.notification_status,
+            notification_type: data.notification_type,
+            failure_type: data.failure_type,
+            persona: data.res_partner_id
+                ? this._store.Persona.insert({
+                      id: data.res_partner_id[0],
+                      displayName: data.res_partner_id[1],
+                      type: "partner",
+                  })
+                : undefined,
+        });
+        if (!this.message.author?.eq(this._store.self)) {
+            return;
+        }
+        const thread = this.message.originThread;
+        this._store.NotificationGroup.insert({
+            modelName: thread?.modelName,
+            resId: thread?.id,
+            resModel: thread?.model,
+            status: this.notification_status,
+            type: this.notification_type,
+            notifications: [[this.isFailure ? "insert" : "insert-and-unlink", this]],
+        });
     }
 
     /** @type {number} */

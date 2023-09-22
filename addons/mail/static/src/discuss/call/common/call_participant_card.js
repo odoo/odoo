@@ -141,9 +141,7 @@ export class CallParticipantCard extends Component {
             channel_id: this.props.thread.id,
             member_ids: [this.channelMember.id],
         });
-        this.threadService.update(this.props.thread, {
-            invitedMembers: channelData.invitedMembers,
-        });
+        this.props.thread.update({ invitedMembers: channelData.invitedMembers });
     }
 
     async onClickReplay() {

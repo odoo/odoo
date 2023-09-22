@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
+import { assignDefined, nullifyClearCommands } from "@mail/utils/common/misc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -30,9 +31,22 @@ export class Persona extends Record {
      */
     static insert(data) {
         const persona = this.get(data) ?? this.new(data);
-        this.env.services["mail.persona"].update(persona, data);
+        persona.update(data);
         // return reactive version
         return persona;
+    }
+
+    update(data) {
+        nullifyClearCommands(data);
+        assignDefined(this, { ...data });
+        if (
+            this.type === "partner" &&
+            this.im_status !== "im_partner" &&
+            !this.is_public &&
+            !this._store.registeredImStatusPartners?.includes(this.id)
+        ) {
+            this._store.registeredImStatusPartners?.push(this.id);
+        }
     }
 
     /** @type {number} */
