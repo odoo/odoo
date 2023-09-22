@@ -111,7 +111,7 @@ class ResPartner(models.Model):
             partners_format.get(partner)["persona"] = {
                 "channelMembers": [
                     (
-                        "insert",
+                        "ADD",
                         member_by_partner.get(partner)
                         ._discuss_channel_member_format(
                             fields={

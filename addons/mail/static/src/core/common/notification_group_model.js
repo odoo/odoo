@@ -56,9 +56,9 @@ export class NotificationGroup extends Record {
         const alreadyKnownNotifications = new Set(this.notifications.map(({ id }) => id));
         const notificationIdsToRemove = new Set();
         for (const [commandName, notification] of notifications) {
-            if (commandName === "insert" && !alreadyKnownNotifications.has(notification.id)) {
+            if (commandName === "ADD" && !alreadyKnownNotifications.has(notification.id)) {
                 this.notifications.push(notification);
-            } else if (commandName === "insert-and-unlink") {
+            } else if (commandName === "DELETE") {
                 notificationIdsToRemove.add(notification.id);
             }
         }

@@ -1532,12 +1532,12 @@ export class Rtc {
         }
         const oldCount = Object.keys(channel.rtcSessions).length;
         switch (command) {
-            case "insert-and-unlink":
+            case "DELETE":
                 for (const sessionData of sessionsData) {
                     this.deleteSession(sessionData.id);
                 }
                 break;
-            case "insert":
+            case "ADD":
                 for (const sessionData of sessionsData) {
                     const session = this.store.RtcSession.insert(sessionData);
                     if (session.notIn(channel.rtcSessions)) {
