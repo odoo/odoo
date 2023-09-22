@@ -785,6 +785,10 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorButtonClick: function (ev) {
+        const odooEditor = this.__parentedParent.odooEditor;
+        if (odooEditor) {
+            odooEditor.options.customGradientButtonEl = ev.currentTarget;
+        }
         const buttonEl = ev.currentTarget;
         const colorInfo = Object.assign(this.getSelectedColors(), this._getButtonInfo(buttonEl));
         this._selectColor(colorInfo, 'color_picked');

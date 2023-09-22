@@ -226,6 +226,7 @@ export class OdooEditor extends EventTarget {
                 isRootEditable: true,
                 placeholder: false,
                 showEmptyElementHint: true,
+                customGradientButtonEl: null,
                 defaultLinkAttributes: {},
                 plugins: [],
                 getUnremovableElements: () => [],
@@ -4159,9 +4160,15 @@ export class OdooEditor extends EventTarget {
         }
 
         // Clean custom selections
-        if (this.deselectTable() && hasValidSelection(this.editable)) {
-            this.document.getSelection().collapseToStart();
+        if (hasTableSelection(this.editable)) {
+            if (!(this.options.customGradientButtonEl && this.options.customGradientButtonEl.classList.contains('o_custom_gradient_btn'))) {
+                this.deselectTable();
+                const selection = this.document.getSelection();
+                selection.rangeCount && selection.collapseToStart();
+            }
         }
+
+        this.observerFlush();
     }
     /**
      * Handle the hint preview for the Powerbox.
