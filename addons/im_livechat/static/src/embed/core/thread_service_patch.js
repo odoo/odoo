@@ -63,17 +63,6 @@ patch(ThreadService.prototype, {
         }
     },
 
-    async update(thread, data) {
-        super.update(...arguments);
-        if (data.operator_pid) {
-            thread.operator = this.store.Persona.insert({
-                type: "partner",
-                id: data.operator_pid[0],
-                name: data.operator_pid[1],
-            });
-        }
-    },
-
     avatarUrl(author, thread) {
         if (thread.type !== "livechat") {
             return super.avatarUrl(...arguments);

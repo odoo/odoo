@@ -9,12 +9,6 @@ patch(AttachmentService.prototype, {
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = services["discuss.voice_message"];
     },
-    update(attachment, data) {
-        super.update(...arguments);
-        if (data["voice"]) {
-            attachment.isVoice = true;
-        }
-    },
     remove(attachment) {
         if (attachment.isVoice && attachment.id > 0) {
             this.voiceMessageService.activePlayer = null;

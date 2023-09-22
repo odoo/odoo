@@ -2,7 +2,6 @@
 
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
-import { removeFromArray } from "@mail/utils/common/arrays";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
@@ -158,9 +157,6 @@ export class Rtc {
                 await this.resetAudioTrack({ force: true });
             }
         });
-        this.env.bus.addEventListener("mail.thread/onUpdate", ({ detail: { thread, data } }) => {
-            this.onThreadUpdate(thread, data);
-        });
         this.env.bus.addEventListener(
             "RTC-SERVICE:UPDATE_RTC_SESSIONS",
             ({ detail: { commands = [], record, thread } }) => {
@@ -282,44 +278,6 @@ export class Rtc {
                 this.timeouts.delete(id);
             }, delay)
         );
-    }
-
-    onThreadUpdate(thread, data) {
-        if ("rtc_inviting_session" in data) {
-            this.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {
-                thread,
-                record: data.rtc_inviting_session,
-            });
-            thread.rtcInvitingSession = this.store.RtcSession.insert({
-                id: data.rtc_inviting_session.id,
-            });
-            if (!this.store.ringingThreads.includes(thread.localId)) {
-                this.store.ringingThreads.push(thread.localId);
-            }
-        }
-        if ("rtcInvitingSession" in data) {
-            if (Array.isArray(data.rtcInvitingSession)) {
-                if (data.rtcInvitingSession[0][0] === "unlink") {
-                    thread.rtcInvitingSession = undefined;
-                    removeFromArray(this.store.ringingThreads, thread.localId);
-                }
-                return;
-            }
-            this.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {
-                thread,
-                record: data.rtcInvitingSession,
-            });
-            thread.rtcInvitingSession = this.store.RtcSession.insert({
-                id: data.rtcInvitingSession.id,
-            });
-            this.store.ringingThreads.push(thread.localId);
-        }
-        if ("rtcSessions" in data) {
-            this.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {
-                thread,
-                commands: data.rtcSessions,
-            });
-        }
     }
 
     /**
@@ -781,7 +739,7 @@ export class Rtc {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
         }
-        const { rtcSessions, iceServers, sessionId, invitedMembers } = await this.rpc(
+        const { rtcSessions, iceServers, sessionId } = await this.rpc(
             "/mail/rtc/channel/join_call",
             {
                 channel_id: channel.id,
@@ -795,7 +753,7 @@ export class Rtc {
         this.clear();
         this.state.logs.clear();
         this.state.channel = channel;
-        this.onThreadUpdate(this.state.channel, { rtcSessions, invitedMembers });
+        this.state.channel.update({ rtcSessions });
         this.state.selfSession = this.store.RtcSession.get(sessionId);
         this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
         this.state.logs.set("channelId", this.state.channel?.id);
