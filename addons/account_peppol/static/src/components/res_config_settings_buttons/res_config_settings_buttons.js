@@ -31,6 +31,30 @@ class PeppolSettingsButtons extends Component {
         return this.props.record.data.account_peppol_proxy_state === "active" && Boolean(this.props.record.data.account_peppol_migration_key);
     }
 
+    get ediMode() {
+        return this.props.record.data.account_peppol_edi_mode;
+    }
+
+    get modeConstraint() {
+        return this.props.record.data.account_peppol_mode_constraint;
+    }
+
+    get createUserButtonLabel() {
+        const modes = {
+            demo: _t("Validate registration (Demo)"),
+            test: _t("Validate registration (Test)"),
+            prod: _t("Validate registration"),
+        }
+        return modes[this.ediMode] || _t("Validate registration");
+    }
+
+    get deregisterUserButtonLabel() {
+        const modes = {
+            demo: _t("Switch to Live"),
+        }
+        return this.modeConstraint !== "demo" && modes[this.ediMode] || _t("Deregister from Peppol");
+    }
+
     async _callConfigMethod(methodName, save = false) {
         if (save) {
             await this._save();
@@ -74,10 +98,14 @@ class PeppolSettingsButtons extends Component {
     }
 
     deregister() {
-        this.showConfirmation(
-            "This will delete your Peppol registration.",
-            "button_deregister_peppol_participant"
-        )
+        if (this.ediMode === 'demo') {
+            this._callConfigMethod("button_deregister_peppol_participant");
+        } else {
+            this.showConfirmation(
+                "This will delete your Peppol registration.",
+                "button_deregister_peppol_participant"
+            )
+        }
     }
 
     async updateDetails() {
