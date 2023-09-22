@@ -289,7 +289,7 @@ QUnit.test("Show send button in mobile", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click("button", { text: "Channel" });
-    await click(".o-mail-NotificationItem-name", { text: "minecraft-wii-u" });
+    await click(".o-mail-NotificationItem", { text: "minecraft-wii-u" });
     await contains(".o-mail-Composer button[aria-label='Send']");
     await contains(".o-mail-Composer button[aria-label='Send'] i.fa-paper-plane-o");
 });
@@ -422,10 +422,10 @@ QUnit.test("leave command on channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel span", { count: 0, text: "general" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
 
-    await contains(".o-mail-Discuss h4.text-muted", { text: "No conversation selected." });
-    await contains(".o_notification_content", { text: "You unsubscribed from general." });
+    await contains(".o-mail-Discuss", { text: "No conversation selected." });
+    await contains(".o_notification", { text: "You unsubscribed from general." });
 });
 
 QUnit.test("Can handle leave notification from unknown member", async () => {
@@ -467,12 +467,10 @@ QUnit.test("leave command on chat", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel span", { count: 0, text: "Chuck Norris" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Chuck Norris" });
 
     await contains(".o-mail-Discuss h4.text-muted", { text: "No conversation selected." });
-    await contains(".o_notification_content", {
-        text: "You unpinned your conversation with Chuck Norris",
-    });
+    await contains(".o_notification", { text: "You unpinned your conversation with Chuck Norris" });
 });
 
 QUnit.test("Can post suggestions", async () => {
@@ -783,7 +781,7 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async () 
     await contains("li", { text: "test4@odoo.com" });
     await contains("li", { text: "test5@odoo.com" });
     await contains("li", { text: "test6@odoo.com" });
-    await contains(".o-mail-Chatter div", { text: "To: test1, test2, test3, test4, test5, …" });
+    await contains(".o-mail-Chatter", { text: "To: test1, test2, test3, test4, test5, …" });
 });
 
 QUnit.test(
@@ -813,8 +811,8 @@ QUnit.test(
                 contentType: "text/plain",
             }),
         ]);
-        await contains(".o-mail-AttachmentCard div", { text: "text1.txt" });
-        await contains(".o-mail-AttachmentCard div", { text: "text2.txt" });
+        await contains(".o-mail-AttachmentCard", { text: "text1.txt" });
+        await contains(".o-mail-AttachmentCard", { text: "text2.txt" });
         await contains(".o-mail-AttachmentCard-aside div[title='Uploading']", { count: 2 });
     }
 );
@@ -849,17 +847,14 @@ QUnit.test(
                 contentType: "text/plain",
             }),
         ]);
-        await contains(".o-mail-AttachmentCard.o-isUploading div", { text: "text1.txt" });
+        await contains(".o-mail-AttachmentCard.o-isUploading", { text: "text1.txt" });
         await click(".o-mail-AttachmentCard-unlink", {
-            parent: [
-                ".o-mail-AttachmentCard.o-isUploading",
-                { contains: ["div", { text: "text2.txt" }] },
-            ],
+            parent: [".o-mail-AttachmentCard.o-isUploading", { text: "text2.txt" }],
         });
-        await contains(".o-mail-AttachmentCard div", { count: 0, text: "text2.txt" });
+        await contains(".o-mail-AttachmentCard", { count: 0, text: "text2.txt" });
         // Simulates the completion of the upload of the first attachment
         uploadPromise.resolve();
-        await contains(".o-mail-AttachmentCard:not(.o-isUploading) div", { text: "text1.txt" });
+        await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { text: "text1.txt" });
     }
 );
 

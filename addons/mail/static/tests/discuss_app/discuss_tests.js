@@ -51,7 +51,7 @@ QUnit.test("can change the thread name of #general [REQUIRE FOCUS]", async (asse
     await contains("input.o-mail-Discuss-threadName", { value: "general" });
     await insertText("input.o-mail-Discuss-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "special" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "special" });
     await contains("input.o-mail-Discuss-threadName", { value: "special" });
     assert.verifySteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
 });
@@ -283,7 +283,7 @@ QUnit.test("show date separator above mesages of similar date", async () => {
     openDiscuss(channelId);
     await contains(".o-mail-Message", {
         count: 29,
-        after: [".o-mail-DateSection span", { text: "April 20, 2019" }],
+        after: [".o-mail-DateSection", { text: "April 20, 2019" }],
     });
 });
 
@@ -299,7 +299,7 @@ QUnit.test("sidebar: chat custom name", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "Marc" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });
 
 QUnit.test("reply to message from inbox (message linked to document) [REQUIRE FOCUS]", async () => {
@@ -326,7 +326,7 @@ QUnit.test("reply to message from inbox (message linked to document) [REQUIRE FO
     await click("[title='Reply']");
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
-    await contains(".o-mail-Composer-coreHeader span", { text: "on: Refactoring" });
+    await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
     await insertText(".o-mail-Composer-input:focus", "Hello");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Composer", { count: 0 });
@@ -349,12 +349,12 @@ QUnit.test("Can reply to starred message", async () => {
     const { openDiscuss } = await start();
     openDiscuss("mail.box_starred");
     await click("[title='Reply']");
-    await contains(".o-mail-Composer-coreHeader b", { text: "RandomName" });
+    await contains(".o-mail-Composer-coreHeader", { text: "RandomName" });
     await insertText(".o-mail-Composer-input", "abc");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Composer-send", { count: 0 });
     await contains(".o_notification", { text: 'Message posted on "RandomName"' });
-    await click(".o-mail-DiscussSidebarChannel span", { text: "RandomName" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "RandomName" });
     await contains(".o-mail-Message-content", { text: "abc" });
 });
 
@@ -376,24 +376,19 @@ QUnit.test("Can reply to history message", async () => {
     const { openDiscuss } = await start();
     openDiscuss("mail.box_history");
     await click("[title='Reply']");
-    await contains(".o-mail-Composer-coreHeader b", { text: "RandomName" });
+    await contains(".o-mail-Composer-coreHeader", { text: "RandomName" });
     await insertText(".o-mail-Composer-input", "abc");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Composer-send", { count: 0 });
     await contains(".o_notification", { text: 'Message posted on "RandomName"' });
-    await click(".o-mail-DiscussSidebarChannel span", { text: "RandomName" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "RandomName" });
     await contains(".o-mail-Message-content", { text: "abc" });
 });
 
 QUnit.test("receive new needaction messages", async () => {
     const { openDiscuss, pyEnv } = await start();
     openDiscuss();
-    await contains("button.o-active", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button.o-active", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Thread .o-mail-Message", { count: 0 });
 
     // simulate receiving a new needaction message
@@ -404,12 +399,7 @@ QUnit.test("receive new needaction messages", async () => {
         model: "res.partner",
         res_id: 20,
     });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { text: "1" }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
 
@@ -421,12 +411,7 @@ QUnit.test("receive new needaction messages", async () => {
         model: "res.partner",
         res_id: 20,
     });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { text: "2" }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "not empty 1" });
     await contains(".o-mail-Message-content", { text: "not empty 2" });
@@ -443,9 +428,9 @@ QUnit.test("basic rendering", async () => {
 QUnit.test("basic rendering: sidebar", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebar button div", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebar button div", { text: "Starred" });
-    await contains(".o-mail-DiscussSidebar button div", { text: "History" });
+    await contains(".o-mail-DiscussSidebar button", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebar button", { text: "Starred" });
+    await contains(".o-mail-DiscussSidebar button", { text: "History" });
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarCategory-chat", { text: "Direct messages" });
@@ -454,23 +439,23 @@ QUnit.test("basic rendering: sidebar", async () => {
 QUnit.test("sidebar: Inbox should have icon", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button", { containsMulti: [[".fa-inbox"], ["div", { text: "Inbox" }]] });
+    await contains("button", { text: "Inbox", contains: [".fa-inbox"] });
 });
 
 QUnit.test("sidebar: default active inbox", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button.o-active div", { text: "Inbox" });
+    await contains("button.o-active", { text: "Inbox" });
 });
 
 QUnit.test("sidebar: change active", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button.o-active div", { text: "Inbox" });
-    await contains("button:not(.o-active) div", { text: "Starred" });
-    await click("button div", { text: "Starred" });
-    await contains("button:not(.o-active) div", { text: "Inbox" });
-    await contains("button.o-active div", { text: "Starred" });
+    await contains("button.o-active", { text: "Inbox" });
+    await contains("button:not(.o-active)", { text: "Starred" });
+    await click("button", { text: "Starred" });
+    await contains("button:not(.o-active)", { text: "Inbox" });
+    await contains("button.o-active", { text: "Starred" });
 });
 
 QUnit.test("sidebar: basic channel rendering", async () => {
@@ -478,7 +463,7 @@ QUnit.test("sidebar: basic channel rendering", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
     await contains(
@@ -584,7 +569,7 @@ QUnit.test("initially load messages from inbox", async (assert) => {
 QUnit.test("default active id on mailbox", async () => {
     const { openDiscuss } = await start();
     openDiscuss("mail.box_starred");
-    await contains("button.o-active div", { text: "Starred" });
+    await contains("button.o-active", { text: "Starred" });
 });
 
 QUnit.test("basic top bar rendering", async () => {
@@ -595,11 +580,11 @@ QUnit.test("basic top bar rendering", async () => {
     await contains("button:disabled", { text: "Mark all read" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
 
-    await click("button div", { text: "Starred" });
+    await click("button", { text: "Starred" });
     await contains("button:disabled", { text: "Unstar all" });
     await contains(".o-mail-Discuss-threadName", { value: "Starred" });
 
-    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-header button[title='Add Users']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
 });
@@ -749,17 +734,17 @@ QUnit.test('messages marked as read move to "History" mailbox', async () => {
     await contains("button.o-active", { text: "History" });
     await contains(".o-mail-Thread h4", { text: "No history messages" });
 
-    await click("button div", { text: "Inbox" });
-    await contains("button.o-active div", { text: "Inbox" });
+    await click("button", { text: "Inbox" });
+    await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread h4", { count: 0, text: "Congratulations, your inbox is empty" });
 
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
 
     await click("button", { text: "Mark all read" });
-    await contains("button.o-active div", { text: "Inbox" });
+    await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread h4", { text: "Congratulations, your inbox is empty" });
 
-    await click("button div", { text: "History" });
+    await click("button", { text: "History" });
     await contains("button.o-active", { text: "History" });
     await contains(".o-mail-Thread h4", { count: 0, text: "No history messages" });
 
@@ -798,18 +783,15 @@ QUnit.test(
         openDiscuss("mail.box_history");
         await contains("button.o-active", { text: "History" });
         await contains(".o-mail-Thread h4", { text: "No history messages" });
-        await click("button div", { text: "Inbox" });
-        await contains("button.o-active div", { text: "Inbox" });
+        await click("button", { text: "Inbox" });
+        await contains("button.o-active", { text: "Inbox" });
         await contains(".o-mail-Message", { count: 2 });
         await click("[title='Mark as Read']", {
-            parent: [
-                ".o-mail-Message",
-                { contains: [".o-mail-Message-content", { text: "not empty 1" }] },
-            ],
+            parent: [".o-mail-Message", { text: "not empty 1" }],
         });
         await contains(".o-mail-Message");
         await contains(".o-mail-Message-content", { text: "not empty 2" });
-        await click("button div", { text: "History" });
+        await click("button", { text: "History" });
         await contains("button.o-active", { text: "History" });
         await contains(".o-mail-Message");
         await contains(".o-mail-Message-content", { text: "not empty 1" });
@@ -834,7 +816,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     await contains(".o-mail-Message", { count: 30 });
     await click("button", { text: "Mark all read" });
     await contains(".o-mail-Message", { count: 0 });
-    await click("button div", { text: "History" });
+    await click("button", { text: "History" });
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
@@ -857,9 +839,7 @@ QUnit.test("post a simple message", async (assert) => {
         },
     });
     openDiscuss(channelId);
-    await contains(".o-mail-Thread .o-mail-Thread-empty", {
-        text: "There are no messages in this conversation.",
-    });
+    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:enabled");
@@ -878,19 +858,9 @@ QUnit.test("starred: unstar all", async () => {
     const { openDiscuss } = await start();
     openDiscuss("mail.box_starred");
     await contains(".o-mail-Message", { count: 2 });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { text: "2" }],
-        ],
-    });
+    await contains("button", { text: "Starred", contains: [".badge", { text: "2" }] });
     await click("button:enabled", { text: "Unstar all" });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:disabled", { text: "Unstar all" });
 });
@@ -910,16 +880,16 @@ QUnit.test("auto-focus composer on opening thread [REQUIRE FOCUS]", async () => 
     ]);
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button.o-active div", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebarChannel:not(.o-active) span", { text: "General" });
-    await contains(".o-mail-DiscussSidebarChannel:not(.o-active) span", { text: "Demo User" });
+    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Demo User" });
     await contains(".o-mail-Composer", { count: 0 });
 
-    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
-    await contains(".o-mail-DiscussSidebarChannel.o-active span", { text: "General" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
     await contains(".o-mail-Composer-input:focus");
-    await click(".o-mail-DiscussSidebarChannel span", { text: "Demo User" });
-    await contains(".o-mail-DiscussSidebarChannel.o-active span", { text: "Demo User" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Demo User" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Demo User" });
     await contains(".o-mail-Composer-input:focus");
 });
 
@@ -1090,7 +1060,7 @@ QUnit.test("should auto-pin chat when receiving a new DM", async () => {
     const { env, openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
-    await contains(".o-mail-DiscussSidebarChannel span", { count: 0, text: "Demo" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
 
     // simulate receiving the first message on channel 11
     pyEnv.withUser(userId, () =>
@@ -1100,7 +1070,7 @@ QUnit.test("should auto-pin chat when receiving a new DM", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "Demo" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
 });
 
 QUnit.test("'Add Users' button should be displayed in the topbar of channels", async () => {
@@ -1231,15 +1201,15 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         openDiscuss();
-        await click(".o-mail-DiscussSidebarChannel span", { text: "Michel Online" });
+        await click(".o-mail-DiscussSidebarChannel", { text: "Michel Online" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Online']");
-        await click(".o-mail-DiscussSidebarChannel span", { text: "Jacqueline Offline" });
+        await click(".o-mail-DiscussSidebarChannel", { text: "Jacqueline Offline" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Offline']");
-        await click(".o-mail-DiscussSidebarChannel span", { text: "Nabuchodonosor Idle" });
+        await click(".o-mail-DiscussSidebarChannel", { text: "Nabuchodonosor Idle" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']");
-        await click(".o-mail-DiscussSidebarChannel span", { text: "Robert Fired" });
+        await click(".o-mail-DiscussSidebarChannel", { text: "Robert Fired" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='No IM status available']");
-        await click(".o-mail-DiscussSidebarChannel span", { text: "OdooBot" });
+        await click(".o-mail-DiscussSidebarChannel", { text: "OdooBot" });
         await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
     }
 );
@@ -1305,17 +1275,15 @@ QUnit.test("Channel is added to discuss after invitation", async () => {
     const { env, openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel");
-    await contains(".o-mail-DiscussSidebarChannel span", { count: 0, text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
 
     pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [pyEnv.adminPartnerId],
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "General" });
-    await contains(".o_notification.border-info .o_notification_content", {
-        text: "You have been invited to #General",
-    });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o_notification.border-info", { text: "You have been invited to #General" });
 });
 
 QUnit.test("select another mailbox", async () => {
@@ -1503,9 +1471,7 @@ QUnit.test("failure on loading messages should display error", async () => {
         },
     });
     openDiscuss(channelId);
-    await contains(".o-mail-Thread-error", {
-        text: "An error occurred while fetching messages.",
-    });
+    await contains(".o-mail-Thread", { text: "An error occurred while fetching messages." });
 });
 
 QUnit.test("failure on loading messages should prompt retry button", async () => {
@@ -1557,9 +1523,7 @@ QUnit.test(
         await contains(".o-mail-Message", { count: 30 });
         messageFetchShouldFail = true;
         await click("button", { text: "Load More" });
-        await contains(".o-mail-Thread-error", {
-            text: "An error occurred while fetching messages.",
-        });
+        await contains(".o-mail-Thread", { text: "An error occurred while fetching messages." });
         await contains("button", { text: "Click here to retry" });
         await contains("button", { count: 0, text: "Load More" });
     }
@@ -1657,13 +1621,13 @@ QUnit.test("composer state: attachments save and restore", async () => {
     // Switch back to #general
     await click("button", { text: "General" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard");
-    await contains(".o-mail-AttachmentCard div", { text: "text.txt" });
+    await contains(".o-mail-AttachmentCard", { text: "text.txt" });
     // Switch back to #special
     await click("button", { text: "Special" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 3 });
-    await contains(".o-mail-AttachmentCard div", { text: "text2.txt" });
-    await contains(".o-mail-AttachmentCard div", { text: "text3.txt" });
-    await contains(".o-mail-AttachmentCard div", { text: "text4.txt" });
+    await contains(".o-mail-AttachmentCard", { text: "text2.txt" });
+    await contains(".o-mail-AttachmentCard", { text: "text3.txt" });
+    await contains(".o-mail-AttachmentCard", { text: "text4.txt" });
 });
 
 QUnit.test(
@@ -1757,7 +1721,7 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await click(".o-mail-DiscussSidebarChannel span", { text: "Albert" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Albert" });
     await contains(".o-mail-Message-content", { text: "hello world" });
 });
 
@@ -1766,7 +1730,7 @@ QUnit.test("Correct breadcrumb when open discuss from chat window then see setti
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_main_navbar i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem-name", { text: "General" });
+    await click(".o-mail-NotificationItem", { text: "General" });
     await click("[title='Open Actions Menu']");
     await click("[title='Open in Discuss']");
     await click("[title='Channel settings']", {
@@ -1801,7 +1765,7 @@ QUnit.test(
         await contains(".o-mail-Discuss", { count: 0 });
         await contains(".o_form_view .o-mail-Chatter");
         await contains(".o_form_view .o_last_breadcrumb_item", { text: "TestPartner" });
-        await contains(".o-mail-Chatter .o-mail-Message-content", {
+        await contains(".o-mail-Chatter .o-mail-Message", {
             text: "A needaction message to have it in messaging menu",
         });
     }

@@ -97,8 +97,8 @@ QUnit.test("recent category (basic)", async () => {
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(".o-Emoji", {
         text: "😀",
-        after: ["span", { text: "Frequently used" }],
-        before: ["span", { text: "Smileys & Emotion" }],
+        after: ["span", { textContent: "Frequently used" }],
+        before: ["span", { textContent: "Smileys & Emotion" }],
     });
 });
 
@@ -116,13 +116,13 @@ QUnit.test("emoji usage amount orders frequent emojis", async () => {
     await click("button[aria-label='Emojis']");
     await contains(".o-Emoji", {
         text: "👽",
-        after: ["span", { text: "Frequently used" }],
+        after: ["span", { textContent: "Frequently used" }],
         before: [
             ".o-Emoji",
             {
                 text: "😀",
-                after: ["span", { text: "Frequently used" }],
-                before: ["span", { text: "Smileys & Emotion" }],
+                after: ["span", { textContent: "Frequently used" }],
+                before: ["span", { textContent: "Smileys & Emotion" }],
             },
         ],
     });
@@ -138,8 +138,8 @@ QUnit.test("posting :wink: in message should impact recent", async () => {
     await click("button[aria-label='Emojis']");
     await contains(".o-Emoji", {
         text: "😉",
-        after: ["span", { text: "Frequently used" }],
-        before: ["span", { text: "Smileys & Emotion" }],
+        after: ["span", { textContent: "Frequently used" }],
+        before: ["span", { textContent: "Smileys & Emotion" }],
     });
 });
 
@@ -154,8 +154,8 @@ QUnit.test("posting :snowman: in message should impact recent", async () => {
     await click("button[aria-label='Emojis']");
     await contains(".o-Emoji", {
         text: "☃️",
-        after: ["span", { text: "Frequently used" }],
-        before: ["span", { text: "Smileys & Emotion" }],
+        after: ["span", { textContent: "Frequently used" }],
+        before: ["span", { textContent: "Smileys & Emotion" }],
     });
 });
 

@@ -38,7 +38,7 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         pyEnv["bus.bus"]._sendone("broadcast", "bundle_changed", {
             server_version: "NEW_MAJOR_VERSION",
         });
-        await contains(".o_notification_content", { text: "The page appears to be out of date." });
+        await contains(".o_notification", { text: "The page appears to be out of date." });
         await click(".o_notification_buttons .btn-primary", { text: "Refresh" });
         assert.verifySteps(["reloadPage"]);
     });

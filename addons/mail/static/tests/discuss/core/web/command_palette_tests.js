@@ -48,7 +48,7 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
 
     await click(".o_command.focused");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-name", { text: "general" });
+    await contains(".o-mail-ChatWindow", { text: "general" });
 });
 
 QUnit.test("Channel mentions in the command palette of Discuss app with @", async () => {
@@ -90,7 +90,7 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
         ],
     });
     await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow-name", { text: "Mitchell Admin and Mario" });
+    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
 });
 
 QUnit.test("Max 3 most recent channels in command palette of Discuss app with #", async () => {

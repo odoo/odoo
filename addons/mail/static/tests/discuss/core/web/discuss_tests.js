@@ -138,7 +138,7 @@ QUnit.test("should create DM chat when adding self and another user", async () =
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "Mario" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Mario" });
 });
 
 QUnit.test("chat search should display no result when no matches found", async () => {

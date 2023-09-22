@@ -107,17 +107,11 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss();
         await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-        await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel) span", {
-            text: "Visitor 12",
-        });
-        await click(":nth-child(2 of .o-mail-DiscussSidebarChannel) span", { text: "Visitor 11" });
+        await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 12" });
+        await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 11" });
         await insertText(".o-mail-Composer-input", "Blabla");
         await click(".o-mail-Composer-send:enabled");
-        await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel) span", {
-            text: "Visitor 11",
-        });
-        await contains(":nth-child(2 of .o-mail-DiscussSidebarChannel) span", {
-            text: "Visitor 12",
-        });
+        await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 11" });
+        await contains(":nth-child(2 of .o-mail-DiscussSidebarChannel)", { text: "Visitor 12" });
     }
 );

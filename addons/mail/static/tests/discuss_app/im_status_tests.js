@@ -112,9 +112,7 @@ QUnit.test("show im status in messaging menu preview of chat", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
-        containsMulti: [
-            [".o-mail-NotificationItem-name", { text: "Demo" }],
-            ["i[aria-label='User is online']"],
-        ],
+        text: "Demo",
+        contains: ["i[aria-label='User is online']"],
     });
 });

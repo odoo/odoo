@@ -34,5 +34,5 @@ QUnit.test("Livechat button is present when there is at least one livechat threa
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
-    await contains(".o-mail-MessagingMenu-navbar span", { text: "Livechat" });
+    await contains(".o-mail-MessagingMenu-navbar", { text: "Livechat" });
 });

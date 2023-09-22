@@ -26,9 +26,7 @@ QUnit.test("Pin message", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message-content", {
-        text: "Hello world!",
-    });
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { text: "Hello world!" });
 });
 
 QUnit.test("Unpin message", async () => {

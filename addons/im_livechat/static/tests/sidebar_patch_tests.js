@@ -25,7 +25,7 @@ QUnit.test("Unknown visitor", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "Visitor 11" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
 });
 
 QUnit.test("Known user with country", async () => {
@@ -333,9 +333,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", {
-            text: "1",
-        });
+        await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { text: "1" });
     }
 );
 
@@ -448,9 +446,7 @@ QUnit.test("Clicking on unpin button unpins the channel", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o_notification_content", {
-        text: "You unpinned your conversation with Visitor 11",
-    });
+    await contains(".o_notification", { text: "You unpinned your conversation with Visitor 11" });
 });
 
 QUnit.test("Message unread counter", async () => {

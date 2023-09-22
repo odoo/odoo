@@ -65,7 +65,7 @@ QUnit.test("Thread rename", async () => {
     });
     triggerHotkey("Enter");
     await contains(".o-mail-Discuss-threadName[title='Sales']", { target: tab2.target });
-    await contains(".o-mail-DiscussSidebarChannel span", { target: tab2.target, text: "Sales" });
+    await contains(".o-mail-DiscussSidebarChannel", { target: tab2.target, text: "Sales" });
 });
 
 QUnit.test("Thread description update", async () => {
@@ -148,7 +148,7 @@ QUnit.test("Adding attachments", async () => {
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentCard div", { target: tab2.target, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard", { target: tab2.target, text: "test.txt" });
 });
 
 QUnit.test("Remove attachment from message", async () => {
@@ -169,15 +169,11 @@ QUnit.test("Remove attachment from message", async () => {
     const tab2 = await start({ asTab: true });
     tab1.openDiscuss(channelId);
     tab2.openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard div", { target: tab1.target, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard", { target: tab1.target, text: "test.txt" });
 
     await click(".o-mail-AttachmentCard-unlink", { target: tab2.target });
     await click(".modal-footer .btn", { text: "Ok", target: tab2.target });
-    await contains(".o-mail-AttachmentCard div", {
-        count: 0,
-        target: tab1.target,
-        text: "test.txt",
-    });
+    await contains(".o-mail-AttachmentCard", { count: 0, target: tab1.target, text: "test.txt" });
 });
 
 QUnit.test("Message delete notification", async () => {
@@ -199,32 +195,12 @@ QUnit.test("Message delete notification", async () => {
     openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { text: "1" }],
-        ],
-    });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { text: "1" }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { count: 0 }],
-        ],
-    });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
 });

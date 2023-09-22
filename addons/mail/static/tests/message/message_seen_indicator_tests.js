@@ -344,10 +344,8 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message", {
-            containsMulti: [
-                [".o-mail-Message-content", { text: "Message before last seen" }],
-                [".o-mail-MessageSeenIndicator", { contains: ["i", { count: 0 }] }],
-            ],
+            text: "Message before last seen",
+            contains: [".o-mail-MessageSeenIndicator", { contains: ["i", { count: 0 }] }],
         });
     }
 );
