@@ -42,7 +42,7 @@ class ResPartner(models.Model):
         if not can_edit_vat:
             return can_edit_vat
         SaleOrder = self.env['sale.order']
-        has_so = SaleOrder.search([
+        has_so = SaleOrder.sudo().search([
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', 'in', ['sent', 'sale', 'done'])
         ], limit=1)
