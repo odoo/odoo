@@ -2727,8 +2727,10 @@ class StockMove(TransactionCase):
         # the quantity done on the move should not respect the rounding of the move line
         self.assertEqual(move_stock_pack.quantity_done, 0.5)
 
-        # Validate the picking should create a backorder in the uom of the quants.
-        picking_stock_pack.button_validate()
+        # create the backorder in the uom of the quants
+        backorder_wizard_dict = picking_stock_pack.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
         self.assertEqual(move_stock_pack.state, 'done')
         self.assertEqual(move_stock_pack.quantity_done, 0.5)
         self.assertEqual(move_stock_pack.product_uom_qty, 0.5)
@@ -4254,9 +4256,9 @@ class StockMove(TransactionCase):
     def test_immediate_validate_2(self):
         """ In a picking with a single partially available move, clicking on validate without
         filling any quantities should open a wizard asking to process all the reservation (so, only
-        a part of the initial demand). Validating this wizard should validate the picking and create
-        a backorder (the user's confirmation is asked only when the reservation is not fully
-        processed). The created backorder should contain the quantities not processed.
+        a part of the initial demand). Validating this wizard should open another one asking for
+        the creation of a backorder. If the backorder is created, it should contain the quantities
+        not processed.
         """
         partner = self.env['res.partner'].create({'name': 'Jean'})
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 5.0)
@@ -4283,7 +4285,11 @@ class StockMove(TransactionCase):
         res_dict = picking.button_validate()
         self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
         wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        self.assertEqual(res_dict_for_back_order.get('res_model'), 'stock.backorder.confirmation')
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
+        # Chose to create a backorder.
+        backorder_wizard.process()
 
         # Only 5 products should be processed on the initial move.
         self.assertEqual(picking.move_ids.state, 'done')
@@ -4299,8 +4305,9 @@ class StockMove(TransactionCase):
     def test_immediate_validate_3(self):
         """ In a picking with two moves, one partially available and one unavailable, clicking
         on validate without filling any quantities should open a wizard asking to process all the
-        reservation (so, only a part of one of the moves). Validating this wizard should confirm the
-        picking and create a backorder with the quantities not processed.
+        reservation (so, only a part of one of the moves). Validating this wizard should open
+        another one asking for the creation of a backorder. If the backorder is created, it should
+        contain the quantities not processed.
         """
         product5 = self.env['product.product'].create({
             'name': 'Product 5',
@@ -4346,6 +4353,10 @@ class StockMove(TransactionCase):
         action = picking.button_validate()
         self.assertEqual(action.get('res_model'), 'stock.immediate.transfer')
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.process()
+        self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
+        self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id')).with_context(action.get('context'))
         wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(len(backorder), 1.0)
@@ -5868,10 +5879,10 @@ class StockMove(TransactionCase):
         delivery_form = Form(picking)
         delivery = delivery_form.save()
         delivery.action_confirm()
-        delivery.button_validate()
 
-        backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)])
-        backorder.action_cancel()  # Cancels the automatically created backorder.
+        backorder_wizard_dict = delivery.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()  # Don't create a backorder
 
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
         aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
