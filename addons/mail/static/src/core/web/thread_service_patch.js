@@ -63,7 +63,7 @@ patch(ThreadService.prototype, {
             }
         }
         if ("attachments" in result) {
-            this.update(thread, {
+            thread.update({
                 areAttachmentsLoaded: true,
                 attachments: result.attachments,
                 isLoadingAttachments: false,

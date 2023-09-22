@@ -49,7 +49,7 @@ export class DiscussCoreCommon {
                 const { id, last_interest_dt } = payload;
                 const channel = this.store.Thread.get({ model: "discuss.channel", id });
                 if (channel) {
-                    this.threadService.update(channel, { last_interest_dt });
+                    channel.update({ last_interest_dt });
                     if (channel.type !== "channel") {
                         this.threadService.sortChannels();
                     }

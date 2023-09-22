@@ -1,7 +1,9 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
+import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -36,8 +38,137 @@ export class Message extends Record {
             });
         }
         const message = this.get(data) ?? this.new(data);
-        this.env.services["mail.message"].update(message, data);
+        message.update(data);
         return message;
+    }
+
+    /** @param {Object} data */
+    update(data) {
+        const {
+            attachment_ids: attachments = this.attachments,
+            default_subject: defaultSubject = this.defaultSubject,
+            is_discussion: isDiscussion = this.isDiscussion,
+            is_note: isNote = this.isNote,
+            is_transient: isTransient = this.isTransient,
+            linkPreviews = this.linkPreviews,
+            message_type: type = this.type,
+            model: resModel = this.resModel,
+            module_icon,
+            notifications = this.notifications,
+            parentMessage,
+            recipients = this.recipients,
+            record_name,
+            res_id: resId = this.resId,
+            res_model_name,
+            subtype_description: subtypeDescription = this.subtypeDescription,
+            ...remainingData
+        } = data;
+        assignDefined(this, remainingData);
+        assignDefined(this, {
+            defaultSubject,
+            isDiscussion,
+            isNote,
+            isStarred: this._store.user
+                ? this.starred_partner_ids.includes(this._store.user.id)
+                : false,
+            isTransient,
+            parentMessage: parentMessage ? this._store.Message.insert(parentMessage) : undefined,
+            resId,
+            resModel,
+            subtypeDescription,
+            type,
+        });
+        // origin thread before other information (in particular notification insert uses it)
+        if (this.originThread) {
+            assignDefined(this.originThread, {
+                modelName: res_model_name || undefined,
+                module_icon: module_icon || undefined,
+                name:
+                    this.originThread.model === "discuss.channel"
+                        ? undefined
+                        : record_name || undefined,
+            });
+        }
+        replaceArrayWithCompare(
+            this.attachments,
+            attachments.map((attachment) =>
+                this._store.Attachment.insert({ message: this, ...attachment })
+            )
+        );
+        if (
+            Array.isArray(this.author) &&
+            this.author.some((command) => command.includes("clear"))
+        ) {
+            this.author = undefined;
+        }
+        if (data.author?.id) {
+            this.author = this._store.Persona.insert({
+                ...data.author,
+                type: "partner",
+            });
+        }
+        if (data.guestAuthor?.id) {
+            this.author = this._store.Persona.insert({
+                ...data.guestAuthor,
+                type: "guest",
+                channelId: this.originThread.id,
+            });
+        }
+        replaceArrayWithCompare(
+            this.linkPreviews,
+            linkPreviews.map((data) => this._store.LinkPreview.insert({ ...data, message: this }))
+        );
+        replaceArrayWithCompare(
+            this.notifications,
+            notifications.map((notification) =>
+                this._store.Notification.insert({ ...notification, message: this })
+            )
+        );
+        replaceArrayWithCompare(
+            this.recipients,
+            recipients.map((recipient) =>
+                this._store.Persona.insert({ ...recipient, type: "partner" })
+            )
+        );
+        if ("user_follower_id" in data && data.user_follower_id && this._store.self) {
+            this.originThread.selfFollower = this._store.Follower.insert({
+                followedThread: this.originThread,
+                id: data.user_follower_id,
+                isActive: true,
+                partner: this._store.self,
+            });
+        }
+        if (data.messageReactionGroups) {
+            const reactionContentToUnlink = new Set();
+            const reactionsToInsert = [];
+            for (const rawReaction of data.messageReactionGroups) {
+                const [command, reactionData] = Array.isArray(rawReaction)
+                    ? rawReaction
+                    : ["insert", rawReaction];
+                const reaction = this._store.MessageReactions.insert(reactionData);
+                if (command === "insert") {
+                    reactionsToInsert.push(reaction);
+                } else {
+                    reactionContentToUnlink.add(reaction.content);
+                }
+            }
+            this.reactions = this.reactions.filter(
+                ({ content }) => !reactionContentToUnlink.has(content)
+            );
+            reactionsToInsert.forEach((reaction) => {
+                const idx = this.reactions.findIndex(({ content }) => reaction.content === content);
+                if (idx !== -1) {
+                    this.reactions[idx] = reaction;
+                } else {
+                    this.reactions.push(reaction);
+                }
+            });
+        }
+        if (this.isNotification && !this.notificationType) {
+            const parser = new DOMParser();
+            const htmlBody = parser.parseFromString(this.body, "text/html");
+            this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
+        }
     }
 
     attachments = Record.many("Attachment");

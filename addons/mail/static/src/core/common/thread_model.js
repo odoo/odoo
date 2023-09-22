@@ -2,7 +2,8 @@
 
 import { AND, Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
-import { onChange } from "@mail/utils/common/misc";
+import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
+import { assignDefined, nullifyClearCommands, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -57,7 +58,7 @@ export class Thread extends Record {
         }
         let thread = this.get(data);
         if (thread) {
-            this.env.services["mail.thread"].update(thread, data);
+            thread.update(data);
             return thread;
         }
         thread = this.new(data);
@@ -78,10 +79,140 @@ export class Thread extends Record {
                 this.store.discuss.threadLocalId = null;
             }
         });
-        this.env.services["mail.thread"].update(thread, data);
+        thread.update(data);
         this.store.Composer.insert({ thread });
         // return reactive version.
         return thread;
+    }
+
+    /** @param {Object} data */
+    update(data) {
+        const { id, name, attachments: attachmentsData, description, ...serverData } = data;
+        assignDefined(this, { id, name, description });
+        if (attachmentsData) {
+            replaceArrayWithCompare(
+                this.attachments,
+                attachmentsData
+                    .map((attachmentData) => this._store.Attachment.insert(attachmentData))
+                    .sort((a1, a2) => a2.id - a1.id)
+            );
+        }
+        if (serverData) {
+            assignDefined(this, serverData, [
+                "uuid",
+                "authorizedGroupFullName",
+                "description",
+                "hasWriteAccess",
+                "is_pinned",
+                "isLoaded",
+                "isLoadingAttachments",
+                "mainAttachment",
+                "message_unread_counter",
+                "message_needaction_counter",
+                "name",
+                "seen_message_id",
+                "state",
+                "type",
+                "status",
+                "group_based_subscription",
+                "last_interest_dt",
+                "is_editable",
+                "defaultDisplayMode",
+            ]);
+            if (serverData.channel && "message_unread_counter" in serverData.channel) {
+                this.message_unread_counter = serverData.channel.message_unread_counter;
+            }
+            const lastServerMessageId = serverData.last_message_id ?? this.lastServerMessage?.id;
+            if (this.lastServerMessage?.id !== lastServerMessageId) {
+                this.lastServerMessage = this._store.Message.insert({
+                    id: lastServerMessageId,
+                });
+            }
+            if (this.model === "discuss.channel" && serverData.channel) {
+                nullifyClearCommands(serverData.channel);
+                this.channel = assignDefined(this.channel ?? {}, serverData.channel);
+            }
+
+            this.memberCount = serverData.channel?.memberCount ?? this.memberCount;
+            if (this.type === "chat" && serverData.channel) {
+                this.customName = serverData.channel.custom_channel_name;
+            }
+            if (serverData.channel?.channelMembers) {
+                for (const [command, membersData] of serverData.channel.channelMembers) {
+                    const members = Array.isArray(membersData) ? membersData : [membersData];
+                    for (const memberData of members) {
+                        const member = this._store.ChannelMember.insert([command, memberData]);
+                        if (this.type !== "chat") {
+                            continue;
+                        }
+                        if (
+                            member.persona.notEq(this._store.user) ||
+                            (serverData.channel.channelMembers[0][1].length === 1 &&
+                                member.persona?.eq(this._store.user))
+                        ) {
+                            this.chatPartner = member.persona;
+                        }
+                    }
+                }
+            }
+            if ("invitedMembers" in serverData) {
+                if (!serverData.invitedMembers) {
+                    this.invitedMemberIds.clear();
+                    return;
+                }
+                const command = serverData.invitedMembers[0][0];
+                const members = serverData.invitedMembers[0][1];
+                switch (command) {
+                    case "insert":
+                        if (members) {
+                            for (const member of members) {
+                                const record = this._store.ChannelMember.insert(member);
+                                this.invitedMemberIds.add(record.id);
+                            }
+                        }
+                        break;
+                    case "unlink":
+                    case "insert-and-unlink":
+                        // eslint-disable-next-line no-case-declarations
+                        for (const member of members) {
+                            this.invitedMemberIds.delete(member.id);
+                        }
+                        break;
+                }
+            }
+            if ("seen_partners_info" in serverData) {
+                this.seenInfos = serverData.seen_partners_info.map(
+                    ({ fetched_message_id, partner_id, seen_message_id }) => {
+                        return {
+                            lastFetchedMessage: fetched_message_id
+                                ? this._store.Message.insert({ id: fetched_message_id })
+                                : undefined,
+                            lastSeenMessage: seen_message_id
+                                ? this._store.Message.insert({ id: seen_message_id })
+                                : undefined,
+                            partner: this._store.Persona.insert({
+                                id: partner_id,
+                                type: "partner",
+                            }),
+                        };
+                    }
+                );
+            }
+        }
+        if (
+            this.type === "channel" &&
+            !this._store.discuss.channels.threads.includes(this.localId)
+        ) {
+            this._store.discuss.channels.threads.push(this.localId);
+        } else if (
+            (this.type === "chat" || this.type === "group") &&
+            !this._store.discuss.chats.threads.includes(this.localId)
+        ) {
+            this._store.discuss.chats.threads.push(this.localId);
+        }
+        if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
+            this.type = "chatter";
+        }
     }
 
     /** @type {number} */

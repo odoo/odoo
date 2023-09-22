@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { assignDefined, nullifyClearCommands } from "@mail/utils/common/misc";
-
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markRaw } from "@odoo/owl";
@@ -36,19 +34,6 @@ export class PersonaService {
             guest_id: guest.id,
             name,
         });
-    }
-
-    update(persona, data) {
-        nullifyClearCommands(data);
-        assignDefined(persona, { ...data });
-        if (
-            persona.type === "partner" &&
-            persona.im_status !== "im_partner" &&
-            !persona.is_public &&
-            !this.store.registeredImStatusPartners?.includes(persona.id)
-        ) {
-            this.store.registeredImStatusPartners?.push(persona.id);
-        }
     }
 
     async fetchIsCompany(persona) {
