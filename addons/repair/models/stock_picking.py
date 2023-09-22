@@ -62,14 +62,13 @@ class PickingType(models.Model):
         }
 
         for field, domain in domains.items():
-            picking_types = self.env['repair.order'].read_group(
+            counts = dict(self.env['repair.order']._read_group(
                 [('picking_type_id', 'in', repair_picking_types.ids), ('state', 'in', ('confirmed', 'under_repair'))] + domain,
-                fields=['picking_type_id'],
-                groupby=['picking_type_id']
-            )
-            counts = {pt['picking_type_id'][0]:pt['picking_type_id_count'] for pt in picking_types}
+                groupby=['picking_type_id'],
+                aggregates=['__count'],
+            ))
             for record in repair_picking_types:
-                record[field] = counts.get(record.id)
+                record[field] = counts.get(record)
 
     @api.depends('return_type_of_ids', 'code')
     def _compute_is_repairable(self):
