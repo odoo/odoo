@@ -21,7 +21,7 @@ QUnit.test("basic rendering", async () => {
     await click("button", { text: "New Message" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header");
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-name", { text: "New message" });
+    await contains(".o-mail-ChatWindow-header", { text: "New message" });
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command", { count: 2 });
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Fold']");
     await contains(
@@ -50,15 +50,10 @@ QUnit.test("fold", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow-content");
     await contains(".o-discuss-ChannelSelector");
-
     await click(".o-mail-ChatWindow-command[title='Fold']");
-    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", { count: 0 });
     await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector", { count: 0 });
-
     await click(".o-mail-ChatWindow-command[title='Open']");
-    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content");
     await contains(".o-discuss-ChannelSelector");
 });
 
@@ -95,24 +90,18 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button", { text: "New Message" });
         await contains(".o-mail-ChatWindow", { count: 2 });
-        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "New message",
-        });
+        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "New message" });
         await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector");
         // open channel-2
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name", { text: "channel-2" });
+        await click(".o-mail-NotificationItem", { text: "channel-2" });
         await contains(".o-mail-ChatWindow", { count: 3 });
-        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "New message",
-        });
+        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "New message" });
         // search for a user in "new message" autocomplete
         await insertText(".o-discuss-ChannelSelector input", "131");
         await click(".o-discuss-ChannelSelector-suggestion a", { text: "Partner 131" });
-        await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
-        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "Partner 131",
-        });
+        await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });
+        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "Partner 131" });
     }
 );
 
@@ -143,7 +132,7 @@ QUnit.test(
         await click("button", { text: "New Message" });
         await insertText(".o-discuss-ChannelSelector input", "131");
         await click(".o-discuss-ChannelSelector-suggestion a");
-        await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
+        await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });
         await contains(".o-mail-ChatWindow");
     }
 );

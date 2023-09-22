@@ -24,7 +24,7 @@ QUnit.test("Session is reset after failing to persist the channel", async (asser
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o_notification_content", {
+    await contains(".o_notification", {
         text: "No available collaborator, please try again later.",
     });
     await contains(".o-livechat-LivechatButton");
@@ -38,13 +38,13 @@ QUnit.test("Thread state is saved on the session", async (assert) => {
     await loadDefaultConfig();
     const env = await start();
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow-content");
+    await contains(".o-mail-Thread");
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
     await click(".o-mail-ChatWindow-header");
-    await contains(".o-mail-ChatWindow-content", { count: 0 });
+    await contains(".o-mail-Thread", { count: 0 });
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "folded");
     await click(".o-mail-ChatWindow-header");
-    await contains(".o-mail-ChatWindow-content");
+    await contains(".o-mail-Thread");
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
 });
 

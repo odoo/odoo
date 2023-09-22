@@ -241,9 +241,7 @@ QUnit.test("should display subject when subject isn't infered from the record", 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Message-content", {
-        text: "Subject: Salutations, voyageurnot empty",
-    });
+    await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
 QUnit.test("should not display user notification messages in chatter", async () => {
@@ -260,7 +258,7 @@ QUnit.test("should not display user notification messages in chatter", async () 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Thread-empty");
+    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -446,10 +444,8 @@ QUnit.test("should not display subject when subject is the same as the thread na
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Message .o-mail-Message-content", {
-        text: "not empty",
-    });
-    await contains(".o-mail-Message .o-mail-Message-content", {
+    await contains(".o-mail-Message", { text: "not empty" });
+    await contains(".o-mail-Message", {
         count: 0,
         text: "Subject: Salutations, voyageurnot empty",
     });
@@ -581,9 +577,7 @@ QUnit.test(
         });
         const { openFormView } = await start();
         openFormView("res.fake", fakeId);
-        await contains(".o-mail-Message .o-mail-Message-content", {
-            text: "Subject: Another Subjectnot empty",
-        });
+        await contains(".o-mail-Message", { text: "Subject: Another Subjectnot empty" });
     }
 );
 
@@ -600,10 +594,8 @@ QUnit.test(
         });
         const { openFormView } = await start();
         openFormView("res.fake", fakeId);
-        await contains(".o-mail-Message .o-mail-Message-content", {
-            text: "not empty",
-        });
-        await contains(".o-mail-Message .o-mail-Message-content", {
+        await contains(".o-mail-Message", { text: "not empty" });
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Custom Default Subjectnot empty",
         });
@@ -623,10 +615,8 @@ QUnit.test(
         });
         const { openFormView } = await start();
         openFormView("res.fake", fakeId);
-        await contains(".o-mail-Message .o-mail-Message-content", {
-            text: "not empty",
-        });
-        await contains(".o-mail-Message .o-mail-Message-content", {
+        await contains(".o-mail-Message", { text: "not empty" });
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Custom Default Subjectnot empty",
         });

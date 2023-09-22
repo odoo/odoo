@@ -109,7 +109,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await click("button[title='Show Call Settings']");
-        await click("button div", { text: "Inbox" });
+        await click("button", { text: "Inbox" });
         await contains("button[title='Hide Call Settings']", { count: 0 });
         await contains(".o-discuss-CallSettings", { count: 0 });
     }

@@ -232,7 +232,7 @@ QUnit.test("Load 100 followers at once", async () => {
     await click("button[title='Show Followers']");
     await contains(".o-mail-Follower", { text: "Mitchell Admin" });
     await contains(".o-mail-Follower", { count: 100 });
-    await contains(".o-mail-Followers-dropdown span", { text: "Load more" });
+    await contains(".o-mail-Followers-dropdown", { text: "Load more" });
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 200 });
     await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden
@@ -264,13 +264,13 @@ QUnit.test("Load 100 recipients at once", async () => {
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button", { text: "Send message" });
-    await contains(".o-mail-Chatter div", {
+    await contains(".o-mail-Chatter", {
         text: "To: partner1, partner2, partner3, partner4, partner5, …",
     });
     await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
     await contains(".o-mail-RecipientList li", { count: 100 });
-    await contains(".o-mail-RecipientList span", { text: "Load more" });
+    await contains(".o-mail-RecipientList", { text: "Load more" });
     await scroll(".o-mail-RecipientList", "bottom");
     await contains(".o-mail-RecipientList li", { count: 200 });
     await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden

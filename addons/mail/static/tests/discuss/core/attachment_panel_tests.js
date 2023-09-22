@@ -14,7 +14,7 @@ QUnit.test("Empty attachment panel", async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(".o-mail-Discuss-inspector p", {
+    await contains(".o-mail-Discuss-inspector", {
         text: "This channel doesn't have any attachments.",
     });
 });
@@ -39,13 +39,13 @@ QUnit.test("Attachment panel sort by date", async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']");
-    await contains(".o-mail-AttachmentList div", {
+    await contains(".o-mail-AttachmentList", {
         text: "file2.pdf",
-        after: [".o-mail-DateSection span", { text: "September, 2023" }],
-        before: [".o-mail-DateSection span", { text: "August, 2023" }],
+        after: [".o-mail-DateSection", { text: "September, 2023" }],
+        before: [".o-mail-DateSection", { text: "August, 2023" }],
     });
-    await contains(".o-mail-AttachmentList div", {
+    await contains(".o-mail-AttachmentList", {
         text: "file1.pdf",
-        after: [".o-mail-DateSection span", { text: "August, 2023" }],
+        after: [".o-mail-DateSection", { text: "August, 2023" }],
     });
 });

@@ -111,7 +111,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup span", { text: "mail.test.activity" });
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "mail.test.activity" });
     await contains(".o-mail-ActivityMenu", { count: 0 });
 });
 

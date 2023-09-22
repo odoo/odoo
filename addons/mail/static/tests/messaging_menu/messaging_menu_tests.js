@@ -69,7 +69,7 @@ QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
             .data("src")
             .includes("/web/image?field=avatar_128&id=2&model=res.partner")
     );
-    await contains(".o-mail-NotificationItem-name", { text: "OdooBot has a request" });
+    await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
 
 QUnit.test("rendering without OdooBot has a request (denied)", async () => {
@@ -93,7 +93,7 @@ QUnit.test("respond to notification prompt (denied)", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o_notification.border-warning .o_notification_body", {
+    await contains(".o_notification.border-warning", {
         text: "Odoo will not send notifications on this device.",
     });
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
@@ -106,7 +106,7 @@ QUnit.test("respond to notification prompt (granted)", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o_notification.border-success .o_notification_body", {
+    await contains(".o_notification.border-success", {
         text: "Odoo will send notifications on this device!",
     });
 });
@@ -180,10 +180,8 @@ QUnit.test("grouped notifications by document", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem", {
-        containsMulti: [
-            [".o-mail-NotificationItem-name", { text: "Partner" }],
-            [".badge", { text: "2" }],
-        ],
+        text: "Partner",
+        contains: [".badge", { text: "2" }],
     });
     await contains(".o-mail-ChatWindow");
 });
@@ -241,10 +239,8 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", {
-        containsMulti: [
-            [".o-mail-NotificationItem-name", { text: "Partner" }],
-            [".badge", { text: "2" }],
-        ],
+        text: "Partner",
+        contains: [".badge", { text: "2" }],
     });
     assert.verifySteps(["do_action"]);
 });
@@ -292,12 +288,8 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await contains(".o-mail-NotificationItem", { count: 2 });
-        await contains(":nth-child(1 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
-            text: "Company",
-        });
-        await contains(":nth-child(2 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
-            text: "Partner",
-        });
+        await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Company" });
+        await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Partner" });
     }
 );
 
@@ -380,13 +372,10 @@ QUnit.test("mark failure as read", async () => {
         ],
     });
     await click("[title='Mark As Read']", {
-        parent: [
-            ".o-mail-NotificationItem",
-            { contains: [".o-mail-NotificationItem-name", { text: "Channel" }] },
-        ],
+        parent: [".o-mail-NotificationItem", { text: "Channel" }],
     });
-    await contains(".o-mail-NotificationItem-name", { count: 0, text: "Channel" });
-    await contains("o-mail-NotificationItem-text", {
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Channel" });
+    await contains("o-mail-NotificationItem", {
         count: 0,
         text: "An error occurred when sending an email",
     });
@@ -437,9 +426,7 @@ QUnit.test("different discuss.channel are not grouped", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 4 });
-    await click(":nth-child(1 of .o-mail-NotificationItem)", {
-        contains: [".o-mail-NotificationItem-name", { text: "Channel" }],
-    });
+    await click(":nth-child(1 of .o-mail-NotificationItem)", { text: "Channel" });
     await contains(".o-mail-ChatWindow");
 });
 
@@ -624,17 +611,17 @@ QUnit.test("filtered previews", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem-name", { text: "Mitchell Admin" });
-    await contains(".o-mail-NotificationItem-name", { text: "channel1" });
+    await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
+    await contains(".o-mail-NotificationItem", { text: "channel1" });
     await click(".o-mail-MessagingMenu button", { text: "Chats" });
-    await contains(".o-mail-NotificationItem-name", { text: "Mitchell Admin" });
+    await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
-    await contains(".o-mail-NotificationItem-name", { text: "channel1" });
+    await contains(".o-mail-NotificationItem", { text: "channel1" });
     await click(".o-mail-MessagingMenu button", { text: "All" });
     await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem-name", { text: "Mitchell Admin" });
+    await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
-    await contains(".o-mail-NotificationItem-name", { text: "channel1" });
+    await contains(".o-mail-NotificationItem", { text: "channel1" });
 });
 
 QUnit.test("no code injection in message body preview", async () => {
@@ -700,8 +687,8 @@ QUnit.test("Messaging menu notification body of chat should show author name onc
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name", { text: "Demo User" });
-    await contains(".o-mail-NotificationItem-text", { text: "Hey!" });
+    await contains(".o-mail-NotificationItem", { text: "Demo User" });
+    await contains(".o-mail-NotificationItem-text", { textContent: "Hey!" });
 });
 
 QUnit.test(
@@ -735,12 +722,12 @@ QUnit.test("click on preview should mark as read and open the thread", async () 
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name", { text: "Frodo Baggins" });
+    await contains(".o-mail-NotificationItem", { text: "Frodo Baggins" });
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await click(".o-mail-NotificationItem-name", { text: "Frodo Baggins" });
+    await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });
     await contains(".o-mail-ChatWindow");
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name", { count: 0, text: "Frodo Baggins" });
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Frodo Baggins" });
 });
 
 QUnit.test(
@@ -771,7 +758,7 @@ QUnit.test(
             },
         });
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name", { text: "Frodo Baggins" });
+        await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });
         await click(".o-mail-ChatWindow-command i.fa-expand");
         await contains(".o-mail-ChatWindow", { count: 0 });
         assert.verifySteps(["do_action"], "should have done an action to open the form view");
@@ -863,9 +850,8 @@ QUnit.test("chat should show unread counter on receiving new messages", async ()
         ],
     });
     await start();
-    click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem-name", { text: "Partner1" });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem", { text: "Partner1" });
     await contains(".o-mail-NotificationItem .badge", { count: 0, text: "1" });
 
     // simulate receiving a new message

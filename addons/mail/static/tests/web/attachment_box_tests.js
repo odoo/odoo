@@ -117,15 +117,15 @@ QUnit.test("view attachments", async () => {
     });
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
-    await contains(".o-FileViewer-header span", { text: "Blah.txt" });
+    await contains(".o-FileViewer-header", { text: "Blah.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
 
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header span", { text: "Blu.txt" });
+    await contains(".o-FileViewer-header", { text: "Blu.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
 
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header span", { text: "Blah.txt" });
+    await contains(".o-FileViewer-header", { text: "Blah.txt" });
 });
 
 QUnit.test("scroll to attachment box when toggling on", async () => {
@@ -208,9 +208,9 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     });
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
-    await contains(":nth-child(1 of .o-mail-AttachmentCard) div", { text: "C.txt" });
-    await contains(":nth-child(2 of .o-mail-AttachmentCard) div", { text: "B.txt" });
-    await contains(":nth-child(3 of .o-mail-AttachmentCard) div", { text: "A.txt" });
+    await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });
+    await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
+    await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });
 });
 
 QUnit.test("attachment box auto-closed on switch to record wih no attachments", async () => {

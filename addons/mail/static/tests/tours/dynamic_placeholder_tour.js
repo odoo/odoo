@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
+import { contains } from "@web/../tests/utils";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("dynamic_placeholder_tour", {
@@ -23,34 +24,17 @@ registry.category("web_tour.tours").add("dynamic_placeholder_tour", {
         {
             content: 'Insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
-            run(actions) {
+            async run(actions) {
                 actions.text(`no_model_id #`, this.$anchor);
                 this.$anchor[0].dispatchEvent(
                     new KeyboardEvent("keydown", { bubbles: true, key: "#" })
                 );
-            },
-        },
-        {
-            content: "Check subject kept the # char And an error notification appear",
-            trigger: 'div[name="subject"] input[type="text"]',
-            run() {
-                const subjectValue = this.$anchor[0].value;
-                if (subjectValue !== "no_model_id #") {
-                    console.error(
-                        `Email template should have "#" in subject input (actual: ${subjectValue})`
-                    );
-                }
-
-                const notification = document.querySelector(
-                    "div.o_notification_manager .o_notification .o_notification_content"
-                );
-                if (
-                    !notification ||
-                    notification.textContent !==
-                        "You need to select a model before opening the dynamic placeholder selector."
-                ) {
-                    console.error(`Email template did not show correct notification.`);
-                }
+                await contains("div[name='subject'] input[type='text']", {
+                    value: "no_model_id #",
+                });
+                await contains(".o_notification", {
+                    text: "You need to select a model before opening the dynamic placeholder selector.",
+                });
             },
         },
         {

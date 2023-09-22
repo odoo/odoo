@@ -28,9 +28,7 @@ QUnit.test("open/close persisted channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await click("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow-content p", {
-        text: "Did we correctly answer your question?",
-    });
+    await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await contains(".o-livechat-LivechatButton", { count: 1 });

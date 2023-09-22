@@ -37,5 +37,5 @@ QUnit.test("Notify message received out of focus", async () => {
             uuid: channel.uuid,
         })
     );
-    await contains(".o_notification.border-info .o_notification_content", { text: "Hello" });
+    await contains(".o_notification.border-info", { text: "Hello" });
 });

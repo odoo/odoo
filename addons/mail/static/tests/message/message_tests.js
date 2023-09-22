@@ -304,7 +304,7 @@ QUnit.test("mentions are kept when editing message", async () => {
         replace: true,
     });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", {
+    await contains(".o-mail-Message", {
         text: "Hi @Mitchell Admin",
         contains: ["a.o_mail_redirect", { text: "@Mitchell Admin" }],
     });
@@ -340,7 +340,7 @@ QUnit.test("can add new mentions when editing message", async () => {
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
     await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", {
+    await contains(".o-mail-Message", {
         text: "Hello @TestPartner",
         contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
     });
@@ -360,17 +360,10 @@ QUnit.test("Other messages are grayed out when replying to another one", async (
     openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
     await click("[title='Reply']", {
-        parent: [
-            ".o-mail-Message",
-            { contains: [".o-mail-Message-content", { text: "Hello world" }] },
-        ],
+        parent: [".o-mail-Message", { text: "Hello world" }],
     });
-    await contains(".o-mail-Message.opacity-50 .o-mail-Message-content", {
-        text: "Goodbye world",
-    });
-    await contains(".o-mail-Message:not(.opacity_50) .o-mail-Message-content", {
-        text: "Hello world",
-    });
+    await contains(".o-mail-Message.opacity-50", { text: "Goodbye world" });
+    await contains(".o-mail-Message:not(.opacity_50)", { text: "Hello world" });
 });
 
 QUnit.test("Parent message body is displayed on replies", async () => {
@@ -566,7 +559,10 @@ QUnit.test("Reaction summary", async () => {
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await pyEnv.withUser(userId, async () => {
             await click("[title='Add a Reaction']");
-            await click(".o-Emoji", { after: ["span", { text: "Smileys & Emotion" }], text: "😅" });
+            await click(".o-Emoji", {
+                after: ["span", { textContent: "Smileys & Emotion" }],
+                text: "😅",
+            });
             await contains(`.o-mail-MessageReaction[title="${expectedSummaries[idx]}"]`);
         });
     }
@@ -740,29 +736,14 @@ QUnit.test("toggle_star message", async (assert) => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']");
     await contains(".o-mail-Message [title='Mark as Todo'] i.fa-star-o");
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
     await click("[title='Mark as Todo']");
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { text: "1" }],
-        ],
-    });
+    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
     assert.verifySteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo'] i.fa-star");
     await click("[title='Mark as Todo']");
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
     assert.verifySteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo'] i.fa-star-o");
@@ -1124,10 +1105,8 @@ QUnit.test("Toggle star should update starred counter on all tabs", async () => 
     await click(".o-mail-Message [title='Mark as Todo']", { target: tab1.target });
     await contains("button", {
         target: tab2.target,
-        containsMulti: [
-            ["div", { text: "Starred" }],
-            [".badge", { text: "1" }],
-        ],
+        text: "Starred",
+        contains: [".badge", { text: "1" }],
     });
 });
 
@@ -1214,10 +1193,16 @@ QUnit.test("Can remove files of message individually", async () => {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await contains("[title='Remove']", { target: $(".o-mail-AttachmentCard:eq(0)")[0] });
-    await contains("[title='Remove']", { target: $(".o-mail-AttachmentCard:eq(1)")[0] });
-    await contains("[title='Remove']", { count: 0, target: $(".o-mail-AttachmentCard:eq(2)")[0] });
-    await contains("[title='Remove']", { target: $(".o-mail-AttachmentCard:eq(3)")[0] });
+    await contains(
+        ":nth-child(1 of .o-mail-Message) :nth-child(1 of .o-mail-AttachmentCard) [title='Remove']"
+    );
+    await contains(
+        ":nth-child(1 of .o-mail-Message) :nth-child(2 of .o-mail-AttachmentCard) [title='Remove']"
+    );
+    await contains(":nth-child(2 of .o-mail-Message) .o-mail-AttachmentCard [title='Remove']", {
+        count: 0,
+    });
+    await contains(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentCard [title='Remove']");
 });
 
 QUnit.test(
@@ -1269,9 +1254,7 @@ QUnit.test("avatar card from author should be opened after clicking on their nam
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message span", { text: "Demo" });
-
-    await click(".o-mail-Message span", { text: "Demo" });
+    await click(".o-mail-Message-author", { text: "Demo" });
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Demo" });
     await contains(".o_card_user_infos > a", { text: "demo@example.com" });
@@ -1345,8 +1328,8 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await contains(".o-mail-Composer-input", { value: "@Test Partner " });
     await click(".o-mail-Composer-send:enabled");
     await click(".o_mail_redirect");
-    await contains(".o-mail-ChatWindow-content");
-    await contains(".o-mail-ChatWindow-name", { text: "Test Partner" });
+    await contains(".o-mail-ChatWindow .o-mail-Thread");
+    await contains(".o-mail-ChatWindow", { text: "Test Partner" });
 });
 
 QUnit.test("Channel should be opened after clicking on its mention", async () => {
@@ -1360,8 +1343,8 @@ QUnit.test("Channel should be opened after clicking on its mention", async () =>
     await click(".o-mail-Composer-suggestion strong", { text: "#my-channel" });
     await click(".o-mail-Composer-send:enabled");
     await click(".o_channel_redirect");
-    await contains(".o-mail-ChatWindow-content");
-    await contains(".o-mail-ChatWindow-name", { text: "my-channel" });
+    await contains(".o-mail-ChatWindow .o-mail-Thread");
+    await contains(".o-mail-ChatWindow", { text: "my-channel" });
 });
 
 QUnit.test(
@@ -1427,7 +1410,6 @@ QUnit.test("message with subtype should be displayed (and not considered as empt
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "Task created" });
 });
 
@@ -1477,7 +1459,7 @@ QUnit.test("message considered empty", async () => {
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Thread-empty");
+    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -1606,7 +1588,7 @@ QUnit.test("Message should display attachments in order", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(":nth-child(1 of .o-mail-AttachmentCard) div", { text: "A.txt" });
-    await contains(":nth-child(2 of .o-mail-AttachmentCard) div", { text: "B.txt" });
-    await contains(":nth-child(3 of .o-mail-AttachmentCard) div", { text: "C.txt" });
+    await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "A.txt" });
+    await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
+    await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "C.txt" });
 });

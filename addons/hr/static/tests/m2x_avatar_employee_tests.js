@@ -62,16 +62,16 @@ QUnit.test("many2one_avatar_employee widget in list view", async function (asser
     // TODO: avatar card employee
     // click on first employee
     // dom.click(document.querySelector(".o_data_cell .o_m2o_avatar > img"));
-    // await contains(".o-mail-ChatWindow-name");
+    // await contains(".o-mail-ChatWindow");
     // assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    // assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
+    // assert.strictEqual(document.querySelector(".o-mail-ChatWindow").textContent, "Mario");
 
     // // click on second employee
     // dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[1]);
-    // await contains(".o-mail-ChatWindow-name", { count: 2 });
+    // await contains(".o-mail-ChatWindow", { count: 2 });
     // assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
     // assert.strictEqual(
-    //     document.querySelectorAll(".o-mail-ChatWindow-name")[1].textContent,
+    //     document.querySelectorAll(".o-mail-ChatWindow")[1].textContent,
     //     "Luigi"
     // );
 
@@ -79,7 +79,7 @@ QUnit.test("many2one_avatar_employee widget in list view", async function (asser
     // dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[2]);
     // assert.containsN(
     //     document.body,
-    //     ".o-mail-ChatWindow-name",
+    //     ".o-mail-ChatWindow",
     //     2,
     //     "should still have only 2 chat windows because third is the same partner as first"
     // );
@@ -217,9 +217,7 @@ QUnit.test("many2many_avatar_employee widget in form view", async function (asse
         document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
     );
     // TODO: avatar card employee
-    assert.verifySteps([
-        `web_read m2x.avatar.employee ${avatarId_1}`,
-    ]);
+    assert.verifySteps([`web_read m2x.avatar.employee ${avatarId_1}`]);
 });
 
 QUnit.test("many2many_avatar_employee widget in list view", async function (assert) {
@@ -264,16 +262,16 @@ QUnit.test("many2many_avatar_employee widget in list view", async function (asse
     // TODO: avatar card employee
     // // click on first employee badge
     // dom.click(document.querySelector(".o_data_cell .o_m2m_avatar"));
-    // await contains(".o-mail-ChatWindow-name");
+    // await contains(".o-mail-ChatWindow");
     // assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    // assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
+    // assert.strictEqual(document.querySelector(".o-mail-ChatWindow").textContent, "Mario");
 
     // // click on second employee
     // dom.click(document.querySelectorAll(".o_data_cell .o_m2m_avatar")[1]);
-    // await contains(".o-mail-ChatWindow-name", { count: 2 });
+    // await contains(".o-mail-ChatWindow", { count: 2 });
     // assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
     // assert.strictEqual(
-    //     document.querySelectorAll(".o-mail-ChatWindow-name")[1].textContent,
+    //     document.querySelectorAll(".o-mail-ChatWindow")[1].textContent,
     //     "Yoshi"
     // );
 });
@@ -342,8 +340,8 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
         `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
     );
 
-    await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[1]);
-    await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[0]);
+    await dom.click(document.querySelectorAll(".o_kanban_record img.o_m2m_avatar")[1]);
+    await dom.click(document.querySelectorAll(".o_kanban_record img.o_m2m_avatar")[0]);
     // TODO: avatar card employee
 });
 
@@ -393,9 +391,7 @@ QUnit.test(
         await dom.click(
             document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
         );
-        assert.verifySteps([
-            `web_read m2x.avatar.employee ${employeeId_1}`,
-        ]);
+        assert.verifySteps([`web_read m2x.avatar.employee ${employeeId_1}`]);
         // TODO: avtar card employee
     }
 );

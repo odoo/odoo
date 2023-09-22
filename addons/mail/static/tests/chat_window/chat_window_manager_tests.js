@@ -168,31 +168,23 @@ QUnit.test(
         );
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name", { text: "channel-A" });
+        await click(".o-mail-NotificationItem", { text: "channel-A" });
         await contains(".o-mail-ChatWindow");
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name", { text: "channel-B" });
+        await click(".o-mail-NotificationItem", { text: "channel-B" });
         await contains(".o-mail-ChatWindow", { count: 2 });
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name", { text: "channel-C" });
+        await click(".o-mail-NotificationItem", { text: "channel-C" });
         await contains(".o-mail-ChatWindowHiddenToggler", { text: "1" });
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name", { text: "channel-D" });
+        await click(".o-mail-NotificationItem", { text: "channel-D" });
         await contains(".o-mail-ChatWindowHiddenToggler", { text: "2" });
-        await contains(":nth-child(1 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "channel-A",
-        });
-        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "channel-D",
-        });
+        await contains(":nth-child(1 of .o-mail-ChatWindow)", { text: "channel-A" });
+        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "channel-D" });
         await click(".o-mail-ChatWindow-command[title='Close Chat Window']", {
-            parent: [".o-mail-ChatWindow-header", { text: "channel-D" }],
+            parent: [".o-mail-ChatWindow", { text: "channel-D" }],
         });
-        await contains(":nth-child(1 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "channel-A",
-        });
-        await contains(":nth-child(2 of .o-mail-ChatWindow) .o-mail-ChatWindow-name", {
-            text: "channel-C",
-        });
+        await contains(":nth-child(1 of .o-mail-ChatWindow)", { text: "channel-A" });
+        await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "channel-C" });
     }
 );

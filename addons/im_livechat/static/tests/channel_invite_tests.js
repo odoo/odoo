@@ -105,11 +105,11 @@ QUnit.test("Partners invited most frequently by the current user come first", as
 
     const { openDiscuss } = await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #1" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(John) input");
     await click("button:contains(Invite):enabled");
-    await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #2" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #2" });
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });

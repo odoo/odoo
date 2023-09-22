@@ -69,7 +69,7 @@ QUnit.test("show call UI in chat window when in call", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem-name", { text: "General" });
+    await click(".o-mail-NotificationItem", { text: "General" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-discuss-Call", { count: 0 });
     await click(".o-mail-ChatWindow-command[title='Start a Call']");
@@ -186,7 +186,7 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     const { openDiscuss } = await start();
     openDiscuss();
     await click("button", { text: "Start a meeting" });
-    await contains(".o-mail-DiscussSidebarChannel span", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
     await contains(".o-discuss-ChannelInvitation");
 });

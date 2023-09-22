@@ -29,7 +29,7 @@ QUnit.test("Receiving a new message out of discuss app should open a chat window
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow-name", { text: "Dumbledore" });
+    await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
 });
 
 QUnit.test(
@@ -57,7 +57,7 @@ QUnit.test(
         );
         // leaving discuss.
         await openFormView("res.partner", partnerId);
-        await contains(".o-mail-ChatWindow-name", { text: "Dumbledore" });
+        await contains(".o-mail-ChatWindow", { text: "Dumbledore" });
     }
 );
 
@@ -80,6 +80,6 @@ QUnit.test(
         // leaving discuss.
         await openFormView("res.partner", partnerId);
         // weak test, no guarantee that we waited long enough for the potential chat window to open
-        await contains(".o-mail-ChatWindow-name", { count: 0, text: "Dumbledore" });
+        await contains(".o-mail-ChatWindow", { count: 0, text: "Dumbledore" });
     }
 );

@@ -25,7 +25,7 @@ QUnit.test("create todo from activity menu without date", async function () {
     // Need to reopen systray as it automatically closes when a todo is created
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter", { text: "1" });
-    await contains(".o-mail-ActivityGroup span", { text: "project.task" });
+    await contains(".o-mail-ActivityGroup", { text: "project.task" });
     await contains(".btn", { text: "1 Today" });
     await contains(".btn", { text: "Add a To-do" });
     await contains(".o-mail-ActivityMenu-show", { count: 0 });
@@ -72,6 +72,6 @@ QUnit.test("create to-do from activity menu with date", async function () {
     // Need to reopen systray as it automatically closes when a todo is created
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter", { text: "1" });
-    await contains(".o-mail-ActivityGroup span", { text: "project.task" });
+    await contains(".o-mail-ActivityGroup", { text: "project.task" });
     await contains(".btn", { text: "1 Future" });
 });

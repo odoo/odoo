@@ -179,10 +179,7 @@ QUnit.test("show subject of message in Inbox", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-content", {
-        text: "Subject: Salutations, voyageurnot empty",
-    });
+    await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
 QUnit.test("show subject of message in history", async () => {
@@ -202,10 +199,7 @@ QUnit.test("show subject of message in history", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss("mail.box_history");
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-content", {
-        text: "Subject: Salutations, voyageurnot empty",
-    });
+    await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
 QUnit.test("subject should not be shown when subject is the same as the thread name", async () => {
@@ -226,8 +220,8 @@ QUnit.test("subject should not be shown when subject is the same as the thread n
     });
     const { openDiscuss } = await start();
     openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message-content");
-    await contains(".o-mail-Message-content", {
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message", {
         count: 0,
         text: "Subject: Salutations, voyageurnot empty",
     });
@@ -253,8 +247,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss("mail.box_inbox");
-        await contains(".o-mail-Message-content");
-        await contains(".o-mail-Message-content", {
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Salutations, voyageurnot empty",
         });
@@ -281,8 +275,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss("mail.box_inbox");
-        await contains(".o-mail-Message-content");
-        await contains(".o-mail-Message-content", {
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Salutations, voyageurnot empty",
         });
@@ -309,8 +303,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss("mail.box_inbox");
-        await contains(".o-mail-Message-content");
-        await contains(".o-mail-Message-content", {
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Salutations, voyageurnot empty",
         });
@@ -337,8 +331,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss("mail.box_inbox");
-        await contains(".o-mail-Message-content");
-        await contains(".o-mail-Message-content", {
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Salutations, voyageurnot empty",
         });
@@ -365,8 +359,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss("mail.box_inbox");
-        await contains(".o-mail-Message-content");
-        await contains(".o-mail-Message-content", {
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Salutations, voyageurnot empty",
         });
@@ -393,8 +387,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss("mail.box_inbox");
-        await contains(".o-mail-Message-content");
-        await contains(".o-mail-Message-content", {
+        await contains(".o-mail-Message");
+        await contains(".o-mail-Message", {
             count: 0,
             text: "Subject: Salutations, voyageurnot empty",
         });
@@ -432,12 +426,7 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     ]);
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { text: "2" }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         containsMulti: [
             ["span", { text: "General" }],
@@ -446,12 +435,7 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     });
     await contains(".o-mail-Discuss-content .o-mail-Message", { count: 2 });
     await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         containsMulti: [
             ["span", { text: "General" }],
@@ -547,14 +531,10 @@ QUnit.test("inbox messages are never squashed", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Message:not(.o-squashed) .o-mail-Message-content", {
-        text: "body1",
-    });
-    await contains(".o-mail-Message:not(.o-squashed) .o-mail-Message-content", {
-        text: "body2",
-    });
-    await click(".o-mail-DiscussSidebarChannel span", { text: "test" });
-    await contains(".o-mail-Message.o-squashed .o-mail-Message-content", { text: "body2" });
+    await contains(".o-mail-Message:not(.o-squashed)", { text: "body1" });
+    await contains(".o-mail-Message:not(.o-squashed)", { text: "body2" });
+    await click(".o-mail-DiscussSidebarChannel", { text: "test" });
+    await contains(".o-mail-Message.o-squashed", { text: "body2" });
 });
 
 QUnit.test("reply: stop replying button click", async () => {
@@ -656,22 +636,12 @@ QUnit.test("emptying inbox doesn't display rainbow man in another thread", async
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { text: "1" }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/mark_as_read", {
         message_ids: [messageId],
         needaction_inbox_counter: 0,
     });
-    await contains("button", {
-        containsMulti: [
-            ["div", { text: "Inbox" }],
-            [".badge", { count: 0 }],
-        ],
-    });
+    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     // weak test, no guarantee that we waited long enough for the potential rainbow man to show
     await contains(".o_reward_rainbow", { count: 0 });
 });
