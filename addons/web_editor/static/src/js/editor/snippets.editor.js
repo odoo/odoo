@@ -159,8 +159,12 @@ const dragAndDropCommonMenuEditor = Widget.extend({
      * @private
      * @param {Element} dropzoneEl - The dropzone on which the item will finally
      * be dropped.
+     * @param {Number} nbrColGrid - If set, the number of columns that a
+     * dynamically built grid item takes on the grid.
+     * @param {Number} nbrRowGrid - If set, the number of rows that a
+     * dynamically built grid item takes on the grid.
      */
-    _droppedNear(dropzoneEl) {
+    _droppedNear(dropzoneEl, nbrColGrid, nbrRowGrid) {
         if (dropzoneEl.classList.contains("oe_grid_zone")) {
             // Case when a column is dropped near a grid.
             const rowEl = dropzoneEl.parentNode;
@@ -172,7 +176,17 @@ const dragAndDropCommonMenuEditor = Widget.extend({
                     // The item comes from the right panel and did not go over
                     // a dropzone yet. Stores its height and width
                     // characteristics.
-                    this._storeGridItemWidthAndHeight(dropzoneEl);
+                    if (nbrColGrid || nbrRowGrid) {
+                        // The grid dimension of snippets that are dynamically
+                        // build (for example, the countdown snippet) are stored
+                        // and do not have to be computed.
+                        this._storeDynamicGridItemWidthAndHeight(
+                            nbrColGrid ? parseFloat(nbrColGrid) : 12,
+                            nbrRowGrid ? parseFloat(nbrRowGrid) : 1,
+                            rowEl);
+                    } else {
+                        this._storeGridItemWidthAndHeight(dropzoneEl);
+                    }
                 }
                 this.options.wysiwyg.odooEditor.observerActive(this.observerName);
                 const spans = gridUtils._convertColumnToGrid(rowEl, this.draggedItemEl, this.dragState.columnWidth, this.dragState.columnHeight);
@@ -427,7 +441,23 @@ const dragAndDropCommonMenuEditor = Widget.extend({
         this.handleDragMove = false;
     },
     /**
-     * Stores the width and height characteristics of a grid item element.
+     * Stores the width and height characteristics of a dynamically built grid
+     * item.
+     *
+     * @param {Number} nbrColGrid - The number of columns that an item will take
+     * on the grid.
+     * @param {Number} nbrRowGrid - The number of rows that an item will take on
+     * the grid.
+     * @param {Element} rowEl - The grid element.
+     */
+    _storeDynamicGridItemWidthAndHeight (nbrColGrid, nbrRowGrid, rowEl) {
+        const gridProp = gridUtils._getGridProperties(rowEl);
+        this.dragState.columnWidth = nbrColGrid * (gridProp.columnSize + gridProp.columnGap) - gridProp.columnGap;
+        this.dragState.columnHeight = nbrRowGrid * (gridProp.rowSize + gridProp.rowGap) - gridProp.rowGap;
+    },
+    /**
+     * Stores the width and height characteristics of a non dynamically built
+     * grid item.
      *
      * @private
      * @param {Element} dropzoneEl
@@ -3457,7 +3487,20 @@ var SnippetsMenu = dragAndDropCommonMenuEditor.extend({
 
                             if (dropzoneEl.classList.contains("oe_grid_zone")) {
                                 if (!self.dragState.columnWidth || !self.dragState.columnHeight) {
-                                    self._storeGridItemWidthAndHeight(dropzoneEl);
+                                    const nbrColGrid = $snippet[0].getAttribute("data-oe-width-grid");
+                                    const nbrRowGrid = $snippet[0].getAttribute("data-oe-height-grid");
+                                    if (nbrColGrid || nbrRowGrid) {
+                                        // The grid dimension of snippets that
+                                        // are dynamically build (for example,
+                                        // the countdown snippet) are stored and
+                                        // does not have to be computed.
+                                        self._storeDynamicGridItemWidthAndHeight(
+                                            nbrColGrid ? parseFloat(nbrColGrid) : 12,
+                                            nbrRowGrid ? parseFloat(nbrRowGrid) : 1,
+                                            dropzoneEl.parentNode);
+                                    } else {
+                                        self._storeGridItemWidthAndHeight(dropzoneEl);
+                                    }
                                 }
                                 self._initDragOverGrid(dropzoneEl);
                             }
@@ -3536,7 +3579,9 @@ var SnippetsMenu = dragAndDropCommonMenuEditor.extend({
                         $el = $el.filter($dropZones);
                         if ($el.length) {
                             $el.after($toInsert);
-                            self._droppedNear($el[0]);
+                            self._droppedNear($el[0],
+                                $snippet[0].getAttribute("data-oe-width-grid"),
+                                $snippet[0].getAttribute("data-oe-height-grid"));
                         }
                     }
 

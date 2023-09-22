@@ -109,7 +109,7 @@
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">Dynamic Content</div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
+                    <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form" t-height-grid = "9"/>
                     <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
                     <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
                     <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
@@ -123,13 +123,13 @@
                     <t id="mass_mailing_newsletter_block_hook"/>
                     <t id="mass_mailing_newsletter_popup_hook"/>
                     <t t-snippet="website.s_popup" string="Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/s_popup.svg"/>
-                    <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
-                    <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
+                    <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg" t-height-grid="2" t-width-grid = "5"/>
+                    <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg" t-height-grid="4">
                         <keywords>celebration, launch</keywords>
                     </t>
                     <t id="mail_group_hook"/>
                     <t id="twitter_favorite_tweets_hook"/>
-                    <t t-snippet="website.s_embed_code" string="Embed Code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true"/>
+                    <t t-snippet="website.s_embed_code" string="Embed Code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true" t-height-grid="1"/>
                     <t id="snippet_donation_hook"/>
                 </div>
             </div>
@@ -150,10 +150,10 @@
                     <t t-snippet="website.s_searchbar_input" string="Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg" t-forbid-sanitize="form"/>
                     <t id="mass_mailing_newsletter_hook"/>
                     <t t-snippet="website.s_text_highlight" string="Text Highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
-                    <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg">
+                    <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg" t-height-grid= "8" t-width-grid = "7">
                         <keywords>chart, table, diagram, pie</keywords>
                     </t>
-                    <t t-snippet="website.s_progress_bar" string="Progress Bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.svg">
+                    <t t-snippet="website.s_progress_bar" string="Progress Bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.svg" t-height-grid="2">
                         <keywords>evolution, growth</keywords>
                     </t>
                     <t t-snippet="website.s_badge" string="Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_badge.svg"/>
