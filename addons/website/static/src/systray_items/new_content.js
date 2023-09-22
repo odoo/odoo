@@ -81,7 +81,7 @@ export class NewContentModal extends Component {
                     moduleName: 'website_blog',
                     moduleXmlId: 'base.module_website_blog',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<img src="/website/static/src/img/apps_thumbs/page.svg"/>`,
+                    icon: xml`<img src="/website/static/src/img/apps_thumbs/blog.svg"/>`,
                     title: _t('Blog Post'),
                 },
                 {

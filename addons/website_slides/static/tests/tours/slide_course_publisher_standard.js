@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     trigger: 'div.o_new_content_container a'
 }, {
     content: 'eLearning: click on New Course',
-    trigger: '#o_new_content_menu_choices a:contains("Course")'
+    trigger: '.popover a:contains("Course")'
 }, {
     content: 'eLearning: set name',
     trigger: 'div[name="name"] input',
