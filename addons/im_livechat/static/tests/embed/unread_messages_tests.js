@@ -6,7 +6,7 @@ import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed
 
 import { Command } from "@mail/../tests/helpers/command";
 
-import { contains } from "@web/../tests/utils";
+import { contains, focus } from "@web/../tests/utils";
 
 QUnit.module("thread service");
 
@@ -63,9 +63,7 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message .o-mail-Message-content", {
-        text: "Are you there?",
-    });
-    $(".o-mail-Composer-input").trigger("focus");
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "Are you there?" });
+    await focus(".o-mail-Composer-input");
     await contains(".o-mail-Thread-newMessage", { count: 0 });
 });

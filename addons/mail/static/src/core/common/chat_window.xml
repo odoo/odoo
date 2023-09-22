@@ -27,7 +27,7 @@
                 </Dropdown>
                 <AutoresizeInput
                     t-if="state.editingName"
-                    className="'o-mail-ChatWindow-name text-truncate fw-bold flex-shrink-1 me-1 py-0'"
+                    className="'text-truncate fw-bold flex-shrink-1 me-1 py-0'"
                     enabled="true"
                     autofocus="true"
                     onValidate.bind="renameThread"
@@ -54,7 +54,7 @@
                 <t t-set="itemClass" t-value="'me-1'"/>
             </t>
         </div>
-        <div t-if="!props.chatWindow.folded or ui.isSmall" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
             <t t-if="thread" name="thread content">
                 <div t-if="threadActions.activeAction?.componentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}">
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
@@ -82,6 +82,6 @@
         <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.type === 'chat' and thread.correspondent" thread="thread"/>
-    <div t-if="!state.editingName" class="o-mail-ChatWindow-name text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
 </t>
 </templates>

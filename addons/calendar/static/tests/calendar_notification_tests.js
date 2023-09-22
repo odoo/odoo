@@ -47,7 +47,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                     notify_at: "1978-04-14 12:45:00",
                 },
             ]);
-            await contains(".o_notification_content", { text: "Very old meeting message" });
+            await contains(".o_notification", { text: "Very old meeting message" });
             await click(".o_notification_buttons button", { text: "OK" });
             await contains(".o_notification", { count: 0 });
             assert.verifySteps(["notifyAck"]);
@@ -89,7 +89,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                     notify_at: "1978-04-14 12:45:00",
                 },
             ]);
-            await contains(".o_notification_content", { text: "Very old meeting message" });
+            await contains(".o_notification", { text: "Very old meeting message" });
             await click(".o_notification_buttons button", { text: "Details" });
             await contains(".o_notification", { count: 0 });
             assert.verifySteps(["ir.actions.act_window"]);
@@ -120,8 +120,8 @@ QUnit.module("Calendar Notification", (hooks) => {
                     notify_at: "1978-04-14 12:45:00",
                 },
             ]);
-            await contains(".o_notification_content", { text: "Very old meeting message" });
-            await click(".o_notification_buttons button", { text: "Snooze" });
+            await contains(".o_notification", { text: "Very old meeting message" });
+            await click(".o_notification button", { text: "Snooze" });
             await contains(".o_notification", { count: 0 });
             assert.verifySteps([], "should only close the notification withtout calling a rpc");
         }

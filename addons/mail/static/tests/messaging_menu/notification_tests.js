@@ -64,18 +64,11 @@ QUnit.test("mark as read", async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], {
-        contains: [".o-mail-NotificationItem-name", { text: "Channel" }],
-    });
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Channel" });
     await click(".o-mail-NotificationItem-markAsRead", {
-        parent: [
-            ".o-mail-NotificationItem",
-            {
-                contains: [".o-mail-NotificationItem-name", { text: "Channel" }],
-            },
-        ],
+        parent: [".o-mail-NotificationItem", { text: "Channel" }],
     });
-    await contains(".o-mail-NotificationItem-name", { count: 0, text: "Channel" });
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Channel" });
 });
 
 QUnit.test("open non-channel failure", async (assert) => {
@@ -267,13 +260,9 @@ QUnit.test("marked as read thread notifications are ordered by last message date
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
-        text: "Channel 2020",
-    });
-    await contains(":nth-child(2 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
-        text: "Channel 2019",
-    });
+    await contains(".o-mail-NotificationItem", { count: 2 });
+    await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Channel 2020" });
+    await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Channel 2019" });
 });
 
 QUnit.test("thread notifications are re-ordered on receiving a new message", async () => {
@@ -311,12 +300,8 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
             res_id: channelId_1,
         },
     });
-    await contains(":nth-child(1 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
-        text: "Channel 2019",
-    });
-    await contains(":nth-child(2 of .o-mail-NotificationItem) .o-mail-NotificationItem-name", {
-        text: "Channel 2020",
-    });
+    await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Channel 2019" });
+    await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Channel 2020" });
     await contains(".o-mail-NotificationItem", { count: 2 });
 });
 

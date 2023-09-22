@@ -47,10 +47,10 @@ QUnit.test('click on "follow" button', async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button span", { text: "Follow" });
+    await contains("button", { text: "Follow" });
 
-    await click("button span", { text: "Follow" });
-    await contains("button span", { text: "Following" });
+    await click("button", { text: "Follow" });
+    await contains("button", { text: "Following" });
 });
 
 QUnit.test('Click on "follow" button should save draft record', async () => {
@@ -67,9 +67,9 @@ QUnit.test('Click on "follow" button should save draft record', async () => {
     };
     const { openFormView } = await start({ serverData: { views } });
     openFormView("res.partner");
-    await contains("button span", { text: "Follow" });
+    await contains("button", { text: "Follow" });
     await contains("div.o_field_char");
-    await click("button span", { text: "Follow" });
+    await click("button", { text: "Follow" });
     await contains("div.o_field_invalid");
 });
 
@@ -89,5 +89,5 @@ QUnit.test('click on "unfollow" button', async () => {
         views: [[false, "form"]],
     });
     await click(".fa-check + span", { text: "Following" });
-    await contains("button span", { text: "Follow" });
+    await contains("button", { text: "Follow" });
 });

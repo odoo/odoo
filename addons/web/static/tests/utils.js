@@ -232,7 +232,11 @@ if (window.QUnit) {
  *  element.
  * @property {HTMLElement} [target=getFixture()]
  * @property {string[]} [triggerEvents] if provided, triggers the given events on the found element
- * @property {string} [text] if provided, the textContent of the found element(s) must match.
+ * @property {string} [text] if provided, the textContent of the found element(s) or one of their
+ *  descendants must match. Use `textContent` option for a match on the found element(s) only.
+ * @property {string} [textContent] if provided, the textContent of the found element(s) must match.
+ *  Prefer `text` option for a match on the found element(s) or any of their descendants, usually
+ *  allowing for a simpler and less specific selector.
  * @property {string} [value] if provided, the input value of the found element(s) must match.
  *  Note: value changes are not observed directly, another mutation must happen to catch them.
  * @property {boolean} [visible] if provided, the found element(s) must be (in)visible
@@ -268,6 +272,9 @@ class Contains {
         }
         if (this.options.text !== undefined) {
             selectorMessage = `${selectorMessage} with text "${this.options.text}"`;
+        }
+        if (this.options.textContent !== undefined) {
+            selectorMessage = `${selectorMessage} with textContent "${this.options.textContent}"`;
         }
         if (this.options.value !== undefined) {
             selectorMessage = `${selectorMessage} with value "${this.options.value}"`;
@@ -536,14 +543,24 @@ class Contains {
         this.childrenContains = [];
         const res = baseRes.filter((el, currentIndex) => {
             let condition =
-                (this.options.text === undefined || el.textContent.trim() === this.options.text) &&
+                (this.options.textContent === undefined ||
+                    el.textContent.trim() === this.options.textContent) &&
                 (this.options.value === undefined || el.value === this.options.value) &&
                 (this.options.scroll === undefined ||
                     (this.options.scroll === "bottom"
                         ? Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 1
                         : Math.abs(el.scrollTop - this.options.scroll) <= 1));
+            if (condition && this.options.text !== undefined) {
+                if (
+                    el.textContent.trim() !== this.options.text &&
+                    [...el.querySelectorAll("*")].every(
+                        (el) => el.textContent.trim() !== this.options.text
+                    )
+                ) {
+                    condition = false;
+                }
+            }
             if (condition) {
-                // avoid checking if condition already failed to avoid uncessary slowness
                 for (const param of this.options.containsMulti) {
                     const childContains = new Contains(param[0], { ...param[1], target: el });
                     if (
@@ -557,13 +574,11 @@ class Contains {
                 }
             }
             if (condition && this.options.visible !== undefined) {
-                // avoid checking if condition already failed to avoid uncessary slowness
                 if (isVisible(el) !== this.options.visible) {
                     condition = false;
                 }
             }
             if (condition && this.options.after) {
-                // avoid checking if condition already failed to avoid uncessary slowness
                 const afterContains = new Contains(this.options.after[0], {
                     ...this.options.after[1],
                     target,
@@ -580,7 +595,6 @@ class Contains {
                 this.childrenContains.push(afterContains);
             }
             if (condition && this.options.before) {
-                // avoid checking if condition already failed to avoid uncessary slowness
                 const beforeContains = new Contains(this.options.before[0], {
                     ...this.options.before[1],
                     target,
