@@ -153,6 +153,9 @@ class BarcodeNomenclature(models.Model):
                     data_type = data['rule'].type
                     value = data['value']
                     if data_type in barcode_types:
+                        if data_type == 'lot':
+                            args[i] = (field_name, operator, value)
+                            break
                         match = re.match('0*([0-9]+)$', str(value))
                         if match:
                             unpadded_barcode = match.groups()[0]
