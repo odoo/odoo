@@ -127,7 +127,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.quantity_done = 1
-        sale_order.picking_ids.button_validate()
+        wiz = sale_order.picking_ids.button_validate()
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
+        wiz.process()
 
         # Invoice 1
         invoice = sale_order._create_invoices()
@@ -264,7 +266,9 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.quantity_done = 1
-        sale_order.picking_ids.button_validate()
+        wiz = sale_order.picking_ids.button_validate()
+        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
+        wiz.process()
 
         # Invoice 1
         invoice = sale_order._create_invoices()

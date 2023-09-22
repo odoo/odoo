@@ -681,7 +681,9 @@ class TestPickShip(TestStockCommon):
         # make some stock
         self.env['stock.quant']._update_available_quantity(self.productA, location, 10.0)
         picking_pick.move_ids.quantity_done = 5.0
-        picking_pick.button_validate()
+        backorder_wizard_values = picking_pick.button_validate()
+        backorder_wizard = self.env[(backorder_wizard_values.get('res_model'))].browse(backorder_wizard_values.get('res_id')).with_context(backorder_wizard_values['context'])
+        backorder_wizard.process()
 
         self.assertTrue(picking_client.move_line_ids, 'A move line should be created.')
         self.assertEqual(picking_client.move_line_ids.reserved_uom_qty, 5, 'The move line should have 5 unit reserved.')
