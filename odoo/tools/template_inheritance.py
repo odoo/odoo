@@ -93,6 +93,12 @@ def locate_node(arch, spec):
             return node
     return None
 
+def is_python_expression_attribute(attribute):
+    return (
+        attribute in ('column_invisible', 'invisible', 'readonly', 'required') or  # modifiers
+        attribute.startswith('decoration-') or  # list decoration
+        attribute in ('t-if', 't-elif', 't-foreach', 't-options', 't-value', 't-att-', 't-out', 't-esc') # qweb directive with expression (not formatted string)
+    )
 
 def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_locate=lambda s: True):
     """ Apply an inheriting view (a descendant of the base view)
@@ -207,8 +213,13 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 for child in spec.getiterator('attribute'):
                     attribute = child.get('name')
                     value = child.text or ''
-                    if child.get('add') or child.get('remove'):
-                        assert not child.text
+
+                    if is_python_expression_attribute(attribute):
+                        assert not child.get('add') and not child.get('remove') and not child.get('separator')
+                        value = value.replace('$0', f'({node.get(attribute)})')
+                    elif child.get('add') or child.get('remove') or child.get('separator'):
+                        assert not value
+                        assert child.get('add') or child.get('remove')
                         separator = child.get('separator', ',')
                         if separator == ' ':
                             separator = None    # squash spaces
@@ -222,6 +233,8 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             (v for v in values if v not in to_remove),
                             to_add
                         ))
+                    else:
+                        value = value.replace('$0', node.get(attribute, ''))
                     if value:
                         node.set(attribute, value)
                     elif attribute in node.attrib:

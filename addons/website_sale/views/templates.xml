@@ -1043,8 +1043,8 @@
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
-                                        <t t-set="hasQuantities" t-value="false"/>
-                                        <t t-set="hasBuyNow" t-value="false"/>
+                                        <t t-set="hasQuantities" t-value="False"/>
+                                        <t t-set="hasBuyNow" t-value="False"/>
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
@@ -1229,7 +1229,7 @@
 
     <template id="product_quantity" inherit_id="website_sale.product" name="Select Quantity">
         <xpath expr="//t[@t-set='hasQuantities']" position="attributes">
-            <attribute name="t-value" remove="false" add="true" separator=" "/>
+            <attribute name="t-value">True</attribute>
         </xpath>
       <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
         <div t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} me-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
@@ -1246,7 +1246,7 @@
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" name="Buy Now Button">
         <xpath expr="//t[@t-set='hasBuyNow']" position="attributes">
-            <attribute name="t-value" remove="false" add="true" separator=" "/>
+            <attribute name="t-value">True</attribute>
         </xpath>
         <xpath expr="//a[@id='add_to_cart']" position="after">
             <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
