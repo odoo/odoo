@@ -359,15 +359,3 @@ class AccountPayment(models.Model):
                 raise ValidationError(_(
                     "The check(s) '%s' is already used on another payment. Please select another check or "
                     "deselect the check on this payment.", self.l10n_latam_check_id.mapped('display_name')))
-
-    def check_operations(self):
-        if self.l10n_latam_check_operation_ids and ((self.l10n_latam_check_payment_date or self.date) < max(self.l10n_latam_check_operation_ids.mapped('date'))):
-            raise UserError(_('Can´t edit if there are operations with checks after the date of this payment.'))
-
-    def action_cancel(self):
-        self.check_operations()
-        super().action_cancel()
-
-    def action_draft(self):
-        self.check_operations()
-        super().action_draft()
