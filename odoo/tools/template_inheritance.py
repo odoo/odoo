@@ -218,6 +218,8 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                         assert not child.get('add') and not child.get('remove') and not child.get('separator')
                         value = value.replace('$0', f'({node.get(attribute)})')
                     elif child.get('add') or child.get('remove') or child.get('separator'):
+                        if value:
+                            raise ValueError(etree.tostring(child, encoding='unicode'))
                         assert not value
                         assert child.get('add') or child.get('remove')
                         separator = child.get('separator', ',')
