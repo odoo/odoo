@@ -8,12 +8,14 @@ from odoo.exceptions import ValidationError
 class MrpRoutingWorkcenter(models.Model):
     _name = 'mrp.routing.workcenter'
     _description = 'Work Center Usage'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
     _order = 'bom_id, sequence, id'
     _check_company_auto = True
 
     name = fields.Char('Operation', required=True)
     active = fields.Boolean(default=True)
-    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True, tracking=True)
     sequence = fields.Integer(
         'Sequence', default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.")
@@ -23,19 +25,19 @@ class MrpRoutingWorkcenter(models.Model):
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     worksheet_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Worksheet", default="text"
+        string="Worksheet", default="text", tracking=True
     )
     note = fields.Html('Description')
     worksheet = fields.Binary('PDF')
-    worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
+    worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.", tracking=True)
     time_mode = fields.Selection([
         ('auto', 'Compute based on tracked time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
-        default='manual')
+        default='manual', tracking=True)
     time_mode_batch = fields.Integer('Based on', default=10)
     time_computed_on = fields.Char('Computed on last', compute='_compute_time_computed_on')
     time_cycle_manual = fields.Float(
-        'Manual Duration', default=60,
+        'Manual Duration', default=60, tracking=True,
         help="Time in minutes:"
         "- In manual mode, time used"
         "- In automatic mode, supposed first time when there aren't any work orders yet")
@@ -165,9 +167,3 @@ class MrpRoutingWorkcenter(models.Model):
         if product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
-
-    def _get_comparison_values(self):
-        if not self:
-            return False
-        self.ensure_one()
-        return tuple(self[key] for key in  ('name', 'company_id', 'workcenter_id', 'time_mode', 'time_cycle_manual', 'bom_product_template_attribute_value_ids'))
