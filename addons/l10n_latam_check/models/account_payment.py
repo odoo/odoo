@@ -103,7 +103,7 @@ class AccountPayment(models.Model):
 
     @api.onchange('l10n_latam_check_issuer_vat')
     def _clean_l10n_latam_check_issuer_vat(self):
-        for rec in self.filtered('l10n_latam_check_issuer_vat'):
+        for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
             stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
             if hasattr(stdnum_vat, 'compact'):
                 rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
