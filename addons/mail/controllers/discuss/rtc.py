@@ -109,9 +109,9 @@ class RtcController(http.Controller):
         current_rtc_sessions, outdated_rtc_sessions = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)
         return {
             "rtcSessions": [
-                ("insert", [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in current_rtc_sessions]),
+                ("ADD", [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in current_rtc_sessions]),
                 (
-                    "insert-and-unlink",
+                    "DELETE",
                     [{"id": missing_rtc_session_sudo.id} for missing_rtc_session_sudo in outdated_rtc_sessions],
                 ),
             ]

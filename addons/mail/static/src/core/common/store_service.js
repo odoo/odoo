@@ -251,12 +251,14 @@ export const storeService = {
                                         if (r2 && r2.notEq(r3)) {
                                             r2.__invs__.delete(r1.localId, name);
                                         }
-                                        r1.__rels__.set(name, r3?.localId);
                                         if (r3) {
+                                            r1.__rels__.set(name, r3?.localId);
                                             if (!(r3 instanceof Record)) {
                                                 return true; // not a record, ignored
                                             }
                                             r3.__invs__.add(r1.localId, name);
+                                        } else {
+                                            delete r1[name];
                                         }
                                     }
                                 } else {

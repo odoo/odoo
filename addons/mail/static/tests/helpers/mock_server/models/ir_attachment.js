@@ -32,7 +32,7 @@ patch(MockServer.prototype, {
             };
             res["originThread"] = [
                 [
-                    "insert",
+                    "ADD",
                     {
                         id: attachment.res_id,
                         model: attachment.res_model,

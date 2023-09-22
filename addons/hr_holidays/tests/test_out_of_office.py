@@ -50,7 +50,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'name': 'test'
         })
         channel_info = channel._channel_info()[0]
-        # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
+        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         members_data = channel_info['channel']['channelMembers'][0][1]
         self.assertEqual(len(members_data), 2, "Channel info should get info for the 2 members")
         partner_info = next(member for member in members_data if member['persona']['partner']['email'] == partner.email)

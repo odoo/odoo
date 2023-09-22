@@ -33,7 +33,7 @@ export class ActivityService {
             feedback: activity.feedback,
         });
         this.broadcastChannel?.postMessage({
-            type: "reload chatter",
+            type: "RELOAD_CHATTER",
             payload: { resId: activity.res_id, resModel: activity.res_model },
         });
     }
@@ -46,7 +46,7 @@ export class ActivityService {
             { feedback: activity.feedback }
         );
         this.broadcastChannel?.postMessage({
-            type: "reload chatter",
+            type: "RELOAD_CHATTER",
             payload: { resId: activity.res_id, resModel: activity.res_model },
         });
         return action;
@@ -80,21 +80,21 @@ export class ActivityService {
     delete(activity, { broadcast = true } = {}) {
         activity.delete();
         if (broadcast) {
-            this.broadcastChannel?.postMessage({ type: "delete", payload: { id: activity.id } });
+            this.broadcastChannel?.postMessage({ type: "DELETE", payload: { id: activity.id } });
         }
     }
 
     _onBroadcastChannelMessage({ data }) {
         switch (data.type) {
-            case "insert":
+            case "INSERT":
                 this.store.Activity.insert(data.payload, { broadcast: false });
                 break;
-            case "delete": {
+            case "DELETE": {
                 const activity = this.store.Activity.insert(data.payload, { broadcast: false });
                 this.delete(activity, { broadcast: false });
                 break;
             }
-            case "reload chatter": {
+            case "RELOAD_CHATTER": {
                 const thread = this.env.services["mail.thread"].getThread(
                     data.payload.resModel,
                     data.payload.resId
