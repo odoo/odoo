@@ -1149,8 +1149,12 @@ class TestMailFormattersPerformance(BaseMailPerformance):
                         'name': f'Test file {att_idx}',
                         'res_id': record.id,
                         'res_model': record._name,
+                        'voice_ids': [
+                            (0, 0, {})
+                            for _ in range(3)
+                        ],
                     })
-                    for att_idx in range(2)
+                    for att_idx in range(3)
                 ],
                 'author_id': cls.partners[msg_idx].id,
                 'body': f'<p>Test {msg_idx}</p>',
@@ -1251,7 +1255,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
 
         self.assertEqual(len(res), 2*2)
         for message in res:
-            self.assertEqual(len(message['attachments']), 2)
+            self.assertEqual(len(message['attachments']), 3)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
@@ -1263,7 +1267,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
             res = message.message_format()
 
         self.assertEqual(len(res), 1)
-        self.assertEqual(len(res[0]['attachments']), 2)
+        self.assertEqual(len(res[0]['attachments']), 3)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
