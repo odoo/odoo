@@ -406,7 +406,7 @@ class Picking(models.Model):
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many(
-        'stock.move', 'picking_id', string="Stock moves not in package", domain=['|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
+        'stock.move', 'picking_id', string="Stock move", domain=['|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
