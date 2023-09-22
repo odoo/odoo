@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -21,6 +21,7 @@ class AccountMove(models.Model):
         copy=False,
         readonly=True,
     )
+    peppol_is_demo_uuid = fields.Boolean(compute="_compute_peppol_is_demo_uuid")
 
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done
@@ -28,3 +29,8 @@ class AccountMove(models.Model):
         if any(move.peppol_move_state in {'processing', 'done'} for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
         self.peppol_move_state = 'canceled'
+
+    @api.depends('peppol_message_uuid')
+    def _compute_peppol_is_demo_uuid(self):
+        for move in self:
+            move.peppol_is_demo_uuid = (move.peppol_message_uuid or '').startswith('demo_')

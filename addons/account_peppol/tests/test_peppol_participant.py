@@ -18,6 +18,11 @@ PDF_FILE_PATH = 'account_peppol/tests/assets/peppol_identification_test.pdf'
 @tagged('-at_install', 'post_install')
 class TestPeppolParticipant(TransactionCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+
     def _get_participant_vals(self):
         return {
             'is_account_peppol_participant': True,
