@@ -316,6 +316,7 @@ class ProductProduct(models.Model):
     def unlink(self):
         unlink_products = self.env['product.product']
         unlink_templates = self.env['product.template']
+        self.packaging_ids.unlink()
         for product in self:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
