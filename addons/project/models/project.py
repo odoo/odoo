@@ -2697,6 +2697,8 @@ class ProjectTags(models.Model):
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
         ids = []
         if not (name == '' and operator in ('like', 'ilike')):
+            if domain is None:
+                domain = []
             domain += [('name', operator, name)]
         if self.env.context.get('project_id'):
             # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.
