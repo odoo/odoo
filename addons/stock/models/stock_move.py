@@ -922,9 +922,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         assert mode in ('serial', 'import')
         default_vals = {}
         # Get default values
+        def remove_prefix(text, prefix):
+            if text.startswith(prefix):
+                return text[len(prefix):]
+            return text
         for key in context:
             if key.startswith('default_'):
-                default_vals[key.removeprefix('default_')] = context[key]
+                default_vals[remove_prefix(key, 'default_')] = context[key]
 
         vals_list = []
         if mode == 'serial':
