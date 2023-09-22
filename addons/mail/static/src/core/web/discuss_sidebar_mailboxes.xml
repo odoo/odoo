@@ -19,8 +19,8 @@
         <button
             class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-reset"
             t-att-class="{
-                'o-bg-inherit': mailbox.localId !== store.discuss.threadLocalId,
-                'o-active': mailbox.localId === store.discuss.threadLocalId,
+                'o-bg-inherit': mailbox.notEq(store.discuss.thread),
+                'o-active': mailbox.eq(store.discuss.thread),
             }"
             t-on-click="(ev) => this.openThread(ev, mailbox)"
         >
