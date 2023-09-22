@@ -174,6 +174,8 @@ class CountryState(models.Model):
         if self.env.context.get('country_id'):
             domain = expression.AND([domain, [('country_id', '=', self.env.context.get('country_id'))]])
 
+        name = re.sub(r'\([^)]*\)$', '', name).strip()
+
         if operator == 'ilike' and not (name or '').strip():
             domain1 = []
             domain2 = []
