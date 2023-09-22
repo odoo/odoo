@@ -21,7 +21,9 @@
                      class="d-flex"
                      invisible="not peppol_move_state or state == 'draft'">
 
+                    <field name="peppol_is_demo_uuid" invisible="1"/>
                     <field name="peppol_move_state" class="oe_inline"/>
+                    <span class="mx-1" invisible="not peppol_is_demo_uuid"> (Demo)</span>
                     <span class="text-muted mx-3"
                           invisible="peppol_move_state != 'to_send'">
                         The invoice will be sent automatically to PEPPOL

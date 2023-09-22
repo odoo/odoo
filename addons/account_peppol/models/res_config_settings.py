@@ -5,6 +5,11 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+
+# at the moment, only European countries are accepted
+ALLOWED_COUNTRIES = set(EAS_MAPPING.keys()) - {'AU', 'SG', 'NZ'}
 
 
 class ResConfigSettings(models.TransientModel):
@@ -36,6 +41,17 @@ class ResConfigSettings(models.TransientModel):
     has_peppol_participant = fields.Boolean(
         compute='_compute_has_peppol_participant'
     )
+    account_peppol_edi_mode = fields.Selection(
+        selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
+        compute='_compute_account_peppol_edi_mode',
+        inverse='_inverse_account_peppol_edi_mode',
+        readonly=False,
+    )
+    account_peppol_mode_constraint = fields.Selection(
+        selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
+        compute='_compute_account_peppol_mode_constraint',
+        help="Using the config params, this field specifies which edi modes may be selected from the UI"
+    )
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -61,6 +77,26 @@ class ResConfigSettings(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+    @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
+    def _compute_account_peppol_mode_constraint(self):
+        mode_constraint = self.env['ir.config_parameter'].sudo().get_param('account_peppol.mode_constraint')
+        trial_param = self.env['ir.config_parameter'].sudo().get_param('saas_trial.confirm_token')
+        self.account_peppol_mode_constraint = trial_param and 'demo' or mode_constraint or 'prod'
+
+    @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
+    def _compute_account_peppol_edi_mode(self):
+        edi_mode = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        for config in self:
+            if config.account_peppol_edi_user:
+                config.account_peppol_edi_mode = config.account_peppol_edi_user.edi_mode
+            else:
+                config.account_peppol_edi_mode = edi_mode or 'prod'
+
+    def _inverse_account_peppol_edi_mode(self):
+        for config in self:
+            if not config.account_peppol_edi_user and config.account_peppol_edi_mode:
+                self.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', config.account_peppol_edi_mode)
+                return
 
     @api.depends("company_id.account_edi_proxy_client_ids")
     def _compute_account_peppol_edi_user(self):
@@ -92,6 +128,7 @@ class ResConfigSettings(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    @handle_demo
     def button_create_peppol_proxy_user(self):
         """
         The first step of the Peppol onboarding.
@@ -109,7 +146,7 @@ class ResConfigSettings(models.TransientModel):
 
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
-        edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', 'prod')
+        edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', self.account_peppol_edi_mode)
         self.account_peppol_proxy_state = 'not_verified'
 
         # if there is an error when activating the participant below,
@@ -144,6 +181,7 @@ class ResConfigSettings(models.TransientModel):
         # but we need the field for future in case the user decided to migrate away from Odoo
         self.account_peppol_migration_key = False
 
+    @handle_demo
     def button_update_peppol_user_data(self):
         """
         Action for the user to be able to update their contact details any time
@@ -245,6 +283,7 @@ class ResConfigSettings(models.TransientModel):
 
             self.account_peppol_proxy_state = 'not_verified'
 
+    @handle_demo
     def button_migrate_peppol_registration(self):
         """
         If the user is active, they need to request a migration key, generated on the IAP server.
@@ -261,6 +300,7 @@ class ResConfigSettings(models.TransientModel):
         response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
         self.account_peppol_migration_key = response['migration_key']
 
+    @handle_demo
     def button_deregister_peppol_participant(self):
         """
         Deregister the edi user from Peppol network

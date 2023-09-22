@@ -7,6 +7,7 @@ from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 TIMEOUT = 10
 
@@ -51,6 +52,7 @@ class ResPartner(models.Model):
             else:
                 partner.account_peppol_verification_label = 'not_valid'
 
+    @handle_demo
     def button_account_peppol_check_partner_endpoint(self):
         """ A basic check for whether a participant is reachable at the given
         Peppol participant ID - peppol_eas:peppol_endpoint (ex: '9999:test')
