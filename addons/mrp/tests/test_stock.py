@@ -305,7 +305,7 @@ class TestKitPicking(common.TestMrpCommon):
             'partner_id': self.test_partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move_receipt_1 = self.env['stock.move'].create({
+        self.env['stock.move'].create({
             'name': self.kit_parent.name,
             'product_id': self.kit_parent.id,
             'product_uom_qty': 3,
@@ -316,6 +316,9 @@ class TestKitPicking(common.TestMrpCommon):
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
         picking.button_validate()
+        backorder_wizard_dict = picking.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process()
 
         # We check that the picking has the correct quantities after its move were splitted.
         self.assertEqual(len(picking.move_ids), 7)
