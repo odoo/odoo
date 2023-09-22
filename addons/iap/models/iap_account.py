@@ -23,6 +23,14 @@ class IapAccount(models.Model):
     company_ids = fields.Many2many('res.company')
 
     @api.model
+    def create(self, vals):
+        account = super().create(vals)
+        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized') and account.account_token:
+            # Disable new accounts on a neutralized database
+            account.account_token = f"{account.account_token.split('+')[0]}+disabled"
+        return account
+
+    @api.model
     def get(self, service_name, force_create=True):
         domain = [
             ('service_name', '=', service_name),
