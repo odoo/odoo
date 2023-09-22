@@ -320,15 +320,16 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # deliver them
         # One of the move is for a consumable product, thus is assigned. The second one is for a
         # storable product, thus is unavailable. Hitting `button_validate` will first ask to
-        # process all the reserved quantities and, if the user chose to process, a backorder will
-        # be created for the unavailable product.
+        # process all the reserved quantities and, if the user chose to process, a second wizard
+        # will ask to create a backorder for the unavailable product.
         self.assertEqual(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids.sorted()[0].button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         self.assertEqual(wizard._name, 'stock.immediate.transfer')
+        res_dict = wizard.process()
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        self.assertEqual(wizard._name, 'stock.backorder.confirmation')
         wizard.process()
-        self.assertEqual(len(self.so.picking_ids), 2)
-        self.assertEqual(self.so.picking_ids[0].backorder_id.id, self.so.picking_ids[1].id)
 
         # Now, the original picking is done and there is a new one (the backorder).
         self.assertEqual(len(self.so.picking_ids), 2)
@@ -1542,6 +1543,9 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         pack_picking.move_line_ids.result_package_id = False
         pack_picking.move_ids.quantity_done = 2
         pack_picking.button_validate()
+        backorder_wizard_dict = pack_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
 
         self.assertEqual(out_picking.move_line_ids.package_id.id, False)
         self.assertEqual(out_picking.move_line_ids.result_package_id.id, False)
@@ -1561,5 +1565,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         pack_picking_2.move_ids.quantity_done = 2
         pack_picking_2.button_validate()
+        backorder_wizard_dict = pack_picking_2.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
 
         self.assertRecordValues(out_picking.move_line_ids, [{'result_package_id': False}, {'result_package_id': package_2.id}])
