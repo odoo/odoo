@@ -75,6 +75,7 @@
                 <page name="combos" string="Combo Choices" groups="point_of_sale.group_pos_user" invisible="not detailed_type == 'combo'">
                     <field name="combo_ids" widget="one2many" >
                         <tree string="combos">
+                            <field name="sequence" widget="handle"/>
                             <field name="name" />
                             <field name="num_of_products"/>
                         </tree>

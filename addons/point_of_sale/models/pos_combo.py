@@ -18,10 +18,11 @@ class PosCombo(models.Model):
     """
     _name = "pos.combo"
     _description = "Product combo choices"
-
+    _order = "sequence, id"
     name = fields.Char(string="Name", required=True)
     combo_line_ids = fields.One2many("pos.combo.line", "combo_id", string="Products in Combo")
     num_of_products = fields.Integer("No of Products", compute="_compute_num_of_products")
+    sequence = fields.Integer(copy=False)
 
     @api.depends("combo_line_ids")
     def _compute_num_of_products(self):
