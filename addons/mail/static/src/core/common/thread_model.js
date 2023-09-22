@@ -294,7 +294,7 @@ export class Thread extends Record {
     /** @type {ScrollPosition} */
     scrollPosition = new ScrollPosition();
     showOnlyVideo = false;
-    transientMessages = [];
+    transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
     type;
     /** @type {string} */
