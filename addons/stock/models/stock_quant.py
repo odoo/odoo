@@ -960,12 +960,12 @@ class StockQuant(models.Model):
     def _get_quants_by_products_locations(self, product_ids, location_ids):
         quants_by_product = defaultdict(lambda: self.env['stock.quant'])
         if product_ids and location_ids:
-            needed_quants = self.env['stock.quant'].read_group([('product_id', 'in', product_ids.ids),
+            needed_quants = self.env['stock.quant']._read_group([('product_id', 'in', product_ids.ids),
                                                                 ('location_id', 'child_of', location_ids.ids)],
-                                                            ['ids:array_agg(id)', 'product_id'],
-                                                            ['product_id'])
-            for quant in needed_quants:
-                quants_by_product[quant['product_id'][0]] = self.env['stock.quant'].browse(quant['ids'])
+                                                            ['product_id'],
+                                                            ['id:recordset'])
+            for product, quants in needed_quants:
+                quants_by_product[product.id] = quants
         return quants_by_product
 
     @api.model

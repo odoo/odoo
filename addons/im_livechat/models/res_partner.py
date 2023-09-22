@@ -18,19 +18,18 @@ class Partners(models.Model):
             return result
         lang_name_by_code = {code: name for code, name in self.env['res.lang'].get_installed()}
         formatted_partner_by_id = {formatted_partner['id']: formatted_partner for formatted_partner in result['partners']}
-        invite_by_self_count_by_partner_id = {
-            result['partner_id'][0]: result['partner_id_count']
-            for result in self.env["discuss.channel.member"].read_group(
+        invite_by_self_count_by_partner_id = dict(
+            self.env["discuss.channel.member"]._read_group(
                 [["create_uid", "=", self.env.user.id], ["partner_id", "in", partners.ids]],
-                fields=[],
                 groupby=["partner_id"],
+                aggregates=['__count'],
             )
-        }
+        )
         active_livechat_partner_ids = self.env['im_livechat.channel'].search([]).available_operator_ids.partner_id.ids
         for partner in partners:
             formatted_partner_by_id[partner.id].update({
                 'lang_name': lang_name_by_code[partner.lang],
-                'invite_by_self_count': invite_by_self_count_by_partner_id.get(partner.id, 0),
+                'invite_by_self_count': invite_by_self_count_by_partner_id.get(partner, 0),
                 'is_available': partner.id in active_livechat_partner_ids,
             })
         return result
