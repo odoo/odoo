@@ -38,8 +38,15 @@ export const companyService = {
     dependencies: ["user", "router", "cookie", "action"],
     start(env, { user, router, cookie, action }) {
         let cids;
-        if ("cids" in router.current.hash) {
-            cids = parseCompanyIds(router.current.hash.cids, CIDS_HASH_SEPARATOR);
+        const hash = router.current.hash;
+        if ("cids" in hash) {
+            // backward compatibility s.t. old urls (still using "," as separator) keep working
+            // deprecated as of 17.0
+            let separator = CIDS_HASH_SEPARATOR;
+            if (typeof hash.cids === "string" && !hash.cids.includes(CIDS_HASH_SEPARATOR)) {
+                separator = ",";
+            }
+            cids = parseCompanyIds(hash.cids, separator);
         } else if ("cids" in cookie.current) {
             cids = parseCompanyIds(cookie.current.cids);
         }
