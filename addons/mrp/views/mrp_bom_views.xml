@@ -179,15 +179,17 @@
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials" sample="1">
+                <tree string="Bill of Materials" sample="1" multi_edit="1">
                     <field name="active" column_invisible="True"/>
                     <field name="sequence" widget="handle"/>
+                    <field name="company_id" column_invisible="True"/>
                     <field name="product_tmpl_id"/>
                     <field name="code" optional="show"/>
                     <field name="type"/>
                     <field name="product_id" groups="product.group_product_variant" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="product_qty" optional="hide"/>
+                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="product_uom_id" groups="uom.group_uom" optional="hide" string="Unit of Measure"/>
                 </tree>
             </field>
