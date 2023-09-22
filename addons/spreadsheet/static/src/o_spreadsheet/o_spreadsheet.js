@@ -1031,13 +1031,17 @@
         return position === "after" ? base + 1 : base;
     }
     /**
-     * Compare two objects.
+     * Compares two objects.
      */
     function deepEquals(o1, o2) {
         if (o1 === o2)
             return true;
         if ((o1 && !o2) || (o2 && !o1))
             return false;
+        if (typeof o1 !== typeof o2)
+            return false;
+        if (typeof o1 !== "object")
+            return o1 === o2;
         // Objects can have different keys if the values are undefined
         const keys = new Set();
         Object.keys(o1).forEach((key) => keys.add(key));
@@ -4803,6 +4807,7 @@
     padding: 10px;
     width: ${ERROR_TOOLTIP_WIDTH}px;
     box-sizing: border-box !important;
+    overflow-wrap: break-word;
   }
 `;
     class ErrorToolTip extends owl.Component {
@@ -22218,9 +22223,11 @@
             }
         }
         function updateMousePosition(e) {
-            x = e.offsetX;
-            y = e.offsetY;
-            lastMoved = Date.now();
+            if (gridRef.el === e.target) {
+                x = e.offsetX;
+                y = e.offsetY;
+                lastMoved = Date.now();
+            }
         }
         function recompute() {
             const { col, row } = getPosition();
@@ -33720,6 +33727,7 @@
         // stores the computed styles in the format of computedStyles.sheetName[col][row] = Style
         computedStyles = {};
         computedIcons = {};
+        uuidGenerator = new UuidGenerator();
         // ---------------------------------------------------------------------------
         // Command Handling
         // ---------------------------------------------------------------------------
@@ -34067,12 +34075,19 @@
                             this.adaptRules(origin.sheetId, cf, [xc], toRemoveRange);
                         }
                         else {
-                            this.adaptRules(target.sheetId, cf, [xc], []);
                             this.adaptRules(origin.sheetId, cf, [], toRemoveRange);
+                            const cfToCopyTo = this.getCFToCopyTo(target.sheetId, cf);
+                            this.adaptRules(target.sheetId, cfToCopyTo, [xc], []);
                         }
                     }
                 }
             }
+        }
+        getCFToCopyTo(targetSheetId, originCF) {
+            const cfInTarget = this.getters
+                .getConditionalFormats(targetSheetId)
+                .find((cf) => cf.stopIfTrue === originCF.stopIfTrue && deepEquals(cf.rule, originCF.rule));
+            return cfInTarget ? cfInTarget : { ...originCF, id: this.uuidGenerator.uuidv4(), ranges: [] };
         }
     }
 
@@ -40191,7 +40206,7 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CUT":
-                    const zones = cmd.cutTarget || this.getters.getSelectedZones();
+                    const zones = this.getters.getSelectedZones();
                     const state = this.getClipboardState(zones, cmd.type);
                     return state.isCutAllowed(zones);
                 case "PASTE":
@@ -40221,7 +40236,7 @@
             switch (cmd.type) {
                 case "COPY":
                 case "CUT":
-                    const zones = ("cutTarget" in cmd && cmd.cutTarget) || this.getters.getSelectedZones();
+                    const zones = this.getters.getSelectedZones();
                     this.state = this.getClipboardState(zones, cmd.type);
                     this.status = "visible";
                     break;
@@ -41641,26 +41656,24 @@
             const isBasedBefore = cmd.base < start;
             const deltaCol = isBasedBefore && isCol ? thickness : 0;
             const deltaRow = isBasedBefore && !isCol ? thickness : 0;
-            this.dispatch("CUT", {
-                cutTarget: [
-                    {
-                        left: isCol ? start + deltaCol : 0,
-                        right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
-                        top: !isCol ? start + deltaRow : 0,
-                        bottom: !isCol ? end + deltaRow : this.getters.getNumberRows(cmd.sheetId) - 1,
-                    },
-                ],
-            });
-            this.dispatch("PASTE", {
-                target: [
-                    {
-                        left: isCol ? cmd.base : 0,
-                        right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
-                        top: !isCol ? cmd.base : 0,
-                        bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
-                    },
-                ],
-            });
+            const target = [
+                {
+                    left: isCol ? start + deltaCol : 0,
+                    right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
+                    top: !isCol ? start + deltaRow : 0,
+                    bottom: !isCol ? end + deltaRow : this.getters.getNumberRows(cmd.sheetId) - 1,
+                },
+            ];
+            const state = new ClipboardCellsState(target, "CUT", this.getters, this.dispatch, this.selection);
+            const pasteTarget = [
+                {
+                    left: isCol ? cmd.base : 0,
+                    right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
+                    top: !isCol ? cmd.base : 0,
+                    bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
+                },
+            ];
+            state.paste(pasteTarget, { selectTarget: true });
             const toRemove = isBasedBefore ? cmd.elements.map((el) => el + thickness) : cmd.elements;
             let currentIndex = cmd.base;
             for (const element of toRemove) {
@@ -47706,9 +47719,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.10';
-    __info__.date = '2023-09-12T12:05:50.708Z';
-    __info__.hash = '3a95562';
+    __info__.version = '16.3.11';
+    __info__.date = '2023-09-22T07:48:43.821Z';
+    __info__.hash = '245df8c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
