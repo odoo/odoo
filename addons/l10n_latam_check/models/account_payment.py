@@ -117,9 +117,13 @@ class AccountPayment(models.Model):
                 raise ValidationError(error_message)
 
     @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
-                 'check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
+                 'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
     def _compute_l10n_latam_check_warning_msg(self):
-        """ Compute warning message for latam checks checks """
+        """
+        Compute warning message for latam checks checks
+        We use l10n_latam_check_number as de dependency because on the interface this is the field the user is using.
+        Another approach could be to add an onchange on _inverse_l10n_latam_check_number method
+        """
         self.l10n_latam_check_warning_msg = False
         latam_draft_checks = self.filtered(
             lambda x: x.state == 'draft' and (x.l10n_latam_manual_checks or x.payment_method_line_id.code in [
@@ -127,13 +131,13 @@ class AccountPayment(models.Model):
         for rec in latam_draft_checks:
             msgs = rec._get_blocking_l10n_latam_warning_msg()
             # new third party check
-            if rec.check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
+            if rec.l10n_latam_check_number and rec.payment_method_line_id.code == 'new_third_party_checks' and \
                     rec.l10n_latam_check_bank_id and rec.l10n_latam_check_issuer_vat:
                 same_checks = self.search([
                     ('company_id', '=', rec.company_id.id),
                     ('l10n_latam_check_bank_id', '=', rec.l10n_latam_check_bank_id.id),
                     ('l10n_latam_check_issuer_vat', '=', rec.l10n_latam_check_issuer_vat),
-                    ('check_number', '=', rec.check_number),
+                    ('check_number', '=', rec.l10n_latam_check_number),
                     ('id', '!=', rec._origin.id)])
                 if same_checks:
                     msgs.append(_(
