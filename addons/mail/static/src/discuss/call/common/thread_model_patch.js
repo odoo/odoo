@@ -9,39 +9,48 @@ patch(Thread.prototype, {
     update(data) {
         super.update(data);
         if ("rtc_inviting_session" in data) {
-            this.Model.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {
-                thread: this,
-                record: data.rtc_inviting_session,
-            });
-            this.rtcInvitingSession = this._store.RtcSession.insert({
-                id: data.rtc_inviting_session.id,
-            });
+            const session = this._store.RtcSession.insert(data.rtc_inviting_session);
+            if (session.notIn(this.rtcSessions)) {
+                this.rtcSessions.push(session);
+            }
             if (!this._store.ringingThreads.includes(this.localId)) {
                 this._store.ringingThreads.push(this.localId);
             }
         }
+        let rtcContinue = true;
         if ("rtcInvitingSession" in data) {
             if (Array.isArray(data.rtcInvitingSession)) {
                 if (data.rtcInvitingSession[0][0] === "unlink") {
                     this.rtcInvitingSession = undefined;
                     removeFromArray(this._store.ringingThreads, this.localId);
                 }
-                return;
+                rtcContinue = false;
             }
-            this.Model.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {
-                thread: this,
-                record: data.rtcInvitingSession,
-            });
-            this.rtcInvitingSession = this._store.RtcSession.insert({
-                id: data.rtcInvitingSession.id,
-            });
+            const session = this._store.RtcSession.insert(data.rtcInvitingSession);
+            if (session.notIn(this.rtcSessions)) {
+                this.rtcSessions.push(session);
+            }
             this._store.ringingThreads.push(this.localId);
         }
-        if ("rtcSessions" in data) {
-            this.Model.env.bus.trigger("RTC-SERVICE:UPDATE_RTC_SESSIONS", {
-                thread: this,
-                commands: data.rtcSessions,
-            });
+        if (rtcContinue && "rtcSessions" in data) {
+            for (const command of data.rtcSessions) {
+                const sessionsData = command[1];
+                switch (command[0]) {
+                    case "insert-and-unlink":
+                        for (const rtcSessionData of sessionsData) {
+                            this.Model.env.services["discuss.rtc"].deleteSession(rtcSessionData.id);
+                        }
+                        break;
+                    case "insert":
+                        for (const rtcSessionData of sessionsData) {
+                            const session = this._store.RtcSession.insert(rtcSessionData);
+                            if (session.notIn(this.rtcSessions)) {
+                                this.rtcSessions.push(session);
+                            }
+                        }
+                        break;
+                }
+            }
         }
     },
 });
