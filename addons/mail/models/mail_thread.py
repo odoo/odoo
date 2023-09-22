@@ -4406,7 +4406,7 @@ class MailThread(models.AbstractModel):
             'Message': {
                 'id': message.id,
                 'body': message.body,
-                'attachments': message.attachment_ids.sorted("id")._attachment_format(),
+                'attachments': message.attachment_ids.sorted("id")._discuss_format(),
                 'pinned_at': message.pinned_at,
                 'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message.partner_ids],
                 'write_date': message.write_date,
@@ -4457,7 +4457,7 @@ class MailThread(models.AbstractModel):
         if 'activities' in request_list:
             res['activities'] = self.with_context(active_test=True).activity_ids.activity_format()
         if 'attachments' in request_list:
-            res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
+            res['attachments'] = self._get_mail_thread_data_attachments()._discuss_format()
         if 'followers' in request_list:
             res['followersCount'] = self.env['mail.followers'].search_count([
                 ("res_id", "=", self.id),

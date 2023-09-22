@@ -26,7 +26,7 @@ patch(MockServer.prototype, {
             if (args.body.get("voice")) {
                 this.mockCreate("discuss.voice.metadata", { attachment_id: attachmentId });
             }
-            return this._mockIrAttachment_attachmentFormat([attachmentId])[0];
+            return this._mockIrAttachment_discussFormat([attachmentId])[0];
         }
         return super.performRPC(...arguments);
     },
@@ -144,7 +144,7 @@ patch(MockServer.prototype, {
                     Message: {
                         id: args.message_id,
                         body: args.body,
-                        attachments: this._mockIrAttachment_attachmentFormat(args.attachment_ids),
+                        attachments: this._mockIrAttachment_discussFormat(args.attachment_ids),
                     },
                 }
             );
@@ -634,7 +634,7 @@ patch(MockServer.prototype, {
                 ["res_id", "=", thread.id],
                 ["res_model", "=", thread_model],
             ]); // order not done for simplicity
-            res["attachments"] = this._mockIrAttachment_attachmentFormat(
+            res["attachments"] = this._mockIrAttachment_discussFormat(
                 attachments.map((attachment) => attachment.id)
             );
             // Specific implementation of mail.thread.main.attachment

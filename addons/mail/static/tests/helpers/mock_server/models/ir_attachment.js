@@ -12,13 +12,13 @@ patch(MockServer.prototype, {
         return super._performRPC(route, args);
     },
     /**
-     * Simulates `_attachment_format` on `ir.attachment`.
+     * Simulates `_discuss_format` on `ir.attachment`.
      *
      * @private
      * @param {integer} ids
      * @returns {Object}
      */
-    _mockIrAttachment_attachmentFormat(ids) {
+    _mockIrAttachment_discussFormat(ids) {
         const attachments = this.mockRead("ir.attachment", [ids]);
         return attachments.map((attachment) => {
             const res = {

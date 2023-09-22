@@ -73,7 +73,7 @@ class IrAttachment(models.Model):
         self.ensure_one()
         return self.env.user.partner_id
 
-    def _attachment_format(self):
+    def _discuss_format(self):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         return [{
             'checksum': attachment.checksum,

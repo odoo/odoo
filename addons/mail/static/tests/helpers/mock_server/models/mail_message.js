@@ -228,7 +228,7 @@ patch(MockServer.prototype, {
             const attachments = this.getRecords("ir.attachment", [
                 ["id", "in", message.attachment_ids],
             ]);
-            const formattedAttachments = this._mockIrAttachment_attachmentFormat(
+            const formattedAttachments = this._mockIrAttachment_discussFormat(
                 attachments.map((attachment) => attachment.id)
             ).sort((a1, a2) => (a1.id < a2.id ? -1 : 1)); // sort attachments from oldest to most recent
             const allNotifications = this.getRecords("mail.notification", [

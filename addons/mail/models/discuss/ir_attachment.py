@@ -17,8 +17,8 @@ class IrAttachment(models.Model):
             return guest
         return super()._bus_notification_target()
 
-    def _attachment_format(self):
-        attachment_format = super()._attachment_format()
+    def _discuss_format(self):
+        attachment_format = super()._discuss_format()
         for a in attachment_format:
         # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
             a["voice"] = bool(self.browse(a["id"]).with_prefetch(self._prefetch_ids).sudo().voice_ids)
