@@ -4,7 +4,7 @@
 import ast
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import AND
@@ -13,7 +13,7 @@ from odoo.osv.expression import AND
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated to this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
@@ -54,11 +54,47 @@ class SaleOrder(models.Model):
             order.show_task_button = order.show_project_button or order.tasks_count
             order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count
 
+    def _search_tasks_ids(self, operator, value):
+        is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
+        is_id_eq_search = operator in ['=', '!='] and isinstance(value, int)
+        is_id_in_search = operator in ['in', 'not in'] and isinstance(value, list) and all(isinstance(item, int) for item in value)
+        if not (is_name_search or is_id_eq_search or is_id_in_search):
+            raise NotImplementedError(_('Operation not supported'))
+
+        if is_name_search:
+            tasks_ids = self.env['project.task']._name_search(value, operator=operator, limit=None)
+        elif is_id_eq_search:
+            tasks_ids = value if operator == '=' else self.env['project.task']._search([('id', '!=', value)], order='id')
+        else:  # is_id_in_search
+            tasks_ids = self.env['project.task']._search([('id', operator, value)], order='id')
+
+        tasks = self.env['project.task'].browse(tasks_ids)
+        return [('id', 'in', tasks.sale_order_id.ids)]
+
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
-        for order in self:
-            order.tasks_ids = self.env['project.task'].search(['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
-            order.tasks_count = len(order.tasks_ids)
+        tasks_per_so = self.env['project.task']._read_group(
+            domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            groupby=['sale_order_id'],
+            aggregates=['id:recordset', '__count']
+        )
+        so_with_tasks = self.env['sale.order']
+        for order, tasks_ids, tasks_count in tasks_per_so:
+            if order:
+                order.tasks_ids = tasks_ids
+                order.tasks_count = tasks_count
+                so_with_tasks += order
+            else:
+                # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
+                for task in tasks_ids:
+                    task_so = task.sale_line_id.order_id
+                    task_so.tasks_ids = [Command.link(task.id)]
+                    task_so.tasks_count += 1
+                    so_with_tasks += task_so
+        remaining_orders = self - so_with_tasks
+        if remaining_orders:
+            remaining_orders.tasks_ids = [Command.clear()]
+            remaining_orders.tasks_count = 0
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
