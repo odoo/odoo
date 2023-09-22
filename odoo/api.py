@@ -29,7 +29,7 @@ except ImportError:
     from decorator import decorator
 
 from .exceptions import AccessError, CacheMiss
-from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, StackMap
+from .tools import frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
 from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -1249,14 +1249,14 @@ class Cache(object):
 
             # select the column for the given ids
             query = Query(env.cr, model._table, model._table_query)
-            qname = model._inherits_join_calc(model._table, field.name, query)
+            sql_id = SQL.identifier(model._table, 'id')
+            sql_field = model._field_to_sql(model._table, field.name, query)
             if field.type == 'binary' and (
                 model.env.context.get('bin_size') or model.env.context.get('bin_size_' + field.name)
             ):
-                qname = f'pg_size_pretty(length({qname})::bigint)'
-            query.add_where(f'"{model._table}".id IN %s', [tuple(ids)])
-            query_str, params = query.select(f'"{model._table}".id', qname)
-            env.cr.execute(query_str, params)
+                sql_field = SQL('pg_size_pretty(length(%s)::bigint)', sql_field)
+            query.add_where(SQL("%s IN %s", sql_id, tuple(ids)))
+            env.cr.execute(query.select(sql_id, sql_field))
 
             # compare returned values with corresponding values in cache
             for id_, value in env.cr.fetchall():
