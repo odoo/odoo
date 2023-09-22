@@ -148,7 +148,7 @@ class UpgradeHook(object):
     """Makes the legacy `migrations` package being `odoo.upgrade`"""
 
     def find_module(self, name, path=None):
-        if re.match(r"^odoo.addons.base.maintenance.migrations\b", name):
+        if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", name):
             # We can't trigger a DeprecationWarning in this case.
             # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
             # the tests, and the common files (utility functions) still needs to import from the
