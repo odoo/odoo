@@ -75,8 +75,8 @@ export class Thread extends Record {
         onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
         onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
         onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
-                this.store.discuss.threadLocalId = null;
+            if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
+                delete this.store.discuss.thread;
             }
         });
         thread.update(data);
@@ -199,16 +199,13 @@ export class Thread extends Record {
                 );
             }
         }
-        if (
-            this.type === "channel" &&
-            !this._store.discuss.channels.threads.includes(this.localId)
-        ) {
-            this._store.discuss.channels.threads.push(this.localId);
+        if (this.type === "channel" && !this._store.discuss.channels.threads.includes(this)) {
+            this._store.discuss.channels.threads.push(this);
         } else if (
             (this.type === "chat" || this.type === "group") &&
-            !this._store.discuss.chats.threads.includes(this.localId)
+            !this._store.discuss.chats.threads.includes(this)
         ) {
-            this._store.discuss.chats.threads.push(this.localId);
+            this._store.discuss.chats.threads.push(this);
         }
         if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
             this.type = "chatter";

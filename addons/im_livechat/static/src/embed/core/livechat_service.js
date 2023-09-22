@@ -157,7 +157,7 @@ export class LivechatService {
             (c) => c.thread.id === this.TEMPORARY_ID
         );
         if (chatWindow) {
-            this.env.services["mail.thread"].remove(chatWindow.thread);
+            chatWindow.thread?.delete();
             if (!this.thread) {
                 this.chatWindowService.close(chatWindow);
                 return;

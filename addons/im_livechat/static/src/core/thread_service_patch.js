@@ -2,7 +2,6 @@
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { ThreadService } from "@mail/core/common/thread_service";
-import { removeFromArray } from "@mail/utils/common/arrays";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -17,12 +16,6 @@ patch(ThreadService.prototype, {
         if (this.ui.isSmall && thread.type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
-    },
-    remove(thread) {
-        if (thread.type === "livechat") {
-            removeFromArray(this.store.discuss.livechat.threads, thread.localId);
-        }
-        super.remove(thread);
     },
 
     canLeave(thread) {
@@ -46,27 +39,18 @@ patch(ThreadService.prototype, {
     sortChannels() {
         super.sortChannels();
         // Live chats are sorted by most recent interest date time in the sidebar.
-        this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.Thread.records[localId_1];
-            const thread2 = this.store.Thread.records[localId_2];
-            return thread2.lastInterestDateTime?.ts - thread1.lastInterestDateTime?.ts;
-        });
+        this.store.discuss.livechat.threads.sort(
+            (t1, t2) => t2.lastInterestDateTime?.ts - t1.lastInterestDateTime?.ts
+        );
     },
 
     /**
      * @returns {boolean} Whether the livechat thread changed.
      */
     goToOldestUnreadLivechatThread() {
-        const oldestUnreadThread =
-            this.store.Thread.records[
-                Object.values(this.store.discuss.livechat.threads)
-                    .filter((localId) => this.store.Thread.records[localId].isUnread)
-                    .sort(
-                        (localId_1, localId_2) =>
-                            this.store.Thread.records[localId_1].lastInterestDateTime?.ts -
-                            this.store.Thread.records[localId_2].lastInterestDateTime?.ts
-                    )[0]
-            ];
+        const oldestUnreadThread = this.store.discuss.livechat.threads
+            .filter((thread) => thread.isUnread)
+            .sort((t1, t2) => t1.lastInterestDateTime?.ts - t2.lastInterestDateTime?.ts)[0];
         if (!oldestUnreadThread) {
             return false;
         }

@@ -4,7 +4,6 @@ import { onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { modelRegistry, Record, RecordInverses, RecordList } from "./record";
@@ -22,6 +21,10 @@ export class Store {
     ChatWindow;
     /** @type {typeof import("@mail/core/common/composer_model").Composer} */
     Composer;
+    /** @type {typeof import("@mail/core/common/discuss_app_model").DiscussApp} */
+    DiscussApp;
+    /** @type {typeof import("@mail/core/common/discuss_app_category_model").DiscussAppCategory} */
+    DiscussAppCategory;
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
     Follower;
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
@@ -70,7 +73,6 @@ export class Store {
      */
     setup(env) {
         this.env = env;
-        this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
     }
 
     updateBusSubscription() {
@@ -141,43 +143,7 @@ export class Store {
         counter: 0,
     };
 
-    // discuss app
-    discuss = {
-        activeTab: "all", // can be 'mailbox', 'all', 'channel' or 'chat'
-        isActive: false,
-        threadLocalId: null,
-        channels: {
-            extraClass: "o-mail-DiscussSidebarCategory-channel",
-            id: "channels",
-            name: _t("Channels"),
-            isOpen: false,
-            canView: true,
-            canAdd: true,
-            serverStateKey: "is_discuss_sidebar_category_channel_open",
-            addTitle: _t("Add or join a channel"),
-            addHotkey: "c",
-            threads: [], // list of ids
-        },
-        chats: {
-            extraClass: "o-mail-DiscussSidebarCategory-chat",
-            id: "chats",
-            name: _t("Direct messages"),
-            isOpen: false,
-            canView: false,
-            canAdd: true,
-            serverStateKey: "is_discuss_sidebar_category_chat_open",
-            addTitle: _t("Start a conversation"),
-            addHotkey: "d",
-            threads: [], // list of ids
-        },
-        // mailboxes in sidebar
-        /** @type {import("models").Thread} */
-        inbox: null,
-        /** @type {import("models").Thread} */
-        starred: null,
-        /** @type {import("models").Thread} */
-        history: null,
-    };
+    discuss = Record.one("DiscussApp");
 
     activityCounter = 0;
 
@@ -245,7 +211,7 @@ export const storeService = {
                                 }
                                 return Reflect.get(target, name, receiver);
                             },
-                            deleteProperty(target, key) {
+                            deleteProperty(target, name) {
                                 if (name !== "__rels__" && target.__rels__.has(name)) {
                                     const r1 = target;
                                     const l1 = r1.__rels__.get(name);
@@ -253,8 +219,9 @@ export const storeService = {
                                     if (r2) {
                                         r2.__invs__.delete(r1.localId, name);
                                     }
+                                    r1.__rels__.set(name, undefined);
                                 }
-                                const ret = Reflect.deleteProperty(target, key);
+                                const ret = Reflect.deleteProperty(target, name);
                                 return ret;
                             },
                             /** @param {Record} receiver */
@@ -315,13 +282,14 @@ export const storeService = {
                 Class.__rels__.add(name);
             }
         }
+        res.discuss = res.DiscussApp.insert();
+        res.discuss.activeTab = env.services.ui.isSmall ? "mailbox" : "all";
         onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";
             } else {
-                res.discuss.activeTab =
-                    res.Thread.records[res.discuss.threadLocalId]?.type ?? "all";
+                res.discuss.activeTab = res.discuss.thread?.type ?? "all";
             }
         });
         return res;
