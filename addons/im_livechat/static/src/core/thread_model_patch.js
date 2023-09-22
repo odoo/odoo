@@ -22,7 +22,7 @@ patch(Thread, {
                 });
             }
             if (isUnknown) {
-                this.store.discuss.livechat.threads.push(thread.localId);
+                this.store.discuss.livechat.threads.push(thread);
                 this.env.services["mail.thread"].sortChannels();
             }
         }

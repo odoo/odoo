@@ -5,10 +5,7 @@ import { discussSidebarCategoriesRegistry } from "@mail/discuss/core/web/discuss
 discussSidebarCategoriesRegistry.add(
     "livechats",
     {
-        predicate: (store) =>
-            store.discuss.livechat.threads.some(
-                (localId) => store.Thread.records[localId]?.is_pinned
-            ),
+        predicate: (store) => store.discuss.livechat.threads.some((thread) => thread?.is_pinned),
         value: (store) => store.discuss.livechat,
     },
     { sequence: 20 }
