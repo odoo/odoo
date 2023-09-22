@@ -35,20 +35,12 @@ patch(Thread.prototype, {
         return super.typesAllowingCalls.concat(["livechat"]);
     },
 
-    get isChannel() {
-        return this.type === "livechat" || super.isChannel;
-    },
-
     get hasMemberList() {
         return this.type === "livechat" || super.hasMemberList;
     },
 
     get isChatChannel() {
         return this.type === "livechat" || super.isChatChannel;
-    },
-
-    get allowSetLastSeenMessage() {
-        return this.type === "livechat" || super.allowSetLastSeenMessage;
     },
 
     get correspondents() {

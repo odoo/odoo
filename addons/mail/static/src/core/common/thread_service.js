@@ -89,7 +89,7 @@ export class ThreadService {
         thread.seen_message_id = newestPersistentMessage?.id ?? false;
         if (
             thread.message_unread_counter > 0 &&
-            thread.allowSetLastSeenMessage &&
+            thread.model === "discuss.channel" &&
             newestPersistentMessage
         ) {
             this.rpc("/discuss/channel/set_last_seen_message", {
@@ -101,7 +101,7 @@ export class ThreadService {
         } else if (newestPersistentMessage) {
             this.updateSeen(thread);
         }
-        if (thread.hasNeedactionMessages) {
+        if (thread.needactionMessages.length > 0) {
             this.markAllMessagesAsRead(thread);
         }
     }
@@ -268,8 +268,8 @@ export class ThreadService {
                     (message) =>
                         message.isNeedaction &&
                         (thread.needactionMessages.length === 0 ||
-                            message.id < thread.oldestNeedactionMessage.id ||
-                            message.id > thread.newestNeedactionMessage.id)
+                            message.id < thread.needactionMessages[0].id ||
+                            message.id > thread.needactionMessages.at(-1).id)
                 );
                 thread.needactionMessages.splice(startNeedactionIndex, 0, ...filteredNeedaction);
             }

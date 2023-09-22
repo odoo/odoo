@@ -23,7 +23,7 @@ patch(SuggestionService.prototype, {
         return super.searchSuggestions(...arguments);
     },
     searchChannelCommand(cleanedSearchTerm, thread, sort) {
-        if (!thread.isChannel) {
+        if (!thread.model === "discuss.channel") {
             // channel commands are channel specific
             return;
         }
