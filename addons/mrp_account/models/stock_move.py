@@ -35,12 +35,12 @@ class StockMove(models.Model):
 
     def _get_src_account(self, accounts_data):
         if self._is_production():
-            return self.location_id.valuation_out_account_id.id or accounts_data['production'].id
+            return self.location_id.valuation_out_account_id.id or accounts_data['production'].id or accounts_data['stock_input'].id
         return super()._get_src_account(accounts_data)
 
     def _get_dest_account(self, accounts_data):
         if self._is_production_consumed():
-            return self.location_dest_id.valuation_in_account_id.id or accounts_data['production'].id
+            return self.location_dest_id.valuation_in_account_id.id or accounts_data['production'].id or accounts_data['stock_output'].id
         return super()._get_dest_account(accounts_data)
 
     def _is_production(self):
