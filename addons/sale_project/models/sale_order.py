@@ -3,14 +3,14 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.tools.safe_eval import safe_eval
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated to this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
@@ -36,11 +36,37 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_product_milestone = order.order_line.product_id.filtered(lambda p: p.service_policy == 'delivered_milestones')
 
+    def _search_tasks_ids(self, operator, value):
+        is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
+        is_id_eq_search = operator in ['=', '!='] and isinstance(value, int)
+        is_id_in_search = operator in ['in', 'not in'] and isinstance(value, list) and all(isinstance(item, int) for item in value)
+        if not (is_name_search or is_id_eq_search or is_id_in_search):
+            raise NotImplementedError(_('Operation not supported'))
+
+        if is_name_search:
+            tasks_ids = self.env['project.task']._name_search(value, operator=operator, limit=None)
+        elif is_id_eq_search:
+            tasks_ids = value if operator == '=' else self.env['project.task']._search([('id', '!=', value)], order='id')
+        else:  # is_id_in_search
+            tasks_ids = self.env['project.task']._search([('id', operator, value)], order='id')
+
+        tasks = self.env['project.task'].browse(tasks_ids)
+        return [('id', 'in', tasks.sale_order_id.ids)]
+
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
+        tasks_per_so = self.env['project.task']._read_group(
+            domain=['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            fields=['sale_order_id', 'ids:array_agg(id)'],
+            groupby=['sale_order_id'],
+        )
+        so_to_tasks_and_count = {
+            group['sale_order_id'][0]: {'task_ids': group['ids'], 'count': group['sale_order_id_count']}
+            for group in tasks_per_so
+        }
         for order in self:
-            order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
-            order.tasks_count = len(order.tasks_ids)
+            order.tasks_ids = [Command.set(so_to_tasks_and_count.get(order.id, {}).get('task_ids', []))]
+            order.tasks_count = so_to_tasks_and_count.get(order.id, {}).get('count', 0)
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
