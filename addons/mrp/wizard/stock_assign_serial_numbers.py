@@ -13,16 +13,6 @@ from collections import defaultdict
 class StockAssignSerialNumbers(models.TransientModel):
     _inherit = 'stock.assign.serial'
 
-    def _default_placeholder(self):
-        production_id = self.env['mrp.production'].browse([self._context.get('default_production_id')])
-        if production_id.product_id.tracking == 'serial':
-            placeholder_value = "SN123,LOT001;3|LOT002;3,SN0120\nSN456,LOT002;3|LOT002;3,SN0121"
-        elif production_id.product_id.tracking == 'lot':
-            placeholder_value = "LOT123,5,LOT001;3|LOT002;3,SN0120\nLOT124,5,LOT002;3|LOT002;3,SN0121"
-        else:
-            placeholder_value = ""
-        return placeholder_value
-
     production_id = fields.Many2one('mrp.production', 'Production')
     expected_qty = fields.Float('Expected Quantity', digits='Product Unit of Measure')
     serial_numbers = fields.Text('Produced Serial Numbers')
@@ -31,7 +21,7 @@ class StockAssignSerialNumbers(models.TransientModel):
     show_backorders = fields.Boolean() # Technical field to show the Create Backorder and No Backorder buttons
     multiple_lot_components_names = fields.Text() # Names of components with multiple lots, used to show warning
     mark_as_done = fields.Boolean("Valide all the productions after the split")
-    lot_numbers = fields.Text("components enter by user", default=_default_placeholder)
+    lot_numbers = fields.Text("components enter by user")
     list_of_component = fields.Text(string="list of component")
 
     def action_open_generate_serial_production(self):
@@ -58,9 +48,7 @@ class StockAssignSerialNumbers(models.TransientModel):
                     any(len(lot_and_qty.split(',')) != expected_length and len(lot_and_qty.split(',')) != 1
                         for lot_and_qty in spilt_per_bo):
                 raise UserError("You can not enter Quantity when any components is track by sr!")
-
-            if any(len(lot_and_qty.split(',')) != expected_length and len(lot_and_qty.split(',')) != 1 for lot_and_qty
-                   in spilt_per_bo):
+            if any(len(lot_and_qty.split(',')) != expected_length for lot_and_qty in spilt_per_bo) and any(len(lot_and_qty.split(',')) not in [1, 2] for lot_and_qty in spilt_per_bo):
                 raise UserError("You have entered a some extra or some less component detail!!")
 
             self.serial_numbers = "\n".join(
@@ -111,21 +99,38 @@ class StockAssignSerialNumbers(models.TransientModel):
         if self._context.get('make_mo_done'):
             self.mark_as_done = True
         serial_numbers = self._get_serial_numbers()
-        split_component = self.lot_numbers and self.lot_numbers.split('\n')
 
-        if split_component:
+        split_component = self.lot_numbers and self.lot_numbers.split('\n')
+        total_lot_count = len(split_component[0].split(',')) if split_component else 0
+        grep_index = 2 if self.production_id.product_id.tracking == 'lot' and not self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial') else 1
+        components_lots = []
+        if total_lot_count > grep_index:
+            components_lots = [sc.split(',')[grep_index:] for sc in split_component]
+        if components_lots:
             self.production_id.do_unreserve()
 
         if self.production_id.product_id.tracking == 'lot' and not self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial'):
             mo_name = self.serial_numbers.split('\n')
-            amounts = [int(count.split(';')[1]) for count in mo_name]
+            amounts = []
+            # amounts = [int(mo_qty.split(';')[1]) for mo_qty in mo_name]
+            for mo_qty in mo_name:
+                try:
+                    if ';' in mo_qty:
+                        amounts.append(float(mo_qty.split(';')[1]))
+                    else:
+                        raise UserError(_("Quantity must be defined for the manufacturing order (MO) when finished product is track by lot."))
+                except ValueError:
+                    if mo_qty.split(';')[1] == '':
+                        amounts.append(1)
+                    else:
+                        raise UserError(_("Mo quantity should be decimal"))
         else:
             amounts = [1] * len(serial_numbers)
 
         productions = self.production_id._split_productions(
             {self.production_id: amounts}, cancel_remaining_quantity, set_consumed_qty=False, sml_create=True)
 
-        if split_component and ',' in split_component[0]:
+        if components_lots:
             # user enter components formate : lot_numbers
             #  -----------------------
             # |mo1,sn01,sn02,l1;1|l2:1|
@@ -134,20 +139,20 @@ class StockAssignSerialNumbers(models.TransientModel):
             # prepare_component = defaultdict(<class 'list'>, {63: [['sn01', 'sn02'], ['sn03', 'sn04']], 64: [{'l1': 1,'l2': 1}, {'l2': 2}], 63: [['sn001'], ['sn002']]})
 
             prepare_component = defaultdict(list)
-            for production, components in zip(productions, split_component):
-                temp_ind = 2 if self.production_id.product_id.tracking == 'lot' and not self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial') else 1
+            for production, components in zip(productions, components_lots):
+                temp_ind = 0
                 for move in production.move_raw_ids.filtered(lambda mv: mv.product_id.tracking != 'none'):
                     comp_per_raw = []
                     if move.product_id.tracking == 'serial':
                         for _comp_qty in range(int(move.product_uom_qty)):
-                            comp_per_raw.append(components.split(',')[temp_ind])
+                            comp_per_raw.append(components[temp_ind])
                             temp_ind += 1
                     else:
-                        pairs_of_lot = re.findall(r'(\w+);(\d+)', components.split(',')[temp_ind])
+                        pairs_of_lot = re.findall(r'(\w+);(\d+)', components[temp_ind])
                         if pairs_of_lot:
                             comp_per_raw = {lot_name: int(qty) for lot_name, qty in pairs_of_lot}
                         else:
-                            comp_per_raw = {components.split(',')[temp_ind]: int(move.product_uom_qty)}
+                            comp_per_raw = {components[temp_ind]: int(move.product_uom_qty)}
                         temp_ind += 1
                     prepare_component[move.product_id.id].append(comp_per_raw)
 

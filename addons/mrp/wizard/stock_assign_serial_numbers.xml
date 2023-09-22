@@ -10,13 +10,15 @@
                         <field name="production_id" invisible="1"/>
                         <field name="next_serial_number" invisible="1"/>
                     </group>
-                    <span>Write one line per finished product to produce, with serial numbers as follows:</span><br/>
+                    <span>Write one line per finished product to produce, with serial numbers as follows:</span><br/><br/>
                     <field name="list_of_component" readonly="1"/>
-                    <field class="form-control my-2" name="lot_numbers" widget="lot_numbers"/>
-                    <footer>
-                        <button name="apply" string="Produce" type="object" class="btn-primary" context="{'make_mo_done': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
-                        <button name="apply" string="Prepare MO" type="object" class="btn-primary" context="{'make_mo_confirmed': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    <field class="form-control my-2" name="lot_numbers" placeholder="" widget="lot_numbers"/>
+                    <footer class="d-flex justify-content-between">
+                        <div class="d-flex gap-1">
+                            <button name="apply" string="Produce" type="object" class="btn-primary" context="{'make_mo_done': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
+                            <button name="apply" string="Prepare MO" type="object" class="btn-primary" context="{'make_mo_confirmed': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
+                            <button string="Cancel" class="btn-secondary" special="cancel" />
+                        </div>
                         <div>
                             <button name="action_open_generate_serial_production" string="Generate Serials" type="object" class="float-end btn-link"/>
                         </div>

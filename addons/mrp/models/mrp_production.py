@@ -2746,3 +2746,11 @@ class MrpProduction(models.Model):
                 'context': {'default_production_ids': self.ids},
             }
         return self.action_open_label_layout()
+    def get_placeholder_value(self):
+        if self.product_id.tracking == 'serial':
+            placeholder_value = "SN123,LOT001;3|LOT002;3,SN0120\nSN456,LOT002;3|LOT002;3,SN0121"
+        elif self.product_id.tracking == 'lot':
+            placeholder_value = "LOT123,5,LOT001;3|LOT002;3,SN0120\nLOT124,5,LOT002;3|LOT002;3,SN0121"
+        else:
+            placeholder_value = ""
+        return placeholder_value
