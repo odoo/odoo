@@ -134,7 +134,6 @@ export class Store {
     users = {};
     internalUserGroupId = null;
     registeredImStatusPartners = null;
-    ringingThreads = null;
 
     hasLinkPreviewFeature = true;
 

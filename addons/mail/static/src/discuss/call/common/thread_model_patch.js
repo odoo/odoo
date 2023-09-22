@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Thread } from "@mail/core/common/thread_model";
-import { removeFromArray } from "@mail/utils/common/arrays";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -13,8 +12,8 @@ patch(Thread.prototype, {
             if (session.notIn(this.rtcSessions)) {
                 this.rtcSessions.push(session);
             }
-            if (!this._store.ringingThreads.includes(this.localId)) {
-                this._store.ringingThreads.push(this.localId);
+            if (this.notIn(this._store.discuss.ringingThreads)) {
+                this._store.discuss.ringingThreads.push(this);
             }
         }
         let rtcContinue = true;
@@ -22,15 +21,16 @@ patch(Thread.prototype, {
             if (Array.isArray(data.rtcInvitingSession)) {
                 if (data.rtcInvitingSession[0][0] === "unlink") {
                     this.rtcInvitingSession = undefined;
-                    removeFromArray(this._store.ringingThreads, this.localId);
+                    this._store.discuss.ringingThreads.delete(this);
                 }
                 rtcContinue = false;
+            } else {
+                const session = this._store.RtcSession.insert(data.rtcInvitingSession);
+                if (session.notIn(this.rtcSessions)) {
+                    this.rtcSessions.push(session);
+                }
+                this._store.discuss.ringingThreads.push(this);
             }
-            const session = this._store.RtcSession.insert(data.rtcInvitingSession);
-            if (session.notIn(this.rtcSessions)) {
-                this.rtcSessions.push(session);
-            }
-            this._store.ringingThreads.push(this.localId);
         }
         if (rtcContinue && "rtcSessions" in data) {
             for (const command of data.rtcSessions) {
