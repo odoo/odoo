@@ -611,13 +611,17 @@
         return position === "after" ? base + 1 : base;
     }
     /**
-     * Compare two objects.
+     * Compares two objects.
      */
     function deepEquals(o1, o2) {
         if (o1 === o2)
             return true;
         if ((o1 && !o2) || (o2 && !o1))
             return false;
+        if (typeof o1 !== typeof o2)
+            return false;
+        if (typeof o1 !== "object")
+            return o1 === o2;
         // Objects can have different keys if the values are undefined
         const keys = new Set();
         Object.keys(o1).forEach((key) => keys.add(key));
@@ -5262,6 +5266,7 @@
     padding: 10px;
     width: ${ERROR_TOOLTIP_WIDTH}px;
     box-sizing: border-box !important;
+    overflow-wrap: break-word;
   }
 `;
     class ErrorToolTip extends owl.Component {
@@ -15117,13 +15122,42 @@
         }
         return true;
     }
-    /** Change a content string to its canonical form (en_US locale) */
+    /**
+     * Change a content string from the given locale to its canonical form (en_US locale). Don't convert date string.
+     *
+     * @example
+     * canonicalizeNumberContent("=SUM(1,5; 02/12/2012)", FR_LOCALE) // "=SUM(1.5, 02/12/2012)"
+     * canonicalizeNumberContent("125,9", FR_LOCALE) // "125.9"
+     * canonicalizeNumberContent("02/12/2012", FR_LOCALE) // "02/12/2012"
+     */
+    function canonicalizeNumberContent(content, locale) {
+        return content.startsWith("=")
+            ? canonicalizeFormula$1(content, locale)
+            : canonicalizeNumberLiteral(content, locale);
+    }
+    /**
+     * Change a content string from the given locale to its canonical form (en_US locale). Also convert date string.
+     * This is destructive and won't preserve the original format.
+     *
+     * @example
+     * canonicalizeContent("=SUM(1,5; 5)", FR_LOCALE) // "=SUM(1.5, 5)"
+     * canonicalizeContent("125,9", FR_LOCALE) // "125.9"
+     * canonicalizeContent("02/12/2012", FR_LOCALE) // "12/02/2012"
+     * canonicalizeContent("02-12-2012", FR_LOCALE) // "12/02/2012"
+     */
     function canonicalizeContent(content, locale) {
         return content.startsWith("=")
             ? canonicalizeFormula$1(content, locale)
-            : toCanonicalNumberString(content, locale);
+            : canonicalizeLiteral(content, locale);
     }
-    /** Change the content of a cell to its canonical form (en_US locale) */
+    /**
+     * Change a content string from its canonical form (en_US locale) to the given locale. Also convert date string.
+     *
+     * @example
+     * localizeContent("=SUM(1.5, 5)", FR_LOCALE) // "=SUM(1,5; 5)"
+     * localizeContent("125.9", FR_LOCALE) // "125,9"
+     * localizeContent("12/02/2012", FR_LOCALE) // "02/12/2012"
+     */
     function localizeContent(content, locale) {
         return content.startsWith("=")
             ? localizeFormula(content, locale)
@@ -15158,23 +15192,74 @@
         return localizedFormula;
     }
     /**
-     *  Replace localized number with localized decimal separator by a number with "." as decimal separator
+     * Change a literal string from the given locale to its canonical form (en_US locale). Don't convert date string.
+     *
+     * @example
+     * canonicalizeNumberLiteral("125,9", FR_LOCALE) // "125.9"
+     * canonicalizeNumberLiteral("02/12/2012", FR_LOCALE) // "02/12/2012"
      */
-    function toCanonicalNumberString(content, locale) {
+    function canonicalizeNumberLiteral(content, locale) {
         if (locale.decimalSeparator === "." || !isNumber(content, locale)) {
             return content;
         }
         return content.replace(locale.decimalSeparator, ".");
     }
-    function localizeLiteral(content, locale) {
-        if (locale.decimalSeparator === "." || !isNumber(content, DEFAULT_LOCALE)) {
-            return content;
+    /**
+     * Change a content string from the given locale to its canonical form (en_US locale). Also convert date string.
+     * This is destructive and won't preserve the original format.
+     *
+     * @example
+     * canonicalizeLiteral("125,9", FR_LOCALE) // "125.9"
+     * canonicalizeLiteral("02/12/2012", FR_LOCALE) // "12/02/2012"
+     * canonicalizeLiteral("02-12-2012", FR_LOCALE) // "12/02/2012"
+     */
+    function canonicalizeLiteral(content, locale) {
+        if (isDateTime(content, locale)) {
+            const dateNumber = toNumber(content, locale);
+            let format = DEFAULT_LOCALE.dateFormat;
+            if (!Number.isInteger(dateNumber)) {
+                format += " " + DEFAULT_LOCALE.timeFormat;
+            }
+            return formatValue(dateNumber, { locale: DEFAULT_LOCALE, format });
+        }
+        return canonicalizeNumberLiteral(content, locale);
+    }
+    /**
+     * Change a literal string from its canonical form (en_US locale) to the given locale. Don't convert date string.
+     * This is destructive and won't preserve the original format.
+     *
+     * @example
+     * localizeNumberLiteral("125.9", FR_LOCALE) // "125,9"
+     * localizeNumberLiteral("12/02/2012", FR_LOCALE) // "12/02/2012"
+     * localizeNumberLiteral("12-02-2012", FR_LOCALE) // "12/02/2012"
+     */
+    function localizeNumberLiteral(literal, locale) {
+        if (locale.decimalSeparator === "." || !isNumber(literal, DEFAULT_LOCALE)) {
+            return literal;
         }
         const decimalNumberRegex = getDecimalNumberRegex(DEFAULT_LOCALE);
-        const localized = content.replace(decimalNumberRegex, (match) => {
+        const localized = literal.replace(decimalNumberRegex, (match) => {
             return match.replace(".", locale.decimalSeparator);
         });
         return localized;
+    }
+    /**
+     * Change a literal string from its canonical form (en_US locale) to the given locale. Also convert date string.
+     *
+     * @example
+     * localizeLiteral("125.9", FR_LOCALE) // "125,9"
+     * localizeLiteral("12/02/2012", FR_LOCALE) // "02/12/2012"
+     */
+    function localizeLiteral(literal, locale) {
+        if (isDateTime(literal, DEFAULT_LOCALE)) {
+            const dateNumber = toNumber(literal, DEFAULT_LOCALE);
+            let format = locale.dateFormat;
+            if (!Number.isInteger(dateNumber)) {
+                format += " " + locale.timeFormat;
+            }
+            return formatValue(dateNumber, { locale, format });
+        }
+        return localizeNumberLiteral(literal, locale);
     }
     function canonicalizeCFRule(cf, locale) {
         return changeCFRuleLocale(cf, (content) => canonicalizeContent(content, locale));
@@ -15532,7 +15617,9 @@
         save() {
             const { col, row } = this.props.cellPosition;
             const locale = this.env.model.getters.getLocale();
-            const label = this.link.label ? canonicalizeContent(this.link.label, locale) : this.link.url;
+            const label = this.link.label
+                ? canonicalizeNumberContent(this.link.label, locale)
+                : this.link.url;
             this.env.model.dispatch("UPDATE_CELL", {
                 col: col,
                 row: row,
@@ -25302,9 +25389,11 @@
             }
         }
         function updateMousePosition(e) {
-            x = e.offsetX;
-            y = e.offsetY;
-            lastMoved = Date.now();
+            if (gridRef.el === e.target) {
+                x = e.offsetX;
+                y = e.offsetY;
+                lastMoved = Date.now();
+            }
         }
         function recompute() {
             const { col, row } = getPosition();
@@ -36677,8 +36766,7 @@
                 if (cell.type === CellValueType.error) {
                     return false;
                 }
-                const locale = this.getters.getLocale();
-                const values = rule.values.map((val) => parseLiteral(val, locale));
+                const values = rule.values.map((val) => parseLiteral(val, DEFAULT_LOCALE));
                 switch (rule.operator) {
                     case "IsEmpty":
                         return cell.value.toString().trim() === "";
@@ -38762,7 +38850,7 @@
             const replaceRegex = new RegExp(this.currentSearchRegex.source, this.currentSearchRegex.flags + "g");
             const toReplace = this.getSearchableString({ sheetId, col, row });
             const content = toReplace.replace(replaceRegex, replaceWith);
-            const canonicalContent = canonicalizeContent(content, this.getters.getLocale());
+            const canonicalContent = canonicalizeNumberContent(content, this.getters.getLocale());
             this.dispatch("UPDATE_CELL", { sheetId, col, row, content: canonicalContent });
         }
         /**
@@ -40936,7 +41024,7 @@
                         sheetId,
                         col: col + index,
                         row,
-                        content: canonicalizeContent(content, this.getters.getLocale()),
+                        content: canonicalizeNumberContent(content, this.getters.getLocale()),
                         format: "",
                         style: mainCell?.style || null,
                     });
@@ -41122,6 +41210,7 @@
         cells;
         copiedTables;
         zones;
+        uuidGenerator = new UuidGenerator();
         constructor(zones, operation, getters, dispatch, selection) {
             super(operation, getters, dispatch, selection);
             if (!zones.length) {
@@ -41583,8 +41672,9 @@
                             this.adaptCFRules(origin.sheetId, cf, [xc], toRemoveRange);
                         }
                         else {
-                            this.adaptCFRules(target.sheetId, cf, [xc], []);
                             this.adaptCFRules(origin.sheetId, cf, [], toRemoveRange);
+                            const cfToCopyTo = this.getCFToCopyTo(target.sheetId, cf);
+                            this.adaptCFRules(target.sheetId, cfToCopyTo, [xc], []);
                         }
                     }
                 }
@@ -41607,6 +41697,12 @@
                 ranges: newRangesXC.map((xc) => this.getters.getRangeDataFromXc(sheetId, xc)),
                 sheetId,
             });
+        }
+        getCFToCopyTo(targetSheetId, originCF) {
+            const cfInTarget = this.getters
+                .getConditionalFormats(targetSheetId)
+                .find((cf) => cf.stopIfTrue === originCF.stopIfTrue && deepEquals(cf.rule, originCF.rule));
+            return cfInTarget ? cfInTarget : { ...originCF, id: this.uuidGenerator.uuidv4(), ranges: [] };
         }
     }
 
@@ -41739,7 +41835,7 @@
     function canonicalizeNumberValue(content, locale) {
         return content.startsWith("=")
             ? canonicalizeFormula(content, locale)
-            : toCanonicalNumberString(content, locale);
+            : canonicalizeNumberLiteral(content, locale);
     }
     /** Change a formula to its canonical form (en_US locale) */
     function canonicalizeFormula(formula, locale) {
@@ -41856,7 +41952,7 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CUT":
-                    const zones = cmd.cutTarget || this.getters.getSelectedZones();
+                    const zones = this.getters.getSelectedZones();
                     const state = this.getClipboardState(zones, cmd.type);
                     return state.isCutAllowed(zones);
                 case "PASTE":
@@ -41891,7 +41987,7 @@
             switch (cmd.type) {
                 case "COPY":
                 case "CUT":
-                    const zones = ("cutTarget" in cmd && cmd.cutTarget) || this.getters.getSelectedZones();
+                    const zones = this.getters.getSelectedZones();
                     this.state = this.getClipboardState(zones, cmd.type);
                     this.status = "visible";
                     this.originSheetId = this.getters.getActiveSheetId();
@@ -42541,7 +42637,7 @@
                 if (content) {
                     const sheetId = this.getters.getActiveSheetId();
                     const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
-                    content = canonicalizeContent(content, this.getters.getLocale());
+                    content = canonicalizeNumberContent(content, this.getters.getLocale());
                     if (content.startsWith("=")) {
                         const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
                         const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
@@ -43562,26 +43658,24 @@
             const isBasedBefore = cmd.base < start;
             const deltaCol = isBasedBefore && isCol ? thickness : 0;
             const deltaRow = isBasedBefore && !isCol ? thickness : 0;
-            this.dispatch("CUT", {
-                cutTarget: [
-                    {
-                        left: isCol ? start + deltaCol : 0,
-                        right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
-                        top: !isCol ? start + deltaRow : 0,
-                        bottom: !isCol ? end + deltaRow : this.getters.getNumberRows(cmd.sheetId) - 1,
-                    },
-                ],
-            });
-            this.dispatch("PASTE", {
-                target: [
-                    {
-                        left: isCol ? cmd.base : 0,
-                        right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
-                        top: !isCol ? cmd.base : 0,
-                        bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
-                    },
-                ],
-            });
+            const target = [
+                {
+                    left: isCol ? start + deltaCol : 0,
+                    right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
+                    top: !isCol ? start + deltaRow : 0,
+                    bottom: !isCol ? end + deltaRow : this.getters.getNumberRows(cmd.sheetId) - 1,
+                },
+            ];
+            const state = new ClipboardCellsState(target, "CUT", this.getters, this.dispatch, this.selection);
+            const pasteTarget = [
+                {
+                    left: isCol ? cmd.base : 0,
+                    right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
+                    top: !isCol ? cmd.base : 0,
+                    bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
+                },
+            ];
+            state.paste(pasteTarget, { selectTarget: true });
             const toRemove = isBasedBefore ? cmd.elements.map((el) => el + thickness) : cmd.elements;
             let currentIndex = cmd.base;
             for (const element of toRemove) {
@@ -50601,9 +50695,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.6';
-    __info__.date = '2023-09-12T12:06:48.370Z';
-    __info__.hash = '5746355';
+    __info__.version = '16.4.7';
+    __info__.date = '2023-09-22T07:49:33.126Z';
+    __info__.hash = 'eccdcce';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
