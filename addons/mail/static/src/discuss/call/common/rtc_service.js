@@ -135,9 +135,6 @@ export class Rtc {
             sourceScreenStream: null,
         });
         this.blurManager = undefined;
-        this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
-        void this.ringingThreads.length;
-        this.store.ringingThreads = this.ringingThreads;
         onChange(this.userSettingsService, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
@@ -280,14 +277,6 @@ export class Rtc {
         if (channel.eq(this.state.channel)) {
             this.clear();
             this.soundEffectsService.play("channel-leave");
-        }
-    }
-
-    onRingingThreadsChange() {
-        if (this.ringingThreads.length > 0) {
-            this.soundEffectsService.play("incoming-call", { loop: true });
-        } else {
-            this.soundEffectsService.stop("incoming-call");
         }
     }
 
