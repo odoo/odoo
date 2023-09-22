@@ -38,7 +38,7 @@ class ResPartner(models.Model):
 
     def _has_order(self):
         self.ensure_one()
-        sale_order = self.env['sale.order'].search([
+        sale_order = self.env['sale.order'].sudo().search([
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', 'in', ['sent', 'sale'])
         ], limit=1)
