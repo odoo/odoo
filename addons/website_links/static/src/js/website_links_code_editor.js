@@ -12,6 +12,11 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
         'click .o_website_links_ok_edit': '_onEditCodeFormSubmit',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -58,12 +63,9 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
         if (initCode === newCode) {
             this._showNewCode(newCode);
         } else {
-            return this._rpc({
-                route: '/website_links/add_code',
-                params: {
-                    init_code: initCode,
-                    new_code: newCode,
-                },
+            return this.rpc('/website_links/add_code', {
+                init_code: initCode,
+                new_code: newCode,
             }).then(function (result) {
                 self._showNewCode(result[0].code);
             }, function () {

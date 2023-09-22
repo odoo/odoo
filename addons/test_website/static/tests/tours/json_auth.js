@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import ajax from "@web/legacy/js/core/ajax";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 registry.category("web_tour.tours").add('test_json_auth', {
     test: true,
     steps: () => [{
     trigger: 'body',
     run: async function () {
-        await ajax.rpc('/test_get_dbname').then( function (result){
-            return ajax.rpc("/web/session/authenticate", {
+        await jsonrpc('/test_get_dbname').then( function (result){
+            return jsonrpc("/web/session/authenticate", {
                 db: result,
                 login: 'admin',
                 password: 'admin'

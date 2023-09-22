@@ -10,6 +10,11 @@ publicWidget.registry.websiteSlidesCategoryDelete = publicWidget.Widget.extend({
         click: "_onClickDeleteCateogry",
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -29,11 +34,7 @@ publicWidget.registry.websiteSlidesCategoryDelete = publicWidget.Widget.extend({
                  * Calls 'unlink' method on slides.slide to delete the category and
                  * reloads page after deletion to re-arrange the content on UI
                  */
-                await this._rpc({
-                    model: "slide.slide",
-                    method: "unlink",
-                    args: [categoryId],
-                });
+                await this.orm.unlink("slide.slide", [categoryId]);
                 window.location.reload();
             },
             cancel: () => {},

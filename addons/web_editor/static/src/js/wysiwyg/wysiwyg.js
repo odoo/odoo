@@ -3058,31 +3058,9 @@ export class Wysiwyg extends Component {
         }
     }
     _callService(payload) {
-        let args = payload.args || [];
-        if (payload.service === 'ajax' && payload.method === 'rpc') {
-            // ajax service uses an extra 'target' argument for rpc
-            const [route, params, settings = {}] = args;
-            if (params && params.kwargs) {
-                params.kwargs.context = {
-                    ...this.env.services.user.context,
-                    ...params.kwargs.context,
-                };
-            }
-            const result = this._serviceRpc(route, params, settings);
-            payload.callback(result);
-            return;
-        }
         const service = this.env.services[payload.service];
-        // If the service doesn't exist it means that it was translated to Owl
-        if (service) {
-            const result = service[payload.method].apply(service, args);
-            payload.callback(result);
-        } else {
-            throw new Error(
-                `The service "${payload.service}" is not present in the legacy owl environment.
-                    You should probably create a mapper in @web/legacy/utils`
-            );
-        }
+        const result = service[payload.method].apply(service, payload.args || []);
+        payload.callback(result);
     }
     _serviceRpc(route, params, settings = {}) {
         if (params && params.kwargs) {

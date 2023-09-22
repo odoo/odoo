@@ -13,6 +13,13 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
         'click .s_donation_donate_btn': '_onClickDonateNowButton',
         'input #s_donation_range_slider': '_onInputRangeSlider',
     },
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
     /**
      * @override
@@ -81,9 +88,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
      * @private
      */
     _displayCurrencies() {
-        return this._rpc({
-            route: '/website/get_current_currency',
-        }).then((result) => {
+        return this.rpc('/website/get_current_currency').then((result) => {
             this.currency = result;
             this.$('.s_donation_currency').remove();
             const $prefilledButtons = this.$('.s_donation_btn, .s_range_bubble');

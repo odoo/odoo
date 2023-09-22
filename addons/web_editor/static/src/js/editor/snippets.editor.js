@@ -1767,6 +1767,8 @@ var SnippetsMenu = Widget.extend({
         this.loadingElements = {};
         this._loadingEffectDisabled = false;
         this._onClick = this._onClick.bind(this);
+
+        this.orm = this.bindService("orm");
     },
     /**
      * @override
@@ -2090,14 +2092,12 @@ var SnippetsMenu = Widget.extend({
             context.lang = this.options.context.user_lang;
             context.snippet_lang = this.options.context.lang;
         }
-        this._defLoadSnippets = this._rpc({
-            model: 'ir.ui.view',
-            method: 'render_public_asset',
-            args: [this.options.snippets, {}],
-            kwargs: {
-                context: context,
-            },
-        }, { shadow: true });
+        this._defLoadSnippets = this.orm.silent.call(
+            "ir.ui.view",
+            "render_public_asset",
+            [this.options.snippets, {}],
+            { context }
+        );
         cacheSnippetTemplate[this.options.snippets] = this._defLoadSnippets;
         return this._defLoadSnippets;
     },
@@ -3817,11 +3817,7 @@ var SnippetsMenu = Widget.extend({
                 classes: 'btn-primary',
                 click: function () {
                     this.$footer.find('.btn').toggleClass('o_hidden');
-                    this._rpc({
-                        model: 'ir.module.module',
-                        method: 'button_immediate_install',
-                        args: [[moduleID]],
-                    }).then(() => {
+                    this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]).then(() => {
                         self.trigger_up('request_save', {
                             invalidateSnippetCache: true,
                             _toMutex: true,
@@ -3897,13 +3893,9 @@ var SnippetsMenu = Widget.extend({
                 close: true,
                 classes: 'btn-primary',
                 click: async () => {
-                    await this._rpc({
-                        model: 'ir.ui.view',
-                        method: 'delete_snippet',
-                        kwargs: {
-                            'view_id': snippetId,
-                            'template_key': this.options.snippets,
-                        },
+                    await this.orm.call("ir.ui.view", "delete_snippet", [], {
+                        'view_id': snippetId,
+                        'template_key': this.options.snippets,
                     });
                     await this._loadSnippetsTemplates(true);
                 },
@@ -3940,14 +3932,10 @@ var SnippetsMenu = Widget.extend({
             const name = $textInput.val();
             if (name !== snippetName) {
                 this._execWithLoadingEffect(async () => {
-                    await this._rpc({
-                        model: 'ir.ui.view',
-                        method: 'rename_snippet',
-                        kwargs: {
-                            'name': name,
-                            'view_id': parseInt(ev.target.dataset.snippetId),
-                            'template_key': this.options.snippets,
-                        },
+                    await this.orm.call("ir.ui.view", "rename_snippet", [], {
+                        'name': name,
+                        'view_id': parseInt(ev.target.dataset.snippetId),
+                        'template_key': this.options.snippets,
                     });
                 }, true);
             }

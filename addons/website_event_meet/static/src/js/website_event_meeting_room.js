@@ -12,6 +12,11 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
         'click .o_wevent_meeting_room_is_pinned': '_onPinClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     start: function () {
         this._super.apply(this, arguments);
         this.csrf_token = odoo.csrf_token;
@@ -34,12 +39,12 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
         this.call("dialog", "add", ConfirmationDialog, {
             body: _t("Are you sure you want to close this room?"),
             confirm: async () => {
-                await this._rpc({
-                    model: "event.meeting.room",
-                    method: "write",
-                    args: [this.meetingRoomId, { is_published: false }],
-                    context: this.context,
-                });
+                await this.orm.write(
+                    "event.meeting.room",
+                    [this.meetingRoomId],
+                    { is_published: false },
+                    { context: this.context }
+                );
 
                 // remove the element so we do not need to refresh the page
                 this.$el.remove();
@@ -58,10 +63,7 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
         this.call("dialog", "add", ConfirmationDialog, {
             body: _t("Are you sure you want to duplicate this room?"),
             confirm: async () => {
-                await this._rpc({
-                    model: "event.meeting.room",
-                    method: "copy",
-                    args: [this.meetingRoomId],
+                await this.orm.call("event.meeting.room", "copy", [this.meetingRoomId], {
                     context: this.context,
                 });
 
@@ -82,12 +84,12 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
         const pinnedButtonClass = "o_wevent_meeting_room_pinned";
         const isPinned = event.currentTarget.classList.contains(pinnedButtonClass);
 
-        await this._rpc({
-            model: 'event.meeting.room',
-            method: 'write',
-            args: [this.meetingRoomId, {is_pinned: !isPinned}],
-            context: this.context,
-        });
+        await this.orm.write(
+            "event.meeting.room",
+            [this.meetingRoomId],
+            { is_pinned: !isPinned },
+            { context: this.context }
+        );
 
         // TDE FIXME: addclass ?
         if (isPinned) {

@@ -33,6 +33,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -323,9 +329,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onFlagAlertClick: function (ev) {
         ev.preventDefault();
         const elem = ev.currentTarget;
-        this._rpc({
-            route: elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
-        }).then(data => {
+        this.rpc(
+            elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
+        ).then(data => {
             if (data.error) {
                 const message = data.error === 'anonymous_user'
                     ? _t("Sorry you must be logged to flag a post")
@@ -365,9 +371,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onVotePostClick: function (ev) {
         ev.preventDefault();
         var $btn = $(ev.currentTarget);
-        this._rpc({
-            route: $btn.data('href'),
-        }).then(data => {
+        this.rpc($btn.data('href')).then(data => {
             if (data.error) {
                 const message = data.error === 'own_post'
                     ? _t('Sorry, you cannot vote for your own posts')
@@ -465,7 +469,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         const link = ev.currentTarget;
         const target = link.dataset.target;
-        const data = await this._rpc({ route: link.dataset.href });
+        const data = await this.rpc(link.dataset.href);
         if (data.error) {
             const message = data.error === 'anonymous_user'
                 ? _t('Sorry, anonymous users cannot choose correct answers.')
@@ -500,7 +504,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onFavoriteQuestionClick: async function (ev) {
         ev.preventDefault();
         const link = ev.currentTarget;
-        const data = await this._rpc({ route: link.dataset.href });
+        const data = await this.rpc(link.dataset.href);
         link.classList.toggle('opacity-50', !data);
         link.classList.toggle('opacity-100-hover', !data);
         const link_icon = link.querySelector('.fa');
@@ -517,9 +521,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         var $link = $(ev.currentTarget);
         var $container = $link.closest('.o_wforum_post_comments_container');
 
-        this._rpc({
-            route: $link.closest('form').attr('action'),
-        }).then(function () {
+        this.rpc($link.closest('form').attr('action')).then(function () {
             $link.closest('.o_wforum_post_comment').remove();
 
             var count = $container.find('.o_wforum_post_comment').length;
@@ -547,11 +549,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     async _onFlagValidatorClick(ev) {
         ev.preventDefault();
         const currentTarget = ev.currentTarget;
-        await this._rpc({
-            model: 'forum.post',
-            method: currentTarget.dataset.action,
-            args: [parseInt(currentTarget.dataset.postId)],
-        });
+        await this.orm.call("forum.post", currentTarget.dataset.action, [
+            parseInt(currentTarget.dataset.postId),
+        ]);
         this._findParent(currentTarget, '.o_wforum_flag_alert')?.classList.toggle('d-none');
         const flaggedButton = currentTarget.parentElement.firstElementChild,
             child = flaggedButton.firstElementChild,
@@ -571,9 +571,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     async _onFlagMarkAsOffensiveClick(ev) {
         ev.preventDefault();
-        const template = await this._rpc({
-            route: $(ev.currentTarget).data('action'),
-        });
+        const template = await this.rpc($(ev.currentTarget).data('action'));
         this.call("dialog", "add", FlagMarkAsOffensiveDialog, {
             title: _t("Offensive Post"),
             body: markup(template),
@@ -595,6 +593,11 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
         'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
         'input #spamSearch': '_onSpamSearchInput',
+    },
+
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
     },
 
     /**
@@ -625,18 +628,14 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     _onSpamSearchInput: function (ev) {
         var self = this;
         var toSearch = $(ev.currentTarget).val();
-        return this._rpc({
-            model: 'forum.post',
-            method: 'search_read',
-            args: [
-                [['id', 'in', self.spamIDs],
-                    '|',
-                    ['name', 'ilike', toSearch],
-                    ['content', 'ilike', toSearch]],
-                ['name', 'content']
-            ],
-            kwargs: {}
-        }).then(function (o) {
+        return this.orm.searchRead(
+            "forum.post",
+            [['id', 'in', self.spamIDs],
+                '|',
+                ['name', 'ilike', toSearch],
+                ['content', 'ilike', toSearch]],
+            ['name', 'content']
+        ).then(function (o) {
             Object.values(o).forEach((r) => {
                 r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
             });
@@ -654,10 +653,11 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         var key = this.$('.modal .tab-pane.active').data('key');
         var $inputs = this.$('.modal .tab-pane.active input.form-check-input:checked');
         var values = Array.from($inputs).map((o) => parseInt(o.value));
-        return this._rpc({model: 'forum.post',
-            method: 'mark_as_offensive_batch',
-            args: [this.spamIDs, key, values],
-        }).then(function () {
+        return this.orm.call("forum.post", "mark_as_offensive_batch", [
+            this.spamIDs,
+            key,
+            values,
+        ]).then(function () {
             window.location.reload();
         });
     },

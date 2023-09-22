@@ -7,7 +7,7 @@ import Widget from "@web/legacy/js/core/widget";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";
-import { pick } from "@web/core/utils/objects";
+import { omit, pick } from "@web/core/utils/objects";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { markup } from "@odoo/owl";
 
@@ -209,6 +209,9 @@ var ViewEditor = Widget.extend({
         this.views = this.resources.xml;
         this.scss = this.resources.scss;
         this.js = this.resources.js;
+
+        this.rpc = this.bindService("rpc");
+        this.orm = this.bindService("orm");
     },
     /**
      * Loads everything the ace library needs to work.
@@ -459,6 +462,9 @@ var ViewEditor = Widget.extend({
             this._showErrorLine(check.error.line, check.error.message, this._getSelectedResource());
         }
     },
+    _getContext() {
+        return {};
+    },
     /**
      * Returns the currently selected resource data.
      *
@@ -502,17 +508,14 @@ var ViewEditor = Widget.extend({
         this.js = this.resources.js;
 
         // Load resources
-        return this._rpc({
-            route: '/web_editor/get_assets_editor_resources',
-            params: {
-                key: this.viewKey,
-                get_views: !this.options.doNotLoadViews,
-                get_scss: !this.options.doNotLoadSCSS,
-                get_js: !this.options.doNotLoadJS,
-                bundles: this.options.includeBundles,
-                bundles_restriction: this.options.filesFilter === 'all' ? [] : this.options.defaultBundlesRestriction,
-                only_user_custom_files: this.options.filesFilter === 'custom',
-            },
+        return this.rpc('/web_editor/get_assets_editor_resources', {
+            key: this.viewKey,
+            get_views: !this.options.doNotLoadViews,
+            get_scss: !this.options.doNotLoadSCSS,
+            get_js: !this.options.doNotLoadJS,
+            bundles: this.options.includeBundles,
+            bundles_restriction: this.options.filesFilter === 'all' ? [] : this.options.defaultBundlesRestriction,
+            only_user_custom_files: this.options.filesFilter === 'custom',
         }).then((function (resources) {
             _processViews.call(this, resources.views || []);
             _processJSorSCSS.call(this, resources.scss || [], 'scss');
@@ -600,10 +603,8 @@ var ViewEditor = Widget.extend({
             return Promise.reject(_t("Reseting views is not supported yet"));
         } else {
             var resource = type === 'scss' ? this.scss[resID] : this.js[resID];
-            return this._rpc({
-                model: 'web_editor.assets',
-                method: 'reset_asset',
-                args: [resID, resource.bundle],
+            return this.orm.call("web_editor.assets", "reset_asset", [resID, resource.bundle], {
+                context: this._getContext(),
             });
         }
     },
@@ -621,11 +622,17 @@ var ViewEditor = Widget.extend({
         var sessionIdEndsWithJS = String(session.id).endsWith(".js");
         var bundle = sessionIdEndsWithJS ? this.js[session.id].bundle : this.scss[session.id].bundle;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
-        return self._rpc({
-            model: 'web_editor.assets',
-            method: 'save_asset',
-            args: [session.id, bundle, session.text, fileType],
-        }).then(function () {
+        return this.orm.call(
+            "web_editor.assets",
+            "save_asset",
+            [
+                session.id,
+                bundle,
+                session.text,
+                fileType,
+            ],
+            { context: this._getContext() }
+        ).then(function () {
             self._toggleDirtyInfo(session.id, fileType, false);
         });
     },
@@ -714,13 +721,13 @@ var ViewEditor = Widget.extend({
     _saveView: function (session) {
         var self = this;
         return new Promise(function (resolve, reject) {
-            self._rpc({
-                model: 'ir.ui.view',
-                method: 'write',
-                args: [[session.id], {arch: session.text}],
-            }, {
-                noContextKeys: 'lang',
-            }).then(function () {
+            self.orm.write(
+                "ir.ui.view",
+                [session.id],
+                { arch: session.text },
+                { context: omit(self._getContext(), "lang") }
+            ).then(
+                function () {
                 self._toggleDirtyInfo(session.id, 'xml', false);
                 resolve();
             }, function (source, error) {

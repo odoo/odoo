@@ -2,13 +2,13 @@
 
     import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
     import { session } from "@web/session";
-    import ajax from "@web/legacy/js/core/ajax";
     import publicWidget from "@web/legacy/js/public/public_widget";
     import dom from "@web/legacy/js/core/dom";
     import { delay } from "@web/core/utils/concurrency";
     import { debounce } from "@web/core/utils/timing";
     import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
+    import { post } from "@web/core/network/http_service";
 import {
     formatDate,
     formatDateTime,
@@ -62,6 +62,7 @@ const { DateTime } = luxon;
             this._visibilityFunctionByFieldName = new Map();
             this._visibilityFunctionByFieldEl = new Map();
             this.__started = new Promise(resolve => this.__startResolve = resolve);
+            this.orm = this.bindService("orm");
         },
         willStart: async function () {
             const res = this._super(...arguments);
@@ -72,11 +73,11 @@ const { DateTime } = luxon;
             // fetch user data (required by fill-with behavior)
             this.preFillValues = {};
             if (session.user_id) {
-                this.preFillValues = (await this._rpc({
-                    model: 'res.users',
-                    method: 'read',
-                    args: [session.user_id, this._getUserPreFillFields()],
-                }))[0] || {};
+                this.preFillValues = (await this.orm.read(
+                    "res.users",
+                    [session.user_id],
+                    this._getUserPreFillFields()
+                ))[0] || {};
             }
             return res;
         },
@@ -351,14 +352,17 @@ const { DateTime } = luxon;
                 }
             }
 
+            if (odoo.csrf_token) {
+                form_values.csrf_token = odoo.csrf_token;
+            }
+
             // Post form and handle result
-            ajax.post(this.$el.attr('action') + (this.$el.data('force_action') || this.$el.data('model_name')), form_values)
+            post(this.$el.attr('action') + (this.$el.data('force_action') || this.$el.data('model_name')), form_values)
             .then(async function (result_data) {
                 // Restore send button behavior
                 self.$el.find('.s_website_form_send, .o_website_form_send')
                     .removeAttr('disabled')
                     .removeClass('disabled'); // !compatibility
-                result_data = JSON.parse(result_data);
                 if (!result_data.id) {
                     // Failure, the server didn't return the created record ID
                     self.update_status('error', result_data.error ? result_data.error : false);

@@ -293,12 +293,9 @@ PortalChatter.include({
         var messageIndex = $source.data("mes_index");
         var ratingId = this.messages[messageIndex].rating.id;
 
-        this._rpc({
-            route: '/website/rating/comment',
-            params: {
-                "rating_id": ratingId,
-                "publisher_comment": '' // Empty publisher comment means no comment
-            }
+        this.rpc('/website/rating/comment', {
+            "rating_id": ratingId,
+            "publisher_comment": '' // Empty publisher comment means no comment
         }).then(function (res) {
             self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
             self._getCommentButton($source).removeClass("d-none");
@@ -318,12 +315,9 @@ PortalChatter.include({
         var comment = this._getCommentTextarea($source).val();
         var ratingId = this.messages[messageIndex].rating.id;
 
-        this._rpc({
-            route: '/website/rating/comment',
-            params: {
-                "rating_id": ratingId,
-                "publisher_comment": comment
-            }
+        this.rpc('/website/rating/comment', {
+            "rating_id": ratingId,
+            "publisher_comment": comment
         }).then(function (res) {
 
             // Modify the related message

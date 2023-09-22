@@ -33,6 +33,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         this.sequence = options.sequence;
         this.slideId = options.slideId;
         this._super.apply(this, arguments);
+        this.rpc = this.bindService("rpc");
     },
 
     /**
@@ -150,10 +151,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
 
         if (this._isValidForm($form)) {
             var values = this._serializeForm($form);
-            var renderedQuestion = await this._rpc({
-                route: '/slides/slide/quiz/question_add_or_update',
-                params: values
-            });
+            var renderedQuestion = await this.rpc('/slides/slide/quiz/question_add_or_update', values);
 
             if (typeof renderedQuestion === 'object' && renderedQuestion.error) {
                 this.$('.o_wslides_js_quiz_validation_error')

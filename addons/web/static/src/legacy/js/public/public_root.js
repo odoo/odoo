@@ -11,7 +11,6 @@ import lazyloader from "@web/legacy/js/public/lazyloader";
 import {
     makeLegacyNotificationService,
     mapLegacyEnvToWowlEnv,
-    makeLegacyRPCService,
     createWidgetParent,
 } from "../../utils";
 
@@ -22,7 +21,6 @@ import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
 import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
-import { omit } from "@web/core/utils/objects";
 import { App, whenReady } from "@odoo/owl";
 import { getOrigin } from '@web/core/utils/urls';
 
@@ -227,37 +225,9 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} event
      */
     _onCallService: function (ev) {
-        function _computeContext(context, noContextKeys) {
-            context = Object.assign({}, this._getContext(), context);
-            if (noContextKeys) {
-                context = omit(context, ...noContextKeys);
-            }
-            return JSON.parse(JSON.stringify(context));
-        }
-
         const payload = ev.data;
-        let args = payload.args || [];
-        if (payload.service === 'ajax' && payload.method === 'rpc') {
-            // ajax service uses an extra 'target' argument for rpc
-            args = args.concat(ev.target);
-
-            var route = args[0];
-            if (String(route).startsWith("/web/dataset/call_kw/")) {
-                var params = args[1];
-                var options = args[2];
-                var noContextKeys;
-                if (options) {
-                    noContextKeys = options.noContextKeys;
-                    args[2] = omit(options, 'noContextKeys');
-                }
-                params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
-            }
-        } else {
-            return;
-        }
-
         const service = this.env.services[payload.service];
-        const result = service[payload.method].apply(service, args);
+        const result = service[payload.method].apply(service, payload.args || []);
         payload.callback(result);
         ev.stopPropagation();
     },
@@ -358,7 +328,6 @@ export async function createPublicRoot(RootWidget) {
     await lazyloader.allScriptsLoaded;
     // add a bunch of mapping services that will redirect service calls from the legacy env
     // to the wowl env
-    serviceRegistry.add("legacy_rpc", makeLegacyRPCService(legacyEnv));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
@@ -379,12 +348,17 @@ export async function createPublicRoot(RootWidget) {
     serviceRegistry.add("rpc", {
         async: true,
         start(env) {
-            let rpcId = 0;
-            return function rpc(route, params = {}, settings) {
+            return function rpc(route, params = {}, settings = {}) {
                 if (!route.match(/^(?:https?:)?\/\//)) {
                     route = baseUrl + route;
                 }
-                return jsonrpc(env, rpcId++, route, params, settings);
+                if (String(route).includes("/web/dataset/call_kw/")) {
+                    params.kwargs.context = {
+                        ...publicRoot._getContext(),
+                        ...params.kwargs.context,
+                    };
+                }
+                return jsonrpc(route, params, { bus: env.bus, ...settings });
             };
         },
     }, { force: true });

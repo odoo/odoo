@@ -144,14 +144,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                         $button.prop('disabled', true);
                         const res = await this._validateGMapAPIKey(valueAPIKey);
                         if (res.isValid) {
-                            await this._rpc({
-                                model: 'website',
-                                method: 'write',
-                                args: [
-                                    [websiteId],
-                                    {google_maps_api_key: valueAPIKey},
-                                ],
-                            });
+                            await this.orm.write("website", [websiteId], { google_maps_api_key: valueAPIKey });
                             invalidated = true;
                             dialog.close();
                         } else {

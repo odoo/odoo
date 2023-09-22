@@ -6,6 +6,11 @@ publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
     // /!\ To adapt the day the beacon makes sense for backend customizations
     selector: '#wrapwrap',
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     /**
      * @override
      */
@@ -15,9 +20,7 @@ publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
             return img.src.split('/unsplash/')[1].split('/')[0];
         });
         if (unsplashImages.length) {
-            this._rpc({
-                route: '/web_unsplash/get_app_id',
-            }).then(function (appID) {
+            this.rpc('/web_unsplash/get_app_id').then(function (appID) {
                 if (!appID) {
                     return;
                 }

@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import { KeepLast } from "@web/core/utils/concurrency";
-import ajax from "@web/legacy/js/core/ajax";
 import { memoize, uniqueId } from "@web/core/utils/functions";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { insertThousandsSep } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 var VariantMixin = {
     events: {
@@ -70,7 +70,7 @@ var VariantMixin = {
                 const $currentOptionalProduct = $(optionalProduct);
                 const childCombination = this.getSelectedVariantValues($currentOptionalProduct);
                 const productTemplateId = parseInt($currentOptionalProduct.find('.product_template_id').val());
-                ajax.jsonRpc('/website_sale/get_combination_info', 'call', {
+                jsonrpc('/website_sale/get_combination_info', {
                     'product_template_id': productTemplateId,
                     'product_id': this._getProductId($currentOptionalProduct),
                     'combination': childCombination,
@@ -89,7 +89,7 @@ var VariantMixin = {
             );
         }
 
-        return ajax.jsonRpc('/website_sale/get_combination_info', 'call', {
+        return jsonrpc('/website_sale/get_combination_info', {
             'product_template_id': parseInt($parent.find('.product_template_id').val()),
             'product_id': this._getProductId($parent),
             'combination': combination,
@@ -317,7 +317,7 @@ var VariantMixin = {
      * @param {$.Element} $container the container to look into
      * @param {integer} productId the product id
      * @param {integer} productTemplateId the corresponding product template id
-     * @param {boolean} useAjax wether the rpc call should be done using ajax.jsonRpc or using _rpc
+     * @param {boolean} useAjax wether the rpc call should be done using jsonrpc or using _rpc
      * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
     selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
@@ -335,10 +335,7 @@ var VariantMixin = {
 
             var route = '/sale/create_product_variant';
             if (useAjax) {
-                productReady = ajax.jsonRpc(route, 'call', params);
-            } else if (Boolean(this._rpc)) {
-                // HACK to combine owl and non owl calls
-                productReady = this._rpc({route: route, params: params});
+                productReady = jsonrpc(route, params);
             } else {
                 productReady = this.rpc(route, params);
             }

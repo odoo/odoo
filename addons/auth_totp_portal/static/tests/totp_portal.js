@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import ajax from "@web/legacy/js/core/ajax";
 import { registry } from "@web/core/registry";
+import { jsonrpc } from "@web/core/network/rpc_service";
 
 registry.category("web_tour.tours").add('totportal_tour_setup', {
     test: true,
@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     trigger: 'a:contains("Cannot scan it?")',
     run: async function(helpers) {
         const secret = this.$anchor.closest('div').find('span[name="secret"]').text();
-        const token = await ajax.jsonRpc('/totphook', 'call', {
+        const token = await jsonrpc('/totphook', {
             secret
         });
         helpers._text(helpers._get_action_values('input[name=code]'), token);
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     content: "input code",
     trigger: 'input[name=totp_token]',
     run: async function (helpers) {
-        const token = await ajax.jsonRpc('/totphook', 'call', {});
+        const token = await jsonrpc('/totphook');
         helpers._text(helpers._get_action_values(), token);
         // FIXME: is there a way to put the button as its own step trigger without
         //        the tour straight blowing through and not waiting for this?

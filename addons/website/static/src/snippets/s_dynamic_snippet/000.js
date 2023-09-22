@@ -35,6 +35,8 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.isDesplayedAsMobile = uiUtils.isSmall();
         this.unique_id = uniqueId("s_dynamic_snippet_");
         this.template_key = 'website.s_dynamic_snippet.grid';
+
+        this.rpc = this.bindService("rpc");
     },
     /**
      *
@@ -117,16 +119,16 @@ const DynamicSnippet = publicWidget.Widget.extend({
     async _fetchData() {
         if (this._isConfigComplete()) {
             const nodeData = this.el.dataset;
-            const filterFragments = await this._rpc({
-                'route': '/website/snippet/filters',
-                'params': Object.assign({
+            const filterFragments = await this.rpc(
+                '/website/snippet/filters',
+                Object.assign({
                     'filter_id': parseInt(nodeData.filterId),
                     'template_key': nodeData.templateKey,
                     'limit': parseInt(nodeData.numberOfRecords),
                     'search_domain': this._getSearchDomain(),
                     'with_sample': this.editableMode,
-                }, this._getRpcParameters()),
-            });
+                }, this._getRpcParameters())
+            );
             this.data = filterFragments.map(markup);
         } else {
             this.data = [];

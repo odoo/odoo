@@ -6,6 +6,10 @@ import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
 paymentExpressCheckoutForm.include({
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
     /**
      * Get the order details to display on the payment form.
@@ -123,14 +127,15 @@ paymentExpressCheckoutForm.include({
                 addresses.shipping_option = ev.shippingOption;
             }
             // Update the customer addresses on the related document.
-            this.paymentContext.partnerId = parseInt(await this._rpc({
-                route: this.paymentContext['expressCheckoutRoute'], params: addresses,
-            }));
+            this.paymentContext.partnerId = parseInt(await this.rpc(
+                this.paymentContext['expressCheckoutRoute'],
+                addresses,
+            ));
             // Call the transaction route to create the transaction and retrieve the client secret.
-            const { client_secret } = await this._rpc({
-                route: this.paymentContext['transactionRoute'],
-                params: this._prepareTransactionRouteParams(providerData.providerId),
-            });
+            const { client_secret } = await this.rpc(
+                this.paymentContext['transactionRoute'],
+                this._prepareTransactionRouteParams(providerData.providerId),
+            );
             // Confirm the PaymentIntent without handling eventual next actions (e.g. 3DS).
             const { paymentIntent, error: confirmError } = await stripeJS.confirmCardPayment(
                 client_secret, {payment_method: ev.paymentMethod.id}, {handleActions: false}
@@ -157,9 +162,9 @@ paymentExpressCheckoutForm.include({
             // shipping address, the shipping options need to be fetched again.
             paymentRequest.on('shippingaddresschange', async (ev) => {
                 // Call the shipping address update route to fetch the shipping options.
-                const availableCarriers = await this._rpc({
-                    route: this.paymentContext['shippingAddressUpdateRoute'],
-                    params: {
+                const availableCarriers = await this.rpc(
+                    this.paymentContext['shippingAddressUpdateRoute'],
+                    {
                         partial_shipping_address: {
                             zip: ev.shippingAddress.postalCode,
                             city: ev.shippingAddress.city,
@@ -167,7 +172,7 @@ paymentExpressCheckoutForm.include({
                             state: ev.shippingAddress.region,
                         },
                     },
-                });
+                );
                 if (availableCarriers.length === 0) {
                     ev.updateWith({status: 'invalid_shipping_address'});
                 } else {

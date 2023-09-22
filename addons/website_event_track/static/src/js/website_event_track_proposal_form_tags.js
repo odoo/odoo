@@ -6,6 +6,11 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form_tags',
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
@@ -22,12 +27,9 @@ publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.ex
         var self = this;
         this.$('.o_wetrack_select2_tags').select2(this._select2Wrapper(_t('Select categories'),
             function () {
-                return self._rpc({
-                    route: "/event/track_tag/search_read",
-                    params: {
-                        fields: ['name', 'category_id'],
-                        domain: [],
-                    }
+                return self.rpc("/event/track_tag/search_read", {
+                    fields: ['name', 'category_id'],
+                    domain: [],
                 });
             })
         );

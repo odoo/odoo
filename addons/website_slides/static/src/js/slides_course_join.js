@@ -48,6 +48,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         this.joinMessage = options.joinMessage || _t('Join this Course');
         this.beforeJoin = options.beforeJoin || function () {return Promise.resolve();};
         this.afterJoin = options.afterJoin || function () {document.location.reload();};
+        this.rpc = this.bindService("rpc");
     },
 
     //--------------------------------------------------------------------------
@@ -125,11 +126,8 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      */
     joinChannel: function (channelId) {
         var self = this;
-        this._rpc({
-            route: '/slides/channel/join',
-            params: {
-                channel_id: channelId,
-            },
+        this.rpc('/slides/channel/join', {
+            channel_id: channelId,
         }).then(function (data) {
             if (!data.error) {
                 self.afterJoin();

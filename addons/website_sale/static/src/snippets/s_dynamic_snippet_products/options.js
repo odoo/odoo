@@ -27,6 +27,8 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         }
         this.productCategories = {};
         this.isAlternativeProductSnippet = this.$target.hasClass('o_wsale_alternative_products');
+
+        this.orm = this.bindService("orm");
     },
     //--------------------------------------------------------------------------
     // Private
@@ -48,14 +50,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @returns {Promise}
      */
     _fetchProductCategories: function () {
-        return this._rpc({
-            model: 'product.public.category',
-            method: 'search_read',
-            kwargs: {
-                domain: wUtils.websiteDomain(this),
-                fields: ['id', 'name'],
-            }
-        });
+        return this.orm.searchRead("product.public.category", wUtils.websiteDomain(this), ["id", "name"]);
     },
     /**
      *

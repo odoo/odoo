@@ -17,6 +17,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     init: function () {
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
+        this.rpc = this.bindService("rpc");
     },
     /**
      * @override
@@ -38,12 +39,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         }
         const always = this._updateView.bind(this);
         const inputName = this.el.querySelector('input').name;
-        return Promise.all([def, this._rpc({
-            route: '/website_mass_mailing/is_subscriber',
-            params: {
-                'list_id': this._getListId(),
-                'subscription_type': inputName,
-            },
+        return Promise.all([def, this.rpc('/website_mass_mailing/is_subscriber', {
+            'list_id': this._getListId(),
+            'subscription_type': inputName,
         }).then(always).guardedCatch(always)]);
     },
     /**
@@ -109,14 +107,11 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             });
             return false;
         }
-        this._rpc({
-            route: '/website_mass_mailing/subscribe',
-            params: {
-                'list_id': this._getListId(),
-                'value': $input.length ? $input.val() : false,
-                'subscription_type': inputName,
-                recaptcha_token_response: tokenObj.token,
-            },
+        this.rpc('/website_mass_mailing/subscribe', {
+            'list_id': this._getListId(),
+            'value': $input.length ? $input.val() : false,
+            'subscription_type': inputName,
+            recaptcha_token_response: tokenObj.token,
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {
