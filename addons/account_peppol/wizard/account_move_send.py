@@ -23,6 +23,7 @@ class AccountMoveSend(models.Model):
         string="Warning",
         compute="_compute_peppol_warning",
     )
+    account_peppol_edi_mode_info = fields.Char(compute='_compute_account_peppol_edi_mode_info')
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -74,6 +75,19 @@ class AccountMoveSend(models.Model):
                     or any(m.ubl_cii_xml_id and m.peppol_move_state not in ('processing', 'done') for m in wizard.move_ids)
                 )
             )
+
+    @api.depends('company_id.account_edi_proxy_client_ids.edi_mode')
+    def _compute_account_peppol_edi_mode_info(self):
+        mode_strings = {
+            'test': _('Test'),
+            'demo': _('Demo'),
+        }
+        for wizard in self:
+            edi_user = wizard.company_id.account_edi_proxy_client_ids.filtered(
+                lambda usr: usr.proxy_type == 'peppol'
+            )
+            mode = mode_strings.get(edi_user.edi_mode)
+            wizard.account_peppol_edi_mode_info = f' ({mode})' if mode else ''
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS

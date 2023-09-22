@@ -24,6 +24,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
 
         cls.env.company.write({
             'country_id': cls.env.ref('base.be').id,

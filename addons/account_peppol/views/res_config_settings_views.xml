@@ -122,9 +122,12 @@
                                     Application status:
                                     <b>
                                         <field name="account_peppol_proxy_state"
+                                            oe_inline="oe_inline"
                                             readonly="1"
                                             decoration-danger="account_peppol_proxy_state == 'rejected'"
                                             decoration-info="account_peppol_proxy_state == 'active'"/>
+                                            <span class="text-info" attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'demo')]}"> (Demo)</span>
+                                            <span class="text-info" attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'test')]}"> (Test)</span>
                                     </b>
                                 </div>
                                 <div attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'rejected')]}">
@@ -151,8 +154,28 @@
                                     <field name="account_peppol_edi_identification"
                                         nolabel="1"/>
                                 </div>
-                                <div class="mt-5"
-                                    attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                <div class="mt-4"
+                                     attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                    <field name="account_peppol_mode_constraint" invisible="1"/>
+                                    <field name="account_peppol_edi_mode"
+                                           widget="account_peppol_radio_field"
+                                           class="o_field_radio"
+                                           readonly_items="account_peppol_mode_constraint != 'prod' and ['prod'] or []"
+                                           hidden_items="account_peppol_mode_constraint != 'test' and ['test'] or []"
+                                           options="{'horizontal': true }"/>
+                                    <div class="mb-3"
+                                         attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'prod')]}">
+                                        By clicking the button below I accept that Odoo may process my e-invoices.
+                                    </div>
+                                    <div class="mb-3"
+                                         attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'test')]}">
+                                        Test mode allows registration of the user on the test Peppol network.
+                                        By clicking the button below I accept that Odoo may process my e-invoices.
+                                    </div>
+                                    <div class="mb-3"
+                                         attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'demo')]}">
+                                        In demo mode sending and receiving invoices is simulated. There will be no communication with the Peppol network.
+                                    </div>
                                     <div class="mb-3">
                                         I accept that Odoo may process my e-invoices.
                                     </div>

@@ -4,8 +4,9 @@
 import logging
 
 from odoo import _, fields, models, modules, tools
-from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -23,6 +24,7 @@ class AccountEdiProxyClientUser(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    @handle_demo
     def _make_request(self, url, params=False):
         # extends account_edi_proxy_client to update peppol_proxy_state
         # of archived users
@@ -53,21 +55,9 @@ class AccountEdiProxyClientUser(models.Model):
         urls['peppol'] = {
             'prod': 'https://peppol.api.odoo.com',
             'test': 'https://peppol.test.odoo.com',
+            'demo': 'demo',
         }
         return urls
-
-    def _get_server_url(self, proxy_type=None, edi_mode=None):
-        proxy_type = proxy_type or self.proxy_type
-        if not proxy_type == 'peppol':
-            return super()._get_server_url(proxy_type, edi_mode)
-
-        peppol_param = self.env['ir.config_parameter'].sudo().get_param(
-            'account_peppol.edi.mode', False
-        )
-        if peppol_param == 'test':
-            edi_mode = 'test'
-
-        return super()._get_server_url(proxy_type, edi_mode)
 
     def _get_proxy_identification(self, company):
         if not company.peppol_eas or not company.peppol_endpoint:
