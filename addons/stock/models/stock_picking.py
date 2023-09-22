@@ -1247,12 +1247,10 @@ class Picking(models.Model):
                 continue
             quantity_todo = {}
             quantity_done = {}
-            for move in picking.move_ids:
-                if move.state == "cancel":
-                    continue
+            for move in picking.move_ids.filtered(lambda m: m.state != "cancel"):
                 quantity_todo.setdefault(move.product_id.id, 0)
                 quantity_done.setdefault(move.product_id.id, 0)
-                quantity_todo[move.product_id.id] += sum(move.move_line_ids.mapped('reserved_qty'))
+                quantity_todo[move.product_id.id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
                 quantity_done[move.product_id.id] += move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
             if any(
                 float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
