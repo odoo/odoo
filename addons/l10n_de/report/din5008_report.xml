@@ -40,7 +40,7 @@
         <!-- New report layout for din5008 format -->
         <template id="external_layout_din5008">
             <div>
-                <div t-attf-class="header din_page o_company_#{company.id}_layout">
+                <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
                     <table class="company_header" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
                         <tr>
                             <td><h3 class="mt0" t-field="company.report_header"/></td>
@@ -49,7 +49,7 @@
                     </table>
                 </div>
 
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
                     <table>
                         <tr>
                             <td>
@@ -116,7 +116,7 @@
                     <t t-raw="0"/>
                 </div>
 
-                <div t-attf-class="din_page footer o_company_#{company.id}_layout">
+                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
                     <div class="text-right page_number">
                         <div class="text-muted">
                             Page: <span class="page"/> of <span class="topage"/>
@@ -126,7 +126,7 @@
                         <table>
                             <tr>
                                 <td>
-                                    <ul class="list-inline">
+                                    <ul class="list-inline text-nowrap">
                                         <li t-if="company.name"><span t-field="company.name"/></li>
                                         <li t-if="company.street"><span t-field="company.street"/></li>
                                         <li t-if="company.street2"><span t-field="company.street2"/></li>
