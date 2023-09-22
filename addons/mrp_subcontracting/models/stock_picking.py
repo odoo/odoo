@@ -42,7 +42,6 @@ class StockPicking(models.Model):
     # Action methods
     # -------------------------------------------------------------------------
     def _action_done(self):
-        res = super(StockPicking, self)._action_done()
         for move in self.move_ids:
             if not move.is_subcontract:
                 continue
@@ -69,15 +68,23 @@ class StockPicking(models.Model):
                 })
                 change_qty.with_context(skip_activity=True).change_prod_qty()
             # Create backorder MO for each move lines
-            amounts = [move_line.qty_done for move_line in move.move_line_ids]
+            amounts = [move_line.qty_done for move_line in move.move_line_ids.filtered(lambda l: l.qty_done)]
             len_amounts = len(amounts)
             productions = production._split_productions({production: amounts}, set_consumed_qty=True)
-            for production, move_line in zip(productions, move.move_line_ids):
+            for production, move_line in zip(productions, move.move_line_ids.filtered(lambda l: l.qty_done)):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id
+                elif move_line.lot_name:
+                    production_lot_vals = {
+                        'product_id': production.product_id.id,
+                        'company_id': production.company_id.id,
+                        'name': move_line.lot_name,
+                    }
+                    production_lot = self.env['stock.lot'].create(production_lot_vals)
+                    move_line.lot_id = production_lot
+                    production.lot_producing_id = production_lot.id
                 production.qty_producing = production.product_qty
             productions[:len_amounts].subcontracting_has_been_recorded = True
-
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
             productions_to_done._subcontract_sanity_check()
@@ -94,7 +101,7 @@ class StockPicking(models.Model):
             production_moves = productions_to_done.move_raw_ids | productions_to_done.move_finished_ids
             production_moves.write({'date': minimum_date - timedelta(seconds=1)})
             production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
-
+        res = super(StockPicking, self)._action_done()
         return res
 
     def action_record_components(self):
