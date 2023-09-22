@@ -232,7 +232,7 @@ class StockMove(models.Model):
         multi_locations_enabled = self.user_has_groups('stock.group_stock_multi_locations')
         consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
 
-        show_details_visible = multi_locations_enabled or has_package
+        show_details_visible = multi_locations_enabled or has_package or consignment_enabled
 
         for move in self:
             if not move.product_id:
@@ -240,10 +240,7 @@ class StockMove(models.Model):
             elif len(move._get_move_lines()) > 1:
                 move.show_details_visible = True
             else:
-                move.show_details_visible = (((consignment_enabled and move.picking_code != 'incoming') or
-                                             show_details_visible or move.has_tracking != 'none') and
-                                             (move.state != 'draft' or move.picking_id) and
-                                             move.show_operations is False)
+                move.show_details_visible = show_details_visible or move.has_tracking != 'none'
 
     def _compute_show_reserved_availability(self):
         """ This field is only of use in an attrs in the picking view, in order to hide the
