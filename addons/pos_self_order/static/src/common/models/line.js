@@ -49,17 +49,6 @@ export class Line extends Reactive {
         return false;
     }
 
-    get attributes() {
-        return Object.entries(this.selected_attributes).map(([key, value]) => {
-            return { name: key, value };
-        });
-    }
-
-    get displayPrice() {
-        // for the moment we use price with tax included but we should look at the config setup
-        return this.price_subtotal_incl;
-    }
-
     updateDataFromServer(data) {
         for (const key in data) {
             let updatedValue = data[key];
@@ -69,5 +58,23 @@ export class Line extends Reactive {
 
             this[key] = updatedValue;
         }
+    }
+
+    getAttributes() {
+        return this.extractProductNameAndAttributes().attributes;
+    }
+
+    extractProductNameAndAttributes() {
+        const str = this.full_product_name;
+        const regex = /\(([^()]+)\)[^(]*$/;
+        const matches = str.match(regex);
+
+        if (matches && matches.length > 1) {
+            const attributes = matches[matches.length - 1].trim();
+            const productName = str.replace(matches[0], "").trim();
+            return { productName, attributes };
+        }
+
+        return { productName: str, attributes: "" };
     }
 }

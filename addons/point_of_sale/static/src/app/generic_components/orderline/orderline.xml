@@ -16,7 +16,7 @@
                     x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
                     <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
                 </li>
-                <li t-if="line.discount !== '0'">
+                <li t-if="line.discount and line.discount !== '0'">
                     With a <em><t t-esc="line.discount" />% </em> discount
                 </li>
                 <li t-if="line.comboParent" class="combo-parent-name">

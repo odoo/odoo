@@ -3,15 +3,21 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { NavBar } from "@pos_self_order/mobile/components/navbar/navbar";
 import { ProductCard } from "@pos_self_order/mobile/components/product_card/product_card";
-import { Lines } from "@pos_self_order/mobile/components/lines/lines";
 import { useSelfOrder } from "@pos_self_order/mobile/self_order_mobile_service";
-import { PriceDetails } from "@pos_self_order/mobile/components/price_details/price_details";
 import { PopupTable } from "@pos_self_order/mobile/components/popup_table/popup_table";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 
 export class OrderCart extends Component {
-    static components = { NavBar, ProductCard, Lines, PriceDetails, PopupTable };
+    static components = {
+        NavBar,
+        ProductCard,
+        PopupTable,
+        OrderWidget,
+        Orderline,
+    };
     static props = [];
     static template = "pos_self_order.OrderCart";
     setup() {

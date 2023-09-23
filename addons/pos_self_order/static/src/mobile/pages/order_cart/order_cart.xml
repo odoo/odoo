@@ -4,13 +4,8 @@
         <div class="d-flex flex-column dvh-100">
             <t t-set="order" t-value="selfOrder.currentOrder"/>
             <NavBar customText="'Cart'" />
-            <main class="h-100 bg-100 overflow-auto">
-                <Lines order="order" />
-                <div class="px-3 pt-4 pb-3 bg-white">
-                    <PriceDetails tax="order.amount_tax" total="order.amount_total"/>
-                </div>
-            </main>
-            <div class="d-flex align-items-center w-100 p-3 bg-white shadow-lg">
+            <main class="bg-100" t-call="pos_self_order.OrderWidget"/>
+            <div class="d-flex mt-auto align-items-center w-100 p-3 bg-white shadow-lg">
                 <div t-attf-class="{{ state.cancelConfirmation ? 'flex-row-reverse' : '' }} d-flex mt-2 flex-fill">
                     <button
                         t-if="order.hasNotAllLinesSent() and order.lines.length > 0"

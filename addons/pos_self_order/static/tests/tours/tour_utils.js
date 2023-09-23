@@ -14,6 +14,7 @@
  * @property {string} value
  */
 import { TourError } from "@web_tour/tour_service/tour_utils";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 export const PosSelf = {
     check: {
@@ -52,30 +53,17 @@ export const PosSelf = {
                 run: () => {},
             };
         },
-        isOrderline: (name, price, description = "", attributes = "", click = false) => {
-            let trigger = `.o_self_order_item_card:has(.o_self_product_name:contains("${name}"))`;
-            if (description) {
-                trigger += `:has(span.customer_note:contains("${description}"))`;
-            }
-            if (price) {
-                trigger += `:has(span.line_price:contains("${price}"))`;
-            }
+        isOrderline: (name, price, customerNote = "", attributes = "", click = false) => {
+            let trigger = Order.computeLineSelector({ productName: name, price, customerNote });
             if (attributes) {
                 trigger += `:has(span:contains("${attributes}"))`;
             }
             return {
                 content: `${
                     (click && "Click") || "Check"
-                } orderline with ${name} and ${price} and ${description}`,
+                } orderline with ${name} and ${price} and ${customerNote}`,
                 trigger: trigger,
                 isCheck: !click,
-            };
-        },
-        isNotOrderline: (name, price, description = "", attributes = "") => {
-            return {
-                content: `Verify is there an orderline with ${name} and ${price} and ${description}`,
-                trigger: `.o_self_order_item_card:not(:has(.o_self_product_name:contains("${name}")):has(span:contains("${description}")):has(span:contains("${attributes}")):has(span.card-text:contains("${price}")))`,
-                run: () => {},
             };
         },
         isProductQuantity: (name, quantity) => {

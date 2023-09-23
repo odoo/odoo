@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderWidget">
+        <OrderWidget lines="order.lines" t-slot-scope="orderline"
+            total="selfOrder.formatMonetary(order.amount_total)" tax="selfOrder.formatMonetary(order.amount_tax)" >
+            <t t-set="line" t-value="orderline.line"/>
+            <Orderline line="selfOrder.getLineDisplayData(line)"
+                t-on-click="() => selfOrder.onLineClick(line, order)"
+                class="{'px-3': true}">
+                <span t-if="line.getAttributes()" t-esc="line.getAttributes()" class="m-0 text-muted small break-line" />
+            </Orderline>
+        </OrderWidget>
+    </t>
+</templates>
