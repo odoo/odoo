@@ -25,7 +25,7 @@ msgstr ""
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Hubungkan Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -36,12 +36,12 @@ msgstr "Tidak dapat membuat hubungan ke API."
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Buat webhook Anda"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Dapatkan Secret dan Publishable key"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -49,12 +49,14 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Bila webhook diaktifkan pada akun Stripe Anda, signing secret ini harus "
+"diaktifkan untuk mengautentikasi pesan yang dikiri dari Stripe ke Odoo."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -89,30 +91,30 @@ msgstr "Pemberi"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Publishable KEy"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "Menerima data dengan status niat yang tidak valid: %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Menerima data tanpa status niat."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Menerima data dengan referensi pedagang yang hilang"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Secret Key"
-msgstr ""
+msgstr "Secret Key"
 
 #. module: payment_stripe
 #: model:account.payment.method,name:payment_stripe.payment_method_stripe
@@ -128,25 +130,25 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "ID Metode Pembayaran Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "Error Proxy Stripe: %(error)s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Proxy Stripe: Error terjadi saat berkomunikasi dengan proxy."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "Proxy Stripe: Tidak dapat mendirikan hubungan."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
@@ -162,17 +164,20 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"Komunikasi dengan API gagal.\n"
+"Stripe memberikan kita informasi berikut mengenai masalah tersebut:\n"
+"'%s'"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "Key yang hanya digunakan untuk mengidentifikasi akun dengan Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Transaksi ini tidak terhubung ke token."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_token.py:0
@@ -183,13 +188,13 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Webhook Signing Secret"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "Webhook Stripe Anda berhasil di setup!"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -197,6 +202,8 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Anda tidak dapat membuat Stripe Webhook bila Stripe Secret Key belum "
+"ditetapkan."
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -218,4 +225,4 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Stripe Wehbook sudah di-setup."

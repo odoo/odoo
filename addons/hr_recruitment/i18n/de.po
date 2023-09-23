@@ -251,8 +251,8 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hallo,\n"
 "                <br/><br/>\n"
-"                Wir bestätigen den Eingang Ihrer Bewerbung für folgende Stelle:\n"
-"                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" bei <strong t-out=\"object.company_id.name or ''\">Ihre Firma</strong>.\n"
+"                hiermit bestätigen wir den Erhalt Ihrer Bewerbung für die Stelle\n"
+"                „<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Erfahrener Entwickler</strong></a>“ bei <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
 "                <br/><br/>\n"
 "                Wir melden uns in Kürze bei Ihnen.\n"
 "\n"
@@ -262,7 +262,7 @@ msgstr ""
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                <t t-if=\"object.user_id\">\n"
-"                    <h3 style=\"color:#9A6C8E;\"><strong>Ihr Kontakt:</strong></h3>\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Ihr Ansprechpartner:</strong></h3>\n"
 "                    <table>\n"
 "                        <tr>\n"
 "                            <td width=\"75\">\n"
@@ -279,8 +279,10 @@ msgstr ""
 "                </t>\n"
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>Wie geht es weiter?</strong></h3>\n"
-"                <strong>Wir beantworten Bewerbungen normalerweise innerhalb einiger Tage.</strong><br/><br/>\n"
-"                <strong>Sie können uns gerne kontaktieren, um schneller Feedback zu erhalten</strong> oder falls Sie nicht schnell genug von uns hören (antworten Sie einfach auf diese E-Mail).\n"
+"                Wir <strong>beantworten Bewerbungen gewöhnlich innerhalb weniger Tage.</strong><br/><br/>\n"
+"                Sie können <strong>uns gerne kontaktieren, um schneller\n"
+"                Feedback zu erhalten</strong> oder wenn Sie nicht schnell genug von\n"
+"                uns hören (antworten Sie einfach auf diese E-Mail).\n"
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
 "                <t t-set=\"location\" t-value=\"''\"/>\n"
@@ -1202,9 +1204,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
-"Definieren Sie die Stufen Ihres Einstellungsprozess, z.B.:\n"
-"Erstanruf zur Qualifizierung, erstes Bewerbergespräch, zweites Bewerbergespräch, \n"
-"keine Einstellung, Einstellung"
+"Definieren Sie die Phasen Ihres Einstellungsverfahrens, zum Beispiel:\n"
+"              Erstanruf zur Qualifizierung, erstes Bewerbungsgespräch, zweites Bewerbungsgespräch, Abgelehnt\n"
+"              Eingestellt."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1324,7 +1326,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Dropdown menu"
-msgstr "Dropdownmenu"
+msgstr "Drop-down-Menü"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1496,7 +1498,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Zeigt Reihenfolge bei Listenansicht der Einstellungsstufen."
+msgstr "Zeigt Reihenfolge bei Listenansicht der Phasen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -2533,7 +2535,9 @@ msgstr "Einstellungen"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Show all records which has next action date is before today"
-msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
+msgstr ""
+"Alle Datensätze anzeigen, die ein Datum für die nächste Aktion vor dem "
+"heutigen Tag haben"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -2650,7 +2654,7 @@ msgstr "Stichwortbezeichnung"
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_applicant_category_name_uniq
 msgid "Tag name already exists !"
-msgstr "Stichwort existiert bereits!"
+msgstr "Stichwortbezeichnung existiert bereits!"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action

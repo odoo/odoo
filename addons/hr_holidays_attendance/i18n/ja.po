@@ -8,6 +8,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +64,7 @@ msgstr "時間外労働"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "時間外利用可能"
 
 #. module: hr_holidays_attendance
 #. openerp-web
@@ -82,7 +83,7 @@ msgstr "時間"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "HR勤怠残業"
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
@@ -101,12 +102,12 @@ msgstr "このタイプの休暇が承認されると、勤務時間の超過が
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "残業控除"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "残業申請"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -118,27 +119,27 @@ msgstr "保存"
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
-msgstr ""
+msgstr "この休暇を申請するには、従業員の時間外労働時間が不足しています。"
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
-msgstr ""
+msgstr "この休暇を延長するには、従業員の時間外労働時間が不足しています。"
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to request this allocation."
-msgstr ""
+msgstr "この割当を申請するには、従業員の時間外労働時間が不足しています。"
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
-msgstr ""
+msgstr "この休暇を申請するには、従業員の時間外労働時間が不足しています。"
 
 #. module: hr_holidays_attendance
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
@@ -166,7 +167,7 @@ msgstr "休暇タイプ"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "合計残業時間"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_users
@@ -178,7 +179,7 @@ msgstr "ユーザ"
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
-msgstr ""
+msgstr "この休暇を申請するには、時間外労働時間が不足しています。"
 
 #. module: hr_holidays_attendance
 #. openerp-web
