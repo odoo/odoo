@@ -2098,7 +2098,7 @@ msgstr "ผลักดัน"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #, python-format
 msgid "Forecast Report"
-msgstr ""
+msgstr "รายงานการคาดการณ์"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
@@ -2128,7 +2128,7 @@ msgstr "ปัญหาที่คาดการณ์"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr ""
+msgstr "ใช้งานได้ฟรี"
 
 #. module: mrp
 #. odoo-javascript
@@ -2665,7 +2665,7 @@ msgstr "ช่วงเวลานำสินค้า"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Lead Times"
-msgstr ""
+msgstr "เวลานำร่อง"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2815,7 +2815,7 @@ msgstr "จัดการการปฏิบัติการคำสั่
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
-msgstr ""
+msgstr "การใช้งานด้วยตนเอง"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
@@ -4481,7 +4481,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
 msgid "Show Allocation"
-msgstr ""
+msgstr "แสดงการจัดสรร"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_apply
@@ -4856,7 +4856,7 @@ msgstr "ชื่อแท็ก"
 msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
-msgstr ""
+msgstr "ฟิลด์ทางเทคนิคใช้เพื่อตัดสินใจว่าควรแสดงปุ่ม \"การจัดสรร\" หรือไม่"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5444,7 +5444,7 @@ msgstr "กางออก"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Unit Cost"
-msgstr ""
+msgstr "ต้นทุนต่อหน่วย"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
@@ -5580,6 +5580,16 @@ msgid "Validate"
 msgstr "ตรวจสอบ"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -5653,7 +5663,7 @@ msgstr "โกดังสินค้า"
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Warehouse:"
-msgstr ""
+msgstr "คลังสินค้า:"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
@@ -5721,6 +5731,8 @@ msgid ""
 "When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
+"เมื่อเปิดใช้งาน การลงทะเบียนปริมาณการใช้สำหรับส่วนประกอบนั้นจะถูกบันทึกด้วยตนเองโดยเฉพาะ\n"
+"หากไม่ได้เปิดใช้งาน และปริมาณการใช้ส่วนประกอบได้รับการแก้ไขด้วยตนเองในใบสั่งผลิต Odoo จะถือว่าปริมาณการใช้ด้วยตนเองเช่นกัน"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6289,13 +6301,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "คุณต้องจัดเตรียมล็อตสำหรับสินค้าสำเร็จรูป"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr ""
 
 #. module: mrp
 #. odoo-python

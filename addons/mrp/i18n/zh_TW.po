@@ -3,10 +3,10 @@
 # 	* mrp
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
 # Tony Ng, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3691,14 +3691,14 @@ msgstr "可能的產品模板屬性值"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Post-Production"
-msgstr "生產前"
+msgstr "生產後"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pre-Production"
-msgstr "生產後"
+msgstr "生產前"
 
 #. module: mrp
 #. odoo-javascript
@@ -3871,7 +3871,7 @@ msgstr "產品量度單位"
 #: model:ir.model,name:mrp.model_product_product
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
 msgid "Product Variant"
-msgstr "產品變體"
+msgstr "產品款式"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_product_variant_action
@@ -5525,6 +5525,16 @@ msgid "Validate"
 msgstr "驗證"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -6203,13 +6213,6 @@ msgstr "您需要在「產能」類別定義至少一個未啟用的產能損失
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "您需要為完工產品提供批號."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr ""
 
 #. module: mrp
 #. odoo-python
