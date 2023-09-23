@@ -16,6 +16,7 @@
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Jiří Podhorecký, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Tomáš Píšek, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2023\n"
+"Last-Translator: Tomáš Píšek, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1116,6 +1117,9 @@ msgid ""
 " all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"Stiknutím Přijmout & Podepsat, souhlasím s tím že vybraný podpis/iniciály "
+"budou platnou elektronickou repezentací mého vlastnoručního podpisu/iniciál "
+"pro všechny způsoby užití na dokumentech, včetně právně závazných smluv."
 
 #. module: web
 #. odoo-javascript
@@ -1176,7 +1180,6 @@ msgstr "Hovor"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1595,7 +1598,6 @@ msgstr "Stát"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1630,6 +1632,13 @@ msgstr "Vytvořit \"<strong>%s</strong>\""
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create %s"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
 msgstr ""
 
 #. module: web
@@ -2793,6 +2802,13 @@ msgid "Invalid fields: "
 msgstr ""
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -3109,7 +3125,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match"
-msgstr ""
+msgstr "Shoda"
 
 #. module: web
 #. odoo-javascript
@@ -6145,7 +6161,6 @@ msgstr "jsou pro tuto aktualizaci platné."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr ""
@@ -6494,7 +6509,7 @@ msgstr "menší nebo rovno"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "jako"
 
 #. module: web
 #. odoo-javascript
@@ -6532,6 +6547,13 @@ msgstr "více"
 #, python-format
 msgid "ms"
 msgstr "ms"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6697,20 +6719,6 @@ msgstr "nastavit"
 #, python-format
 msgid "set (true)"
 msgstr "nastavit (true)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "to open in new tab"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "to open,"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
