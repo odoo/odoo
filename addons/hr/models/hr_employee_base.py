@@ -28,11 +28,14 @@ class HrEmployeeBase(models.AbstractModel):
     address_id = fields.Many2one('res.partner', 'Work Address', compute="_compute_address_id", store=True, readonly=False,
         check_company=True)
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
+    phone = fields.Char(related="user_id.phone")
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
+    email = fields.Char(related="user_id.email")
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location')
     user_id = fields.Many2one('res.users')
+    share = fields.Boolean(related='user_id.share')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
@@ -58,6 +61,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_to_define', 'To define'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
+    im_status = fields.Char(related="user_id.im_status")
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
     @api.model

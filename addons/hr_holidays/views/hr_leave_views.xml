@@ -459,7 +459,7 @@
         <field name="arch" type="xml">
             <tree string="Time Off Requests" sample="1">
                 <field name="employee_id" column_invisible="True" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
-                <field name="all_employee_ids" widget="many2many_tags_avatar" decoration-muted="not active_employee" string="Employees" />
+                <field name="all_employee_ids" widget="many2many_avatar_user" decoration-muted="not active_employee" string="Employees" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="holiday_type" string="Mode" groups="base.group_no_one" readonly="state not in ['confirm', 'draft']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
