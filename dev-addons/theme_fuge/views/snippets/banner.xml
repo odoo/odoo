@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="fuge_index_banner" inherit_id="website.snippets"
+              name="Fuge Index banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_fuge.fuge_banner"
+               t-thumbnail="/theme_fuge/static/src/images/snippets/banner/banner.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="fuge_banner" name="Fuge Banner">
+        <section class="banner">
+            <!-- Top nav -->
+            <div class="top-header-content ">
+
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <div class=" col-md-8 col-lg-8 col-sm-12 p-0">
+
+                            <div id="carouselExampleIndicators"
+                                 class="carousel slide" data-bs-ride="carousel">
+<!--                                <ol class="carousel-indicators">-->
+<!--                                    <li data-bs-target="#carouselExampleIndicators"-->
+<!--                                        data-bs-slide-to="0" class="active"/>-->
+<!--                                    <li data-bs-target="#carouselExampleIndicators"-->
+<!--                                        data-bs-slide-to="1"/>-->
+
+<!--                                    &lt;!&ndash; <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> &ndash;&gt;-->
+<!--                                </ol>-->
+
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <img class="bg-right">
+                                                    <div class="container-fluid">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-8">
+                                                                    <div class="card left_card">
+                                                                        <div class="card-body">
+                                                                            <h2 class="card-title">
+                                                                                Women's
+                                                                                Fashion
+                                                                                <p class="card-title">
+                                                                                    50%
+                                                                                    OFF
+                                                                                </p>
+                                                                            </h2>
+                                                                            <a href="#"
+                                                                               class="btn btn-banner1">
+                                                                                Shop
+                                                                                now
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </img>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <div class="row">
+
+
+                                            <div class="col-12">
+                                                <img class="bg-right2">
+                                                    <div class="container-fluid">
+                                                        <!-- <div class="top-right  d-flex">
+                                                            <h6>UPTO 30% OFF ON ALL STYLES,</h6>
+                                                            <P>Click Here For &nbsp;
+                                                                <i class="far fa-hand-point-right"></i><span class="more">More Details</span>
+                                                            </P>
+                                                        </div> -->
+
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-8">
+                                                                    <div class="card left_card">
+
+                                                                        <div class="card-body">
+                                                                            <h2 class="card-title">
+                                                                                Women's
+                                                                                Fashion
+                                                                                <p style="color: #fff;font-size: 50px;text-align: left;font-weight: 900;">
+                                                                                    50%
+                                                                                    OFF
+                                                                                </p>
+                                                                            </h2>
+                                                                            <a href="#"
+                                                                               class="btn btn-banner1">
+                                                                                Shop
+                                                                                now
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </img>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="carousel-item">
+                                        <div class="row">
+
+
+                                            <div class="col-12">
+                                                <img class="bg-right3">
+                                                    <div class="container-fluid">
+                                                        <!-- <div class="top-right  d-flex">
+                                                            <h6>UPTO 30% OFF ON ALL STYLES,</h6>
+                                                            <P>Click Here For &nbsp;
+                                                                <i class="far fa-hand-point-right"></i><span class="more">More Details</span>
+                                                            </P>
+                                                        </div> -->
+
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-8">
+                                                                    <div class="card left_card">
+
+                                                                        <div class="card-body">
+                                                                            <h2 class="card-title">
+                                                                                Women's
+                                                                                Fasion
+                                                                                <p style="color: #fff;font-size: 50px;text-align: left;font-weight: 900;">
+                                                                                    50%
+                                                                                    OFF
+                                                                                </p>
+                                                                            </h2>
+                                                                            <a href="#"
+                                                                               class="btn btn-banner1">
+                                                                                Shop
+                                                                                now
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </img>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="carousel-control-prev"
+                                   href="#carouselExampleIndicators"
+                                   role="button"
+                                   data-bs-slide="prev">
+<!--                                    <span class="carousel-control-prev-icon"-->
+<!--                                          aria-hidden="true" style="display:inline-block !important;"/>-->
+                                    <span class="fa fa-chevron-left fa-2x"/>
+
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next"
+                                   href="#carouselExampleIndicators"
+                                   role="button"
+                                   data-bs-slide="next">
+<!--                                    <span class="carousel-control-next-icon"-->
+<!--                                          aria-hidden="true" style="display:inline-block !important;"/>-->
+                                    <span class="fa fa-chevron-right fa-2x"/>
+
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class=" col-md-4 col-lg-4 col-sm-12 p-0">
+                            <img class="bg-left">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-8 col-lg-8 col-sm-12 col-md-12">
+                                            <div class="card right_card">
+                                                <div class="card-body">
+                                                    <h2 class="card-title">
+                                                        Mens's Fasion
+                                                        <p class="card-title">
+                                                            50% OFF
+                                                        </p>
+                                                    </h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </img>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

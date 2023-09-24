@@ -1,0 +1,520 @@
+<odoo>
+    <template id="shop_product_page" inherit_id="website_sale.products"
+              active="True" name="Products Page">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <section class="banner_about" style="margin-top:-50px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff; font-weight:bold;">Shop</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li style="color:#fff; font-weight:bold;" href="/shop">Shop</li>
+                    </ol>
+                </div>
+            </section>
+        </xpath>
+        <xpath expr="//table[hasclass('table')]" position="replace">
+            <div class="product_view">
+                <div class="container">
+                    <div class="row">
+                        <div t-if="bins" class="row pt">
+                            <t t-foreach="bins" t-as="tr_product">
+                                <t t-foreach="tr_product"
+                                   t-as="td_product">
+                                    <t t-if="td_product">
+                                        <t t-set="product"
+                                           t-value="td_product['product']"/>
+                                        <t t-attf-class="wrapper"
+                                           t-att-data-ribbon-id="td_product['ribbon'].id">
+                                            <div class="col-md-3">
+                                                <div t-attf-class="img_wrapper">
+                                                    <t t-call="theme_fuge.fuge_shop_images"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </t>
+                                    <t t-else=""/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="fuge_add_to_wishlist" inherit_id="website_sale.products_item" name="Wishlist Button" priority="20">
+        <xpath expr="//div[hasclass('card-body')]" position="inside">
+            <t t-nocache="The wishlist depends on the user and must not be shared with other users. As this rendering is in the loop, the product value is set in the template, we must retain the id of the product on which we are."
+               t-nocache-product_template_id="product.id">
+                <t t-set="product" t-value="products.filtered(lambda p: p.id == product_template_id)"/>
+                <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
+                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                <button t-if="product_variant_id" type="button" role="button"
+                        class="btn btn-outline-primary bg-white o_add_wishlist fuge_btn" t-att-disabled='in_wish or None'
+                        title="Add to Wishlist" t-att-data-product-template-id="product.id"
+                        t-att-data-product-product-id="product_variant_id" data-action="o_wishlist">
+                    <span class="fa fa-heart fuge_icon" role="img" aria-label="Add to wishlist"></span>
+                </button>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="fuge_add_to_compare" inherit_id="website_sale.products_item" name="Comparison List" priority="22">
+        <xpath expr="//div[hasclass('card-body')]" position="inside">
+            <t t-if="boolean_product_comparison">
+                <t t-set="categories"
+                   t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                <button t-if="product_variant_id and categories" type="button" role="button"
+                        class="d-none d-md-inline-block btn btn-outline-primary bg-white o_add_compare fuge_btn" title="Compare"
+                        aria-label="Compare" t-att-data-product-product-id="product_variant_id"
+                        data-action="o_comparelist">
+                    <span class="fa fa-exchange fuge_icon"></span>
+                </button>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="fuge_pricelist_dropdown" name="Fuge Pricelist Dropdown"
+              inherit_id="website_sale.pricelist_list">
+        <xpath expr="//div[contains(@t-attf-class, 'o_pricelist_dropdown')]" position="replace"/>
+    </template>
+
+
+    <template id="Fuge_layout_button" name="Fuge Layout Button"
+              inherit_id="website_sale.add_grid_or_list_option">
+        <xpath expr="//div[contains(@t-attf-class, 'o_wsale_apply_layout')]" position="replace"/>
+    </template>
+
+    <template id="fuge_pricelist_button" name="Fuge Pricelist Button"
+              inherit_id="website_sale.sort">
+        <xpath expr="//div[contains(@t-attf-class, 'o_sortby_dropdown')]" position="replace">
+            <div t-attf-class="o_sortby_dropdown dropdown dropdown_sorty_by ms-lg-3 btn-primary {{_classes}}">
+                <a role="button" href="#" t-attf-class="dropdown-toggle btn" data-bs-toggle="dropdown">
+                    <span class="d-none d-lg-inline">
+                        <t t-if="isSortingBy" t-out="isSortingBy[0][1]"/>
+                        <span t-else="1" t-field="website.shop_default_sort"/>
+                    </span>
+                    <i class="fa fa-sort-amount-asc d-lg-none"/>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" role="menu">
+                    <t t-foreach="website_sale_sortable" t-as="sortby">
+                        <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[0])"
+                           class="dropdown-item">
+                            <span t-out="sortby[1]"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="fuge_search" name="Fuge Search"
+              inherit_id="website.website_search_box">
+        <xpath expr="//div[@role='search']" position="replace">
+            <div class="sidebar" style="margin-top: 10px; margin-right:auto;">
+                <div class="wrapper">
+                    <div class="box">
+                        <form class="o_wsale_products_searchbar_form example dropdown show"
+                              method="get" action="/shop"
+                              style="margin:auto; max-width:600px">
+                            <div t-attf-class="input-group #{_classes}"
+                                 role="search">
+                                <input type="text" name="search"
+                                       class="search-query"
+                                       placeholder="Search.."
+                                       style="padding: 10px;font-size: 17px; border: 1px solid #ccc;float: left;width: 100%;background: #ffffff;"/>
+                                <button type="submit"
+                                        style="padding: 10px;background: transparent;color: #e2e2e2;font-size: 17px;border: 1px solid #ccc;border-left-color: rgb(204, 204, 204);border-left-style: solid;border-left-width: 1px;border-left: none;border-bottom: none;cursor: pointer;position: absolute;right: 0;z-index: 999;">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                            <input name="order" type="hidden"
+                                   class="o_wsale_search_order_by" value=""/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    <template id="fuge_pager" name="Fuge pager">
+        <ul t-if="pager['page_count'] > 1"
+            t-attf-class="#{ classname or '' } pagination m-0 #{_classes}"
+            style="justify-content:center;margin-bottom:15px !important;">
+            <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
+                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None"
+                   class="page-link"
+                   style="margin-right:10px; margin-left:10px;">
+                    <span class="fa fa-angle-double-left"/>
+                </a>
+            </li>
+            <t t-foreach="pager['pages']" t-as="page">
+                <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''}">
+                    <a t-att-href="page['url']" class="page-link"
+                       t-raw="page['num']"
+                       style="margin-right:10px; margin-left:10px;"/>
+                </li>
+            </t>
+            <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None"
+                   class="page-link"
+                   style="margin-right:10px; margin-left:10px;">
+                    <span class="fa fa-angle-double-right"/>
+                </a>
+            </li>
+        </ul>
+    </template>
+
+
+    <template id="Fuge_pagination" name="fuge pagination"
+              inherit_id="website_sale.products">
+        <xpath expr="//div[hasclass('justify-content-center')]"
+               position="replace">
+            <div class="justify-content-center">
+                <t t-call="theme_fuge.fuge_pager"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="fuge_shop_images" name="Fuge Shop Images"
+              inherit_id="website_sale.products_item">
+        <xpath expr="//div[hasclass('oe_product_image')]"
+               position="replace">
+            <t t-set="product" t-value="product"/>
+            <div class="card-body p-1 oe_product_image">
+                <input type="hidden" name="csrf_token"
+                       t-att-value="request.csrf_token()"/>
+                <a t-att-href="product_href" class="d-block h-100"
+                   itemprop="url">
+                    <t t-set="image_holder"
+                       t-value="product._get_image_holder()"/>
+                    <span t-field="image_holder.image_1920"
+                          t-options="{'widget': 'image', 'preview_image': 'image_1920'}"
+                          class="d-flex h-100 justify-content-center align-items-center">
+                    </span>
+                </a>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wsale_product_information_text')]"
+               position="replace">
+            <div class="p-2 o_wsale_product_information_text">
+                <h6 class="o_wsale_products_item_title">
+                    <a style="font-size: 16px;text-decoration: none !important;font-weight: 600;color: #000000 !important"
+                       itemprop="name"
+                       t-att-href="product_href"
+                       t-att-content="product.name"
+                       t-field="product.name"/>
+                    <a role="button"
+                       t-if="not product.website_published"
+                       t-att-href="product_href"
+                       class="btn btn-sm btn-danger"
+                       title="This product is unpublished.">Unpublished
+                    </a>
+                </h6>
+                <div class="product_price" itemprop="offers"
+                     itemscope="itemscope"
+                     itemtype="http://schema.org/Offer">
+                    <t t-if="product_id">
+                        <t t-set="combination_info"
+                           t-value="product_id.product_tmpl_id._get_combination_info(product_id=product_id.id, add_qty=add_qty or 1, pricelist=pricelist)"/>
+                        <del t-attf-class="text-danger mr-2 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                             style="white-space: nowrap;"
+                             t-esc="combination_info['list_price']"
+                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span t-if="combination_info['price']"
+                              t-esc="combination_info['price']"
+                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                              style="font-weight: 600;color: #000000 !important"/>
+                        <span itemprop="price" style="display:none;"
+                              t-esc="combination_info['price']"/>
+                        <span itemprop="priceCurrency" style="display:none;"
+                              t-esc="website.currency_id.name"/>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="fuge_cart" name="Shopping Cart" inherit_id="website_sale.cart">
+        <xpath expr="//div[@id='wrap']"
+               position="replace">
+            <section class="banner_about" style="margin-top:-50px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff; font-weight:bold;">Cart</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li style="color:#fff" class="active">Cart</li>
+                    </ol>
+                </div>
+            </section>
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="10"/>
+                            </t>
+                        </div>
+                        <div class="col-12 col-xl-8 oe_cart">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info"
+                                         role="alert"> <!-- abandoned cart choices -->
+                                        <t t-if="abandoned_proceed">
+                                            <p>Your previous cart has already been completed.</p>
+                                            <p t-if="website_sale_order">Please proceed your current cart.</p>
+                                        </t>
+                                        <t t-if="access_token">
+                                            <p>This is your current cart.</p>
+                                            <p>
+                                                <strong>
+                                                    <a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">
+                                                        Click here
+                                                    </a>
+                                                </strong>
+                                                if you want to restore your previous cart. Your current cart will be
+                                                replaced with your previous cart.
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">
+                                                        Click here
+                                                    </a>
+                                                </strong>
+                                                if you want to merge your previous cart into current cart.
+                                            </p>
+                                        </t>
+                                    </div>
+                                    <t t-call="website_sale.cart_lines"/>
+                                    <div class="clearfix"/>
+                                    <a role="button" href="/shop"
+                                       class="btn btn-secondary mb32 d-none d-xl-inline-block">
+                                        <span class="fa fa-chevron-left"/>
+                                        <span class="">Continue Shopping</span>
+                                    </a>
+                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line"
+                                       class="btn btn-primary float-end d-none d-xl-inline-block"
+                                       href="/shop/checkout?express=1">
+                                        <span class="">Process Checkout</span>
+                                        <span class="fa fa-chevron-right"/>
+                                    </a>
+                                    <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-4" id="o_cart_summary">
+                            <t t-call="website_sale.short_cart_summary"/>
+                            <div class="d-xl-none mt8">
+                                <a role="button" href="/shop" class="btn btn-secondary mb32">
+                                    <span class="fa fa-chevron-left"/>
+                                    Continue
+                                    <span class="d-none d-md-inline">Shopping</span>
+                                </a>
+                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line"
+                                   class="btn btn-primary float-right" href="/shop/checkout?express=1">
+                                    <span class="">Process Checkout</span>
+                                    <span class="fa fa-chevron-right"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_sale_cart_2"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="fuge_payment" name="Payment" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <section class="banner_about" style="margin-top:-50px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff; font-weight:bold;">Checkout</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li style="color:#fff" class="active">Checkout</li>
+                    </ol>
+                </div>
+            </section>
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                    <div class="row">
+                        <div class='col-12'>
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="40"/>
+                            </t>
+                        </div>
+                        <div class="col-12" t-if="errors">
+                            <t t-foreach="errors" t-as="error">
+                                <div class="alert alert-danger" t-if="error" role="alert">
+                                    <h4>
+                                        <t t-esc="error[0]"/>
+                                    </h4>
+                                    <t t-esc="error[1]"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-12 col-xl-auto order-xl-2">
+                            <t t-call="website_sale.cart_summary"/>
+                        </div>
+                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                            <div id='address_on_payment'>
+                                <t t-call="website_sale.address_on_payment"/>
+                            </div>
+
+                            <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
+
+                            <t t-if="website_sale_order.amount_total">
+                                <div t-if="providers or tokens" id="payment_method" class="mt-3">
+                                    <h3 class="mb24">Pay with</h3>
+                                    <t t-call="payment.checkout">
+                                        <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
+                                        <t t-set="submit_button_label" >Pay Now</t>
+                                    </t>
+                                </div>
+                                <div t-else="" class="alert alert-warning">
+                                    <strong>No suitable payment option could be found.</strong>
+                                    <br/>
+                                    If you believe that it is an error, please contact the website administrator.
+                                </div>
+                            </t>
+
+                            <div t-if="not providers" class="mt-2">
+                                <a role="button" class="btn-link"
+                                   groups="base.group_system"
+                                   t-attf-href="/web#action=#{payment_action_id}">
+                                    <i class="fa fa-arrow-right"></i>
+                                    Add payment acquirers
+                                </a>
+                            </div>
+                            <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method"
+                                 name="o_website_sale_free_cart">
+                                <form target="_self" action="/shop/payment/validate" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <t t-call="website_sale.payment_footer">
+                                        <t t-set="submit_button_label" t-value="'Confirm Order'"/>
+                                    </t>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="confirmation" inherit_id="website_sale.confirmation">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <section class="banner_about" style="margin-top:-50px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff; font-weight:bold;">Confirmation</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li style="color:#fff" class="active">Confirmation</li>
+                    </ol>
+                </div>
+            </section>
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                    <h1>
+                        <span>Order</span>
+                        <em t-field="order.name"/>
+                        <t t-if="order.state == 'sale'">
+                            <span>Confirmed</span>
+                        </t>
+                    </h1>
+
+                    <div class="row">
+                        <div class="col-12 col-xl">
+                            <div class="oe_cart">
+                                <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
+                                <t t-if="payment_tx_id.state == 'done'">
+                                    <div class="thanks_msg">
+                                        <h2>Thank you for your order.
+                                            <a role="button" class="btn btn-primary d-none d-md-inline-block"
+                                               href="/shop/print" target="_blank" aria-label="Print" title="Print">
+                                                <i class="fa fa-print"></i>
+                                                Print
+                                            </a>
+                                        </h2>
+                                    </div>
+                                </t>
+                                <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
+                                    <p class="alert alert-info mt-3" role="status">
+                                        <a role="button"
+                                           t-att-href='order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True).signup_url'
+                                           class='btn btn-primary'>Sign Up
+                                        </a>
+                                        to follow your order.
+                                    </p>
+                                </t>
+                                <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
+                                <h3 class="text-left mt-3">
+                                    <strong>Payment Information:</strong>
+                                </h3>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <t t-esc="order.get_portal_last_transaction().provider_id.sudo().name"/>
+                                            </td>
+                                            <td class="text-end" width="100">
+                                                <strong>Total:</strong>
+                                            </td>
+                                            <td class="text-end" width="100">
+                                                <strong t-field="order.amount_total"
+                                                        t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <t t-call="website_sale.payment_confirmation_status"/>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <t t-set="same_shipping"
+                                           t-value="bool(order.partner_shipping_id==order.partner_id or only_services)"/>
+                                        <div>
+                                            <b>Billing <t t-if="same_shipping and not only_services">&amp; Shipping</t>:
+                                            </b>
+                                            <span t-esc='order.partner_id'
+                                                  t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
+                                                  class="address-inline"/>
+                                        </div>
+                                        <div t-if="not same_shipping and not only_services"
+                                             groups="sale.group_delivery_invoice_address">
+                                            <b>Shipping:</b>
+                                            <span t-esc='order.partner_shipping_id'
+                                                  t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
+                                                  class="address-inline"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-auto">
+                            <t t-set="website_sale_order" t-value="order"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="hide_coupon" t-value="1"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

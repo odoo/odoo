@@ -1,0 +1,102 @@
+.subscribe{
+
+
+.sub_left_content{
+    width: 100%;
+}
+
+    .card{
+        background: transparent;
+        border: none;
+    @media screen and(max-width:767px){
+        margin: 0px auto;
+        width: 80%;
+        padding-bottom: 50px;
+        @media screen and(max-width:767px){
+                
+            padding-top: 30px;
+            margin-bottom: 30px;
+        }
+    }
+     
+        .card-body{
+            padding: 0;
+            margin-top: 60px;
+            padding-left: 100px;
+            @media screen and(max-width:767px){
+                
+                padding-left: 70px;
+            }
+        }
+    
+        .card-title{
+            text-transform: uppercase;
+        font-size: $font-size-h1;
+         font-weight: 700;
+         span{
+            color: $color-orange;
+            margin-top: 0;
+        }
+        }
+        p{
+            color: $color-grey;
+            margin-top: 30px;
+        }
+    
+
+
+        .forms-gds{
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+
+ @media screen and(max-width:576px){
+            
+    grid-template-columns: 1fr 1fr;
+        }
+
+            .form-input{
+                input{
+                    
+                    width: 100%;
+                    background-color: #ececec;
+                    border-top-left-radius: 25px;
+                    border-bottom-left-radius: 25px;
+                    border: none;
+                    padding: 15px 30px;
+                    color:#2f2f2f;
+                }
+            }
+        }
+          
+    }
+    
+
+    .sub_right{
+        background-image: url(./../images/subscribe/11.jpg);
+
+        
+        height: 100vh;
+        -webkit-background-size: cover;
+        background-size: cover;
+            width: 100%;
+                background-repeat: no-repeat;
+        background-position: center;
+        margin-left: 15px;
+        margin-right: 15px;
+
+        @media screen and(max-width:767px){
+            margin-left: -15px;
+            width: 105%;
+        }
+        @media screen and(max-width:619px){
+            margin-left: -15px;
+            width: 105%;
+        }
+    
+    }
+}
+
+.sub_left{
+    display: flex;
+    align-items: center;
+}

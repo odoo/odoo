@@ -1,0 +1,123 @@
+.product{
+    margin-top: 90px;
+
+    h1{
+        
+        font-weight: 700;
+        margin-bottom: 10px;
+        span{
+            color: $color-orange;
+        }
+    }
+    p{
+        color: $color-grey;
+        font-size: $font-sub-head;
+    }
+
+    .product_sectoin{
+        padding-top:70px ;
+    }
+
+    .img_wrapper{
+        position: relative;
+
+img{
+    width: 100%;
+border-radius: 7px;
+}
+      
+
+      .product_details{
+
+
+        a{
+            text-decoration: none !important;
+        }
+        h4{
+            text-decoration: none !important;
+            font-weight: 600;
+            color: $color-black !important;
+            &:hover{
+                color: $color-orange !important;
+            }
+        }
+.old_rate{
+    color: $color-grey !important;
+    margin-right: 10px;
+    font-weight: normal;
+}
+        span{
+  font-weight: 600;
+            color: $color-black;
+        }
+      }
+  
+        img{
+            width: 100%;
+            border-radius: 7px;
+        }
+    }
+
+
+    .img_wrapper:hover .button {
+        position: absolute;
+        display: block;
+        text-decoration: none !important;
+        top: 280px;
+        width: 100%;
+        padding: 9px 77px;
+        font-size: 20px;
+        text-align: center;
+        color: #ffffff;
+        background-color: #ff7315;
+        &:hover{
+            background-color: #000000;
+        }
+        @media screen and(max-width:1199px) {
+
+            top: 230px;
+        width: 100%;
+        padding: 9px 50px;
+        font-size: 16px;
+        text-align: center;
+            
+        }
+        @media screen and(max-width:991px) {
+
+            top: 377px;
+        width: 100%;
+        padding: 11px 50px;
+        font-size: 18px;
+        text-align: center;
+            
+        }
+        @media screen and(max-width:767px) {
+
+            top: 260px;
+        padding: 11px 50px;
+        font-size: 18px;
+        text-align: center;
+            
+        }
+    }
+    
+    
+    
+    .button{
+        display:none;
+    }
+
+
+
+
+}
+
+
+@-webkit-keyframes flash {
+    0% { opacity: .3; }
+    100% { opacity: 1; }
+   }
+   @keyframes flash {
+    0% { opacity: .3; }
+    100% { opacity: 1; }
+   }

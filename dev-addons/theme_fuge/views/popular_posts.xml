@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="popular_post_fuge" name="Popular Posts">
+        <ul class="populor">
+            <li t-foreach="posts_popular" t-as="p" style="margin-bottom:25px;">
+                <a t-attf-href="/blog/#{p.blog_id.id}/#{p.id}">
+                    <div class="wrapper" style="height: 50px; width:50px;margin-top:-10px;">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="p"/>
+                            <t t-set="use_size" t-value="cover_small"/>
+                            <t t-set="additionnal_classes"
+                               t-value="'cover_small'"/>
+                        </t>
+                    </div>
+                    <div class="wrapper2">
+                        <a t-attf-href="/blog/#{p.blog_id.id}/#{p.id}">
+                            <div class="date">
+                                <t t-esc="p.published_date"
+                                   t-options="{'widget': 'date', 'format': 'MMM dd yyyy'}"/>
+                            </div>
+                            <span style="color:#000000">
+                                <t t-esc="p.name"/>
+                            </span>
+                        </a>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </template>
+</odoo>

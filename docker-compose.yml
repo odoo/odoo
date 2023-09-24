@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  odoo-db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - ./database:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - odoo-network
+#  odoo-backend:
+#    build: .
+#    volumes:
+#      - ./:/backend
+#    command: python odoo-bin -c local.conf
+#    ports:
+#      - "8069:8069"
+#    depends_on:
+#      - odoo-db
+#    networks:
+#      - odoo-network
+networks:
+  odoo-network:
+    external: false

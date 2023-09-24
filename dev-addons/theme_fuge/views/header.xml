@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="template_header_default"
+              inherit_id="website.template_header_default"
+              name="Template Header Theme Fuge" active="True">
+        <xpath expr="//t [@t-call='website.navbar']" position="replace">
+            <t t-call="website.navbar">
+            <t t-set="_navbar_classes" t-valuef="shadow-sm"/>
+            <div id="top_menu_container" class="container justify-content-start justify-content-lg-between">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand">
+                    <t t-set="_link_class" t-valuef="mr-4"/>
+                </t>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse order-last order-lg-0">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-valuef="flex-grow-1"/>
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-valuef="nav-item"/>
+                                <t t-set="link_class" t-valuef="nav-link"/>
+                            </t>
+                        </t>
+                        <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item mx-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+                         <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item mr-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
+                            <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
+                            <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
+                        </t>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item my-auto ml-lg-2"/>
+                        </t>
+                    </t>
+                </div>
+                <!-- Call To Action -->
+                <t t-call="website.placeholder_header_call_to_action"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler">
+                    <t t-set="_toggler_class" t-valuef="ml-auto"/>
+                </t>
+            </div>
+        </t>
+
+        </xpath>
+    </template>
+
+
+</odoo>
+

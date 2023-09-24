@@ -1,0 +1,107 @@
+.blog_main{
+    .pagination{
+
+        display: flex;
+justify-content: end;
+margin: 0 auto;}
+}
+
+
+
+.blog{
+    margin-top: 0px;
+    margin-bottom: 0;
+
+    @media screen and(max-width:767px) {
+        margin-bottom: 50px;
+    }
+    .blog_wrapper{
+        .blog_img{
+            
+            img{
+                width: 100%;
+                border-radius: 5px;
+            }
+        }
+
+        .blog_info{
+            padding-top: 10px;
+            p{
+                font-size: 14px;
+                margin-bottom: 0;
+           
+                a{color: $color-grey;
+                    text-decoration: none;
+                
+                    &:hover{
+                        color: $color-orange;
+
+                    }
+
+                }
+            }
+        }
+
+        .blog_heading{
+            
+            font-size: 24px;
+            font-weight: 600;
+            padding-bottom: 0;
+            a{color: $color-black;
+                text-decoration: none;
+            
+                &:hover{
+                    color: $color-orange;
+
+                }
+
+            }
+        }
+        p{
+            color: $color-grey;
+            padding-bottom: 12px;
+        }
+    }
+}
+
+.blog_main{
+    padding-top: 90px;
+    padding-bottom: 90px;
+
+    .pagination{
+
+
+margin-top: 50px;
+
+        ul{
+            padding-left: 0;
+            list-style: none;
+            display: flex;
+            li{
+
+
+
+                   
+                margin-left: 10px;
+                margin-right: 10px;
+               
+              
+
+
+                a{color: $color-orange;
+                    padding: 8px 17px;     
+                    border-radius: 4px;
+                        border: 1px solid ;
+                        background-color: transparent !important;
+                        text-decoration: none;
+                    &:hover{
+                        background-color: $color-orange;
+                        color: #000000;
+                    }
+               }
+            }
+        }
+    }
+
+}
+

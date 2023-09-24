@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="blog_details_top" inherit_id="website_blog.blog_post_complete" name="Blog Post Top">
+        <xpath expr="//section[@id='o_wblog_post_top']" position="replace">
+             <section class="banner_about" style="margin-top:-50px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff; font-weight:bold;">Blog</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li style="color:#fff" class="active">Blog Details</li>
+                    </ol>
+                </div>
+            </section>
+             <t t-call="website.record_cover">
+                <t t-set="_record" t-value="blog_post"/>
+                <t t-set="snippet_autofocus" t-value="True"/>
+                <t t-set="use_size" t-value="cover_big"/>
+                <t t-set="additionnal_classes"
+                   t-value="'cover_big'"/>
+            </t>
+        </xpath>
+    </template>
+
+
+    <template id="blog_details_next" inherit_id="website_blog.blog_post_complete" name="Blog Next Post">
+        <xpath expr="//div[@t-if='next_post']" position="replace">
+        </xpath>
+    </template>
+</odoo>

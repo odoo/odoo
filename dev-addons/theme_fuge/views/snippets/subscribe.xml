@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="subscribe_banner" inherit_id="website.snippets" name="Subscribe banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="theme_fuge.subscribe" t-thumbnail="/theme_fuge/static/src/images/snippets/banner/subscribe.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="subscribe" name="Fuge Subscribe">
+        <!-- Subscribe section starts here  -->
+        <section class="subscribe">
+            <div class="sub_content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12 sub_left">
+                            <div class="sub_left_content">
+                                <div class="card ">
+                                    <div class="card-body">
+                                        <h2 class="card-title">Join us for FREE to get instant<br/><span> email
+                                                updates!</span>
+                                        </h2>
+                                        <p>Visit our shop to see amazing creations from our designers.</p>
+                                        <form action="#" method="post" class="signin-form mt-lg-5 mt-4">
+                                            <div class="forms-gds ">
+                                                <div class="form-input">
+                                                    <input type="email" name="" placeholder="Your email here" required=""/>
+                                                </div>
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+
+                                                <div class="form-input"><button class="btn btn-sub">Join</button></div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6  col-sm-12">
+                            <img class="sub_right" src="/theme_fuge/static/src/images/subscribe/11.jpg" alt="Contact Image"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

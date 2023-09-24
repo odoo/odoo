@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="fuge_layout" inherit_id="website.layout"
+              name="Fuge Layout">
+        <!-- Add an element after the top menu  -->
+        <xpath expr="//div[@id='wrapwrap']/main" position="before">
+            <html lang="en">
+
+                <head>
+                    <meta charset="UTF-8"/>
+                    <meta name="viewport"
+                          content="width=device-width, initial-scale=1.0"/>
+                    <title>Fuge</title>
+                     <link rel="shortcut icon" type="image/x-icon"
+                          href="x-icon.png"/>
+                    <link rel="stylesheet"
+                          href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+                          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+                          crossorigin="anonymous"/>
+                    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+                          rel="stylesheet"/>
+                    <link rel="stylesheet" type="text/css"
+                          href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css"/>
+                    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+                          rel="stylesheet"/>
+                    <link rel="stylesheet"
+                          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"/>
+                </head>
+            </html>
+
+        </xpath>
+    </template>
+</odoo>

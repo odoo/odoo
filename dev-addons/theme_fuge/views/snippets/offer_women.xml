@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="offer_women_banner" inherit_id="website.snippets" name="Offer Women banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="theme_fuge.offer_women" t-thumbnail="/theme_fuge/static/src/images/snippets/banner/women-offer.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="offer_women" name="Fuge Offer Women">
+        <section class="women-offer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 p-0">
+                        <div class="offer_wrapper">
+
+                            <div class="bg1"/>
+                            <div class="play_button"><a href="#"><span class="fas fa-play"/> </a></div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 col-sm-12">
+                        <div class="card ">
+                            <div class="card-body">
+                                <h2 class="card-title">ALL BRANDED WOMEN'S BAGS ARE FLAT<p>30% DISCOUNT</p>
+                                </h2>
+                                <p>Visit our shop to see amazing creations from our designers.</p>
+                                <a href="#" class="btn btn-men">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="shop_with_us_banner" inherit_id="website.snippets" name="Shop with us banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="theme_fuge.shop_with_us" t-thumbnail="/theme_fuge/static/src/images/snippets/banner/shop-with-us.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="shop_with_us" name="Fuge Shop With Us">
+            <!-- Shop with us section starts here -->
+    <section class="shop_with_us text-center">
+
+        <h1>
+            SHOP WITH <span>US</span>
+        </h1>
+        <P> handpicked Favourits Just For You</P>
+
+        <div class="container pt-5 pb-5">
+            <div class="row">
+                <div class=" col-lg-2 col-md-4 col-6">
+                    <div class="favourites">
+                        <img src="/theme_fuge/static/src/images/favourite/grid1.jpg"/>
+                        <h5>
+                            Hand Bags
+                        </h5>
+                    </div>
+                </div>
+                <div class=" col-lg-2 col-md-4 col-6">
+                    <div class="favourites">
+                        <img src="/theme_fuge/static/src/images/favourite/grid2.jpg"/>
+                        <h5>
+                            Shoes
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="favourites">
+                        <img src="/theme_fuge/static/src/images/favourite/grid4.jpg"/>
+                        <h5>
+                            Watches
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="favourites">
+                        <img src="/theme_fuge/static/src/images/favourite/grid3.jpg"/>
+                        <h5>
+                            Suites
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="favourites">
+                        <img src="/theme_fuge/static/src/images/favourite/grid5.jpg"/>
+                        <h5>
+                            Accessories
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="favourites">
+                        <img src="/theme_fuge/static/src/images/favourite/grid6.jpg"/>
+                        <h5>
+                            Fragrences
+                        </h5>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    </template>
+</odoo>

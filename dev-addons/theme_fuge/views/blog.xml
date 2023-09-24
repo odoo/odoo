@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="Fuge_blog" name="fuge Blog"
+              inherit_id="website_blog.blog_post_short">
+        <xpath expr="//div[@id='o_wblog_blog_top']" position="replace">
+            <section class="banner_about" style="margin-top:-50px; margin-bottom: 25px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff; font-weight:bold;">Blog</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li style="color:#fff" class="active">Blog</li>
+                    </ol>
+                </div>
+            </section>
+        </xpath>
+        <xpath expr="//t[@t-call='website_blog.blogs_nav']" position="replace">
+        </xpath>
+    </template>
+    <template id="fuge_blog_sidebar" name="Fuge Blog Sidebar"
+              inherit_id="website_blog.sidebar_blog_index">
+        <xpath expr="//div[@id='o_wblog_sidebar']" position="replace">
+            <t t-call="theme_fuge.fuge_sidebar"/>
+        </xpath>
+    </template>
+    <template id="fuge_sidebar" name="Fuge Sidebar">
+        <div class="col-lg-12">
+            <div class="filter_sidebar2">
+                <div class="filter_sidebar_main">
+                    <div class="kk">
+                        <h3 class="filter_heading" style="margin-top:30px;">
+                            SUBSCRIBE TO
+                            <Span>BLOG</Span>
+                        </h3>
+                    </div>
+                    <div class="filter_sidebar_sub">
+                        <div class="ecommerce_shoe-type">
+
+                            <form action="#" method="post" class="signin-form ">
+                                <div class="forms-gds ">
+                                    <div class="form-input">
+                                        <input type="email" name=""
+                                               placeholder="Your email here"
+                                               required=""/>
+                                    </div>
+                                    <div class="form-input">
+                                        <button class="btn btn-search">
+                                            <i class="fas fa-paper-plane"
+                                               aria-hidden="False"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter_sidebar_main">
+                    <h3 class="filter_heading">
+
+                        OUR
+                        <span>CATEGORIES</span>
+                    </h3>
+
+                    <div class="filter_sidebar_sub">
+
+                        <ul>
+                            <li class="hh">
+                                <a href="/blog"
+                                   t-attf-class="nav-link font-weight-bold #{(not blog) and ''}">
+                                    All
+                                </a>
+                                <span class="nu"><t t-esc="search_count"/></span>
+                            </li>
+                            <li class="hh" t-foreach="blogs" t-as="nav_blog">
+                                <a t-attf-href="/blog/#{slug(nav_blog)}"
+                                   t-attf-class="nav-link #{(blog and nav_blog.id == blog.id) and '' or ''}">
+                                    <b t-field="nav_blog.name"/>
+                                </a>
+                                <span class="nu">12</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="filter_sidebar_main">
+                    <div class="kk">
+                        <h3 class="filter_heading">
+                            POPULAR
+                            <span>POSTS</span>
+                        </h3>
+                    </div>
+                    <div class="filter_sidebar_sub">
+                        <t t-call="theme_fuge.popular_post_fuge"/>
+                    </div>
+                </div>
+                <div class="filter_sidebar_main">
+                    <div class="kk">
+                        <h3 class="filter_heading">
+                            BROWSE
+                            <span>TAGS</span>
+                        </h3>
+                    </div>
+                    <div class="filter_sidebar_sub">
+                        <div class="tags">
+                            <t t-call="website_blog.tags_list">
+                                <t t-set='hide_title'
+                                   t-value='not len(tag_category)'/>
+                                <t t-set='categ_title'>Others</t>
+                                <t t-set='tags' t-value='other_tags'/>
+                                <t t-set="showInactive" t-value="True"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="filter_sidebar_main">
+                    <div class="kk">
+
+                        <h3 class="filter_heading">
+
+                            RECENT
+                            <span>COMMENTS</span>
+                        </h3>
+                    </div>
+                    <div class="filter_sidebar_sub">
+                        <div class="recent">
+
+                            <div class="row">
+                                <div class="rec_img d-flex">
+                                    <img src="/theme_fuge/static/src/images/team/team1.jpg"/>
+
+
+                                    <div class=" product_details ">
+                                        <a href="#">
+                                            <h6>
+                                                Women top
+                                            </h6>
+                                        </a>
+                                        <p>
+                                            <span>$500.00</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="rec_img d-flex">
+                                    <img src="/theme_fuge/static/src/images/team/team2.jpg"/>
+                                    <div class=" product_details ">
+                                        <a href="#">
+                                            <h6>
+                                                Women top
+                                            </h6>
+                                        </a>
+                                        <p>
+                                            <span>$500.00</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="filter_sidebar_main">
+                    <div class="filter_sidebar_sub">
+                        <div class="bottom_img">
+
+                            <div class="bg"/>
+                            <img src="/theme_fuge/static/src/images/snippets/banner/left1.jpg"/>
+
+
+                            <div class="offer">
+                                <h3>
+                                    Men's Fashion
+                                    50% Off
+                                </h3>
+                                <p>Online &amp; in-store</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+</odoo>

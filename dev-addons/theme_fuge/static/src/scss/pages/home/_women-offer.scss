@@ -1,0 +1,118 @@
+.women-offer{
+
+    
+
+    img{
+        width: 100%;
+        position: relative;
+     
+    }
+
+
+
+
+.play{
+    
+    
+
+background-color: rgba(0, 0, 0, 0.397);
+    max-width: 40px;
+  
+    img{
+        width: 100%;
+      
+
+
+    }
+}
+
+
+.card{
+    background: transparent;
+    border: none;
+    padding-left: 44px;
+padding-right: 20px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    .card-body{
+        
+    
+    }
+
+    .card-title{
+     color: $font-size-h1;
+     font-weight: 700;
+
+     @media screen and (max-width:1105PX) {
+         font-size: 25PX;
+     }
+     @media screen and (max-width:991) {
+        font-size: 35;
+    }
+     p{
+        color: $color-orange;
+        margin-top: 0;
+    }
+    }
+    p{
+        color: $color-grey;
+        margin-top: 20px;
+    }
+
+      
+}
+
+
+
+
+}
+
+.bg1{
+    &:after{
+    content: "";
+    
+    position: absolute;
+    top: 0;
+    min-height: 100%;
+    left: 0;
+    right: 0;
+    z-index: 0;
+
+}
+}
+
+.offer_wrapper{
+    position: relative;
+text-align: center;
+background-image: linear-gradient(#000000ab, #111111be),url(./../images/men-woemn-offer/33.jpg);
+background-size: cover;
+background-position: center center;
+background-repeat: no-repeat;
+width: 100%;
+height: 400px;
+
+
+    .play_button{
+        position: absolute;
+top: 200px;
+width: 100%;
+        a{
+          
+        }
+        span{
+            color: white;
+            font-size: 25px;
+            border-radius: 50%;
+            width: 65px;
+            background-color: rgba(178, 178, 178, 0.47);
+            height: 66px;
+            padding-top: 20px;
+            
+
+            &:hover{
+                background-color: $color-orange;
+            }
+            
+        }
+    }
+}

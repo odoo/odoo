@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="product_banner" inherit_id="website.snippets"
+              name="Product banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_fuge.product_section"
+               t-thumbnail="/theme_fuge/static/src/images/snippets/banner/product-section.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="product_section" name="Fuge Product Section">
+        <!-- Product section  starts here -->
+        <section class="product">
+            <div class="container text-center">
+                <h1>
+                    SHOP WITH
+                    <span>US</span>
+                </h1>
+                <P>handpicked Favourits Just For You</P>
+            </div>
+            <div class="container" style="max-width:1010px; text-align:center;">
+                <div class="product_sectoin">
+                    <div class="row">
+                        <t t-foreach="main_products"
+                           t-as="mp">
+                            <div class=" col-12 col-lg-3 col-md-6 col-sm-6 mt-3 mb-4">
+                                <div class="img_wrapper">
+                                    <a>
+                                        <img  style="max-width: 50%;height: 140px;" t-attf-src="/web/image?model=product.template&amp;field=image_1920&amp;id=#{mp.id}"
+                                             class="img img-fluid rotate-center"
+                                             alt="" loading="lazy"/>
+
+                                    </a>
+                                    <div class=" product_details mt-3">
+                                        <a t-att-href="'/shop/product/%s' % slug(mp)">
+                                            <h5>
+                                                <span t-esc="mp.name"/>
+                                            </h5>
+                                        </a>
+                                        <p>
+                                            <span class="old_rate">
+                                                <del>$954.00</del>
+                                            </span>
+                                            <span t-field="mp.lst_price"
+                                                  t-options='{"widget": "monetary","display_currency": mp.currency_id}'/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

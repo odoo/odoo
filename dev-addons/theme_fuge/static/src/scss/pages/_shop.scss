@@ -1,0 +1,223 @@
+.shop{
+padding-bottom: 40px;
+
+
+    .pagination{
+
+        display: flex;
+justify-content: end;
+margin: 0 auto;
+
+        ul{
+            list-style: none;
+            display: flex;
+            padding-left: 0;
+            li{
+                margin-left: 10px;
+                margin-right: 10px;
+               
+                a{color: $color-orange;
+                    padding: 8px 17px;     
+                    border-radius: 4px;
+                        border: 1px solid ;
+                        background-color: transparent !important;
+                        text-decoration: none;
+                    &:hover{
+                        background-color: $color-orange;
+                        color: #000000;
+                    }
+               }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+.p_top{
+    h4{
+        font-size: 24px;
+        color: $color-grey;
+    font-weight: 600;
+    @media screen and(max-width:991px) {
+        font-size: 18px;  
+    }
+    @media screen and(max-width:767px) {
+        font-size: 14px;  
+    }
+}
+  
+}
+
+
+
+
+
+
+
+
+
+    .product{
+        margin-top: 90px;
+    
+        h1{
+            
+            font-weight: 700;
+            margin-bottom: 10px;
+            span{
+                color: $color-orange;
+            }
+        }
+        p{
+            color: $color-grey;
+            font-size: $font-sub-head;
+        }
+    
+        .product_sectoin{
+            padding-top:70px ;
+
+            @media screen and(max-width:991px) {
+                padding-top:40px ;
+
+            }
+        }
+    
+        .img_wrapper{
+         max-width: 200px;
+    position: relative;
+          img{
+              width: 100%;
+    
+    
+              &:hover {
+                opacity: 1;
+                -webkit-animation: flash 1.5s;
+                animation: flash 1.5s;
+               }
+    
+          }
+    
+          
+    
+          .product_details{
+    
+    
+            a{
+                text-decoration: none !important;
+            }
+            h4{
+                font-size: 16px;
+                text-decoration: none !important;
+                font-weight: 600;
+                color: $color-black !important;
+                &:hover{
+                    color: $color-orange !important;
+                }
+            }
+    .old_rate{
+        color: $color-grey !important;
+        margin-right: 10px;
+        font-weight: normal;
+    }
+            span{
+      font-weight: 600;
+                color: $color-black;
+            }
+          }
+      
+            img{
+                width: 100%;
+                border-radius: 7px;
+            }
+        }
+    
+    
+        .img_wrapper:hover .button {
+            position: absolute;
+            display: block;
+            text-decoration: none !important;
+            top: 216px;
+            padding: 12px 30px;
+            width: 100%;
+            font-size: 13px;
+            text-align: center;
+            color: #ffffff;
+            background-color: #ff7315;
+            font-weight: 700;
+
+            @media screen and(max-width:1199px) {
+
+                top: 188px;
+            width: 100%;
+            padding: 9px 30px;
+            font-size: 13px;
+            text-align: center;
+                
+            }
+            @media screen and(max-width:991px) {
+    
+                top: 175px;
+                width: 100%;
+                padding: 9px 30px;
+                font-size: 13px;
+                text-align: center;
+                
+            }
+            @media screen and(max-width:767px) {
+    
+                top: 221px;
+                width: 100%;
+                padding: 9px 30px;
+                font-size: 13px;
+                text-align: center;
+                
+            }
+            @media screen and(max-width:462px) {
+    
+                top: 201px;
+                width: 100%;
+                padding: 9px 30px;
+                font-size: 13px;
+                text-align: center;
+                
+            }
+            @media screen and(max-width:370px) {
+    
+                top: 190px;
+                width: 100%;
+                padding: 9px 30px;
+                font-size: 13px;
+                text-align: center;
+                
+            }
+        }
+        
+        
+        
+        .button{
+            
+        }
+    
+    
+    
+    
+    }
+    
+    
+    @-webkit-keyframes flash {
+        0% { opacity: .3; }
+        100% { opacity: 1; }
+       }
+       @keyframes flash {
+        0% { opacity: .3; }
+        100% { opacity: 1; }
+       }
+}

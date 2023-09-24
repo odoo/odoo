@@ -1,0 +1,132 @@
+.customer_review{
+margin-top: 30px;
+
+padding-top: 50px;
+padding-bottom:100px;
+background-color:$color-bg;
+
+
+h1{
+        
+    font-weight: 700;
+    margin-bottom: 10px;
+    span{
+        color: $color-orange;
+    }
+}
+p{
+    color: $color-grey;
+    font-size: $font-sub-head;
+}
+
+
+
+.carousel-inner{
+
+
+padding-top: 50px;
+padding-bottom:40px;
+
+.review{
+    color: $color-white;
+    background-color: $color-carousel;
+    padding: 30px 50px;
+    border-radius: 5px;
+    position: relative;
+    text-align: center;
+}
+
+.traingle{
+    
+   
+
+    &:after{
+        content:"";
+        width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 15px solid $color-carousel;
+    position: absolute;
+    left: 132px;
+    top: 280px;
+
+    @media screen and(max-width:1199px) {
+
+        left: 110px;
+    top: 353px;
+        
+    }
+
+    @media screen and(max-width:991px) {
+
+        left: 170px;
+    top: 232px;
+        
+    }
+    @media screen and(max-width:767px) {
+
+        left: 260px;
+    top: 185px;
+        
+    }
+    }
+}
+
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon{
+    display: none;
+}
+
+
+.carousel-indicators {
+    bottom: -59px;
+}
+
+
+.carousel-indicators li {
+    box-sizing: content-box;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    margin-right: 4px;
+    margin-left: 5px;
+    text-indent: -999px;
+    cursor: pointer;
+    background-color: #aeb3b1;
+    background-clip: padding-box;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    opacity: .5;
+    transition: opacity .6s ease;
+}
+
+
+.customer{
+    padding-top: 40px;
+    display: flex;
+    justify-content: center;
+    img{
+        max-width: 70px;
+        border-radius: 50%;
+        border: 3px solid #b8b9bd;
+    }
+
+    @media screen and(max-width:991px) {
+
+        padding-bottom: 30px;
+        
+    };
+}
+
+
+.quote{
+    color: $color-orange;
+
+    font-size: 25px;
+}
+
+}

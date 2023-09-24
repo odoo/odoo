@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="offer_men_banner" inherit_id="website.snippets" name="Offer Men banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="theme_fuge.offer_men" t-thumbnail="/theme_fuge/static/src/images/snippets/banner/men-offer.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="offer_men" name="Fuge Men Offer">
+        <Section class="men_offer">
+            <div class="container">
+                <div class="row pb-5">
+                    <div class="col-lg-6 col-md-6 col-sm-12 pt-5">
+                        <div class="card ">
+
+                            <div class="card-body">
+                                <h2 class="card-title">ALL BRANDED MEN'S SUITES ARE FLAT<p>30% DISCOUNT</p>
+                                </h2>
+                                <p>Visit our shop to see amazing creations from our designers.</p>
+                                <a href="#" class="btn btn-men">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-lg-6 col-md-6 col-sm-12 pt-5">
+                        <div class="men_img">
+                            <img class="img-fluid" src="/theme_fuge/static/src/images/men-woemn-offer/1.jpg"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Section>
+    </template>
+</odoo>

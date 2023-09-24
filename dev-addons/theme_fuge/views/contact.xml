@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="fuge_contact" inherit_id="website.contactus"
+                  name="Contactus">
+            <xpath expr="//section[hasclass('s_title')]"
+                   position="replace">
+                <section class="header banner_about" style="margin-top:-50px;">
+                    <div class="banner-heading text-center">
+                        <h1 style="color:#fff; font-weight:bold;">Contact us</h1>
+                        <ol class="breadcrumb mb-0">
+                            <li>
+                                <a style="color:#fff" href="/">Home</a>
+                                <span style="color:#fff" class="fa fa-angle-double-right"/>
+                            </li>
+                            <li style="color:#fff" class="active">Contact</li>
+                        </ol>
+                    </div>
+                </section>
+            </xpath>
+
+            <xpath expr="//section[hasclass('s_text_block')]"
+                   position="replace">
+                <!-- Contact section starts here -->
+                <section class="contact">
+                    <div class="contact_details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="contact_left">
+                                        <div class="get_touch">
+
+                                            <div class="wrapper">
+                                                <h3>GET IN
+                                                    <span>TOUCH</span>
+                                                </h3>
+                                                <p>We're ready to lead you into
+                                                    the future with Business
+                                                    Services
+                                                </p>
+                                            </div>
+
+                                            <div class="num_email">
+                                                <p>
+                                                    <span>Call us:</span>
+                                                    <a href="tel:+6494461709">
+                                                        +6494461709
+                                                    </a>
+                                                </p>
+                                                <p>
+                                                    <span>Email :</span>
+                                                    <a href="mailto:info@demo.com">
+                                                        info@demo.com
+                                                    </a>
+                                                </p>
+
+                                                <p class="address">433
+                                                    California St, Suite 300 San
+                                                    Francisco, CA 94104, USA
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="hours">
+                                            <div class="wrapper">
+                                                <h3>WORKING
+                                                    <span>HOURS</span>
+                                                </h3>
+
+                                            </div>
+
+                                            <div class="service">
+                                                <h6>Business Service:</h6>
+                                                <p>Monday to Friday 8.00 am -
+                                                    6.00 pm
+                                                </p>
+                                                <p>
+                                                    Saturday and Sunday -
+                                                    Closed>
+                                                </p>
+                                            </div>
+
+                                            <div class="service">
+                                                <h6>Customer support:</h6>
+                                                <p>Monday to Friday 8.00 am -
+                                                    6.00 pm
+                                                </p>
+                                                <p>Saturday 10.00 am - 4.00 pm
+                                                </p>
+                                                <p>Sunday - Closed</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="contact_right">
+
+                                        <div class="map">
+                                            <iframe
+                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125531.6465457217!2d76.1532098152453!3d10.51137992115151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7ee15ed42d1bb%3A0x82e45aa016ca7db!2sThrissur%2C%20Kerala!5e0!3m2!1sen!2sin!4v1601463985519!5m2!1sen!2sin"
+                                                    width="100%" height="500"
+                                                    frameborder="0"
+                                                    style="border:4;"
+                                                    allowfullscreen=""
+                                                    aria-hidden="false"
+                                                    tabindex="0"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Contact section ends here -->
+                <!-- Contact forrm section starts here -->
+                <section class="contact_form s_website_form">
+                    <div class="container">
+                        <div class="c_form">
+                            <h2 class="h1-responsive  text-center my-4">FILL OUT
+                                OF THE FORM
+                            </h2>
+                            <section class="mb-4">
+                                <div class="row ">
+                                    <div class="col-md-9 mb-md-0 mb-5">
+                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
+                                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                                <div class="row mb-5">
+                                                <div class="mb-0 py-2 col-6 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                        <div class="col-sm">
+                                                            <input id="contact1" type="text" class="form-control s_website_form_input" name="name" required="" placeholder="Your name"/>
+<!--                                                                   data-fill-with="name"/>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-0 py-2 col-6 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
+                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                        <div class="col-sm">
+                                                            <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required="" placeholder="Your email"/>
+<!--                                                                   data-fill-with="email"/>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="row mb-5">
+                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                        <div class="col-sm">
+                                                            <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required="" placeholder="Subject"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="row mb-5">
+                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                        <div class="col-sm">
+                                                            <textarea id="contact6" class="form-control s_website_form_input" name="description" rows="5" required="" placeholder="Message"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_dnone">
+                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                        <div class="col-sm">
+                                                            <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-center text-md-left s_website_form_submit" data-name="Submit Button">
+                                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                                    <a href="#" role="button" class="btn btn-contact o_website_form_send">Submit</a>
+                                                    <span id="s_website_form_result"></span>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <div class="status"/>
+                                    </div>
+
+                                    <div class="col-md-3 text-center">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>
+                                                <i class="fas fa-map-marker-alt fa-2x"/>
+                                                <p>San Francisco, CA 94126,
+                                                    USA
+                                                </p>
+                                            </li>
+
+                                            <li>
+                                                <i class="fa fa-phone mt-4 fa-2x"/>
+                                                <p>+ 01 234 567 89</p>
+                                            </li>
+
+                                            <li>
+                                                <i class="fa fa-envelope mt-4 fa-2x"/>
+                                                <p>mail@demo.com</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+                    <!--Section: Contact v.2-->
+                    <!--Section: Contact v.2-->
+                </section>
+
+                <!-- Contact form section starts here -->
+            </xpath>
+        </template>
+    </data>
+</odoo>

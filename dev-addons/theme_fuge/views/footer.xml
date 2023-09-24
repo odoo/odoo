@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="footer_default_sample" inherit_id="website.layout"
+              name="Footer Sample">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <footer class="pt-100">
+                <!-- Footer section starts here -->
+                <section class="footer">
+                    <div class="container">
+                        <div class="footer_top">
+                            <div class="row">
+                                <div class="col-12 col-lg-4 col-md-12 col-sm-12">
+                                    <div class="footer_left">
+                                        <div class="footer_logo">
+                                            <a href="/">
+                                                <t t-call="website.placeholder_header_brand">
+                                                    <t t-set="_link_class"
+                                                       t-value="'mr-auto'"/>
+                                                </t>
+                                            </a>
+                                        </div>
+                                        <p class="footer_desc">Lorem ipsum dolor sit amet,Ea consequuntur
+                                                               illum facere aperiam sequi optio consectetur.Vivamus a
+                                                               ligula quam. Ut blandit eu leo non suscipit.
+                                        </p>
+                                        <div class="footer-social">
+                                            <a href="/website/social/facebook">
+                                                <i class="fa fa-facebook m-1"/>
+                                            </a>
+                                            <a href="/website/social/twitter"
+                                               class="s_share_twitter"
+                                               target="_blank">
+                                                <i class="fa fa-twitter m-1"/>
+                                            </a>
+                                            <a href="/website/social/instagram"
+                                               class="s_share_instagram"
+                                               target="_blank">
+                                                <i class="fa fa-instagram m-1"/>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-12 col-lg-8 col-md-12 col-sm-12">
+                                    <div class="footer_right">
+
+                                        <div class="footer_discount">
+                                            Women's Day Special Offer All
+                                            Branded Sandals are Flat 50%
+                                            Discount
+                                        </div>
+
+
+                                        <div class="footer_right_bottom">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6 col-lg-6 col-sm-12">
+                                                    <div class="useful_links">
+                                                        <h4 class="f_r_h">
+                                                            USEFUL LINKS
+                                                        </h4>
+                                                        <div class="ul_wrapper">
+                                                            <ul>
+                                                                <t t-foreach="website.menu_id.child_id"
+                                                                   t-as="submenu">
+                                                                    <t t-call="website.submenu">
+                                                                        <t t-set="item_class"
+                                                                           t-value="'nav-item'"/>
+                                                                        <t t-set="link_class"
+                                                                           t-value="''"/>
+                                                                    </t>
+                                                                </t>
+                                                            </ul>
+                                                            <ul>
+                                                                <a href="">
+                                                                    <li>
+                                                                        Careers
+                                                                    </li>
+                                                                </a>
+                                                                <a href="">
+                                                                    <li>Privacy
+                                                                        Policy
+                                                                    </li>
+                                                                </a>
+                                                                <a href="">
+                                                                    <li>Terms
+                                                                        and
+                                                                        Conditions
+                                                                    </li>
+                                                                </a>
+                                                                <a href="">
+                                                                    <li>
+                                                                        Support
+                                                                    </li>
+                                                                </a>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                    <div class="store">
+                                                        <h4 class="f_r_h">
+                                                            STORE
+                                                        </h4>
+                                                        <div class="address">
+                                                            49436 Broaddus Honey
+                                                            Court Avenue,
+                                                            Madisonville KY
+                                                            95020, United States
+                                                            of America
+                                                        </div>
+                                                        <div class="payment">
+                                                            <h4 class="f_r_h">
+                                                                WE ACCEPT:
+                                                            </h4>
+
+                                                            <ul>
+                                                                <a href="#">
+                                                                    <span class="fab fa-cc-visa"
+                                                                          style="font-size: 34px;margin: 0 14px 0px 0;color: #acb2b7"/>
+                                                                </a>
+                                                                <a href="#">
+                                                                    <span class="fab fa-cc-mastercard"
+                                                                          style="font-size: 34px;margin: 0 14px 0px 0;color: #acb2b7"/>
+                                                                </a>
+                                                                <a href="#">
+                                                                    <span class="fab fa-cc-paypal"
+                                                                          style="font-size: 34px;margin: 0 14px 0px 0;color: #acb2b7"/>
+                                                                </a>
+                                                                <a href="#">
+                                                                    <span class="fab fa-cc-amex"
+                                                                          style="font-size: 34px;margin: 0 14px 0px 0;color: #acb2b7"/>
+                                                                </a>
+                                                            </ul>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer_bottom">
+                            <div class="row">
+
+                                <div class="col-6">
+                                    <div class="bottom_left">
+                                        <span>
+                                            <a href="">Privacy Policy</a>
+                                        </span>
+                                        <span>
+                                            <a href="">Term of Service</a>
+                                        </span>
+                                        <span>
+                                            <a href="">Customer Care</a>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 f_b_r">
+                                    <div class="bottom_right">
+                                        © 2023 FugeStore. All rights reserved.
+                                        Design by
+                                        <a href="#">Cybrosys</a>
+
+                                    </div>
+                                    <t id="language_selector_call"
+                                       t-call="portal.language_selector">
+                                        <t t-set="_div_classes"
+                                           t-value="(_div_classes or '') + ' dropup'"/>
+                                    </t>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <!-- Footer section ends here -->
+            </footer>
+        </xpath>
+    </template>
+</odoo>

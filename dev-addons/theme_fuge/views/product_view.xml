@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="fuge_product_view" name="Fuge Product View"
+              inherit_id="website_sale.product">
+        <xpath expr="//section[@id='product_detail']" position="before">
+            <section class="banner_about"
+                     style="margin-top:-50px; margin-bottom:25px;">
+                <div class="banner-heading text-center">
+                    <h1 style="color:#fff;font-weight:bold;">Shop</h1>
+                    <ol class="breadcrumb mb-0">
+                        <li>
+                            <a style="color:#fff" href="/">Home</a>
+                            <span style="color:#fff" class="fa fa-angle-double-right"/>
+                        </li>
+                        <li class="active" style="color:#fff" href="/shop">Preview</li>
+                    </ol>
+                </div>
+            </section>
+        </xpath>
+         <xpath expr="//t[@t-call='website_sale.product_price']" position="replace">
+        </xpath>
+         <xpath expr="//div[hasclass('d-flex')]" position="replace">
+        </xpath>
+        <xpath expr="//section[@id='product_detail']" position="after">
+            <section class="men_women">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="men">
+                                <img src="/theme_fuge/static/src/images/blog/bg4.jpg"/>
+                                <div class="inside">
+                                    <p>MENS'S FASHION
+                                        <br/>
+                                        50% OFF
+                                    </p>
+                                    <a href="#" class="btn btn-banner2">Buy
+                                        Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="men">
+                                <img src="/theme_fuge/static/src/images/blog/bg3.jpg"/>
+                                <div class="inside">
+                                    <p>MEN'S FASHION
+                                        <br/>
+                                        50% OFF
+                                    </p>
+                                    <a href="#" class="btn btn-banner2">Buy
+                                        Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+        <xpath expr="//a[@id='add_to_cart']" position="replace">
+             <a role="button" id="add_to_cart" style="margin-top: 0px !important;" class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"/> Add to Cart</a>
+        </xpath>
+        <xpath expr="//h1[@t-field='product.name']" position="replace">
+            <h1 itemprop="name" t-field="product.name"
+                style="color: #000000;text-transform: uppercase;font-weight: 700">
+                Product Name
+            </h1>
+        </xpath>
+        <xpath expr="//p[@t-field='product.description_sale']" position="replace">
+        </xpath>
+        <xpath expr="//h1[@t-field='product.name']" position="after">
+            <div class="rate row" style="padding-bottom:20px; margin-left:5px;">
+                        <p itemprop="offers" itemscope="itemscope"
+                           itemtype="http://schema.org/Offer"
+                           class="product_price mt16">
+                            <h4 class="oe_price_h4 css_editable_mode_hidden">
+                                <span t-attf-class="text-danger oe_default_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                      style="text-decoration: line-through; white-space: nowrap;"
+                                      t-esc="combination_info['list_price']"
+                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                />
+                                <b class="oe_price"
+                                   style="white-space: nowrap;"
+                                   t-esc="combination_info['price']"
+                                   t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+
+                                <span itemprop="price" style="display:none;"
+                                      t-esc="combination_info['price']"/>
+                                <span itemprop="priceCurrency"
+                                      style="display:none;"
+                                      t-esc="website.currency_id.name"/>
+                            </h4>
+                            <h4 class="css_non_editable_mode_hidden decimal_precision"
+                                t-att-data-precision="str(website.currency_id.decimal_places)">
+                                <span t-field="product.list_price"
+                                      t-options='{
+                   "widget": "monetary",
+                   "display_currency": product.currency_id,}'/>
+                            </h4>
+                        </p>
+            </div>
+            <div class="description">
+                <h3 t-if="product.description_sale"
+                    style="color: #000000;text-transform: uppercase;font-weight: 700">
+                    Description
+                </h3>
+                <p style="color: #6b778d;" t-field="product.description_sale"
+                   placeholder="A short description that will also appear on documents."/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

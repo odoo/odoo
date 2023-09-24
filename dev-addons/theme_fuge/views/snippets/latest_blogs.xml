@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="latest_blog_banner" inherit_id="website.snippets"
+              name="Fuge Index banner">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]"
+               position="inside">
+            <t t-snippet="theme_fuge.latest_blog"
+               t-thumbnail="/theme_fuge/static/src/images/snippets/banner/blog-section.jpg"/>
+        </xpath>
+    </template>
+
+    <template id="latest_blog" name="Fuge Latest Blog">
+        <section class="blog">
+            <div class="container text-center">
+                <h1>
+                    LATEST BLOG
+                    <span>SPOT</span>
+                </h1>
+                <P>handpicked Favourits Just For You</P>
+            </div>
+            <div class="container">
+                <div class="blog_contents">
+                    <div class="row">
+                        <t t-foreach="posts_recent" t-as="p">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="card"
+                                     style="height:300px !important; text-align: center;">
+                                    <t t-call="website.record_cover">
+                                        <t t-set="_record"
+                                           t-value="p"/>
+                                        <!--                                        <t t-set="use_filters" t-value="True"/>-->
+                                        <t t-set="use_size"
+                                           t-value="img_wrap"/>
+                                        <t t-set="additionnal_classes"
+                                           t-value="'img_wrap'"/>
+                                    </t>
+                                    <ul class="d-flex">
+                                        <li class="">By admin</li>
+                                        <li class="">
+                                            <t t-esc="p.published_date"
+                                               t-options="{'widget': 'date', 'format': 'MMM dd yyyy'}"/>
+                                        </li>
+                                    </ul>
+                                    <div class="card-body">
+                                        <a t-attf-href="/blog/#{p.blog_id.id}/#{p.id}"
+                                           class="card-link">
+                                            <t t-esc="p.name"/>
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

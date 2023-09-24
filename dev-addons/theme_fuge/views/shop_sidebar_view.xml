@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="Fuge_categories" name="Fuge Categories"
+              inherit_id="website_sale.products_categories"
+              customize_show="True" priority="1" active="True">
+        <xpath expr="//button[@type='button']" position="replace"/>
+        <xpath expr="//div[@id='wsale_products_categories_collapse']"
+               position="replace">
+            <div class="sidebar">
+                <div class="wrapper">
+                    <div class="box">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card" style="border:none; color:#f4f4f4;">
+                                <div class="card-header" id="headingOne">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link collapsed"
+                                                type="button"
+                                                data-toggle="collapse"
+                                                data-target="#collapseOne"
+                                                aria-expanded="true"
+                                                aria-controls="collapseOne">
+                                            <h3 style="font-size: 24px;color: #000000;margin-bottom: 30px;font-weight: 700; display:ruby; margin-left:-28px;">
+                                                PRODUCT
+                                                <span style="color: #3fc0b6">
+                                                    CATEGORIES
+                                                </span>
+                                            </h3>
+                                        </button>
+                                    </h2>
+                                    <ul class="list-group">
+                                        <t t-foreach="categories"
+                                           t-as="c">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <t t-call="theme_fuge.fuge_categories_recursive"/>
+                                            </div>
+                                        </t>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="fuge_categories_recursive" name="fuge Category list" inherit_id="website_sale.categories_recursive">
+         <xpath expr="//li[hasclass('nav-item')]"
+               position="replace">
+        <li class="nav-item">
+            <a  style="color:#828282;" t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link #{'active' if c.id == category.id else ''}">
+                <span t-field="c.name"/>
+            </a>
+            <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
+                <t t-foreach="c.child_id" t-as="c">
+                    <t t-if="not search or c.id in search_categories_ids">
+                        <t t-call="theme_fuge.fuge_categories_recursive" />
+                    </t>
+                </t>
+            </ul>
+        </li>
+         </xpath>
+    </template>
+
+    <template id="Fuge_attributes" name="Fuge Attributes"
+              inherit_id="website_sale.products_attributes"
+              customize_show="True" priority="20" active="True">
+        <xpath expr="//div[@id='wsale_products_attributes_collapse']"
+               position="replace">
+            <div class="sidebar">
+                <div class="wrapper">
+                    <div class="box">
+                        <div class="accordion" id="accordionExample">
+                            <div class="card" style="border:none; background-color:#f4f4f4;">
+                                <div class="collapse d-lg-block"
+                                     id="wsale_products_attributes_collapse">
+                                    <form class="js_attributes mb-2"
+                                          method="get">
+                                        <input t-if="category" type="hidden"
+                                               name="category"
+                                               t-att-value="category.id"/>
+                                        <input type="hidden" name="search"
+                                               t-att-value="search"/>
+                                        <ul class="nav nav-pills flex-column">
+                                            <t t-foreach="attributes" t-as="a">
+                                                <li t-if="a.value_ids and len(a.value_ids) &gt; 1"
+                                                    class="nav-item">
+                                                    <div class="card-header"
+                                                         id="headingSix" style="background-color: revert;border-bottom: none !important;">
+                                                        <h2 class="mb-0">
+                                                                <span t-field="a.name" style="font-size: 24px;color: #000000;margin-bottom: 30px;font-weight: 700;"/>
+                                                        </h2>
+                                                    </div>
+                                                    <t t-if="a.display_type == 'select'">
+                                                        <div>
+                                                            <div class="card-body" style="background-color: #f4f4f4 !important;">
+                                                                <div class="wrapp2">
+                                                                    <div class="list-group">
+                                                                        <select class="form-control"
+                                                                                name="attrib">
+                                                                            <option value=""/>
+
+                                                                            <t t-foreach="a.value_ids"
+                                                                               t-as="v">
+                                                                                <option t-att-value="'%s-%s' % (a.id,v.id)"
+                                                                                        t-esc="v.name"
+                                                                                        t-att-selected="v.id in attrib_set"/>
+                                                                            </t>
+
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                    <t t-if="a.display_type == 'radio'">
+                                                        <ul class="nav nav-pills flex-column">
+                                                            <div>
+                                                                <div class="card-body" style="background-color: #f4f4f4 !important;">
+                                                                    <div class="wrapp2">
+                                                                        <div class="list-group">
+                                                                            <t t-foreach="a.value_ids"
+                                                                               t-as="v">
+                                                                                <li class="nav-item">
+                                                                                    <label style="padding: 0.25rem 0rem; margin: 0"
+                                                                                           t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                                                        <input type="checkbox"
+                                                                                               name="attrib"
+                                                                                               t-att-value="'%s-%s' % (a.id,v.id)"
+                                                                                               t-att-checked="'checked' if v.id in attrib_set else None"/>
+                                                                                        <span style="font-weight: normal; color:#828282;"
+                                                                                              t-field="v.name"/>
+                                                                                    </label>
+                                                                                </li>
+                                                                            </t>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ul>
+                                                    </t>
+                                                    <t t-if="a.display_type == 'color'">
+                                                        <div>
+                                                            <div class="card-body" style="background-color: #f4f4f4 !important;">
+                                                                <div class="wrapp2">
+                                                                    <div class="list-group">
+                                                                        <t t-foreach="a.value_ids"
+                                                                           t-as="v">
+                                                                            <label t-attf-style="background-color:#{v.html_color or v.name}"
+                                                                                   t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
+                                                                                <input type="checkbox"
+                                                                                       name="attrib"
+                                                                                       t-att-value="'%s-%s' % (a.id,v.id)"
+                                                                                       t-att-checked="'checked' if v.id in attrib_set else None"
+                                                                                       t-att-title="v.name"/>
+                                                                            </label>
+                                                                        </t>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
