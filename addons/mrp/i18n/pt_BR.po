@@ -2192,6 +2192,9 @@ msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
+"Não é possível cancelar o planejamento de uma única ordem de trabalho. Em "
+"vez disso, você deve cancelar o planejamento da ordem de produção para "
+"cancelar o planejamento de todas as operações vinculadas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -2863,6 +2866,10 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"Observe que os centros de trabalho arquivados, '%s', ainda estão vinculados "
+"à lista de materiais ativa, o que significa que as operações ainda podem ser"
+" planejadas neles. Para evitar isso, recomenda-se a exclusão do centro de "
+"trabalho."
 
 #. module: mrp
 #: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
@@ -2871,6 +2878,8 @@ msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
+"Observe que os produtos, '%s', ainda estão vinculados à lista de materiais "
+"ativa, o que significa que o produto ainda pode ser usado nelas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -4254,7 +4263,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr ""
+msgstr "A ordem de trabalho (%s) não pode ser iniciada duas vezes."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4315,6 +4324,9 @@ msgid ""
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
 msgstr ""
+"O produto já foi usado pelo menos uma vez, e a edição de sua estrutura pode "
+"levar a comportamentos indesejáveis. Em vez disso, você deve arquivar o "
+"produto e criar um novo com uma nova lista de materiais."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
