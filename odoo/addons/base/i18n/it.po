@@ -24,8 +24,8 @@
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1158,7 +1158,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Questo modulo ponte consente di gestire l'esternalizzazione con il modulo di spedizione diretta.\n"
+"        Questo modulo ponte consente di gestire la subfornitura con il modulo di spedizione diretta.\n"
 "    "
 
 #. module: base
@@ -1169,7 +1169,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Questo modulo ponte consente di gestire l'esternalizzazione con la valutazione.\n"
+"        Questo modulo ponte consente di gestire la subfornitura con la valutazione.\n"
 "    "
 
 #. module: base
@@ -1228,7 +1228,7 @@ msgid ""
 msgstr ""
 "\n"
 "        Questo modulo consente una compilazione rapida di ordini di\n"
-"        acquisto scegliendo la quantità varianti prodotto da un elemento griglia.\n"
+"        acquisto scegliendo la quantità di varianti prodotto da una voce della griglia.\n"
 "    "
 
 #. module: base
@@ -1241,7 +1241,7 @@ msgid ""
 msgstr ""
 "\n"
 "        Questo modulo permette una compilazione rapida di ordini di\n"
-"        vendita scegliendo la quantità varianti prodotto da un elemento griglia.\n"
+"        vendita scegliendo la quantità di varianti prodotto da una voce della griglia.\n"
 "    "
 
 #. module: base
@@ -1414,7 +1414,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"       Aggiunge varianti agli ordini di acquisto attraverso una voce nella griglia dell'ordine.\n"
+"       Aggiunge varianti agli ordini di acquisto tramite una voce della griglia.\n"
 "    "
 
 #. module: base
@@ -2453,7 +2453,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Consente l'acquisto esterno di servizi. Questo modulo permette di vendere servizi\n"
+"Consente l'esternalizzazione di servizi. Questo modulo permette di vendere servizi\n"
 "in dotazione a fornitori esterni generando automaticamente ordini di acquisto per il rivenditore.\n"
 "    "
 
@@ -2840,6 +2840,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Modulo di base per la localizzazione brasiliana\n"
+"==========================================\n"
+"\n"
+"Questo modulo comprende:\n"
+"\n"
+" -Piani contabili brasiliani generici\n"
+" -Imposte brasiliane:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"Il campo tax_discount è stato aggiunto nel account.tax.template e\n"
+"account.tax objects per consentire un calcolo corretto di alcune imposte sul valore aggiunto brasiliane\n"
+"come ICMS. La procedura guidata per la creazione del piano contabile è stata estesa per\n"
+"diffondere i nuovi dati in maniera appropriata.\n"
+"\n"
+"Tuttavia, è importante notare che questo modulo manca di alcune implementazioni per\n"
+"utilizzare Odoo in maniera appropriata in Brasile. Tali implementazioni (come la fatturazione\n"
+"elettronica che è già operativa) sono introdotte da più di 15\n"
+"moduli aggiuntivi del progetto di localizzazione brasiliano\n"
+"https://launchpad.net/openerp.pt-br-localiz e le rispettive dipendenze nel\n"
+"ramo dei componenti aggiuntivi. Quei moduli hanno lo scopo di non rompere la modularità\n"
+"eccezionale di Odoo, ecco perché sono numerosi ma piccoli. Una delle\n"
+"ragioni per mantenere i moduli separati è che i leader della localizzazione brasiliana\n"
+"devono garantire una certa flessibilità dei diritti per completare la localizzazione in quanto le aziende\n"
+"sovvenzionano i restanti requisiti legali (come ad esempio i registri fiscali),\n"
+"SPED contabilità, SPED fiscale e PAF ECF che ancora mancano al settembre\n"
+"2011). Anche questi moduli sono rigorosamente concessi in licenza AGPL V3 e oggi non\n"
+"vengono forniti con alcun permesso aggiuntivo a pagamento per l'uso online di \"moduli privati\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2994,11 +3030,11 @@ msgid ""
 "screen devices.\n"
 msgstr ""
 "\n"
-"Modulo ponte per la posta e l'impresa\n"
+"Modulo ponte per posta ed Enterprise\n"
 "=====================================\n"
 "\n"
-"Visualizza un'anteprima dell'ultimo allegato della chat nella vista del modulo per i dispositivi a schermo\n"
-"per i dispositivi con schermo grande.\n"
+"Nella vista scheda, visualizza un'anteprima dell'ultimo allegato del registro comunicazioni per i dispositivi\n"
+"con schermo grande.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise
@@ -3008,7 +3044,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Modulo ponte per progetto ed enterprise\n"
+"Modulo ponte per progetto ed Enterprise\n"
 "    "
 
 #. module: base
@@ -3827,8 +3863,8 @@ msgstr ""
 "\n"
 "Questo modulo contiene tutti i campi aggiuntivi necessari per gestire con cura gli indirizzi.\n"
 "\n"
-"Nei rapporti legali, ad esempio, alcuni paesi dividono l'indirizzo in vari campi,\n"
-"con nome della strada, il numero civico e l'interno.\n"
+"Nei resoconti legali, ad esempio, alcune nazioni dividono l'indirizzo in vari campi,\n"
+"con nome della via, numero civico e interno.\n"
 "        "
 
 #. module: base
@@ -4016,6 +4052,24 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Funzionale\n"
+"----------\n"
+"\n"
+"In alcuni Paesi dell'America Latina, tra cui Argentina e Chile, alcune operazioni contabili come le fatture e le fatture fornitore sono classificate da tipi di documento definiti dalle autorità fiscali del governo (In Argentina AFIP, in Chile SII).\n"
+"\n"
+"Questo modulo è destinato a essere esteso dalle localizzazioni per gestire questi tipi di documenti ed è un'informazione essenziale che deve essere visualizzata nei rendiconti stampati e che deve essere facilmente identificata, sia all'interno dell'insieme delle fatture che dei movimenti di conto.\n"
+"\n"
+"Ogni tipo di documento ha le proprie regole e la propria sequenza numerica, quest'ultima integrata con il numero della fattura e la sequenza del registro per facilitare l'utente. Per supportare o meno questi tipi di documenti, il registro ha una nuova opzione che consente di utilizzare o meno il documento..\n"
+"\n"
+"Tecnico\n"
+"---------\n"
+"\n"
+"Se la tua localizzazione ha bisogno di questa logica devi aggiungere il modulo come dipendenza ed estendere il modulo di localizzazione:\n"
+"\n"
+"*estendere il metodo _localization_use_documents() dell'azienda.\n"
+"*crea i dati relativi ai tipi di documenti che esistono per il Paese specifico. Il tipo di documento ha un campo Paese\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -6053,8 +6107,8 @@ msgid ""
 "=============================\n"
 msgstr ""
 "\n"
-"Invia periodicamente riepiloghi dei KPI\n"
-"=============================\n"
+"Invio periodico di riepiloghi ICP\n"
+"==============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_bpost
@@ -6465,6 +6519,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Questo componente aggiuntivo fornisce i requisiti tecnici per il regolamento francese CGI art. 286, I. 3° bis che stipula alcuni criteri riguardanti l'inalterabilità, la sicurezza, la raccolta e l'archiviazione di dati relativi alle vendite a privati (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Installalo se utilizzi l'app Punto Vendita per vendere ai privati.\n"
+"\n"
+"Il modulo aggiunge le seguenti funzionalità:\n"
+"\n"
+"    Inalterabilità: disattivazione di tutti i metodi per eliminare o modificare dati principali degli ordini POS, fatture e registrazioni contabili\n"
+"\n"
+"    Sicurezza: concatenare l'argoritmo per verificare l'inalterabilità\n"
+"\n"
+"    Raccolta: chiusura automatica delle vendite con il calcolo sia del periodo che dei totali cumulativi (giornaliero, mensile, annuale)\n"
+"\n"
+"    Accedi per scaricare il Certificato di conformità obbligatorio fornito da Odoo SA (solo per gli utenti di Odoo Enterprise)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -7227,6 +7296,15 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Questo modulo aggiunge il codice base richiesto per una completa integrazione del portale clienti.\n"
+"Comprende la classe di controllo di base e i modelli di base. Componenti aggiuntivi aziendali\n"
+"verranno aggiunti i modelli specifici e i controller per espandere il portale\n"
+"clienti.\n"
+"\n"
+"Questo modulo contiene la maggior parte del codice proveniente da odoo v10 website_portal. L'obiettivo\n"
+"è di consentire la visualizzazione del portale cliente senza avere\n"
+"una dipendenza dalle capacità di modifica e personalizzazione del sito web."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -7456,6 +7534,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo permette di pubblicare i rivenditori/partner sul tuo sito web e di inoltrare i contatti/le opportunità in entrata agli stessi.\n"
+"\n"
+"\n"
+"**Pubblica un partner**\n"
+"\n"
+"Per pubblicare un partner, configura un \"livello\" nel modulo di contatto (nella sezione Assegnazione del partner) e fai clic sul pulsante \"Pubblica\".\n"
+"\n"
+"**Inoltra i contatti**\n"
+"\n"
+"L'inoltro dei contatti può essere effettuato per uno o più contatti alla volta. L'azione è disponibile nella sezione *Partner assegnato* della vista elenco del contatto/opportunità e nel menu della vista elenco *Azione*.\n"
+"\n"
+"L'assegnazione automatica è calcolata dal peso dei livelli del partner e dalla geolocalizzazione. I partner ottengono i contatti che sono localizzati intorno a loro.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
@@ -10198,7 +10291,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_product_matrix
 msgid "Add variants to Sales Order through a grid entry."
 msgstr ""
-"Aggiunge varianti a un ordine di vendita attraverso una voce della griglia."
+"Aggiunge varianti a un ordine di vendita tramite una voce della griglia."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
@@ -10578,7 +10671,7 @@ msgstr "Aziende consentite"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
 msgid "Allows the subcontracting process with the barcode views"
-msgstr "Permetti il processo di subappalto con le viste dei codici a barre"
+msgstr "Consente il processo di subfornitura con le viste dei codici a barre"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_quality_control
@@ -11830,7 +11923,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
 msgid "Bridge module for project and enterprise"
-msgstr "Modulo ponte per progetto ed enterprise"
+msgstr "Modulo ponte per progetto ed Enterprise"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_twitter_wall
@@ -14475,7 +14568,7 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "%(country_code)s: the code of the country"
 msgstr ""
-"Visualizza il formato da utilizzare per gli indirizzi appartenenti alla nazione.\n"
+"Formato di visualizzazione da utilizzare per gli indirizzi appartenenti a questa nazione.\n"
 "\n"
 "È possibile usare un modello stringa di tipo Python con tutti i campi dell'indirizzo (ad esempio, usare \"%(street)s\" per visualizzare il campo \"indirizzo\") più\n"
 "%(state_name)s: nome stato/provincia\n"
@@ -14720,7 +14813,7 @@ msgstr "Menù a discesa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr "Gestione Spedizione diretta e Subappalti"
+msgstr "Gestione spedizione diretta e subfornitura"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -18212,7 +18305,7 @@ msgstr "Parametro \"raggruppa per\" non valido"
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid Expression while parsing xpath %r"
-msgstr ""
+msgstr "Espressione non valida durante l'analisi XPath %r"
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
@@ -23199,6 +23292,121 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"Organizza eventi, corsi di formazione e webinar\n"
+"-------------------------------------\n"
+"\n"
+"### Programma, promuovi, vendi, organizza\n"
+"\n"
+"Organizza, promuovi r vendi eventi online. Odoo offre tutte le funzionalità di cui hai bisogno per gestire gli eventi, sia che si tratti di riunioni, conferenze che di corsi di formazione o webinar.\n"
+"\n"
+"Crea fantastiche pagine evento\n"
+"--------------------------\n"
+"\n"
+"### Sbarazzati dei vecchi editor WYSIWYG\n"
+"\n"
+"Crea fantastiche pagine per gli eventi trascinando e rilasciando \"blocchi di costruzione\"*. Pubblica le foto dell'evento, gli oratori, il programma, ecc.\n"
+"\n"
+"L'approccio unico e *'edit inline'* di Odoo rende la creazione di un sito web sorprendentemente semplice. \"Vuoi presentare un oratore? modificare il prezzo di un biglietto? aggiornare un banner? promuovere degli sponsor?\" è sufficiente fare clic e apportare la modifica.\n"
+"\n"
+"Vendi biglietti online\n"
+"-------------------\n"
+"\n"
+"### Automatizza la registrazione e il processo di pagamento\n"
+"\n"
+"Vendi le iscrizioni all'evento con la funzione multi-ticketing. Gli eventi possono essere gratuiti o a pagamento. I partecipanti possono pagare online con carta di credito o su fattura, in base alla vostra configurazione.\n"
+"\n"
+"Aumenta le vendite con prezzi early-bird, condizioni speciali per i soci o servizi extra con biglietti multipli.\n"
+"\n"
+"Integrazione Google Analytics chiara\n"
+"------------------------------------\n"
+"\n"
+"### Controlla il flusso delle vendite con Google Analytics\n"
+"\n"
+"Ottieni una panoramica chiara delle vendite. I tracker di Odoo per Google Analytics sono configurati in maniera predefinita per tracciare qualsiasi tipo di evento legato a carrelli della spesa, pulsanti call-to-action, ecc.\n"
+"\n"
+"Dato che gli strumenti per il marketing di Odoo (mass mailing, campagne, ecc) sono collegati anche a Google Analytics, avrai una visione completa della tua azienda.\n"
+"\n"
+"Promuovi gli eventi in maniera efficace\n"
+"--------------------------\n"
+"\n"
+"### Mass ailing e social network\n"
+"\n"
+"Utilizza la segmentazione, l'integrazione con i social network e le funzioni di mailing di massa per promuovere gli eventi al pubblico giusto. Configura l'invio di e-mail automatiche ai partecipanti per fornire loro i dettagli di cui hanno bisogno.\n"
+"\n"
+"Temi a prova di designer\n"
+"------------------------\n"
+"\n"
+"### I designer amano lavorare con Odoo\n"
+"\n"
+"I temi sono fantastici e semplici da progettare. Non c'è bisogno di essere in grado di sviluppare per creare nuove pagine, temi o blocchi di costruzione. Utilizziamo una struttura HTML chiara, un [bootstrap](http://getbootstrap.com/) CSS e la nostra modularità permette di distribuire facilmente i temi.\n"
+"\n"
+"L'approccio a blocchi permette al sito web di rimanere pulito anche dopo che gli utenti finali hanno iniziato a creare nuovi contenuti.\n"
+"\n"
+"Rendi il tuo evento più visibile\n"
+"----------------------------\n"
+"\n"
+"### Strumenti SEO a portata di mano\n"
+"\n"
+"Gli strumenti SEO sono pronti all'uso senza doverli cofigurare in precedenza. Odoo consiglia parole chiave secondo i termini più cercati su Google, Google Analytics traccia i carrelli che comprendono l'evento e crea automaticamente mappe del sito.\n"
+"\n"
+"Realizziamo anche contenuti strutturati in modo automatico per promuovere efficacemente gli eventi e i prodotti su Google.\n"
+"\n"
+"Sfrutta i social network\n"
+"---------------------\n"
+"\n"
+"### Ottimizza: dalla pubblicità alle conversioni\n"
+"\n"
+"Crea facilmente nuove pagine di destinazione con la funzionalità di modifica in linea di Odoo. Indirizza i visitatori delle diverse campagne di marketing verso le pagine di destinazione degli eventi per ottimizzare le conversioni.\n"
+"\n"
+"E molto di più...\n"
+"----------------\n"
+"\n"
+"### Pianifica\n"
+"\n"
+"- Calendario degli eventi\n"
+"- Pubblica documenti correlati\n"
+"- Distribuisci le risorse\n"
+"- Automatizza gli acquisti (catering...)\n"
+"- Organizzatori e luoghi multipli\n"
+"- Interfaccia mobile\n"
+"\n"
+"### Vendi\n"
+"\n"
+"-  Vendite online od offline\n"
+"-  Fatturazione automatizzata\n"
+"-  Politiche di cancellazione\n"
+"-  Prezzi specifici per membri\n"
+"-   Dashboard e resoconti\n"
+"\n"
+"### Organizza\n"
+"\n"
+"-  Pianificazione avanzata\n"
+"-  Stampa di badge\n"
+"-  Automatizza le e-mail di follow-up\n"
+"-  Capacità Min/Max\n"
+"-  Gestisci lezioni e risorse\n"
+"-  Crea gruppi di partecipanti\n"
+"-  Automatizza i sondaggi di soddisfazione\n"
+"\n"
+"Completamente integrata con le altre app\n"
+"---------------------------------\n"
+"\n"
+"### Ottieni centinaia di app open source gratuite\n"
+"\n"
+"\n"
+"### eCommerce\n"
+"\n"
+"Promuovi prodotti, vendi online, ottimizza le esperienze di acquisto dei visitatori.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Pubblica news, attrai nuovi visitatori, fidelizza i clienti.\n"
+"\n"
+"\n"
+"### Il nostro team\n"
+"\n"
+"Crea la pagina \"Chi siamo\" page e presenta il tuo team in maniera efficace.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -26658,7 +26866,7 @@ msgstr "Indirizzo"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr "Indirizzo 2…"
+msgstr "Via 2…"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -26697,17 +26905,17 @@ msgstr "Studio"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_subcontracting
 msgid "Subcontract Productions"
-msgstr "Esternalizzazione delle produzioni"
+msgstr "Subfornitura delle produzioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mrp_subcontracting
 msgid "Subcontract with Barcode"
-msgstr ""
+msgstr "Subfornitura con codice a barre"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account
 msgid "Subcontracting Management with Stock Valuation"
-msgstr "Gestione esternalizzazione con valutazione giacenze"
+msgstr "Gestione subfornitura con valutazione giacenze"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -28352,7 +28560,7 @@ msgstr "Tour"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr ""
+msgstr "Marketing SMS per oratori conferenze"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -28522,6 +28730,8 @@ msgstr "Albero"
 #, python-format
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
 msgstr ""
+"Un elemento figlio di un albero può avere unicamente uno dei %(tags)s tag (e"
+" non %(wrong_tag)s)"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -29665,6 +29875,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Siamo una società di consulenza tecnologica e strategica che crea soluzioni "
+"che aumentano il valore attraverso l'uso di software avanzati per i nostri "
+"clienti, in tutto il mondo. Noi di Lumber Inc offriamo l'esperienza "
+"operativa unita a..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -29673,6 +29887,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Siamo una società di consulenza tecnologica e strategica che crea soluzioni che aumentano il valore attraverso l'uso di software avanzati per i nostri clienti, in tutto il mondo.\n"
+"<br> <br>\n"
+"In Lumber Inc portiamo l'esperienza operativa unita all'acume tecnologico. Siamo consapevoli che qualsiasi software a supporto delle operazioni aziendali deve essere progettato in modo tale da facilitare l'esecuzione dei processi operativi critici e servire da strumento per gli utenti piuttosto che da ostacolo. Il nostro approccio si concentra innanzitutto sul processo, assicurandoci che contribuisca agli obiettivi dell'azienda, quindi lo ottimizziamo e progettiamo le soluzioni software per supportarlo al meglio."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web

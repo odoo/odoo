@@ -95,14 +95,14 @@ msgstr "Impor Dasar"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Base Import Mapping"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Batas batch"
 
 #. module: base_import
 #. openerp-web
@@ -157,6 +157,8 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Tidak dapat mengambil URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
@@ -366,7 +368,7 @@ msgstr "Jenis Berkas"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Ukuran file melampaui konfigurasi maksimum (%s byte)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -394,6 +396,8 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Menemukan data gambar yang tidak valid, gambar harus diimpor sebagai URL "
+"atau data base64-encode."
 
 #. module: base_import
 #. openerp-web
@@ -462,7 +466,7 @@ msgstr "Impor"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "Tanya Jawab Impor"
 
 #. module: base_import
 #. openerp-web
@@ -483,7 +487,7 @@ msgstr "Tinjauan impor gagal karena:"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import records"
-msgstr ""
+msgstr "Impor recor"
 
 #. module: base_import
 #. openerp-web
@@ -494,12 +498,16 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Impor habis waktu. Mohon coba lagi. Bila Anda masih mengalami masalah ini, "
+"file mungkin terlalu besar untuk konfigurasi sistem, coba pisahkan file "
+"(impor lebih sedikit record untuk setiap file)."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"Value cell tidak valid pada baris %(row)s, kolom %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -609,7 +617,7 @@ msgstr "Butuh bantuan?"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Tidak ada Separator"
 
 #. module: base_import
 #. openerp-web
@@ -660,7 +668,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Lihat kemungkinan value"
 
 #. module: base_import
 #. openerp-web
@@ -675,7 +683,7 @@ msgstr "Pilih berkas CSV atau Excel untuk diimpor"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Selected Sheet:"
-msgstr ""
+msgstr "Sheet Terpilih:"
 
 #. module: base_import
 #. openerp-web
@@ -715,7 +723,7 @@ msgstr "Spasi"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Mulai pada bari"
 
 #. module: base_import
 #. openerp-web
@@ -919,6 +927,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Anda dapat mengetes atau memuat ulang file Anda sebelum melanjutkan impor."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -951,4 +960,4 @@ msgstr "antara baris %d dan %d"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "kode error %s tidak diketahui"
