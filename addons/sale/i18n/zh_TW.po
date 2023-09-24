@@ -955,6 +955,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"根據產品配置，可透過機制自動計算交貨數量：\n"
+"  - 手動：在資料行手動設定數量\n"
+"  - 從開支分析：數量是已過賬開支的數量總和\n"
+"  - 工時表：連結至此銷售資料行的任務所記錄的工時總和\n"
+"  - 庫存變動：採用已確認提貨的數量\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -3242,7 +3247,7 @@ msgstr "產品計量單位唯讀"
 #: model:ir.model,name:sale.model_product_product
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 msgid "Product Variant"
-msgstr "產品變體"
+msgstr "產品款式"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
@@ -4629,7 +4634,7 @@ msgstr "未連稅總額"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Included"
-msgstr "含稅總金額"
+msgstr "連稅總額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type

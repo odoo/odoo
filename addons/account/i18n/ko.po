@@ -3310,6 +3310,15 @@ msgstr "미사용 계정 코드를 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr "미사용 전표 코드를 생성할 수 없습니다. %s 전표 이름을 변경하세요."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
@@ -10885,7 +10894,7 @@ msgstr "새로 고침"
 msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
 " This action is irreversible."
-msgstr ""
+msgstr "일치하지 않는 경우 회계 데이터 (세금, 계정 등)를 다시 불러옵니다. 이 작업은 되돌릴 수 없습니다."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard

@@ -38,7 +38,7 @@ msgstr "コンフィグ設定"
 msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
-msgstr ""
+msgstr "VIESサーバとの接続に失敗しました。VAT番号%sが検証できませんでした。"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -49,7 +49,7 @@ msgstr "連絡先"
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
-msgstr ""
+msgstr "欧州VAT番号はVIESデータベースで自動的にチェックされます。"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -61,7 +61,7 @@ msgstr "財政状態"
 msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
-msgstr ""
+msgstr "このチェックボックスをオンにした場合、適用されるデフォルトの財政ポジションは、欧州VIESサービスによる検証の出力によって異なります。"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -73,7 +73,7 @@ msgstr "域内無効"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Vies検証を実施"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -88,6 +88,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+" %(vat_label)s 番号 [%(wrong_vat)s] が有効でないようです。\n"
+"メモ: 予測される形式は %(expected_format)sです。"
 
 #. module: base_vat
 #. odoo-python
@@ -97,13 +99,15 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"%(vat_label)s 番号 [%(wrong_vat)s]  (%(record_label)s 用)が有効ではないようです。\n"
+"メモ: 予測される形式は %(expected_format)sです。"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "VAT 番号 %s はVIESサーバで解釈することはできませんでした。"
 
 #. module: base_vat
 #. odoo-python
@@ -136,7 +140,7 @@ msgstr "ヨーロッパのVIESサービスを使用してVAT番号を確認す�
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "Vies VAT要チェック"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -155,4 +159,4 @@ msgstr "財政状態 [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "取引先 [%s]"

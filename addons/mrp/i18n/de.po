@@ -5828,6 +5828,18 @@ msgid "Validate"
 msgstr "Validieren"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"Die Werte können nicht festgelegt und validiert werden, weil für ein verfolgtes Produkt, dessen verbrauchte Menge erhöht wird, eine Los-/Seriennummer angegeben werden muss:\n"
+"-"
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -6553,13 +6565,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Sie müssen viel für das fertige Produkt bereitstellen."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "Sie müssen eine Los-/Seriennummer zur Verfügung stellen."
 
 #. module: mrp
 #. odoo-python

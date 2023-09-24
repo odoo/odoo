@@ -10,8 +10,8 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Chloe Wang, 2023
 # Ryan <ouyang.em@gmail.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -417,7 +417,7 @@ msgstr "将优先权分配给产品供应商列表。"
 msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
-msgstr ""
+msgstr "最多可同时显示%s个数量。移除选定数量以添加其他数量。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -511,6 +511,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"计算基价。\n"
+"销售价格： 基础价格是销售价格。\n"
+"成本价： 基础价格是成本价格。\n"
+"其他价格表： 根据其他价格表计算基准价格。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -3035,7 +3039,7 @@ msgstr "写入日期"
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr ""
+msgstr "您正在取消价目表功能。所有已启用的价目表都会被存档。"
 
 #. module: product
 #. odoo-python
@@ -3081,6 +3085,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"您不能更改属性%(attribute)s的 \"变体创建模式\"， 因为该属性已用于以下产品：\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3089,7 +3095,7 @@ msgstr ""
 msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
-msgstr ""
+msgstr "您不能更改 %(value)s 值的属性，因为它已用于以下产品：%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3146,6 +3152,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"您不能删除属性 %(attribute)s ，因为该属性已被用于以下产品：\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3247,7 +3255,7 @@ msgstr ""
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "您必须留下至少一个数量。"
 
 #. module: product
 #. odoo-python
