@@ -34,6 +34,10 @@ class ResourceResource(models.Model):
         ('material', 'Material')], string='Type',
         default='user', required=True)
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
+    im_status = fields.Char(related='user_id.im_status')
+    share = fields.Boolean(related='user_id.share')
+    email = fields.Char(related='user_id.email')
+    phone = fields.Char(related='user_id.phone')
     time_efficiency = fields.Float(
         'Efficiency Factor', default=100, required=True,
         help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
