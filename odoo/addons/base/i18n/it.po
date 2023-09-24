@@ -1987,6 +1987,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Modulo di base per la localizzazione brasiliana\n"
+"==========================================\n"
+"\n"
+"Questo modulo comprende:\n"
+"\n"
+" -Piani contabili brasiliani generici\n"
+" -Imposte brasiliane:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"Il campo tax_discount è stato aggiunto nel account.tax.template e\n"
+"account.tax objects per consentire un calcolo corretto di alcune imposte sul valore aggiunto brasiliane\n"
+"come ICMS. La procedura guidata per la creazione del piano contabile è stata estesa per\n"
+"diffondere i nuovi dati in maniera appropriata.\n"
+"\n"
+"Tuttavia, è importante notare che questo modulo manca di alcune implementazioni per\n"
+"utilizzare Odoo in maniera appropriata in Brasile. Tali implementazioni (come la fatturazione\n"
+"elettronica che è già operativa) sono introdotte da più di 15\n"
+"moduli aggiuntivi del progetto di localizzazione brasiliano\n"
+"https://launchpad.net/openerp.pt-br-localiz e le rispettive dipendenze nel\n"
+"ramo dei componenti aggiuntivi. Quei moduli hanno lo scopo di non rompere la modularità\n"
+"eccezionale di Odoo, ecco perché sono numerosi ma piccoli. Una delle\n"
+"ragioni per mantenere i moduli separati è che i leader della localizzazione brasiliana\n"
+"devono garantire una certa flessibilità dei diritti per completare la localizzazione in quanto le aziende\n"
+"sovvenzionano i restanti requisiti legali (come ad esempio i registri fiscali),\n"
+"SPED contabilità, SPED fiscale e PAF ECF che ancora mancano al settembre\n"
+"2011). Anche questi moduli sono rigorosamente concessi in licenza AGPL V3 e oggi non\n"
+"vengono forniti con alcun permesso aggiuntivo a pagamento per l'uso online di \"moduli privati\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2566,6 +2602,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Sportello unico (OSS) UE IVA\n"
+"==========================\n"
+"\n"
+"Dal 1 luglio 2021, le aziende europee che vendono beni all'interno dell'UE superiori a 10.000€ ad acquirenti situati in un altro stato membro devono registrare e pagare l'IVA nello stato membro dell'acquirente.\n"
+"Al di sotto della nuova soglia europea puoi continuare ad applicare le norme nazionali relative all'IVA per le vendite transnazionali. Al fine di semplificare l'applicazione della direttiva UE, il regime di registrazione dello sportello unico (OSS) permette alle aziende di presentare un'unica dichiarazione.\n"
+"\n"
+"Questo modulo lo rende possibile attraverso la creazione delle posizioni di bilancio UE e delle imposte richieste per applicarle e registrarle automaticamente.\n"
+"\n"
+"Ciò che devi fare è verificare che la mappatura proposta sia adeguata per i prodotti e i servizi venduti.\n"
+"\n"
+"Riferimenti\n"
+"++++++++++\n"
+"Direttiva (UE) 2017/2455 del consiglio Direttiva (UE) 2019/1995 del consiglio\n"
+"Regolamento di esecuzione (UE) 2019/2026 del consiglio\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -2613,6 +2666,24 @@ msgid ""
 "Pro rules and show the errors.\n"
 "    "
 msgstr ""
+"\n"
+"Modulo fatturazione elettronica\n"
+"===========================\n"
+"\n"
+"Permette di importare ed esportare i formati: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Quando viene creato un PDF sulla fattura, il PDF verrà incorporato nell'xml per tutti i formati UBL. Questo permette al \n"
+"ricevitore di recuperare il PDF con il solo file xml. Nota che**EHF3 è completamente implementato da UBL Bis 3** (`riferimento \n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"I formati possono essere scelti dal registro (Registro > Impostazioni avanzate) collegato alla fattura. \n"
+"\n"
+"Nota che E-FFF, NLCIUS e XRechnung (UBL) sono disponibili rispettivamente solo per azienda belga, olandesi e tedesche. UBL Bis 3 è disponibile solo per le aziende il cui Paese è presente nell'elenco `EAS \n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"Nota anche che affinché Chorus Pro individui automaticamente il formato \"PDF/A-3 (Factur-X)\", devi attivare \n"
+"l'opzione \"Factur-X PDF/A-3\" nel registro. Questa opzione validerà anche xml contro le regole Factur-X e Chorus\n"
+"Pro rules e mostrerà l'errore.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -2666,6 +2737,24 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Funzionale\n"
+"----------\n"
+"\n"
+"In alcuni Paesi dell'America Latina, tra cui Argentina e Chile, alcune operazioni contabili come le fatture e le fatture fornitore sono classificate da tipi di documento definiti dalle autorità fiscali del governo (In Argentina AFIP, in Chile SII).\n"
+"\n"
+"Questo modulo è destinato a essere esteso dalle localizzazioni per gestire questi tipi di documenti ed è un'informazione essenziale che deve essere visualizzata nei rendiconti stampati e che deve essere facilmente identificata, sia all'interno dell'insieme delle fatture che dei movimenti di conto.\n"
+"\n"
+"Ogni tipo di documento ha le proprie regole e la propria sequenza numerica, quest'ultima integrata con il numero della fattura e la sequenza del registro per facilitare l'utente. Per supportare o meno questi tipi di documenti, il registro ha una nuova opzione che consente di utilizzare o meno il documento..\n"
+"\n"
+"Tecnico\n"
+"---------\n"
+"\n"
+"Se la tua localizzazione ha bisogno di questa logica devi aggiungere il modulo come dipendenza ed estendere il modulo di localizzazione:\n"
+"\n"
+"*estendere il metodo _localization_use_documents() dell'azienda.\n"
+"*crea i dati relativi ai tipi di documenti che esistono per il Paese specifico. Il tipo di documento ha un campo Paese\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -3018,6 +3107,19 @@ msgid ""
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 "    "
 msgstr ""
+"\n"
+"India- Fatturazione elettronica\n"
+"====================\n"
+"Per fornire la fatturazione al governo tramite API.\n"
+"Utilizziamo \"Tera Software Limited\" come imposta sulla prestazione di servizi\n"
+"\n"
+"Step 1: come prima cosa bisogna creare un nome utente e una password API nel portale dedicato alla fatturazione elettronica.\n"
+"Step 2: passa all'azienda legata al numero GST\n"
+"Step 3: configura il numero utente e la password su Odoo (Vai su: Fatturazione/Contabilità -> Configurazione -> Impostazioni -> Fatture cliente o cerca \"Fatturazione elettronica\" nella barra di ricerca)\n"
+"Step 4: ripeti gli step 1,2,3 per tutti i numeri GSTIN che hai in odoo. Se possiedi aziende multiple con lo stesso numero GST esegui lo step 1 solo per la prima azienda.\n"
+"\n"
+"Per creare un nome utente e una password API consulta il seguente documento: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
@@ -3034,6 +3136,17 @@ msgid ""
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
 msgstr ""
+"\n"
+"India - E-waybill\n"
+"====================================\n"
+"Per fornire il documento E-waybill tramite API al governo.\n"
+"Utilizziamo \"Tera Software Limited\" come imposta sulla prestazione di servizi\n"
+"\n"
+"Step 1: come prima cosa devi creare un nome utente e una password API nel portale E-waybill.\n"
+"Step 2: passa all'azienda corrispondente al numero GST\n"
+"Step 3: configura il nome utente e la password in Odoo (Vai a: Fatturazione/Contabilità -> Configurazione -> Impostazioni -> Indian Electronic WayBill o trova \"E-waybill\" nella barra di ricerca)\n"
+"Step 4: ripeti gli step 1,2,3 per tutti i numeri GSTIN che hai in odoo. Se possiedi aziende multiple con lo stesso numero GST esegui lo step 1 .\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -3766,6 +3879,41 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"Gestione assegni propri\n"
+"---------------------\n"
+"\n"
+"Estende il modulo 'Base per la stampa degli assegni' per gestire i propri assegni attraverso maggiori funzionalità:\n"
+"\n"
+"*permette di utilizzare assegni che non sono stampati ma compilati manualmente dall'utente\n"
+"*permette di usare assegni elettronici o differiti\n"
+"  *stampa disattivata\n"
+"  *il numero dell'assegno è impostato manualmente dall'utente\n"
+"*aggiunta di un \"Data incasso assegno\" per gli assegni postdatati (pagamenti dilazionati)\n"
+"*aggiunta di un menu per tracciare i propri assegni\n"
+"\n"
+"Gestione assegni terze parti\n"
+"-----------------------------\n"
+"\n"
+"Aggiunge nuove funzionalità per la \"Gestione degli assegni di terze parti\".\n"
+"\n"
+"Sono 2 i metodi di pagamento aggiunti:\n"
+"\n"
+"*Assegni di terze parti nuovi:\n"
+"\n"
+"  *I pagamenti effettuati con questo metodo di pagamento rappresentano l'assegno che si riceve da un cliente quando viene pagato (da una fattura o da un pagamento manuale).\n"
+"\n"
+"*Assegni di terze parti esistenti.\n"
+"\n"
+"  *Pagamenti effettuati con questo metodo di pagamento servono a tracciare i movimenti dell'assegno, ad es.:\n"
+"\n"
+"    *usare un assegno per pagare un fornitore\n"
+"    *versare l'assegno in banca\n"
+"    *ritirare l'assegno dalla banca (rifiuto)\n"
+"    *ricevere l'assegno dal venditore (rifiuto o ritorno)\n"
+"    *trasferire l'assegno da un registro di assegni di terzi all'altro (da un negozio all'altro)\n"
+"\n"
+"  *Queste operazioni possono essere eseguite con più controlli contemporaneamente\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -4165,6 +4313,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail : the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"Localizzazione svizzera\n"
+"==================\n"
+"Questo modulo definisce il piano contabile e le imposte per la Svizzera ( PME/KMU 2015) e abilita la creazione di ISR e fatture QR quando stampi una fattura o la invii tramite e-mail.\n"
+"\n"
+"Un ISR verrà generato se specifichi le informazioni necessarie:\n"
+"    -Il conto corrente sul quale vuoi ricevere il denaro deve essere configurato e avere un riferimento postale valido.\n"
+"    -Alla fattura deve essere stato assegnato un conto bancario per ricevere il pagamento\n"
+"      (questo può essere fatto manualmente ma un valore predefinito viene configurato automaticamente se hai indicato un conto corrente).\n"
+"    -È necessario aver impostato i riferimenti postali della propria banca.\n"
+"    -La fattura deve essere in EUR o franco svizzero (in quanto ISR non accetta altre valute)\n"
+"\n"
+"Una fattura QR verrà generata se:\n"
+"    - Il partner indicato nella fattura ha un indirizzo completo (via, città, codice postale e Paese) in Svizzera.\n"
+"    - L'opzione per generare il QR-code svizzero è selezionata sulla fattura (per impostazione predefinita).\n"
+"    -Un numero di conto corretto/IBAN QR è configurato nel registro della banca\n"
+"    - (quando utilizzi un IBAN-QR): il riferimento di pagamento della fattura è un riferimento QR\n"
+"\n"
+"La generazione del documento ISR e della fattura QR è automatica se si soddisfano i criteri precedenti.\n"
+"\n"
+"Ecco come funziona:\n"
+"    -la stampa della fattura attiverà il download di tre file: la fattura, l'ISR e la fattura QR\n"
+"    -facendo clic sul pulsante 'Invia tramite e-mail' i tre file verranno allegati all'e-mail in bozza : la fattura, l'ISR e la fattura QR.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_tcs_tds
@@ -4176,6 +4348,12 @@ msgid ""
 "This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
 "    "
 msgstr ""
+"\n"
+"Dichiarazione fiscale TCS/TDS per l'India\n"
+"====================================\n"
+"\n"
+"Il modulo aggiunge le dichiarazioni fiscali di tipo TCS e TDS e carica le relative imposte per l'azienda indiana.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -4331,6 +4509,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Questo componente aggiuntivo fornisce i requisiti tecnici per il regolamento francese CGI art. 286, I. 3° bis che stipula alcuni criteri riguardanti l'inalterabilità, la sicurezza, la raccolta e l'archiviazione di dati relativi alle vendite a privati (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Installalo se utilizzi l'app Punto Vendita per vendere ai privati.\n"
+"\n"
+"Il modulo aggiunge le seguenti funzionalità:\n"
+"\n"
+"    Inalterabilità: disattivazione di tutti i metodi per eliminare o modificare dati principali degli ordini POS, fatture e registrazioni contabili\n"
+"\n"
+"    Sicurezza: concatenare l'argoritmo per verificare l'inalterabilità\n"
+"\n"
+"    Raccolta: chiusura automatica delle vendite con il calcolo sia del periodo che dei totali cumulativi (giornaliero, mensile, annuale)\n"
+"\n"
+"    Accedi per scaricare il Certificato di conformità obbligatorio fornito da Odoo SA (solo per gli utenti di Odoo Enterprise)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -5117,6 +5310,15 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Questo modulo aggiunge il codice base richiesto per una completa integrazione del portale clienti.\n"
+"Comprende la classe di controllo di base e i modelli di base. Componenti aggiuntivi aziendali\n"
+"verranno aggiunti i modelli specifici e i controller per espandere il portale\n"
+"clienti.\n"
+"\n"
+"Questo modulo contiene la maggior parte del codice proveniente da odoo v10 website_portal. L'obiettivo\n"
+"è di consentire la visualizzazione del portale cliente senza avere\n"
+"una dipendenza dalle capacità di modifica e personalizzazione del sito web."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -5248,6 +5450,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo permette di pubblicare i rivenditori/partner sul tuo sito web e di inoltrare i contatti/le opportunità in entrata agli stessi.\n"
+"\n"
+"\n"
+"**Pubblica un partner**\n"
+"\n"
+"Per pubblicare un partner, configura un \"livello\" nel modulo di contatto (nella sezione Assegnazione del partner) e fai clic sul pulsante \"Pubblica\".\n"
+"\n"
+"**Inoltra i contatti**\n"
+"\n"
+"L'inoltro dei contatti può essere effettuato per uno o più contatti alla volta. L'azione è disponibile nella sezione *Partner assegnato* della vista scheda del contatto/opportunità e nel menu della vista elenco *Azione*.\n"
+"\n"
+"L'assegnazione automatica è calcolata dal peso dei livelli del partner e dalla geolocalizzazione. I partner ottengono i contatti che sono localizzati intorno a loro.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subonctracting_landed_costs
@@ -5467,6 +5684,20 @@ msgid ""
 "    Democratic Republic of the Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo implementa il piano dei conti per l'area OHADA.\n"
+"===========================================================\n"
+"\n"
+"Permette a qualsiasi associazione o azienda di gestire la propria contabilità finanziaria.\n"
+"\n"
+"I Paesi che si avvalgono del sistema OHADA sono i seguenti:\n"
+"-------------------------------------------\n"
+"    Benin, Burkina Faso, Camerun, Repubblica centrafricana, Comore, Congo,\n"
+"\n"
+"    Costa d'Avorio, Gabon, Guinea, Guinea Bissau, Guinea equatoriale, Mali, Nigeria,\n"
+"\n"
+"    Repubblica democratica del Congo, Senegal, Chad, Togo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -5674,7 +5905,7 @@ msgstr ""
 "Le seguenti date possono essere tracciate::\n"
 "-------------------------------\n"
 "    - fine vita\n"
-"    - data di scadenza\n"
+"    - data di durata minima\n"
 "    - data di rimozione\n"
 "    - data avviso\n"
 "\n"
@@ -5998,6 +6229,15 @@ msgid ""
 "    Please also update the Italian Accounting module (l10n_it) when you install this module.\n"
 "    "
 msgstr ""
+"\n"
+"Gestione della ritenuta d'acconto e del fondo previdenziale per l'implementazione della fattura elettronica in Italia.\n"
+"\n"
+"    La ritenuta d'acconto e il fondo previdenziale sono calcolati come qualsiasi altra imposta\n"
+"    con l'ordinamento per sequenza, quindi fai attenzione all'ordine delle imposte\n"
+"    nel configuratore.\n"
+"\n"
+"    Ti ricordiamo di aggiornare anche il modulo per la contabilità italiana (l10n_it) quando installi questo modulo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -6889,6 +7129,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: funzione di registrazione per "
+"registrare le informazioni di debug nella tabella <code>ir.logging</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9070,6 +9312,8 @@ msgid ""
 "Authenticate by using SSL certificates, belonging to your domain name. \n"
 "SSL certificates allow you to authenticate your mail server for the entire domain name."
 msgstr ""
+"Autenticati utilizzandoi certificati SSL che appartengono al tuo nome di dominio. \n"
+"I certificati SSL ti permettono di autenticare il tuo server e-mail per l'intero nome di dominio."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication
@@ -9482,6 +9726,8 @@ msgid ""
 "Be able to see Identification Type and AFIP Responsibility in ecommerce "
 "checkout form."
 msgstr ""
+"Questo modulo consente la visualizzazione dei tipi di identificazione e "
+"della responsabilità AFIP nel modulo di checkout dell'e-commerce."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -9875,7 +10121,7 @@ msgstr "Calendario - SMS"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__call_at
 msgid "Call At"
-msgstr ""
+msgstr "Chiama il"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -10193,7 +10439,7 @@ msgstr "Chat, posta elettronica e canali privati"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr "Controllo della base di stampa"
+msgstr "Base per la stampa degli assegni"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__is_company
@@ -11700,6 +11946,7 @@ msgstr "DLE 26 110 x 220 mm"
 #: model:ir.module.module,summary:base.module_pos_daily_sales_reports
 msgid "Daily X and Z sales reports of a Point of Sale session"
 msgstr ""
+"Rendiconti vendite giornaliere X e Z di una sessione del Punto vendita"
 
 #. module: base
 #. odoo-python
@@ -11772,6 +12019,9 @@ msgid ""
 "Database fetch misses ids (%(missing)s) and has extra ids (%(extra)s), may "
 "be caused by a type incoherence in a previous request"
 msgstr ""
+"Nel prelevamento dal database mancano gli ID (%(missing)s) e contiene ID in "
+"eccesso (%(extra)s). Ciò può essere causato da un'incoerenza sulla tipologia"
+" in una richiesta precedente"
 
 #. module: base
 #. odoo-python
@@ -12047,7 +12297,7 @@ msgstr "Costi di consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_stock_picking_batch
 msgid "Delivery Stock Picking Batch"
-msgstr ""
+msgstr "Spedizione prelievo stock per lotto"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -15542,7 +15792,7 @@ msgstr "Indian - Resoconto magazzino (GST - imposta sui beni e servizi)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_tcs_tds
 msgid "Indian - TCS/TDS Accounting Report and Taxes"
-msgstr ""
+msgstr "India - Rendiconti contabili TCS/TDS e imposte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_upi
@@ -15627,6 +15877,8 @@ msgid ""
 "Inherited view cannot have 'Groups' define on the record. Use 'groups' "
 "attributes inside the view definition"
 msgstr ""
+"La vista ereditata non può avere \"Gruppi\" indicati nella registrazione. "
+"Utilizza gli attributi \"gruppi\" all'interno della definizione della vista"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
@@ -16387,7 +16639,7 @@ msgstr "Costi sbarcati su OdP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subonctracting_landed_costs
 msgid "Landed Costs With Subcontracting order"
-msgstr ""
+msgstr "Costi sbarcati con ordine di subappalto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
@@ -17070,7 +17322,7 @@ msgstr "Progetto MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_repair
 msgid "MRP Subcontracting Repair"
-msgstr ""
+msgstr "MRP subappalto riparazione"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
@@ -18163,12 +18415,12 @@ msgstr "Mongolia - Contabilità"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_mrp
 msgid "Monitor MRP using project"
-msgstr ""
+msgstr "Monitora MRP con l'aiuto del progetto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_purchase
 msgid "Monitor purchase in project"
-msgstr ""
+msgstr "Monitora gli acquisti nel progetto"
 
 #. module: base
 #: model:res.country,name:base.me
@@ -18247,6 +18499,13 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
+"My Company (San Francisco) si impegna a fare del proprio meglio per fornire "
+"servizi performanti in tempo utile, nel rispetto delle tempistiche "
+"concordate. Tuttavia, nessuno degli impegni può essere considerato un "
+"obbligo di risultato. My Company (San Francisco) non può in nessun caso "
+"essere coinvolta dal cliente a comparire come terza parte nel contesto di "
+"qualsiasi richiesta di risarcimento danni presentata contro il cliente "
+"stesso da un consumatore finale."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -18885,6 +19144,96 @@ msgid ""
 "etc) and directly following Odoo's standard access rights management, so you do\n"
 "not have to configure things twice.\n"
 msgstr ""
+"Odoo Blog\n"
+"----------\n"
+"\n"
+"Scrivi, progetta, promuovi e coinvolgi con <a href=\"https://www.odoo.com/app/blog\">Odoo Blog</a>.\n"
+"\n"
+"Esprimi te stesso con la piattaforma di blogging di livello aziendale di Odoo. Scrivi\n"
+"fantastici articoli per il blog, coinvolgi i visitatori, traduci il contenuto e modera\n"
+"i social network.\n"
+"\n"
+"Gli articoli del blog vengono referenziati in modo efficiente da Google e tradotti\n"
+"in più lingue in pochi clic.\n"
+"\n"
+"Scrivi fantastici articoli per il blog\n"
+"--------------------------\n"
+"\n"
+"Trascina e rilascia *'Blocchi di costruzione'* ben strutturati per creare fantastici articoli\n"
+"che comprendono immagini, video, pulsanti di azione, citazioni, banner,\n"
+"ecc.\n"
+"\n"
+"Con il nostro approccio *'modifica in linea'* unico, non è necessario essere un designer per\n"
+"creare contenuti belli e accattivant. Ogni articolo sembrerà essere\n"
+"progettato da un designer professionista.\n"
+"\n"
+"Traduzione automatica realizzata da professionisti\n"
+"--------------------------------------\n"
+"\n"
+"Gli articoli del tuo blog possono essere tradotti in più lingue. La nostra funzionalità\n"
+"di traduzione \"su richiesta\" ti permette di beneficiare di traduttori\n"
+"professionisti che traducono le modifiche in maniera automatica. (\\$0.05 per parola)\n"
+"Le versioni tradotte vengono aggiornate automaticamente una volta che il lavoro di traduzione è stato completato\n"
+"(circa 32 ore).\n"
+"\n"
+"Coinvolgi i visitatori\n"
+"-------------------------\n"
+"\n"
+"La live chat integrata con il sito web permette di iniziare a chattare in tempo reale con\n"
+"i visitatori per avere un feedback sugli articoli più recenti o raccogliere idee per scrivere nuovi\n"
+"articoli.\n"
+"\n"
+"Coinvolgere i visitatori è un ottimo modo per trasformarli in clienti.\n"
+"\n"
+"Fedeltà visitatori\n"
+"---------------------\n"
+"\n"
+"Il pulsante *segui* permette ai visitatori di ricevere gli articoli del blog via\n"
+"e-mail senza sforzo e senza doversi registrare. Le icone dei social network permettono\n"
+"ai visitatori di condividere facilmente gli articoli.\n"
+"\n"
+"Integrazione Google Analytics\n"
+"----------------------------\n"
+"\n"
+"Ottieni una chiara panoramica del flusso delle vendite. I tracker Google Analytics di Odoo\n"
+"sono configurati in maniera predefinita per tracciare tutti i tipi di eventi legati a carrelli\n"
+", pulsanti di azione, ecc.\n"
+"\n"
+"Dato che gli strumenti per il marketing di Odoo (mass mailing, campagne, ecc) sono collegati anche a\n"
+"Google Analytics, hai una visione a 360° della tua azienda.\n"
+"\n"
+"Ottimizzazione SEO articoli del blog\n"
+"------------------------\n"
+"\n"
+"Gli strumenti SEO sono pronti all'uso e non hanno bisogno di essere configurati. Odoo suggerisce\n"
+"le parole chiave per i titoli secondo i termini più cercati su Google, Google\n"
+"Analytics traccia gli interessi dei visitatori, le mappe del sito vengono create automaticamentesitemaps\n"
+"per un'indicizzazione rapida su Google, ecc.\n"
+"\n"
+"Il sistema crea anche contenuti strutturati per promuovere i tuoi\n"
+"prodotti ed eventi in maniera efficace su Google.\n"
+"\n"
+"Temi di design\n"
+"------------------------\n"
+"\n"
+"I temi sono fantastici e semplici da progettare. Non hai bisogno di sviluppare per creare nuove\n"
+"pagine, temi o blocchi di costruzione. Utilizziamo un chiara struttura HTML, un\n"
+"[bootstrap](http://getbootstrap.com/) CSS e la modularità ti permette di\n"
+"distribuire i tuoi temi facilmente.\n"
+"\n"
+"L'approccio con i blocchi di costruzione permette al sito web di restare intatto dopo che gli utenti finali\n"
+"iniziano a creare nuovi contenuti.\n"
+"\n"
+"Diritti di accesso facilitato\n"
+"------------------\n"
+"\n"
+"Non tutti richiedono lo stesso livello di accesso al tuo sito web. I designer gestiscono il\n"
+"layout del sito, gli editor approvsno il contenuto e gli autori scrivono il contenuto stesso.\n"
+"In questo modo è possibile organizzare il processo di pubblicazione in base alle proprie esigenze..\n"
+"\n"
+"Gli altri diritti di accesso sono legati agli oggetti aziendali (prodotti, persone, eventi,\n"
+"ecc) e seguono direttamente la gestione dei diritti di accesso predefiniti di Odoo quindi non\n"
+"devi configurare le cose due volte.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -19709,6 +20058,69 @@ msgid ""
 "etc.\n"
 "\n"
 msgstr ""
+"Catena di distribuzione Odoo\n"
+"-----------------\n"
+"\n"
+"Automatizza le richieste di pagamento e la verifica delle fatture con la\n"
+"<a href=\"https://www.odoo.com/app/purchase\">catena di approviggionamento open source</a> di Odoo.\n"
+"\n"
+"Automatizza le proposte di approviggionamento, richiedi preventivi, traccia\n"
+"gli ordini di acquisto, gestisci le informazioni del venditore, controlla la ricezione dei prodotti e\n"
+"controlla le fatture dei fornitori.\n"
+"\n"
+"Proposte di approviggionamento automatizzate\n"
+"----------------------------------\n"
+"\n"
+"Riduci il livello del magazzino con le regole di approviggionamento. Ricevi la proposta d'acquisto\n"
+"giusta al momento giusto per ridurre il livello del magazzino. Migliora\n"
+"le prestazioni di acquisto e dell'inventario attraverso le regole di approviggionamento in base ai livelli\n"
+"dello stock, regole logistiche, ordini di vendita, ordini di produzione previsti, ecc.\n"
+"\n"
+"Invia richieste di preventivo od ordini di acquisto al venditore in un solo clic.\n"
+"Ottieni l'accesso ai prodotti ricevuti e alle fatture dall'ordine di acquisto.\n"
+"\n"
+"Offerte d'acquisto\n"
+"----------------\n"
+"\n"
+"Lancia offerte d'acquisto, integra le risposte dei venditori nel processo e\n"
+"confronta le proposte. Scegli l'offerta migliore e invia facilmente ordini d'acquisto.\n"
+"Utilizza i rendiconti per analizzare la qualità dei fornitori.\n"
+"\n"
+"\n"
+"Integrazioni e-mail\n"
+"------------------\n"
+"\n"
+"Integra tutte le comunicazioni del venditore sull'ordine di acquisto (o RFQ) per ottenere\n"
+"la tracciabilità della negoziazione o dopo problemi relativi alla vendita dei servizi. Usa il\n"
+"modulo di gestione dei reclami per tracciare i problemi legati ai fornitori.\n"
+"\n"
+"Prezzo standard, prezzo medio, FIFO\n"
+"-----------------------------------\n"
+"\n"
+"Utilizza il criterio del costo che riflette meglio la tua azienda: prezzo standard, prezzo\n"
+"medio, FIFO o LIFO. Ottieni le scritture contabili e la giusta valutazione del magazzino\n"
+"in tempo reale; Odoo gestisce tutto per te, in maniera trasparente.\n"
+"\n"
+"Importa i listini prezzi del fornitore\n"
+"--------------------------\n"
+"\n"
+"Prendi decisioni relative agli acquisti utilizzando i prezzi migliori. Importa facilmente i listini\n"
+"prezzi dei fornitori per prendere decisioni più intelligenti relative agli acquisti in base a promozioni, prezzi,\n"
+"quantità e condizioni del contratto speciali. È possibile stabilire il proprio prezo di vendita\n"
+"in base ai prezzi del venditore.\n"
+"\n"
+"Controlla i prodotti e le fatture\n"
+"-----------------------------\n"
+"\n"
+"Nessun prodotto od ordine viene lasciato indietro, il controllo dell'inventario permette di gestire\n"
+"gli ordini residui, i rimborsi, la ricezione del prodotto e il controllo qualità. Scegli il metodo\n"
+"di controllo adatto ai tuoi bisogni.\n"
+"\n"
+"Controlla le fatture fornitore senza sforzi. Scegli il metodo giusto secondo\n"
+"i tuoi bisogni: genera bozze di fatture basate su ordini di acquisto, ricezione dei\n"
+"prodotti, crea fatture manualmente e importa le righe dagli ordini di acquisto,\n"
+"ecc.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
@@ -20249,6 +20661,8 @@ msgid ""
 "Only the portal users can delete their accounts. The user(s) %s can not be "
 "deleted."
 msgstr ""
+"Solo gli utenti del portale possono eliminare i propri account. L'utente o "
+"gli utenti %s non possono essere eliminati."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -20559,6 +20973,121 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"Organizza eventi, corsi di formazione e webinar\n"
+"-------------------------------------\n"
+"\n"
+"### Programma, promuovi, vendi, organizza\n"
+"\n"
+"Organizza, promuovi r vendi eventi online. Odoo offre tutte le funzionalità di cui hai bisogno per gestire gli eventi, sia che si tratti di riunioni, conferenze che di corsi di formazione o webinar.\n"
+"\n"
+"Crea fantastiche pagine evento\n"
+"--------------------------\n"
+"\n"
+"### Sbarazzati dei vecchi editor WYSIWYG\n"
+"\n"
+"Crea fantastiche pagine per gli eventi trascinando e rilasciando \"blocchi di costruzione\"*. Pubblica le foto dell'evento, gli oratori, il programma, ecc.\n"
+"\n"
+"L'approccio unico e *'edit inline'* di Odoo rende la creazione di un sito web sorprendentemente semplice. \"Vuoi presentare un oratore? modificare il prezzo di un biglietto? aggiornare un banner? promuovere degli sponsor?\" è sufficiente fare clic e apportare la modifica.\n"
+"\n"
+"Vendi biglietti online\n"
+"-------------------\n"
+"\n"
+"### Automatizza la registrazione e il processo di pagamento\n"
+"\n"
+"Vendi le iscrizioni all'evento con la funzione multi-ticketing. Gli eventi possono essere gratuiti o a pagamento. I partecipanti possono pagare online con carta di credito o su fattura, in base alla vostra configurazione.\n"
+"\n"
+"Aumenta le vendite con prezzi early-bird, condizioni speciali per i soci o servizi extra con biglietti multipli.\n"
+"\n"
+"Integrazione Google Analytics chiara\n"
+"------------------------------------\n"
+"\n"
+"### Controlla il flusso delle vendite con Google Analytics\n"
+"\n"
+"Ottieni una panoramica chiara delle vendite. I tracker di Odoo per Google Analytics sono configurati in maniera predefinita per tracciare qualsiasi tipo di evento legato a carrelli della spesa, pulsanti call-to-action, ecc.\n"
+"\n"
+"Dato che gli strumenti per il marketing di Odoo (mass mailing, campagne, ecc) sono collegati anche a Google Analytics, avrai una visione completa della tua azienda.\n"
+"\n"
+"Promuovi gli eventi in maniera efficace\n"
+"--------------------------\n"
+"\n"
+"### Mass ailing e social network\n"
+"\n"
+"Utilizza la segmentazione, l'integrazione con i social network e le funzioni di mailing di massa per promuovere gli eventi al pubblico giusto. Configura l'invio di e-mail automatiche ai partecipanti per fornire loro i dettagli di cui hanno bisogno.\n"
+"\n"
+"Temi a prova di designer\n"
+"------------------------\n"
+"\n"
+"### I designer amano lavorare con Odoo\n"
+"\n"
+"I temi sono fantastici e semplici da progettare. Non c'è bisogno di essere in grado di sviluppare per creare nuove pagine, temi o blocchi di costruzione. Utilizziamo una struttura HTML chiara, un [bootstrap](http://getbootstrap.com/) CSS e la nostra modularità permette di distribuire facilmente i temi.\n"
+"\n"
+"L'approccio a blocchi permette al sito web di rimanere pulito anche dopo che gli utenti finali hanno iniziato a creare nuovi contenuti.\n"
+"\n"
+"Rendi il tuo evento più visibile\n"
+"----------------------------\n"
+"\n"
+"### Strumenti SEO a portata di mano\n"
+"\n"
+"Gli strumenti SEO sono pronti all'uso senza doverli cofigurare in precedenza. Odoo consiglia parole chiave secondo i termini più cercati su Google, Google Analytics traccia i carrelli che comprendono l'evento e crea automaticamente mappe del sito.\n"
+"\n"
+"Realizziamo anche contenuti strutturati in modo automatico per promuovere efficacemente gli eventi e i prodotti su Google.\n"
+"\n"
+"Sfrutta i social network\n"
+"---------------------\n"
+"\n"
+"### Ottimizza: dalla pubblicità alle conversioni\n"
+"\n"
+"Crea facilmente nuove pagine di destinazione con la funzionalità di modifica in linea di Odoo. Indirizza i visitatori delle diverse campagne di marketing verso le pagine di destinazione degli eventi per ottimizzare le conversioni.\n"
+"\n"
+"E molto di più...\n"
+"----------------\n"
+"\n"
+"### Pianifica\n"
+"\n"
+"- Calendario degli eventi\n"
+"- Pubblica documenti correlati\n"
+"- Distribuisci le risorse\n"
+"- Automatizza gli acquisti (catering...)\n"
+"- Organizzatori e luoghi multipli\n"
+"- Interfaccia mobile\n"
+"\n"
+"### Vendi\n"
+"\n"
+"-  Vendite online od offline\n"
+"-  Fatturazione automatizzata\n"
+"-  Politiche di cancellazione\n"
+"-  Prezzi specifici per membri\n"
+"-   Dashboard e resoconti\n"
+"\n"
+"### Organizza\n"
+"\n"
+"-  Pianificazione avanzata\n"
+"-  Stampa di badge\n"
+"-  Automatizza le e-mail di follow-up\n"
+"-  Capacità Min/Max\n"
+"-  Gestisci lezioni e risorse\n"
+"-  Crea gruppi di partecipanti\n"
+"-  Automatizza i sondaggi di soddisfazione\n"
+"\n"
+"Completamente integrata con le altre app\n"
+"---------------------------------\n"
+"\n"
+"### Ottieni centinaia di app open source gratuite\n"
+"\n"
+"\n"
+"### eCommerce\n"
+"\n"
+"Promuovi prodotti, vendi online, ottimizza le esperienze di acquisto dei visitatori.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Pubblica news, attrai nuovi visitatori, fidelizza i clienti.\n"
+"\n"
+"\n"
+"### Il nostro team\n"
+"\n"
+"Crea la pagina \"Chi siamo\" page e presenta il tuo team in maniera efficace.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -21325,7 +21854,7 @@ msgstr "Punto vendita-Buoni sconto e fedeltà"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
 msgid "Point of Sale Daily Sales Reports"
-msgstr ""
+msgstr "Resoconti vendite giornaliere Punto Vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -21587,6 +22116,10 @@ msgid ""
 "                    Enabling the profiling here allows all users to activate profiling on their session.\n"
 "                    Profiling can be disabled at any moment in the settings."
 msgstr ""
+"La profilazione è una funzionalità per sviluppatori che deve essere utilizzata con cautela su un database di produzione.\n"
+"                    Potrebbe aggiungere del carico al server e potenzialmente renderlo meno reattivo.\n"
+"                    L'abilitazione della profilazione permette a tutti gli utenti di attivarla per le proprie sessioni.\n"
+"                    È possibile disattivare la profilazione in ogni momento dalle impostazioni."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
@@ -22161,7 +22694,7 @@ msgstr "Raleway"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_string
 msgid "Rate String"
-msgstr ""
+msgstr "Rate String"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_ids
@@ -22892,7 +23425,7 @@ msgstr "Matrice Vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp_margin
 msgid "Sale Mrp Margin"
-msgstr ""
+msgstr "Vendite MRP margine"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_configurator
@@ -23480,7 +24013,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_margin
 msgid "Service Margins in Sales Orders"
-msgstr ""
+msgstr "Margini servizi negli ordini di vendita"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -24529,7 +25062,7 @@ msgstr "Test Discuti (completo)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_crm_full
 msgid "Test Full Crm Flow"
-msgstr ""
+msgstr "Prova il flusso CRM completo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full
@@ -24564,7 +25097,7 @@ msgstr "Test RPC"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_sale_product_configurators
 msgid "Test Suite for Sale Product Configurator"
-msgstr ""
+msgstr "Suite di test per il configuratore di prodotti per vendita"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module_install
@@ -24577,11 +25110,13 @@ msgid ""
 "Test of Discuss with all possible overrides installed, including feature and"
 " performance tests."
 msgstr ""
+"Prova Discuti con tutte le possibili sostituzioni instalalte, compresi test "
+"relativi a funzionalità e prestazioni."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_discuss_full
 msgid "Test of Discuss with all possible overrides installed."
-msgstr ""
+msgstr "Prova Discuti con tutti le sostituzioni possibili installate."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
@@ -25026,6 +25561,8 @@ msgid ""
 "The method _button_immediate_install cannot be called on init or non loaded "
 "registries. Please use button_install instead."
 msgstr ""
+"Il method _button_immediate_install non può essere chiamato su dei registri "
+"init o non caricati. Utilizza il button_install."
 
 #. module: base
 #. odoo-python
@@ -25256,7 +25793,7 @@ msgstr "Il tasso di cambio per la valuta con cambio pari a 1"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The rate of the currency to the currency of rate 1 "
-msgstr ""
+msgstr "Il tasso di conversione della valuta verso la valuta del tasso 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -25283,6 +25820,9 @@ msgid ""
 "\n"
 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname."
 msgstr ""
+"Il modello del rendiconto %r è errato, contatta l'amministratore. \n"
+"\n"
+"Non è possibile separare il file da salvare come allegato perché il modello del rendiconto non contiene gli attributi 'data-oe-model' e 'data-oe-id' sul div con il nome della classe 'article'."
 
 #. module: base
 #. odoo-python
@@ -25418,7 +25958,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "The value (%s) passed should be positive"
-msgstr ""
+msgstr "Il valore (%s) passato deve essere positivo"
 
 #. module: base
 #. odoo-python
@@ -25480,7 +26020,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
 msgid "Third Party and Deferred/Electronic Checks Management"
-msgstr ""
+msgstr "Gestione degli assegni di terzi e degli assegni differiti/elettronici"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_third_party
@@ -25971,7 +26511,7 @@ msgstr "Tour"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
 msgid "Traces Async"
-msgstr ""
+msgstr "Traces Async"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_sync
@@ -25981,7 +26521,7 @@ msgstr "Sinc. tracce"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr ""
+msgstr "Marketing SMS per oratori conferenze"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -26075,6 +26615,8 @@ msgstr "Traduzioni"
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"Le traduzioni dei campi tradotti per il modello accettano solo i valori "
+"fittizi e le stringhe di caratteri"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -26094,6 +26636,8 @@ msgstr "Albero"
 #, python-format
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
 msgstr ""
+"Un elemento figlio di un albero può avere unicamente uno dei %(tags)s tag (e"
+" non %(wrong_tag)s)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
@@ -27274,6 +27818,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Siamo una società di consulenza tecnologica e strategica che crea soluzioni "
+"che aumentano il valore attraverso l'uso di software avanzati per i nostri "
+"clienti, in tutto il mondo. Noi di Lumber Inc offriamo l'esperienza "
+"operativa unita a..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -27282,6 +27830,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Siamo una società di consulenza tecnologica e strategica che crea soluzioni che aumentano il valore attraverso l'uso di software avanzati per i nostri clienti, in tutto il mondo.\n"
+"<br> <br>\n"
+"In Lumber Inc portiamo l'esperienza operativa unita all'acume tecnologico. Siamo consapevoli che qualsiasi software a supporto delle operazioni aziendali deve essere progettato in modo tale da facilitare l'esecuzione dei processi operativi critici e servire da strumento per gli utenti piuttosto che da ostacolo. Il nostro approccio si concentra innanzitutto sul processo, assicurandoci che contribuisca agli obiettivi dell'azienda, quindi lo ottimizziamo e progettiamo le soluzioni software per supportarlo al meglio."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -27475,6 +28026,8 @@ msgid ""
 "When re-invoicing the expense on the SO, set the cost to the total untaxed "
 "amount of the expense."
 msgstr ""
+"Configura il costo per l'importo totale imponibile della spesa quando viene "
+"effettuata la rifatturazione della spesa stessa nell'ordine di vendita."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
