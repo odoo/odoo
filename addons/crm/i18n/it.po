@@ -266,6 +266,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Assegna periodicamente contatti in base a regole</span><br/>\n"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    Tutti i team di vendita useranno questa impostazione di default se non è\n"
+"                                    specificato diversamente.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -582,7 +587,7 @@ msgstr "Nome alias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Stato alias"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
@@ -592,7 +597,7 @@ msgstr "Dominio alias"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Stato alias verificato sull'ultimo messaggio ricevuto."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -3996,6 +4001,8 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %(email_link)s to"
 " test the email gateway."
 msgstr ""
+"Utilizza il pulsante <i>Crea</i> in alto a sinistra o invia un'e-mail a "
+"%(email_link)s per provare il gateway di posta."
 
 #. module: crm
 #. odoo-python

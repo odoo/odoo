@@ -7,8 +7,8 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Luca Carlo, 2023
 # Martin Trigaux, 2023
-# Marianna Ciofani, 2023
 # Wil Odoo, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1189,7 +1189,6 @@ msgstr "Chiamata"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1610,7 +1609,6 @@ msgstr "Nazione"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1646,6 +1644,13 @@ msgstr "Crea \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "Crea %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2812,7 +2817,7 @@ msgstr "Campi non validi:"
 #: code:addons/web/controllers/domain.py:0
 #, python-format
 msgid "Invalid model: %s"
-msgstr ""
+msgstr "Modello non valido: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2893,7 +2898,7 @@ msgstr "Selezione etichetta"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 #, python-format
 msgid "Label:"
-msgstr ""
+msgstr "Etichetta:"
 
 #. module: web
 #. odoo-python
@@ -3309,7 +3314,7 @@ msgstr "Sposta in %s..."
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 #, python-format
 msgid "Move to next %s"
-msgstr ""
+msgstr "Passa al successivo %s"
 
 #. module: web
 #. odoo-javascript
@@ -3514,7 +3519,7 @@ msgstr "Nessun menù trovato"
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid "No quick filter available."
-msgstr ""
+msgstr "Nessun filtro rapido disponibile."
 
 #. module: web
 #. odoo-javascript
@@ -4324,6 +4329,8 @@ msgstr "Aggiunta rapida"
 msgid ""
 "Quick filters will become available if the records shown can be filtered."
 msgstr ""
+"I filtri rapidi saranno disponibili se i record visualizzati possono essere "
+"filtrati."
 
 #. module: web
 #. odoo-javascript
@@ -4965,7 +4972,7 @@ msgstr "Imposta un fuso orario sul tuo utente"
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Set kanban state as %s"
-msgstr ""
+msgstr "Imposta stato kanban come %s"
 
 #. module: web
 #. odoo-javascript
@@ -5141,7 +5148,7 @@ msgstr "Stile"
 #: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
 #, python-format
 msgid "Style error"
-msgstr ""
+msgstr "Errore di stile"
 
 #. module: web
 #. odoo-javascript
@@ -5283,6 +5290,9 @@ msgid ""
 "or developer error that must be fixed for the entire database before "
 "continuing working."
 msgstr ""
+"La compilazione dello stile non è riuscita, vedi l'errore in basso. Si "
+"tratta di un errore dell'amministratore o dello sviluppatore che deve essere"
+" corretto nell'intero database prima di continuare a lavorare."
 
 #. module: web
 #. odoo-javascript
@@ -5687,7 +5697,7 @@ msgstr "Modifiche non salvate"
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Unselect all"
-msgstr ""
+msgstr "Deseleziona tutto"
 
 #. module: web
 #. odoo-javascript
@@ -5702,7 +5712,7 @@ msgstr "Senza titolo"
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid "Update the filters in the search bar to display more records."
-msgstr ""
+msgstr "Aggiorna i filtri nella barra di ricerca per visualizzare più record."
 
 #. module: web
 #. odoo-javascript
@@ -6254,7 +6264,6 @@ msgstr "è/sono valido/i per l'aggiornamento."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "come nuovo"
@@ -6644,6 +6653,13 @@ msgstr "ms"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr "nuova scheda"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6807,13 +6823,6 @@ msgstr "impostato"
 #, python-format
 msgid "set (true)"
 msgstr "impostato (vero)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "new tab"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
