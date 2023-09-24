@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -366,8 +366,6 @@ msgstr "盤點位置"
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/__init__.py:0
-#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
@@ -528,7 +526,7 @@ msgstr "產品模板"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr "產品變體"
+msgstr "產品款式"
 
 #. module: stock_account
 #. odoo-python
@@ -654,7 +652,7 @@ msgid "Stock Quantity History"
 msgstr "庫存數量歷史"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
+#: model:ir.model,name:stock_account.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
 msgstr "庫存補貨報告"
 
@@ -665,7 +663,7 @@ msgstr "庫存請求進行盤點"
 
 #. module: stock_account
 #. odoo-javascript
-#: code:addons/stock_account/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
@@ -892,7 +890,9 @@ msgid "Value"
 msgstr "值"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
+#, python-format
 msgid "Value On Hand:"
 msgstr ""
 

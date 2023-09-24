@@ -70,6 +70,12 @@ msgid ""
 "                                        Contract\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible' : [('contracts_count', '=', 1)]}\" class=\"o_stat_text\">\n"
+"                                        Contratti\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible' : [('contracts_count', '&gt;', 1)]}\" class=\"o_stat_text\">\n"
+"                                        Contratto\n"
+"                                    </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -101,6 +107,8 @@ msgid ""
 "According to the contract's end date, this contract has been put in red on "
 "the %s. Please advise and correct."
 msgstr ""
+"Secondo la data di fine contratto, questo contratto è stato reso rosso sul "
+"%s. Per favore, avvisa e correggi."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction

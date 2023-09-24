@@ -12,6 +12,7 @@
 # Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Alfonso González, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Alfonso González, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5820,6 +5821,19 @@ msgid "Validate"
 msgstr "Validar "
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"Los valores no pueden ser establecidos y validados por que el número de "
+"serie/lote necesita ser especificado por trazabilidad del producto que ha "
+"sido consumido."
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -6537,13 +6551,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Debe proporcionar un lote para el producto terminado."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "Debe proporcionar un número de lote o de serie"
 
 #. module: mrp
 #. odoo-python

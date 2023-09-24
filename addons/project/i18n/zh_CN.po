@@ -291,6 +291,16 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>您好，<br>\n"
+"    很高兴告诉您，我们已成功完成了“<strong t-out=\"object.name or ''\">翻修</strong>”项目。 \n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">收到此电子邮件，表示您的项目已被移至<b t-out=\"object.stage_id.name or ''\">“完成”</b>阶段。</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -308,6 +318,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>您好，<br>\n"
+"    感谢您的查询。<br> \n"
+"    如果您有任何问题，请告诉我们。\n"
+"    <br><br>\n"
+"    谢谢\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -356,7 +378,7 @@ msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr ""
+msgstr "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -4393,7 +4415,7 @@ msgstr "任务活动"
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "任务已批准"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
@@ -4442,7 +4464,7 @@ msgstr "任务完成"
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "任务进行中"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4502,17 +4524,17 @@ msgstr "任务标题..."
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "任务等待中"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "任务已批准"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task canceled"
-msgstr ""
+msgstr "任务已取消"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4522,7 +4544,7 @@ msgstr "任务描述..."
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr ""
+msgstr "任务已完成"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4761,7 +4783,7 @@ msgstr "本周"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "该项任务被另一项未完成的任务阻挡"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4924,7 +4946,7 @@ msgstr "记录中异常活动的类型。"
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "取消项目存档"
 
 #. module: project
 #. odoo-python
@@ -5233,7 +5255,7 @@ msgstr "结束的工作时间"
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
-msgstr ""
+msgstr "您是否也希望取消存档这些阶段中的所有项目？"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
@@ -5289,14 +5311,14 @@ msgstr "如果一个分析账户与一个项目有关，您不能改变它的公
 msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
-msgstr ""
+msgstr "不能删除包含项目的阶段。您可以将阶段存档，或者先删除阶段内的所有项目。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
-msgstr ""
+msgstr "不能删除包含项目的阶段。您应首先删除阶段内的所有项目。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard

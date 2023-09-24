@@ -38,6 +38,12 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"                                        アクティブユーザ\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                        アクティブユーザ\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -50,6 +56,13 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                        会社\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                        会社\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -61,6 +74,12 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                            言語\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                            言語\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -91,7 +110,7 @@ msgstr "APIキー"
 msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
-msgstr ""
+msgstr "APIキーを使用すると、多要素認証が有効な場合、ユーザは外部ツールからOdooにアクセスできます。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -118,7 +137,7 @@ msgstr "面白いエフェクトを追加し、ユーザのモチベーション
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
 msgid "Allow integration with the mail plugins"
-msgstr ""
+msgstr "メールプラグインとの統合を許可"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
@@ -295,7 +314,7 @@ msgstr "連絡先をジオローカライズする"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
 msgid "Get product pictures using barcode"
-msgstr ""
+msgstr "バーコードでプロダクト画像を取得"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -532,4 +551,4 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"
