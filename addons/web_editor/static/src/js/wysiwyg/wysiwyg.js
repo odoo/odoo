@@ -1734,7 +1734,7 @@ const Wysiwyg = Widget.extend({
                     closestElement(selection.anchorNode, containerSelector)) ||
                 // In case a suitable container could not be found then the
                 // selection is restricted inside the editable area.
-                this.$editable.find(containerSelector);
+                this.$editable.find(containerSelector)[0];
             if (container) {
                 const range = document.createRange();
                 range.selectNodeContents(container);
