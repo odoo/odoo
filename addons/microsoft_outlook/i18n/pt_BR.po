@@ -63,7 +63,7 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr "Ocorreu um erro ao resgatar o token de acesso. %s"
+msgstr "Houve um erro ao buscar o token de acesso. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -132,8 +132,8 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
-"Conexão de Segurança Incorreta para o servidor de e-mail Outlook %r. Favor "
-"alterar para \"TLS (STARTTLS)\"."
+"Segurança de conexão incorreta para o servidor de e-mail Outlook %r. Defina "
+"como \"TLS (STARTTLS)\"."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
@@ -150,14 +150,14 @@ msgstr "Servidor de e-mail"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr "Microsoft Outlook Mixin"
+msgstr "Mixin do Microsoft Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr "Somente o administrador pode ligar a um servidor de e-mail Outlook."
+msgstr "Somente o administrador pode vincular um servidor de e-mail Outlook."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
@@ -171,17 +171,17 @@ msgstr "Código de acesso do Outlook"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr "Data de expiração do código de acesso do Outlook"
+msgstr "Data e hora de expiração do código de acesso do Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr "ID Cliente Outlook"
+msgstr "ID do cliente Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr "Segredo Cliente Outlook"
+msgstr "Segredo do cliente Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
@@ -201,7 +201,7 @@ msgstr "Código de atualização do Outlook"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr "Favor configurar as credenciais do Outlook."
+msgstr "Configure suas credenciais do Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -219,9 +219,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
-"Preencha o campo \" Nome de usuário\" com seu nome de usuário do "
+"Preencha o campo \"Nome de usuário\" com seu nome de usuário do "
 "Outlook/Office365 (seu endereço de e-mail). Essa deve ser a mesma conta "
-"usada para o Outlook OAuthentication Token."
+"usada para o token do Outlook OAuthentication."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -231,8 +231,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
-"Por favor deixe o campo da senha vazio para o servidor de correio Outlook "
-"%r. O processo de OAuth não o exige."
+"Deixe o campo da senha vazio para o servidor de e-mail Outlook %r. O "
+"processo de OAuth não exige isso."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -249,7 +249,7 @@ msgstr "O SSL é necessário para o servidor %r."
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret"
-msgstr "Secreto"
+msgstr "Segredo"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -268,8 +268,8 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
-"Configure as suas credenciais Outlook API na configuração geral para "
-"associar a sua conta Outlook."
+"Configure as suas credenciais de API do Outlook na configuração geral para "
+"vincular a sua conta Outlook."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
@@ -294,4 +294,4 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr "Erro desconhecido"
+msgstr "Erro desconhecido."

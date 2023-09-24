@@ -42,34 +42,34 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<strong>Error:</strong> The currency is missing or invalid."
-msgstr ""
+msgstr "<strong>错误：</strong> 货币遗失或无效。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid ""
 "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>错误：</strong>  付款过程中出现问题。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/> If you "
 "believe that it is an error, please contact the website administrator."
-msgstr ""
+msgstr "<strong>未找到合适的付款方式。</strong><br/> 如果您认为出现错误，请联系网站管理员。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 #, python-format
 msgid "A POS config cannot have more than one online payment method."
-msgstr ""
+msgstr "一个 POS 配置不能有超过一种在线支付方式。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "A payment option must be specified."
-msgstr ""
+msgstr "必须指定付款方式。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -77,7 +77,7 @@ msgstr ""
 #, python-format
 msgid ""
 "A validation payment cannot be used for a Point of Sale online payment."
-msgstr ""
+msgstr "验证付款不能用于销售点在线付款。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -356,14 +356,14 @@ msgstr ""
 msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
-msgstr ""
+msgstr "无法正确保存 POS 在线支付 (tx.id=%d)，因为找不到在线支付方法"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The POS session is not opened."
-msgstr ""
+msgstr "POS 会话未开启。"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
@@ -394,14 +394,14 @@ msgstr ""
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The currency is invalid."
-msgstr ""
+msgstr "货币无效。"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The invoice could not be generated."
-msgstr ""
+msgstr "无法生成发票。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -415,21 +415,21 @@ msgstr "订单已被取消。"
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The order has not been saved correctly on the server."
-msgstr ""
+msgstr "订单未正确保存在服务器上。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
 #, python-format
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
+msgstr "无法找到 POS 在线支付的合作伙伴 (id=%d)"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The payment provider is invalid."
-msgstr ""
+msgstr "付款提供商无效。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -444,35 +444,35 @@ msgstr "支付应该是直接的，有重定向的，或者是通过令牌进行
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The payment token is invalid."
-msgstr ""
+msgstr "支付令牌无效。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 #, python-format
 msgid "The payment transaction (%d) has a negative amount."
-msgstr ""
+msgstr "付款交易 (%d) 的金额为负数。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The provided order or access token is invalid."
-msgstr ""
+msgstr "提供的订单或访问令牌无效。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The provided partner_id is different than expected."
-msgstr ""
+msgstr "提供的 partner_id 与预期不同。"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The saved order could not be retrieved."
-msgstr ""
+msgstr "无法检索已保存的订单。"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -481,14 +481,14 @@ msgstr ""
 msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
-msgstr ""
+msgstr "要执行的剩余在线支付总额 (%s) 与订单的剩余未支付金额 (%s) 不一致。"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "There are online payments that were missing in your view."
-msgstr ""
+msgstr "您的视图中缺少在线支付。"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -497,7 +497,7 @@ msgstr ""
 msgid ""
 "There is a problem with the server. The order cannot be saved and therefore "
 "the online payment is not possible."
-msgstr ""
+msgstr "服务器出现问题。无法保存订单，因此无法进行在线支付。"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -506,7 +506,7 @@ msgstr ""
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
-msgstr ""
+msgstr "服务器出现问题。无法检索订单在线支付状态。"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -515,7 +515,7 @@ msgstr ""
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
-msgstr ""
+msgstr "服务器出现问题。无法检索订单在线支付状态。您确定该订单无在线支付？"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -523,14 +523,14 @@ msgstr ""
 #, python-format
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
-msgstr ""
+msgstr "此销售点订单未配置在线支付方式。"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "There is nothing to pay for this order."
-msgstr ""
+msgstr "此订单无需支付任何费用。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay

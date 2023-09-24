@@ -29,12 +29,12 @@ msgstr "Akun"
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__code__alipay
 #: model:payment.provider,name:payment_alipay.payment_provider_alipay
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "Alipay Seller Email"
-msgstr ""
+msgstr "Email Penjual Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
@@ -44,34 +44,34 @@ msgstr "Kode"
 #. module: payment_alipay
 #: model:payment.provider,display_as:payment_alipay.payment_provider_alipay
 msgid "Credit Card (powered by Alipay)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Alipay)"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
 msgid "Cross-border"
-msgstr ""
+msgstr "Cross-border"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "Express Checkout (hanya untuk pedagang Tiongkok)"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
 msgid "MD5 Signature Key"
-msgstr ""
+msgstr "MD5 Signature Key"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
-msgstr ""
+msgstr "ID Partner Pedagang"
 
 #. module: payment_alipay
 #. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_provider
@@ -88,17 +88,19 @@ msgstr "Transaksi Tagihan"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "Menerima data dengan referensi %(r)s atau txn_id %(t)s yang hilang."
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "Email publik partner Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
+"ID publik partner yang digunakan hanya untuk mengidentifikasi akun dengan "
+"Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
@@ -111,6 +113,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Asiapay</strong>."
 msgstr ""
+"Penyedia ini sudah didepresiasi.\n"
+"                    Pertimbangkan untuk menonaktifkan penyedia dan mulai gunakan <strong>Asiapay</strong>."
 
 #. module: payment_alipay
 #: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
@@ -139,4 +143,4 @@ msgstr "Pembayaran Anda telah berhasil diproses. Terima kasih!"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "menerima status transaksi tidak valid: %s"

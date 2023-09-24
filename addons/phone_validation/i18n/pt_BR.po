@@ -43,7 +43,7 @@ msgstr "Ativo"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Add a phone number in the blacklist"
-msgstr "Adicionar um número de telefone na lista negra"
+msgstr "Adicionar um número de telefone à lista de bloqueio"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -56,6 +56,8 @@ msgstr "Arquivado"
 #, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
 msgstr ""
+"Tem certeza de que deseja remover esse número de telefone da lista de "
+"bloqueio?"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -71,7 +73,7 @@ msgstr "Lista de bloqueio"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr "Data da lista negra"
+msgstr "Data de inclusão na lista de bloqueio"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -104,7 +106,7 @@ msgid ""
 "(#%(user_id)s)"
 msgstr ""
 " Bloqueado pela exclusão da conta do portal %(portal_user_name)s por "
-"%(user_name)s (#%(user_id)s)"
+"%(user_name)s (nº %(user_id)s)"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -145,8 +147,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo usado para armazenar número de telefone higienizado. Ajuda a agilizar "
-"pesquisas e comparações."
+"Campo utilizado para armazenar número de telefone uniformizado. Ajuda a "
+"agilizar buscas e comparações."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -158,7 +160,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (parceiros)"
+msgstr "Seguidores (usuários)"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
@@ -182,7 +184,7 @@ msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Se marcado, algumas mensagens tem erro de entrega."
+msgstr "Se marcado, algumas mensagens têm um erro de entrega."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -198,7 +200,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits."
-msgstr "Numero impossivel %s: provavelmente número inválido de dígitos."
+msgstr "Número impossível %s: provavelmente um número inválido de dígitos."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -227,7 +229,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr "Número inválido %s: provavelmente o prefixo está incorreto"
+msgstr "Número inválido %s: o prefixo provavelmente está incorreto."
 
 #. module: phone_validation
 #. odoo-python
@@ -272,7 +274,7 @@ msgstr "Mensagens"
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Missing definition of phone fields."
-msgstr "Falta de definição dos campos telefônicos."
+msgstr "Falta definição dos campos telefônicos."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
@@ -329,7 +331,7 @@ msgstr "Mixin da lista de bloqueio de telefone"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Telefone na lista negra"
+msgstr "Telefone na lista de bloqueio"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
@@ -361,7 +363,7 @@ msgstr "Motivo"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 msgid "Remove phone from blacklist"
-msgstr "Remover telefone da lista negra"
+msgstr "Remover telefone da lista de bloqueio"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -373,12 +375,12 @@ msgstr "Número uniformizado"
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Unable to parse %(phone)s: %(error)s"
-msgstr "Incapaz de analisar %(phone)s: %(error)s"
+msgstr "Não foi possível analisar %(phone)s: %(error)s"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 msgid "Unblacklist"
-msgstr "Fora da lista de bloqueio"
+msgstr "Remover da lista de bloqueio"
 
 #. module: phone_validation
 #. odoo-python

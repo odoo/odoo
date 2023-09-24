@@ -45,6 +45,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\">Đã uỷ quyền</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -52,6 +54,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\">Đã thanh toán</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -66,12 +70,12 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Đang đợi"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-inline\">Đang treo</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Giao dịch thanh toán</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -89,6 +93,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Cảnh báo!</strong> Một khoản hoàn tiền cho khoản thanh toán này vẫn còn treo.\n"
+"                        Hãy chờ xử lý thêm một lúc. Nếu khoản hoàn tiền vẫn ở trạng thái treo trong \n"
+"                        vài phút, hãy kiểm tra cấu hình nhà cung cấp dịch vụ thanh toán của bạn."
 
 #. module: account_payment
 #. odoo-python
@@ -190,7 +197,7 @@ msgstr ""
 #. module: account_payment
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
-msgstr ""
+msgstr "Bật thanh toán thẻ tín dụng & ghi nợ được hỗ trợ bởi Stripe."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -218,6 +225,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Trong chế độ kiểm thử, một khoản thanh toán giả sẽ được xử lý thông qua giao diện thanh toán kiểm thử.\n"
+"Nên dùng chế độ này khi thiết lập nhà cung cấp dịch vụ thanh toán."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -265,14 +274,14 @@ msgstr "Cập nhật lần cuối vào"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Khoản hoàn tiền tối đa được phép"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
 msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
-msgstr ""
+msgstr "Lưu ý rằng chỉ token từ nhà cung cấp cho phép nhận tiền mới khả dụng."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -280,11 +289,13 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Lưu ý rằng token từ nhà cung cấp được thiết lập là chỉ ủy quyền giao dịch "
+"(thay vì nhận tiền) sẽ không khả dụng."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Onboarding Online Payments"
-msgstr ""
+msgstr "Giới thiệu thanh toán Online"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_onboarding_onboarding_step
@@ -299,7 +310,7 @@ msgstr "Thanh toán trực tuyến"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Thanh toán hoá đơn online"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -427,7 +438,7 @@ msgstr "CÀI ĐẶT"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Token thanh toán đã lưu"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -437,7 +448,7 @@ msgstr "Token thanh toán đã lưu"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Thanh toán gốc"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -453,7 +464,7 @@ msgstr "Bước hoàn thành!"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Token thanh toán phù hợp"
 
 #. module: account_payment
 #. odoo-python
@@ -468,12 +479,12 @@ msgstr "Token truy cập không hợp lệ."
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "Số tiền cần hoàn lại phải lớn hơn 0 và không thể vượt quá %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Sổ nhật ký dùng để ghi các giao dịch thành công."
 
 #. module: account_payment
 #. odoo-python
@@ -483,6 +494,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"Khoản thanh toán liên quan đến giao dịch có mã tham chiếu %(ref)s đã được "
+"ghi sổ: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -495,7 +508,7 @@ msgstr "Các tham số được cung cấp không hợp lệ. "
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Thanh toán gốc của các khoản thanh toán hoàn tiền liên quan"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -531,13 +544,13 @@ msgstr "Giao dịch"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Loại hoàn tiền được hỗ trợ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Sử dụng phương thức thanh toán điện tử"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -552,6 +565,19 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Bạn không thể xóa phương thức thanh toán được liên kết với nhà cung cấp ở trạng thái kích hoạt hoặc kiểm thử.\n"
+"(Các) nhà cung cấp được liên kết:%s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payment method transactions already "
+"exist."
+msgstr ""
+"Bạn không thể gỡ cài đặt phân hệ này vì các giao dịch của phương thức thanh "
+"toán đã tồn tại."
 
 #. module: account_payment
 #. odoo-python
@@ -561,3 +587,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Trước tiên, bạn phải hủy kích hoạt nhà cung cấp dịch vụ thanh toán trước khi xóa sổ nhật ký của nhà cung cấp dịch vụ đó.\n"
+"Nhà cung cấp được liên kết: %s"

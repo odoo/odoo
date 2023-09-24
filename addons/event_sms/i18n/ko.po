@@ -51,8 +51,8 @@ msgid ""
 "Ready for \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
-"준비됨 \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
-"{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
+"\"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}에 참여할 준비가 되셨나요?\n"
+"{{ '행사는 %s에 시작하며' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', 장소는 %s입니다.' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\n곧 만나뵙겠습니다!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else '참여를 원하신다면, 다음 링크를 확인해 주세요. %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
@@ -84,5 +84,4 @@ msgid ""
 "{{ object.event_id.name }} event."
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: 등록을 환영하오며 다음 행사에 등록이 완료되었습니다. {{ "
-"object.event_id.name }} "
+"user.env.company.name }}: {{ object.event_id.name }} 행사에 성공적으로 등록되셨습니다."

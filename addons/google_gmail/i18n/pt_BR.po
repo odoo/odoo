@@ -34,7 +34,7 @@ msgid ""
 "                        Connect your Gmail account"
 msgstr ""
 "<i class=\"oi oi-arrow-right\"/>\n"
-"                        Conectar à sua conta Gmail"
+"                        Conecte sua conta do Gmail"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -44,7 +44,7 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
-"                        Token válido Gmail\n"
+"                        Token do Gmail válido\n"
 "                    </span>"
 
 #. module: google_gmail
@@ -55,7 +55,7 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
-"                        Token válido Gmail\n"
+"                        Token do Gmail válido\n"
 "                    </span>"
 
 #. module: google_gmail
@@ -70,7 +70,7 @@ msgstr "Token de acesso"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
 msgid "Access Token Expiration Timestamp"
-msgstr "Carimbo de data e hora de expiração do token de acesso"
+msgstr "Data e hora de expiração do token de acesso"
 
 #. module: google_gmail
 #. odoo-python
@@ -78,14 +78,14 @@ msgstr "Carimbo de data e hora de expiração do token de acesso"
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process."
-msgstr "Ocorreu um erro durante o processo de autenticação."
+msgstr "Houve um erro durante o processo de autenticação."
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr "Ocorreu um erro ao buscar o token de acesso."
+msgstr "Houve um erro ao buscar o token de acesso."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -201,9 +201,9 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
-"Preencha o campo \" Usuário\" com seu nome de usuário do Gmail (seu endereço"
-" de e-mail). Essa deve ser a mesma conta usada para o token de autenticação "
-"do Gmail OA."
+"Preencha o campo \"Usuário\" com seu nome de usuário do Gmail (seu endereço "
+"de e-mail). Essa deve ser a mesma conta usada para o token de de "
+"OAuthentication do Gmail."
 
 #. module: google_gmail
 #. odoo-python
@@ -214,7 +214,7 @@ msgid ""
 "process does not require it"
 msgstr ""
 "Deixe o campo de senha vazio para o servidor de e-mail do Gmail %r. O "
-"processo OAuth não exige essa senha"
+"processo de OAuth não exige isso."
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -236,7 +236,7 @@ msgstr "Segredo"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr "Segredo de seu aplicativo do Google"
+msgstr "Segredo do seu aplicativo do Google"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type

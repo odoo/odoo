@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,7 +179,7 @@ msgstr "%s 일 기한 초과"
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #, python-format
 msgid "%s has a request"
-msgstr "%s에 요청 내용이 있습니다"
+msgstr "%s에서 요청을 받았습니다"
 
 #. module: mail
 #. odoo-javascript
@@ -403,7 +403,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
-msgstr "<samp>%(send_keybind)s</samp><i> 버튼을 누르면 저장됩니다.</i>"
+msgstr "<samp>%(send_keybind)s</samp><i> 키를 누르면 저장됩니다.</i>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -468,12 +468,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was done by you:</span><br/>"
-msgstr "<span>작업자가 귀하인 경우:</span><br/>"
+msgstr "<span>회원님이 로그인을 시도하셨다면:</span><br/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was not done by you:</span>"
-msgstr "<span>작업자가 귀하가 아닌 경우:</span>"
+msgstr "<span>회원님이 로그인을 시도하신 것이 아니라면:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
@@ -483,7 +483,7 @@ msgstr "<span>기록 열기</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>We suggest you start by</span>"
-msgstr "<span>다음부터 시작하는 것을 권합니다.</span>"
+msgstr "<span>지금 바로 비밀번호를 변경해 주세요.</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -491,7 +491,7 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
-"<strong>내부 통신</strong>: 회신은 내부 노트를 통해 전달됩니다. 팔로워에게는 이메일 알림이 전송되지 않습니다."
+"<strong>내부 메시지</strong>: 회신은 내부 메시지를 통해 전달됩니다. 팔로워에게는 이메일 알림이 전송되지 않습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -1764,7 +1764,7 @@ msgstr "첨부 파일을 확인하려면 여기를 클릭하세요"
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 #, python-format
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: mail
 #. odoo-javascript
@@ -1951,7 +1951,7 @@ msgstr "연락처"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Contact your administrator"
-msgstr "관리자에게 문의하시기 바랍니다"
+msgstr "관리자에게 문의하여 관련 내용을 확인해 주세요."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_activity
@@ -2274,7 +2274,7 @@ msgstr "청력 상실"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "친애하는"
+msgstr "안녕하세요,"
 
 #. module: mail
 #. odoo-python
@@ -2603,14 +2603,14 @@ msgstr "완료 및 다음 실행"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "완료 및 다음 스케줄 예약"
+msgstr "완료 및 다음 일정 예약"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #, python-format
 msgid "Done and Schedule Next"
-msgstr "완료 및 다음 스케줄 예약"
+msgstr "완료 및 다음 일정 예약"
 
 #. module: mail
 #. odoo-javascript
@@ -3533,12 +3533,12 @@ msgstr "HTTP 라우팅"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr "이메일로 처리"
+msgstr "이메일"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "Handle in Odoo"
-msgstr "Odoo에서 처리"
+msgstr "Odoo 수신함"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
@@ -6224,9 +6224,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
-"대화 알림을 처리하는 방법에 대한 정책 :\n"
-"- 이메일로 처리 : 이메일 주소로 알림이 전송됩니다\n"
-"- Odoo로 처리 : Odoo 수신함에 알림으로 나타납니다."
+"대화 알림 처리 방법을 설정합니다:\n"
+"- 이메일: 설정하신 이메일 주소로 알림이 전송됩니다.\n"
+"- Odoo 수신함: Odoo 수신함에 알림이 표시됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -6816,7 +6816,7 @@ msgstr "서식 재설정"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Resetting Your Password"
-msgstr "비밀번호 재설정"
+msgstr "비밀번호 변경하기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -6937,7 +6937,7 @@ msgstr "활동 계획표"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr "작업을 완료하기 위한 활동을 예약하십시오."
+msgstr "작업을 완료하기 위한 활동을 예약하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -7852,7 +7852,8 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr "납세자용 식별 번호로, 국가별 양식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우 '/'를 입력하세요."
+msgstr ""
+"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
 
 #. module: mail
 #. odoo-python
@@ -7945,7 +7946,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
 #: model:ir.model.fields,help:mail.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr "해당 연락처를 담당하는 내부 담당자입니다."
+msgstr "해당 연락처를 담당하는 내부 사용자입니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -8792,7 +8793,7 @@ msgid ""
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
 "`mail.catchall.domain.allowed`의 값을 확인할 수 없습니다.\n"
-"도메인 목록은 쉼표로 구분되어야 합니다. (예. example.com,example.org.)"
+"여러 개의 도메인 정보를 넣으시려면 쉼표로 구분해야 합니다. (예. example.com,example.org)"
 
 #. module: mail
 #. odoo-javascript
@@ -8902,7 +8903,7 @@ msgstr "주"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Welcome to MyCompany!"
-msgstr "CompanyName에 오신 것을 환영합니다! "
+msgstr "MyCompany에 오신 것을 환영합니다!"
 
 #. module: mail
 #. odoo-javascript
@@ -8971,7 +8972,7 @@ msgstr "YYYY-MM-DD HH:MM:SS"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid "Yeah, pin it!"
-msgstr "네, 핀고정 합니다!"
+msgstr "네, 핀으로 고정 합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9009,7 +9010,8 @@ msgid ""
 "You are about to leave this group conversation and will no longer have "
 "access to it unless you are invited again. Are you sure you want to "
 "continue?"
-msgstr "이 그룹 대화창에서 나가시면 더 이상 대화에 참여할 수 없으며, 다시 초대를 받으셔야 합니다. 계속하시겠습니까?"
+msgstr ""
+"대화창에서 나가시면 더 이상 그룹 대화에 참여할 수 없으며, 참여를 원하실 경우 다시 초대를 받으셔야 합니다. 계속하시겠습니까?"
 
 #. module: mail
 #. odoo-python
@@ -9086,7 +9088,7 @@ msgstr "지정 사용자가 있는 협력사와만 채팅하실 수 있습니다
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "You can safely ignore this message"
-msgstr "이 메시지는 무시하셔도 됩니다"
+msgstr "이 메시지는 무시하셔도 됩니다."
 
 #. module: mail
 #. odoo-python
@@ -9362,7 +9364,7 @@ msgstr "일"
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #, python-format
 msgid "days overdue:"
-msgstr "연체 일수:"
+msgstr "일 연체됨:"
 
 #. module: mail
 #. odoo-javascript
@@ -9435,7 +9437,7 @@ msgstr "예. 연락처"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr "예: 업무 협의 제안"
+msgstr "예. 업무 협의 제안"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -9477,7 +9479,7 @@ msgstr "다음에서 변경되었습니다:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "has just assigned you the following activity:"
-msgstr "다음 활동이 할당되었습니다:"
+msgstr "을 통해 다음 활동이 배정되었습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter

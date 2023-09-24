@@ -193,12 +193,12 @@ msgstr "장치"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr "이중 인증 비활성화"
+msgstr "2단계 인증 비활성화"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "이중 인증 비활성화"
+msgstr "2단계 인증 비활성화"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -215,7 +215,7 @@ msgstr "이 기기에서 다시 묻지 않음"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Enable 2FA"
-msgstr "이중 인증 활성화"
+msgstr "2단계 인증 활성화"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -344,7 +344,7 @@ msgstr "2단계 인증 활성화"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr "이중 인증"
+msgstr "2단계 인증"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -353,9 +353,9 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
-"이중 인증 (Two-factor Authentication, \"2FA\")이란 이중으로 인증 절차를 진행하는 시스템입니다.\n"
-"                        첫번째는 비밀번호를 통해서 그리고 두번째는 전용 모바일 앱에서 받은 코드로 인증이 이루어집니다.\n"
-"                       가장 많이 사용되는 인증 방법으로는 Authy, Google 인증 또는 Microsoft 인증을 사용합니다."
+"2단계 인증 (Two-factor Authentication, \"2FA\")이란 로그인 시 추가로 인증 절차를 진행하는 이중 보안 서비스입니다.\n"
+"                        아이디와 비밀번호로 로그인한 후, 사전에 등록했던 모바일 앱을 통해 받은 코드를 입력하면 추가 인증이 이루어집니다.\n"
+"                       가장 많이 사용되는 인증 방법으로는 Authy, Google 인증 또는 Microsoft 인증이 있습니다."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -364,14 +364,14 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
-"이중 인증 (Two-factor Authentication, \"2FA\")이란 이중으로 인증 절차를 진행하는 시스템입니다.\n"
-"                        첫번째는 비밀번호를 통해서 그리고 두번째는 전용 모바일 앱에서 받은 코드로 인증이 이루어집니다.\n"
-"                       가장 많이 사용되는 인증 방법으로는 Authy, Google 인증 또는 Microsoft 인증을 사용합니다."
+"2단계 인증 (Two-factor Authentication, \"2FA\")이란 로그인 시 추가로 인증 절차를 진행하는 이중 보안 서비스입니다.\n"
+"                        아이디와 비밀번호로 로그인한 후, 사전에 등록했던 모바일 앱을 통해 받은 코드를 입력하면 추가 인증이 이루어집니다.\n"
+"                       가장 많이 사용되는 인증 방법으로는 Authy, Google 인증 또는 Microsoft 인증이 있습니다."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr "이중 인증"
+msgstr "2단계 인증"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
@@ -388,7 +388,7 @@ msgstr "2단계 인증 활성화"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr "이중 인증이 이미 활성화되어 있습니다"
+msgstr "2단계 인증이 이미 활성화되어 있습니다"
 
 #. module: auth_totp
 #. odoo-python
@@ -402,7 +402,7 @@ msgstr "2단계 인증은 본인만 활성화할 수 있습니다"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr "다음 사용자에 대해 이중 인증이 비활성화됨: %s"
+msgstr "다음 사용자에 대해 2단계 인증이 비활성화됨: %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

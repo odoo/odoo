@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Pengaturan Konfigurasi"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Online payment method"
-msgstr ""
+msgstr "Metode pembayaran online"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -50,7 +51,7 @@ msgstr "Bayar"
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Bayar di kasir"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -70,7 +71,7 @@ msgstr "Order Point of Sale"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Select a payment method"
-msgstr ""
+msgstr "Pilih metode pembayaran"
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -80,20 +81,22 @@ msgid ""
 "The POS self-order mode with payment after each order requires an online "
 "payment method to be configured."
 msgstr ""
+"Mode self-order POS dengan pembayaran setelah setiap order membutuhkan "
+"metode pembayaran online untuk dikonfigurasi."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Order saat ini tidka dapat dibayar (mungkin sudah dibayar)."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order is invalid."
-msgstr ""
+msgstr "Order saat ini tidak valid."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -101,6 +104,8 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"Metode pembayaran online untuk digunakan saat pelanggan membayar self-order "
+"secara online."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -111,6 +116,9 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Metode pembayaran online yang digunakan untuk sekf-order di konfigurasi POS "
+"harus memiliki setidaknya satu penyedia pembayaran yang diterbitkan yang "
+"mendukung mata uang konfigurasi POS tersebut."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -118,8 +126,9 @@ msgstr ""
 #, python-format
 msgid "The order could not be saved, therefore its payment is unavailable."
 msgstr ""
+"Order tidak dapat disimpan, oleh karena itu pembayaran tidak tersedia."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Gunakan Pembayaran Self Order Online"

@@ -113,16 +113,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-" * 초안 : 이 재고이동은 아직 승인되지 않았습니다. 예약이 승인되지 않았습니다.\n"
-" * 다른 작업대기 : 이 재고이동은 준비전 다른 작업을 기다리고 있습니다. \n"
-" * 대기 : 이 재고이동은 일부 품목의 가용성을 기다리고 있습니다.\n"
-"(a) 이동정책이 \"가능한 빨리\"일 경우 : 예약가능한 품목이 없습니다.\n"
-"(b) 이동정책이 \"모든 품목이 준비되었을 때\"일 경우 : 모든/일부 품목이 예약가능하지 않습니다. \n"
-" * 준비 : 재고이동이 진행가능합니다.\n"
-"(a) 이동정책이 \"가능한 빨리\"일 경우 : 최소한 하나의 품목이 예약되었을 때.\n"
-"(b) 이동정책이 \"모든 품목이 준비되었을 때\"일 경우 : 모든 품목이 예약되었을 때.\n"
-" * 완료 : 재고이동이 완료되었습니다.\n"
-" * 취소됨 : 재고이동이 취소되었습니다."
+" * 미결: 재고 이동이 아직 확정되지 않았습니다. 예약이 적용되지 않습니다.\n"
+" * 다른 작업 대기 중: 이 재고 이동이 준비되기 전에 다른 작업이 완료되기를 기다리는 중입니다.\n"
+" * 대기 중: 일부 품목이 준비되기를 기다리는 중입니다.\n"
+"(a) 이동 정책이 \"가능한 빨리\"인 경우: 예약 가능한 품목이 없습니다.\n"
+"(b) 이동 정책이 \"모든 품목이 준비되었을 때\"인 경우 : 모든 품목을 예약할 수 없습니다.. \n"
+" * 준비: 재고 이동을 처리할 준비가 완료되었습니다.\n"
+"(a) 이동 정책이 \"가능한 빨리\"인 경우: 하나 이상의 품목을 예약되었습니다.\n"
+"(b) 이동 정책이 \"모든 품목이 준비되었을 때\"인 경우: 모든 품목이 예약되었습니다.\n"
+" * 완료: 재고 이동이 완료되었습니다.\n"
+" * 취소: 재고 이동이 취소되었습니다."
 
 #. module: stock
 #. odoo-python
@@ -201,7 +201,7 @@ msgstr "'위치 - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr "'로트-일련번호 - %s' % object.name"
+msgstr "'LOT-일련번호 - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
@@ -429,8 +429,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        안녕하세요 <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님,<br><br>\n"
-"        고객님이 주문하신 상품이 발송되었음을 안내드립니다.\n"
+"        안녕하세요, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님.<br><br>\n"
+"        고객님께서 주문하신 상품이 발송되었음을 안내드립니다.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            배송 조회 번호는 다음과 같습니다.\n"
 "            <strong>\n"
@@ -761,7 +761,7 @@ msgstr "<strong>상태 : </strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
 msgid "<strong>The initial demand has been updated.</strong>"
-msgstr "<strong>초기 수요가 업데이트 되었습니다.</strong>"
+msgstr "<strong>초기 수량이 업데이트 되었습니다.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -803,7 +803,7 @@ msgstr "완료된 이동 명세에는 절대로 예약된 수량이 없어야 �
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr "이 위치에는 이 품목에 대한 보충 규칙이 이미 있습니다."
+msgstr "이미 품목에 대한 재보충 규칙이 존재합니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -814,7 +814,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 재고 관리 앱을 설치해야 사용하실 수 있습니다.\n"
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 사용을 위해서는 재고 관리 앱을 설치하셔야 합니다.\n"
 "소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
 "서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
@@ -1570,7 +1570,7 @@ msgstr "이 위치를 사용하여 폐기/손상된 상품을 넣을 수 있게 
 #: code:addons/stock/wizard/stock_label_type.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr "라벨 레이아웃 선택"
+msgstr "라벨 인쇄용 레이아웃 선택"
 
 #. module: stock
 #. odoo-python
@@ -1627,7 +1627,7 @@ msgstr "수량 삭제"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_closest
@@ -1768,8 +1768,8 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
-"품목을 보충할 때 향후 며칠 동안의 품목 예측을 고려하고 적시에 보충하기 위해 0으로 설정합니다.\n"
-"해당 값은 경로 유형 (구매 또는 제조)에 따라 다릅니다."
+"향후 며칠 동안의 품목 예측을 고려하여 재보충이 실행되며, 0으로 설정 시 적시 공급이 이루어집니다..\n"
+"해당 값은 경로 유형 (매입 또는 제조)에 따라 달라질 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -2225,7 +2225,7 @@ msgstr "예약 날짜"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Day and month that annual inventory counts should occur."
-msgstr "연간 재고 조사를 실시하는 월과 일자를 정의합니다."
+msgstr "연간 재고 조사를 실시하는 날짜를 정의합니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -2332,7 +2332,7 @@ msgstr "창고를 통한 기본 경로"
 msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr "Odoo에서 자동으로 견적 요청을 하거나 제조주문서를 승인하여 재고를 재보충할 수 있도록 최소 재고량 규칙을 설정하십시오."
+msgstr "최소 재고 수량을 설정하여 Odoo가 자동으로 견적을 요청하거나 제조주문서를 승인하여 재고를 재보충할 수 있도록 합니다."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2835,7 +2835,7 @@ msgstr "직배송"
 msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
-msgstr "향후 입고가 예정되어 있으므로 재고 수량이 초과될 수 있습니다. 재주문 전에는 예측 보고서를 확인하시기 바랍니다."
+msgstr "향후 입고가 예정되어 있으므로 재고 수량이 초과될 수 있습니다. 재주문 전 예측 보고서를 확인해 주세요."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -2903,9 +2903,9 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Odoo 바코드 앱으로 빠른 속도를 경험해 보세요. 정말 빠르게 업무 처리가 가능하며 인터넷 연결이 안정적이지 않더라도 문제 없이 "
-"작동합니다. 워크 플로우 상의 어떤 업무에도 적용이 가능하며, 재고 조정, 일괄 픽업, 로트나 팔레트 이동, 재고 부족 알림 등 모든 "
-"업무에서 활용할 수 있습니다. 앱 메뉴로 이동하여 바코드 인터페이스를 활성화하세요."
+"Odoo 바코드 앱으로 빠른 업무 처리를 경험해 보세요. 인터넷 연결이 안정적이지 않더라도 문제 없이 작동합니다. 재고 조정, 일괄 "
+"픽업, LOT 및 팔레트 이동, 재고 부족 알림 등 모든 업무 전반에서 활용이 가능합니다. 앱 메뉴로 이동하여 바코드 인터페이스를 "
+"활성화하세요."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3241,7 +3241,7 @@ msgstr "사용 가능"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 #, python-format
 msgid "From"
-msgstr "시작 시간"
+msgstr "시작"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -4375,7 +4375,7 @@ msgstr "이 경로가 모든 회사간에 공유되는 경우 이 입력란을 �
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Legend"
-msgstr "전설"
+msgstr "범례"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__packaging_length
@@ -4767,7 +4767,7 @@ msgstr "방법"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr "최소수량"
+msgstr "최소 수량"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -5967,7 +5967,7 @@ msgstr "참석은 작업 유형에 따라 다릅니다."
 msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
-msgstr "생성 버튼을 누르면 재고 상태인 각 품목 수량을 정의하거나 즐겨찾기를 통해 스프레드시트에서 가져오기를 합니다."
+msgstr "신규 버튼을 눌러 각 품목에 대한 재고 수량을 정의하거나 즐겨찾기에 있는 스프레드 시트에서 가져오기할 수 있습니다."
 
 #. module: stock
 #. odoo-javascript
@@ -6715,7 +6715,7 @@ msgstr "입고"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr "문서를 생성하여 공급업체로부터의 품목 입고를 관리할 수 있습니다."
+msgstr "문서를 생성하여 공급업체로부터의 품목 입고 내역을 관리할 수 있습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6933,13 +6933,13 @@ msgstr "재보충"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
 msgid "Replenishment Info"
-msgstr "보충 정보"
+msgstr "재보충 정보"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Replenishment Information"
-msgstr "보충 정보"
+msgstr "재보충 정보"
 
 #. module: stock
 #. odoo-python
@@ -6958,7 +6958,7 @@ msgstr "재보충 보고서"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr "보충 보고서 검색"
+msgstr "재보충 보고서 검색"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -6974,7 +6974,7 @@ msgstr "실사 요청"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Request your vendors to deliver to your customers"
-msgstr "공급업체에게 고객에게 배달하도록 요청"
+msgstr "품목을 공급업체로부터 고객에게 직접 배달하도록 요청합니다."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_sign_delivery
@@ -7411,7 +7411,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "품목의 판매와 구매 단위를 다르게 설정합니다."
+msgstr "품목의 판매 단위와 구매 단위를 다르게 설정합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8507,7 +8507,7 @@ msgstr "이 재고 이동을 생성한 재고 규칙"
 msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
-msgstr "재고는 가용성을 기다리는 작업을 위해 예약되며 재정렬 규칙이 트리거됩니다."
+msgstr "대기 중인 작업을 위해 재고가 예약되며, 부족한 재고에 대해서는 재주문 규칙이 트리거됩니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -8668,14 +8668,14 @@ msgstr "이 노트는 배송 주문에 추가됩니다."
 msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
-msgstr "이 노트는 내부용 재고 이동에 추가됩니다(예 : 창고의 어디에서 품목을 가지고 올수 있는지)."
+msgstr "이 노트는 내부 재고 이동 주문 (예. 창고에서 품목을 픽업할 위치)에 추가됩니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
-msgstr "이 노트는 입고 주문에 추가됩니다 (예. 창고에 품목을 보관하는 위치)."
+msgstr "이 노트는 입고 주문에 추가됩니다. (예. 창고에 품목을 보관하는 위치)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -9011,7 +9011,7 @@ msgstr "재고 이동 %s : 이동을 위해 품목을 추가하세요."
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
-msgstr "재고 이동을 통해 한 공간에서 다른 공간으로 품목을 이동할 수 있습니다."
+msgstr "재고 이동을 통해 품목의 위치를 이동시킬 수 있습니다."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -9300,7 +9300,7 @@ msgstr "웨이브 픽업 사용"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes"
-msgstr "나만의 경로 사용"
+msgstr "나의 경로를 설정합니다."
 
 #. module: stock
 #. odoo-javascript
@@ -9789,7 +9789,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "잘하셨습니다, 재보충할 건이 없습니다!"
+msgstr "아직 재보충이 필요한 주문이 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10237,8 +10237,8 @@ msgid ""
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 "여기에서 재고 예측을 기반으로 한 스마트 보충 안내를 확인할 수 있습니다.\n"
-"            클릭 한 번으로 구매 또는 제조 수량을 선택하여 주문을 완료합니다. \n"
-"            규칙을 \"자동\"으로 설정해놓으면 소요되는 시간을 줄일 수 있습니다. "
+"            클릭 한 번으로 구매 또는 제조 수량을 선택하여 주문을 시작하세요. \n"
+"            규칙을 \"자동\"으로 설정해놓으면 주문에 소요되는 시간을 줄일 수 있습니다. "
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
@@ -10265,7 +10265,7 @@ msgstr "ZPL 라벨"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 msgid "ZPL Labels with price"
-msgstr "ZPL 라벨 가격 표시"
+msgstr "ZPL 라벨, 가격 표시"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule

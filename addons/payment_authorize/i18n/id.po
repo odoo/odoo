@@ -27,31 +27,34 @@ msgid ""
 "                    <option value=\"savings\">Personal Savings</option>\n"
 "                    <option value=\"businessChecking\">Business Checking</option>"
 msgstr ""
+"<option value=\"checking\">Rekening Giro Pribadi</option>\n"
+"                    <option value=\"savings\">Tabungan Pribadi</option>\n"
+"                    <option value=\"businessChecking\">Rekening Giro Bisnis</option>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "Nomor Routing ABA"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API Client Key"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "ID Login API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API Signature Key"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API Transaction Key"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -61,47 +64,47 @@ msgstr "Nomor Rekening"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_payment_method_type
 msgid "Allow Payments From"
-msgstr ""
+msgstr "Izinkan Pembayaran Dari"
 
 #. module: payment_authorize
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "An error occurred when displayed this payment form."
-msgstr ""
+msgstr "Terjadi error saat menampilkan formulir pembayaran ini."
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "Authorize.Net Payment Type"
-msgstr ""
+msgstr "Tipe Pembayaran Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "ID Profil Authorize.Net"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Bank (powered by Authorize)"
-msgstr ""
+msgstr "Bank (powered by Authorize)"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__authorize_payment_method_type__bank_account
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
 msgid "Bank Account (USA Only)"
-msgstr ""
+msgstr "Akun Bank (Hanya USA)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Tipe Akun Bank"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -111,7 +114,7 @@ msgstr "Nama Bank"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "Kode Kartu"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -131,6 +134,8 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"Tidak dapat menemukan detail pedagang:\n"
+"%s"
 
 #. module: payment_authorize
 #. odoo-python
@@ -140,6 +145,7 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
 msgstr ""
+"Tidak dapat menemukan detail transaksi (kode error: %s; error_Details: %s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__authorize_payment_method_type__credit_card
@@ -157,7 +163,7 @@ msgstr "Kartu Kredit (powered by Authorize)"
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_payment_method_type
 msgid "Determines with what payment method the customer can pay."
-msgstr ""
+msgstr "Menentukan dengan metode pembayaran apa pelangganan dapat membayar."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -172,40 +178,42 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"Gagal untuk mengautentikasi.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr ""
+msgstr "Buat Client Key"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Cara dibayar dengan Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "Nama Pada Akun"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "Hanya satu mata uang yang dapat dipilih oleh akun Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -227,14 +235,14 @@ msgstr "Transaksi pembayaran"
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr ""
+msgstr "Menerima data dengan kode status \"%(status)s\" dan kode error \"%(error)s\" "
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Menerima data permintaan pembayaran yang diubah tanpa izin."
 
 #. module: payment_authorize
 #. odoo-javascript
@@ -248,12 +256,13 @@ msgstr "Kesalahan Server"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Tetapkan Mata Uang Akun"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
+"ID yang digunakan hanya untuk mengidentifikasi akun dengan Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -261,6 +270,8 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"Client key publik. Untuk membuat langsung dari Odoo atau dari Authorize.Net "
+"backend."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
@@ -274,18 +285,19 @@ msgstr "Kode teknis penyedia pembayaran ini."
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
 msgstr ""
+"Transaksi ini bukan dalam status untuk di-refund. (status: %s. detail: %s)"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Transaksi ini tidak terhubung ke token."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "The type of payment method this token is linked to."
-msgstr ""
+msgstr "Tipe metode pembayaran yang token ini terhubung pada."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -293,6 +305,7 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"Referensi unik untuk kombinasi partner/token di Authorize.net backend."
 
 #. module: payment_authorize
 #. odoo-python
@@ -303,13 +316,16 @@ msgid ""
 "method type, please disable the provider and duplicate it. Then, change the "
 "payment method type on the duplicated provider."
 msgstr ""
+"Terdapat token aktif yang terhubung ke penyedia ini. Untuk merubah tipe "
+"metode pembayaran, mohon nonaktifkan penyedia dan gandakan. Lalu, rubah tipe"
+" metode pembayaran pada penyedia yang digandakan."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "Action ini tidak dapat dilakukan selama penyedia dinonaktifkan."
 
 #. module: payment_authorize
 #. odoo-javascript
@@ -322,4 +338,4 @@ msgstr "Kita tidak dapat memproses pembayaran Anda."
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "YY"

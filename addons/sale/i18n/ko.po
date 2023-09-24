@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,8 +78,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
-"'Order - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and '견적 - %s' % (object.name)) or '주문 - "
+"%s' % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -620,21 +620,21 @@ msgstr ""
 "        <br><br>\n"
 "        고객님의\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            견적송장이 <t t-out=\"doc_name or ''\">견적서 번호</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span> 및\n"
+"            견적용 인보이스가 <t t-out=\"doc_name or ''\">견적서 번호</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (참조: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            금액 <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>으로 발행이 완료되었습니다.\n"
+"            금액 <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>으로 발행되었습니다.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">견적서</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span> 및 \n"
+"            <t t-out=\"doc_name or ''\">견적서</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span> \n"
 "            <t t-if=\"object.origin\">\n"
-"                (참조 번호: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"                ((참조 번호: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            금액 <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>으로 검토 준비가 완료되었습니다.\n"
+"            금액 <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>) 확인이 가능합니다.\n"
 "        </t>\n"
 "        <br><br>\n"
-"        궁금한 점이 있으시면 언제든지 문의해주시기 바랍니다.\n"
+"        궁금한 점이 있으면 언제든지 연락해 주시기 바랍니다.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
 "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -1033,7 +1033,7 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for "
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
-msgstr "청구서 발행 정책에 따라 발행 준비가 완료된 모든 주문 라인에 대해 표준 청구서가 발행됩니다 (주문 또는 배송 수량 기준)."
+msgstr "청구서 발행 기준에 따라 발행 준비가 완료된 모든 주문 라인에 대해 표준 청구서가 발행됩니다 (주문 또는 배송 수량 기준)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -1042,7 +1042,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 재고 관리 앱을 설치해야 사용하실 수 있습니다.\n"
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 사용을 위해서는 재고 관리 앱을 설치하셔야 합니다.\n"
 "소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
 "서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
@@ -1056,7 +1056,7 @@ msgstr "제품 또는 고객에 대한 주의사항이 설정됩니다.(판매)"
 msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
-msgstr "판매 주문에서 포장 상품 유형을 선택하고 포장 상품당 단위 수의 배수인 수량을 강제 적용할 수 있습니다."
+msgstr "판매 주문에서 패키지 유형을 선택하고 패키지당 단위 수의 배수인 수량을 강제로 적용할 수 있습니다."
 
 #. module: sale
 #. odoo-python
@@ -1115,7 +1115,7 @@ msgstr "보증금 또는 착수금에 사용된 계정"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr "발생 수익 항목"
+msgstr "선수 수익 항목"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1173,7 +1173,7 @@ msgstr "영역 추가"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "그리드에서 발주서로 세부선택 추가"
+msgstr "그리드에서 주문서로 여러 세부선택 항목을 추가합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1277,7 +1277,9 @@ msgstr "분석 라인"
 msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
-msgstr "판매 주문 내역에 수동으로 할인을 적용하거나 가격표에서 계산된 할인을 표시합니다(가격표 환경 설정에서 활성화하는 옵션)."
+msgstr ""
+"판매 주문 내역에서 수동으로 할인을 적용하거나 가격표에 할인 가격을계산하여 표시합니다. (가격표 환경 설정에서 해당 옵션을 활성화해야 "
+"함)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1381,8 +1383,8 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"쿠폰, 프로모션, 기프트 카드, 적립 제도 등 다양한 종류의 프로그램으로 매출을 높이십시오. 특정 조건 (제품, 고객, 최소 구매 금액,"
-" 기간)을 설정할 수 있습니다. 리워드는 할인 (% 또는 금액) 또는 무료 제품으로 증정이 가능합니다."
+"쿠폰, 프로모션, 기프트 카드, 적립 제도 등 다양한 종류의 프로그램으로 매출 상승효과를 기대할 수 있습니다. 제품, 고객, 최소 구매 "
+"금액, 기간 등에 특정 조건을 설정하거나, 할인 또는 사은품 증정을 할 수 있습니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1463,14 +1465,14 @@ msgstr "기존 견적서에서 회사를 변경하려면 세부 항목을 수기
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Choose between electronic signatures or online payments."
-msgstr "다양한 전자 서명이나 온라인 결제 방식 중에서 선택하실 수 있습니다."
+msgstr "전자 서명이나 온라인 결제 방식 중에서 선택하세요."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Choose how to confirm quotations"
-msgstr "견적 승인 방법 선택"
+msgstr "견적서 승인 방법 선택"
 
 #. module: sale
 #. odoo-javascript
@@ -1489,7 +1491,7 @@ msgstr "청구서 발행 대상을 정의하려면 클릭"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
@@ -1645,7 +1647,7 @@ msgstr "신규 품목 만들기"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr "새로 견적서를 생성하세요. 신규 매출을 향한 첫 단계입니다!"
+msgstr "새로운 견적서를 생성하세요. 신규 매출을 향한 첫 단계입니다!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1846,12 +1848,12 @@ msgstr "기본값"
 msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
-msgstr "새로운 견적서를 생성할 때 사용되는 기본값입니다. 개별 견적서에서 변경할 수 있습니다."
+msgstr "새로운 견적서를 생성할 때 사용되는 기본값입니다. 이 값은 개별 견적서에서 변경할 수 있습니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr "이메일로 컨텐츠 배송"
+msgstr "이메일로 내용 전송"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2253,7 +2255,7 @@ msgstr "잘하셨습니다, 계속 진행해봅시다."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr "판매 주문 내역에 할인 적용"
+msgstr "판매 주문 내역에 할인 혜택을 적용합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -2423,7 +2425,7 @@ msgstr "청구서 수"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr "생성된 청구서"
+msgstr "청구서 생성"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
@@ -2530,7 +2532,7 @@ msgstr "청구서 발행 주소 :"
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "청구서 발행 정책"
+msgstr "청구서 발행 기준"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
@@ -2593,7 +2595,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
 msgid "Journal Entry"
-msgstr "전표입력"
+msgstr "전표 입력"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
@@ -2638,7 +2640,7 @@ msgstr "리드타임"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "고객이 로그인하여 문서를 확인할 수 있습니다."
+msgstr "고객이 로그인하여 문서를 볼 수 있도록 허용합니다."
 
 #. module: sale
 #. odoo-javascript
@@ -2690,7 +2692,7 @@ msgstr "메일 서식"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
-msgstr "프로모션, 쿠폰, 적립 카드, 기프트 카드 및 전자 지갑 관리"
+msgstr "프로모션, 쿠폰, 적립 카드, 기프트 카드 및 전자 지갑을 관리합니다."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2722,7 +2724,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
 msgid "Margins"
-msgstr "여백"
+msgstr "마진"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
@@ -3633,7 +3635,7 @@ msgstr "참조"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr "이 판매주문서 요청이 생성된 참고 문서"
+msgstr "이 판매주문서를 생성하도록 요청을 받았던 근거 문서"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -4045,17 +4047,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "품목의 판매와 구매 단위를 다르게 설정합니다."
+msgstr "품목의 판매 단위와 구매 단위를 다르게 설정합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr "포장 상품별로 다양한 단위로 품목 판매"
+msgstr "패키지당 단위의 배수로 품목을 판매합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "속성 (크기, 색상 등) 설정된 세부값이 있는 제품 판매"
+msgstr "크기, 색상 등 제품 속성이 설정된 세부내용이 있는 품목을 판매합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4065,14 +4067,14 @@ msgstr "견적송장 발송"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr "청구서 금액이 확인되면 품목별로 이메일 보내기"
+msgstr "청구서가 승인되면 품목별로 이메일을 전송합니다."
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sample_quotation
 msgid "Send a quotation to test the customer portal."
 msgstr ""
 "견적서를 발송하여\n"
-"고객 포털을 테스트해보십시오"
+"고객 포털을 테스트해 보세요."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -4087,7 +4089,7 @@ msgstr "이메일로 전송"
 #. module: sale
 #: model:onboarding.onboarding.step,button_text:sale.onboarding_onboarding_step_sample_quotation
 msgid "Send sample"
-msgstr "샘플 발송"
+msgstr "테스트 발송"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
@@ -4101,7 +4103,7 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
-"이메일 방식은 품목과 관련한 특정 정보나 내용 (사용법, 지침, 링크나 미디어 등)을 공유하는 경우에 유용합니다. 품목의 세부 정보 양식"
+"이메일 전송은 제품과 관련된 특정 정보나 내용 (사용법, 지침, 링크, 미디어 등)을 공유하는 경우에 유용합니다. 품목의 세부 정보 양식"
 " (회계 탭)에서 이메일 서식을 생성하여 설정하십시오."
 
 #. module: sale
@@ -4134,7 +4136,7 @@ msgstr "서비스"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "제품당 복합단가 설정, 자동 할인 등"
+msgstr "품목당 복합단가 및 자동 할인 등을 설정할 수 있습니다."
 
 #. module: sale
 #: model:onboarding.onboarding.step,button_text:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -4176,7 +4178,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr "주문에서 마진 표시"
+msgstr "주문에 대한 마진을 표시합니다."
 
 #. module: sale
 #. odoo-python
@@ -4542,7 +4544,7 @@ msgstr ""
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
-msgstr "이익은 제품 판매 가격의 합계에서 세부 양식에 설정된 비용을 뺀 값으로 계산됩니다."
+msgstr "마진은 제품 판매 가격의 합계에서 세부 양식에 설정된 비용을 뺀 값으로 계산됩니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -4677,7 +4679,7 @@ msgstr ""
 msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
-msgstr "고객에게 약속된 배송 날짜입니다. 설정된 경우 배송 주문은 상품 리드타임이 아닌 이 날짜를 기준으로 예약됩니다."
+msgstr "고객에게 약속한 배송 날짜입니다. 설정된 경우 배송 주문은 품목 리드 타임이 아니라 이 날짜를 기준으로 예약됩니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4781,8 +4783,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"B2B 모드로 초대장을 보내려면 연락처보기를 열거 나 목록보기에서 연락처를 선택하고 드롭 다운 메뉴 *작업*에서 '포탈 사용 권한 관리'"
-" 선택 사항을 클릭하십시오."
+"B2B 모드에서 초대장을 보내려면 연락처를 열거나 목록보기에서 연락처를 선택하고 드롭 다운 메뉴 *작업*에서 '포털 사용 권한 관리' "
+"옵션을 클릭합니다."
 
 #. module: sale
 #. odoo-javascript
@@ -4859,12 +4861,12 @@ msgstr "레코드에 있는 예외 활동의 유형입니다."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr "내용을 입력하여 고객을 검색합니다"
+msgstr "고객을 검색하거나 새로 입력합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr "내용을 입력하여 품목을 검색합니다"
+msgstr "품목을 검색하거나 새로 입력합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -5273,8 +5275,7 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
-" }})"
+"== 'pending') and '보류 중인 주문' or '주문' }} (Ref {{ object.name or '없음' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

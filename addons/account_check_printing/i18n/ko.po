@@ -38,7 +38,7 @@ msgstr " : 번호 순서 확인"
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr "생성된 수표의 여백을 프린터의 설정과 일치하도록 조정하십시오"
+msgstr "프린터 설정에 맞도록 생성한 수표의 여백을 조정하세요."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -99,7 +99,7 @@ msgstr "수표 번호는 숫자로만 구성되어야 합니다"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "미리 인쇄된 수표에 번호가 없는 경우 이 옵션을 선택하십시오."
+msgstr "수표에 번호가 없는 경우 선택하세요."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -109,7 +109,7 @@ msgstr "수표 인쇄"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "검사"
+msgstr "수표"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -189,7 +189,7 @@ msgstr "전표"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_move
 msgid "Journal Entry"
-msgstr "전표입력"
+msgstr "전표 입력"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -205,7 +205,7 @@ msgstr "최근 갱신 일자"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
-msgstr "수동으로 번호 부여"
+msgstr "번호 수기 지정"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
@@ -220,9 +220,9 @@ msgstr ""
 "수기 결제: Odoo 외부의 다른 방법으로 결제하거나 지불을 받습니다.\n"
 "결제대행업체: 결제업체들은 자체적인 결제 방법을 사용하고 있습니다. 온라인 구매나 구독을 할 경우, 협력사에 저장된 결제 토큰을 이용하여 카드로 결제를 요청합니다.\n"
 "수표: 청구 금액을 수표로 지불하도록 Odoo에서 인쇄하세요.\n"
-"일괄 입금: 여러 고객들의 수표를 수금 후 일괄 입금을 생성하여 은행에 입금합니다. account_batch_payment 모듈이 있어야 합니다.\n"
-"SEPA 계좌이체: 은행에 SEPA 계좌이체 파일을 전송하여 SEPA 지역에서 결제할 수 있습니다. account_sepa 모듈이 있어야 합니다.\n"
-"SEPA 자동이체: 협력사 권한으로 SEPA 지역에서 결제가 가능합니다. account_sepa 모듈이 있어야 합니다.\n"
+"일괄 입금: 여러 고객들의 수표를 수금 후 일괄 입금을 생성하여 은행에 입금합니다 (account_batch_payment 모듈 필수).\n"
+"SEPA 계좌이체: 은행에 SEPA 계좌이체 파일을 전송하여 SEPA 지역에서 결제할 수 있습니다 (account_sepa 모듈 필수).\n"
+"SEPA 자동이체: 협력사 권한으로 SEPA 지역에서 결제가 가능합니다 (account_sepa 모듈 필수).\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -297,8 +297,8 @@ msgid ""
 "vendor bills by preferred payment method to register payments in mass. Use "
 "cases: create bank files for batch wires, check runs."
 msgstr ""
-"이 공급업체에 지불할 때 선호하는 결제 방법입니다. 대량 지불 건 등록을 할 경우 선호하는 지불 방법으로 공급업체 청구서를 필터하기 위해"
-" 사용됩니다. 사용 사례: 일괄 이체 시 은행 파일 생성, 점검 실행"
+"이 업체에 결제할 때 선호하는 결제 방법입니다. 선호하는 결제 방법으로 업체 청구서를 필터하여 대량 결제를 등록합니다 (예: 대량 이체용"
+" 은행 파일 생성, 테스트 실행)"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -351,7 +351,7 @@ msgstr "수표 용지에 인쇄 할 형식을 선택하십시오. 인쇄 기능�
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Sent"
-msgstr "전송됨"
+msgstr "발송 완료"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number

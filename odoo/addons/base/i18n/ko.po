@@ -7299,7 +7299,7 @@ msgstr ""
 "조달 경로를 추가합니다.\n"
 "\n"
 "직배송을 사용할 경우, 상품은 소매점의 창고를 거치지 않고\n"
-"판매업체에서 고객(직접 배송)으로 직접 배달됩니다.\n"
+"공급업체로부터 고객에게 직접 배달됩니다. (직접 배송)\n"
 "이 경우 내부적으로 문서를 전송할 필요가 없습니다.\n"
 "\n"
 
@@ -8350,20 +8350,20 @@ msgid ""
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
 "\n"
-"정기 직원 평가\n"
+"정기 업무 평가\n"
 "==============================\n"
 "\n"
-"이 애플리케이션을 사용하면 직원 성과에 대한 정기적인 평가를 통해 동기 부여 과정을 유지할 수 있습니다. 인적 자원에 대한 정기적 인 평가는 직원과 귀사에게 도움이 될 수 있습니다.\n"
+"이 평가서를 통해 직원의 업무 수행 능력과 관련하여 정기적인 평가를 진행하고 업무에 대한 동기를 부여할 수 있습니다. 인적 자원에 대한 정기적인 평가는 직원 뿐만 아니라 회사에게도 도움이 될 수 있습니다.\n"
 "\n"
-"평가 계획은 각 직원별로 할당할 수 있습니다. 이 계획은 정기적인 직원 평가를 관리하는 방식과 빈도를 정의합니다.\n"
+"평가 계획은 정기적인 직원 평가를 관리하는 방식과 기간을 정의하여 각 직원별로 할당됩니다..\n"
 "\n"
 "주요 기능\n"
 "------------\n"
-"* 직원 평가 항목을 작성하는 기능().\n"
-"* 평가는 관리자가 정하거나 직원 양식에 정의된 일정에 따라 자동으로 수행될 수 있습니다.\n"
-"* 평가는 다양한 설문조사를 이용해 계획에 따라 수행됩니다. 각 설문 조사는 직원 계층에서 특정 레벨로 응답할 수 있습니다. 최종 검토 및 평가는 관리자가 수행합니다.\n"
-"* 관리자, 동료, 협업자 및 직원은 정기적인 평가를 위해 메일을 받게 됩니다.\n"
-"* 직원, 동료, 협업자가 작성한 모든 평가 내용은 PDF 형식으로 볼 수 있습니다.\n"
+"* 직원의 업무에 대한 평가 항목을 작성합니다.\n"
+"* 평가서는 관리자가 작성하거나, 정의된 일정에 따라 자동으로 작성됩니다.\n"
+"* 평가는 다양한 설문조사를 통해 수행됩니다. 각 설문조사는 조직 구성도의 특정 구성원에 따라 답변되며, 관리자는 최종 검토 및 평가를 진행합니다.\n"
+"* 관리자와 동료, 직원 본인은 정기적인 평가를 위한 메일을 받게 됩니다.\n"
+"* 직원 본인과, 동료가 작성한 모든 평가 내용은 PDF 형식으로 볼 수 있습니다.\n"
 "* 면담 요청은 직원 평가에 따라 수동으로 생성됩니다.\n"
 
 #. module: base
@@ -12114,7 +12114,7 @@ msgstr "%y - 2자리수 연도 [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "&amp; Close"
-msgstr "&amp; 닫기"
+msgstr "후 닫기"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -13315,7 +13315,7 @@ msgstr "API 키 나열"
 msgid ""
 "API Keys are used to connect to Odoo from external tools without the need "
 "for a password or Two-factor Authentication."
-msgstr "API 키는 비밀번호나 이중 인증 없이 외부의 도구에서 Odoo에 접속하는 데 사용됩니다."
+msgstr "API 키는 비밀번호나 2단계 인증 없이 외부에서 Odoo에 접속하는 데 사용됩니다."
 
 #. module: base
 #. odoo-python
@@ -13447,12 +13447,12 @@ msgstr "벨기에 및 미국 회사를 사용한 계정 통합 데모 데이터"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr "계정 소유자"
+msgstr "계좌 명의자"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "계정 소유자명"
+msgstr "계좌 명의"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -14333,7 +14333,7 @@ msgstr "모든 연락처의 이메일이 동일해야 합니다. 관리자만 �
 msgid ""
 "All the emails and documents sent to this contact will be translated in this"
 " language."
-msgstr "이 연락처에 전송된 이메일과 문서는 모두 이 언어로 번역됩니다."
+msgstr "해당 연락처로 발송되는 이메일 및 문서는 모두 이 언어로 번역됩니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_consolidation
@@ -17984,7 +17984,7 @@ msgstr "고객"
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations
 msgid "Customizations"
-msgstr "맞춤화"
+msgstr "커스터마이징"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -22418,7 +22418,7 @@ msgstr "인도네시아 - 회계"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr "산업 분야"
+msgstr "산업 분류"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -22427,7 +22427,7 @@ msgstr "산업 분야"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr "산업"
+msgstr "산업 분류"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -23867,7 +23867,7 @@ msgstr "현지화"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
-msgstr "로그"
+msgstr "로그 기록"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form_revokedevices
@@ -24539,7 +24539,7 @@ msgstr "다대대 관계"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_map
 msgid "Map View"
-msgstr "지도 화면"
+msgstr "지도 보기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
@@ -28505,7 +28505,7 @@ msgstr "기타 주소"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Other Devices"
-msgstr "기타 장치"
+msgstr "기타 디바이스"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -29585,7 +29585,7 @@ msgstr "상품 이미지"
 #: model:ir.module.category,name:base.module_category_manufacturing_product_lifecycle_management_(plm)
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr "상품 라이프 사이클 관리 (PLM)"
+msgstr "제품 수명주기 관리 (PLM)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_matrix
@@ -31381,7 +31381,7 @@ msgstr "판매"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr "판매 및 구매"
+msgstr "판매 및 매입"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
@@ -31799,7 +31799,7 @@ msgstr "온라인으로 제품 판매"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__allow_out_payment
 msgid "Send Money"
-msgstr "이체"
+msgstr "자금 이체"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sms
@@ -33079,7 +33079,7 @@ msgstr "스웨덴 등록된 현금 등록기"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "Switch to"
-msgstr "다음으로 전환"
+msgstr "사용 언어 변경:"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -33598,7 +33598,8 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr "납세자용 식별 번호로, 국가별 양식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우 '/'를 입력하세요."
+msgstr ""
+"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -33807,7 +33808,7 @@ msgstr "시간은 0에서 23 사이의 값이어야 합니다."
 #: model:ir.model.fields,help:base.field_res_partner__user_id
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr "해당 연락처를 담당하는 내부 담당자입니다."
+msgstr "해당 연락처를 담당하는 내부 사용자입니다."
 
 #. module: base
 #. odoo-python
@@ -33991,8 +33992,8 @@ msgid ""
 "Field: %(field_name)s (%(field_tech_name)s)\n"
 msgstr ""
 "작업을 완료할 수 없습니다:\n"
-"- 생성/업데이트: 필수 필드를 설정하지 않았습니다.\n"
-"- 삭제: 다른 모델에서 레코드를 삭제해야 합니다. 대신 보관처리 하십시오.\n"
+"- 생성/업데이트: 필수 입력 필드를 설정하지 않았습니다.\n"
+"- 삭제: 다른 모델의 레코드를 삭제해야 합니다. 대신 보관처리하실 수 있습니다..\n"
 "\n"
 "모델: %(model_name)s (%(model_tech_name)s)\n"
 "필드: %(field_name)s (%(field_tech_name)s)\n"
@@ -34014,9 +34015,9 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Constraint: %(constraint)s\n"
 msgstr ""
-"작업을 완료할 수 없습니다: 다른 모델에서 레코드를 삭제해야 합니다. 그 대신, 보관 처리할 수 있습니다.\n"
+"작업을 완료할 수 없습니다: 다른 모델에서 레코드를 삭제해야 합니다. 대신 보관 처리할 수 있습니다.\n"
 "모델: %(model_name)s (%(model_tech_name)s)\n"
-"통제항목: %(constraint)s\n"
+"통제 항목: %(constraint)s\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -34102,7 +34103,8 @@ msgstr "환율 1에 대한 통화 비율"
 msgid ""
 "The registry number of the company. Use it if it is different from the Tax "
 "ID. It must be unique across all partners of a same country"
-msgstr "회사 등록 번호로, 세무용 사업자등록번호와 다른 경우 이 번호를 사용합니다. 같은 국가 협력사 간의 고유한 번호입니다."
+msgstr ""
+"회사 등록 번호입니다. 사업자등록번호와 다른 경우에는 이 번호를 사용합니다. 같은 국가에 있는 협력사 전체에 고유하게 적용됩니다."
 
 #. module: base
 #. odoo-python
@@ -35802,7 +35804,7 @@ msgstr "사용자 양식에서 메뉴 및 홈 액션을 필터링하는 데 사�
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__login
 msgid "Used to log into the system"
-msgstr "시스템에 로그인하는 데 사용됩니다"
+msgstr "시스템 로그인에 사용합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__sequence
@@ -36805,7 +36807,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "You are inviting a new user."
-msgstr "새 사용자를 초대하고 있습니다."
+msgstr "새로운 사용자를 초대합니다."
 
 #. module: base
 #. odoo-python
@@ -37526,7 +37528,7 @@ msgid ""
 "                            Users can choose their favorite language in their preferences."
 msgstr ""
 "가 성공적으로 설치되었습니다.\n"
-"                            사용자는 기본 설정에서 사용 언어를 선택할 수 있습니다."
+"                            추가 설정에서 사용 언어를 선택할 수 있습니다."
 
 #. module: base
 #. odoo-python

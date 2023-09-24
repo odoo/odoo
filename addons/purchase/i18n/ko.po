@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -246,7 +246,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        다음의 견적요청서 첨부 파일을 확인해 주시기 바랍니다. <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        다음 견적요청서 첨부 파일을 확인해 주시기 바랍니다. <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            참조 번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -549,7 +549,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 재고 관리 앱을 설치해야 사용하실 수 있습니다.\n"
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 사용을 위해서는 재고 관리 앱을 설치하셔야 합니다.\n"
 "소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
 "서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
@@ -1419,7 +1419,7 @@ msgstr "팔로워임"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
-msgstr "전표입력"
+msgstr "전표 입력"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
@@ -2550,7 +2550,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Sell and purchase products in different units of measure"
-msgstr "품목의 판매와 구매 단위를 다르게 설정합니다."
+msgstr "품목의 판매 단위와 구매 단위를 다르게 설정합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2814,7 +2814,7 @@ msgstr "현재 귀하의 계정에 대한 견적 요청이 없습니다."
 msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
-msgstr "청구서 발행가능한 내역이 없습니다. 만약 품목의 관리정책이 입고된 수량일 경우, 수량이 입고되었는지 확인하십시오."
+msgstr "청구서를 발행할 항목이 없습니다. 입고 수량을 기준으로 품목을 관리하는 경우, 해당 수량의 입고 여부를 확인하세요."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3199,9 +3199,9 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"발주서를 생성할 때, 공급업체의 <i>정시 납기율</i>을 확인하세요. 정시에 물품을 배송한 비율을 나타냅니다. 이 비율이 너무 낮다면,"
-" <i>자동 알림</i>을 활성화하세요. 입고 예정일 며칠 전에, Odoo는 업체에 이메일을 보내어 배송 날짜를 확정하고 혹시 지연될 "
-"경우 바로 알려 드립니다. 공급업체 관련 수치를 확인하려면, OTD 비율 항목을 클릭하세요."
+"발주서를 생성할 때, 공급업체가 정시에 물품을 배송한 비율을 나타내는<i>정시 납기율</i>을 확인해 보세요. 이 비율이 너무 낮다면, "
+"<i>자동 알림</i>을 활성화할 수 있습니다. 입고 예정일 전에 Odoo가 공급업체에 이메일을 보내어 배송 날짜를 확정하고 혹시 지연될"
+" 경우 바로 알려 드립니다. 공급업체 관련 수치를 확인하려면 OTD 비율 항목을 클릭하세요."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1

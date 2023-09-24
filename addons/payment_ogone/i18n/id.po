@@ -23,12 +23,12 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
-msgstr ""
+msgstr "API User ID"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
-msgstr ""
+msgstr "Password API User"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
@@ -45,30 +45,30 @@ msgstr "Tidak dapat membuat hubungan ke API."
 #. module: payment_ogone
 #: model:payment.provider,display_as:payment_ogone.payment_provider_ogone
 msgid "Credit Card (powered by Ogone)"
-msgstr ""
+msgstr "Kartu Kredit (powered by Ogone)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
 msgid "Hash function"
-msgstr ""
+msgstr "Fungsi hash"
 
 #. module: payment_ogone
 #. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
 #: model:payment.provider,name:payment_ogone.payment_provider_ogone
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
-msgstr ""
+msgstr "PSPID"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_provider
@@ -85,32 +85,32 @@ msgstr "Transaksi Tagihan"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Menerima data dengan status pembayaran tidak valid: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "SHA Key IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "SHA Key OUT"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
 msgid "SHA1"
-msgstr ""
+msgstr "SHA1"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
 msgid "SHA256"
-msgstr ""
+msgstr "SHA256"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
 msgid "SHA512"
-msgstr ""
+msgstr "SHA512"
 
 #. module: payment_ogone
 #. odoo-python
@@ -118,16 +118,17 @@ msgstr ""
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"Menyimpan detail pembayaran Anda penting untuk penggunaan di masa depan."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "ID yang digunakan hanya untuk mengidentifikasi API user dengan Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "ID yang digunakan hanya untuk mengidentifikasi akun dengan Ogone"
 
 #. module: payment_ogone
 #. odoo-python
@@ -141,7 +142,7 @@ msgstr "Komunikasi dengan API gagal."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "Pembayaran telah ditolak: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
@@ -153,7 +154,7 @@ msgstr "Kode teknis penyedia pembayaran ini."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Transaksi ini tidak terhubung ke token."
 
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
@@ -161,6 +162,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Stripe</strong>."
 msgstr ""
+"Penyedia ini sudah didepresiasi.\n"
+"                    Pertimbangkan untuk menonaktifkan penyedia dan mulai gunakan <strong>Stripe</strong>."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone

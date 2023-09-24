@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,7 +189,7 @@ msgstr ""
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
 "                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                        <strong>기프트 카드</strong>\n"
+"                        <strong>기프트 카드 번호</strong>\n"
 "                    </p>\n"
 "                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
 "                </div>\n"
@@ -198,7 +198,7 @@ msgstr ""
 "                </div>\n"
 "                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
 "                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">지금 바로 사용해보세요!</a>\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">지금 바로 사용하실 수 있습니다!</a>\n"
 "                    </span>\n"
 "                </div>\n"
 "            </div>\n"
@@ -346,7 +346,7 @@ msgstr "<span> x </span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Minimum purchase of</span>"
-msgstr "<span>최소구매수량</span>"
+msgstr "<span>최소 구매 수량</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -429,10 +429,10 @@ msgstr ""
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        <t t-if=\"object._get_mail_partner().name\">\n"
-"            축하합니다 <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>님,<br>\n"
+"            축하합니다, <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>님.<br>\n"
 "        </t>\n"
 "\n"
-"        고객님께 <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>에서 리워드를 드립니다.<br>\n"
+"        <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>에서 고객님께 리워드를 발급해드렸습니다.<br>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
@@ -444,7 +444,7 @@ msgstr ""
 "</tr>\n"
 "<tr style=\"margin-top: 16px\">\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        다음의 프로모션 코드를 사용하세요.\n"
+"        다음 구매시 프로모션 코드를 사용하세요.\n"
 "        <t t-if=\"object.expiration_date\">\n"
 "            만료일 <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
 "        </t>\n"
@@ -454,12 +454,12 @@ msgstr ""
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    최소 구매 수량 <t t-out=\"rule.minimum_qty or ''\">10</t> 품목\n"
+"                    최소 구매 수량 <t t-out=\"rule.minimum_qty or ''\">10</t>개\n"
 "                </span><br>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    다음 금액 이상 구매하실 경우 사용이 가능합니다. <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                    다음 금액 이상 주문하실 경우 사용이 가능합니다. <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
 "                </span><br>\n"
 "            </t>\n"
 "        </t>\n"
@@ -1551,7 +1551,7 @@ msgstr "품목 테그"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
 msgid "Product Variant"
-msgstr "품목 세부선택"
+msgstr "세부 품목"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
@@ -1983,7 +1983,7 @@ msgstr "고객님의 기프트 카드는 다음에 해당됩니다 {{ object.com
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "{{ object.program_id.company_id.name }} 의 리워드 쿠폰"
+msgstr "{{ object.program_id.company_id.name }}님의 리워드 쿠폰"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban

@@ -1300,6 +1300,9 @@ msgid ""
 "        E-Invoicing, Universal Business Language\n"
 "    "
 msgstr ""
+"\n"
+"        电子发票，通用商务语言\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_edi
@@ -1308,6 +1311,9 @@ msgid ""
 "        E-invoice implementation for the Kingdom of Saudi Arabia\n"
 "    "
 msgstr ""
+"\n"
+"        沙特阿拉伯推行电子发票\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1336,6 +1342,12 @@ msgid ""
 "        P&L + balance Sheet\n"
 "    "
 msgstr ""
+"\n"
+"        电子会计报告\n"
+"            - 销售报告\n"
+"            - 采购报告\n"
+"        损益表 + 资产负责表\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_keypay
@@ -1345,6 +1357,10 @@ msgid ""
 "        This Module will synchronise all payrun journals from Employment Hero to Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"        Employment Hero 薪资集成\n"
+"        该模块将把 Employment Hero 中的所有薪资日志同步到 Odoo 中。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
@@ -2419,6 +2435,8 @@ msgid ""
 "\n"
 "    This is a link module between Point of Sale and Mrp.\n"
 msgstr ""
+"\n"
+"    这是销售点和 MRP 之间的链接模块。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -2427,6 +2445,9 @@ msgid ""
 "    This is the base module to manage the accounting chart for Republic of Ireland in Odoo. \n"
 "    "
 msgstr ""
+"\n"
+"    该基础模块用于在 Odoo 系统中管理爱尔兰共和国会计图表。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_edi_facturae
@@ -2463,6 +2484,18 @@ msgid ""
 "    You need to configure your certificate and the tax agency.\n"
 "    "
 msgstr ""
+"\n"
+"    该模块将发票和供应商账单发送到\n"
+"    Araba/Álava、Bizkaia 和 Gipuzkoa的\"Diputaciones Forales\"。\n"
+"\n"
+"    发票和账单将被转换为XML格式，并定期发送到\n"
+"    巴斯克政府服务器，为其提供唯一标识符。\n"
+"    哈希链确保了发票/账单序列连贯。 \n"
+"    已发送（发送/打印）的发票、账单和票据上加上了QR码，\n"
+"    以便任何人都可以检查它们是否已被申报。\n"
+"\n"
+"    您需要设置您的证书和税务机构。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_edi_ubl_cii_tests
@@ -3226,6 +3259,14 @@ msgid ""
 "in the \"Statement Reports\" section).\n"
 "    "
 msgstr ""
+"\n"
+"法国会计报告\n"
+"================================\n"
+"\n"
+"该模块还允许导出法国增值税报告，并将其发送给 DGFiP、OGA 或专业会计师。\n"
+"\n"
+"它在法国增值税报告上添加了一个 \"EDI VAT\" 新按钮，并在 \"报告\" 部分的 \"报表报告\" 下方添加了一个 \"EDI exports\" 新菜单项。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr_reports
@@ -3236,6 +3277,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"希腊会计报告\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports
@@ -4858,6 +4904,8 @@ msgid ""
 "\n"
 "Chilean module for Point of Sale\n"
 msgstr ""
+"\n"
+"智利销售点模块\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -6751,6 +6799,13 @@ msgid ""
 "split per delivery.\n"
 "    "
 msgstr ""
+"\n"
+"Avatax 库存管理\n"
+"=======================================\n"
+"该模块允许从 avatax 获取税款时使用行级地址。\n"
+"\n"
+"目前的限制是单个订单行中存在多个库存移动（例如，10 个单位的产品A，其中 2 个从仓库#1发货，8 个从仓库#2发货）。在这种情况下，销售订单应该在交货时进行拆分。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8591,6 +8646,13 @@ msgid ""
 "This module allows the creation and sending of documents (XBRL) needed for the Dutch SBR system.\n"
 "    "
 msgstr ""
+"\n"
+"SBR 荷兰本地化\n"
+"========================\n"
+"允许用户向荷兰政府报告。\n"
+"\n"
+"该模块允许创建和发送荷兰 SBR 系统所需的文档（XBRL）。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_sms
@@ -8960,6 +9022,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"瑞士本地化\n"
+"==================\n"
+"该模块定义了瑞士的会计科目表（Swiss PME/KMU 2015）、税款，并可在打印发票或邮寄发票时生成 QR 账单。\n"
+"QR 账单随附于发票，付款更便捷。\n"
+"\n"
+"如果满足以下情况，则会生成 QR 账单：\n"
+"    - 发票上的合作伙伴在瑞士有完整的地址（街道、城市、邮编和国家）。\n"
+"    - 在发票上选择生成瑞士QR码的选项（默认情况下已选择）。\n"
+"    - 银行日志上设置了正确的账号/QR IBAN。\n"
+"    - （使用QR-IBAN时）发票的付款参考是QR参考号。\n"
+"\n"
+"如果满足上述条件，QR 账单会自动生成。打印或邮寄发票时，QR 账单将附加在发票之后。\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -9016,6 +9093,17 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"我们的目标是建立一个完整模块，管理所有产品的维修。\n"
+"====================================================================\n"
+"\n"
+"该模块涵盖以下主题：:\n"
+"------------------------------------------------------\n"
+"    * 添加/删除维修产品\n"
+"    * 库存影响\n"
+"    * 保修概念\n"
+"    * 维修报价报告\n"
+"    * 技术人员和最终客户须知\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -9759,6 +9847,19 @@ msgid ""
 "    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) for VietQR.\n"
 "\n"
 msgstr ""
+"\n"
+"该模块用于在 Odoo 系统中管理越南的会计图表和银行信息。\n"
+"========================================================================================\n"
+"\n"
+"- 本模块适用于遵循越南会计准则（VAS）和根据No. 200/2014/TT-BTC法令设立账户科目表的公司。\n"
+"- 添加越南银行信息（如名称、代码等），该信息由越南国家银行宣布并每年更新，详情请参见越南国家银行网站\n"
+"(https://sbv.gov.vn/webcenter/portal/en/home/sbv/paytreasury/bankidno).\n"
+"- 为发票添加 VietQR 功能\n"
+"\n"
+"**贡献者:**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
+"    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) 关于VietQR的贡献者。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr_restaurant
@@ -10372,6 +10473,10 @@ msgid ""
 "Install this if you are using the Point of Sale app in Chile.    \n"
 "\n"
 msgstr ""
+"\n"
+"如果您在智利使用销售点应用程序，\n"
+"请安装此模块以满足智利监管要求的技术要求。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_cert
@@ -11937,6 +12042,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- 联系人：用于整理给定公司的员工联系方式（例如：首席执行官，首席财务官等）。\n"
+"- 发票地址：发票的首选地址。当您为属于此公司的订单开具发票时，默认选择此地址。\n"
+"- 送货地址：送货的首选地址。当您交付属于此公司的订单时，默认选择此地址。\n"
+"- 私人地址：私人地址仅对授权用户可见，并包含敏感数据（员工家庭地址等）。\n"
+"- 其他地址：公司的其他地址（例如：子公司等）。"
 
 #. module: base
 #. odoo-python
@@ -11944,7 +12054,7 @@ msgstr ""
 #, python-format
 msgid ""
 "- Only a root company can be set on %(record)r. Currently set to %(company)r"
-msgstr ""
+msgstr "- 只能在 %(record)r 上设置根公司。当前设置为 %(company)r"
 
 #. module: base
 #. odoo-python
@@ -14649,7 +14759,7 @@ msgstr "附件"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Attachment is not encoded in base64."
-msgstr ""
+msgstr "附件未以 base64 编码。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -14872,7 +14982,7 @@ msgstr "Avatax"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_stock
 msgid "Avatax for Inventory"
-msgstr ""
+msgstr "AvaTax 库存管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_sale
@@ -15080,7 +15190,7 @@ msgstr "条码过期"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_mrp
 msgid "Barcode Quality MRP module"
-msgstr ""
+msgstr "条码质量 MRP 模块"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
@@ -15498,7 +15608,7 @@ msgstr "Brazil - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_sales
 msgid "Brazil - Sale"
-msgstr ""
+msgstr "巴西 - 销售"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
@@ -16581,7 +16691,7 @@ msgstr "公司类型"
 msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
-msgstr ""
+msgstr "公司标语，包含在打印文档的页眉或页脚（取决于所选版式）。"
 
 #. module: base
 #. odoo-python
@@ -17581,14 +17691,14 @@ msgstr "货币单位"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__currency_field
 msgid "Currency field"
-msgstr ""
+msgstr "货币字段"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Currency field does not have type many2one"
-msgstr ""
+msgstr "货币字段无many2one类型"
 
 #. module: base
 #. odoo-python
@@ -20905,7 +21015,7 @@ msgstr "Greece - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr_reports
 msgid "Greece - Accounting Reports"
-msgstr ""
+msgstr "希腊 - 会计报告"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -21059,7 +21169,7 @@ msgstr "H - 运输和储存"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_livechat
 msgid "HR - Livechat"
-msgstr ""
+msgstr "人力资源 - 即时聊天"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
@@ -22655,7 +22765,7 @@ msgstr "Ireland - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie_reports
 msgid "Ireland - Accounting Reports"
-msgstr ""
+msgstr "爱尔兰 - 会计报告"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
@@ -25233,7 +25343,7 @@ msgstr "荷兰 - 薪资单与会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr
 msgid "Netherlands - SBR"
-msgstr ""
+msgstr "荷兰 - 标准商业报告（SBR）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -27585,7 +27695,7 @@ msgstr "一个或多个选定的模块已被卸载，如果您认为这是一个
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_settings_unique_user_id
 msgid "One user should only have one user settings."
-msgstr ""
+msgstr "一个用户只能有一项用户设置。"
 
 #. module: base
 #. odoo-python
@@ -28365,12 +28475,12 @@ msgstr "POS 自助订购"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment_self_order
 msgid "POS Self-Order / Online Payment"
-msgstr ""
+msgstr "POS 自助订购/在线支付"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment_self_order_preparation_display
 msgid "POS Self-Order / Online Payment / Preparation Display"
-msgstr ""
+msgstr "POS 自助订购/在线支付/准备工作显示"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -28553,13 +28663,13 @@ msgstr "合作伙伴标签"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr "合作伙伴抬头"
+msgstr "合作伙伴称谓"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
-msgstr "合作伙伴抬头"
+msgstr "合作伙伴称谓"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
@@ -29009,7 +29119,7 @@ msgstr "销售点租赁库存"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_appointment
 msgid "Point of Sale Restaurant Appointment"
-msgstr ""
+msgstr "销售点餐厅预约"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
@@ -29024,7 +29134,7 @@ msgstr "POS营业点企业"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "销售点在线支付"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -29234,7 +29344,7 @@ msgstr "私有方法 (比如 %s) 不能远程调用."
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
 msgid "Process Manufacturing Orders from the barcode application"
-msgstr ""
+msgstr "通过条形码应用程序处理生产订单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -30802,7 +30912,7 @@ msgstr "规则定义( 域筛选)"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
 msgid "Rule must have at least one checked access right!"
-msgstr ""
+msgstr "规则必须至少有一项已勾选的访问权限！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__rule_groups
@@ -30854,7 +30964,7 @@ msgstr "S - 其它服务活动"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
 msgid "SBR"
-msgstr ""
+msgstr "SBR"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -31272,7 +31382,7 @@ msgstr "Saudi Arabia - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_edi
 msgid "Saudi Arabia - E-invoicing"
-msgstr ""
+msgstr "沙特阿拉伯 - 电子发票"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -32304,7 +32414,7 @@ msgstr "Spain - SII EDI Suministro de Libros"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai
 msgid "Spain - TicketBAI"
-msgstr ""
+msgstr "西班牙 - TicketBAI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
@@ -32445,7 +32555,7 @@ msgstr "Spreadsheet Documents"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_spreadsheet
 msgid "Spreadsheet Test"
-msgstr ""
+msgstr "电子表格测试"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_spreadsheet
@@ -32832,7 +32942,7 @@ msgstr "支持批量调拨的质量管控"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order
 msgid "Support online payment in self-order"
-msgstr ""
+msgstr "支持自助订单在线支付"
 
 #. module: base
 #: model:res.country,name:base.sr
@@ -33341,7 +33451,7 @@ msgstr "「应用程序切换」动作不能选择为主动作."
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
-msgstr ""
+msgstr "子公司的%s必须与根公司相同。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -33444,7 +33554,7 @@ msgstr "%(company_name)s公司无法存档，因为其仍然用作%(active_users
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "The company hierarchy cannot be changed."
-msgstr ""
+msgstr "公司层级不可更改。"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
@@ -34162,7 +34272,7 @@ msgstr "无法将此文件解码为图像文件。"
 #: code:addons/image.py:0
 #, python-format
 msgid "This file is not a webp file."
-msgstr ""
+msgstr "该文件不是 webp 文件。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -34461,7 +34571,7 @@ msgstr "该模块已弃用。"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_appointment
 msgid "This module lets you manage online reservations for restaurant tables"
-msgstr ""
+msgstr "该模块可以帮助您管理餐厅餐桌的在线预订"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_survey
@@ -36569,6 +36679,8 @@ msgid ""
 "You are about to log out from all devices that currently have access to your account.<br/><br/>\n"
 "                        <strong>Type in your password to confirm :</strong>"
 msgstr ""
+"您即将从当前可访问您账户的所有设备上登出。<br/><br/>\n"
+"                        <strong>输入密码确认：</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -37158,7 +37270,7 @@ msgstr "例如: 更新订单数量"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "e.g. email@domain.com, domain.com"
-msgstr ""
+msgstr "例如：email@domain.com、domain.com"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -37426,7 +37538,7 @@ msgstr "pos_account_reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mrp
 msgid "pos_mrp"
-msgstr ""
+msgstr "pos_mrp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
