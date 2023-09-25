@@ -164,3 +164,90 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
         dashboard_data = default_journal_sale._get_journal_dashboard_data_batched()[default_journal_sale.id]
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
+
+    @freeze_time("2023-03-15")
+    def test_purchase_journal_numbers_and_sums(self):
+        company_currency = self.company_data['currency']
+        journal = self.company_data['default_journal_purchase']
+
+        #Setup multiple payments term
+        twentyfive_now_term = self.env['account.payment.term'].create({
+            'name': '25% now, rest in 30 days',
+            'note': 'Pay 25% on invoice date and 75% 30 days later',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'percent',
+                    'value_amount': 25.00,
+                    'delay_type': 'days_after',
+                    'nb_days': 0,
+                }),
+                (0, 0, {
+                    'value': 'percent',
+                    'value_amount': 75.00,
+                    'delay_type': 'days_after',
+                    'nb_days': 30,
+                }),
+            ],
+        })
+
+        self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2023-04-01',
+            'date': '2023-03-15',
+            'invoice_payment_term_id': twentyfive_now_term.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'name': 'product test 1',
+                'price_unit': 4000,
+                'tax_ids': [],
+            })]
+        }).action_post()
+        # This bill has two amls of 10$. Both are waiting for payment and due in 16 and 46 days.
+        # number_waiting += 2, sum_waiting += -4000$, number_late += 0, sum_late += 0$
+
+        self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2023-03-01',
+            'date': '2023-03-15',
+            'invoice_payment_term_id': twentyfive_now_term.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'name': 'product test 1',
+                'price_unit': 400,
+                'tax_ids': [],
+            })]
+        }).action_post()
+        # This bill has two amls of 100$. One which is late and due 14 days prior and one which is waiting for payment and due in 15 days.
+        # number_waiting += 2, sum_waiting += -400$, number_late += 1, sum_late += -100$
+
+        self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2023-02-01',
+            'date': '2023-03-15',
+            'invoice_payment_term_id': twentyfive_now_term.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'name': 'product test 1',
+                'price_unit': 40,
+                'tax_ids': [],
+            })]
+        }).action_post()
+        # This bill has two amls of 1000$. Both of them are late and due 45 and 15 days prior.
+        # number_waiting += 2, sum_waiting += -40$, number_late += 2, sum_late += -40$
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        # Expected behavior is to have six amls waiting for payment for a total amount of 4440$
+        # three of which would be late for a total amount of 140$
+        self.assertEqual(6, dashboard_data['number_waiting'])
+        self.assertEqual(format_amount(self.env, 4440, company_currency), dashboard_data['sum_waiting'])
+        self.assertEqual(3, dashboard_data['number_late'])
+        self.assertEqual(format_amount(self.env, 140, company_currency), dashboard_data['sum_late'])

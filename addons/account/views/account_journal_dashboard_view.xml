@@ -334,9 +334,8 @@
                                     context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_sale_pay_link">
                                         <t t-out="dashboard.number_waiting"/> Unpaid Invoices
                                     </a>
-
-                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action"
-                                    context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_purchase_pay_link">
+                                    <a type="object" name="open_action" t-if="journal_type == 'purchase'"
+                                    context="{'action_name': 'action_open_payment_items', 'search_default_purchases': '1'}">
                                         <t t-out="dashboard.number_waiting"/> Bills to Pay
                                     </a>
                                 </div>
@@ -346,9 +345,12 @@
                             </div>
                             <div class="row" t-if="dashboard.number_late">
                                 <div class="col overflow-hidden text-start">
-                                    <a type="object" name="open_action" context="{'search_default_late': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Late Invoices"><t t-out="dashboard.number_late"/> Late Invoices</span>
-                                        <span t-if="journal_type == 'purchase'" title="Late Bills"><t t-out="dashboard.number_late"/> Late Bills</span>
+                                    <a type="object" name="open_action" t-if="journal_type == 'sale'" context="{'search_default_late': '1'}">
+                                        <span><t t-out="dashboard.number_late"/> Late Invoices</span>
+                                    </a>
+                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action"
+                                    context="{'action_name': 'action_open_payment_items', 'search_default_purchases': '1', 'search_default_late': '1'}">
+                                        <span><t t-out="dashboard.number_late"/> Late Bills</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
