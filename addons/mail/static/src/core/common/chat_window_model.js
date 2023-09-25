@@ -9,8 +9,8 @@ import { _t } from "@web/core/l10n/translation";
 
 export class ChatWindow extends Record {
     static id = "thread";
-    /** @type {import("models").ChatWindow[]} */
-    static records = [];
+    /** @type {Object<number, import("models").ChatWindow} */
+    static records = {};
     /** @returns {import("models").ChatWindow} */
     static new(data) {
         return super.new(data);
@@ -24,7 +24,7 @@ export class ChatWindow extends Record {
      * @returns {import("models").ChatWindow}
      */
     static insert(data = {}) {
-        const chatWindow = this.records.find((c) => c.thread?.eq(data.thread));
+        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(data.thread));
         if (!chatWindow) {
             const chatWindow = this.new(data);
             Object.assign(chatWindow, { thread: data.thread });
@@ -33,22 +33,28 @@ export class ChatWindow extends Record {
             const visible = this.env.services["mail.chat_window"].visible;
             const maxVisible = this.env.services["mail.chat_window"].maxVisible;
             if (!data.replaceNewMessageChatWindow) {
-                if (maxVisible <= this.records.length) {
+                if (maxVisible <= this.store.discuss.chatWindows.length) {
                     const swaped = visible[visible.length - 1];
                     index = visible.length - 1;
                     this.env.services["mail.chat_window"].hide(swaped);
                 } else {
-                    index = this.records.length;
+                    index = this.store.discuss.chatWindows.length;
                 }
             } else {
-                const newMessageChatWindowIndex = this.records.findIndex((cw) => !cw.thread);
+                const newMessageChatWindowIndex = this.store.discuss.chatWindows.findIndex(
+                    (cw) => !cw.thread
+                );
                 index =
                     newMessageChatWindowIndex !== -1
                         ? newMessageChatWindowIndex
-                        : this.records.length;
+                        : this.store.discuss.chatWindows.length;
             }
-            this.records.splice(index, data.replaceNewMessageChatWindow ? 1 : 0, chatWindow);
-            return this.records[index]; // return reactive version
+            this.store.discuss.chatWindows.splice(
+                index,
+                data.replaceNewMessageChatWindow ? 1 : 0,
+                chatWindow
+            );
+            return this.store.discuss.chatWindows[index]; // return reactive version
         }
         if (chatWindow.hidden) {
             this.env.services["mail.chat_window"].makeVisible(chatWindow);

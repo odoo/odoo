@@ -15,7 +15,7 @@
 </t>
 
 <t t-name="mail.MessagingMenu.content">
-    <t t-set="failures" t-value="store.NotificationGroup.records"/>
+    <t t-set="failures" t-value="store.discuss.notificationGroups"/>
     <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1" t-att-class="{ 'overflow-auto w-100 mh-100': ui.isSmall }">
         <div class="o-mail-MessagingMenu-header" t-att-class="{'flex-row-reverse text-uppercase': ui.isSmall, 'border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp }">
             <t t-if="!ui.isSmall">

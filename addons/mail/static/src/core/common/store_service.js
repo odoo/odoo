@@ -53,9 +53,6 @@ export class Store {
             return undefined;
         }
         const modelName = Record.modelFromLocalId(localId);
-        if (Array.isArray(this[modelName].records)) {
-            return this[modelName].records.find((r) => r.localId === localId);
-        }
         return this[modelName].records[localId];
     }
 
