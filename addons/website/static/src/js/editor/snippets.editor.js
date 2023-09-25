@@ -91,6 +91,21 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         )[0];
         delete themeBodyLineHeightEl.dataset.unit;
         delete themeBodyLineHeightEl.dataset.saveUnit;
+        const themeButtonFontFamilyEl = $html.find("[data-variable='buttons-font']")[0];
+        if (!themeButtonFontFamilyEl) {
+            const rowEl = new DOMParser().parseFromString(`
+                <we-row>
+                    <we-fontfamilypicker data-variable="buttons-font"></we-fontfamilypicker>
+                    <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link"
+                        data-customize-website-variable="" data-variable="buttons-font"
+                        data-remove-font="set-buttons-font" data-no-preview="true"/>
+                </we-row>
+            `, "text/html").querySelector("we-row");
+            rowEl.setAttribute("string", _t("Font family"));
+            rowEl.querySelector("we-button").setAttribute("title", _t("Reset to Paragraph Font Family"));
+            const previousEl = $html.find("[data-variable='btn-secondary-outline-border-width']")[0];
+            previousEl.insertAdjacentElement("afterend", rowEl);
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
