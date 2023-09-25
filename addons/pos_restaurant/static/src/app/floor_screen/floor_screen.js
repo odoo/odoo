@@ -590,10 +590,8 @@ export class FloorScreen extends Component {
             }
         } else {
             await this.popup.add(ErrorPopup, {
-                title: this.env._t("Delete Error"),
-                body: this.env._t(
-                    "You cannot delete a table with orders still in draft for this table."
-                ),
+                title: _t("Delete Error"),
+                body: _t("You cannot delete a table with orders still in draft for this table."),
             });
         }
         // Value of an object can change inside async function call.
