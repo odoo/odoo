@@ -265,7 +265,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         if (session.is_website_user) {
             this._displayAccessDeniedNotification(
-                Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+                Markup(sprintf("<p>%s</p>", _t('Oh no! Please <a href=/web/login>sign in</a> to vote')))
             );
             return;
         }
@@ -374,7 +374,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const message = data.error === 'own_post'
                     ? _t('Sorry, you cannot vote for your own posts')
                     : data.error === 'anonymous_user'
-                        ? Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+                        ? Markup(sprintf("<p>%s</p>", _t('Oh no! Please <a href=/web/login>sign in</a> to vote')))
                         : data.error;
                 this._displayAccessDeniedNotification(message);
             } else {
