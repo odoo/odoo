@@ -5,7 +5,7 @@ import { ChatWindowService } from "@mail/core/common/chat_window_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(ChatWindowService.prototype, {
-    async close() {
+    async _onClose(chatWindow) {
         if (this.ui.isSmall && !this.store.discuss.isActive) {
             // If we are in mobile and discuss is not open, it means the
             // chat window was opened from the messaging menu. In that
@@ -15,6 +15,6 @@ patch(ChatWindowService.prototype, {
             // ensure messaging menu is opened before chat window is closed
             await Promise.resolve();
         }
-        await super.close(...arguments);
+        await super._onClose(...arguments);
     },
 });
