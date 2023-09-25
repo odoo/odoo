@@ -218,6 +218,16 @@ class Project(models.Model):
         if not self.alias_enabled:
             self.alias_name = False
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if (self.env.user.has_group('project.group_project_stages') and self.stage_id.company_id
+                and self.stage_id.company_id != self.company_id):
+            self.stage_id = self.env['project.project.stage'].search(
+                [('company_id', 'in', [self.company_id.id, False])],
+                order=f"sequence asc, {self.env['project.project.stage']._order}",
+                limit=1,
+            ).id
+
     def _compute_alias_enabled(self):
         for project in self:
             project.alias_enabled = bool(project.alias_email)
@@ -463,15 +473,19 @@ class Project(models.Model):
     def write(self, vals):
         # Here we modify the project's stage according to the selected company (selecting the first
         # stage in sequence that is linked to the company).
-        if self.env.user.has_group('project.group_project_stages') and\
-            vals.get('company_id') not in (None, self.company_id.id) and\
-            self.stage_id.company_id:
-            ProjectStage = self.env['project.project.stage']
-            vals['stage_id'] = ProjectStage.search(
-                [('company_id', 'in', (vals['company_id'], False))],
-                order=f"company_id asc, {ProjectStage._order}",
-                limit=1,
-            ).id
+        company_id = vals.get('company_id')
+        if self.env.user.has_group('project.group_project_stages') and company_id:
+            projects_already_with_company = self.filtered(lambda p: p.company_id.id == company_id)
+            if projects_already_with_company:
+                projects_already_with_company.write({key: value for key, value in vals.items() if key != 'company_id'})
+                self -= projects_already_with_company
+            if company_id not in (None, *self.company_id.ids) and self.stage_id.company_id:
+                ProjectStage = self.env['project.project.stage']
+                vals["stage_id"] = ProjectStage.search(
+                    [('company_id', 'in', (company_id, False))],
+                    order=f"sequence asc, {ProjectStage._order}",
+                    limit=1,
+                ).id
 
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:

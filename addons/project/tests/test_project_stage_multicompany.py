@@ -76,12 +76,4 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
         project.company_id = self.company_b.id
 
         # Check that project was moved to stage_company_b
-        self.assertEqual(self.project_company_a.stage_id, self.stage_company_b, "Project Company A should now be in Stage Company B")
-
-        # Here we remove the company from the stage; then changing the project's company to company A should
-        # move it to the first stage in sequence that is linked to no company, and not in stage company A
-        self.stage_company_a.company_id = False
-
-        project.company_id = self.company_a.id
-
-        self.assertNotEqual(self.project_company_a.stage_id, self.stage_company_a, "Project Company A should not be in Stage Company A")
+        self.assertFalse(self.project_company_a.stage_id.company_id, "Project Company A should now be in a stage without company")
