@@ -22,6 +22,18 @@
                            password="True"/>
                 </group>
             </group>
+            <field name="allow_tokenization" position="after">
+                <div invisible="code != 'razorpay' or not allow_tokenization" colspan="2">
+                    <a href="https://www.odoo.com/documentation/17.0/applications/finance/payment_providers/razorpay.html#payment-providers-razorpay-recurring-payments"
+                       class="btn btn-link"
+                       role="button"
+                       target="new"
+                    >
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Enable recurring payments on Razorpay
+                    </a>
+                </div>
+            </field>
         </field>
     </record>
 

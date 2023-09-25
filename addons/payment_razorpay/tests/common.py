@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.fields import Command
 
 
 class RazorpayCommon(PaymentCommon):
@@ -13,7 +14,11 @@ class RazorpayCommon(PaymentCommon):
             'razorpay_key_id': 'rzp_123',
             'razorpay_key_secret': 'Y63AyP9eL91',
             'razorpay_webhook_secret': 'coincoin_motherducker',
+            'payment_method_ids': [Command.set([cls.env.ref('payment.payment_method_card').id])],
         })
+
+        cls.razorpay_customer_id = 'cust_123'
+        cls.razorpay_token_id = 'token_404'
 
         cls.payment_id = 'pay_123'
         cls.refund_id = 'rfd_456'
@@ -23,10 +28,16 @@ class RazorpayCommon(PaymentCommon):
             'razorpay_order_id': cls.order_id,
             'razorpay_signature': 'dummy',
         }
+        cls.payment_method_id = cls.provider.payment_method_ids[:1].id
         cls.payment_data = {
             'id': cls.payment_id,
             'description': cls.reference,
             'status': 'captured',
+        }
+        cls.tokenize_payment_data = {
+            **cls.payment_data,
+            'customer_id': cls.razorpay_customer_id,
+            'token_id': cls.razorpay_token_id,
         }
         cls.refund_data = {
             'id': cls.refund_id,
