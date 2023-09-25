@@ -136,7 +136,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             return NaN;
         }
         const expectedAmount =
-            paymentId === this.props.default_cash_details.id
+            paymentId === this.props.default_cash_details?.id
                 ? this.props.default_cash_details.amount
                 : this.props.other_payment_methods.find((pm) => pm.id === paymentId).amount;
 
