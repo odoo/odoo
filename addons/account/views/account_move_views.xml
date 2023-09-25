@@ -305,6 +305,7 @@
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">account.move.line.search</field>
             <field name="model">account.move.line</field>
+            <field eval="16" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
                     <field name="name" string="Journal Item" filter_domain="[
@@ -314,6 +315,8 @@
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="invoice_date"/>
+                    <field name="date_maturity" string="Due Date"/>
+                    <field name="discount_date" string="Discount Date"/>
                     <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', self), ('debit', '=', self)]"/>
                     <field name="account_id"/>
                     <field name="account_type"/>
@@ -365,6 +368,86 @@
                     <searchpanel class="account_root">
                         <field name="account_root_id" icon="fa-filter" groupby="account_id" limit="0"/>
                     </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <!-- account.move.line (Payment Items) -->
+
+        <record id="view_move_line_payment_tree" model="ir.ui.view">
+            <field name="name">account.move.line.payment.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="200" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Payment Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="account_search_bar">
+                    <header>
+                        <button name="action_register_payment" type="object" string="Register Payment"/>
+                    </header>
+                    <field name="move_id" column_invisible="True"/>
+                    <field name="invoice_date" string="Invoice Date"/>
+                    <field name="date" readonly="1" optional="hide"/>
+                    <field name="date_maturity" string="Invoice Due Date" readonly="1" optional="hide"/>
+                    <field name="discount_date" string="Discount Date" optional="hide"/>
+                    <field name="payment_date" string="Due Date" readonly="1"/>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                    <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
+                    <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
+                    <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
+                    <field name="ref" readonly="False"/>
+                    <field name="display_name" optional="show"/>
+                    <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
+                    <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
+                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
+                    <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
+                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="move_type" column_invisible="True"/>
+                    <field name="is_same_currency" column_invisible="True"/>
+                    <field name="is_account_reconcile" column_invisible="True"/>
+                    <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
+                    <groupby name="partner_id">
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    </groupby>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_move_line_payment_filter" model="ir.ui.view">
+            <field name="name">account.move.line.payment.search</field>
+            <field name="model">account.move.line</field>
+            <field eval="200" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Search Journal Items">
+                    <field name="name" string="Journal Item" filter_domain="[
+                        '|', '|', '|',
+                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="payment_date" string="Due Date"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <separator/>
+                    <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items" invisible="1"/>
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <separator/>
+                    <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
+                    <filter string="Due Date" name="date_maturity" date="date"/>
+                    <filter string="Overdue" name="late" domain="[('date_maturity', '&lt;', time.strftime('%Y-%m-%d'))]" help="Overdue payments, due date passed"/>
+                    <separator/>
+                    <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Currency" name="group_by_currencies" domain="[]" context="{'group_by': 'currency_id'}"/>
+                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
+                        <filter string="Due Date" name="groupby_payment_date" domain="[]" context="{'group_by': 'payment_date'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1603,6 +1686,23 @@
               </p><p>
                 Note that the easiest way to create a vendor credit note is to do it directly from the vendor bill.
               </p>
+            </field>
+        </record>
+
+        <record id="action_open_payment_items" model="ir.actions.act_window">
+            <field name="name">Amounts to Settle</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_move_line_payment_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
+            <field name="context">{'search_default_group_by_partner':1, 'expand':1}</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Amounts to settle
+                </p><p>
+                    Cool, it looks like you don't have anything to pay either for vendor bills or for customer credit notes.
+                </p>
             </field>
         </record>
 

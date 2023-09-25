@@ -1,7 +1,7 @@
 import ast
 from collections import defaultdict
 from contextlib import contextmanager
-from datetime import date, timedelta
+from datetime import date
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
@@ -230,6 +230,7 @@ class AccountMoveLine(models.Model):
     amount_residual_currency = fields.Monetary(
         string='Residual Amount in Currency',
         compute='_compute_amount_residual', store=True,
+        group_operator=None,
         help="The residual amount on a journal item expressed in its currency (possibly not the "
              "company currency).",
     )
@@ -384,12 +385,21 @@ class AccountMoveLine(models.Model):
         string='Discount amount in Currency',
         store=True,
         currency_field='currency_id',
+        group_operator=None,
     )
     # Discounted balance when the early payment discount is applied
     discount_balance = fields.Monetary(
         string='Discount Balance',
         store=True,
         currency_field='company_currency_id',
+    )
+
+    # === Payment Fields === #
+    # payment_date is the closest date to the date the aml was created between discount_date and date_maturity.
+    payment_date = fields.Date(
+        string='Payment Date',
+        compute='_compute_payment_date',
+        search='_search_payment_date',
     )
 
     # === Misc Information === #
@@ -432,6 +442,14 @@ class AccountMoveLine(models.Model):
             "Forbidden balance or account on non-accountable line"
         ),
     ]
+
+    @api.model
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        if res['views'].get('list') and self.env['ir.ui.view'].browse(res['views']['list']['id']).name == "account.move.line.payment.tree":
+            # We dont want any additionnal action in the "account.move.line.payment.tree" view toolbar
+            res['views']['list']['toolbar']['action'] = []
+        return res
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -1101,6 +1119,38 @@ class AccountMoveLine(models.Model):
                     "company_id": line.company_id.id,
                 })
                 line.analytic_distribution = distribution or line.analytic_distribution
+
+    @api.depends('discount_date', 'date_maturity')
+    def _compute_payment_date(self):
+        for line in self:
+            line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
+
+    def _search_payment_date(self, operator, value):
+        assert operator == '='
+        return [
+                '|',
+                '|',
+                '&', ('discount_date', '>=', str(date.today())), ('discount_date', '<=', value),
+                '&', ('discount_date', '<', str(date.today())), ('date_maturity', '<=', value),
+                '&', ('discount_date', '=', False), ('date_maturity', '<=', value),
+            ]
+
+    def action_register_payment(self):
+        ''' Open the account.payment.register wizard to pay the selected journal items.
+        :return: An action opening the account.payment.register wizard.
+        '''
+        return {
+            'name': _('Register Payment'),
+            'res_model': 'account.payment.register',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'context': {
+                'active_model': 'account.move.line',
+                'active_ids': self.ids,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS

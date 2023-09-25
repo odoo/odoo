@@ -126,14 +126,10 @@ export class SearchBar extends Component {
         const items = [];
 
         const isFieldProperty = searchItem.type === "field_property";
-
-        const { type } = isFieldProperty
-            ? searchItem.propertyFieldDefinition
-            : this.fields[searchItem.fieldName];
-        const fieldType = type === "reference" ? "char" : type;
+        const fieldType = this.getFieldType(searchItem);
 
         /** @todo do something with respect to localization (rtl) */
-        let preposition = _t(["date", "datetime"].includes(fieldType) ? "at" : "for");
+        let preposition = this.getPreposition(searchItem);
 
         if ((isFieldProperty && FOLDABLE_TYPES.includes(fieldType)) || fieldType === "properties") {
             // Do not chose preposition for foldable properties
@@ -234,6 +230,20 @@ export class SearchBar extends Component {
         }
 
         return items;
+    }
+
+    getPreposition(searchItem) {
+        const fieldType = this.getFieldType(searchItem);
+        return ["date", "datetime"].includes(fieldType) ? _t("at") : _t("for");
+    }
+
+    getFieldType(searchItem) {
+        const { type } = searchItem.type === "field_property"
+            ? searchItem.propertyFieldDefinition
+            : this.fields[searchItem.fieldName];
+        const fieldType = type === "reference" ? "char" : type;
+
+        return fieldType
     }
 
     /**
