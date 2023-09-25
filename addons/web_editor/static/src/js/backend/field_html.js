@@ -470,6 +470,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     _onChange: function (ev) {
         this._doDebouncedAction.apply(this, arguments);
 
+        if (!this.$content) {
+            return;
+        }
         var $lis = this.$content.find('.note-editable ul.o_checklist > li:not(:has(> ul.o_checklist))');
         if (!$lis.length) {
             return;
