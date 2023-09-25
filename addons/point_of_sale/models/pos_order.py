@@ -113,6 +113,10 @@ class PosOrder(models.Model):
 
         return new_session
 
+    def _get_tracking_ref(self):
+        self.ensure_one()
+        return str(self.session_id.id)[-1] + str(self.sequence_number)[-2:]
+
     @api.model
     def _process_order(self, order, draft, existing_order):
         """Create or update an pos.order from a given dictionary.
