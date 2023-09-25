@@ -8,7 +8,7 @@ from datetime import timedelta, datetime, time
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.addons.rating.models import rating_data
-from odoo.addons.web_editor.controllers.main import handle_history_divergence
+from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
