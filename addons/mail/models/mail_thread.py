@@ -92,7 +92,8 @@ class MailThread(models.AbstractModel):
         compute='_compute_message_partner_ids',
         inverse='_inverse_message_partner_ids',
         search='_search_message_partner_ids',
-        groups='base.group_user')
+        groups='base.group_user',
+    )
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
@@ -388,6 +389,28 @@ class MailThread(models.AbstractModel):
             return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
 
         return super().get_empty_list_help(help_message)
+
+    def _flush_search(self, domain, fields=None, order=None, seen=None):
+        """ Override _flush_search in order to relax field groups security
+        check on `message_partner_ids`. Accept portal user to filter
+        threads by themselves as followers.
+        """
+        if self.env.su or self.user_has_groups('base.group_user'):
+            return super()._flush_search(domain, fields, order, seen)
+
+        domain = list(domain)
+        for i, leaf in enumerate(domain):
+            if len(leaf) != 3 or leaf[0] != 'message_partner_ids':
+                continue
+            user_partner = self.env.user.partner_id
+            allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
+            operand = leaf[2] if isinstance(leaf[2], (list, tuple)) else [leaf[2]]
+            if not allow_partner_ids.issuperset(operand):
+                raise AccessError("Portal users can only filter threads by themselves as followers.")
+            # Replace the leaf with dummy leaf
+            domain[i] = expression.TRUE_LEAF
+
+        return super()._flush_search(domain, fields, order, seen)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
