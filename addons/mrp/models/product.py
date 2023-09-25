@@ -73,10 +73,9 @@ class ProductTemplate(models.Model):
             template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
 
     def action_view_mos(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_report")
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_action")
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
-            'graph_measure': 'product_uom_qty',
             'search_default_filter_plan_date': 1,
         }
         return action
