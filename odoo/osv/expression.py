@@ -868,11 +868,11 @@ class expression(object):
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
                 return [FALSE_LEAF]
-            left_model = left_model.with_context(active_test=False)
+            left_model_sudo = left_model.sudo().with_context(active_test=False)
             if left_model._parent_store:
                 domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
-                    for rec in left_model.sudo().browse(ids)
+                    for rec in left_model_sudo.browse(ids)
                 ])
             else:
                 # recursively retrieve all children nodes with sudo(); the
@@ -882,13 +882,13 @@ class expression(object):
                 if (left_model._name != left_model._fields[parent_name].comodel_name):
                     raise ValueError(f"Invalid parent field: {left_model._fields[parent_name]}")
                 child_ids = set()
-                records = left_model.sudo().browse(ids)
+                records = left_model_sudo.browse(ids)
                 while records:
                     child_ids.update(records._ids)
                     records = records.search([(parent_name, 'in', records.ids)], order='id') - records.browse(child_ids)
                 domain = [('id', 'in', list(child_ids))]
             if prefix:
-                return [(left, 'in', left_model._search(domain))]
+                return [(left, 'in', left_model_sudo._search(domain))]
             return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
@@ -898,11 +898,11 @@ class expression(object):
             ids = [id for id in ids if id]  # ignore (left, 'parent_of', [False])
             if not ids:
                 return [FALSE_LEAF]
-            left_model = left_model.with_context(active_test=False)
+            left_model_sudo = left_model.sudo().with_context(active_test=False)
             if left_model._parent_store:
                 parent_ids = [
                     int(label)
-                    for rec in left_model.sudo().browse(ids)
+                    for rec in left_model_sudo.browse(ids)
                     for label in rec.parent_path.split('/')[:-1]
                 ]
                 domain = [('id', 'in', parent_ids)]
@@ -912,13 +912,13 @@ class expression(object):
                 # done by the rest of the domain
                 parent_name = parent or left_model._parent_name
                 parent_ids = set()
-                records = left_model.sudo().browse(ids)
+                records = left_model_sudo.browse(ids)
                 while records:
                     parent_ids.update(records._ids)
                     records = records[parent_name] - records.browse(parent_ids)
                 domain = [('id', 'in', list(parent_ids))]
             if prefix:
-                return [(left, 'in', left_model._search(domain))]
+                return [(left, 'in', left_model_sudo._search(domain))]
             return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,
