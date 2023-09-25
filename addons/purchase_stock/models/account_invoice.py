@@ -150,11 +150,12 @@ class AccountMove(models.Model):
         stock_valuation_layers = self.env['stock.valuation.layer'].sudo()
         valued_lines = self.env['account.move.line'].sudo()
         for invoice in self:
+            invoice = invoice.with_company(invoice.company_id)
             if invoice.sudo().stock_valuation_layer_ids:
                 continue
             if invoice.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
                 valued_lines |= invoice.invoice_line_ids.filtered(
-                    lambda l: l.product_id and l.product_id.cost_method != 'standard')
+                    lambda l: l.product_id and l.product_id.type == 'product' and l.product_id.cost_method != 'standard')
         if valued_lines:
             svls, _amls = valued_lines._apply_price_difference()
             stock_valuation_layers |= svls
