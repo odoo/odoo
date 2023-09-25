@@ -148,11 +148,11 @@ export class Dropdown extends Component {
             );
 
             // Position menu relatively to parent element
-            usePosition(() => this.rootRef.el.parentElement, positioningOptions);
+            this.position = usePosition(() => this.rootRef.el.parentElement, positioningOptions);
         } else {
             // Position menu relatively to inner toggler
             const togglerRef = useRef("togglerRef");
-            usePosition(() => togglerRef.el, positioningOptions);
+            this.position = usePosition(() => togglerRef.el, positioningOptions);
         }
 
         useEffect(
@@ -321,6 +321,7 @@ Dropdown.bus = new EventBus();
 Dropdown.defaultProps = {
     menuDisplay: "d-block",
     autoOpen: true,
+    holdOnHover: false,
     onOpened: () => {},
     onStateChanged: () => {},
     onScroll: () => {},
@@ -400,6 +401,10 @@ Dropdown.props = {
         optional: true,
     },
     showCaret: {
+        type: Boolean,
+        optional: true,
+    },
+    holdOnHover: {
         type: Boolean,
         optional: true,
     },
