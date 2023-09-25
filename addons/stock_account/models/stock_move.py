@@ -19,7 +19,13 @@ class StockMove(models.Model):
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
     analytic_account_line_id = fields.Many2one(
+<<<<<<< HEAD
         'account.analytic.line', copy=False, index='btree_not_null')
+||||||| parent of 085012cf2adc (temp)
+        'account.analytic.line', copy=False)
+=======
+        'account.analytic.line', copy=False, index=True)
+>>>>>>> 085012cf2adc (temp)
 
     def _filter_anglo_saxon_moves(self, product):
         return self.filtered(lambda m: m.product_id.id == product.id)
