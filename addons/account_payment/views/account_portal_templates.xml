@@ -79,7 +79,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
-            <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
+            <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.transaction_status">
                     <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
                 </t>

@@ -71,7 +71,7 @@
                         class="d-flex gap-3 align-items-center mt-4 mb-3 fs-6 small text-uppercase
                                fw-bolder"
                     >
-                        <span>Saved payment methods</span>
+                        <span>Your payment methods</span>
                         <hr class="flex-grow-1 m-0"/>
                     </h4>
                     <!-- === Body === -->
@@ -213,7 +213,7 @@
                 </div>
                 <!-- === Provider name (only for desktop and tablet) === -->
                 <div class="col d-none d-md-block">
-                    <p t-att-class="'mb-0 small text-600'
+                    <p name="o_payment_secured_by_desktop" t-att-class="'mb-0 small text-600'
                                     + (' ms-4 ms-md-0' if allow_token_selection else '')"
                     >
                         <span><i class="fa fa-lock"/> Secured by</span>
@@ -239,7 +239,9 @@
             <t t-call="{{inline_form_xml_id}}"/>
         </div>
         <!-- === Provider name (only for mobile) === -->
-        <p class="align-self-end d-block d-md-none mb-0 small text-600">
+        <p name="o_payment_secured_by_mobile"
+           class="align-self-end d-block d-md-none mb-0 small text-600"
+        >
             <span><i class="fa fa-lock"/> Secured by</span>
             <span t-out="dict(provider_sudo._fields['code']._description_selection(
                              provider_sudo.env
@@ -348,7 +350,7 @@
                     </label>
                 </div>
                 <!-- === Provider name === -->
-                <p class="align-self-end mb-0 ms-auto small text-600">
+                <p name="o_payment_secured_by" class="align-self-end mb-0 ms-auto small text-600">
                     <span><i class="fa fa-lock"/> Secured by</span>
                     <span t-out="dict(provider_sudo._fields['code']._description_selection(
                                      provider_sudo.env

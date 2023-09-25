@@ -53,17 +53,34 @@ class PaymentMethod(models.Model):
     )
 
     # Feature support fields.
-    support_tokenization = fields.Boolean(string="Tokenization Supported")
-    support_express_checkout = fields.Boolean(string="Express Checkout Supported")
+    support_tokenization = fields.Boolean(
+        string="Tokenization Supported",
+        help="Tokenization is the process of saving the payment details as a token that can later"
+             " be reused without having to enter the payment details again.",
+    )
+    support_express_checkout = fields.Boolean(
+        string="Express Checkout Supported",
+        help="Express checkout allows customers to pay faster by using a payment method that"
+             " provides all required billing and shipping information, thus allowing to skip the"
+             " checkout process.",
+    )
     support_refund = fields.Selection(
         string="Type of Refund Supported",
         selection=[('full_only', "Full Only"), ('partial', "Partial")],
+        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
     )
     supported_country_ids = fields.Many2many(
-        string="Supported Countries", comodel_name='res.country'
+        string="Supported Countries",
+        comodel_name='res.country',
+        help="The list of countries in which this payment method can be used (if the provider"
+             " allows it). In other countries, this payment method is not available to customers."
     )
     supported_currency_ids = fields.Many2many(
-        string="Supported Currencies", comodel_name='res.currency'
+        string="Supported Currencies",
+        comodel_name='res.currency',
+        help="The list of currencies for that are supported by this payment method (if the provider"
+             " allows it). When paying with another currency, this payment method is not available "
+             "to customers.",
     )
 
     #=== COMPUTE METHODS ===#

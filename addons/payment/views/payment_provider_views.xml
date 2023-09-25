@@ -78,6 +78,7 @@
                             <group name="provider_config">
                                 <group string="Payment Form" name="payment_form">
                                     <field name="payment_method_ids"
+                                           string="Payment Methods"
                                            domain="[('is_primary', '=', True)]"
                                            readonly="True"
                                            widget="many2many_tags"
@@ -215,7 +216,15 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name" string="provider" filter_domain="[('name', 'ilike', self)]"/>
-                <field name="code"/>
+                <field name="payment_method_ids"
+                       string="payment method"
+                       context="{'active_test': False}"
+                       filter_domain="[
+                            '|',
+                            ('payment_method_ids.name', 'ilike', self),
+                            ('payment_method_ids.code', 'ilike', self),
+                       ]"
+                />
                 <filter name="provider_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Provider" name="code" context="{'group_by': 'code'}"/>
