@@ -1044,7 +1044,7 @@ export class Record extends DataPoint {
             }
         }
         if (Object.keys(changes).length > 0) {
-            const initialChanges = pick(this._changes, ...Object.keys(changes));
+            const initialChanges = pick(this.data, ...Object.keys(changes));
             this._applyChanges(changes);
             try {
                 await this._onUpdate({ withoutParentUpdate });
