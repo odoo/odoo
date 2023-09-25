@@ -576,13 +576,14 @@ class Web_Editor(http.Controller):
             'type': 'binary',
             'res_model': res_model or 'ir.ui.view',
             'mimetype': mimetype or attachment.mimetype,
+            'name': name or attachment.name,
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
         elif res_id:
             fields['res_id'] = res_id
-        if name:
-            fields['name'] = name
+        if fields['mimetype'] == 'image/webp':
+            fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
         attachment = attachment.copy(fields)
         if alt_data:
             for size, per_type in alt_data.items():
@@ -599,7 +600,7 @@ class Web_Editor(http.Controller):
                     reference_id = resized[0]
                 if 'image/jpeg' in per_type:
                     attachment.create_unique([{
-                        'name': re.sub(r'\.webp$', '.jpg', attachment.name),
+                        'name': re.sub(r'\.webp$', '.jpg', attachment.name, flags=re.I),
                         'description': 'format: jpeg',
                         'datas': per_type['image/jpeg'],
                         'res_id': reference_id,
