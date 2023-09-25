@@ -93,7 +93,10 @@ export class MoveNodePlugin {
                 this._resetHooksNextMousemove = true;
             } else {
                 this._visibleMovableElements.delete(element);
-                this._elementHookMap.get(element).style.display = `none`;
+                const hookElement = this._elementHookMap.get(element);
+                if (hookElement) {
+                    hookElement.style.display = `none`;
+                }
             }
         }
     }
