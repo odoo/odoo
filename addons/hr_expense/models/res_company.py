@@ -10,7 +10,7 @@ class ResCompany(models.Model):
         "product.product",
         string="Default Expense Category",
         check_company=True,
-        domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('can_be_expensed', '=', True)]",
     )
     expense_journal_id = fields.Many2one(
         "account.journal",

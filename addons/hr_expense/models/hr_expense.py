@@ -1375,6 +1375,13 @@ class HrExpenseSheet(models.Model):
 
     def action_open_expense_view(self):
         self.ensure_one()
+        if self.expense_number == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'hr.expense',
+                'res_id': self.expense_line_ids.id,
+            }
         return {
             'name': _('Expenses'),
             'type': 'ir.actions.act_window',
