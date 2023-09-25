@@ -5,7 +5,8 @@ from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import single_email_re
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -155,6 +156,12 @@ class Applicant(models.Model):
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
     meeting_count = fields.Integer(compute='_compute_meeting_count', help='Meeting Count')
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
+
+    @api.constrains('email_from')
+    def _check_valid_email(self):
+        for record in self:
+            if record.email_from and not single_email_re.match(record.email_from):
+                raise ValidationError(_('Invalid email address'))
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -423,11 +430,11 @@ class Applicant(models.Model):
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
-        val = msg.get('from').split('<')[0]
+        partner_name, email_from_normalized = self.env['res.partner']._parse_partner_name(msg.get('from'))
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
+            'partner_name': partner_name or email_from_normalized,
+            'email_from': email_from_normalized,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
