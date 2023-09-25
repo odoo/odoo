@@ -252,6 +252,13 @@ export class RecordList extends Array {
             .concat(...collections.map((c) => [...c]));
     }
     /** @param {R}  */
+    add(r) {
+        if (this.indexOf(r) !== -1) {
+            return;
+        }
+        this.push(r);
+    }
+    /** @param {R}  */
     delete(r) {
         const index = this.indexOf(r);
         if (index === -1) {

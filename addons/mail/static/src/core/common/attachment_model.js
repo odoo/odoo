@@ -60,10 +60,8 @@ export class Attachment extends Record {
                 id: threadData.id,
             });
             const thread = this.originThread;
-            if (this.notIn(thread.attachments)) {
-                thread.attachments.push(this);
-                thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
-            }
+            thread.attachments.add(this);
+            thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
         }
     }
 

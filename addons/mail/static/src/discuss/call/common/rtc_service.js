@@ -831,9 +831,7 @@ export class Rtc {
             const activeSessionsData = rtcSessions[0][1];
             for (const sessionData of activeSessionsData) {
                 const session = this.store.RtcSession.insert(sessionData);
-                if (session.notIn(this.state.channel.rtcSessions)) {
-                    this.state.channel.rtcSessions.push(session);
-                }
+                this.state.channel.rtcSessions.add(session);
             }
             const outdatedSessionsData = rtcSessions[1][1];
             for (const sessionData of outdatedSessionsData) {
@@ -1540,9 +1538,7 @@ export class Rtc {
             case "ADD":
                 for (const sessionData of sessionsData) {
                     const session = this.store.RtcSession.insert(sessionData);
-                    if (session.notIn(channel.rtcSessions)) {
-                        channel.rtcSessions.push(session);
-                    }
+                    channel.rtcSessions.add(session);
                 }
                 break;
         }

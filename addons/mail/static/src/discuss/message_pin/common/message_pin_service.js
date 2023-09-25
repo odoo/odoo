@@ -37,9 +37,7 @@ patch(MessageModel.prototype, {
             (pinnedAt !== undefined || this.isEmpty)
         ) {
             if (pinnedAt && !this.isEmpty) {
-                if (this.notIn(this.originThread.pinnedMessages)) {
-                    this.originThread.pinnedMessages.push(this);
-                }
+                this.originThread.pinnedMessages.add(this);
                 this.pinnedAt = pinnedAt;
             } else {
                 delete this.pinnedAt;

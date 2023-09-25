@@ -346,8 +346,8 @@ export class ThreadService {
                 });
                 if (!thread.isLoaded) {
                     thread.messages.push(message);
-                    if (message.isNeedaction && message.notIn(thread.needactionMessages)) {
-                        thread.needactionMessages.push(message);
+                    if (message.isNeedaction) {
+                        thread.needactionMessages.add(message);
                     }
                 }
                 thread.isLoaded = true;
@@ -731,9 +731,7 @@ export class ThreadService {
             data.temporary_id = null;
         }
         const message = this.store.Message.insert(Object.assign(data, { body: markup(data.body) }));
-        if (message.notIn(thread.messages)) {
-            thread.messages.push(message);
-        }
+        thread.messages.add(message);
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }

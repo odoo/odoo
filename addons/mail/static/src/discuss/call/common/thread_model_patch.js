@@ -9,12 +9,8 @@ patch(Thread.prototype, {
         super.update(data);
         if ("rtc_inviting_session" in data) {
             const session = this._store.RtcSession.insert(data.rtc_inviting_session);
-            if (session.notIn(this.rtcSessions)) {
-                this.rtcSessions.push(session);
-            }
-            if (this.notIn(this._store.discuss.ringingThreads)) {
-                this._store.discuss.ringingThreads.push(this);
-            }
+            this.rtcSessions.add(session);
+            this._store.discuss.ringingThreads.add(this);
         }
         let rtcContinue = true;
         if ("rtcInvitingSession" in data) {
@@ -26,10 +22,8 @@ patch(Thread.prototype, {
                 rtcContinue = false;
             } else {
                 const session = this._store.RtcSession.insert(data.rtcInvitingSession);
-                if (session.notIn(this.rtcSessions)) {
-                    this.rtcSessions.push(session);
-                }
-                this._store.discuss.ringingThreads.push(this);
+                this.rtcSessions.add(session);
+                this._store.discuss.ringingThreads.add(this);
             }
         }
         if (rtcContinue && "rtcSessions" in data) {
@@ -44,9 +38,7 @@ patch(Thread.prototype, {
                     case "ADD":
                         for (const rtcSessionData of sessionsData) {
                             const session = this._store.RtcSession.insert(rtcSessionData);
-                            if (session.notIn(this.rtcSessions)) {
-                                this.rtcSessions.push(session);
-                            }
+                            this.rtcSessions.add(session);
                         }
                         break;
                 }
