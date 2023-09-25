@@ -71,9 +71,7 @@
             <we-colorpicker string="Line Color" data-select-style="true" data-css-property="border-color" data-color-prefix="border-" data-apply-to=".s_timeline_line"/>
         </div>
     </xpath>
-    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
-        <attribute name="data-selector" add=".s_timeline_row" separator=","/>
-    </xpath>
+    <xpath expr="//*[@t-set='prev_and_next_arrow_selector']" position="inside">, .s_timeline_row</xpath>
 </template>
 
 <record id="website.s_timeline_000_scss" model="ir.asset">

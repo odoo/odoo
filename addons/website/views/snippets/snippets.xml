@@ -592,13 +592,14 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div" data-no-scroll=".accordion > .card">
+    <t t-set="prev_and_next_arrow_selector" t-translation="off">section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div</t>
+    <div data-js="SnippetMove" t-att-data-selector="prev_and_next_arrow_selector" data-no-scroll=".accordion > .card">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
     <div data-js="SnippetMove"
-         data-selector=".row:not(.s_col_no_resize) > div, .nav-item"
-         data-exclude=".s_showcase .row > div"
+         data-selector=".row:not(.s_col_no_resize) > div, .nav-item, .o_grid_item"
+         t-attf-data-exclude=".s_showcase .row > div, #{prev_and_next_arrow_selector}"
          data-name="move_horizontally_opt">
         <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true" data-name="move_left_opt"/>
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
