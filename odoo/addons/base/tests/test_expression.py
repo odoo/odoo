@@ -226,15 +226,15 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # same kind of search from another model
         Bank = self.env['res.partner.bank'].with_user(self.user_demo)
-        bank_top, _bank_med, bank_bot = Bank.create([
+        bank_top, bank_med, bank_bot = Bank.create([
             {'acc_number': '1', 'partner_id': top.id},
             {'acc_number': '2', 'partner_id': med.id},
             {'acc_number': '3', 'partner_id': bot.id},
         ])
 
         self.assertEqual(Bank.search([('partner_id', 'in', accessible.ids)]), bank_top + bank_bot)
-        self.assertEqual(Bank.search([('partner_id', 'child_of', top.ids)]), bank_top + bank_bot)
-        self.assertEqual(Bank.search([('partner_id', 'parent_of', bot.ids)]), bank_top + bank_bot)
+        self.assertEqual(Bank.search([('partner_id', 'child_of', top.ids)]), bank_top + bank_med + bank_bot)
+        self.assertEqual(Bank.search([('partner_id', 'parent_of', bot.ids)]), bank_top + bank_med + bank_bot)
 
     def test_10_eq_lt_gt_lte_gte(self):
         # test if less/greater than or equal operators work
@@ -1251,7 +1251,7 @@ class TestQueries(TransactionCase):
             SELECT "res_partner_title"."id"
             FROM "res_partner_title"
             WHERE (COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US') like %s)
-            ORDER BY COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US')   
+            ORDER BY COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US')
         ''']):
             Model.search([('name', 'like', 'foo')])
 
