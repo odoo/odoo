@@ -1712,6 +1712,7 @@ export class Order extends PosModel {
                     this.lastOrderPrepaChange[lineKey]["quantity"] = line.get_quantity();
                 } else {
                     this.lastOrderPrepaChange[lineKey] = {
+                        attribute_value_ids: line.attribute_value_ids,
                         line_uuid: line.uuid,
                         product_id: line.get_product().id,
                         name: line.get_full_product_name(),
@@ -1765,6 +1766,7 @@ export class Order extends PosModel {
                     changes[productKey] = {
                         name: orderline.get_full_product_name(),
                         product_id: product.id,
+                        attribute_value_ids: orderline.attribute_value_ids,
                         quantity: quantityDiff,
                         note: note,
                     };
@@ -1790,6 +1792,7 @@ export class Order extends PosModel {
                         product_id: lineResume["product_id"],
                         name: lineResume["name"],
                         note: lineResume["note"],
+                        attribute_value_ids: lineResume["attribute_value_ids"],
                         quantity: -lineResume["quantity"],
                     };
                 } else {
