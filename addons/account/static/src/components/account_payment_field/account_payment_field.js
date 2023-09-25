@@ -53,10 +53,10 @@ export class AccountPaymentField extends Component {
         };
     }
 
-    onInfoClick(ev, idx) {
+    onInfoClick(ev, line) {
         this.popover.open(ev.currentTarget, {
             title: _t("Journal Entry Info"),
-            ...this.lines[idx],
+            ...line,
             _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
             _onOpenMove: this.openMove.bind(this),
         });
