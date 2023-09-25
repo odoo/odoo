@@ -192,9 +192,7 @@ export class MessageService {
         const starred = this.store.discuss.starred;
         if (isStarred) {
             starred.counter++;
-            if (message.notIn(starred.messages)) {
-                starred.messages.push(message);
-            }
+            starred.messages.add(message);
         } else {
             starred.counter--;
             removeFromArrayWithPredicate(starred.messages, (msg) => msg.eq(message));
