@@ -169,7 +169,7 @@ class TestAttendee(common.SlidesCase):
             'member_status': 'invited'
         })
 
-        self.assertTrue(user_portal_partner.id in self.channel.partner_all_ids.ids)
+        self.assertTrue(user_portal_partner in self.channel.channel_partner_all_ids.partner_id)
         self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
         # Invited partner can join the course and enroll itself. Sudo is used in controller if invited.
         self.assertTrue(self.channel.with_user(self.user_portal).is_member_invited)
@@ -192,7 +192,7 @@ class TestAttendee(common.SlidesCase):
 
     @users('user_officer')
     def test_partners_and_search_on_slide_channel(self):
-        ''' Check that partner_ids contains enrolled partners and partner_all_ids contains both invited and enrolled partners'''
+        ''' Check that partner_ids contains (only) active enrolled partners '''
         invited_cp, joined_cp = self.env['slide.channel.partner'].create([{
             'channel_id': self.channel.id,
             'partner_id': self.user_portal.partner_id.id,
@@ -209,21 +209,25 @@ class TestAttendee(common.SlidesCase):
         joined_cp_channel_ids = self.env['slide.channel'].search([('partner_ids', '=', joined_cp.partner_id.id)])
         self.assertTrue(self.channel in joined_cp_channel_ids)
 
-        # Search partner_all_ids on model
-        invited_cp_channel_ids = self.env['slide.channel'].search([('partner_all_ids', '=', invited_cp.partner_id.id)])
-        self.assertTrue(self.channel in invited_cp_channel_ids)
-        joined_cp_channel_ids = self.env['slide.channel'].search([('partner_all_ids', '=', joined_cp.partner_id.id)])
-        self.assertTrue(self.channel in joined_cp_channel_ids)
-
-        # partner_ids should only contain enrolled channel partners
         partner_ids = self.channel.partner_ids
         self.assertFalse(invited_cp.partner_id in partner_ids)
         self.assertTrue(joined_cp.partner_id in partner_ids)
 
-        # partner_all_ids also contains invited channel partners.
-        partner_all_ids = self.channel.partner_all_ids
-        self.assertTrue(joined_cp.partner_id in partner_all_ids)
-        self.assertTrue(invited_cp.partner_id in partner_all_ids)
+        partner_ids = self.channel.partner_ids
+        self.assertFalse(invited_cp.partner_id in partner_ids)
+        self.assertTrue(joined_cp.partner_id in partner_ids)
+
+        invited_cp.action_archive()
+        joined_cp.action_archive()
+
+        partner_ids = self.channel.partner_ids
+        self.assertFalse(invited_cp.partner_id in partner_ids)
+        self.assertFalse(joined_cp.partner_id in partner_ids)
+
+        invited_cp_channel_ids = self.env['slide.channel'].search([('partner_ids', '=', invited_cp.partner_id.id)])
+        self.assertFalse(self.channel in invited_cp_channel_ids)
+        joined_cp_channel_ids = self.env['slide.channel'].search([('partner_ids', '=', joined_cp.partner_id.id)])
+        self.assertFalse(self.channel in joined_cp_channel_ids)
 
     def test_copy_partner_not_course_member(self):
         """ To check members of the channel after duplication of contact """

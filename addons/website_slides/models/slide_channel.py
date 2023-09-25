@@ -412,14 +412,11 @@ class Channel(models.Model):
         compute='_compute_members_counts')
     members_completed_count = fields.Integer('# Completed Attendees', compute='_compute_members_counts')
     members_invited_count = fields.Integer('# Invited Attendees', compute='_compute_members_counts')
-    # partner_ids and partner_all_ids implemented as compute/search instead of specifying the relation table
-    # directly, this is done because we want to exclude active=False records on the joining table
+    # partner_ids is implemented as compute/search instead of specifying the relation table
+    # directly because we want to exclude active=False records on the joining table
     partner_ids = fields.Many2many(
         'res.partner', string='Attendees', help="Enrolled partners in the course",
         compute="_compute_partners", search="_search_partner_ids")
-    partner_all_ids = fields.Many2many(
-        'res.partner', string='All Attendees', help="Partners in the course (both enrolled and invited)",
-        compute="_compute_partners", search="_search_partner_all_ids")
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
@@ -468,18 +465,15 @@ class Channel(models.Model):
     @api.depends('channel_partner_all_ids', 'channel_partner_all_ids.member_status', 'channel_partner_all_ids.active')
     def _compute_partners(self):
         data = {
-            (slide_channel, member_status): partner_ids
-            for slide_channel, member_status, partner_ids in self.env['slide.channel.partner'].sudo()._read_group(
-                [('channel_id', 'in', self.ids)],
-                ['channel_id', 'member_status'],
+            slide_channel: partner_ids
+            for slide_channel, partner_ids in self.env['slide.channel.partner'].sudo()._read_group(
+                [('channel_id', 'in', self.ids), ('member_status', '!=', 'invited')],
+                ['channel_id'],
                 aggregates=['partner_id:array_agg']
             )
         }
-
         for slide_channel in self:
-            partner_ids = data.get((slide_channel, 'joined'), []) + data.get((slide_channel, 'ongoing'), []) + data.get((slide_channel, 'completed'), [])
-            slide_channel.partner_ids = partner_ids
-            slide_channel.partner_all_ids = partner_ids + data.get((slide_channel, 'invited'), [])
+            slide_channel.partner_ids = data.get(slide_channel, [])
 
     def _search_partner_ids(self, operator, value):
         if isinstance(value, int) and operator == 'in':
@@ -489,16 +483,6 @@ class Channel(models.Model):
                 [('partner_id', operator, value),
                  ('active', '=', True),
                  ('member_status', '!=', 'invited')],
-            )
-        )]
-
-    def _search_partner_all_ids(self, operator, value):
-        if isinstance(value, int) and operator == 'in':
-            value = [value]
-        return [(
-            'channel_partner_all_ids', '=', self.env['slide.channel.partner']._search(
-                [('partner_id', operator, value),
-                 ('active', '=', True)],
             )
         )]
 
@@ -1244,7 +1228,7 @@ class Channel(models.Model):
         slide_category = options.get('slide_category')
         domain = [website.website_domain()]
         if my:
-            domain.append([('partner_ids', '=', self.env.user.partner_id.id)])
+            domain.append([('is_member', '=', True)])
         if search_tags:
             ChannelTag = self.env['slide.channel.tag']
             try:
