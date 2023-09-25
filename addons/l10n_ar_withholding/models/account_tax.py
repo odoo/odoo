@@ -26,14 +26,11 @@ class AccountTax(models.Model):
         })
         return vals
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        for tax_id in self.filtered(lambda x: x.l10n_ar_withholding == 'supplier' and not x.l10n_ar_withholding_sequence_id):
-            res.l10n_ar_withholding_sequence_id = self.env['ir.sequence'].create({
+    def ensure_withholding_sequence(self):
+        for rec in self.filtered(lambda x: x.l10n_ar_withholding == 'supplier' and not x.l10n_ar_withholding_sequence_id):
+            rec.l10n_ar_withholding_sequence_id = self.env['ir.sequence'].create({
                 'implementation': 'standard',
-                'name': res.name,
+                'name': rec.name,
                 'padding': 8,
                 'number_increment' :1,
             })
-        return res
