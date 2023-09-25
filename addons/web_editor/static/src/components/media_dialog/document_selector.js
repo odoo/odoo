@@ -11,7 +11,7 @@ export class DocumentSelector extends FileSelector {
 
         this.uploadText = this.env._t("Upload a document");
         this.urlPlaceholder = "https://www.odoo.com/mydocument";
-        this.addText = this.env._t("Add document");
+        this.addText = this.env._t("Add URL");
         this.searchPlaceholder = this.env._t("Search a document");
         this.allLoadedText = this.env._t("All documents have been loaded");
     }
