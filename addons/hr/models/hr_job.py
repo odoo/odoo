@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.web_editor.controllers.main import handle_history_divergence
+from odoo.addons.web_editor.tools import handle_history_divergence
 
 
 class Job(models.Model):
