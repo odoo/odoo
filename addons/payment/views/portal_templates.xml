@@ -114,7 +114,7 @@
                     <!-- Portal breadcrumb -->
                     <t t-call="payment.portal_breadcrumb"/>
                     <!-- Payment methods page -->
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-lg-7">
                             <div t-if="not payment_methods_sudo and not tokens_sudo"
                                  class="alert alert-warning"
@@ -160,6 +160,7 @@
         <t t-call="portal.frontend_layout">
             <t t-set="page_title" t-value="'Payment Confirmation'"/>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <t t-set="show_pm" t-value="tx.payment_method_code != 'unknown'"/>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -172,7 +173,9 @@
                                 <t t-call="payment.transaction_status"/>
                             </div>
                         </div>
-                        <div class="o_cc o_cc2 row row-cols-1 row-cols-md-4 mx-0 mb-3 py-2 rounded">
+                        <div t-att-class="'o_cc o_cc2 row row-cols-1 mx-0 mb-3 py-2 rounded'
+                                          + (' row-cols-md-4' if show_pm else ' row-cols-md-3')"
+                        >
                             <t t-call="payment.summary_item">
                                 <t t-set="name" t-value="'amount'"/>
                                 <t t-set="label">Amount</t>
@@ -187,11 +190,13 @@
                                 <t t-set="value" t-value="tx.reference"/>
                                 <t t-set="include_separator" t-value="True"/>
                             </t>
-                            <t t-call="payment.summary_item">
-                                <t t-set="name" t-value="'method'"/>
-                                <t t-set="label">Payment Method</t>
-                                <t t-set="value" t-value="tx.payment_method_id.name"/>
-                                <t t-set="include_separator" t-value="True"/>
+                            <t t-if="tx.payment_method_code != 'unknown'">
+                               <t t-call="payment.summary_item">
+                                    <t t-set="name" t-value="'method'"/>
+                                    <t t-set="label">Payment Method</t>
+                                    <t t-set="value" t-value="tx.payment_method_id.name"/>
+                                    <t t-set="include_separator" t-value="True"/>
+                               </t>
                             </t>
                             <t t-call="payment.summary_item">
                                 <t t-set="name" t-value="'provider'"/>

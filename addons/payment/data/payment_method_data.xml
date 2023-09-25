@@ -26,7 +26,7 @@
     </record>
 
     <record id="payment_method_unknown" model="payment.method">
-        <field name="name">Unknown</field>
+        <field name="name">Payment method</field>
         <field name="code">unknown</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
@@ -3621,6 +3621,27 @@
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.HKD'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_method_boleto" model="payment.method">
+        <field name="name">Boleto</field>
+        <field name="code">boleto</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/cash_app_pay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund"></field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.br'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.BRL'),
                      ])]"
         />
     </record>

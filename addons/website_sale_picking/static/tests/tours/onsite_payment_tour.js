@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
         wsTourUtils.goToCart({quantity: 2}),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
-        wTourUtils.clickOnElement('"Pay in store when picking the product"', '.o_delivery_carrier_select:contains("Example shipping On Site")'),
+        wTourUtils.clickOnElement('"Pay in Store"', '.o_delivery_carrier_select:contains("Example shipping On Site")'),
         wTourUtils.clickOnElement('Pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
         {
             content: "Check if the payment is successful",

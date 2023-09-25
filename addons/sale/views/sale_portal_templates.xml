@@ -292,7 +292,7 @@
                                         If you believe that it is an error, please contact the website administrator.
                                     </div>
                                     <div t-else="" id="payment_method" class="text-start">
-                                        <h3 class="mb24">Pay with</h3>
+                                        <h3>Pay with</h3>
                                         <t t-call="payment.form">
                                             <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
                                             <t t-set="sale_order_id" t-value="sale_order.id"/>
@@ -348,7 +348,7 @@
                         Your order is not in a state to be rejected.
                     </div>
 
-                    <t t-if="sale_order.transaction_ids">
+                    <t t-if="sale_order.get_portal_last_transaction()">
                         <t t-call="payment.transaction_status">
                             <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
                         </t>
@@ -417,7 +417,7 @@
         <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
             <!-- Informations -->
             <div id="informations">
-                <div t-if="sale_order.transaction_ids and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="sale_order.id">
+                <div t-if="sale_order.get_portal_last_transaction() and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="sale_order.id">
                     <t t-if="sale_order.transaction_ids">
                         <t t-call="payment.transaction_status">
                             <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
