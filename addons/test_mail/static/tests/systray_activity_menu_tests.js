@@ -20,9 +20,9 @@ QUnit.test("menu with no records", async () => {
         },
     });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    await contains(
-        ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)"
-    );
+    await contains(".o-mail-ActivityMenu", {
+        text: "Congratulations, you're done with your activities.",
+    });
 });
 
 QUnit.test("do not show empty text when at least some future activities", async () => {
@@ -39,10 +39,10 @@ QUnit.test("do not show empty text when at least some future activities", async 
     ]);
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    await contains(
-        ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)",
-        { count: 0 }
-    );
+    await contains(".o-mail-ActivityMenu", {
+        count: 0,
+        text: "Congratulations, you're done with your activities.",
+    });
 });
 
 QUnit.test("activity menu widget: activity menu with 2 models", async (assert) => {
@@ -145,15 +145,15 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains("button[title='Summary']", { count: 2 });
-    const first = $(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
-    const second = $(
-        ".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']"
-    );
-    assert.ok(first);
-    assert.hasClass(first, "fa-clock-o");
-    assert.ok(second);
-    assert.hasClass(second, "fa-clock-o");
-    assert.strictEqual($(".dropdown-menu").parents(".show").length, 1);
+    await contains(".o-mail-ActivityGroup", {
+        text: "res.partner",
+        contains: ["button[title='Summary'].fa-clock-o"],
+    });
+    await contains(".o-mail-ActivityGroup", {
+        text: "mail.test.activity",
+        contains: ["button[title='Summary'].fa-clock-o"],
+    });
+    await contains(".show .dropdown-menu");
     patchWithCleanup(env.services.action, {
         doAction(action) {
             if (action.name) {
@@ -165,14 +165,18 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
             }
         },
     });
-    await click(".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
+    await click("button[title='Summary']", {
+        parent: [".o-mail-ActivityGroup", { text: "mail.test.activity" }],
+    });
     await contains(".dropdown-menu", { count: 0 });
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
+    await click("button[title='Summary']", {
+        parent: [".o-mail-ActivityGroup", { text: "res.partner" }],
+    });
     assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
 });
 
-QUnit.test("activity menu widget: close on messaging menu click", async (assert) => {
+QUnit.test("activity menu widget: close on messaging menu click", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");

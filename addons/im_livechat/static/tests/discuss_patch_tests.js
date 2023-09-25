@@ -40,11 +40,9 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
             message_content: "new message",
         })
     );
-    await contains(".o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
-    await contains(
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel:contains(Visitor (Belgium))"
-    );
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        text: "Visitor (Belgium)",
+    });
 });
 
 QUnit.test("invite button should be present on livechat", async () => {

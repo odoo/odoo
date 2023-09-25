@@ -48,7 +48,7 @@ QUnit.test("Known user with country", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel:contains(Jean (Belgium))");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
 });
 
 QUnit.test("Do not show channel when visitor is typing", async () => {
