@@ -55,11 +55,7 @@ export class ChannelMember extends Record {
         }
         switch (command) {
             case "ADD":
-                {
-                    if (this.thread && this.notIn(this.thread.channelMembers)) {
-                        this.thread.channelMembers.push(this);
-                    }
-                }
+                this.thread?.channelMembers.add(this);
                 break;
             case "DELETE":
                 this.delete();

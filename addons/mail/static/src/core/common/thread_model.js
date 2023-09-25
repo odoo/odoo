@@ -166,9 +166,7 @@ export class Thread extends Record {
                         if (members) {
                             for (const member of members) {
                                 const record = this._store.ChannelMember.insert(member);
-                                if (record.notIn(this.invitedMembers)) {
-                                    this.invitedMembers.push(record);
-                                }
+                                this.invitedMembers.add(record);
                             }
                         }
                         break;
@@ -199,13 +197,10 @@ export class Thread extends Record {
                 );
             }
         }
-        if (this.type === "channel" && !this._store.discuss.channels.threads.includes(this)) {
-            this._store.discuss.channels.threads.push(this);
-        } else if (
-            (this.type === "chat" || this.type === "group") &&
-            !this._store.discuss.chats.threads.includes(this)
-        ) {
-            this._store.discuss.chats.threads.push(this);
+        if (this.type === "channel") {
+            this._store.discuss.channels.threads.add(this);
+        } else if (this.type === "chat" || this.type === "group") {
+            this._store.discuss.chats.threads.add(this);
         }
         if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
             this.type = "chatter";
