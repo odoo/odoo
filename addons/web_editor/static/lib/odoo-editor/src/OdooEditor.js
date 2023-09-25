@@ -231,6 +231,7 @@ export class OdooEditor extends EventTarget {
 
         this.isMobile = matchMedia('(max-width: 767px)').matches;
         this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+        this.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && navigator.userAgent.toLowerCase().indexOf("chrome") < 0;
 
         // Keyboard type detection, happens only at the first keydown event.
         this.keyboardType = KEYBOARD_TYPES.UNKNOWN;
@@ -1440,7 +1441,9 @@ export class OdooEditor extends EventTarget {
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
         const contents = range.extractContents();
-        setSelection(start, nodeSize(start));
+        if (!this.isSafari) {
+            setSelection(start, nodeSize(start));
+        }
         range = getDeepRange(this.editable, { sel });
         // Restore unremovables removed by extractContents.
         [...contents.querySelectorAll('*')].filter(isUnremovable).forEach(n => {
