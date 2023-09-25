@@ -54,15 +54,15 @@ export class ReferenceField extends Component {
         this.state = useState({
             formattedCharValue: undefined, // Value extracted from reference char field
             modelName: undefined, // Name get of the value of the model field
+            currentRelation: undefined,
         });
-        this.currentValue = undefined;
-        this.currentRelation = this.getRelation();
         if (this._isCharField(this.props)) {
             /** Fetch the display name of the record referenced by the field */
+            let currentValue = undefined;
             useRecordObserver(async (record) => {
-                if (this.currentValue !== record.data[this.props.name]) {
+                if (currentValue !== record.data[this.props.name]) {
                     this.state.formattedCharValue = await this._fetchReferenceCharData(this.props);
-                    this.currentValue = record.data[this.props.name];
+                    currentValue = record.data[this.props.name];
                 }
             });
         } else if (this.props.modelField) {
@@ -76,8 +76,6 @@ export class ReferenceField extends Component {
                     this.currentModelId = record.data[this.props.modelField]?.[0];
                 }
             });
-        } else {
-            this.currentValue = this.props.record.data[this.props.name];
         }
     }
 
@@ -118,7 +116,7 @@ export class ReferenceField extends Component {
         if (value && value.resModel) {
             return value.resModel;
         } else {
-            return this.currentRelation;
+            return this.state.currentRelation;
         }
     }
 
@@ -141,18 +139,16 @@ export class ReferenceField extends Component {
     }
 
     updateModel(value) {
-        this.currentRelation = value;
+        this.state.currentRelation = value;
         this.props.record.update({ [this.props.name]: false });
     }
 
     updateM2O(data) {
         const value = data[this.props.name];
-        if (!this.currentRelation) {
-            this.currentRelation = this.getRelation();
-        }
+        const resModel = this.state.currentRelation || this.getRelation();
         this.props.record.update({
             [this.props.name]: value && {
-                resModel: this.currentRelation,
+                resModel,
                 resId: value[0],
                 displayName: value[1],
             },
