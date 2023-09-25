@@ -17,6 +17,8 @@
                     };
                 </script>
                 <t t-call-assets="pos_self_order.assets_kiosk" />
+                <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_self_order.assets_kiosk_tests" />
+
             </head>
             <body>
             </body>

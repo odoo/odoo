@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { PosSelf } from "@pos_self_order/../tests/tours/tour_utils";
+import { PosSelf } from "@pos_self_order/../tests/utils/tour_utils";
 
 registry.category("web_tour.tours").add("pos_online_payment_self_order_after_each_cart_tour", {
     test: true,

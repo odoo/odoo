@@ -72,10 +72,15 @@
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
+            "pos_self_order/static/tests/utils/**/*",
         ],
         "pos_self_order.assets_mobile_tests": [
             ('include', 'pos_self_order.assets_common_tests'),
-            "pos_self_order/static/tests/tours/**/*",
+            "pos_self_order/static/tests/tours/mobile/**/*",
+        ],
+        "pos_self_order.assets_kiosk_tests": [
+            ('include', 'pos_self_order.assets_common_tests'),
+            "pos_self_order/static/tests/tours/kiosk/**/*",
         ],
     },
     "license": "LGPL-3",

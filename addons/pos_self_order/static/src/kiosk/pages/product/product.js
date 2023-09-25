@@ -50,14 +50,17 @@ export class Product extends Component {
     }
 
     get fullProductName() {
-        const productAttributeString = Object.values(this.state.selectedVariants).join(", ");
-        let name = `${this.product.name}`;
-
-        if (productAttributeString) {
-            name += ` (${productAttributeString})`;
+        if (!this.product.attributes.length) {
+            return this.product.name;
         }
 
-        return name;
+        const findAttribute = (id) => this.product.attributes.find((attr) => attr.id == id);
+        const findValue = (attr, id) => attr.values.find((value) => value.id == id);
+        const productAttributeString = Object.entries(this.state.selectedVariants)
+            .map(([attrId, valueId]) => findValue(findAttribute(attrId), valueId).name)
+            .join(", ");
+
+        return `${this.product.name} (${productAttributeString})`;
     }
 
     async addToCart() {

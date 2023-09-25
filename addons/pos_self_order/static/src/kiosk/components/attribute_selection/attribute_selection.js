@@ -57,11 +57,17 @@ export class AttributeSelection extends Component {
     }
 
     get attributeSelected() {
-        return Object.entries(this.props.productState.selectedVariants).map(([key, value]) => {
-            return {
-                name: key,
-                value: value,
-            };
-        });
+        let result = [];
+        for (let [key, value] of Object.entries(this.props.productState.selectedVariants)){
+            const attribute = this.props.productState.product.attributes.find(attribute => attribute.id===parseInt(key));
+            const val = attribute.values.find(val => val.id === parseInt(value));
+            result.push(
+                {
+                    name: attribute.name,
+                    value: val.name,
+                }
+            )
+        }
+        return result;
     }
 }

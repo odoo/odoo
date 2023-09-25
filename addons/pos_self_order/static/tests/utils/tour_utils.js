@@ -71,6 +71,25 @@ export const PosSelf = {
                 isCheck: !click,
             };
         },
+        isKioskOrderline: (name, price, qty) => {
+            return {
+                content: `Verify is there an orderline with ${name} and ${price} and ${qty}`,
+                trigger: `.o_kiosk_item_card:has(.o_kiosk_product_name:contains("${name}")):has(span.fw-bolder:contains("${price}")):has(div.d-flex:contains("${qty}"))`,
+                run: () => {},
+            };
+        },
+        isNotKioskOrderline: (name) => {
+            return {
+                content: `Verify is there no orderline with ${name}`,
+                trigger: `.o_kiosk_item_card`,
+                run: () => {
+                    const product = Array.from(document.querySelectorAll('div')).find(el => el.textContent === `${name}`);
+                    if (product){
+                        throw new TourError(`${name} should not be present in the order`);
+                    }
+                },
+            };
+        },
         isNotOrderline: (name, price, description = "", attributes = "") => {
             return {
                 content: `Verify is there an orderline with ${name} and ${price} and ${description}`,
@@ -100,13 +119,7 @@ export const PosSelf = {
                 },
                 {
                     content: `Inside product main view 'Add' button should not be present`,
-                    trigger: `.product_main_view`,
-                    run: () => {
-                        const addButton = document.querySelector(".o_self_order_main_button");
-                        if (addButton){
-                            throw new TourError("Add button should not be present");
-                        }
-                    },
+                    trigger: `body:not(:has(.product_main_view .o_self_order_main_button))`,
                 },
             ];
         },
@@ -118,6 +131,20 @@ export const PosSelf = {
             };
         },
         attributes: (attributes) => attributes.map((attribute) => attributeHelper(attribute, true)),
+        isPreparingOrder: () => {
+            return {
+                content: `Verify if the order is preparing`,
+                trigger: `body:has(.o_kiosk_preparation_title:contains('preparing'))`,
+                run: () => {},
+            }
+        },
+        isTableNumber: (number) => {
+            return {
+                content: `Verify if right table is selected`,
+                trigger: `body:has(.number:contains('${number}'))`,
+                run: () => {},
+            }
+        },
     },
     action: {
         cancelOrder: () => {
@@ -144,12 +171,26 @@ export const PosSelf = {
                 trigger: `.btn:contains('${buttonName}')`,
             };
         },
+        clickCancelPopupBtn: () => {
+            return {
+                trigger: `.btn:contains('Cancel Order')`,
+                in_modal: true,
+            };
+        },
         selectTable(table) {
             return {
                 content: `Select ${table.name} with value ${table.id}`,
                 trigger: `.o_self-popup-table select:has(option[value='${table.id}'])`,
                 run: `text ${table}`,
             };
+        },
+        clicKioskProduct: (name) => {
+            return [
+                {
+                    content: `Click on product '${name}'`,
+                    trigger: `.o_kiosk_product_card span:contains('${name}')`,
+                },
+            ]
         },
         addProduct: (name, quantity = 1, description, attributes = []) => {
             return [
@@ -191,6 +232,34 @@ export const PosSelf = {
             ];
         },
         selectAttributes: (attributes) => attributes.map((attribute) => attributeHelper(attribute)),
+        clickKioskTrash: (name) => {
+            return [
+                {
+                    content: `Click on trash icon`,
+                    trigger: `.o_kiosk_item_card:has(.o_kiosk_product_name:contains("${name}")) .btn .fa.fa-trash`,
+                }
+            ];
+        },
+        pressNumpad: (keys) => {
+            const numberChars = "0 1 2 3 4 5 6 7 8 9".split(" ");
+            function generateStep(key) {
+                let trigger;
+                if (numberChars.includes(key)) {
+                    trigger = `.numpad .touch-key:contains("${key}")`;
+                }
+                return {
+                    content: `'${key}' pressed in numpad`,
+                    trigger,
+                };
+            }
+            return keys.split(" ").map(generateStep);
+        },
+        selectLocation: (location) => {
+            return {
+                content: `Select location: ${location}`,
+                trigger: `.o_kiosk_eating_location span:contains('${location}')`
+            }
+        }
     },
 };
 

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { PosSelf, descriptionHelper } from "./tour_utils";
+import { PosSelf, descriptionHelper } from "../../utils/tour_utils";
 
 registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
     test: true,

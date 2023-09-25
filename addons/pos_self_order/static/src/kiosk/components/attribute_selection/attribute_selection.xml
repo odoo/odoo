@@ -23,17 +23,17 @@
                                     <span t-if="this.props.productState.selectedVariants[attribute.name] == value.name" class="selected-badge position-absolute top-0 start-50 translate-middle-x px-3 rounded-bottom text-bg-primary">
                                         Selected
                                     </span>
-                                    
+
                                 </div>
                             </label>
                         </div>
                         <input
                             type="radio"
                             class="d-none"
-                            t-att-value="value.name"
+                            t-att-value="value.id"
                             t-on-click="attributeClicked"
                             t-attf-id="{{ attribute.id }}_{{ value.id }}"
-                            t-model="this.props.productState.selectedVariants[attribute.name]" />
+                            t-model="this.props.productState.selectedVariants[attribute.id]" />
                     </t>
                 </div>
             </div>
