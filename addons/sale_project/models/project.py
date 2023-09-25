@@ -614,7 +614,7 @@ class ProjectTask(models.Model):
         compute='_compute_sale_line', store=True, readonly=False,
         domain="""[
             ('company_id', '=', company_id),
-            '|', ('order_partner_id', 'child_of', partner_id if partner_id else []),
+            '|', ('order_partner_id', 'child_of', commercial_partner_id if commercial_partner_id else []),
                  ('order_partner_id', '=?', partner_id),
             ('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])
         ]""",
