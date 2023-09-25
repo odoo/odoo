@@ -6,6 +6,7 @@ import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_he
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import {
+    editInput,
     click,
     getFixture,
     clickOpenedDropdownItem,
@@ -68,6 +69,7 @@ QUnit.module('Subtask Kanban List tests', {
                         <tree editable="bottom">
                             <field name="display_in_project" force_save="1"/>
                             <field name="project_id" widget="project"/>
+                            <field name="name"/>
                         </tree>
                     </field>
                 </form>`
@@ -146,8 +148,25 @@ QUnit.module('Subtask Kanban List tests', {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         await clickDropdown(target, 'project_id');
         await clickOpenedDropdownItem(target, 'project_id', 'Project One');
+        await editInput(target, ".o_data_row > td[name='name'] > div > input", "aaa");
         await click(target, ".o_form_button_save");
         assert.equal(target.querySelector('.o_field_project').textContent.trim(), 'Project One')
     });
 
+    QUnit.test("focus new subtask's name", async function (assert) {
+        const views = this.views;
+        const { openView } = await start({ serverData: { views } });
+        await openView({
+            res_model: "project.task",
+            views: [[false, "form"]],
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row > td[name='name'] > div > input"),
+            "Upon clicking on 'Add a line', the new subtask's name should be focused."
+        );
+    });
 });
