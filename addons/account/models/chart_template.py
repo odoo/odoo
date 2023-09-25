@@ -919,7 +919,7 @@ class AccountChartTemplate(models.AbstractModel):
             ('applicability', '=', 'taxes'),
             ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
         ])}
-        return lambda *args: [tags[re.sub(r'\s+', ' ', x.strip())] for x in args]
+        return lambda *args: [tags[re.sub(r'\s+', ' ', x.strip())] if not re.match(r"^\w+\.\w+$", x) else x for x in args]
 
     def _deref_account_tags(self, template_code, tax_data):
         mapper = self._get_tag_mapper(template_code)
@@ -928,7 +928,7 @@ class AccountChartTemplate(models.AbstractModel):
                 if tax.get(fname):
                     for _command, _id, repartition in tax[fname]:
                         tags = repartition.get('tag_ids')
-                        if isinstance(tags, str) and not re.match(r"^(\w+\.\w+,)*\w+\.\w+$", tags):
+                        if isinstance(tags, str):
                             repartition['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
 
     def _parse_csv(self, template_code, model, module=None):
