@@ -10,6 +10,7 @@ import { PopoverController } from "./popover_controller";
  *   onClose?: () => void;
  *   popoverClass?: string;
  *   position?: import("@web/core/position_hook").Options["position"];
+ *   fixedPosition?: boolean;
  *   onPositioned?: import("@web/core/position_hook").PositionEventHandler;
  * }} PopoverServiceAddOptions
  */
