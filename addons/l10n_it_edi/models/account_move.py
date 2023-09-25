@@ -111,17 +111,16 @@ class AccountMove(models.Model):
             ids_intersection = set(invoice_lines_tags.ids) & set(vj_lines_tags.ids)
             move.l10n_it_edi_is_self_invoice = bool(ids_intersection)
 
-    @api.depends('l10n_it_edi_transaction')
-    def _compute_need_cancel_request(self):
-        super()._compute_need_cancel_request()
-
     # -------------------------------------------------------------------------
     # Overrides
     # -------------------------------------------------------------------------
 
-    def _need_cancel_request(self):
+    @api.depends('l10n_it_edi_transaction')
+    def _compute_show_reset_to_draft_button(self):
         # EXTENDS 'account'
-        return super()._need_cancel_request() or self.l10n_it_edi_transaction
+        super()._compute_show_reset_to_draft_button()
+        for move in self:
+            move.show_reset_to_draft_button = not move.l10n_it_edi_transaction and move.show_reset_to_draft_button
 
     def _get_edi_decoder(self, file_data, new=False):
         # EXTENDS 'account'
