@@ -165,7 +165,7 @@ export const editorCommands = {
         const containerFirstChild = document.createElement('fake-element-fc');
         const containerLastChild = document.createElement('fake-element-lc');
 
-        if (content instanceof Node) {
+        if (content instanceof editor.document.defaultView.Node) {
             container.replaceChildren(content);
         } else {
             container.textContent = content;
