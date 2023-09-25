@@ -18,6 +18,7 @@
 
                 <xpath expr="//field[@name='acc_number']" position="attributes">
                     <attribute name="attrs">{'readonly': [('allow_out_payment', '=', True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="attributes">
