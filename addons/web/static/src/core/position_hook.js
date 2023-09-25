@@ -16,6 +16,12 @@ import { localization } from "@web/core/l10n/localization";
  */
 
 /**
+ * @typedef PositioningControl
+ * @property {() => void} lock prevents further positioning updates
+ * @property {() => void} unlock allows further positioning updates
+ */
+
+/**
  * @typedef Options
  * @property {string} [popper="popper"] useRef reference to the popper element
  * @property {HTMLElement} [container] container element
@@ -303,14 +309,17 @@ const POSITION_BUS = Symbol("position-bus");
  *
  * @param {HTMLElement | (() => HTMLElement)} target
  * @param {Options} options
+ * @returns {PositioningControl}
+ *  control object to lock/unlock the positioning.
  */
 export function usePosition(target, options) {
     const popperRef = useRef(options?.popper || DEFAULTS.popper);
     const getTarget = typeof target === "function" ? target : () => target;
+    let lock = false;
     const update = () => {
         const targetEl = getTarget();
         const popperEl = popperRef.el;
-        if (!targetEl || !popperEl) {
+        if (!targetEl || !popperEl || lock) {
             return;
         }
 
@@ -348,4 +357,14 @@ export function usePosition(target, options) {
             };
         }
     });
+
+    return {
+        lock: () => {
+            lock = true;
+        },
+        unlock: () => {
+            lock = false;
+            bus.trigger("update");
+        },
+    };
 }
