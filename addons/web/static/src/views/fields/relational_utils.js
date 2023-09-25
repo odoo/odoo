@@ -47,10 +47,10 @@ import {
 //
 export function useSelectCreate({ resModel, activeActions, onSelected, onCreateEdit, onUnselect }) {
     const env = useEnv();
-    const addDialog = useOwnedDialogs();
+    const dialogService = useService("dialog");
 
     function selectCreate({ domain, context, filters, title }) {
-        addDialog(SelectCreateDialog, {
+        dialogService.add(SelectCreateDialog, {
             title: title || env._t("Select records"),
             noCreate: !activeActions.create,
             multiSelect: "link" in activeActions ? activeActions.link : false, // LPE Fixme
