@@ -345,6 +345,20 @@ QUnit.test("reposition popper when a load event occurs", async (assert) => {
     assert.verifySteps(["onPositioned called"], "onPositioned called when load event is triggered");
 });
 
+QUnit.test("reposition popper when a scroll event occurs", async (assert) => {
+    const TestComp = getTestComponent({
+        onPositioned: () => {
+            assert.step("onPositioned called");
+        },
+    });
+    await mount(TestComp, container);
+    assert.verifySteps(["onPositioned called"]);
+    await document.querySelector("#popper").dispatchEvent(new Event("scroll"));
+    assert.verifySteps([], "onPositioned not called when scroll event is triggered inside popper");
+    await document.querySelector("#popper").parentElement.dispatchEvent(new Event("scroll"));
+    assert.verifySteps(["onPositioned called"]);
+});
+
 QUnit.test("is positioned relative to its containing block", async (assert) => {
     const fixtureBox = getFixture().getBoundingClientRect();
     // offset the container

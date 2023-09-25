@@ -344,12 +344,19 @@ export function usePosition(target, options) {
 
         if (isTopmost) {
             // Attach listeners to keep the positioning up to date
+            const scrollListener = (e) => {
+                if (popperRef.el?.contains(e.target)) {
+                    // In case the scroll event occurs inside the popper, do not reposition
+                    return;
+                }
+                throttledUpdate();
+            };
             const targetDocument = getTarget()?.ownerDocument;
-            targetDocument?.addEventListener("scroll", throttledUpdate, { capture: true });
+            targetDocument?.addEventListener("scroll", scrollListener, { capture: true });
             targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
             window.addEventListener("resize", throttledUpdate);
             return () => {
-                targetDocument?.removeEventListener("scroll", throttledUpdate, { capture: true });
+                targetDocument?.removeEventListener("scroll", scrollListener, { capture: true });
                 targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
                 window.removeEventListener("resize", throttledUpdate);
             };
