@@ -3289,7 +3289,8 @@ export class Wysiwyg extends Component {
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
         let altData = undefined;
-        if (el.dataset.mimetype === 'image/webp') {
+        const isImageField = !!el.closest("[data-oe-type=image]");
+        if (el.dataset.mimetype === 'image/webp' && isImageField) {
             // Generate alternate sizes and format for reports.
             altData = {};
             const image = document.createElement('img');
