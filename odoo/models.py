@@ -2986,21 +2986,64 @@ class BaseModel(metaclass=MetaModel):
         """ Initialize the value of the given column for existing rows. """
         # get the default value; ideally, we should use default_get(), but it
         # fails due to ir.default not being ready
+        value = None
         field = self._fields[column_name]
         if field.default:
             value = field.default(self)
             value = field.convert_to_write(value, self)
             value = field.convert_to_column(value, self)
-        else:
-            value = None
         # Write value if non-NULL, except for booleans for which False means
         # the same as NULL - this saves us an expensive query on large tables.
         necessary = (value is not None) if field.type != 'boolean' else value
         if necessary:
-            _logger.debug("Table '%s': setting default value of new column %s to %r",
-                          self._table, column_name, value)
-            query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,))
+            _logger.debug("Table '%s': setting default value of new column %s  with type %s to %r",
+                          self._table, field.type, column_name, value)
+
+            ### Scenarios ##
+
+            # 1 - fresh no default values column, adding a default will affect only subsequent inserts(update/insert).
+            # existing rows will not have this column updated as occurs with
+            # UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL
+            # Which is not the aim. We want to insert a value where there's none
+
+            # 2 - no existing rows in table. Every new insertion will default to value, with
+            # every new row insert defaulting to value. Do we want this? Or should it stay null?
+
+            # 3 - We want to drop this column and add it again with a default,
+            # but for some reason an error occurs (dependent modules, constraints)
+
+            # solution: if drop column does not yield any error or side effect, drop it, re-add
+            # it with a default value, it will fill all prexisting null column rows with value
+            # if necessary drop the default afterwards.
+            # if an error is produced on dropping table, fallback to the update statement.
+            query_fast = psycopg2.sql.SQL(
+                    "\
+                    BEGIN;\
+                    ALTER TABLE {table}\
+                    DROP COLUMN {column_name} RESTRICT;\
+                    ALTER TABLE {table}\
+                    ADD COLUMN {column_name} %s DEFAULT %s;\
+                    "
+                    ).format(
+                    table=psycopg2.sql.Identifier(self._table),
+                    column_name=psycopg2.sql.Identifier(column_name),
+            )
+            query_fallback = psycopg2.sql.SQL(
+                "\
+                UPDATE {table}\
+                SET {column_name} = %s WHERE {column_name} IS NULL\
+                ").format(
+                table=psycopg2.sql.Identifier(self._table),
+                column_name=psycopg2.sql.Identifier(column_name),
+            )
+            try:
+                sql_data_type = field.column_type[1]
+                self._cr.execute(query_fast,(psycopg2.extensions.AsIs(sql_data_type), value), log_exceptions=False)
+                self._add_sql_constraints()
+            except Exception:
+                # above query fails, dependent columns on drop column statement
+                self._cr.rollback()
+                self._cr.execute(query_fallback, (value,))
 
     @ormcache()
     def _table_has_rows(self):
