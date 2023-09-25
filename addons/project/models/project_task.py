@@ -290,6 +290,10 @@ class Task(models.Model):
         for task in self:
             task.analytic_account_id = task.project_id.analytic_account_id
 
+    def _compute_display_name(self):
+        for task in self:
+            task.display_name = ''
+
     @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
         for task in self:
