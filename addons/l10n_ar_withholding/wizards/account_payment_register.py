@@ -81,8 +81,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_withholdings(self):
         supplier_recs = self.filtered(lambda x: x.partner_type == 'supplier' and (not x.can_group_payments or (x.can_group_payments and x.group_payment)))        
         for rec in supplier_recs:
-            taxes = rec.line_ids.move_id.invoice_line_ids.product_id.l10n_ar_supplier_withholding_taxes_ids.filtered(
-                    lambda y: y.company_id == rec.company_id)
+            taxes = rec._get_withholding_tax()
             rec.withholding_ids =[Command.clear()] + [Command.create({'tax_id': x.id}) for x in taxes]
         (self - supplier_recs).withholding_ids = False
 
@@ -92,30 +91,28 @@ class AccountPaymentRegister(models.TransientModel):
             if rec.l10n_latam_check_id:
                 rec.currency_id = rec.l10n_latam_check_id.currency_id
                 rec.net_amount = rec.l10n_latam_check_id.amount
-                conversion_rate = rec._get_conversion_rate()
-
-                amount_total = sum(rec.mapped('line_ids.move_id.amount_total'))
-                amount_untaxed = sum(rec.mapped('line_ids.move_id.amount_untaxed'))
-                payment_total_ratio = min(rec.source_amount / amount_total, 1)
-                net_amount_curency = rec.l10n_latam_check_id.amount * conversion_rate
-
-                for withholding in rec.withholding_ids:
-                    tax_base_lines =rec.line_ids.move_id.invoice_line_ids.filtered(lambda x: withholding.tax_id in x.product_id.l10n_ar_supplier_withholding_taxes_ids)
-                    if withholding.tax_id.l10n_ar_withholding_amount_type == 'untaxed_amount':
-                        base_lines_amount_total = sum(rec.mapped('line_ids.move_id.amount_total'))
-                        base_lines_amount_untaxed = sum(rec.mapped('line_ids.move_id.amount_untaxed'))
-                        base_line_payment_ratio =  base_lines_amount_untaxed / base_lines_amount_total
-                        payment_ratio = min(payment_total_ratio , (net_amount_curency * base_line_payment_ratio) / amount_untaxed)
-                        base = sum(tax_base_lines.mapped('price_subtotal'))
-                    else:
-                        payment_ratio = min(payment_total_ratio, net_amount_curency / amount_total)
-                        base = sum(tax_base_lines.mapped('price_total'))
-                    if payment_ratio:
-                        withholding.base_amount = base * payment_ratio
-                        withholding._compute_amount()
-                rec.amount = rec.l10n_latam_check_id.amount + sum(rec.withholding_ids.mapped('amount'))
+                net_info = rec._get_amount_net_info()
+                witholding_net_amount = min(rec.l10n_latam_check_id.amount , net_info[1])
+                rec.amount = witholding_net_amount * net_info[0] + (rec.l10n_latam_check_id.amount - witholding_net_amount)
             else:
                 rec.net_amount = rec.amount - sum(rec.withholding_ids.mapped('amount'))
+
+    def _get_withholding_tax(self):
+        self.ensure_one()
+        return self.line_ids.move_id.invoice_line_ids.product_id.l10n_ar_supplier_withholding_taxes_ids.filtered(
+                lambda y: y.company_id == self.company_id)
+
+    def _get_amount_net_info(self):
+        self.ensure_one()
+        # This method allows to simulate the total net amount of a payment and the relationship between the total and net amounts.
+        # return a tupple
+        #   - factor between total and net
+        #   - Net amount total
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move.line', active_ids=self.line_ids.ids).new()
+        wizard.currency_id = self.l10n_latam_check_id.currency_id
+        wizard.payment_date = self.payment_date
+        wizard.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id, 'base_amount': x.base_amount , 'amount': x.amount}) for x in self.withholding_ids]
+        return (wizard.amount / wizard.net_amount, wizard.net_amount)
 
     def _get_withholding_move_line_default_values(self):
         return {
