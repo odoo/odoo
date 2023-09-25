@@ -281,7 +281,7 @@
                                     </td>
 
                                     <td class="text-end">
-                                        <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"
+                                        <span t-out="', '.join(map(lambda x: (x.invoice_label or x.name), line.tax_ids))"
                                               id="line_tax_ids"/>
                                     </td>
                                     <td t-if="display_discount"
