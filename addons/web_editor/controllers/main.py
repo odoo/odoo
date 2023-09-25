@@ -33,15 +33,6 @@ DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
 diverging_history_regex = 'data-last-history-steps="([0-9,]+)"'
 
-def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
-    server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')
-    # Do not check old documents without data-last-history-steps.
-    if server_history_matches:
-        server_last_history_id = server_history_matches[1].split(',')[-1]
-        if server_last_history_id not in incoming_history_ids:
-            logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
-            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
-
 # This method must be called in a context that has write access to the record as
 # it will write to the bus.
 def handle_history_divergence(record, html_field_name, vals):
@@ -81,7 +72,13 @@ def handle_history_divergence(record, html_field_name, vals):
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
     if record[html_field_name]:
-        ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
+        server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')
+        # Do not check old documents without data-last-history-steps.
+        if server_history_matches:
+            server_last_history_id = server_history_matches[1].split(',')[-1]
+            if server_last_history_id not in incoming_history_ids:
+                logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+                raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
 
     # Save only the latest id.
     vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
@@ -814,11 +811,3 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
-
-    @http.route("/web_editor/ensure_common_history", type="json", auth="user")
-    def ensure_common_history(self, model_name, field_name, res_id, history_ids):
-        record = request.env[model_name].browse([res_id])
-        try:
-            ensure_no_history_divergence(record, field_name, history_ids)
-        except ValidationError:
-            return record[field_name]
