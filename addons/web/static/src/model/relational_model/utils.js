@@ -338,8 +338,11 @@ export function getFieldContext(
 }
 
 export function getBasicEvalContext(config) {
+    const { uid, allowed_company_ids } = config.context;
     return {
-        ...config.context,
+        context: config.context,
+        uid,
+        allowed_company_ids,
         active_id: config.resId || false,
         active_ids: config.resId ? [config.resId] : [],
         active_model: config.resModel,

@@ -131,6 +131,7 @@ export class RelationalModel extends Model {
         this.config = {
             isMonoRecord: false,
             currentCompanyId: company.currentCompany.id,
+            context: {},
             ...params.config,
             isRoot: true,
         };

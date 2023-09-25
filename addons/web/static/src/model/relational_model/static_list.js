@@ -85,8 +85,11 @@ export class StaticList extends DataPoint {
     }
 
     get evalContext() {
+        const context = this.config.context;
         return {
-            ...this.config.context,
+            context,
+            uid: context.uid,
+            allowed_company_ids: context.allowed_company_ids,
             parent: this._parent.evalContext,
         };
     }
