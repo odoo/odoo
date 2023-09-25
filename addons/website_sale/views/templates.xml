@@ -13,7 +13,7 @@
                 <a href="/shop/cart" t-attf-class="#{_link_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart"/>
                     <span t-if="_text">My Cart</span>
-                    <sup class="my_cart_quantity badge text-bg-primary" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <sup t-attf-class="my_cart_quantity badge text-bg-primary #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-esc="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
                 </a>
             </li>
         </t>
