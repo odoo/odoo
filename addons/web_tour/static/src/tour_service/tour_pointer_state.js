@@ -121,6 +121,7 @@ export function createPointerState() {
                 default: {
                     const onClick = () => {
                         anchor.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                        hide();
                     };
 
                     const scrollParent = getScrollParent(anchor);
