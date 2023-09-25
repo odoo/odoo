@@ -5,6 +5,7 @@
         <Dropdown togglerClass="'o_searchview_dropdown_toggler d-print-none btn btn-outline-secondary o-no-caret rounded-start-0 h-100'"
                   menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap w-100 w-md-auto mx-n3 mx-md-auto mt-2 py-3'"
                   position="'bottom-end'"
+                  holdOnHover="true"
                   t-if="this.env.searchModel.searchMenuTypes.size">
             <t t-set-slot="toggler" t-slot-scope="scope">
                 <i class="fa fa-caret-down" aria-hidden="true" data-hotkey="shift+q" title="Toggle Search Panel"/>
