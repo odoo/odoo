@@ -753,7 +753,7 @@ class ProjectTask(models.Model):
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
         domain="""[
-            '|', ('order_partner_id', 'child_of', partner_id if partner_id else []),
+            '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', partner_id if partner_id else []),
                  ('order_partner_id', '=?', partner_id),
             ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
         ]""",
