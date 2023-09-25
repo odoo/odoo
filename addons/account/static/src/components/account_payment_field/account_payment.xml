@@ -37,7 +37,7 @@
                     </t>
                     <t t-if="!info.outstanding">
                         <td>
-                           <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line_index" style="margin-right:5px;" aria-label="Info" title="Journal Entry Info" data-bs-toggle="tooltip" t-on-click.stop="(ev) => this.onInfoClick(ev, line_index)"></a>
+                           <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line_index" style="margin-right:5px;" aria-label="Info" title="Journal Entry Info" data-bs-toggle="tooltip" t-on-click.stop="(ev) => this.onInfoClick(ev, line)"></a>
                         </td>
                         <td t-if="!line.is_exchange">
                             <i class="o_field_widget text-start o_payment_label">Paid on <t t-out="line.date"></t></i>
