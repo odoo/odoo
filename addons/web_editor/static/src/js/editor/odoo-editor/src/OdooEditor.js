@@ -2366,7 +2366,7 @@ export class OdooEditor extends EventTarget {
                 this._activateContenteditable();
             }
             const returnValue = editorCommands[method](this, ...args);
-            if (link) {
+            if (link && link.isConnected) {
                 this.setContenteditableLink(link);
             }
             return returnValue;
@@ -3100,6 +3100,8 @@ export class OdooEditor extends EventTarget {
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#create-link');
         linkButton && linkButton.classList.toggle('active', !!linkNode);
+        const unlinkButton = this.toolbar.querySelector('#unlink');
+        unlinkButton && unlinkButton.classList.toggle('d-none', !linkNode);
         const undoButton = this.toolbar.querySelector('#undo');
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
