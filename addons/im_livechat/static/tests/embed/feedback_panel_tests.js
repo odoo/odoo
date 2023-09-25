@@ -68,7 +68,7 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
-    await click("button:contains(Send):enabled");
+    await click("button:enabled", { text: "Send" });
     await contains("p", { text: "Thank you for your feedback" });
     assert.verifySteps(["/im_livechat/feedback"]);
 });
