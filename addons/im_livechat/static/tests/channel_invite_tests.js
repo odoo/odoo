@@ -30,8 +30,10 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[title='Add Users']");
-    await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
-    await click("button:contains(Invite):enabled");
+    await click("input", {
+        parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
+    });
+    await click("button:enabled", { text: "Invite" });
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "James" });
@@ -107,8 +109,8 @@ QUnit.test("Partners invited most frequently by the current user come first", as
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
     await click("button[title='Add Users']");
-    await click(".o-discuss-ChannelInvitation-selectable:contains(John) input");
-    await click("button:contains(Invite):enabled");
+    await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
+    await click("button:enabled", { text: "Invite" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #2" });
     await click("button[title='Add Users']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });

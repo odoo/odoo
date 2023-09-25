@@ -527,18 +527,7 @@ class Contains {
         if (!target) {
             return;
         }
-        /** @type HTMLElement[] */
-        let baseRes;
-        try {
-            baseRes = [...target.querySelectorAll(this.selector)];
-        } catch (error) {
-            if (error.message.includes("Failed to execute 'querySelectorAll'")) {
-                // keep jquery for backwards compatibility until all tests are converted
-                baseRes = [...$(target).find(this.selector)];
-            } else {
-                throw error;
-            }
-        }
+        const baseRes = [...target.querySelectorAll(this.selector)];
         /** @type {Contains[]} */
         this.childrenContains = [];
         const res = baseRes.filter((el, currentIndex) => {

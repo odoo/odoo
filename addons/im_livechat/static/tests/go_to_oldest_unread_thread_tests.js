@@ -256,5 +256,5 @@ QUnit.test("tab on composer doesn't switch thread if no unread thread", async ()
     await openDiscuss(channelIds[0]);
     await focus(".o-mail-Composer-input");
     triggerHotkey("Tab");
-    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
 });

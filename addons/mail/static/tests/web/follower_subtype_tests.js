@@ -41,11 +41,11 @@ QUnit.test("simplest layout of a followed subtype", async () => {
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] label`,
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] label`,
         { text: "TestSubtype" }
     );
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:checked`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:checked`
     );
 });
 
@@ -81,7 +81,7 @@ QUnit.test("simplest layout of a not followed subtype", async () => {
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:not(:checked)`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
 });
 
@@ -117,19 +117,19 @@ QUnit.test("toggle follower subtype checkbox", async () => {
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:not(:checked)`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
     await click(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']`
     );
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:checked`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:checked`
     );
     await click(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']`
     );
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:not(:checked)`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
 });
 
@@ -161,22 +161,22 @@ QUnit.test("follower subtype apply", async () => {
     await click("button[title='Edit subscription']");
 
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId1}] input[type='checkbox']:checked`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId1}'] input[type='checkbox']:checked`
     );
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId2}] input[type='checkbox']:not(:checked)`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId2}'] input[type='checkbox']:not(:checked)`
     );
     await click(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId1}] input[type='checkbox']`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId1}'] input[type='checkbox']`
     );
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId1}] input[type='checkbox']:not(:checked)`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId1}'] input[type='checkbox']:not(:checked)`
     );
     await click(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId2}] input[type='checkbox']`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId2}'] input[type='checkbox']`
     );
     await contains(
-        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId2}] input[type='checkbox']:checked`
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId2}'] input[type='checkbox']:checked`
     );
     await click(".modal-footer button", { text: "Apply" });
     await contains(".o_notification", {

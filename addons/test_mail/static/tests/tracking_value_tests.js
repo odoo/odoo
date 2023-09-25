@@ -59,7 +59,7 @@ QUnit.test("basic rendering of tracking value (float type)", async function () {
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking");
     await contains(".o-mail-Message-trackingField");
-    await contains(".o-mail-Message-trackingField:contains('(Float)')");
+    await contains(".o-mail-Message-trackingField", { text: "(Float)" });
     await contains(".o-mail-Message-trackingOld");
     await contains(".o-mail-Message-trackingOld", { text: "12.30" });
     await contains(".o-mail-Message-trackingSeparator");
@@ -75,7 +75,7 @@ QUnit.test("rendering of tracked field of type float: from non-0 to 0", async fu
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=float_field] input", "0", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('1.000.00(Float)')");
+    await contains(".o-mail-Message-tracking", { text: "1.000.00(Float)" });
 });
 
 QUnit.test("rendering of tracked field of type float: from 0 to non-0", async function () {
@@ -86,7 +86,7 @@ QUnit.test("rendering of tracked field of type float: from 0 to non-0", async fu
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=float_field] input", "1", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('0.001.00(Float)')");
+    await contains(".o-mail-Message-tracking", { text: "0.001.00(Float)" });
 });
 
 QUnit.test("rendering of tracked field of type integer: from non-0 to 0", async function () {
@@ -97,7 +97,7 @@ QUnit.test("rendering of tracked field of type integer: from non-0 to 0", async 
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=integer_field] input", "0", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('10(Integer)')");
+    await contains(".o-mail-Message-tracking", { text: "10(Integer)" });
 });
 
 QUnit.test("rendering of tracked field of type integer: from 0 to non-0", async function () {
@@ -108,7 +108,7 @@ QUnit.test("rendering of tracked field of type integer: from 0 to non-0", async 
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=integer_field] input", "1", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('01(Integer)')");
+    await contains(".o-mail-Message-tracking", { text: "01(Integer)" });
 });
 
 QUnit.test("rendering of tracked field of type monetary: from non-0 to 0", async function () {
@@ -119,7 +119,7 @@ QUnit.test("rendering of tracked field of type monetary: from non-0 to 0", async
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=monetary_field] input", "0", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('1.000.00(Monetary)')");
+    await contains(".o-mail-Message-tracking", { text: "1.000.00(Monetary)" });
 });
 
 QUnit.test("rendering of tracked field of type monetary: from 0 to non-0", async function () {
@@ -130,7 +130,7 @@ QUnit.test("rendering of tracked field of type monetary: from 0 to non-0", async
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=monetary_field] input", "1", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('0.001.00(Monetary)')");
+    await contains(".o-mail-Message-tracking", { text: "0.001.00(Monetary)" });
 });
 
 QUnit.test("rendering of tracked field of type boolean: from true to false", async function () {
@@ -141,7 +141,7 @@ QUnit.test("rendering of tracked field of type boolean: from true to false", asy
     await this.start({ res_id: mailTestTrackAllId1 });
     click(".o_field_boolean input").catch(() => {});
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('YesNo(Boolean)')");
+    await contains(".o-mail-Message-tracking", { text: "YesNo(Boolean)" });
 });
 
 QUnit.test("rendering of tracked field of type boolean: from false to true", async function () {
@@ -150,7 +150,7 @@ QUnit.test("rendering of tracked field of type boolean: from false to true", asy
     await this.start({ res_id: mailTestTrackAllId1 });
     click(".o_field_boolean input").catch(() => {});
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('NoYes(Boolean)')");
+    await contains(".o-mail-Message-tracking", { text: "NoYes(Boolean)" });
 });
 
 QUnit.test(
@@ -163,7 +163,7 @@ QUnit.test(
         await this.start({ res_id: mailTestTrackAllId1 });
         await insertText("div[name=char_field] input", "", { replace: true });
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('MarcNone(Char)')");
+        await contains(".o-mail-Message-tracking", { text: "MarcNone(Char)" });
     }
 );
 
@@ -177,7 +177,7 @@ QUnit.test(
         await this.start({ res_id: mailTestTrackAllId1 });
         await insertText("div[name=char_field] input", "Marc", { replace: true });
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('NoneMarc(Char)')");
+        await contains(".o-mail-Message-tracking", { text: "NoneMarc(Char)" });
     }
 );
 
@@ -195,7 +195,7 @@ QUnit.test(
             ["change"]
         );
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('None12/14/2018(Date)')");
+        await contains(".o-mail-Message-tracking", { text: "None12/14/2018(Date)" });
     }
 );
 
@@ -213,7 +213,7 @@ QUnit.test(
             ["change"]
         );
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('12/14/2018None(Date)')");
+        await contains(".o-mail-Message-tracking", { text: "12/14/2018None(Date)" });
     }
 );
 
@@ -232,7 +232,7 @@ QUnit.test(
             ["change"]
         );
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('None12/14/2018 13:42:28(Datetime)')");
+        await contains(".o-mail-Message-tracking", { text: "None12/14/2018 13:42:28(Datetime)" });
         const savedRecord = pyEnv
             .getData()
             ["mail.test.track.all"].records.find(({ id }) => id === mailTestTrackAllId1);
@@ -255,7 +255,7 @@ QUnit.test(
             ["change"]
         );
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('12/14/2018 16:42:28None(Datetime)')");
+        await contains(".o-mail-Message-tracking", { text: "12/14/2018 16:42:28None(Datetime)" });
     }
 );
 
@@ -267,7 +267,7 @@ QUnit.test("rendering of tracked field of type text: from some text to empty", a
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=text_field] textarea", "", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('MarcNone(Text)')");
+    await contains(".o-mail-Message-tracking", { text: "MarcNone(Text)" });
 });
 
 QUnit.test("rendering of tracked field of type text: from empty to some text", async function () {
@@ -278,7 +278,7 @@ QUnit.test("rendering of tracked field of type text: from empty to some text", a
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=text_field] textarea", "Marc", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking:contains('NoneMarc(Text)')");
+    await contains(".o-mail-Message-tracking", { text: "NoneMarc(Text)" });
 });
 
 QUnit.test(
@@ -291,7 +291,7 @@ QUnit.test(
         await this.start({ res_id: mailTestTrackAllId1 });
         await editSelect(target, "div[name=selection_field] select", false);
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('firstNone(Selection)')");
+        await contains(".o-mail-Message-tracking", { text: "firstNone(Selection)" });
     }
 );
 
@@ -303,7 +303,7 @@ QUnit.test(
         await this.start({ res_id: mailTestTrackAllId1 });
         await editSelect(target, "div[name=selection_field] select", '"first"');
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('Nonefirst(Selection)')");
+        await contains(".o-mail-Message-tracking", { text: "Nonefirst(Selection)" });
     }
 );
 
@@ -318,7 +318,7 @@ QUnit.test(
         await this.start({ res_id: mailTestTrackAllId1 });
         await insertText(".o_field_many2one_selection input", "", { replace: true });
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('MarcNone(Many2one)')");
+        await contains(".o-mail-Message-tracking", { text: "MarcNone(Many2one)" });
     }
 );
 
@@ -331,6 +331,6 @@ QUnit.test(
         await this.start({ res_id: mailTestTrackAllId1 });
         await selectDropdownItem(target, "many2one_field_id", "Marc");
         await click(".o_form_button_save");
-        await contains(".o-mail-Message-tracking:contains('NoneMarc(Many2one)')");
+        await contains(".o-mail-Message-tracking", { text: "NoneMarc(Many2one)" });
     }
 );
