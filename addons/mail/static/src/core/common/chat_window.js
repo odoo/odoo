@@ -136,8 +136,8 @@ export class ChatWindow extends Component {
         }
     }
 
-    close(options) {
-        this.chatWindowService.close(this.props.chatWindow, options);
+    async close(options) {
+        await this.chatWindowService.close(this.props.chatWindow, options);
     }
 
     get actionsMenuTitleText() {

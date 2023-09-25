@@ -90,11 +90,11 @@ export class DiscussCoreWeb {
                 if (data.serverFoldState && thread && data.serverFoldState !== thread.state) {
                     thread.state = data.serverFoldState;
                     if (thread.state === "closed") {
-                        const chatWindow = this.store.ChatWindow.records.find((chatWindow) =>
+                        const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
                             chatWindow.thread?.eq(thread)
                         );
                         if (chatWindow) {
-                            this.chatWindowService.close(chatWindow);
+                            await this.chatWindowService.close(chatWindow);
                         }
                     } else {
                         this.store.ChatWindow.insert({

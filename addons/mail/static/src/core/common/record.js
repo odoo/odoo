@@ -342,11 +342,9 @@ export class Record {
         const obj = new this.Class();
         let record = Object.assign(obj, { localId: this.localId(data), Model: this });
         Object.assign(record, { _store: this.store });
-        if (!Array.isArray(this.records)) {
-            this.records[record.localId] = record;
-            // return reactive version
-            record = this.records[record.localId];
-        }
+        this.records[record.localId] = record;
+        // return reactive version
+        record = this.records[record.localId];
         return record;
     }
     /**
@@ -435,14 +433,7 @@ export class Record {
             }
         }
         if (this.Model) {
-            if (Array.isArray(this.Model.records)) {
-                const index = this.Model.records.findIndex((r) => r.eq(r1));
-                if (index !== -1) {
-                    this.Model.records.splice(index, 1);
-                }
-            } else {
-                delete this.Model.records[r1.localId];
-            }
+            delete this.Model.records[r1.localId];
             delete this.Model;
         }
     }

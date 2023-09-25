@@ -45,6 +45,8 @@ export class DiscussApp extends Record {
 
     /** @type {'mailbox'|'all'|'channel'|'chat'|'livechat'} */
     activeTab = "all";
+    chatWindows = Record.many("ChatWindow");
+    notificationGroups = Record.many("NotificationGroup");
     isActive = false;
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");

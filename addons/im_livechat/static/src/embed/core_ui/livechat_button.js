@@ -68,7 +68,7 @@ export class LivechatButton extends Component {
             this.livechatService.initialized &&
             this.livechatService.available &&
             !this.livechatService.shouldRestoreSession &&
-            this.store.ChatWindow.records.length === 0
+            this.store.discuss.chatWindows.length === 0
         );
     }
 }

@@ -22,7 +22,7 @@ patch(ChatWindow.prototype, {
         });
     },
 
-    close() {
+    async close() {
         if (this.thread?.type !== "livechat") {
             return super.close();
         }
@@ -31,7 +31,7 @@ patch(ChatWindow.prototype, {
             this.chatWindowService.show(this.props.chatWindow);
         } else {
             this.thread?.delete();
-            super.close();
+            await super.close();
         }
         this.livechatService.leaveSession();
         this.chatbotService.stop();

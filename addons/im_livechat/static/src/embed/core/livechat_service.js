@@ -153,13 +153,13 @@ export class LivechatService {
         } finally {
             this.persistThreadPromise = null;
         }
-        const chatWindow = this.store.ChatWindow.records.find(
+        const chatWindow = this.store.discuss.chatWindows.find(
             (c) => c.thread.id === this.TEMPORARY_ID
         );
         if (chatWindow) {
             chatWindow.thread?.delete();
             if (!this.thread) {
-                this.chatWindowService.close(chatWindow);
+                await this.chatWindowService.close(chatWindow);
                 return;
             }
             chatWindow.thread = this.thread;

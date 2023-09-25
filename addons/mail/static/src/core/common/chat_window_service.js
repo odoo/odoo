@@ -42,7 +42,7 @@ export class ChatWindowService {
     }
 
     openNewMessage() {
-        if (this.store.ChatWindow.records.some(({ thread }) => !thread)) {
+        if (this.store.discuss.chatWindows.some(({ thread }) => !thread)) {
             // New message chat window is already opened.
             return;
         }
@@ -50,18 +50,18 @@ export class ChatWindowService {
     }
 
     closeNewMessage() {
-        const newMessageChatWindow = this.store.ChatWindow.records.find(({ thread }) => !thread);
+        const newMessageChatWindow = this.store.discuss.chatWindows.find(({ thread }) => !thread);
         if (newMessageChatWindow) {
             this.close(newMessageChatWindow);
         }
     }
 
     get visible() {
-        return this.store.ChatWindow.records.filter((chatWindow) => !chatWindow.hidden);
+        return this.store.discuss.chatWindows.filter((chatWindow) => !chatWindow.hidden);
     }
 
     get hidden() {
-        return this.store.ChatWindow.records.filter((chatWindow) => chatWindow.hidden);
+        return this.store.discuss.chatWindows.filter((chatWindow) => chatWindow.hidden);
     }
 
     get maxVisible() {
@@ -109,24 +109,27 @@ export class ChatWindowService {
         chatWindow.thread.state = "folded";
     }
 
-    close(chatWindow, { escape = false } = {}) {
-        if (!chatWindow.hidden && this.maxVisible < this.store.ChatWindow.records.length) {
+    async close(chatWindow, { escape = false } = {}) {
+        if (!chatWindow.hidden && this.maxVisible < this.store.discuss.chatWindows.length) {
             const swaped = this.hidden[0];
             swaped.hidden = false;
             swaped.folded = false;
         }
-        const index = this.store.ChatWindow.records.findIndex((c) => c.eq(chatWindow));
+        const index = this.store.discuss.chatWindows.findIndex((c) => c.eq(chatWindow));
         if (index > -1) {
-            this.store.ChatWindow.records.splice(index, 1);
+            this.store.discuss.chatWindows.splice(index, 1);
         }
         const thread = chatWindow.thread;
         if (thread) {
             thread.state = "closed";
         }
-        if (escape && this.store.ChatWindow.records.length > 0) {
-            this.focus(this.store.ChatWindow.records[index - 1]);
+        if (escape && this.store.discuss.chatWindows.length > 0) {
+            this.focus(this.store.discuss.chatWindows[index - 1]);
         }
+        await this._onClose(chatWindow);
+        chatWindow.delete();
     }
+    async _onClose(chatWindow) {}
 }
 
 export const chatWindowService = {

@@ -33,7 +33,7 @@ export class MailCoreWeb {
                         author: this.store.user,
                     })
                 );
-                this.store.NotificationGroup.records.sort(
+                this.store.discuss.notificationGroups.sort(
                     (n1, n2) => n2.lastMessage?.id - n1.lastMessage?.id
                 );
             });

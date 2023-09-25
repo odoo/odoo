@@ -168,9 +168,9 @@ patch(ThreadService.prototype, {
         thread.suggestedRecipients = recipients;
     },
     async leaveChannel(channel) {
-        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(channel));
+        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(channel));
         if (chatWindow) {
-            this.chatWindowService.close(chatWindow);
+            await this.chatWindowService.close(chatWindow);
         }
         super.leaveChannel(...arguments);
     },
@@ -239,10 +239,10 @@ patch(ThreadService.prototype, {
         ]);
         follower.delete();
     },
-    unpin(thread) {
-        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(thread));
+    async unpin(thread) {
+        const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(thread));
         if (chatWindow) {
-            this.chatWindowService.close(chatWindow);
+            await this.chatWindowService.close(chatWindow);
         }
         super.unpin(...arguments);
     },
