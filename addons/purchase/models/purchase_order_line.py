@@ -89,7 +89,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_amount(self):
         for line in self:
             tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
-            totals = list(tax_results['totals'].values())[0]
+            totals = next(iter(tax_results['totals'].values()))
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']
 
@@ -564,9 +564,11 @@ class PurchaseOrderLine(models.Model):
             )
 
     def _validate_analytic_distribution(self):
-        for line in self.filtered(lambda l: not l.display_type):
-            line._validate_distribution(**{
-                'product': line.product_id.id,
-                'business_domain': 'purchase_order',
-                'company_id': line.company_id.id,
-            })
+        for line in self:
+            if line.display_type:
+                continue
+            line._validate_distribution(
+                product=line.product_id.id,
+                business_domain='purchase_order',
+                company_id=line.company_id.id,
+            )
