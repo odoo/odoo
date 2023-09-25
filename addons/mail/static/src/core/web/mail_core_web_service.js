@@ -58,14 +58,14 @@ export class MailCoreWeb {
                 const message = this.store.Message.insert(data);
                 const inbox = this.store.discuss.inbox;
                 if (message.notIn(inbox.messages)) {
-                    inbox.messages.push(message);
                     inbox.counter++;
                 }
+                inbox.messages.add(message);
                 const thread = message.originThread;
                 if (message.notIn(thread.needactionMessages)) {
-                    thread.needactionMessages.push(message);
                     thread.message_needaction_counter++;
                 }
+                thread.needactionMessages.add(message);
             });
             this.busService.subscribe("mail.message/mark_as_read", (payload) => {
                 const { message_ids: messageIds, needaction_inbox_counter } = payload;
@@ -96,9 +96,7 @@ export class MailCoreWeb {
                     removeFromArray(message.needaction_partner_ids, partnerIndex);
                     removeFromArrayWithPredicate(inbox.messages, ({ id }) => id === messageId);
                     const history = this.store.discuss.history;
-                    if (message.notIn(history.messages)) {
-                        history.messages.push(message);
-                    }
+                    history.messages.add(message);
                 }
                 inbox.counter = needaction_inbox_counter;
                 if (inbox.counter > inbox.messages.length) {

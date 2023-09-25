@@ -90,8 +90,8 @@ patch(ThreadService.prototype, {
                     followedThread: thread,
                     ...followerData,
                 });
-                if (follower.notEq(thread.selfFollower) && follower.notIn(thread.followers)) {
-                    thread.followers.push(follower);
+                if (follower.notEq(thread.selfFollower)) {
+                    thread.followers.add(follower);
                 }
             }
             thread.recipientsCount = result.recipientsCount;
@@ -100,9 +100,7 @@ patch(ThreadService.prototype, {
                     followedThread: thread,
                     ...recipientData,
                 });
-                if (recipient.notIn(thread.recipients)) {
-                    thread.recipients.push(recipient);
-                }
+                thread.recipients.add(recipient);
             }
         }
         if ("suggestedRecipients" in result) {
@@ -184,8 +182,8 @@ patch(ThreadService.prototype, {
                 followedThread: thread,
                 ...data,
             });
-            if (follower.notEq(thread.selfFollower) && follower.notIn(thread.followers)) {
-                thread.followers.push(follower);
+            if (follower.notEq(thread.selfFollower)) {
+                thread.followers.add(follower);
             }
         }
     },
@@ -201,9 +199,7 @@ patch(ThreadService.prototype, {
                 followedThread: thread,
                 ...data,
             });
-            if (recipient.notIn(thread.recipients)) {
-                thread.recipients.push(recipient);
-            }
+            thread.recipients.add(recipient);
         }
     },
     open(thread, replaceNewMessageChatWindow) {
