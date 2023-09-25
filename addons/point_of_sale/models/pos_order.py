@@ -1468,7 +1468,7 @@ class ReportSaleDetails(models.AbstractModel):
         else:
             payments = []
 
-        return {
+        report = {
             'date_start': date_start,
             'date_stop': date_stop,
             'currency_precision': user_currency.decimal_places,
@@ -1484,9 +1484,13 @@ class ReportSaleDetails(models.AbstractModel):
                 'price_unit': price_unit,
                 'discount': discount,
                 'uom': product.uom_id.name,
-                'cost': product.standard_price,
+                'cost': round(product.standard_price, 2),
             } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
+        report['total_cost'] = sum(product['cost'] * product['quantity'] for product in report['products'])
+        report['revenue'] = report['total_paid'] - report['total_cost']
+
+        return report
 
     @api.model
     def _get_report_values(self, docids, data=None):

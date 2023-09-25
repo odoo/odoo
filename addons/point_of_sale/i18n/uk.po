@@ -5201,6 +5201,11 @@ msgid "Receipt Header"
 msgstr "Верхній колонтитул чека"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Revenue:"
+msgstr "Дохід: "
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
@@ -6682,6 +6687,15 @@ msgid "There are unsynced orders. Do you want to sync these orders?"
 msgstr ""
 "Є несинхронізовані замовлення. Ви хочете синхронізувати ці замовлення?"
 
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
+#, python-format
+msgid "Total Cost:"
+msgstr "Собівартість разом: "
+
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -7091,7 +7105,7 @@ msgstr "Загальна кількість"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total:"
-msgstr "Разом:"
+msgstr "Разом: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
@@ -7893,3 +7907,4 @@ msgstr "були дублікати існуючих замовлень"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Cost"
 msgstr "Собівартісь"
+
