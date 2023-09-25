@@ -195,7 +195,6 @@
                            optional="show"
                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
                            />
-
                     <field name="move_type" column_invisible="True"/>
                     <field name="parent_state" column_invisible="True"/>
                     <field name="account_type" column_invisible="True"/>
@@ -305,6 +304,7 @@
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">account.move.line.search</field>
             <field name="model">account.move.line</field>
+            <field eval="100" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
                     <field name="name" string="Journal Item" filter_domain="[
@@ -314,6 +314,8 @@
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="invoice_date"/>
+                    <field name="date_maturity" string="Due Date"/>
+                    <field name="discount_date" string="Discount Date"/>
                     <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', self), ('debit', '=', self)]"/>
                     <field name="account_id"/>
                     <field name="account_type"/>
@@ -365,6 +367,105 @@
                     <searchpanel class="account_root">
                         <field name="account_root_id" icon="fa-filter" groupby="account_id" limit="0"/>
                     </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <!-- account.move.line (Payment Items) -->
+
+        <record id="view_move_line_payment_tree" model="ir.ui.view">
+            <field name="name">account.move.line.payment.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="200" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Payment Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                    <header>
+                        <button name="action_register_payment" type="object" string="Register Payment" groups="account.group_account_user"/>
+                    </header>
+                    <field name="move_id" column_invisible="True"/>
+                    <field name="invoice_date" string="Invoice Date"/>
+                    <field name="date" readonly="1" optional="hide"/>
+                    <field name="payment_date" readonly="1"/>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                    <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
+                    <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', 'parent_of', company_id), ('deprecated', '=', False)]" groups="account.group_account_readonly" optional="hide"/>
+                    <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
+                    <field name="ref" optional="hide" readonly="False"/>
+                    <field name="product_id" readonly="1" optional="hide"/>
+                    <field name="name" optional="show"/>
+                    <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
+                    <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" readonly="1" invisible="not is_account_reconcile"/>
+                    <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
+                    <field name="tax_ids" widget="many2many_tags" optional="hide" readonly="1"/>
+                    <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" invisible="is_same_currency"/>
+                    <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
+                    <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
+                    <field name="matching_number" readonly="1" optional="show"/>
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                        groups="analytic.group_analytic_accounting"
+                        optional="show"
+                        options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
+                        />
+                    <field name="move_type" column_invisible="True"/>
+                    <field name="parent_state" column_invisible="True"/>
+                    <field name="account_type" column_invisible="True"/>
+                    <field name="statement_line_id" column_invisible="True"/>
+                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="is_same_currency" column_invisible="True"/>
+                    <field name="is_account_reconcile" column_invisible="True"/>
+                    <field name="sequence" column_invisible="True"/>
+                    <groupby name="partner_id">
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    </groupby>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_move_line_payment_filter" model="ir.ui.view">
+            <field name="name">account.move.line.payment.search</field>
+            <field name="model">account.move.line</field>
+            <field eval="200" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Search Journal Items">
+                    <field name="name" string="Journal Item" filter_domain="[
+                        '|', '|', '|',
+                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="date_maturity"/>
+                    <field name="discount_date"/>
+                    <field name="payment_date"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <separator/>
+                    <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items" invisible="1"/>
+                    <separator/>
+                    <filter string="Unreconciled" domain="[('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled" invisible="1"/>
+                    <separator/>
+                    <filter string="Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]" help="From Trade Payable accounts" name="trade_payable"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
+                    <filter string="Due date" name="invoice_date_due" date="date"/>
+                    <filter string="Discount Date" name="date_maturity" date="date"/>
+                    <filter string="Overdue" name="late" domain="[('date_maturity', '&lt;', time.strftime('%Y-%m-%d'))]" help="Overdue payments, due date passed"/>
+                    <separator/>
+                    <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
+                        <filter string="Due Date" name="groupby_invoice_date_due" domain="[]" context="{'group_by': 'date_maturity'}"/>
+                        <filter string="Discount Date" name="groupby_discount_date" domain="[]" context="{'group_by': 'discount_date'}"/>
+                        <filter string="Payment Date" name="groupby_payment_date" domain="[]" context="{'group_by': 'payment_date'}"/>
+                        <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1395,7 +1496,7 @@
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
         </record>
 
-        <record id="action_automatic_entry_change_account" model="ir.actions.server">
+        <record id="²" model="ir.actions.server">
             <field name="name">Move to Account</field>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>

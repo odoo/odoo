@@ -320,8 +320,8 @@
                             <div class="row" t-if="dashboard.number_draft">
                                 <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-out="dashboard.number_draft"/> Invoices to Validate</span>
-                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate" id="account_dashboard_purchase_draft"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
+                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-out="dashboard.number_draft"/> To Validate</span>
+                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate" id="account_dashboard_purchase_draft"><t t-out="dashboard.number_draft"/> To Validate</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
@@ -330,14 +330,13 @@
                             </div>
                             <div class="row" t-if="dashboard.number_waiting">
                                 <div class="col overflow-hidden text-start">
-                                    <a type="object" t-if="journal_type == 'sale'" name="open_action"
+                                    <a type="object" name="open_action"
                                     context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_sale_pay_link">
-                                        <t t-out="dashboard.number_waiting"/> Unpaid Invoices
+                                        <span t-if="journal_type == 'sale'" title="Unpaid Invoices"><t t-out="dashboard.number_waiting"/> Unpaid</span>
                                     </a>
-
-                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action"
-                                    context="{'search_default_open':1, 'search_default_posted':1, 'search_default_partial': 1}" id="account_dashboard_purchase_pay_link">
-                                        <t t-out="dashboard.number_waiting"/> Bills to Pay
+                                    <a type="object" name="action_open_payment_items"
+                                    context="{'search_default_purchases': '1',}" id="account_dashboard_purchase_pay_link">
+                                        <span t-if="journal_type == 'purchase'" title="Unpaid Bills"><t t-out="dashboard.number_waiting"/> To Pay</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
@@ -347,8 +346,10 @@
                             <div class="row" t-if="dashboard.number_late">
                                 <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_late': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Late Invoices"><t t-out="dashboard.number_late"/> Late Invoices</span>
-                                        <span t-if="journal_type == 'purchase'" title="Late Bills"><t t-out="dashboard.number_late"/> Late Bills</span>
+                                        <span t-if="journal_type == 'sale'" title="Late Invoices"><t t-out="dashboard.number_late"/> Late </span>
+                                    </a>
+                                    <a type="object" name="action_open_payment_items" context="{'search_default_purchases': '1', 'search_default_late': '1'}">
+                                        <span t-if="journal_type == 'purchase'" title="Late Bills"><t t-out="dashboard.number_late"/> Late </span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">

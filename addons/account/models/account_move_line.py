@@ -381,6 +381,11 @@ class AccountMoveLine(models.Model):
         store=True,
         help='Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted'
     )
+    payment_date = fields.Date(
+        string='Payment Date',
+        store=False,
+        compute='_compute_payment_date',
+    )
     # Discounted amount to pay when the early payment discount is applied
     discount_amount_currency = fields.Monetary(
         string='Discount amount in Currency',
@@ -1120,6 +1125,27 @@ class AccountMoveLine(models.Model):
                     "company_id": line.company_id.id,
                 })
                 line.analytic_distribution = distribution or line.analytic_distribution
+
+    def _compute_payment_date(self):
+        for line in self:
+            line.payment_date = line.discount_date if line.discount_date else line.date_maturity
+
+    def action_register_payment(self):
+        ''' Open the account.payment.register wizard to pay the selected journal items.
+        :return: An action opening the account.payment.register wizard.
+        '''
+        return {
+            'name': _('Register Payment'),
+            'res_model': 'account.payment.register',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'context': {
+                'active_model': 'account.move.line',
+                'active_ids': self.ids,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
