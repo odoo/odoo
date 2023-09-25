@@ -114,7 +114,7 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
 
     def new_payment_register(self, active_ids, values = {}):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create(values)
-        taxes = wizard.line_ids.move_id.invoice_line_ids.product_id.l10n_ar_supplier_withholding_taxes_ids.filtered(lambda y: y.company_id == wizard.company_id)
+        taxes = wizard._get_withholding_tax()
         wizard.withholding_ids =[Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0 , 'amount': 0}) for x in taxes]
         wizard.withholding_ids._compute_base_amount()
         wizard.withholding_ids._compute_amount()
