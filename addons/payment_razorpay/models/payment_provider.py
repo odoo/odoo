@@ -47,6 +47,7 @@ class PaymentProvider(models.Model):
         self.filtered(lambda p: p.code == 'razorpay').update({
             'support_manual_capture': 'full_only',
             'support_refund': 'partial',
+            'support_tokenization': True,
         })
 
     # === BUSINESS METHODS ===#
@@ -88,8 +89,8 @@ class PaymentProvider(models.Model):
                     "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
                 )
                 raise ValidationError("Razorpay: " + _(
-                    "The communication with the API failed. Razorpay gave us the following "
-                    "information: '%s'", response.json().get('error', {}).get('description')
+                    "Razorpay gave us the following information: '%s'",
+                    response.json().get('error', {}).get('description')
                 ))
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
@@ -126,3 +127,15 @@ class PaymentProvider(models.Model):
         if self.code != 'razorpay':
             return default_codes
         return const.DEFAULT_PAYMENT_METHODS_CODES
+
+    def _get_validation_amount(self):
+        """ Override of `payment` to return the amount for Razorpay validation operations.
+
+        :return: The validation amount.
+        :rtype: float
+        """
+        res = super()._get_validation_amount()
+        if self.code != 'razorpay':
+            return res
+
+        return 1.0

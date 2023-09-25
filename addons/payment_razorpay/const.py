@@ -111,6 +111,12 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'discover',
 ]
 
+# The maximum amount in INR that can be paid through an eMandate.
+MANDATE_MAX_AMOUNT = {
+    'card': 500000,
+    'upi': 100000,
+}
+
 # Mapping of transaction states to Razorpay's payment statuses.
 # See https://razorpay.com/docs/payments/payments#payment-life-cycle.
 PAYMENT_STATUS_MAPPING = {
