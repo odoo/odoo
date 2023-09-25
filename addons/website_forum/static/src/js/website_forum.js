@@ -269,7 +269,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         if (session.is_website_user) {
             this._displayAccessDeniedNotification(
+<<<<<<< HEAD
                 markup(`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`)
+||||||| parent of 086480f0d57 (temp)
+                Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+=======
+                Markup(sprintf("<p>%s</p>", _t('Oh no! Please <a href=/web/login>sign in</a> to vote')))
+>>>>>>> 086480f0d57 (temp)
             );
             return;
         }
@@ -376,7 +382,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const message = data.error === 'own_post'
                     ? _t('Sorry, you cannot vote for your own posts')
                     : data.error === 'anonymous_user'
+<<<<<<< HEAD
                         ? markup(`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`)
+||||||| parent of 086480f0d57 (temp)
+                        ? Markup`<p>${sprintf(_t('Oh no! Please <a href="%s">sign in</a> to vote'), "/web/login")}</p>`
+=======
+                        ? Markup(sprintf("<p>%s</p>", _t('Oh no! Please <a href=/web/login>sign in</a> to vote')))
+>>>>>>> 086480f0d57 (temp)
                         : data.error;
                 this._displayAccessDeniedNotification(message);
             } else {
