@@ -696,6 +696,7 @@ export class PosGlobalState extends PosModel {
                 message = messageFp;
             }
         }
+        await this._getMissingProducts(ordersJson);
         const allOrders = [...this.get_order_list()];
         this._replaceOrders(allOrders, ordersJson);
         this.sortOrders();
@@ -732,6 +733,17 @@ export class PosGlobalState extends PosModel {
             [odoo.pos_session_id],
             pricelistsToGet,
         ]);
+    }
+    async _getMissingProducts(ordersJson) {
+        const productIds = [];
+        for (const order of ordersJson) {
+            for (const orderline of order.lines) {
+                if (!this.db.get_product_by_id(orderline[2].product_id)) {
+                    productIds.push(orderline[2].product_id);
+                }
+            }
+        }
+        await this._addProducts(productIds, false);
     }
     _addPosPricelists(pricelistsJson) {
         if (!this.config.use_pricelist) {
