@@ -14177,4 +14177,46 @@ QUnit.module("Fields", (hooks) => {
         ]);
         assert.verifySteps(["get_views", "web_read", "web_save"]);
     });
+
+    QUnit.test("one2many causes an onchange on the parent which fails", async function (assert) {
+        serverData.models.partner.onchanges = {
+            turtles: function () {},
+        };
+        serviceRegistry.add("error", errorService);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree editable="top">
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange" && args.model === "partner") {
+                    throw makeServerError();
+                }
+            },
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='turtle_foo'] input").value,
+            "blip"
+        );
+
+        // onchange on parent record fails
+        await editInput(target, ".o_field_widget[name='turtle_foo'] input", "new value");
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='turtle_foo'] input").value,
+            "blip"
+        );
+        assert.containsOnce(target, ".o_error_dialog");
+    });
 });
