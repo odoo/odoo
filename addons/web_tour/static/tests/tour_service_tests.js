@@ -135,6 +135,93 @@ QUnit.module("Tour service", (hooks) => {
         assert.strictEqual(target.querySelector("span.value").textContent, "1");
     });
 
+    QUnit.test("scroller pointer to reach next step", async function (assert) {
+        patchWithCleanup(Element.prototype, {
+            scrollIntoView(options) {
+                super.scrollIntoView({ ...options, behavior: "instant" });
+            },
+        });
+
+        // The fixture should be shown for this test
+        target.style.position = "fixed";
+        target.style.top = "200px";
+        target.style.left = "50px";
+
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            steps: () => [{ trigger: "button.inc", content: "Click to increment" }],
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Root extends Component {
+            static components = { OverlayContainer, Counter };
+            static template = xml/*html*/ `
+                <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
+                    <div class="top-filler" style="height: 300px" />
+                    <Counter />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                    <div class="bottom-filler" style="height: 300px" />
+                </div>
+            `;
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        await mock.advanceTime(100); // awaits the macro engine
+
+        // Even if this seems weird, it should show the initial pointer.
+        // This is due to the fact the intersection observer has just been started and
+        // the pointer did not have the observations yet when the pointTo method was called.
+        // This is a bit tricky to change for now because the synchronism of the pointTo method
+        // is what permits to avoid multiple pointer to be shown at the same time
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(
+            document.body.querySelector(".o_tour_pointer").textContent,
+            "Click to increment"
+        );
+
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        // now the scroller pointer should be shown
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(
+            document.body.querySelector(".o_tour_pointer").textContent,
+            "Scroll down to reach the next step."
+        );
+
+        // awaiting the click here permits to the intersection observer to update
+        await click(document.body, ".o_tour_pointer");
+        assert.containsNone(document.body, ".o_tour_pointer");
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(
+            document.body.querySelector(".o_tour_pointer").textContent,
+            "Click to increment"
+        );
+
+        document.querySelector(".scrollable-parent").scrollTop = 1000;
+        await nextTick(); // awaits the intersection observer to update after the scroll
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(
+            document.body.querySelector(".o_tour_pointer").textContent,
+            "Scroll up to reach the next step."
+        );
+
+        // awaiting the click here permits to the intersection observer to update
+        await click(document.body, ".o_tour_pointer");
+        assert.containsNone(document.body, ".o_tour_pointer");
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(
+            document.body.querySelector(".o_tour_pointer").textContent,
+            "Click to increment"
+        );
+    });
+
     QUnit.test("perform edit on next step", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
