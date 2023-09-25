@@ -33,8 +33,8 @@
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                        <label for="partner_ids" string="Recipients" attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
-                        <div groups="base.group_user" attrs="{'invisible': [('composition_mode', '!=', 'comment')]}">
+                        <label for="partner_ids" string="Recipients" attrs="{'invisible': ['|', ('composition_mode', '!=', 'comment'), ('subtype_is_log', '=', True)]}"/>
+                        <div groups="base.group_user" attrs="{'invisible': ['|', ('composition_mode', '!=', 'comment'), ('subtype_is_log', '=', True)]}">
                             <span name="document_followers_text" attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">Followers of the document and</span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
