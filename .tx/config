@@ -862,6 +862,7 @@ type          = PO
 minimum_perc  = 0
 resource_name = payment
 
+<<<<<<< HEAD
 [o:odoo:p:odoo-s16-4:r:payment_adyen]
 file_filter   = addons/payment_adyen/i18n/<lang>.po
 source_file   = addons/payment_adyen/i18n/payment_adyen.pot
@@ -989,6 +990,18 @@ minimum_perc  = 0
 resource_name = payment_stripe
 
 [o:odoo:p:odoo-s16-4:r:phone_validation]
+||||||| parent of 3ddd21aba6c (temp)
+[o:odoo:p:odoo-s16-3:r:phone_validation]
+=======
+[o:odoo:p:odoo-s16-3:r:payment_stripe]
+file_filter   = addons/payment_stripe/i18n/<lang>.po
+source_file   = addons/payment_stripe/i18n/payment_stripe.pot
+type          = PO
+minimum_perc  = 0
+resource_name = payment_stripe
+
+[o:odoo:p:odoo-s16-3:r:phone_validation]
+>>>>>>> 3ddd21aba6c (temp)
 file_filter   = addons/phone_validation/i18n/<lang>.po
 source_file   = addons/phone_validation/i18n/phone_validation.pot
 type          = PO
