@@ -95,6 +95,7 @@ function updateCartNavBar(data) {
     sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
     $(".my_cart_quantity")
         .parents('li.o_wsale_my_cart').removeClass('d-none').end()
+        .toggleClass('d-none', data.cart_quantity === 0)
         .addClass('o_mycart_zoom_animation').delay(300)
         .queue(function () {
             $(this)
