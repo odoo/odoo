@@ -146,6 +146,67 @@ class TestChartTemplate(TransactionCase):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             cls.env['account.chart.template'].try_loading('test', company=cls.company_1, install_demo=False)
 
+    def test_signed_and_unsigned_tags_tax(self):
+        tax_report = self.env['account.report'].create({
+            'name': "Tax report 1",
+            'country_id': None,
+            'column_ids': [
+                Command.create({
+                    'name': "Balance",
+                    'expression_label': 'balance',
+                }),
+            ],
+        })
+        self.env['account.report.line'].create({
+            'name': "[SIGNED_TAG] Signed tag line",
+            'report_id': tax_report.id,
+            'sequence': max(tax_report.mapped('line_ids.sequence') or [0]) + 1,
+            'expression_ids': [
+                Command.create({
+                    'label': 'balance',
+                    'engine': 'tax_tags',
+                    'formula': 'SIGNED_TAG',
+                }),
+            ],
+        })
+        signed_tag = self.env['account.account.tag'].search([
+            ('applicability', '=', 'taxes'),
+            ('name', '=', '+SIGNED_TAG'),
+        ])
+        self.env['account.account.tag']._load_records([
+            {
+                'xml_id': 'account.unsigned_tax_tag',
+                'noupdate': True,
+                'values': {
+                    'name': "unsigned tax tag",
+                    'applicability': 'taxes',
+                },
+            },
+        ])
+        tax_to_load = {
+            'name': 'Mixed Tags Tax',
+            'amount': 30,
+            'amount_type': 'percent',
+            'tax_group_id': 'tax_group_taxes',
+            'active': True,
+            'repartition_line_ids': [
+                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': 'account.unsigned_tax_tag||+SIGNED_TAG'}),
+                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
+                Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
+                Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
+            ]
+        }
+        self.env['account.chart.template']._deref_account_tags('test', {'tax1': tax_to_load})
+        self.assertEqual(
+            tax_to_load['repartition_line_ids'][0],
+            Command.create({
+                'document_type': 'invoice',
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [Command.set(['account.unsigned_tax_tag', signed_tag.id])],
+            })
+        )
+
     def test_update_taxes_creation(self):
         """ Tests that adding a new tax and a fiscal position tax creates new records when updating. """
         def local_get_data(self, template_code):
