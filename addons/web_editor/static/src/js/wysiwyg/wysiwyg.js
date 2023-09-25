@@ -51,7 +51,6 @@ const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
 const isProtected = OdooEditorLib.isProtected;
-const isBlock = OdooEditorLib.isBlock;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
@@ -2064,10 +2063,6 @@ export class Wysiwyg extends Component {
         }
 
         this.odooEditor.automaticStepSkipStack();
-        // Clear "d-none" for button groups.
-        for (const buttonGroup of this.toolbarEl.querySelectorAll('.btn-group')) {
-            buttonGroup.classList.remove('d-none');
-        }
         // We need to use the editor's window so the tooltip displays in its
         // document even if it's in an iframe.
         const editorWindow = this.odooEditor.document.defaultView;
@@ -2078,6 +2073,7 @@ export class Wysiwyg extends Component {
         // snippet is a media.
         const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars') && e.target &&
             (e.target.isContentEditable || (e.target.parentElement && e.target.parentElement.isContentEditable));
+        this.toolbarEl.classList.toggle('oe-media', isInMedia);
 
         for (const el of this.toolbarEl.querySelectorAll([
             '#image-preview',
@@ -2113,13 +2109,12 @@ export class Wysiwyg extends Component {
             '#justifyFull',
             '#list',
             '#colorInputButtonGroup',
-            '#create-link',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
         ].join(','))){
             el.classList.toggle('d-none', isInMedia);
         }
         // Some icons are relevant for icons, that aren't for other media.
-        for (const el of this.toolbarEl.querySelectorAll('#colorInputButtonGroup, #create-link')) {
+        for (const el of this.toolbarEl.querySelectorAll('#colorInputButtonGroup')) {
             el.classList.toggle('d-none', isInMedia && !$target.is('.fa'));
         }
         for (const el of this.toolbarEl.querySelectorAll('.only_fa')) {
@@ -2135,17 +2130,6 @@ export class Wysiwyg extends Component {
                 el.classList.toggle('d-none', true);
             }
         }
-        // Hide the create-link button if the selection spans several blocks.
-        selection = this.odooEditor.document.getSelection();
-        const range = selection && selection.rangeCount && selection.getRangeAt(0);
-        const $rangeContainer = range && $(range.commonAncestorContainer);
-        const spansBlocks = range && !!$rangeContainer.contents().filter((i, node) => isBlock(node)).length;
-        if (!range || spansBlocks) {
-            this.toolbarEl.querySelector('#create-link')?.classList.toggle('d-none', true);
-        }
-        // Toggle unlink button. Always hide it on media.
-        const linkNode = getInSelection(this.odooEditor.document, 'a');
-        this.toolbarEl.querySelector('#unlink')?.classList.toggle('d-none', !linkNode || isInMedia);
         // Toggle the toolbar arrow.
         this.toolbarEl.classList.toggle('noarrow', isInMedia);
         // Unselect all media.
@@ -2182,12 +2166,6 @@ export class Wysiwyg extends Component {
                     this.tooltipTimeouts.push(setTimeout(() => removeTooltip(), 800));
                 });
             }, 400));
-        }
-        // Hide button groups that have no visible buttons.
-        for (const buttonGroup of this.toolbarEl.querySelectorAll('.btn-group:not(.d-none)')) {
-            if (!buttonGroup.querySelector('.btn:not(.d-none)')) {
-                buttonGroup.classList.add('d-none');
-            }
         }
         // Toolbar might have changed size, update its position.
         this.odooEditor.updateToolbarPosition();
