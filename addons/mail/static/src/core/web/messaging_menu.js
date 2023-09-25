@@ -74,7 +74,7 @@ export class MessagingMenu extends Component {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
-            (this.store.NotificationGroup.records.length > 0 &&
+            (this.store.discuss.notificationGroups.length > 0 &&
                 this.store.discuss.activeTab === "all") ||
             (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
         );
@@ -86,7 +86,7 @@ export class MessagingMenu extends Component {
             displayName: _t("%s has a request", this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isLast: this.threads.length === 0 && this.store.NotificationGroup.records.length === 0,
+            isLast: this.threads.length === 0 && this.store.discuss.notificationGroups.length === 0,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
@@ -234,7 +234,7 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.ChatWindow.records.find(({ thr }) => thr?.eq(thread))?.close();
+            this.store.discuss.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
         } else {
             this.threadService.open(thread);
         }
@@ -297,7 +297,7 @@ export class MessagingMenu extends Component {
             Object.values(this.store.Thread.records).filter(
                 (thread) => thread.is_pinned && thread.message_unread_counter > 0
             ).length +
-            Object.values(this.store.NotificationGroup.records).reduce(
+            this.store.discuss.notificationGroups.reduce(
                 (acc, ng) => acc + parseInt(ng.notifications.length),
                 0
             );

@@ -58,7 +58,7 @@ export class AutopopupService {
      */
     async shouldOpenChatWindow() {
         const thread = await this.livechatService.thread;
-        return this.storeService.ChatWindow.records.every((cw) => !cw.thread?.eq(thread));
+        return this.storeService.discuss.chatWindows.every((cw) => !cw.thread?.eq(thread));
     }
 
     get allowAutoPopup() {

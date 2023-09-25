@@ -411,7 +411,7 @@ export class ThreadService {
         thread.pendingNewMessages = [];
     }
 
-    unpin(thread) {
+    async unpin(thread) {
         if (thread.eq(this.store.discuss.thread)) {
             this.router.replaceState({ active_id: undefined });
         }
