@@ -213,14 +213,14 @@ class PurchaseOrderLine(models.Model):
 
         move_dests = self.move_dest_ids
         if not move_dests:
-            move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier')
+            move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier')
 
         if not move_dests:
             qty_to_attach = 0
             qty_to_push = self.product_qty - qty
         else:
             move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
-                sum(move_dests.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier').mapped('product_qty')),
+                sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
                 self.product_uom, rounding_method='HALF-UP')
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
