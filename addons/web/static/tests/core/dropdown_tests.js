@@ -18,6 +18,7 @@ import {
     makeDeferred,
     mount,
     mouseEnter,
+    mouseLeave,
     nextTick,
     patchWithCleanup,
     triggerEvent,
@@ -224,6 +225,44 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(target, "button.dropdown-toggle");
         await click(target, ".dropdown-menu .dropdown-item");
         assert.containsNone(target, ".dropdown-menu");
+    });
+
+    QUnit.test("hold position on hover", async (assert) => {
+        let parentState;
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ filler: false });
+                parentState = this.state;
+            }
+            static template = xml`
+                <div t-if="state.filler" class="filler" style="height: 100px;"/>
+                <Dropdown holdOnHover="true">
+                </Dropdown>
+            `;
+            static components = { Dropdown };
+        }
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.containsNone(target, ".dropdown-menu");
+        await click(target, "button.dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+        const menuBox1 = target.querySelector(".dropdown-menu").getBoundingClientRect();
+
+        // Pointer enter the dropdown menu
+        await mouseEnter(target, ".dropdown-menu");
+
+        // Add a filler to the parent
+        assert.containsNone(target, ".filler");
+        parentState.filler = true;
+        await nextTick();
+        assert.containsOnce(target, ".filler");
+        const menuBox2 = target.querySelector(".dropdown-menu").getBoundingClientRect();
+        assert.strictEqual(menuBox2.top - menuBox1.top, 0);
+
+        // Pointer leave the dropdown menu
+        await mouseLeave(target, ".dropdown-menu");
+        const menuBox3 = target.querySelector(".dropdown-menu").getBoundingClientRect();
+        assert.strictEqual(menuBox3.top - menuBox1.top, 100);
     });
 
     QUnit.test("payload received on item selection", async (assert) => {

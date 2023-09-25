@@ -41,6 +41,8 @@
         t-att-class="props.menuClass"
         role="menu"
         t-ref="menuRef"
+        t-on-pointerenter="() => props.holdOnHover and position.lock()"
+        t-on-pointerleave="() => props.holdOnHover and position.unlock()"
         t-on-scroll="props.onScroll"
       >
         <t t-slot="default" />

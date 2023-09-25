@@ -7,8 +7,14 @@ import { usePosition } from "@web/core/position_hook";
 export class Popover extends Component {
     setup() {
         useForwardRefToParent("ref");
-        usePosition(this.props.target, {
-            onPositioned: this.props.onPositioned || this.onPositioned.bind(this),
+        const position = usePosition(this.props.target, {
+            onPositioned: (el, solution) => {
+                (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
+                if (this.props.fixedPosition) {
+                    // Prevent further positioning updates if fixed position is wanted
+                    position.lock();
+                }
+            },
             position: this.props.position,
             popper: "ref",
             fixedPosition: this.props.fixedPosition,
