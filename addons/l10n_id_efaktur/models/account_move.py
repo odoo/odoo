@@ -56,10 +56,17 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'line_ids.tax_ids')
     def _compute_need_kode_transaksi(self):
         for move in self:
-            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
+            # If there are no taxes at all on every line (0% taxes counts as having a tax) then we don't need a kode transaksi
+            move.l10n_id_need_kode_transaksi = (
+                move.partner_id.l10n_id_pkp
+                and not move.l10n_id_tax_number
+                and move.move_type == 'out_invoice'
+                and move.country_code == 'ID'
+                and move.line_ids.tax_ids
+            )
 
     @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
     def _constraint_kode_ppn(self):
@@ -129,6 +136,8 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
             if record.partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
+                if not self.l10n_id_need_kode_transaksi:
+                    raise ValidationError(_('E-faktur is not available for invoices without any taxes.'))
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 
         self._generate_efaktur(',')
