@@ -52,6 +52,17 @@ QUnit.module('Subtask Kanban List tests', {
                         </t>
                     </templates>
                 </kanban>`,
+            "project.task,false,form":
+                `<form>
+                    <field name="name"/>
+                    <field name="child_ids" widget="subtasks_one2many">
+                        <tree editable="bottom">
+                            <field name="id"/>
+                            <field name="project_id"/>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </form>`
         };
         target = getFixture();
         setupViewRegistries();
@@ -81,5 +92,22 @@ QUnit.module('Subtask Kanban List tests', {
         await click(target, '.subtask_list_button');
 
         assert.containsNone(target, '.subtask_list', "If the drawdown button is clicked again, the subtasks list should be hidden again");
+    });
+
+    QUnit.test("focus new subtask's name", async function (assert) {
+        const views = this.views;
+        const { openView } = await start({ serverData: { views } });
+        await openView({
+            res_model: "project.task",
+            views: [[false, "form"]],
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row > td[name='name'] > div > input"),
+            "Upon clicking on 'Add a line', the new subtask's name should be focused."
+        );
     });
 });
