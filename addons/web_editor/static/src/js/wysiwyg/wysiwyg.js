@@ -2686,19 +2686,11 @@ export class Wysiwyg extends Component {
         this._isOnline = true;
         if (!this.ptp) return;
 
-        // Ask for potential missing steps from all peers.
-        return Promise.all(this._getPtpClients().map(client => {
-            return this.requestClient(
-                client.id,
-                'get_missing_steps', {
-                    fromStepId: peek(this.odooEditor.historyGetBranchIds()).id,
-                },
-                { transport: 'rtc' }
-            ).then(missingSteps => {
-                if (missingSteps === REQUEST_ERROR) return;
-                this._processMissingSteps(missingSteps);
-            });
-        }));
+        // If it was disconnected to some peers, send the join signal again.
+        this.ptp.notifyAllClients('ptp_join');
+        // Send last step to all peers. If the peers cannot add the step, they
+        // will ask for missing steps.
+        this.ptp.notifyAllClients('oe_history_step', peek(this.odooEditor.historyGetSteps()), { transport: 'rtc' });
     }
     /**
      * Process missing steps received from a peer.
@@ -2821,9 +2813,10 @@ export class Wysiwyg extends Component {
                             }
                             this._historySyncFinished = true;
                         } else {
-                            const currentStep = this.odooEditor._historySteps[this.odooEditor._historySteps.length - 1];
+                            // Make both send their last step to each other to
+                            // ensure they are in sync.
+                            this.ptp.notifyAllClients('oe_history_step', peek(this.odooEditor.historyGetSteps()), { transport: 'rtc' });
                             this._setCollaborativeSelection(fromClientId);
-                            this.ptp.notifyClient(fromClientId, 'oe_history_step', currentStep, { transport: 'rtc' });
                         }
 
                         this.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
