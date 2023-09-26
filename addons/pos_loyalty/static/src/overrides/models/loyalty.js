@@ -1041,8 +1041,8 @@ patch(Order.prototype, {
     _createLineFromVals(vals) {
         vals["lst_price"] = vals["price"];
         const line = new Orderline(
-            { env: this.env, pos: this.pos },
-            { order: this, product: vals["product"] }
+            { env: this.env },
+            { pos: this.pos, order: this, product: vals["product"] }
         );
         this.fix_tax_included_price(line);
         this.set_orderline_options(line, vals);

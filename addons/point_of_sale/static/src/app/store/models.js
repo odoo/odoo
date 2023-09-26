@@ -175,11 +175,12 @@ export class Product extends BaseProduct {
 // An Order contains zero or more Orderlines.
 export class Orderline extends BaseOrderline {
     setup(obj, options) {
+        this.pos = options.pos;
         if (options.json) {
             this.setup_base(obj);
+            this.order = options.order;
             this.selected = false;
             this.saved_quantity = 0;
-            this.order = options.order;
             try {
                 this.init_from_JSON(options.json);
             } catch {
@@ -227,8 +228,9 @@ export class Orderline extends BaseOrderline {
     }
     clone() {
         var orderline = new Orderline(
-            { env: this.env, pos: this.pos },
+            { env: this.env },
             {
+                pos: this.pos,
                 order: this.order,
                 product: this.product,
                 price: this.price,
@@ -957,8 +959,8 @@ export class Order extends BaseOrder {
             if (orderline.product_id && this.pos.db.get_product_by_id(orderline.product_id)) {
                 this.add_orderline(
                     new Orderline(
-                        { env: this.env, pos: this.pos },
-                        { order: this, json: orderline }
+                        { env: this.env },
+                        { order: this, pos: this.pos, json: orderline }
                     )
                 );
             }
@@ -1471,8 +1473,8 @@ export class Order extends BaseOrder {
         options = options || {};
         const quantity = options.quantity ? options.quantity : 1;
         const line = new Orderline(
-            { env: this.env, pos: this.pos },
-            { order: this, product: product, quantity: quantity }
+            { env: this.env },
+            { pos: this.pos, order: this, product: product, quantity: quantity }
         );
         this.fix_tax_included_price(line);
 

@@ -20,9 +20,7 @@ export class SplitBillScreen extends Component {
         this.newOrder = undefined;
         this._isFinal = false;
         this.newOrder = new Order(
-            {
-                env: this.env,
-            },
+            { env: this.env },
             {
                 pos: this.pos,
                 cashier: this.pos.get_cashier(),
