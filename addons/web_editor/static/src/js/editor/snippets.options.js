@@ -5111,6 +5111,12 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 registry.layout_column = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    cleanUI() {
+        this._removeGridPreview();
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -5257,6 +5263,30 @@ registry.layout_column = SnippetOptionWidget.extend({
         gridUtils._resizeGrid(rowEl);
         this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        await this._super(previewMode, widgetValue, params);
+
+        const rowEl = this.$target[0];
+        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+        const isMobileView = rowEl.ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+        if (["row-gap", "column-gap"].includes(params.cssProperty) && !isMobileView) {
+            // Reset the animation.
+            this._removeGridPreview();
+            void rowEl.offsetWidth; // Trigger a DOM reflow.
+
+            // Add an animated grid preview.
+            this.options.wysiwyg.odooEditor.observerUnactive("addGridPreview");
+            this.gridPreviewEl = gridUtils._addBackgroundGrid(rowEl, 0);
+            this.gridPreviewEl.classList.add("o_we_grid_preview");
+            gridUtils._setElementToMaxZindex(this.gridPreviewEl, rowEl);
+            this.options.wysiwyg.odooEditor.observerActive("addGridPreview");
+            this.removeGridPreview = this._removeGridPreview.bind(this);
+            rowEl.addEventListener("animationend", this.removeGridPreview);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -5377,6 +5407,22 @@ registry.layout_column = SnippetOptionWidget.extend({
         // Kept for compatibility.
         rowEl.style.removeProperty('--grid-item-padding-x');
         rowEl.style.removeProperty('--grid-item-padding-y');
+        rowEl.style.removeProperty("gap");
+    },
+    /**
+     * Removes the grid preview that was added when changing the grid gaps.
+     *
+     * @private
+     */
+    _removeGridPreview() {
+        this.options.wysiwyg.odooEditor.observerUnactive("removeGridPreview");
+        this.$target[0].removeEventListener("animationend", this.removeGridPreview);
+        if (this.gridPreviewEl) {
+            this.gridPreviewEl.remove();
+            delete this.gridPreviewEl;
+        }
+        delete this.removeGridPreview;
+        this.options.wysiwyg.odooEditor.observerActive("removeGridPreview");
     },
 });
 

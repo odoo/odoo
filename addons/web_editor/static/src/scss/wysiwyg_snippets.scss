@@ -2614,6 +2614,22 @@ we-select.o_grid we-toggler {
         stroke-opacity: .2;
         stroke-width: 1px;
     }
+
+    &.o_we_grid_preview {
+        pointer-events: none;
+
+        .o_we_cell {
+            animation: gridPreview 2s 0.5s;
+        }
+    }
+}
+
+// Grid preview.
+@keyframes gridPreview {
+    to {
+        fill-opacity: 0;
+        stroke-opacity: 0;
+    }
 }
 
 .o_we_drag_helper {
