@@ -1073,6 +1073,9 @@ export class OdooEditor extends EventTarget {
         this.observerActive();
         this.dispatchEvent(new Event('historyResetFromSteps'));
     }
+    historyGetSteps() {
+        return this._historySteps;
+    }
     historyGetMissingSteps({fromStepId, toStepId}) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
         const toIndex = toStepId ? this._historySteps.findIndex(x => x.id === toStepId) : this._historySteps.length;
