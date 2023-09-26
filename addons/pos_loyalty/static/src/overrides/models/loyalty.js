@@ -858,7 +858,7 @@ patch(Order.prototype, {
                     }
                 }
             }
-            const res = (points || program.program_type === 'coupons') ? [{ points }] : [];
+            const res = points || program.program_type === "coupons" ? [{ points }] : [];
             if (splitPoints.length) {
                 res.push(...splitPoints);
             }
@@ -1041,8 +1041,8 @@ patch(Order.prototype, {
     _createLineFromVals(vals) {
         vals["lst_price"] = vals["price"];
         const line = new Orderline(
-            { env: this.env },
-            { pos: this.pos, order: this, product: vals["product"] }
+            { env: this.env, pos: this.pos },
+            { order: this, product: vals["product"] }
         );
         this.fix_tax_included_price(line);
         this.set_orderline_options(line, vals);
@@ -1358,9 +1358,12 @@ patch(Order.prototype, {
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
-                const appliedRules = appliedRulesIds !== undefined
-                    ? reward.program_id.rules.filter(rule => appliedRulesIds.includes(rule.id))
-                    : reward.program_id.rules;
+                const appliedRules =
+                    appliedRulesIds !== undefined
+                        ? reward.program_id.rules.filter((rule) =>
+                              appliedRulesIds.includes(rule.id)
+                          )
+                        : reward.program_id.rules;
                 let factor = 0;
                 let orderPoints = 0;
                 for (const rule of appliedRules) {

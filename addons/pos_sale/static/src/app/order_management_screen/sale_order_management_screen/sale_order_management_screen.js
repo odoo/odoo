@@ -208,9 +208,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     }
 
                     const new_line = new Orderline(
-                        { env: this.env },
+                        { env: this.env, pos: this.pos },
                         {
-                            pos: this.pos,
                             order: this.pos.get_order(),
                             product: this.pos.db.get_product_by_id(line.product_id[0]),
                             description: line.name,
@@ -350,9 +349,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     }
 
                     const new_line = new Orderline(
-                        { env: this.env },
+                        { env: this.env, pos: this.pos },
                         {
-                            pos: this.pos,
                             order: this.pos.get_order(),
                             product: down_payment_product,
                             price: down_payment,

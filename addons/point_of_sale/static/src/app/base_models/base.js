@@ -36,6 +36,9 @@ export class PosModel {
      * @param {Object?} defaultObj its props copied to this instance.
      */
     setup(defaultObj) {
+        this.setup_base(defaultObj);
+    }
+    setup_base(defaultObj) {
         defaultObj = defaultObj || {};
         if (!defaultObj.cid) {
             defaultObj.cid = this._getCID(defaultObj);

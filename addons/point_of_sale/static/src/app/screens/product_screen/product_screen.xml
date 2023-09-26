@@ -19,7 +19,7 @@
                                 t-attf-title="{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product lot'}}" />
                         </t>
                         <ul t-if="line.pack_lot_lines">
-                            <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
+                            <li t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
                                 SN <t t-esc="lot.lot_name"/>
                             </li>
                         </ul>
