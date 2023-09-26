@@ -298,13 +298,12 @@ export class PosStore extends Reactive {
 
         const modelProducts = products.map((product) => {
             product.pos = this;
-            product.env = this.env;
             product.applicablePricelistItems = {};
             productMap[product.id] = product;
             productTemplateMap[product.product_tmpl_id[0]] = (
                 productTemplateMap[product.product_tmpl_id[0]] || []
             ).concat(product);
-            return new Product(product);
+            return new Product({ env: this.env }, product);
         });
 
         for (const pricelist of this.pricelists) {

@@ -8,8 +8,9 @@ import { deserializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 export class BaseProduct extends PosModel {
-    setup(obj) {
+    setup(obj, product) {
         super.setup(obj);
+        Object.assign(this, product);
         this.parent_category_ids = [];
         let category = this.categ.parent;
         while (category) {
