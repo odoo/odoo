@@ -18,11 +18,9 @@ import { makeEnv, startServices } from "@web/env";
 import { loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
-import { jsonrpc } from '@web/core/network/rpc_service';
 import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
 import { App, whenReady } from "@odoo/owl";
-import { getOrigin } from '@web/core/utils/urls';
 
 const { Settings } = luxon;
 
@@ -334,35 +332,6 @@ export async function createPublicRoot(RootWidget) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
     }
     await whenReady();
-
-    // Patch browser.fetch and the rpc service to use the correct base url when
-    // embeded in an external page
-    const baseUrl = getOrigin();
-    const { fetch } = browser;
-    browser.fetch = function(url, ...args) {
-        if (!url.match(/^(?:https?:)?\/\//)) {
-            url = baseUrl + url;
-        }
-        return fetch(url, ...args);
-    }
-    serviceRegistry.add("rpc", {
-        async: true,
-        start(env) {
-            return function rpc(route, params = {}, settings = {}) {
-                if (!route.match(/^(?:https?:)?\/\//)) {
-                    route = baseUrl + route;
-                }
-                if (String(route).includes("/web/dataset/call_kw/")) {
-                    params.kwargs.context = {
-                        ...publicRoot._getContext(),
-                        ...params.kwargs.context,
-                    };
-                }
-                return jsonrpc(route, params, { bus: env.bus, ...settings });
-            };
-        },
-    }, { force: true });
-
     const wowlEnv = makeEnv();
 
     await startServices(wowlEnv);
