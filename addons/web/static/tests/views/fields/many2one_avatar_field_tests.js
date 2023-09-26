@@ -10,6 +10,7 @@ import {
     selectDropdownItem,
     triggerEvent,
     clickDiscard,
+    clickOpenedDropdownItem,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
@@ -343,8 +344,7 @@ QUnit.module("Fields", (hooks) => {
         const input = target.querySelector(".o_field_widget[name=user_id] input");
         input.value = "yy";
         await triggerEvent(input, null, "input");
-        await click(target, ".o_field_widget[name=user_id] input");
-        await selectDropdownItem(target, "user_id", "Create and edit...");
+        await clickOpenedDropdownItem(target, "user_id", "Create and edit...");
 
         await clickDiscard(target.querySelector(".modal"));
         assert.strictEqual(target.querySelector(".o_field_widget[name=user_id] input").value, "");

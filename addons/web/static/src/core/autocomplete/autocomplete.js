@@ -12,6 +12,7 @@ export class AutoComplete extends Component {
         this.nextSourceId = 0;
         this.nextOptionId = 0;
         this.sources = [];
+        this.inEdition = false;
 
         this.state = useState({
             navigationRev: 0,
@@ -45,7 +46,6 @@ export class AutoComplete extends Component {
             }
         }, this.constructor.timeout);
 
-
         useExternalListener(window, "scroll", this.onWindowScroll, true);
 
         this.hotkey = useService("hotkey");
@@ -54,8 +54,10 @@ export class AutoComplete extends Component {
         owl.onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value || this.forceValFromProp) {
                 this.forceValFromProp = false;
-                this.state.value = nextProps.value;
-                this.inputRef.el.value = nextProps.value;
+                if (!this.inEdition) {
+                    this.state.value = nextProps.value;
+                    this.inputRef.el.value = nextProps.value;
+                }
                 this.close();
             }
         });
@@ -156,6 +158,7 @@ export class AutoComplete extends Component {
     }
     selectOption(indices, params = {}) {
         const option = this.sources[indices[0]].options[indices[1]];
+        this.inEdition = false;
         if (option.unselectable) {
             this.inputRef.el.value = "";
             this.close();
@@ -234,6 +237,7 @@ export class AutoComplete extends Component {
             this.props.onBlur({
                 inputValue: value,
             });
+            this.inEdition = false;
             this.close();
         }
     }
@@ -250,6 +254,7 @@ export class AutoComplete extends Component {
         });
     }
     async onInput() {
+        this.inEdition = true;
         this.pendingPromise = this.pendingPromise || new Deferred();
         this.loadingPromise = this.pendingPromise;
         this.debouncedProcessInput();

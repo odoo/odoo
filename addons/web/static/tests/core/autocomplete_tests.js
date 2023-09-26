@@ -397,4 +397,84 @@ QUnit.module("Components", (hooks) => {
 
         assert.strictEqual(target.querySelector(".o-autocomplete input"), document.activeElement);
     });
+
+    QUnit.test("autocomplete in edition keep edited value before select option", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ value: "Hello" });
+            }
+
+            onClick() {
+                this.state.value = "My Click";
+            }
+
+            onSelect() {
+                this.state.value = "My Selection";
+            }
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <button class="myButton" t-on-click="onClick" />
+            <AutoComplete value="this.state.value"
+            sources="[{ options: [{ label: 'My Selection' }] }]"
+            onSelect.bind="onSelect"
+            />
+        `;
+
+        await mount(Parent, target, { env });
+        const input = target.querySelector(".o-autocomplete input");
+        input.value = "Yolo";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "Yolo");
+
+        await click(target, ".myButton");
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "Yolo");
+
+        // Leave inEdition mode when selecting an option
+        await click(target.querySelector(".o-autocomplete input"));
+        await click(target.querySelectorAll(".o-autocomplete--dropdown-item")[0]);
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "My Selection");
+
+        await click(target, ".myButton");
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "My Click");
+    });
+
+    QUnit.test("autocomplete in edition keep edited value before blur", async (assert) => {
+        let count = 0;
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ value: "Hello" });
+            }
+
+            onClick() {
+                this.state.value = `My Click ${count++}`;
+            }
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <button class="myButton" t-on-click="onClick" />
+            <AutoComplete value="this.state.value"
+            sources="[]"
+            onSelect="() => {}"
+            />
+        `;
+
+        await mount(Parent, target, { env });
+        let input = target.querySelector(".o-autocomplete input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "");
+
+        await click(target, ".myButton");
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "");
+
+        // Leave inEdition mode when blur the input
+        input = target.querySelector(".o-autocomplete input");
+        await triggerEvent(input, null, "blur");
+        await nextTick();
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "");
+
+        await click(target, ".myButton");
+        assert.strictEqual(target.querySelector(".o-autocomplete input").value, "My Click 1");
+    });
 });
