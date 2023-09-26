@@ -11,7 +11,7 @@ from . import populate
 # TODO: Apply proper fix & remove in master
 def pre_init_hook(env):
     env['ir.model.data'].search([
-        ('model', 'like', '%stock%'),
+        ('model', 'like', 'stock'),
         ('module', '=', 'stock')
     ]).unlink()
 
