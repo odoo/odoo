@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { assignDefined } from "@mail/utils/common/misc";
 
@@ -19,10 +18,6 @@ export class Message extends Record {
     /** @type {Object.<number, import("models").Message>} */
     static records = {};
     /** @returns {import("models").Message} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Message} */
     static get(data) {
         return super.get(data);
     }
@@ -37,7 +32,8 @@ export class Message extends Record {
                 id: data.res_id,
             });
         }
-        const message = this.get(data) ?? this.new(data);
+        /** @type {import("models").Message} */
+        const message = this.preinsert(data);
         message.update(data);
         return message;
     }
@@ -72,7 +68,7 @@ export class Message extends Record {
                 ? this.starred_partner_ids.includes(this._store.user.id)
                 : false,
             isTransient,
-            parentMessage: parentMessage ? this._store.Message.insert(parentMessage) : undefined,
+            parentMessage: parentMessage || undefined,
             resId,
             resModel,
             subtypeDescription,
@@ -89,48 +85,23 @@ export class Message extends Record {
                         : record_name || undefined,
             });
         }
-        replaceArrayWithCompare(
-            this.attachments,
-            attachments.map((attachment) =>
-                this._store.Attachment.insert({ message: this, ...attachment })
-            )
-        );
+        this.attachments = attachments.map((attachment) => ({ message: this, ...attachment }));
         if (data.author?.id) {
-            this.author = this._store.Persona.insert({
-                ...data.author,
-                type: "partner",
-            });
+            this.author = { ...data.author, type: "partner" };
         }
         if (data.guestAuthor?.id) {
-            this.author = this._store.Persona.insert({
-                ...data.guestAuthor,
-                type: "guest",
-                channelId: this.originThread.id,
-            });
+            this.author = { ...data.guestAuthor, type: "guest", channelId: this.originThread.id };
         }
-        replaceArrayWithCompare(
-            this.linkPreviews,
-            linkPreviews.map((data) => this._store.LinkPreview.insert({ ...data, message: this }))
-        );
-        replaceArrayWithCompare(
-            this.notifications,
-            notifications.map((notification) =>
-                this._store.Notification.insert({ ...notification, message: this })
-            )
-        );
-        replaceArrayWithCompare(
-            this.recipients,
-            recipients.map((recipient) =>
-                this._store.Persona.insert({ ...recipient, type: "partner" })
-            )
-        );
+        this.linkPreviews = linkPreviews.map((data) => ({ ...data, message: this }));
+        this.notifications = notifications.map((notif) => ({ ...notif, message: this }));
+        this.recipients = recipients.map((recipient) => ({ ...recipient, type: "partner" }));
         if ("user_follower_id" in data && data.user_follower_id && this._store.self) {
-            this.originThread.selfFollower = this._store.Follower.insert({
+            this.originThread.selfFollower = {
                 followedThread: this.originThread,
                 id: data.user_follower_id,
                 isActive: true,
                 partner: this._store.self,
-            });
+            };
         }
         if (data.messageReactionGroups) {
             const reactionContentToUnlink = new Set();

@@ -38,10 +38,6 @@ export class Activity extends Record {
     /** @type {Object.<number, import("models").Activity>} */
     static records = {};
     /** @returns {import("models").Activity} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Activity} */
     static get(data) {
         return super.get(data);
     }
@@ -52,7 +48,8 @@ export class Activity extends Record {
      * @returns {import("models").Activity}
      */
     static insert(data, { broadcast = true } = {}) {
-        const activity = this.get(data) ?? this.new(data);
+        /** @type {import("models").Activity} */
+        const activity = this.preinsert(data);
         Object.assign(activity, { id: data.id });
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];

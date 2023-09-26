@@ -7,10 +7,6 @@ export class RtcSession extends Record {
     /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
     /** @returns {import("models").RtcSession} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").RtcSession} */
     static get(data) {
         return super.get(data);
     }
@@ -19,7 +15,8 @@ export class RtcSession extends Record {
      * @returns {number, import("models").RtcSession}
      */
     static insert(data) {
-        const session = this.get(data) ?? this.new(data);
+        /** @type {import("models").RtcSession} */
+        const session = this.preinsert(data);
         const { channelMember, ...remainingData } = data;
         for (const key in remainingData) {
             session[key] = remainingData[key];

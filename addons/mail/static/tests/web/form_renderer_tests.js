@@ -16,7 +16,10 @@ QUnit.test("Form view not scrolled when switching record", async () => {
             description: [...Array(60).keys()].join("\n"),
             display_name: "Partner 1",
         },
-        { display_name: "Partner 2" },
+        {
+            description: [...Array(60).keys()].join("\n"),
+            display_name: "Partner 2",
+        },
     ]);
     const messages = [...Array(60).keys()].map((id) => {
         return {

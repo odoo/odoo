@@ -4,11 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import { Record } from "./record";
 
 export class DiscussApp extends Record {
-    /** @returns {import("models").DiscussApp} */
     static new(data) {
+        /** @type {import("models").DiscussApp} */
         const res = super.new(data);
         Object.assign(res, {
-            channels: this.store.DiscussAppCategory.insert({
+            channels: {
                 extraClass: "o-mail-DiscussSidebarCategory-channel",
                 id: "channels",
                 name: _t("Channels"),
@@ -18,8 +18,8 @@ export class DiscussApp extends Record {
                 serverStateKey: "is_discuss_sidebar_category_channel_open",
                 addTitle: _t("Add or join a channel"),
                 addHotkey: "c",
-            }),
-            chats: this.store.DiscussAppCategory.insert({
+            },
+            chats: {
                 extraClass: "o-mail-DiscussSidebarCategory-chat",
                 id: "chats",
                 name: _t("Direct messages"),
@@ -29,7 +29,7 @@ export class DiscussApp extends Record {
                 serverStateKey: "is_discuss_sidebar_category_chat_open",
                 addTitle: _t("Start a conversation"),
                 addHotkey: "d",
-            }),
+            },
         });
         return res;
     }
@@ -38,9 +38,8 @@ export class DiscussApp extends Record {
         return super.get(data);
     }
     /** @returns {import("models").DiscussApp} */
-    static insert() {
-        const app = this.get() ?? this.new();
-        return app;
+    static insert(data) {
+        return super.insert(data);
     }
 
     /** @type {'mailbox'|'all'|'channel'|'chat'|'livechat'} */

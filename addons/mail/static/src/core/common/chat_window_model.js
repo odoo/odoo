@@ -12,10 +12,6 @@ export class ChatWindow extends Record {
     /** @type {Object<number, import("models").ChatWindow} */
     static records = {};
     /** @returns {import("models").ChatWindow} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").ChatWindow} */
     static get(data) {
         return super.get(data);
     }
@@ -26,7 +22,8 @@ export class ChatWindow extends Record {
     static insert(data = {}) {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(data.thread));
         if (!chatWindow) {
-            const chatWindow = this.new(data);
+            /** @type {import("models").ChatWindow} */
+            const chatWindow = this.preinsert(data);
             Object.assign(chatWindow, { thread: data.thread });
             assignDefined(chatWindow, data);
             let index;
@@ -54,7 +51,7 @@ export class ChatWindow extends Record {
                 data.replaceNewMessageChatWindow ? 1 : 0,
                 chatWindow
             );
-            return this.store.discuss.chatWindows[index]; // return reactive version
+            return chatWindow; // return reactive version
         }
         if (chatWindow.hidden) {
             this.env.services["mail.chat_window"].makeVisible(chatWindow);

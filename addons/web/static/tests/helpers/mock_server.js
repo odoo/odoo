@@ -16,6 +16,7 @@ import { deepCopy, pick } from "@web/core/utils/objects";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
 import { makeErrorFromResponse } from "@web/core/network/rpc_service";
+import { registerCleanup } from "./cleanup";
 
 const serviceRegistry = registry.category("services");
 
@@ -134,6 +135,7 @@ function traverseElementTree(tree, cb) {
 // -----------------------------------------------------------------------------
 
 export class MockServer {
+    active = true;
     constructor(data, options = {}) {
         this.init(data, options);
     }
@@ -2517,6 +2519,10 @@ export async function makeMockServer(serverData, mockRPC) {
             // simulates that we serialized the call to be passed in a real request
             args = JSON.parse(JSON.stringify(args));
         }
+        if (!mockServer.active) {
+            // End of test => all RPCs are blocking
+            return new Promise(() => {});
+        }
         if (mockRPC) {
             res = await mockRPC(route, args, mockServer.performRPC.bind(mockServer));
         }
@@ -2558,6 +2564,7 @@ export async function makeMockServer(serverData, mockRPC) {
         });
     }
     // Replace RPC service
+    registerCleanup(() => (mockServer.active = false));
     serviceRegistry.add("rpc", rpcService, { force: true });
     return mockServer;
 }
