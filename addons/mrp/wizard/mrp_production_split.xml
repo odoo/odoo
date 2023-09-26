@@ -54,6 +54,9 @@
                     </field>
                     <field name="production_split_multi_id" invisible="1"/>
                     <field name="valid_details" invisible="1"/>
+                    <div class="alert alert-danger" role="alert" invisible="valid_details or counter == 0">
+                        The total should be equal to the quantity to produce.
+                    </div>
                     <footer>
                         <button string="Split" class="btn-primary" type="object" name="action_split" data-hotkey="q" invisible="not valid_details"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" invisible="production_split_multi_id"/>
