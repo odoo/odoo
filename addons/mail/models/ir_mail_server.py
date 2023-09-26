@@ -31,7 +31,7 @@ class IrMailServer(models.Model):
         domain = ICP.get_param('mail.catchall.domain')
         if bounce_alias and domain:
             return f'{bounce_alias}@{domain}'
-        return super()._get_default_from_address()
+        return super()._get_default_bounce_address()
 
     @api.model
     def _get_default_from_address(self):
