@@ -14,6 +14,8 @@ class AccountAccountTag(models.Model):
     tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this box to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="Country for which this tag is available, when applied on taxes.")
 
+    _sql_constraints = [('name_uniq', "unique(name, applicability, country_id)", "A tag with the same name and applicability already exists in this country.")]
+
     @api.depends('applicability', 'country_id')
     @api.depends_context('company')
     def _compute_display_name(self):
