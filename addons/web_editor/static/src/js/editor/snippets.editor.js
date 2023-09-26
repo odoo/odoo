@@ -1354,10 +1354,7 @@ var SnippetEditor = Widget.extend({
         } else if (this.$target[0].classList.contains('o_grid_item') && this.dropped) {
             // Case when dropping a grid item in a non-grid dropzone.
             this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-            const gridSizeClasses = this.$target[0].className.match(/(g-col-lg|g-height)-[0-9]+/g);
-            this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain', ...gridSizeClasses);
-            this.$target[0].style.removeProperty('z-index');
-            this.$target[0].style.removeProperty('grid-area');
+            gridUtils._convertToNormalColumn(this.$target[0]);
             this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         }
 
@@ -1401,10 +1398,7 @@ var SnippetEditor = Widget.extend({
                         // Case when a grid column is dropped near a non-grid
                         // dropzone.
                         this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-                        const gridSizeClasses = this.$target[0].className.match(/(g-col-lg|g-height)-[0-9]+/g);
-                        this.$target[0].classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain', ...gridSizeClasses);
-                        this.$target[0].style.removeProperty('z-index');
-                        this.$target[0].style.removeProperty('grid-area');
+                        gridUtils._convertToNormalColumn(this.$target[0]);
                         this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
                     }
                 }

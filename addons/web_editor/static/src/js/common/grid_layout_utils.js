@@ -295,6 +295,18 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
     return {columnColCount: columnColCount, columnRowCount: columnRowCount};
 }
 /**
+ * Removes the grid properties from the grid column when it becomes a normal
+ * column.
+ *
+ * @param {Element} columnEl
+ */
+export function _convertToNormalColumn(columnEl) {
+    const gridSizeClasses = columnEl.className.match(/(g-col-lg|g-height)-[0-9]+/g);
+    columnEl.classList.remove("o_grid_item", "o_grid_item_image", "o_grid_item_image_contain", ...gridSizeClasses);
+    columnEl.style.removeProperty("z-index");
+    columnEl.style.removeProperty("grid-area");
+}
+/**
  * Checks whether the column only contains an image or not. An image is
  * considered alone if the column only contains empty textnodes and line breaks
  * in addition to the image.
