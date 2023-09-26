@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import {
     addRow,
     click,
@@ -2107,4 +2108,37 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("many2many field calling replaceWith (add + remove)", async function (assert) {
+        serverData.models.partner.records[0].p = [1];
+
+        class MyX2Many extends Component {
+            get list() {
+                return this.props.record.data[this.props.name];
+            }
+            onClick() {
+                this.list.replaceWith([2, 3]);
+            }
+        }
+        MyX2Many.template = xml`
+            <span class="ids" t-esc="list.resIds"/>
+            <button class="my_btn" t-on-click="onClick">To id</button>`;
+
+        registry.category("fields").add("my_x2many", { component: MyX2Many });
+
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            serverData,
+            arch: `
+                <form>
+                    <field name="partner_ids" widget="my_x2many"/>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.strictEqual(target.querySelector(".ids").innerText, "2,4");
+        await click(target.querySelector(".my_btn"));
+        assert.strictEqual(target.querySelector(".ids").innerText, "2,3");
+    });
 });
