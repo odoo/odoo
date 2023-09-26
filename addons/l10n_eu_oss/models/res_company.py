@@ -4,6 +4,7 @@
 from itertools import product
 
 from odoo import Command, api, models
+from .eu_account_map import EU_ACCOUNT_MAP
 from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
 
@@ -111,6 +112,21 @@ class Company(models.Model):
     def _get_oss_account(self):
         self.ensure_one()
         if not self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}', raise_if_not_found=False):
+            self._create_oss_account()
+        return self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}')
+
+    def _create_oss_account(self):
+        if (
+            self.chart_template in EU_ACCOUNT_MAP
+            and (oss_account_if_exists :=
+                self.env['account.account'].search([
+                    ('company_id', '=', self.id),
+                    ('code', '=', EU_ACCOUNT_MAP[self.chart_template])
+                ])
+            )
+        ):
+            oss_account = oss_account_if_exists
+        else:
             sales_tax_accounts = self.env['account.tax'].search([
                     *self.env['account.tax']._check_company_domain(self),
                     ('type_tax_use', '=', 'sale'),
@@ -127,15 +143,14 @@ class Company(models.Model):
                 'account_type': sales_tax_accounts[0].account_type,
                 'company_id': self.id,
                 'tag_ids': [(4, tag.id, 0) for tag in sales_tax_accounts[0].tag_ids],
-                })
-            self.env['ir.model.data'].create({
-                'name': f'oss_tax_account_company_{self.id}',
-                'module': 'l10n_eu_oss',
-                'model': 'account.account',
-                'res_id': oss_account.id,
-                'noupdate': True,
-                })
-        return self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}')
+            })
+        self.env['ir.model.data'].create({
+            'name': f'oss_tax_account_company_{self.id}',
+            'module': 'l10n_eu_oss',
+            'model': 'account.account',
+            'res_id': oss_account.id,
+            'noupdate': True,
+        })
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
