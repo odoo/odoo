@@ -77,7 +77,7 @@ export class Order extends Reactive {
         this.lastChangesSent = this.lines.reduce((acc, line) => {
             acc[line.uuid] = {
                 qty: line.qty,
-                selected_attributes: [...line.selected_attributes],
+                attribute_value_ids: [...line.attribute_value_ids],
                 customer_note: line.customer_note,
             };
             return acc;

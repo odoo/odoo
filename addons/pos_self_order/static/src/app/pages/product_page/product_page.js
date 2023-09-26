@@ -15,7 +15,7 @@ export class ProductPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-        useSubEnv({ selectedValues: {}, editable: this.editableProductLine });
+        useSubEnv({ selectedValues: {}, customValues: {}, editable: this.editableProductLine });
 
         if (!this.props.product) {
             this.router.navigate("productList");
@@ -95,7 +95,7 @@ export class ProductPage extends Component {
 
         const line = this.selfOrder.currentOrder.lines.find(
             (l) =>
-                JSON.stringify(l.selected_attributes.sort()) ===
+                JSON.stringify(l.attribute_value_ids.sort()) ===
                     JSON.stringify(attributeFlatter(this.env.selectedValues).sort()) &&
                 l.customer_note === this.state.customer_note &&
                 l.product_id === this.product.id
@@ -109,7 +109,7 @@ export class ProductPage extends Component {
         const lineToMerge = this.orderlineCanBeMerged();
 
         if (lineToMerge) {
-            lineToMerge.selected_attributes = attributeFlatter(this.env.selectedValues);
+            lineToMerge.attribute_value_ids = attributeFlatter(this.env.selectedValues);
             lineToMerge.customer_note = this.state.customer_note;
             lineToMerge.full_product_name = this.product.name;
 
@@ -126,7 +126,8 @@ export class ProductPage extends Component {
                 product_id: this.product.id,
                 full_product_name: this.product.name,
                 customer_note: this.state.customer_note,
-                selected_attributes: attributeFlatter(this.env.selectedValues),
+                custom_attribute_value_ids: Object.values(this.env.customValues),
+                attribute_value_ids: attributeFlatter(this.env.selectedValues),
             });
 
             lines.push(mainLine);

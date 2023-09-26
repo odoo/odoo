@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import { Reactive } from "@web/core/utils/reactive";
 import { uuidv4 } from "@point_of_sale/utils";
+import { ProductCustomAttribute } from "@point_of_sale/app/store/models/product_custom_attribute";
 
 export class Line extends Reactive {
     constructor({
@@ -13,7 +14,8 @@ export class Line extends Reactive {
         price_unit,
         price_subtotal_incl,
         price_subtotal,
-        selected_attributes,
+        attribute_value_ids,
+        custom_attribute_value_ids,
         combo_parent_uuid,
         combo_id,
         child_lines,
@@ -33,10 +35,19 @@ export class Line extends Reactive {
         this.price_unit = line.price_unit || 0;
         this.price_subtotal_incl = line.price_subtotal_incl || 0;
         this.price_subtotal = line.price_subtotal || 0;
-        this.selected_attributes = line.selected_attributes || [];
+        this.attribute_value_ids = line.attribute_value_ids || [];
+        this.custom_attribute_value_ids = line.custom_attribute_value_ids || [];
         this.combo_parent_uuid = line.combo_parent_uuid || null;
         this.combo_id = line.combo_id || null;
         this.child_lines = line.child_lines || [];
+
+        this.initCustomAttribute();
+    }
+
+    initCustomAttribute() {
+        this.custom_attribute_value_ids = this.custom_attribute_value_ids.map(
+            (customAttribute) => new ProductCustomAttribute(customAttribute)
+        );
     }
 
     isChange(lastChange) {
@@ -50,7 +61,7 @@ export class Line extends Reactive {
     }
 
     get attributes() {
-        return Object.entries(this.selected_attributes).map(([key, value]) => {
+        return Object.entries(this.attribute_value_ids).map(([key, value]) => {
             return { name: key, value };
         });
     }
@@ -63,7 +74,7 @@ export class Line extends Reactive {
     updateDataFromServer(data) {
         for (const key in data) {
             let updatedValue = data[key];
-            if (key === "selected_attributes") {
+            if (key === "attribute_value_ids") {
                 updatedValue ||= {};
             }
 

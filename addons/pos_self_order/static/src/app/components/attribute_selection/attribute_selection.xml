@@ -12,7 +12,7 @@
             </div>
             <div t-if="!state.showResume" class="attribute-selection-content align-items-center justify-content-start">
                 <div class="row row-cols-3 g-3">
-                    <t t-foreach="attribute.values" t-as="value" t-key="value.id">
+                    <t t-foreach="availableAttributeValue" t-as="value" t-key="value.id">
                         <div class="col">
                             <label t-attf-for="{{ attribute.id }}_{{ value.id }}" t-attf-class="{{ this.isChecked(attribute, value) ? 'border-2 border-primary' : '' }} d-flex btn btn-light flex-column align-items-center justify-content-center p-0 rounded border overflow-hidden">
                                 <div class="name position-relative d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 py-2 text-center">
@@ -43,6 +43,7 @@
                             t-model="this.selectedValues[attribute.id][value.id]"
                             t-on-click="() => this.attributeClicked(value.id)"
                             t-attf-id="{{ attribute.id }}_{{ value.id }}" />
+                        <input t-if="this.isChecked(attribute, value) and value.is_custom" type="text" t-model="this.env.customValues[value.id].custom_value" class="form-control" placeholder="Enter your custom value" />
                     </t>
                 </div>
                 <div t-if="attribute.display_type === 'multi' || this.state.showNext" class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm z-index-1">

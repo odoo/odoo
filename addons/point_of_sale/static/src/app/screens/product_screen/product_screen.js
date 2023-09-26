@@ -98,7 +98,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.sendKey(buttonValue);
     }
 
-
     selectLine(orderline) {
         this.numberBuffer.reset();
         this.currentOrder.select_orderline(orderline);
@@ -211,7 +210,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             const { product_id = [], packaging = [] } = await this.orm.silent.call(
                 "pos.session",
                 "find_product_by_barcode",
-                [odoo.pos_session_id, code.base_code],
+                [odoo.pos_session_id, code.base_code]
             );
             if (product_id.length) {
                 await this.pos._addProducts(product_id, false);

@@ -59,7 +59,10 @@ export class CartPage extends Component {
             this.sendInProgress = true;
             await this.selfOrder.sendDraftOrderToServer();
             this.sendInProgress = false;
-            return;
+
+            if (type !== "kiosk") {
+                return;
+            }
         }
 
         if (orderingMode === "table" && !takeAway) {
@@ -176,7 +179,9 @@ export class CartPage extends Component {
         }
     }
 
-    getSelectedAttributes(attrs) {
-        return attributeFormatter(this.selfOrder.attributeById, attrs);
+    getSelectedAttributes(line) {
+        const attributeValues = line.attribute_value_ids;
+        const customAttr = line.custom_attribute_value_ids;
+        return attributeFormatter(this.selfOrder.attributeById, attributeValues, customAttr);
     }
 }

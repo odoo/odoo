@@ -1179,6 +1179,10 @@ class PosOrderLine(models.Model):
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
     attribute_value_ids = fields.Many2many('product.template.attribute.value', string="Selected Attributes")
+    custom_attribute_value_ids = fields.One2many(
+        comodel_name='product.attribute.custom.value', inverse_name='pos_order_line_id',
+        string="Custom Values",
+        store=True, readonly=False)
     price_unit = fields.Float(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
     price_subtotal = fields.Float(string='Subtotal w/o Tax', digits=0,
@@ -1313,6 +1317,8 @@ class PosOrderLine(models.Model):
         return {
             'id': orderline.id,
             'qty': orderline.qty,
+            'attribute_value_ids': orderline.attribute_value_ids.ids,
+            'custom_attribute_value_ids': orderline.custom_attribute_value_ids.read(['id', 'name', 'custom_product_template_attribute_value_id', 'custom_value'], load=False),
             'price_unit': orderline.price_unit,
             'skip_change': orderline.skip_change,
             'uuid': orderline.uuid,

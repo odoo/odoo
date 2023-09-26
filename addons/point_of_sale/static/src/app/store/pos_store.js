@@ -263,6 +263,7 @@ export class PosStore extends Reactive {
         this.pricelists = loadedData["product.pricelist"];
         this.default_pricelist = loadedData["default_pricelist"];
         this.currency = loadedData["res.currency"];
+        this.db.add_attributes(loadedData["attributes_by_ptal_id"]);
         this.db.add_categories(loadedData["pos.category"]);
         this.db.add_combos(loadedData["pos.combo"]);
         this.db.add_combo_lines(loadedData["pos.combo.line"]);

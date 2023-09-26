@@ -34,6 +34,7 @@ export class BaseProductAttribute extends Component {
         return {
             value,
             valueIds,
+            custom_value: this.state.custom_value,
             extra,
         };
     }
@@ -105,22 +106,27 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
     }
 
     getPayload() {
-        const selected_attributes = [];
+        const attribute_custom_values = [];
         let attribute_value_ids = [];
         var price_extra = 0.0;
         const quantity = this.state.quantity;
 
         this.env.attribute_components.forEach((attribute_component) => {
-            const { value, valueIds, extra } = attribute_component.getValue();
-            selected_attributes.push(value);
+            const { valueIds, extra, custom_value } = attribute_component.getValue();
             attribute_value_ids.push(valueIds);
+
+            if (custom_value) {
+                // for custom values, it will never be a multiple attribute
+                attribute_custom_values[valueIds[0]] = custom_value;
+            }
+
             price_extra += extra;
         });
 
         attribute_value_ids = attribute_value_ids.flat();
         return {
-            selected_attributes,
             attribute_value_ids,
+            attribute_custom_values,
             price_extra,
             quantity,
         };
