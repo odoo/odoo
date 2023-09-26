@@ -67,7 +67,7 @@
 
             <!-- Payment Lines -->
 
-            <t t-foreach="receiptData.receipt.paymentlines" t-as="line" t-key="line.cid">
+            <t t-foreach="receiptData.receipt.paymentlines" t-as="line" t-key="line_index">
                 <div>
                     <t t-esc="line.name" />
                     <span t-esc="env.utils.formatCurrency(line.amount, false)" class="pos-receipt-right-align"/>

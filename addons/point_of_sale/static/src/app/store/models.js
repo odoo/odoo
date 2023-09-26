@@ -24,6 +24,7 @@ import {
     BaseOrderline,
 } from "@point_of_sale/app/base_models/base_orderline";
 import { BaseOrder } from "@point_of_sale/app/base_models/base_order";
+import { BasePayment } from "@point_of_sale/app/base_models/base_payment";
 
 const { DateTime } = luxon;
 
@@ -676,12 +677,11 @@ export class Packlotline extends PosModel {
 }
 
 // Every Paymentline contains a cashregister and an amount of money.
-export class Payment extends PosModel {
-    setup(obj, options) {
+export class Payment extends BasePayment {
+    setup(_obj, options) {
         super.setup(...arguments);
         this.pos = options.pos;
         this.order = options.order;
-        this.amount = 0;
         this.selected = false;
         this.cashier_receipt = "";
         this.ticket = "";
@@ -692,19 +692,16 @@ export class Payment extends PosModel {
 
         if (options.json) {
             this.init_from_JSON(options.json);
-            return;
+        } else {
+            if (this.payment_method === undefined) {
+                throw new Error(_t("Please configure a payment method in your POS."));
+            }
         }
-        this.payment_method = options.payment_method;
-        if (this.payment_method === undefined) {
-            throw new Error(_t("Please configure a payment method in your POS."));
-        }
-        this.name = this.payment_method.name;
     }
     init_from_JSON(json) {
         this.amount = json.amount;
         this.payment_method = this.pos.payment_methods_by_id[json.payment_method_id];
         this.can_be_reversed = json.can_be_reversed;
-        this.name = this.payment_method.name;
         this.payment_status = json.payment_status;
         this.ticket = json.ticket;
         this.card_type = json.card_type;
@@ -715,11 +712,7 @@ export class Payment extends PosModel {
     //sets the amount of money on this payment line
     set_amount(value) {
         this.order.assert_editable();
-        this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimal_places);
-    }
-    // returns the amount of money on this paymentline
-    get_amount() {
-        return this.amount;
+        super.set_amount(value);
     }
     get_amount_str() {
         return formatFloat(this.amount, {
@@ -767,16 +760,6 @@ export class Payment extends PosModel {
         this.cashier_receipt = value;
     }
 
-    /**
-     * Set additional info to be printed on the receipts. value should
-     * be compatible with both the QWeb and ESC/POS receipts.
-     *
-     * @param {string} value - receipt info
-     */
-    set_receipt_info(value) {
-        this.ticket += value;
-    }
-
     // returns the associated cashregister
     //exports as JSON for server communication
     export_as_JSON() {
@@ -790,15 +773,6 @@ export class Payment extends PosModel {
             card_type: this.card_type,
             cardholder_name: this.cardholder_name,
             transaction_id: this.transaction_id,
-        };
-    }
-    //exports as JSON for receipt printing
-    export_for_printing() {
-        return {
-            cid: this.cid,
-            amount: this.get_amount(),
-            name: this.name,
-            ticket: this.ticket,
         };
     }
     // If payment status is a non-empty string, then it is an electronic payment.
