@@ -600,16 +600,13 @@ class TestMailAliasMixin(TestMailAliasCommon):
         self.assertEqual(record.alias_id.alias_contact, 'followers')
 
         record.write({
+            'alias_domain_id': self.mail_alias_domain_c2.id,
             'alias_name': 'better.alias.test',
             'alias_defaults': "{'default_name': 'defaults'}"
         })
+        self.assertEqual(record.alias_domain, self.mail_alias_domain_c2.name)
         self.assertEqual(record.alias_id.alias_name, 'better.alias.test')
         self.assertEqual(record.alias_id.alias_defaults, "{'default_name': 'defaults'}")
-
-        with self.assertRaises(exceptions.AccessError):
-            record.write({
-                'alias_domain_id': self.mail_alias_domain_c2.id,
-            })
 
         with self.assertRaises(exceptions.AccessError):
             record.write({
