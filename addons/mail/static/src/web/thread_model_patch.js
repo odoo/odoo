@@ -5,6 +5,7 @@ import { Thread } from "@mail/core/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, "mail/web", {
+    foldStateCount: 0,
     /**
      * @returns {import("@mail/web/activity/activity_model").Activity[]}
      */
