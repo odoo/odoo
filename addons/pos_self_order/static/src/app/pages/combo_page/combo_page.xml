@@ -1,87 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ComboPage">
-        <div class="d-flex flex-column  w-100 fs-2 text-center border-bottom">
-            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white"><t t-esc="props.product.name" /></div>
-            <div t-if="!state.showResume" class="breadcrumb h-100 w-100 d-flex flex-nowrap p-0 bg-200 overflow-x-auto overflow-y-hidden">
-                <t t-foreach="props.product.pos_combo_ids" t-as="combo_id" t-key="combo_id">
-                    <div t-attf-class="d-flex align-items-center justify-content-center {{ currentComboId === combo_id ? 'active-step bg-100' : 'bg-200' }}">
-                        <span class="position-relative d-block pe-3" t-esc="selfOrder.comboByIds[combo_id].name" />
-                    </div>
-                </t>
-            </div>
+        <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 px-3 py-2 w-100 bg-view border-bottom overflow-x-auto z-index-1">
+            <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => this.router.back()">
+                <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
+            </button>
+            <h1 class="mb-0 fw-bolder text-nowrap" t-esc="props.product.name"/>
+            <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
         </div>
-        <div class="h-100 overflow-y-auto">
-            <t t-if="state.selectedProduct">
-                <div class="d-flex flex-column h-25">
-                    <div t-attf-class="h-100 m-4 mb-0">
-                        <div class="d-flex flex-row h-100 pb-5 bg-view rounded shadow-sm">
-                            <img
-                                class="o_self_order_item_card_image w-25 p-3 rounded bg-view"
-                                style="object-fit: contain;"
-                                t-attf-src="/menu/get-image/{{ state.selectedProduct.id }}/512?unique={{state.selectedProduct.write_date}}"
-                                alt="Product image"
-                                loading="lazy"
-                                onerror="this.remove()" />
-                            <div class="d-flex flex-column justify-content-center w-75 p-3 ps-0">
-                                <span class="fs-1 fw-bolder" t-esc="state.selectedProduct.name"/>
-                                <div t-if="state.selectedProduct.description_sale"
-                                class="o_self_order_main_desc text-muted overflow-y-auto"
-                                t-esc="state.selectedProduct.description_sale"
-                                />
-                            </div>
+
+
+        <div class="d-flex flex-column overflow-y-auto bg-view flex-grow-1">
+            <section t-if="!state.showResume" class="pos_self_order_breadcrumb position-relative px-3 px-md-0 pb-md-4 bg-view">
+                <div class="d-flex justify-content-around my-5">
+                    <div t-foreach="props.product.pos_combo_ids" t-as="combo_id" t-key="combo_id" class="position-relative">
+                        <t t-set="isComboCurrent" t-value="currentComboId === combo_id"/>
+                        <t t-set="isComboSelected" t-value="false"/>
+                        <t t-set="isNextSelected" t-value="false"/>
+                        <t t-foreach="state.selectedCombos"  t-as="selected"  t-key="selected">
+                            <t t-if="selected.id === combo_id" t-set="isComboSelected" t-value="true"/>
+                        </t>
+
+                        <span
+                            t-if="!combo_id_first"
+                            class="position-absolute end-0 top-50 border-top border-2"
+                            t-attf-style="width: calc(100vw / {{
+                                props.product.pos_combo_ids.length}})"
+                            />
+
+                        <div class="pos_self_order_breadcrumb_pill d-flex align-items-center justify-content-center ratio ratio-1x1 mx-md-auto">
+                            <span
+                                class="rounded-pill d-flex justify-content-center align-items-center border border-2 z-index-1"
+                                t-att-class="{
+                                    'text-bg-primary border-primary' : isComboCurrent,
+                                    'bg-view' : !isComboCurrent,
+                                    'border-success' : isComboSelected &amp;&amp; !isComboCurrent
+                                }">
+                                    <t t-esc="combo_id_index + 1"/>
+                                    <i t-if="isComboSelected &amp;&amp; !isComboCurrent" class="position-absolute top-0 start-100 translate-middle-x fa fa-check fs-4 bg-view text-success"/>
+                            </span>
                         </div>
+                        <div class="position-absolute start-50 d-none d-md-block mt-3 translate-middle text-nowrap" t-esc="selfOrder.comboByIds[combo_id].name" />
+                    </div>
+                </div>
+            </section>
+            <t t-if="state.selectedProduct">
+                <div class="o-so-product-details d-flex flex-row align-items-start p-3 gap-3">
+                    <div class="o-so-product-details-image ratio ratio-1x1 w-25 flex-shrink-0">
+                        <div class="placeholder-glow">
+                            <div class="placeholder w-100 h-100 bg-300 rounded"/>
+                        </div>
+                        <img
+                            class="o_self_order_item_card_image w-100 rounded"
+                            t-attf-src="/menu/get-image/{{ state.selectedProduct.id }}/512?unique={{state.selectedProduct.write_date}}"
+                            alt="Product image"
+                            loading="lazy"
+                            onerror="this.remove()"/>
+                    </div>
+                    <div class="o-so-product-details-description">
+                        <h2 t-esc="state.selectedProduct.name"/>
+                        <small t-if="state.selectedProduct.description_sale"
+                            class="o_self_order_main_desc d-block mb-3 text-muted"
+                            t-out="state.selectedProduct.description_sale"
+                        />
+                        <span class="fs-3" t-esc="selfOrder.formatMonetary(state.selectedProduct.prices)"/>
                     </div>
                 </div>
             </t>
-            <div class="d-flex flex-column h-75" t-if="!state.showResume">
-                <div t-attf-class="h-100 {{ state.selectedProduct ? 'm-4 mt-0 rounded-bottom-3' : '' }}">
-                    <ComboSelection combo="currentCombo" comboState="state" next.bind="next"/>
-                </div>
+            <div t-if="!state.showResume" class="d-flex flex-column flex-grow-1" t-attf-class="{{ state.selectedProduct ? '' : '' }}">
+                <ComboSelection combo="currentCombo" comboState="state" next.bind="next"/>
             </div>
-            <div t-else="" t-attf-class="o_kiosk-combo d-flex flex-column {{ state.showResume ? 'h-75' : 'h-50' }} p-4 overflow-auto">
-                <div class="attribute_name py-1 mt-3 mb-4 fw-bold">
-                    <h1>Your Selection</h1>
-                </div>
-                <div class="h-100 align-items-center justify-content-start">
-                    <div class="d-flex flex-column">
-                        <div t-foreach="state.selectedCombos" t-as="combo" t-key="combo.id" class="d-flex align-items-center justify-content-between w-100 gap-3 py-3 p-2 pe-4 mb-3 rounded shadow-sm bg-view">
-                            <t t-set="product" t-value="this.selfOrder.productByIds[combo.product.id]"/>
-                            <img
-                                class="o_self_order_item_card_image w-auto h-100 rounded bg-view"
-                                t-attf-src="/menu/get-image/{{ combo.product.id }}/512?unique={{product.write_date}}"
-                                alt="Product image"
-                                loading="lazy"
-                                onerror="this.remove()" />
-                            <div class="name d-flex flex-column justify-content-center align-items-start flex-grow-1 h-auto w-100 text-center">
-                                <h2 class="m-0"><t t-esc="combo.product.name"/></h2>
-                                <div t-foreach="getAttributeSelected(combo.product)" t-as="attribute" t-key="attribute.id">
-                                    - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
+            <div t-else="" t-attf-class="o_kiosk-combo d-flex flex-column flex-grow-1 px-3">
+                <h2 class="attribute_name mt-5 mb-3 fw-bold">Your Selection</h2>
+
+                <ul class="list-group">
+                    <li class="list-group-item d-flex flex-wrap align-items-start gap-3" t-foreach="state.selectedCombos" t-as="combo" t-key="combo.id">
+                        <t t-set="product" t-value="this.selfOrder.productByIds[combo.product.id]"/>
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="pos_self_order_combo_image ratio ratio-1x1">
+                                <div class="placeholder-glow">
+                                    <div class="placeholder w-100 h-100 bg-300 rounded"/>
                                 </div>
+                                <img
+                                    class="o_self_order_item_card_image w-100 rounded"
+                                    t-attf-src="/menu/get-image/{{ combo.product.id }}/512?unique={{product.write_date}}"
+                                    alt="Product image"
+                                    loading="lazy"
+                                    onerror="this.remove()"/>
                             </div>
-                            <button class="btn btn-secondary btn-lg px-5 py-2" t-on-click="() => this.editCombo(combo.id)">EDIT</button>
+                            <div>
+                                <strong class="fs-4" t-esc="combo.product.name"/>
+                                <ul t-if="getAttributeSelected(combo.product)">
+                                    <li t-foreach="getAttributeSelected(combo.product)" t-as="attribute" t-key="attribute.id">
+                                        <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                        <button class="btn btn-secondary ms-auto" t-on-click="() => this.editCombo(combo.id)">Edit</button>
+
+                    </li>
+                </ul>
             </div>
             <t t-if="state.showResume">
-                <div class="d-flex flex-column justify-content-center align-items-center w-100 h-25 p-5 bg-view border-top" style="z-index:1">
-                    <div class="o_self_order_incr_button d-flex flex-row text-center border-light mb-1" role="group" aria-label="Quantity select">
+                <div class="bg-view p-3 text-end">
+                    <div class="o_self_order_incr_button btn-group" role="group" aria-label="Quantity select">
                         <button type="button"
                             t-on-click = "() => this.changeQuantity(false)"
-                            class="btn btn-secondary fs-1 px-5 py-3"> - </button>
-                        <div class="d-flex align-items-center px-5 fs-1 fw-bold" t-esc="state.qty"/>
+                            t-attf-class="btn btn-secondary btn-lg"><span class="fs-2 lh-1 fa-fw d-inline-block">－</span></button>
+                        <div class="o-so-tabular-nums d-flex align-items-center px-3 text-bg-200" t-esc="state.qty"/>
                         <button type="button"
                             t-on-click = "() => this.changeQuantity(true)"
-                            class="btn btn-secondary fs-1 px-5 py-3"> + </button>
+                            class="btn btn-secondary btn-lg"><span class="fs-2 lh-1 fa-fw d-inline-block">＋</span></button>
                     </div>
                 </div>
             </t>
         </div>
-        <div class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm">
-            <button class="btn btn-secondary h-100  w-100 p-0 m-0 fs-2 flex-grow-1 text-uppercase" t-on-click="back">Discard</button>
-            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="next">Next</button>
-            <button t-if="state.showResume" class="btn btn-primary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="addToCart">Add to cart</button>
+        <div
+            t-if="state.showResume || (!state.showResume and showQtyButtons)"
+            class="page-buttons d-flex justify-content-end gap-3 p-3 border-top bg-view">
+            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary btn-lg" t-on-click="next">Next</button>
+            <button t-if="state.showResume" class="btn btn-primary btn-lg" t-on-click="addToCart">Add to cart</button>
         </div>
     </t>
 </templates>

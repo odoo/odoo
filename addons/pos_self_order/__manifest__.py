@@ -34,6 +34,7 @@
             "pos_self_order/static/src/upgrade_selection_field.js",
         ],
         "pos_self_order.assets": [
+            "pos_self_order/static/src/app/primary_variables.scss",
             "pos_self_order/static/src/app/bootstrap_overridden.scss",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),

@@ -77,10 +77,6 @@ export class ProductListPage extends Component {
         );
     }
 
-    get width() {
-        return window.innerWidth;
-    }
-
     get productCategory() {
         const productByCat = this.selfOrder.productsGroupedByCategory;
         const currentCategory = this.selfOrder.currentCategory;

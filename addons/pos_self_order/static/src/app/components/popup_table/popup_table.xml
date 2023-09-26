@@ -8,9 +8,7 @@
                     <h3>Confirm your table</h3>
                     <span>to place the order</span>
                 </div>
-                <button class="btn rounded" t-on-click="close">
-                    <i class="fa fa-times"/>
-                </button>
+                <button class="btn btn-close" t-on-click="close"/>
             </div>
             <select class="form-select form-select-lg mb-5" t-model="state.selectedTable">
                 <t t-foreach="availableFloor" t-as="floor" t-key="floor.id">
