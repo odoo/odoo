@@ -25,36 +25,16 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
 .website_forum {
     --o-post-header-height: var(--o-avatar-height);
 
-    .o_wforum_wrapper {
-        @include media-breakpoint-up(xl) {
-            grid-template-columns: $-forum-sidebar-width minmax(0, auto);
-        }
-
-        @include media-breakpoint-up(xxl) {
-            max-width: 100%;
-        }
-    }
-
     .o_wforum_content_wrapper {
-        @include media-breakpoint-up(xxl) {
-            margin-left: -$-forum-sidebar-width;
-
-            > div {
-                max-width: map-get($grid-breakpoints, xl) - $-forum-sidebar-width - 100px;
-                @include make-container();
-            }
-        }
-
         .o_searchbar_form {
             min-width: 200px;
         }
     }
 
     aside.o_wforum_sidebar {
-        min-width: $-forum-sidebar-width;
-
         .btn.w-100:hover {
-            background-color: darken(map-get($o-color-palette, 'o-color-3'), 4%);
+            background-color: $light;
+            color: color-contrast($light);
         }
     }
 
