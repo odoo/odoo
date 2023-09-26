@@ -1045,9 +1045,9 @@
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
-                                            <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+                                            <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1" href="#">
                                                 <i class="fa fa-shopping-cart me-2"/>
-                                                <span style="font-weight: bold">ADD TO CART</span>
+                                                Add to cart
                                             </a>
                                         </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
@@ -1229,7 +1229,7 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
       <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
-        <div t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} me-2 mb-2 align-middle #{'input-group-lg' if ctaSizeBig else ''}" contenteditable="false">
+        <div t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} me-2 mb-2 align-middle" contenteditable="false">
             <a t-attf-href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
                 <i class="fa fa-minus"></i>
             </a>
@@ -1248,7 +1248,7 @@
         <xpath expr="//a[@id='add_to_cart']" position="after">
             <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
                 <i class="fa fa-bolt me-2"/>
-                <span style="font-weight:bold">BUY NOW</span>
+                Buy now
             </a>
         </xpath>
     </template>
