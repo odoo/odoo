@@ -38,6 +38,15 @@ class AccountChartTemplate(models.AbstractModel):
             + self.ref('demo_invoice_followup')
             + self.ref('demo_invoice_5')
             + self.ref('demo_invoice_equipment_purchase')
+            + self.ref('demo_move_auto_reconcile_1')
+            + self.ref('demo_move_auto_reconcile_2')
+            + self.ref('demo_move_auto_reconcile_3')
+            + self.ref('demo_move_auto_reconcile_4')
+            + self.ref('demo_move_auto_reconcile_5')
+            + self.ref('demo_move_auto_reconcile_6')
+            + self.ref('demo_move_auto_reconcile_7')
+            + self.ref('demo_move_auto_reconcile_8')
+            + self.ref('demo_move_auto_reconcile_9')
         ).with_context(check_move_validity=False)
 
         # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
@@ -58,7 +67,29 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_move(self, company=False):
+        one_month_ago = fields.Date.today() + relativedelta(months=-1)
         fifteen_months_ago = fields.Date.today() + relativedelta(months=-15)
+        cid = company.id or self.env.company.id
+        misc_journal = self.env['account.journal'].search(
+            domain=[
+                *self.env['account.journal']._check_company_domain(cid),
+                ('type', '=', 'general'),
+            ],
+            limit=1,
+        )
+        bank_journal = self.env['account.journal'].search(
+            domain=[
+                *self.env['account.journal']._check_company_domain(cid),
+                ('type', '=', 'bank'),
+            ],
+            limit=1,
+        )
+        default_receivable = self.env.ref('base.res_partner_3').with_company(company).property_account_receivable_id
+        income_account = self.env['account.account'].search([
+            ('company_id', '=', cid),
+            ('account_type', '=', 'income'),
+            ('id', '!=', (company or self.env.company).account_journal_early_pay_discount_gain_account_id.id)
+        ], limit=1)
         return {
             'demo_invoice_1': {
                 'move_type': 'out_invoice',
@@ -76,8 +107,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
-                'invoice_date': time.strftime('%Y-%m-08'),
-                'delivery_date': time.strftime('%Y-%m-08'),
+                'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                     Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
@@ -87,8 +118,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
-                'invoice_date': time.strftime('%Y-%m-08'),
-                'delivery_date': time.strftime('%Y-%m-08'),
+                'invoice_date': (fields.Date.today() + timedelta(days=-3)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-3)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 5}),
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
@@ -130,6 +161,95 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_line_ids': [
                     Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10,
                                     'tax_ids': self.env.company.account_purchase_tax_id.ids}),
+                ],
+            },
+            'demo_move_auto_reconcile_1': {
+                'move_type': 'out_refund',
+                'partner_id': 'base.res_partner_12',
+                'invoice_date': one_month_ago.strftime("%Y-%m-02"),
+                'delivery_date': one_month_ago.strftime("%Y-%m-02"),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                ],
+            },
+            'demo_move_auto_reconcile_2': {
+                'move_type': 'out_refund',
+                'partner_id': 'base.res_partner_12',
+                'invoice_date': one_month_ago.strftime("%Y-%m-03"),
+                'delivery_date': one_month_ago.strftime("%Y-%m-03"),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
+                ],
+            },
+            'demo_move_auto_reconcile_3': {
+                'move_type': 'in_refund',
+                'partner_id': 'base.res_partner_12',
+                'invoice_date': time.strftime('%Y-%m-01'),
+                'delivery_date': time.strftime('%Y-%m-01'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
+                ],
+            },
+            'demo_move_auto_reconcile_4': {
+                'move_type': 'in_refund',
+                'partner_id': 'base.res_partner_12',
+                'invoice_date': fifteen_months_ago.strftime("%Y-%m-19"),
+                'delivery_date': fifteen_months_ago.strftime("%Y-%m-19"),
+                'invoice_line_ids': [
+                    Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10,
+                                    'tax_ids': self.env.company.account_purchase_tax_id.ids}),
+                ],
+            },
+            'demo_move_auto_reconcile_5': {
+                'move_type': 'out_refund',
+                'partner_id': 'base.res_partner_2',
+                'invoice_date': (fields.Date.today() + timedelta(days=-10)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-10)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                ],
+            },
+            'demo_move_auto_reconcile_6': {
+                'move_type': 'out_refund',
+                'partner_id': 'base.res_partner_2',
+                'invoice_user_id': False,
+                'invoice_date': (fields.Date.today() + timedelta(days=-1)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-1)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
+                ],
+            },
+            'demo_move_auto_reconcile_7': {
+                'move_type': 'out_refund',
+                'partner_id': 'base.res_partner_2',
+                'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 5}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
+                ],
+            },
+            'demo_move_auto_reconcile_8': {
+                'move_type': 'entry',
+                'partner_id': 'base.res_partner_2',
+                'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
+                'journal_id': misc_journal.id,
+                'line_ids': [
+                    Command.create({'debit': 0.0, 'credit': 2500.0, 'account_id': default_receivable.id}),
+                    Command.create({'debit': 2500.0, 'credit': 0.0, 'account_id': bank_journal.default_account_id.id}),
+                ],
+            },
+            'demo_move_auto_reconcile_9': {
+                'move_type': 'entry',
+                'partner_id': 'base.res_partner_2',
+                'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
+                'journal_id': misc_journal.id,
+                'line_ids': [
+                    Command.create({'debit': 2500.0, 'credit': 0.0, 'account_id': default_receivable.id}),
+                    Command.create({'debit': 0.0, 'credit': 2500.0, 'account_id': income_account.id}),
                 ],
             },
         }
