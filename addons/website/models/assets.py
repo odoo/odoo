@@ -55,7 +55,7 @@ class Assets(models.AbstractModel):
             IrAttachment.search([
                 '|', ('id', '=', delete_attachment_id),
                 ('original_id', '=', delete_attachment_id),
-                ('name', 'like', '%google-font%')
+                ('name', 'like', 'google-font'),
             ]).unlink()
 
         google_local_fonts = values.get('google-local-fonts')

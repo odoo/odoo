@@ -286,7 +286,7 @@ class TestChartTemplate(TransactionCase):
             self.env['account.chart.template'].try_loading('test', company=company_2, install_demo=False)
 
         taxes_1_companies = self.env['account.tax'].search([
-            ('name', 'like', '%Tax 1'),
+            ('name', '=like', '%Tax 1'),
             ('company_id', 'in', [self.company_1.id, company_2.id]),
         ])
         # we should have 4 records: 2 companies * (1 original tax + 1 recreated tax)

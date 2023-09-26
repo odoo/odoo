@@ -71,7 +71,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
     def _get_tax_tags(self, country, tag_name=None, active_test=True):
         domain = [('country_id', '=', country.id), ('applicability', '=', 'taxes')]
         if tag_name:
-            domain.append(('name', 'like', '_' + tag_name))
+            domain.append(('name', '=like', '_' + tag_name))
         return self.env['account.account.tag'].with_context(active_test=active_test).search(domain)
 
     def test_create_shared_tags(self):
