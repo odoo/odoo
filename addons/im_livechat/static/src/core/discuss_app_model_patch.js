@@ -9,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussApp, {
     new(data) {
         const res = super.new(data);
-        res.livechat = this.store.DiscussAppCategory.insert({
+        res.livechat = {
             extraClass: "o-mail-DiscussSidebarCategory-livechat",
             id: "livechat",
             name: _t("Livechat"),
@@ -17,7 +17,7 @@ patch(DiscussApp, {
             canView: false,
             canAdd: false,
             serverStateKey: "is_discuss_sidebar_category_livechat_open",
-        });
+        };
         return res;
     },
 });

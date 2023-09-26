@@ -10,10 +10,6 @@ export class NotificationGroup extends Record {
     /** @type {Object.<number, import("models").NotificationGroup>} */
     static records = {};
     /** @returns {import("models").NotificationGroup} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").NotificationGroup} */
     static get(data) {
         return super.get(data);
     }
@@ -31,7 +27,8 @@ export class NotificationGroup extends Record {
         });
         if (!group) {
             const id = nextId++;
-            group = this.new({ id });
+            /** @type {import("models").NotificationGroup} */
+            group = this.preinsert({ id });
             Object.assign(group, { id });
             this.store.discuss.notificationGroups.add(group);
         }

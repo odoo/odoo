@@ -2,7 +2,6 @@
 
 import { AND, Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
-import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { assignDefined, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -27,12 +26,14 @@ export class Thread extends Record {
     /** @type {Object.<string, import("models").Thread>} */
     static records = {};
     /** @returns {import("models").Thread} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Thread} */
     static get(data) {
         return super.get(data);
+    }
+    static new(data) {
+        /** @type {import("models").Thread} */
+        const thread = super.new(data);
+        this.store.Composer.insert({ thread });
+        return thread;
     }
     /**
      * @param {string} localId
@@ -61,7 +62,8 @@ export class Thread extends Record {
             thread.update(data);
             return thread;
         }
-        thread = this.new(data);
+        /** @type {import("models").Thread} */
+        thread = this.preinsert(data);
         Object.assign(thread, {
             id: data.id,
             model: data.model,
@@ -76,11 +78,10 @@ export class Thread extends Record {
         onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
         onChange(thread, "is_pinned", () => {
             if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
-                delete this.store.discuss.thread;
+                this.store.discuss.thread = undefined;
             }
         });
         thread.update(data);
-        this.store.Composer.insert({ thread });
         // return reactive version.
         return thread;
     }
@@ -90,12 +91,7 @@ export class Thread extends Record {
         const { id, name, attachments: attachmentsData, description, ...serverData } = data;
         assignDefined(this, { id, name, description });
         if (attachmentsData) {
-            replaceArrayWithCompare(
-                this.attachments,
-                attachmentsData
-                    .map((attachmentData) => this._store.Attachment.insert(attachmentData))
-                    .sort((a1, a2) => a2.id - a1.id)
-            );
+            this.attachments = attachmentsData.sort((a1, a2) => a2.id - a1.id);
         }
         if (serverData) {
             assignDefined(this, serverData, [
@@ -124,9 +120,7 @@ export class Thread extends Record {
             }
             const lastServerMessageId = serverData.last_message_id ?? this.lastServerMessage?.id;
             if (this.lastServerMessage?.id !== lastServerMessageId) {
-                this.lastServerMessage = this._store.Message.insert({
-                    id: lastServerMessageId,
-                });
+                this.lastServerMessage = { id: lastServerMessageId };
             }
             if (this.model === "discuss.channel" && serverData.channel) {
                 this.channel = assignDefined(this.channel ?? {}, serverData.channel);
@@ -165,15 +159,13 @@ export class Thread extends Record {
                     case "ADD":
                         if (members) {
                             for (const member of members) {
-                                const record = this._store.ChannelMember.insert(member);
-                                this.invitedMembers.add(record);
+                                this.invitedMembers.add(member);
                             }
                         }
                         break;
                     case "DELETE":
                         for (const member of members) {
-                            const record = this._store.ChannelMember.insert(member);
-                            this.invitedMembers.delete(record);
+                            this.invitedMembers.delete(member);
                         }
                         break;
                 }
@@ -183,15 +175,10 @@ export class Thread extends Record {
                     ({ fetched_message_id, partner_id, seen_message_id }) => {
                         return {
                             lastFetchedMessage: fetched_message_id
-                                ? this._store.Message.insert({ id: fetched_message_id })
+                                ? { id: fetched_message_id }
                                 : undefined,
-                            lastSeenMessage: seen_message_id
-                                ? this._store.Message.insert({ id: seen_message_id })
-                                : undefined,
-                            partner: this._store.Persona.insert({
-                                id: partner_id,
-                                type: "partner",
-                            }),
+                            lastSeenMessage: seen_message_id ? { id: seen_message_id } : undefined,
+                            partner: { id: partner_id, type: "partner" },
                         };
                     }
                 );

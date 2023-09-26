@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto': props.hasMessageListScrollAdjust, 'o-chatter-disabled': props.threadId === false }" t-on-scroll="onScrollDebounced" t-ref="root">
+    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto': props.hasMessageListScrollAdjust, 'o-chatter-disabled': props.threadId === false }" t-on-scroll="onScrollDebounced" t-ref="root">
         <div class="o-mail-Chatter-top position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned }" t-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 px-3 overflow-x-auto">
                 <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-1" t-att-class="{

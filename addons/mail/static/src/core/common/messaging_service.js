@@ -30,26 +30,26 @@ export class Messaging {
         this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.registeredImStatusPartners = reactive([], () => this.updateImStatusRegistration());
         this.store.registeredImStatusPartners = this.registeredImStatusPartners;
-        this.store.discuss.inbox = this.store.Thread.insert({
+        this.store.discuss.inbox = {
             id: "inbox",
             model: "mail.box",
             name: _t("Inbox"),
             type: "mailbox",
-        });
-        this.store.discuss.starred = this.store.Thread.insert({
+        };
+        this.store.discuss.starred = {
             id: "starred",
             model: "mail.box",
             name: _t("Starred"),
             type: "mailbox",
             counter: 0,
-        });
-        this.store.discuss.history = this.store.Thread.insert({
+        };
+        this.store.discuss.history = {
             id: "history",
             model: "mail.box",
             name: _t("History"),
             type: "mailbox",
             counter: 0,
-        });
+        };
         this.updateImStatusRegistration();
     }
 
@@ -64,22 +64,16 @@ export class Messaging {
 
     initMessagingCallback(data) {
         if (data.current_partner) {
-            this.store.user = this.store.Persona.insert({
-                ...data.current_partner,
-                type: "partner",
-            });
+            this.store.user = { ...data.current_partner, type: "partner" };
         }
         if (data.currentGuest) {
-            this.store.guest = this.store.Persona.insert({
+            this.store.guest = {
                 ...data.currentGuest,
                 type: "guest",
                 channelId: data.channels[0]?.id,
-            });
+            };
         }
-        this.store.odoobot = this.store.Persona.insert({
-            ...data.odoobot,
-            type: "partner",
-        });
+        this.store.odoobot = { ...data.odoobot, type: "partner" };
         const settings = data.current_user_settings;
         this.userSettingsService.updateFromCommands(settings);
         this.userSettingsService.id = settings.id;

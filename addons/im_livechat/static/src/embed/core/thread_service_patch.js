@@ -64,7 +64,7 @@ patch(ThreadService.prototype, {
     },
 
     avatarUrl(author, thread) {
-        if (thread.type !== "livechat") {
+        if (thread?.type !== "livechat") {
             return super.avatarUrl(...arguments);
         }
         const isFromOperator =

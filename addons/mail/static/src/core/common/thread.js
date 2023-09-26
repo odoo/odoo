@@ -9,15 +9,7 @@ import {
     useVisible,
 } from "@mail/utils/common/hooks";
 
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUpdateProps,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
 import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -57,7 +49,11 @@ export class Thread extends Component {
     setup() {
         this.escape = escape;
         this.store = useState(useService("mail.store"));
-        this.state = useState({ isReplyingTo: false, showJumpPresent: false });
+        this.state = useState({
+            isReplyingTo: false,
+            mountedAndLoaded: false,
+            showJumpPresent: false,
+        });
         this.threadService = useState(useService("mail.thread"));
         if (!this.env.inChatter || !this.props.hasScrollAdjust) {
             useAutoScroll("messages", () => {
@@ -140,16 +136,23 @@ export class Thread extends Component {
             },
             () => [this.props.jumpPresent]
         );
-        onMounted(() => {
-            this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
-            if (!this.env.inChatter || !this.props.hasScrollAdjust) {
-                this.scrollPosition.restore();
-                this.updateShowJumpPresent();
-            }
-        });
-        onWillStart(() => {
+        useEffect(
+            () => {
+                if (!this.state.mountedAndLoaded) {
+                    return;
+                }
+                this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
+                if (!this.env.inChatter || !this.props.hasScrollAdjust) {
+                    this.scrollPosition.restore();
+                    this.updateShowJumpPresent();
+                }
+            },
+            () => [this.state.mountedAndLoaded]
+        );
+        onMounted(async () => {
             this.lastJumpPresent = this.props.jumpPresent;
-            this.threadService.fetchNewMessages(this.props.thread);
+            await this.threadService.fetchNewMessages(this.props.thread);
+            this.state.mountedAndLoaded = true;
         });
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;

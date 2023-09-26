@@ -273,7 +273,7 @@ export class Rtc {
      * @param {import("models").Thread} [channel]
      */
     endCall(channel = this.state.channel) {
-        channel.rtcInvitingSessionId = undefined;
+        channel.rtcInvitingSession = undefined;
         if (channel.eq(this.state.channel)) {
             this.clear();
             this.soundEffectsService.play("channel-leave");
@@ -762,7 +762,7 @@ export class Rtc {
             3000,
             true
         );
-        this.state.channel.rtcInvitingSessionId = undefined;
+        this.state.channel.rtcInvitingSession = undefined;
         this.call();
         this.soundEffectsService.play("channel-join");
         await this.resetAudioTrack({ force: true });
@@ -830,8 +830,7 @@ export class Rtc {
         if (this.state.channel && rtcSessions) {
             const activeSessionsData = rtcSessions[0][1];
             for (const sessionData of activeSessionsData) {
-                const session = this.store.RtcSession.insert(sessionData);
-                this.state.channel.rtcSessions.add(session);
+                this.state.channel.rtcSessions.add(sessionData);
             }
             const outdatedSessionsData = rtcSessions[1][1];
             for (const sessionData of outdatedSessionsData) {
@@ -892,19 +891,19 @@ export class Rtc {
                 // ignore error during remove, the value will be overwritten at next usage anyway
             }
         }
-        delete session.audioStream;
-        delete session.connectionState;
-        delete session.localCandidateType;
-        delete session.remoteCandidateType;
-        delete session.dataChannelState;
-        delete session.packetsReceived;
-        delete session.packetsSent;
-        delete session.dtlsState;
-        delete session.iceState;
-        delete session.raisingHand;
-        delete session.logStep;
-        delete session.audioError;
-        delete session.videoError;
+        session.audioStream = undefined;
+        session.connectionState = undefined;
+        session.localCandidateType = undefined;
+        session.remoteCandidateType = undefined;
+        session.dataChannelState = undefined;
+        session.packetsReceived = undefined;
+        session.packetsSent = undefined;
+        session.dtlsState = undefined;
+        session.iceState = undefined;
+        session.raisingHand = undefined;
+        session.logStep = undefined;
+        session.audioError = undefined;
+        session.videoError = undefined;
         session.isTalking = false;
         this.removeVideoFromSession(session);
         session.dataChannel?.close();
@@ -927,7 +926,7 @@ export class Rtc {
                 }
             }
             peerConnection.close();
-            delete session.peerConnection;
+            session.peerConnection = undefined;
         }
         browser.clearTimeout(this.state.recoverTimeouts.get(session.id));
         this.state.recoverTimeouts.delete(session.id);
@@ -1537,8 +1536,7 @@ export class Rtc {
                 break;
             case "ADD":
                 for (const sessionData of sessionsData) {
-                    const session = this.store.RtcSession.insert(sessionData);
-                    channel.rtcSessions.add(session);
+                    channel.rtcSessions.add(sessionData);
                 }
                 break;
         }

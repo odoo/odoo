@@ -131,9 +131,7 @@ export class ChatBotService {
             channel_uuid: this.livechatService.thread.uuid,
             chatbot_script_id: this.chatbot.scriptId,
         });
-        this.livechatService.thread?.messages.push(
-            this.store.Message.insert({ ...message, body: markup(message.body) })
-        );
+        this.livechatService.thread?.messages.push({ ...message, body: markup(message.body) });
         this.currentStep = null;
         this.start();
     }
@@ -147,11 +145,10 @@ export class ChatBotService {
             chatbot_script_id: this.chatbot.scriptId,
         });
         for (const rawMessage of rawMessages) {
-            const message = this.store.Message.insert({
+            this.livechatService.thread?.messages.add({
                 ...rawMessage,
                 body: markup(rawMessage.body),
             });
-            this.livechatService.thread?.messages.add(message);
         }
         this.hasPostedWelcomeSteps = true;
     }
@@ -180,11 +177,10 @@ export class ChatBotService {
                 return;
             }
             if (stepMessage) {
-                const message = this.store.Message.insert({
+                this.livechatService.thread?.messages.add({
                     ...stepMessage,
                     body: markup(stepMessage.body),
                 });
-                this.livechatService.thread?.messages.add(message);
             }
             this.currentStep = step;
             if (
@@ -281,10 +277,8 @@ export class ChatBotService {
             channel_uuid: this.livechatService.thread.uuid,
         });
         this.currentStep.isEmailValid = success;
-        if (msg && !this.livechatService.thread.messages.some((m) => m.id === msg.id)) {
-            this.livechatService.thread.messages.push(
-                this.store.Message.insert({ ...msg, body: markup(msg.body) })
-            );
+        if (msg) {
+            this.livechatService.thread.messages.add({ ...msg, body: markup(msg.body) });
         }
     }
 

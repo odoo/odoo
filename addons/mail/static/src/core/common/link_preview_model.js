@@ -5,10 +5,6 @@ import { Record } from "@mail/core/common/record";
 export class LinkPreview extends Record {
     static id = "id";
     /** @returns {import("models").LinkPreview} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").LinkPreview} */
     static get(data) {
         return super.get(data);
     }
@@ -20,13 +16,10 @@ export class LinkPreview extends Record {
         const message = this.store.Message.get(data.message_id);
         data.message = message;
         delete data.message_id;
-        let linkPreview = message?.linkPreviews.find((lp) => lp.id === data.id);
-        if (linkPreview) {
-            return Object.assign(linkPreview, data);
-        }
-        linkPreview = this.new(data);
+        /** @type {import("models").LinkPreview} */
+        const linkPreview = this.preinsert(data);
         Object.assign(linkPreview, data);
-        message?.linkPreviews.push(linkPreview);
+        message?.linkPreviews.add(linkPreview);
         return linkPreview;
     }
 

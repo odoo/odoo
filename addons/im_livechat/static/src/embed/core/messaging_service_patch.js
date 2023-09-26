@@ -11,10 +11,10 @@ patch(Messaging.prototype, {
             return super.initialize();
         }
         if (session.livechatData?.options.current_partner_id) {
-            this.store.user = this.store.Persona.insert({
+            this.store.user = {
                 type: "partner",
                 id: session.livechatData.options.current_partner_id,
-            });
+            };
         }
         this.store.isMessagingReady = true;
         this.isReady.resolve({

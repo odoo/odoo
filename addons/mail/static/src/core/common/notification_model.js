@@ -9,10 +9,6 @@ export class Notification extends Record {
     /** @type {Object.<number, import("models").Notification>} */
     static records = {};
     /** @returns {import("models").Notification} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Notification} */
     static get(data) {
         return super.get(data);
     }
@@ -21,7 +17,8 @@ export class Notification extends Record {
      * @returns {import("models").Notification}
      */
     static insert(data) {
-        const notification = this.get(data) ?? this.new(data);
+        /** @type {import("models").Notification} */
+        const notification = this.preinsert(data);
         Object.assign(notification, { id: data.id });
         notification.update(data);
         return notification;
@@ -34,11 +31,11 @@ export class Notification extends Record {
             notification_type: data.notification_type,
             failure_type: data.failure_type,
             persona: data.res_partner_id
-                ? this._store.Persona.insert({
+                ? {
                       id: data.res_partner_id[0],
                       displayName: data.res_partner_id[1],
                       type: "partner",
-                  })
+                  }
                 : undefined,
         });
         if (!this.message.author?.eq(this._store.self)) {

@@ -11,10 +11,6 @@ export class Attachment extends Record {
     /** @type {Object.<number, import("models").Attachment>} */
     static records = {};
     /** @returns {import("models").Attachment} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Attachment} */
     static get(data) {
         return super.get(data);
     }
@@ -26,7 +22,8 @@ export class Attachment extends Record {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        const attachment = this.get(data) ?? this.new(data);
+        /** @type {import("models").Attachment} */
+        const attachment = this.preinsert(data);
         Object.assign(attachment, { id: data.id });
         attachment.update(data);
         return attachment;
@@ -55,10 +52,10 @@ export class Attachment extends Record {
             const threadData = Array.isArray(data.originThread)
                 ? data.originThread[0][1]
                 : data.originThread;
-            this.originThread = this._store.Thread.insert({
+            this.originThread = {
                 model: threadData.model,
                 id: threadData.id,
-            });
+            };
             const thread = this.originThread;
             thread.attachments.add(this);
             thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));

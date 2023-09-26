@@ -70,19 +70,14 @@ patch(ThreadService.prototype, {
             });
         }
         if ("mainAttachment" in result) {
-            thread.mainAttachment = result.mainAttachment.id
-                ? this.store.Attachment.insert(result.mainAttachment)
-                : undefined;
+            thread.mainAttachment = result.mainAttachment.id ? result.mainAttachment : undefined;
         }
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(thread, 0);
         }
         if ("followers" in result) {
             if (result.selfFollower) {
-                thread.selfFollower = this.store.Follower.insert({
-                    followedThread: thread,
-                    ...result.selfFollower,
-                });
+                thread.selfFollower = { followedThread: thread, ...result.selfFollower };
             }
             thread.followersCount = result.followersCount;
             for (const followerData of result.followers) {
@@ -96,11 +91,7 @@ patch(ThreadService.prototype, {
             }
             thread.recipientsCount = result.recipientsCount;
             for (const recipientData of result.recipients) {
-                const recipient = this.store.Follower.insert({
-                    followedThread: thread,
-                    ...recipientData,
-                });
-                thread.recipients.add(recipient);
+                thread.recipients.add({ followedThread: thread, ...recipientData });
             }
         }
         if ("suggestedRecipients" in result) {
@@ -123,18 +114,15 @@ patch(ThreadService.prototype, {
             type: "chatter",
         });
         if (resId === false) {
-            const tmpId = this.messageService.getNextTemporaryId();
-            const tmpData = {
-                id: tmpId,
+            thread.messages.push({
+                id: this.messageService.getNextTemporaryId(),
                 author: { id: this.store.self.id },
                 body: _t("Creating a new record..."),
                 message_type: "notification",
                 trackingValues: [],
                 res_id: thread.id,
                 model: thread.model,
-            };
-            const message = this.store.Message.insert(tmpData);
-            thread.messages.push(message);
+            });
         }
         return thread;
     },
@@ -156,12 +144,7 @@ patch(ThreadService.prototype, {
                 email,
                 lang,
                 reason,
-                persona: partner_id
-                    ? this.store.Persona.insert({
-                          type: "partner",
-                          id: partner_id,
-                      })
-                    : false,
+                persona: partner_id ? { type: "partner", id: partner_id } : false,
                 checked: true,
             });
         }
@@ -198,11 +181,7 @@ patch(ThreadService.prototype, {
             { filter_recipients: true }
         );
         for (const data of recipients) {
-            const recipient = this.store.Follower.insert({
-                followedThread: thread,
-                ...data,
-            });
-            thread.recipients.add(recipient);
+            thread.recipients.add({ followedThread: thread, ...data });
         }
     },
     open(thread, replaceNewMessageChatWindow) {

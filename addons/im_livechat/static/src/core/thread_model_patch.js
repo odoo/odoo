@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { assignDefined } from "@mail/utils/common/misc";
 
@@ -8,29 +9,30 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Thread, {
     insert(data) {
-        const isUnknown = !this.get(data);
         const thread = super.insert(data);
         if (thread.type === "livechat") {
             if (data?.channel) {
                 assignDefined(thread, data.channel, ["anonymous_name"]);
             }
             if (data?.operator_pid) {
-                thread.operator = this.store.Persona.insert({
+                thread.operator = {
                     type: "partner",
                     id: data.operator_pid[0],
                     displayName: data.operator_pid[1],
-                });
+                };
             }
-            if (isUnknown) {
-                this.store.discuss.livechat.threads.push(thread);
-                this.env.services["mail.thread"].sortChannels();
-            }
+            this.store.discuss.livechat.threads.add(thread);
+            this.env.services["mail.thread"].sortChannels();
         }
         return thread;
     },
 });
 
 patch(Thread.prototype, {
+    setup() {
+        super.setup();
+        this.operator = Record.one("Persona");
+    },
     get typesAllowingCalls() {
         return super.typesAllowingCalls.concat(["livechat"]);
     },

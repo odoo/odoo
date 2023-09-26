@@ -5,10 +5,6 @@ import { AND, Record } from "@mail/core/common/record";
 export class MessageReactions extends Record {
     static id = AND("message", "content");
     /** @returns {import("models").MessageReactions} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").MessageReactions} */
     static get(data) {
         return super.get(data);
     }
@@ -21,7 +17,8 @@ export class MessageReactions extends Record {
             ({ content }) => content === data.content
         );
         if (!reaction) {
-            reaction = this.new(data);
+            /** @type {import("models").MessageReactions} */
+            reaction = this.preinsert(data);
         }
         const personasToUnlink = new Set();
         const alreadyKnownPersonaIds = new Set(reaction.personas.map((p) => p.localId));
@@ -48,7 +45,7 @@ export class MessageReactions extends Record {
         Object.assign(reaction, {
             count: data.count,
             content: data.content,
-            message: this.store.Message.insert(data.message),
+            message: data.message,
             personas: reaction.personas.filter((p) => !personasToUnlink.has(p)),
         });
         return reaction;

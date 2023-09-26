@@ -81,7 +81,7 @@ export class ThreadService {
      * @param {import("models").Thread} thread
      */
     async markAsRead(thread) {
-        if (!thread.isLoaded && thread.status === "loading") {
+        if (!thread.isLoaded) {
             await thread.isLoadedDeferred;
             await new Promise(setTimeout);
         }

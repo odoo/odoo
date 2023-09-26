@@ -4,6 +4,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { contains } from "@web/../tests/utils";
+
 QUnit.module("chatter");
 
 QUnit.test("Send message button activation (access rights dependent)", async function (assert) {
@@ -54,19 +56,10 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
             res_model: model,
             views: [[false, "form"]],
         });
-        const details = `hasReadAccess: ${hasReadAccess}, hasWriteAccess: ${hasWriteAccess}, model: ${model}, resId: ${resId}`;
         if (enabled) {
-            assert.containsNone(
-                document.body,
-                ".o-mail-Chatter-topbar button:contains(Send message):disabled",
-                `${msg}: send message button must not be disabled (${details}`
-            );
+            await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
         } else {
-            assert.containsOnce(
-                document.body,
-                ".o-mail-Chatter-topbar button:contains(Send message):disabled",
-                `${msg}: send message button must be disabled (${details})`
-            );
+            await contains(".o-mail-Chatter-topbar button:disabled", { text: "Send message" });
         }
     }
     await assertSendButton(

@@ -15,10 +15,6 @@ export class Follower extends Record {
     /** @type {Object.<number, import("models").Follower>} */
     static records = {};
     /** @returns {import("models").Follower} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Follower} */
     static get(data) {
         return super.get(data);
     }
@@ -27,12 +23,13 @@ export class Follower extends Record {
      * @returns {import("models").Follower}
      */
     static insert(data) {
-        const follower = this.get(data) ?? this.new(data);
+        /** @type {import("models").Follower} */
+        const follower = this.preinsert(data);
         Object.assign(follower, {
             followedThread: data.followedThread,
             id: data.id,
             isActive: data.is_active,
-            partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
+            partner: { ...data.partner, type: "partner" },
         });
         return follower;
     }
