@@ -15,10 +15,23 @@ import { parseFloat } from "@web/views/fields/parsers";
  * functions that are parameterized by the data in `pos` service.
  */
 export const contextualUtilsService = {
-    dependencies: ["pos", "localization"],
-    start(env, { pos, localization }) {
-        const currency = pos.currency;
-        const productUoMDecimals = pos.dp["Product Unit of Measure"];
+    dependencies: ["pos_data", "localization"],
+    start(env, { pos_data, localization }) {
+        const cache = {
+            company: pos_data["res.company"],
+            currency: pos_data["res.currency"],
+            pricelists: pos_data["product.pricelist"],
+            uom_unit_id: pos_data["uom_unit_id"],
+            config: pos_data["pos.config"],
+            base_url: pos_data["base_url"],
+            dp: pos_data["decimal.precision"],
+            picking_type: pos_data["stock.picking.type"],
+
+            taxes_by_id: pos_data["taxes_by_id"],
+            units_by_id: pos_data["units_by_id"],
+        };
+
+        const productUoMDecimals = cache.dp["Product Unit of Measure"];
         const decimalPoint = localization.decimalPoint;
         const thousandsSep = localization.thousandsSep;
         // Replace the thousands separator and decimal point with regex-escaped versions
@@ -43,16 +56,16 @@ export const contextualUtilsService = {
 
         const formatCurrency = (value, hasSymbol = true) => {
             return formatMonetary(value, {
-                currencyId: currency.id,
+                currencyId: cache.currency.id,
                 noSymbol: !hasSymbol,
             });
         };
         const floatIsZero = (value) => {
-            return genericFloatIsZero(value, currency.decimal_places);
+            return genericFloatIsZero(value, cache.currency.decimal_places);
         };
 
         const roundCurrency = (value) => {
-            return roundDecimals(value, currency.decimal_places);
+            return roundDecimals(value, cache.currency.decimal_places);
         };
 
         const isValidFloat = (inputValue) => {
@@ -67,6 +80,7 @@ export const contextualUtilsService = {
             isValidFloat,
             floatIsZero,
         };
+        env.cache = cache;
     },
 };
 

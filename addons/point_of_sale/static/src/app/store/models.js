@@ -7,7 +7,6 @@ import {
     formatDate,
     formatDateTime,
     serializeDateTime,
-    deserializeDate,
     deserializeDateTime,
 } from "@web/core/l10n/dates";
 import {
@@ -22,113 +21,12 @@ import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configu
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { PosModel, PosCollection } from "@point_of_sale/app/base_models/base";
+import { BaseProduct } from "@point_of_sale/app/base_models/base_product";
 
 const { DateTime } = luxon;
 
-/**
- * If optimization is needed, then we should implement this
- * using a Balanced Binary Tree to behave like an Object and an Array.
- * But behaving like Object (indexed by cid) might not be
- * needed. Let's see how it turns out.
- */
-export class PosCollection extends Array {
-    getByCID(cid) {
-        return this.find((item) => item.cid == cid);
-    }
-    add(item) {
-        this.push(item);
-    }
-    remove(item) {
-        const index = this.findIndex((_item) => item.cid == _item.cid);
-        if (index < 0) {
-            return index;
-        }
-        this.splice(index, 1);
-        return index;
-    }
-    reset() {
-        this.length = 0;
-    }
-    at(index) {
-        return this[index];
-    }
-}
-
-let nextId = 0;
-class PosModel {
-    /**
-     * Create an object with cid. If no cid is in the defaultObj,
-     * cid is computed based on its id. Override _getCID if you
-     * don't want this default calculation of cid.
-     * @param {Object?} defaultObj its props copied to this instance.
-     */
-    constructor() {
-        this.setup(...arguments);
-    }
-    // To be used by Model patches to patch constructor
-    setup(defaultObj) {
-        defaultObj = defaultObj || {};
-        if (!defaultObj.cid) {
-            defaultObj.cid = this._getCID(defaultObj);
-        }
-        Object.assign(this, defaultObj);
-    }
-    /**
-     * Default cid getter. Used as local identity of this object.
-     * @param {Object} obj
-     */
-    _getCID(obj) {
-        if (obj.id) {
-            if (typeof obj.id == "string") {
-                return obj.id;
-            } else if (typeof obj.id == "number") {
-                return `c${obj.id}`;
-            }
-        }
-        return `c${nextId++}`;
-    }
-}
-export class Product extends PosModel {
-    constructor(obj) {
-        super(obj);
-        this.parent_category_ids = [];
-        let category = this.categ.parent;
-        while (category) {
-            this.parent_category_ids.push(category.id);
-            category = category.parent;
-        }
-    }
-    isAllowOnlyOneLot() {
-        const productUnit = this.get_unit();
-        return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
-    }
-    /**
-     * @returns {string}
-     */
-    getImageUrl() {
-        return (
-            (this.image_128 &&
-                `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
-            ""
-        );
-    }
-    isTracked() {
-        return (
-            ["serial", "lot"].includes(this.tracking) &&
-            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-        );
-    }
-    get_unit() {
-        var unit_id = this.uom_id;
-        if (!unit_id) {
-            return undefined;
-        }
-        unit_id = unit_id[0];
-        if (!this.pos) {
-            return undefined;
-        }
-        return this.pos.units_by_id[unit_id];
-    }
+export class Product extends BaseProduct {
     async _onScaleNotAvailable() {}
     get isScaleAvailable() {
         return true;
@@ -243,91 +141,6 @@ export class Product extends PosModel {
             comboLines,
             attribute_value_ids,
         };
-    }
-    isPricelistItemUsable(item, date) {
-        const categories = this.parent_category_ids.concat(this.categ.id);
-        return (
-            (!item.categ_id || categories.includes(item.categ_id[0])) &&
-            (!item.date_start || deserializeDate(item.date_start) <= date) &&
-            (!item.date_end || deserializeDate(item.date_end) >= date)
-        );
-    }
-    // Port of _get_product_price on product.pricelist.
-    //
-    // Anything related to UOM can be ignored, the POS will always use
-    // the default UOM set on the product and the user cannot change
-    // it.
-    //
-    // Pricelist items do not have to be sorted. All
-    // product.pricelist.item records are loaded with a search_read
-    // and were automatically sorted based on their _order by the
-    // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
-        const date = DateTime.now();
-
-        // In case of nested pricelists, it is necessary that all pricelists are made available in
-        // the POS. Display a basic alert to the user in the case where there is a pricelist item
-        // but we can't load the base pricelist to get the price when calling this method again.
-        // As this method is also call without pricelist available in the POS, we can't just check
-        // the absence of pricelist.
-        if (recurring && !pricelist) {
-            alert(
-                _t(
-                    "An error occurred when loading product prices. " +
-                        "Make sure all pricelists are available in the POS."
-                )
-            );
-        }
-
-        const rules = !pricelist
-            ? []
-            : (this.applicablePricelistItems[pricelist.id] || []).filter((item) =>
-                  this.isPricelistItemUsable(item, date)
-              );
-
-        let price = this.lst_price + (price_extra || 0);
-        const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
-        if (!rule) {
-            return price;
-        }
-
-        if (rule.base === "pricelist") {
-            const base_pricelist = this.pos.pricelists.find(
-                (pricelist) => pricelist.id === rule.base_pricelist_id[0]
-            );
-            if (base_pricelist) {
-                price = this.get_price(base_pricelist, quantity, 0, true);
-            }
-        } else if (rule.base === "standard_price") {
-            price = this.standard_price;
-        }
-
-        if (rule.compute_price === "fixed") {
-            price = rule.fixed_price;
-        } else if (rule.compute_price === "percentage") {
-            price = price - price * (rule.percent_price / 100);
-        } else {
-            var price_limit = price;
-            price -= price * (rule.price_discount / 100);
-            if (rule.price_round) {
-                price = round_pr(price, rule.price_round);
-            }
-            if (rule.price_surcharge) {
-                price += rule.price_surcharge;
-            }
-            if (rule.price_min_margin) {
-                price = Math.max(price, price_limit + rule.price_min_margin);
-            }
-            if (rule.price_max_margin) {
-                price = Math.min(price, price_limit + rule.price_max_margin);
-            }
-        }
-
-        // This return value has to be rounded with round_di before
-        // being used further. Note that this cannot happen here,
-        // because it would cause inconsistencies with the backend for
-        // pricelist that have base == 'pricelist'.
-        return price;
     }
     get_display_price({
         pricelist = this.pos.getDefaultPricelist(),

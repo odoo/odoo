@@ -1,7 +1,8 @@
 /** @odoo-module */
 /* global waitForWebfonts */
 
-import { PosCollection, Order, Product } from "@point_of_sale/app/store/models";
+import { PosCollection } from "@point_of_sale/app/base_models/base";
+import { Order, Product } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
 import { PosDB } from "@point_of_sale/app/store/db";
 import { markRaw, reactive } from "@odoo/owl";
@@ -82,13 +83,14 @@ export class PosStore extends Reactive {
         "barcode_reader",
         "hardware_proxy",
         "ui",
+        "pos_data",
     ];
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui }) {
+    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui, pos_data }) {
         this.env = env;
         this.orm = orm;
         this.popup = popup;
@@ -171,7 +173,8 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
-        await this.load_server_data();
+        await this._processData(pos_data);
+        await this.after_load_server_data();
         if (this.config.use_proxy) {
             await this.connectToProxy();
         }
@@ -233,13 +236,6 @@ export class PosStore extends Reactive {
         this.markReady();
     }
 
-    async load_server_data() {
-        const loadedData = await this.orm.silent.call("pos.session", "load_pos_data", [
-            [odoo.pos_session_id],
-        ]);
-        await this._processData(loadedData);
-        return this.after_load_server_data();
-    }
     async _processData(loadedData) {
         this.version = loadedData["version"];
         this.company = loadedData["res.company"];
