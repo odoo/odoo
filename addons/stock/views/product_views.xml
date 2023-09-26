@@ -39,6 +39,7 @@
         <record id="view_stock_product_tree" model="ir.ui.view">
             <field name="name">product.stock.tree.inherit</field>
             <field name="model">product.product</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
                 <field name="price" position="after">
@@ -51,6 +52,7 @@
         <record id="view_stock_product_template_tree" model="ir.ui.view">
             <field name="name">product.template.stock.tree.inherit</field>
             <field name="model">product.template</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
@@ -154,6 +156,7 @@
         <record model="ir.ui.view" id="product_template_kanban_stock_view">
             <field name="name">Product Template Kanban Stock</field>
             <field name="model">product.template</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
             <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="inside">
