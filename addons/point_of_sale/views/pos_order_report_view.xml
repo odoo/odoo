@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_report_pos_order_graph" model="ir.ui.view">
+            <field name="name">report.pos.order.graph</field>
+            <field name="model">report.pos.order</field>
+            <field name="arch" type="xml">
+                <graph string="Point of Sale Analysis" sample="1">
+                    <field name="product_categ_id"/>
+                    <field name="price_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="view_report_pos_order_pivot" model="ir.ui.view">
             <field name="name">report.pos.order.pivot</field>
             <field name="model">report.pos.order</field>
@@ -11,17 +22,6 @@
                     <field name="product_qty" type="measure"/>
                     <field name="price_total" type="measure"/>
                 </pivot>
-            </field>
-        </record>
-
-        <record id="view_report_pos_order_graph" model="ir.ui.view">
-            <field name="name">report.pos.order.graph</field>
-            <field name="model">report.pos.order</field>
-            <field name="arch" type="xml">
-                <graph string="Point of Sale Analysis" sample="1">
-                    <field name="product_categ_id"/>
-                    <field name="price_total" type="measure"/>
-                </graph>
             </field>
         </record>
 
@@ -55,9 +55,13 @@
                     <filter name="filter_date" date="date"/>
                     <field name="config_id"/>
                     <field name="partner_id"/>
+                    <field name="partner_category"/>
                     <field name="product_id"/>
                     <field name="product_categ_id"/>
                     <group expand="1" string="Group By">
+                        <filter string="Partner Category" name="partner_category"  context="{'group_by':'partner_category'}"/>
+                        <filter string="Partner ID" name="partner_id" context="{'group_by':'partner_id'}"/>
+                        <separator/>
                         <filter string="User" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Point of Sale" name="pos" context="{'group_by':'config_id'}"/>
                         <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
@@ -79,7 +83,7 @@
         <record id="action_report_pos_order_all" model="ir.actions.act_window">
             <field name="name">Orders Analysis</field>
             <field name="res_model">report.pos.order</field>
-            <field name="view_mode">graph,pivot</field>
+            <field name="view_mode">pivot,graph</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="help" type="html">
