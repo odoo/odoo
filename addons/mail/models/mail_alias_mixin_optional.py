@@ -52,7 +52,8 @@ class AliasMixinOptional(models.AbstractModel):
                 vals['alias_name'] = self.env['mail.alias']._sanitize_alias_name(vals['alias_name'])
             if self._require_new_alias(vals):
                 alias_vals, record_vals = self._alias_filter_fields(vals)
-                alias_vals.update(self._alias_get_creation_values())
+                # generate record-agnostic base alias values
+                alias_vals.update(self.env[self._name]._alias_get_creation_values())
                 alias_vals_list.append(alias_vals)
                 record_vals_list.append(record_vals)
 
@@ -120,6 +121,7 @@ class AliasMixinOptional(models.AbstractModel):
                 del data[fields_not_writable]
         return [data]
 
+    @api.model
     def _require_new_alias(self, record_vals):
         """ Create only if no existing alias, and if a name is given, to avoid
         creating inactive aliases (falsy name). """
