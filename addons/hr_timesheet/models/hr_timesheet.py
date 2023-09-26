@@ -104,7 +104,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('project_id')
     def _compute_task_id(self):
-        for line in self.filtered(lambda line: not line.project_id):
+        for line in self:
+            if line.project_id and line.project_id == line.task_id.project_id:
+                continue
             line.task_id = False
 
     @api.onchange('project_id')
