@@ -5,19 +5,15 @@ from odoo import _, fields, models
 
 
 class ProductLabelLayout(models.TransientModel):
-    _name = 'picking.label.type'
-    _description = 'Choose whether to print product or lot/sn labels'
+    _inherit = 'picking.label.type'
 
-    picking_ids = fields.Many2many('stock.picking')
-    label_type = fields.Selection([
-        ('products', 'Product Labels'),
-        ('lots', 'Lot/SN Labels')], string="Labels to print", required=True, default='products')
+    production_ids = fields.Many2many('mrp.production')
 
     def process(self):
-        if not self.picking_ids:
-            return
+        if not self.production_ids:
+            return super().process()
         if self.label_type == 'products':
-            return self.picking_ids.action_open_label_layout()
+            return self.production_ids.action_open_label_layout()
         view = self.env.ref('stock.lot_label_layout_form_picking')
         return {
             'name': _('Choose Labels Layout'),
@@ -25,5 +21,7 @@ class ProductLabelLayout(models.TransientModel):
             'res_model': 'lot.label.layout',
             'views': [(view.id, 'form')],
             'target': 'new',
-            'context': {'default_move_line_ids': self.picking_ids.move_line_ids.ids},
+            'context': {
+                'default_move_line_ids': self.production_ids.move_finished_ids.move_line_ids.ids
+            },
         }
