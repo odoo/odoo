@@ -29,8 +29,14 @@ patch(MockServer.prototype, {
         if (args.model === "discuss.channel" && args.method === "channel_fold") {
             const ids = args.args[0];
             const state = args.args[1] || args.kwargs.state;
+<<<<<<< HEAD
             const state_count = args.args[2] || args.kwargs.state_count;
             return this._mockDiscussChannelChannelFold(ids, state, state_count);
+||||||| parent of 16d7f417311 (temp)
+            return this._mockDiscussChannelChannelFold(ids, state);
+=======
+            return this._mockDiscussChannelChannelFold(ids, state, args.kwargs.context);
+>>>>>>> 16d7f417311 (temp)
         }
         if (args.model === "discuss.channel" && args.method === "channel_create") {
             const name = args.args[0];
@@ -465,9 +471,21 @@ patch(MockServer.prototype, {
      * @private
      * @param {number} ids
      * @param {state} [state]
+<<<<<<< HEAD
      * @param {number} [state_count]
+||||||| parent of 16d7f417311 (temp)
+=======
+     * @param {Object} [context={}]
+     * @param {number} [context.state_count=0]
+>>>>>>> 16d7f417311 (temp)
      */
+<<<<<<< HEAD
     _mockDiscussChannelChannelFold(ids, state, state_count) {
+||||||| parent of 16d7f417311 (temp)
+    _mockDiscussChannelChannelFold(ids, state) {
+=======
+    _mockDiscussChannelChannelFold(ids, state, { state_count = 0 } = {}) {
+>>>>>>> 16d7f417311 (temp)
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(

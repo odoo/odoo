@@ -4,6 +4,7 @@ import { ChatWindowService } from "@mail/core/common/chat_window_service";
 
 import { patch } from "@web/core/utils/patch";
 
+<<<<<<< HEAD
 patch(ChatWindowService.prototype, {
     async _onClose(chatWindow, options) {
         const { notifyState = true } = options;
@@ -11,6 +12,19 @@ patch(ChatWindowService.prototype, {
         if (notifyState) {
             this.notifyState(chatWindow);
         }
+||||||| parent of 16d7f417311 (temp)
+patch(ChatWindowService.prototype, "discuss/core/web", {
+    close(chatWindow) {
+        this._super(...arguments);
+        this.notifyState(chatWindow);
+=======
+patch(ChatWindowService.prototype, "discuss/core/web", {
+    close(chatWindow, { notifyState = true } = {}) {
+        this._super(...arguments);
+        if (notifyState) {
+            this.notifyState(chatWindow);
+        }
+>>>>>>> 16d7f417311 (temp)
     },
     hide(chatWindow) {
         super.hide(...arguments);
@@ -28,7 +42,12 @@ patch(ChatWindowService.prototype, {
                 [[chatWindow.thread.id]],
                 {
                     state: chatWindow.thread.state,
+<<<<<<< HEAD
                     state_count: chatWindow.thread.foldStateCount,
+||||||| parent of 16d7f417311 (temp)
+=======
+                    context: { state_count: chatWindow.thread.foldStateCount },
+>>>>>>> 16d7f417311 (temp)
                 }
             );
         }

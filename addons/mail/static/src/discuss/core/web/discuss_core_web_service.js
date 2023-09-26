@@ -86,6 +86,7 @@ export class DiscussCoreWeb {
         this.busService.subscribe("mail.record/insert", (payload) => {
             if (payload.Thread) {
                 const data = payload.Thread;
+<<<<<<< HEAD
                 const thread = this.store.Thread.get(data);
                 if (data.serverFoldState && thread && data.foldStateCount > thread.foldStateCount) {
                     thread.foldStateCount = data.foldStateCount;
@@ -103,6 +104,41 @@ export class DiscussCoreWeb {
                                 thread,
                                 folded: thread.state === "folded",
                             });
+||||||| parent of 16d7f417311 (temp)
+                const thread = this.store.threads[createLocalId(data.model, data.id)];
+                if (data.serverFoldState && thread && data.serverFoldState !== thread.state) {
+                    thread.state = data.serverFoldState;
+                    if (thread.state === "closed") {
+                        const chatWindow = this.store.chatWindows.find(
+                            (chatWindow) => chatWindow.threadLocalId === thread.localId
+                        );
+                        if (chatWindow) {
+                            this.chatWindowService.close(chatWindow);
+=======
+                const thread = this.store.threads[createLocalId(data.model, data.id)];
+                if (
+                    data.serverFoldState &&
+                    thread &&
+                    (!data.foldStateCount || data.foldStateCount > thread.foldStateCount)
+                ) {
+                    if (data.foldStateCount) {
+                        thread.foldStateCount = data.foldStateCount;
+                    }
+                    if (data.serverFoldState !== thread.state) {
+                        thread.state = data.serverFoldState;
+                        if (thread.state === "closed") {
+                            const chatWindow = this.store.chatWindows.find(
+                                (chatWindow) => chatWindow.threadLocalId === thread.localId
+                            );
+                            if (chatWindow) {
+                                this.chatWindowService.close(chatWindow, { notifyState: false });
+                            }
+                        } else {
+                            this.chatWindowService.insert({
+                                thread,
+                                folded: thread.state === "folded",
+                            });
+>>>>>>> 16d7f417311 (temp)
                         }
                     }
                 }

@@ -997,7 +997,12 @@ class Channel(models.Model):
                 session_state.write(vals)
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {
                 'Thread': {
+<<<<<<< HEAD
                     'foldStateCount': state_count,
+||||||| parent of 16d7f417311 (temp)
+=======
+                    'foldStateCount': self.env.context.get('state_count', 0),
+>>>>>>> 16d7f417311 (temp)
                     'id': session_state.channel_id.id,
                     'model': 'discuss.channel',
                     'serverFoldState': state,

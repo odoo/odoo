@@ -198,6 +198,7 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         patchUiSize({ size: SIZES.SM });
         const { openDiscuss } = await start();
+<<<<<<< HEAD:addons/mail/static/tests/gif_picker/gif_picker_tests.js
         openDiscuss(channelId);
         await click("span", { text: "General" });
         await click("button[aria-label='Emojis']");
@@ -205,6 +206,19 @@ QUnit.test(
         await click("button", { text: "GIFs" });
         await contains(".popover .o-discuss-GifPicker", { count: 0 });
         await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
+||||||| parent of 16d7f417311 (temp):addons/mail/static/tests/gif_picker/gif_picker_test.js
+        await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
+        await click("span:contains(channel)");
+        await click("button[aria-label='GIFs']");
+        assert.containsNone($, ".popover .o-discuss-GifPicker");
+        assert.containsOnce($, ".o-mail-Composer-footer .o-discuss-GifPicker");
+=======
+        await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
+        await click(".o-mail-NotificationItem:contains(channel)");
+        await click("button[aria-label='GIFs']");
+        assert.containsNone($, ".popover .o-discuss-GifPicker");
+        assert.containsOnce($, ".o-mail-Composer-footer .o-discuss-GifPicker");
+>>>>>>> 16d7f417311 (temp):addons/mail/static/tests/gif_picker/gif_picker_test.js
     }
 );
 
