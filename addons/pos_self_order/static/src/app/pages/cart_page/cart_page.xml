@@ -41,19 +41,19 @@
                                     <div t-foreach="childLines" t-as="cline" t-key="cline.uuid" class="text-muted">
                                         - <span t-esc="cline.full_product_name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
                                         <div class="product-info d-flex flex-column flex-grow-1 ms-3">
-                                            <div t-foreach="getSelectedAttributes(cline.selected_attributes)" t-as="attribute" t-key="attribute.name">
+                                            <div t-foreach="getSelectedAttributes(cline)" t-as="attribute" t-key="attribute.name">
                                                 - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
                                             </div>
                                         </div>
                                     </div>
-                                    <div t-foreach="getSelectedAttributes(line.selected_attributes)" t-as="attribute" t-key="attribute.name" class="text-muted">
+                                    <div t-foreach="getSelectedAttributes(line)" t-as="attribute" t-key="attribute.name" class="text-muted">
                                         - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
                                     </div>
                                 </div>
                             </div>
                             <div class="line-price d-flex flex-column align-items-end justify-content-between h-auto w-25">
                                 <span class="fw-bolder" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
-                                <button t-if="this.selfOrder.productByIds[line.product_id].attributes.length > 0 || line.child_lines.length > 0"
+                                <button t-if="!selfOrder.currentOrder.isSavedOnServer and this.selfOrder.productByIds[line.product_id].attributes.length > 0 || line.child_lines.length > 0"
                                     type="button"
                                     t-on-click="() => this.clickOnLine(line)"
                                     class="btn btn-secondary rounded" >Modify</button>

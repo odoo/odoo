@@ -58,6 +58,7 @@
             "web/static/lib/bootstrap/js/dist/carousel.js",
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             "pos_self_order/static/src/app/**/*",
+            "point_of_sale/static/src/app/store/models/product_custom_attribute.js",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

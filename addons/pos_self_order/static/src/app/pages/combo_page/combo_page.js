@@ -16,7 +16,7 @@ export class ComboPage extends Component {
         this.selfOrder = useSelfOrder();
         this.selfOrder.lastEditedProductId = this.props.product.id;
         this.router = useService("router");
-        useSubEnv({ selectedValues: {}, editable: this.editableProductLine });
+        useSubEnv({ selectedValues: {}, customValues: {}, editable: this.editableProductLine });
 
         if (!this.props.product) {
             this.router.navigate("productList");
@@ -55,9 +55,10 @@ export class ComboPage extends Component {
         return this.selfOrder.comboByIds[this.currentComboId];
     }
 
-    getAttributeSelected(values) {
-        const flatAttribute = attributeFlatter(values);
-        return attributeFormatter(this.selfOrder.attributeById, flatAttribute);
+    getAttributeSelected(combo) {
+        const flatAttribute = attributeFlatter(combo.variants);
+        const customAttribute = combo.customValues;
+        return attributeFormatter(this.selfOrder.attributeById, flatAttribute, customAttribute);
     }
 
     resetState() {
@@ -67,6 +68,10 @@ export class ComboPage extends Component {
         // Cannot assign to read only property
         for (const key in this.env.selectedValues) {
             delete this.env.selectedValues[key];
+        }
+
+        for (const key in this.env.customValues) {
+            delete this.env.customValues[key];
         }
     }
 
@@ -81,6 +86,7 @@ export class ComboPage extends Component {
                     id: this.state.selectedProduct.id,
                     name: this.state.selectedProduct.name,
                     variants: { ...this.env.selectedValues },
+                    customValues: { ...this.env.customValues },
                 },
             };
         } else {
@@ -91,6 +97,7 @@ export class ComboPage extends Component {
                     id: this.state.selectedProduct.id,
                     name: this.state.selectedProduct.name,
                     variants: { ...this.env.selectedValues },
+                    customValues: { ...this.env.customValues },
                 },
             });
         }
@@ -132,7 +139,8 @@ export class ComboPage extends Component {
             price_unit: this.props.product.price_info.price_without_tax,
             product_id: this.props.product.id,
             full_product_name: this.props.product.name,
-            selected_attributes: [],
+            attribute_value_ids: [],
+            custom_attribute_value_ids: [],
             combo_parent_uuid: null,
             combo_id: null,
         });
@@ -144,7 +152,8 @@ export class ComboPage extends Component {
                 qty: this.state.qty,
                 product_id: combo.product.id,
                 full_product_name: combo.product.name,
-                selected_attributes: attributeFlatter(combo.product.variants),
+                attribute_value_ids: attributeFlatter(combo.product.variants),
+                custom_attribute_value_ids: Object.values(combo.product.customValues),
                 combo_parent_uuid: parent_line.uuid,
                 combo_id: combo.id,
             });

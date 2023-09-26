@@ -55,7 +55,7 @@
                                 onerror="this.remove()" />
                             <div class="name d-flex flex-column justify-content-center align-items-start flex-grow-1 h-auto w-100 text-center">
                                 <h2 class="m-0"><t t-esc="combo.product.name"/></h2>
-                                <div t-foreach="getAttributeSelected(combo.product.variants)" t-as="attribute" t-key="attribute.id">
+                                <div t-foreach="getAttributeSelected(combo.product)" t-as="attribute" t-key="attribute.id">
                                     - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
                                 </div>
                             </div>
