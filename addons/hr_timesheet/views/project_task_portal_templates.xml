@@ -5,8 +5,7 @@
         <xpath expr="//li[@id='task-nav']" position="before">
             <li t-if="timesheets and allow_timesheets" class="list-group-item d-grid flex-grow-1" id='nav-report'>
                 <div class="o_download_pdf d-flex gap-1 align-items-center">
-                    <a class="btn btn-secondary flex-fill o_download_btn" t-att-href="task.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
-                    <a class="btn btn-secondary flex-fill o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                    <a class="btn btn-secondary flex-fill o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
                 </div>
             </li>
         </xpath>

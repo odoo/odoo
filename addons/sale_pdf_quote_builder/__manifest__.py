@@ -12,6 +12,6 @@
     'demo': [
         'data/sale_pdf_quote_builder_demo.xml',
     ],
-    'installable': True,
+    'auto_install': True,
     'license': 'LGPL-3',
 }
