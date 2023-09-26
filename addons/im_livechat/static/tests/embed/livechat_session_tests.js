@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
 
-import { mockTimeout, triggerHotkey } from "@web/../tests/helpers/utils";
+import { mockTimeout, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("livechat session");
@@ -57,6 +57,7 @@ QUnit.test("Seen message is saved on the session", async (assert) => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 2 });
+    await nextTick(); // wait for message seen
     assert.strictEqual(
         env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
         env.services["im_livechat.livechat"].thread.newestMessage.id

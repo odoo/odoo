@@ -7,10 +7,6 @@ export class CannedResponse extends Record {
     /** @type {Object.<number, import("models").CannedResponse>} */
     static records = {};
     /** @returns {import("models").CannedResponse} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").CannedResponse} */
     static get(data) {
         return super.get(data);
     }
@@ -19,7 +15,8 @@ export class CannedResponse extends Record {
      * @returns {import("models").CannedResponse}
      */
     static insert(data) {
-        const cannedResponse = this.get(data) ?? this.new(data);
+        /** @type {import("models").CannedResponse} */
+        const cannedResponse = this.preinsert(data);
         Object.assign(cannedResponse, {
             id: data.id,
             name: data.source,

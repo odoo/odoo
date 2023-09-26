@@ -4,6 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { getOrigin } from "@web/core/utils/urls";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
@@ -87,10 +88,9 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    const replyAvatar = document.querySelector(".o-mail-MessageInReply-avatar");
-    assert.ok(
-        replyAvatar.dataset["src"].includes(
-            `/discuss/channel/${channelId}/partner/${pyEnv.currentPartnerId}/avatar_128`
-        )
+    await contains(
+        `.o-mail-MessageInReply-avatar[data-src='${`${getOrigin()}/discuss/channel/${channelId}/partner/${
+            pyEnv.currentPartnerId
+        }/avatar_128`}']`
     );
 });

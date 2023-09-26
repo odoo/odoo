@@ -40,7 +40,7 @@ patch(MessageModel.prototype, {
                 this.originThread.pinnedMessages.add(this);
                 this.pinnedAt = pinnedAt;
             } else {
-                delete this.pinnedAt;
+                this.pinnedAt = undefined;
                 this.originThread.pinnedMessages.delete(this);
             }
         }

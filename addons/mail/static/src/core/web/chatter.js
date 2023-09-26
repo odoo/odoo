@@ -17,7 +17,6 @@ import {
     markup,
     onMounted,
     onPatched,
-    onWillStart,
     onWillUpdateProps,
     useChildSubEnv,
     useEffect,
@@ -135,9 +134,7 @@ export class Chatter extends Component {
             "o-mail-Chatter-dropzone"
         );
 
-        onMounted(this.scrollPosition.restore);
-        onPatched(this.scrollPosition.restore);
-        onWillStart(() => {
+        onMounted(async () => {
             if (this.props.threadId) {
                 this.state.thread = this.store.Thread.insert({
                     id: this.props.threadId,
@@ -145,12 +142,14 @@ export class Chatter extends Component {
                     name: this.props.webRecord?.data?.display_name || undefined,
                 });
             }
-            return this.load(this.props.threadId, [
+            await this.load(this.props.threadId, [
                 "followers",
                 "attachments",
                 "suggestedRecipients",
             ]);
+            this.scrollPosition.restore();
         });
+        onPatched(this.scrollPosition.restore);
         onWillUpdateProps((nextProps) => {
             this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
             if (nextProps.threadId === false) {
@@ -168,22 +167,33 @@ export class Chatter extends Component {
         });
         useEffect(
             () => {
-                if (this.attachments.length === 0) {
+                if (
+                    this.state.thread &&
+                    !["new", "loading"].includes(this.state.thread.status) &&
+                    this.attachments.length === 0
+                ) {
                     this.state.isAttachmentBoxOpened = false;
                 }
             },
-            () => [this.attachments]
+            () => [this.state.thread?.status, this.attachments]
         );
         useEffect(
             () => {
-                if (this.state.scrollToAttachments > 0) {
+                if (
+                    this.state.thread &&
+                    !["new", "loading"].includes(this.state.thread.status) &&
+                    this.state.scrollToAttachments > 0
+                ) {
                     this.attachmentBox.el.scrollIntoView({ block: "center" });
                 }
             },
-            () => [this.state.scrollToAttachments]
+            () => [this.state.thread?.status, this.state.scrollToAttachments]
         );
         useEffect(
             () => {
+                if (!this.state.thread) {
+                    return;
+                }
                 browser.clearTimeout(this.loadingAttachmentTimeout);
                 if (this.state.thread?.isLoadingAttachments) {
                     this.loadingAttachmentTimeout = browser.setTimeout(
@@ -195,7 +205,7 @@ export class Chatter extends Component {
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             },
-            () => [this.state.thread?.isLoadingAttachments]
+            () => [this.state.thread, this.state.thread?.isLoadingAttachments]
         );
     }
 
@@ -203,7 +213,7 @@ export class Chatter extends Component {
      * @returns {import("models").Activity[]}
      */
     get activities() {
-        return this.state.thread.activities;
+        return this.state.thread?.activities ?? [];
     }
 
     get followerButtonLabel() {
@@ -218,7 +228,7 @@ export class Chatter extends Component {
      * @returns {boolean}
      */
     get isDisabled() {
-        return !this.props.threadId || !this.state.thread.hasReadAccess;
+        return !this.props.threadId || !this.state.thread?.hasReadAccess;
     }
 
     get attachments() {
@@ -229,17 +239,19 @@ export class Chatter extends Component {
      * @returns {string}
      */
     get toRecipientsText() {
-        const recipients = [...this.state.thread.recipients].slice(0, 5).map(({ partner }) => {
-            const text = partner.email ? partner.emailWithoutDomain : partner.name;
-            return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
-                text
-            )}</span>`;
-        });
+        const recipients = [...(this.state.thread?.recipients ?? [])]
+            .slice(0, 5)
+            .map(({ partner }) => {
+                const text = partner.email ? partner.emailWithoutDomain : partner.name;
+                return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
+                    text
+                )}</span>`;
+            });
         const formatter = new Intl.ListFormat(
             this.store.env.services["user"].lang?.replace("_", "-"),
             { type: "unit" }
         );
-        if (this.state.thread.recipients.length > 5) {
+        if (this.state.thread && this.state.thread.recipients.length > 5) {
             recipients.push("…");
         }
         return markup(formatter.format(recipients));
@@ -255,7 +267,7 @@ export class Chatter extends Component {
     ) {
         const { threadModel } = this.props;
         this.state.thread = this.threadService.getThread(threadModel, threadId);
-        this.scrollPosition.model = this.state.thread.scrollPosition;
+        this.scrollPosition.model = this.state.thread?.scrollPosition;
         if (!threadId) {
             return;
         }

@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click } from "@web/../tests/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("activity (patch)");
 
@@ -36,9 +36,7 @@ QUnit.test("grant course access", async (assert) => {
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Activity");
-    assert.containsOnce($, "button:contains(Grant Access)");
-
+    await contains(".o-mail-Activity");
     await click("button", { text: "Grant Access" });
     assert.verifySteps(["access_grant"]);
 });
@@ -71,9 +69,7 @@ QUnit.test("refuse course access", async (assert) => {
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Activity");
-    assert.containsOnce($, "button:contains(Refuse Access)");
-
+    await contains(".o-mail-Activity");
     await click("button", { text: "Refuse Access" });
     assert.verifySteps(["access_refuse"]);
 });

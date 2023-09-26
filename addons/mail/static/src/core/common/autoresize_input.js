@@ -14,7 +14,7 @@ export class AutoresizeInput extends Component {
         enabled: { optional: true },
         onValidate: { type: Function, optional: true },
         placeholder: { type: String, optional: true },
-        value: { type: String },
+        value: { type: String, optional: true },
     };
     static defaultProps = {
         autofocus: false,

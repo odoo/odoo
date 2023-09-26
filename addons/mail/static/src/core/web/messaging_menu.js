@@ -287,7 +287,7 @@ export class MessagingMenu extends Component {
             );
         }
         if (this.store.discuss.activeTab !== "mailbox") {
-            delete this.store.discuss.thread;
+            this.store.discuss.thread = undefined;
         }
     }
 

@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { onChange } from "@mail/utils/common/misc";
 
@@ -25,20 +26,20 @@ patch(Thread, {
                 }
             });
             if (chatbotService.isChatbotThread(thread)) {
-                thread.chatbotTypingMessage = this.store.Message.insert({
+                thread.chatbotTypingMessage = {
                     id: messageService.getNextTemporaryId(),
                     res_id: thread.id,
                     model: thread.model,
                     author: thread.operator,
-                });
+                };
             } else {
-                thread.livechatWelcomeMessage = this.store.Message.insert({
+                thread.livechatWelcomeMessage = {
                     id: messageService.getNextTemporaryId(),
                     body: livechatService.options.default_message,
                     res_id: thread.id,
                     model: thread.model,
                     author: thread.operator,
-                });
+                };
             }
         }
         return thread;
@@ -48,14 +49,19 @@ patch(Thread, {
 patch(Thread.prototype, {
     chatbotScriptId: null,
 
+    setup() {
+        super.setup();
+        this.chatbotTypingMessage = Record.one("Message");
+        this.livechatWelcomeMessage = Record.one("Message");
+    },
     update(data) {
         super.update(...arguments);
         if (data.operator_pid) {
-            this.operator = this._store.Persona.insert({
+            this.operator = {
                 type: "partner",
                 id: data.operator_pid[0],
                 name: data.operator_pid[1],
-            });
+            };
         }
     },
 

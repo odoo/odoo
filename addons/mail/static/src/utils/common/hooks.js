@@ -331,6 +331,7 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
  */
 export function useScrollPosition(refName, model, clearOn) {
     const ref = useRef(refName);
+    let observeScroll = false;
     const self = {
         ref,
         model,
@@ -368,11 +369,21 @@ export function useScrollPosition(refName, model, clearOn) {
     }
 
     onMounted(() => {
-        ref.el.addEventListener("scroll", onScrolled);
+        if (ref.el) {
+            observeScroll = true;
+        }
+        ref.el?.addEventListener("scroll", onScrolled);
+    });
+
+    onPatched(() => {
+        if (!observeScroll && ref.el) {
+            observeScroll = true;
+            ref.el.addEventListener("scroll", onScrolled);
+        }
     });
 
     onWillUnmount(() => {
-        ref.el.removeEventListener("scroll", onScrolled);
+        ref.el?.removeEventListener("scroll", onScrolled);
     });
     return self;
 }

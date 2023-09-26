@@ -612,7 +612,8 @@ QUnit.test("emptying inbox displays rainbow man in inbox", async () => {
     ]);
     const { openDiscuss } = await start();
     openDiscuss();
-    await click("button", { text: "Mark all read" });
+    await contains(".o-mail-Message");
+    await click("button:enabled", { text: "Mark all read" });
     await contains(".o_reward_rainbow");
 });
 

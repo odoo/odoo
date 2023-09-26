@@ -9,10 +9,6 @@ import { OR, Record } from "@mail/core/common/record";
 export class Composer extends Record {
     static id = OR("thread", "message");
     /** @returns {import("models").Composer} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Composer} */
     static get(data) {
         return super.get(data);
     }
@@ -27,7 +23,8 @@ export class Composer extends Record {
         }
         let composer = (thread ?? message)?.composer;
         if (!composer) {
-            composer = this.new(data);
+            /** @type {import("models").Composer} */
+            composer = this.preinsert(data);
             const { message, thread } = data;
             if (thread) {
                 composer.thread = thread;

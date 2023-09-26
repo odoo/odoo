@@ -18,10 +18,6 @@ export class Persona extends Record {
     /** @type {Object.<number, import("models").Persona>} */
     static records = {};
     /** @returns {import("models").Persona} */
-    static new(data) {
-        return super.new(data);
-    }
-    /** @returns {import("models").Persona} */
     static get(data) {
         return super.get(data);
     }
@@ -30,10 +26,7 @@ export class Persona extends Record {
      * @returns {import("models").Persona}
      */
     static insert(data) {
-        const persona = this.get(data) ?? this.new(data);
-        persona.update(data);
-        // return reactive version
-        return persona;
+        return super.insert(data);
     }
 
     update(data) {

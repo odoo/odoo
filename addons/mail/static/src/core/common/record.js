@@ -17,6 +17,29 @@ export function OR(...args) {
     return [OR_SYM, ...args];
 }
 
+/**
+ * @param {R|any} val
+ * @param {Record} record
+ * @param {string} fname
+ * @param {(R) => void} fn
+ */
+export function preinsert(val, record, fname, fn) {
+    /** @type {R} */
+    let r3;
+    if (!(val instanceof Record)) {
+        const { targetModel } = record.Model.__rels__.get(fname);
+        r3 = record.Model.store[targetModel].preinsert(val);
+    } else {
+        r3 = val;
+    }
+    fn(r3);
+    if (!(val instanceof Record)) {
+        // was preinserted, fully insert now
+        const { targetModel } = record.Model.__rels__.get(fname);
+        record.Model.store[targetModel].insert(val);
+    }
+}
+
 export class RecordInverses {
     /**
      * Track the inverse of a record. Each record contains this map.
@@ -102,16 +125,16 @@ export class RecordList extends Array {
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index] = r3" syntax
                     const index = parseInt(name);
-                    /** @type {R} */
-                    const r3 = val;
-                    const r2 = receiver[index];
-                    if (r2 && r2.notEq(r3)) {
-                        receiver.__deleteInverse__(r2);
-                    }
-                    receiver.__list__[index] = r3?.localId;
-                    if (r3) {
-                        receiver.__addInverse__(r3);
-                    }
+                    receiver._preinsert(val, (r3) => {
+                        const r2 = receiver[index];
+                        if (r2 && r2.notEq(r3)) {
+                            receiver.__deleteInverse__(r2);
+                        }
+                        receiver.__list__[index] = r3?.localId;
+                        if (r3) {
+                            receiver.__addInverse__(r3);
+                        }
+                    });
                 } else if (name === "length") {
                     const newLength = parseInt(val);
                     if (newLength < receiver.length) {
@@ -125,7 +148,13 @@ export class RecordList extends Array {
             },
         });
     }
-
+    /**
+     * @param {R|any} val
+     * @param {(R) => void} fn
+     */
+    _preinsert(val, fn) {
+        preinsert(val, this.owner, this.name, fn);
+    }
     /**
      * @param {number} index
      * @returns {R}
@@ -135,11 +164,11 @@ export class RecordList extends Array {
     }
     /** @param {R[]} records */
     push(...records) {
-        this.__list__.push(...records.map((r3) => r3.localId));
-        for (const r3 of records) {
-            if (r3) {
+        for (const val of records) {
+            this._preinsert(val, (r3) => {
+                this.__list__.push(r3.localId);
                 this.__addInverse__(r3);
-            }
+            });
         }
         return this.__list__.length;
     }
@@ -161,11 +190,11 @@ export class RecordList extends Array {
     }
     /** @param {R[]} records */
     unshift(...records) {
-        this.__list__.unshift(...records.map((r3) => r3.localId));
-        for (const r3 of records) {
-            if (r3) {
+        for (const val of records) {
+            this._preinsert(val, (r3) => {
+                this.__list__.unshift(r3.localId);
                 this.__addInverse__(r3);
-            }
+            });
         }
         return this.__list__.length;
     }
@@ -251,20 +280,31 @@ export class RecordList extends Array {
             .map((localId) => this.__store__.get(localId))
             .concat(...collections.map((c) => [...c]));
     }
-    /** @param {R}  */
-    add(r) {
-        if (this.indexOf(r) !== -1) {
-            return;
+    /** @param {...R}  */
+    add(...records) {
+        for (const val of records) {
+            this._preinsert(val, (r) => {
+                if (this.indexOf(r) === -1) {
+                    this.push(r);
+                }
+            });
         }
-        this.push(r);
     }
-    /** @param {R}  */
-    delete(r) {
-        const index = this.indexOf(r);
-        if (index === -1) {
-            return;
+    /** @param {...R}  */
+    delete(...records) {
+        for (const val of records) {
+            this._preinsert(val, (r) => {
+                const index = this.indexOf(r);
+                if (index !== -1) {
+                    this.splice(index, 1);
+                }
+            });
         }
-        this.splice(index, 1);
+    }
+    clear() {
+        while (this.__list__.length > 0) {
+            this.pop();
+        }
     }
     /** @yields {R} */
     *[Symbol.iterator]() {
@@ -306,7 +346,7 @@ export class Record {
     }
     static _localId(expr, data, { brackets = false } = {}) {
         if (!Array.isArray(expr)) {
-            if (this.Class.__rels__.has(expr)) {
+            if (this.__rels__.has(expr)) {
                 // relational field (note: optional when OR)
                 return `(${data[expr]?.localId})`;
             }
@@ -319,6 +359,35 @@ export class Record {
         let res = vals.join(expr[0] === OR_SYM ? " OR " : " AND ");
         if (brackets) {
             res = `(${res})`;
+        }
+        return res;
+    }
+    static _retrieveIdFromData(data) {
+        const res = {};
+        function _deepRetrieve(expr2) {
+            if (typeof expr2 === "string") {
+                return Object.assign(res, { [expr2]: data[expr2] });
+            }
+            if (expr2 instanceof Array) {
+                for (const expr of this.id) {
+                    if (typeof expr === "symbol") {
+                        continue;
+                    }
+                    _deepRetrieve(expr);
+                }
+            }
+        }
+        if (this.id === undefined) {
+            return res;
+        }
+        if (typeof this.id === "string") {
+            return { [this.id]: data[this.id] };
+        }
+        for (const expr of this.id) {
+            if (typeof expr === "symbol") {
+                continue;
+            }
+            _deepRetrieve(expr);
         }
         return res;
     }
@@ -340,7 +409,8 @@ export class Record {
      */
     static new(data) {
         const obj = new this.Class();
-        let record = Object.assign(obj, { localId: this.localId(data), Model: this });
+        const ids = this._retrieveIdFromData(data);
+        let record = Object.assign(obj, { Model: this, localId: this.localId(data), ...ids });
         Object.assign(record, { _store: this.store });
         this.records[record.localId] = record;
         // return reactive version
@@ -353,7 +423,7 @@ export class Record {
      * @returns {import("models").Models[M]}
      */
     static one(modelName) {
-        return ONE_SYM;
+        return [ONE_SYM, modelName];
     }
     /**
      * @template {keyof import("model").Models} M
@@ -361,13 +431,24 @@ export class Record {
      * @returns {import("models").Models[M][]}
      */
     static many(modelName) {
-        return MANY_SYM;
+        return [MANY_SYM, modelName];
     }
     /**
      * @param {Object} data
      * @returns {Record}
      */
-    static insert(data) {}
+    static insert(data) {
+        const res = this.preinsert(data);
+        res.update(data);
+        return res;
+    }
+    /**
+     * @param {Object} data
+     * @returns {Record}
+     */
+    static preinsert(data) {
+        return this.get(data) ?? this.new(data);
+    }
 
     /**
      * Raw relational values of the record, each of which contains object id(s)
@@ -377,7 +458,7 @@ export class Record {
      * @type {Map<string, string|RecordList>}
      */
     __rels__ = new Map();
-    /** Track inverse relations of current record. */
+    /** @type {Map<string, { targetModel: string }>} */
     __invs__ = new RecordInverses();
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
@@ -405,14 +486,12 @@ export class Record {
 
     setup() {}
 
+    update(data) {}
+
     delete() {
         const r1 = this;
-        for (const [name, l1] of r1.__rels__.entries()) {
-            if (l1 instanceof RecordList) {
-                r1[name] = [];
-            } else {
-                r1[name] = undefined;
-            }
+        for (const name of r1.__rels__.keys()) {
+            r1[name] = undefined;
         }
         for (const [localId, names] of r1.__invs__.__map__.entries()) {
             for (const [name2, count] of names.entries()) {
