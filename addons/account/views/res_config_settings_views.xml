@@ -316,12 +316,12 @@
                                 </setting>
                             </block>
                         </t>
-                        <block title="Analytics" id="analytic">
-                            <setting id="track_costs_revenues" title="Allows you to use the analytic accounting." groups="account.group_account_user" help="Track costs &amp; revenues by project, department, etc"
+                        <block title="Analytics" id="analytic" groups="account.group_account_user">
+                            <setting id="track_costs_revenues" title="Allows you to use the analytic accounting." help="Track costs &amp; revenues by project, department, etc"
                                 documentation="/applications/finance/accounting/others/analytic_accounting.html">
                                 <field name="group_analytic_accounting"/>
                             </setting>
-                            <setting id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user" help="Use budgets to compare actual with expected revenues and costs"
+                            <setting id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." help="Use budgets to compare actual with expected revenues and costs"
                                 documentation="/applications/finance/accounting/others/adviser/budget.html">
                                 <field name="module_account_budget" widget="upgrade_boolean"/>
                             </setting>
