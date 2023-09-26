@@ -692,8 +692,7 @@ QUnit.module("Fields", (hooks) => {
             const input = target.querySelector(".o_field_widget[name=trululu] input");
             input.value = "yy";
             await triggerEvent(input, null, "input");
-            await click(target, ".o_field_widget[name=trululu] input");
-            await selectDropdownItem(target, "trululu", "Create and edit...");
+            await clickOpenedDropdownItem(target, "trululu", "Create and edit...");
 
             await clickSave(target.querySelector(".modal"));
             assert.verifySteps([`web_save: [[],{"name":"yy"}]`]);
@@ -742,8 +741,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelectorAll(".o_data_cell")[0]);
             const input = target.querySelector(".o_field_widget[name=user_id] input");
             await editInput(input, null, "yy");
-            await click(target, ".o_field_widget[name=user_id] input");
-            await selectDropdownItem(target, "user_id", 'Create "yy"');
+            await clickOpenedDropdownItem(target, "user_id", 'Create "yy"');
 
             assert.verifySteps(["name_create"]);
         }
@@ -831,6 +829,46 @@ QUnit.module("Fields", (hooks) => {
                 "read",
                 "onchange",
             ]);
+        }
+    );
+
+    QUnit.test(
+        "onchanges on many2ones trigger when editing record in form view",
+        async function (assert) {
+            serverData.models.partner.onchanges.display_name = function (obj) {
+                obj.user_id = 19;
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="user_id"/>
+                    </form>`,
+                async mockRPC(route, { method }) {
+                    if (method === "onchange") {
+                        assert.step("onchange");
+                        await def;
+                    }
+                },
+            });
+
+            await editInput(target, "[name='display_name'] input", "new name");
+            const input = target.querySelector("[name='user_id'] input");
+            input.value = "Plop";
+            await triggerEvent(input, null, "input");
+            assert.strictEqual(target.querySelector("[name='user_id'] input").value, "Plop");
+
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(target.querySelector("[name='user_id'] input").value, "Plop");
+
+            assert.verifySteps(["onchange"]);
         }
     );
 
