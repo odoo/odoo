@@ -1187,7 +1187,6 @@ var SnippetEditor = Widget.extend({
             over: function () {
                 if (self.dropped) {
                     self.$target.detach();
-                    $('.oe_drop_zone').removeClass('invisible');
                 }
 
                 // Prevent a column to be trapped in an upper grid dropzone at
@@ -3392,7 +3391,8 @@ var SnippetsMenu = Widget.extend({
                             if (dropped) {
                                 $toInsert.detach();
                                 $toInsert.addClass('oe_snippet_body');
-                                $('.oe_drop_zone').removeClass('invisible');
+                                [...$dropZones].forEach(dropzoneEl =>
+                                    dropzoneEl.classList.remove("invisible"));
                             }
                             dropped = true;
                             $(this).first().after($toInsert).addClass('invisible');
