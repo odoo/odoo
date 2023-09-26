@@ -5388,12 +5388,8 @@ registry.layout_column = SnippetOptionWidget.extend({
         for (const columnEl of columnEls) {
             // Reloading the images.
             gridUtils._reloadLazyImages(columnEl);
-
             // Removing the grid properties.
-            const gridSizeClasses = columnEl.className.match(/(g-col-lg|g-height)-[0-9]+/g);
-            columnEl.classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain', ...gridSizeClasses);
-            columnEl.style.removeProperty('grid-area');
-            columnEl.style.removeProperty('z-index');
+            gridUtils._convertToNormalColumn(columnEl);
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
