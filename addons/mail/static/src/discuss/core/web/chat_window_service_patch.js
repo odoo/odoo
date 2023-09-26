@@ -5,9 +5,11 @@ import { ChatWindowService } from "@mail/core/common/chat_window_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(ChatWindowService.prototype, "discuss/core/web", {
-    close(chatWindow) {
+    close(chatWindow, { notifyState = true } = {}) {
         this._super(...arguments);
-        this.notifyState(chatWindow);
+        if (notifyState) {
+            this.notifyState(chatWindow);
+        }
     },
     hide(chatWindow) {
         this._super(...arguments);

@@ -86,7 +86,7 @@ export class DiscussCoreWeb {
                             (chatWindow) => chatWindow.threadLocalId === thread.localId
                         );
                         if (chatWindow) {
-                            this.chatWindowService.close(chatWindow);
+                            this.chatWindowService.close(chatWindow, { notifyState: false });
                         }
                     } else {
                         this.chatWindowService.insert({
