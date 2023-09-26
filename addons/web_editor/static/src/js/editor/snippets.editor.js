@@ -37,48 +37,6 @@ var globalSelector = {
 };
 
 const dragAndDropCommonMenuEditor = Widget.extend({
-   /**
-     * Checks if an "over" dropzone event happens after an other "over" without
-     * an "out" between them. If it is the case, escapes the previous dropzone.
-     *
-     * @private
-     * @param {Element} currentDropzoneEl - The dropzone over which the target
-     * currently is.
-     */
-   _checkAndEscapePreviousDropzone(currentDropzoneEl) {
-        // Checking if the "out" event happened before this "over": if
-        // `self.dragState.currentDropzoneEl` exists, "out" didn't happen
-        // because it deletes it. We are therefore in the case of an "over"
-        // after an "over" and we need to escape the previous dropzone first.
-        if (this.dragState.currentDropzoneEl) {
-            const previousDropzoneEl = this.dragState.currentDropzoneEl;
-            const rowEl = previousDropzoneEl.parentNode;
-
-            if (rowEl.classList.contains("o_grid_mode")) {
-                this.handleDragMove = false;
-                const fromGridToGrid = currentDropzoneEl.classList.contains("oe_grid_zone");
-                if (fromGridToGrid) {
-                    // If we went from a grid dropzone to another grid one.
-                    rowEl.style.removeProperty("position");
-                } else {
-                    // If we went from a grid dropzone to a normal one.
-                    gridUtils._gridCleanUp(rowEl, this.draggedItemEl);
-                    this.draggedItemEl.style.removeProperty("z-index");
-                }
-
-                // Removing the drag helper and the background grid and
-                // resizing the grid and the dropzone.
-                this.dragState.dragHelperEl.remove();
-                this.dragState.backgroundGridEl.remove();
-                this.options.wysiwyg.odooEditor.observerActive("dragAndDropMoveSnippet");
-                gridUtils._resizeGrid(rowEl);
-                this.options.wysiwyg.odooEditor.observerUnactive("dragAndDropMoveSnippet");
-                const rowCount = parseInt(rowEl.dataset.rowCount);
-                previousDropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
-            }
-            previousDropzoneEl.classList.remove("invisible");
-        }
-   },
     /**
      * Removes the grid properties from the grid item. Needed for example if the
      * target has been dragged over a grid zone but is finally dropped in a
@@ -377,6 +335,40 @@ const dragAndDropCommonMenuEditor = Widget.extend({
             dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
         }
         delete this.dragState.currentDropzoneEl;
+    },
+   /**
+     * Escapes the previous dropzone.
+     *
+     * @private
+     * @param {Element} currentDropzoneEl - The dropzone over which the target
+     * currently is.
+     */
+   _outPreviousDropzone(currentDropzoneEl) {
+        const previousDropzoneEl = this.dragState.currentDropzoneEl;
+        const rowEl = previousDropzoneEl.parentNode;
+
+        if (rowEl.classList.contains("o_grid_mode")) {
+            this.handleDragMove = false;
+            const fromGridToGrid = currentDropzoneEl.classList.contains("oe_grid_zone");
+            if (fromGridToGrid) {
+                // If we went from a grid dropzone to another grid one.
+                rowEl.style.removeProperty("position");
+            } else {
+                // If we went from a grid dropzone to a normal one.
+                gridUtils._gridCleanUp(rowEl, this.draggedItemEl);
+                this.draggedItemEl.style.removeProperty("z-index");
+            }
+
+            // Removing the drag helper and the background grid and
+            // resizing the grid and the dropzone.
+            this.dragState.dragHelperEl.remove();
+            this.dragState.backgroundGridEl.remove();
+            this.options.wysiwyg.odooEditor.observerActive("dragAndDropMoveSnippet");
+            gridUtils._resizeGrid(rowEl);
+            this.options.wysiwyg.odooEditor.observerUnactive("dragAndDropMoveSnippet");
+            const rowCount = parseInt(rowEl.dataset.rowCount);
+            previousDropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
+        }
     },
     /**
      * Removes the grid and the drag helper.
@@ -1427,8 +1419,14 @@ var SnippetEditor = dragAndDropCommonMenuEditor.extend({
         this.$dropZones.droppable({
             over: function () {
                 if (self.dropped) {
+                    // Checking if the "out" event happened before this "over":
+                    // if `self.dropped` is "true", "out" didn't happen because
+                    // it sets it to "false". We are therefore in the case of an
+                    // "over" after an "over" and we need to escape the previous
+                    // dropzone first.
                     self.$target.detach();
                     $('.oe_drop_zone').removeClass('invisible');
+                    self._outPreviousDropzone(this);
                 }
 
                 // Prevent a column to be trapped in an upper grid dropzone at
@@ -1453,7 +1451,6 @@ var SnippetEditor = dragAndDropCommonMenuEditor.extend({
                 const $dropzone = $(this).first().after(self.$target);
                 $dropzone.addClass('invisible');
 
-                self._checkAndEscapePreviousDropzone($dropzone[0]);
                 self.dragState.currentDropzoneEl = $dropzone[0];
 
                 if ($dropzone[0].classList.contains('oe_grid_zone')) {
