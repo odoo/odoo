@@ -145,4 +145,6 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': ref('product.consu_delivery_03').id, 'quantity': 1.0, 'price_unit': 500.0}),
                 ],
             }
+            move_data['demo_move_auto_reconcile_3']['l10n_latam_document_number'] = 'FFF-100007'
+            move_data['demo_move_auto_reconcile_4']['l10n_latam_document_number'] = 'FFF-100008'
         return move_data
