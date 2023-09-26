@@ -738,8 +738,8 @@ export class TicketScreen extends Component {
             // them again, unless invalidated. See `_onInvoiceOrder`.
             fetchedOrders.forEach((order) => {
                 this._state.syncedOrders.cache[order.id] = new Order(
-                    { env: this.env },
-                    { pos: this.pos, json: order }
+                    { env: this.env, pos: this.pos, cashier: this.pos.get_cashier() },
+                    order
                 );
             });
             //Update the datetime indicator of the cache refresh

@@ -317,6 +317,10 @@ export class BaseOrderline extends PosModel {
         return this.get_all_prices().tax;
     }
 
+    get_tax_details() {
+        return this.get_all_prices().taxDetails;
+    }
+
     getUnitDisplayPriceBeforeDiscount() {
         if (this.env.cache.config.iface_tax_included === "total") {
             return this.get_all_prices(1).priceWithTaxBeforeDiscount;

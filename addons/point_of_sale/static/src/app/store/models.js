@@ -1,14 +1,8 @@
 /** @odoo-module */
 
-import { uuidv4 } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
-import {
-    formatDate,
-    formatDateTime,
-    serializeDateTime,
-    deserializeDateTime,
-} from "@web/core/l10n/dates";
+import { formatDate, serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import {
     formatFloat,
     roundDecimals as round_di,
@@ -21,7 +15,7 @@ import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configu
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { PosModel, PosCollection } from "@point_of_sale/app/base_models/base";
+import { PosModel } from "@point_of_sale/app/base_models/base";
 import { BaseProduct } from "@point_of_sale/app/base_models/base_product";
 import {
     incOrderlineId,
@@ -29,6 +23,7 @@ import {
     setOrderlineId,
     BaseOrderline,
 } from "@point_of_sale/app/base_models/base_orderline";
+import { BaseOrder } from "@point_of_sale/app/base_models/base_order";
 
 const { DateTime } = luxon;
 
@@ -560,9 +555,6 @@ export class Orderline extends BaseOrderline {
         }
         return taxes;
     }
-    get_tax_details() {
-        return this.get_all_prices().taxDetails;
-    }
     /**
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
      * @returns {Number} the total amount of price included taxes
@@ -835,30 +827,19 @@ export class Payment extends PosModel {
 // plus the associated payment information (the Paymentlines)
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
-export class Order extends PosModel {
-    setup(_defaultObj, options) {
+export class Order extends BaseOrder {
+    setup(_obj, json) {
         super.setup(...arguments);
-        var self = this;
-        options = options || {};
-
         this.locked = false;
-        this.pos = options.pos;
         this.selected_orderline = undefined;
         this.selected_paymentline = undefined;
         this.screen_data = {}; // see Gui
-        this.temporary = options.temporary || false;
-        this.date_order = luxon.DateTime.now();
         this.to_invoice = false;
-        this.orderlines = new PosCollection();
-        this.paymentlines = new PosCollection();
         this.pos_session_id = this.pos.pos_session.id;
-        this.cashier = this.pos.get_cashier();
         this.finalized = false; // if true, cannot be modified.
         this.shippingDate = null;
         this.firstDraft = true;
         this.combos = [];
-
-        this.partner = null;
 
         this.uiState = {
             ReceiptScreen: {
@@ -874,8 +855,8 @@ export class Order extends PosModel {
             },
         };
 
-        if (options.json) {
-            this.init_from_JSON(options.json);
+        if (json) {
+            this.init_from_JSON(json);
             const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
             for (const line of this.orderlines) {
                 line.comboLines = line.combo_line_ids?.map((id) => linesById[id]);
@@ -884,16 +865,6 @@ export class Order extends PosModel {
                     line.comboParent = linesById[combo_parent_id];
                 }
             }
-        } else {
-            this.set_pricelist(this.pos.default_pricelist);
-            this.sequence_number = this.pos.pos_session.sequence_number++;
-            this.access_token = uuidv4(); // unique uuid used to identify the authenticity of the request from the QR code.
-            this.ticketCode = this._generateTicketCode(); // 5-digits alphanum code shown on the receipt
-            this.uid = this.generate_unique_id();
-            this.name = _t("Order %s", this.uid);
-            this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
-                return fp.id === self.pos.config.default_fiscal_position_id[0];
-            });
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
@@ -1064,90 +1035,6 @@ export class Order extends PosModel {
     _exportShippingDateForPrinting() {
         const shippingDate = DateTime.fromJSDate(new Date(this.shippingDate));
         return formatDate(shippingDate);
-    }
-    export_for_printing() {
-        var orderlines = [];
-
-        this.orderlines.forEach(function (orderline) {
-            orderlines.push(orderline.export_for_printing());
-        });
-
-        // If order is locked (paid), the 'change' is saved as negative payment,
-        // and is flagged with is_change = true. A receipt that is printed first
-        // time doesn't show this negative payment so we filter it out.
-        var paymentlines = this.paymentlines
-            .filter(function (paymentline) {
-                return !paymentline.is_change;
-            })
-            .map(function (paymentline) {
-                return paymentline.export_for_printing();
-            });
-        const partner = this.partner;
-        const cashier = this.pos.get_cashier();
-        const company = this.pos.company;
-        const date = new Date();
-
-        var receipt = {
-            orderlines: orderlines,
-            paymentlines: paymentlines,
-            subtotal: this.get_subtotal(),
-            total_with_tax: this.get_total_with_tax(),
-            total_rounded: this.get_total_with_tax() + this.get_rounding_applied(),
-            total_without_tax: this.get_total_without_tax(),
-            total_tax: this.get_total_tax(),
-            total_paid: this.get_total_paid(),
-            total_discount: this.get_total_discount(),
-            rounding_applied: this.get_rounding_applied(),
-            tax_details: this.get_tax_details(),
-            change: this.locked ? this.amount_return : this.get_change(),
-            name: this.get_name(),
-            partner: partner ? partner : null,
-            invoice_id: null, //TODO
-            cashier: cashier ? cashier.name : null,
-            precision: {
-                price: 2,
-                money: 2,
-                quantity: 3,
-            },
-            date: {
-                year: date.getFullYear(),
-                month: date.getMonth(),
-                date: date.getDate(), // day of the month
-                day: date.getDay(), // day of the week
-                hour: date.getHours(),
-                minute: date.getMinutes(),
-                isostring: date.toISOString(),
-                localestring: formatDateTime(luxon.DateTime.now()),
-                date_order: this.date_order,
-            },
-            company: {
-                email: company.email,
-                website: company.website,
-                company_registry: company.company_registry,
-                contact_address: company.partner_id[1],
-                vat: company.vat,
-                vat_label: (company.country && company.country.vat_label) || _t("Tax ID"),
-                name: company.name,
-                phone: company.phone,
-                logo: this.pos.company_logo_base64,
-            },
-            currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code
-                ? this.ticketCode
-                : false,
-            base_url: this.pos.base_url,
-        };
-
-        const isHeaderOrFooter = this.pos.config.is_header_or_footer;
-        receipt.header = (isHeaderOrFooter && this.pos.config.receipt_header) || "";
-        receipt.footer = (isHeaderOrFooter && this.pos.config.receipt_footer) || "";
-
-        if (!receipt.date.localestring && (!this.state || this.state == "draft")) {
-            receipt.date.localestring = formatDateTime(DateTime.local());
-        }
-
-        return receipt;
     }
     // This function send order change to printer
     // For sending changes to preparation display see sendChanges function.
@@ -1378,31 +1265,8 @@ export class Order extends PosModel {
     is_empty() {
         return this.orderlines.length === 0;
     }
-    generate_unique_id() {
-        // Generates a public identification number for the order.
-        // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes, should it be needed
-
-        function zero_pad(num, size) {
-            var s = "" + num;
-            while (s.length < size) {
-                s = "0" + s;
-            }
-            return s;
-        }
-        return (
-            zero_pad(this.pos.pos_session.id, 5) +
-            "-" +
-            zero_pad(this.pos.pos_session.login_number, 3) +
-            "-" +
-            zero_pad(this.sequence_number, 4)
-        );
-    }
     updateSavedQuantity() {
         this.orderlines.forEach((line) => line.updateSavedQuantity());
-    }
-    get_name() {
-        return this.name;
     }
     assert_editable() {
         if (this.finalized) {
@@ -1427,9 +1291,6 @@ export class Order extends PosModel {
             }
         }
         return null;
-    }
-    get_orderlines() {
-        return this.orderlines;
     }
     /**
      * Groups the orderlines of the specific order according to the taxes applied to them. The orderlines that have
@@ -1848,26 +1709,6 @@ export class Order extends PosModel {
                 });
         }
     }
-    /* ---- Payment Status --- */
-    get_subtotal() {
-        return round_pr(
-            this.orderlines.reduce(function (sum, orderLine) {
-                return sum + orderLine.get_display_price();
-            }, 0),
-            this.pos.currency.rounding
-        );
-    }
-    get_total_with_tax() {
-        return this.get_total_without_tax() + this.get_total_tax();
-    }
-    get_total_without_tax() {
-        return round_pr(
-            this.orderlines.reduce(function (sum, orderLine) {
-                return sum + orderLine.get_price_without_tax();
-            }, 0),
-            this.pos.currency.rounding
-        );
-    }
     _get_ignored_product_ids_total_discount() {
         return [];
     }
@@ -1902,41 +1743,6 @@ export class Order extends PosModel {
             this.pos.currency.rounding
         );
     }
-    get_total_tax() {
-        if (this.pos.company.tax_calculation_rounding_method === "round_globally") {
-            // As always, we need:
-            // 1. For each tax, sum their amount across all order lines
-            // 2. Round that result
-            // 3. Sum all those rounded amounts
-            var groupTaxes = {};
-            this.orderlines.forEach(function (line) {
-                var taxDetails = line.get_tax_details();
-                var taxIds = Object.keys(taxDetails);
-                for (var t = 0; t < taxIds.length; t++) {
-                    var taxId = taxIds[t];
-                    if (!(taxId in groupTaxes)) {
-                        groupTaxes[taxId] = 0;
-                    }
-                    groupTaxes[taxId] += taxDetails[taxId].amount;
-                }
-            });
-
-            var sum = 0;
-            var taxIds = Object.keys(groupTaxes);
-            for (var j = 0; j < taxIds.length; j++) {
-                var taxAmount = groupTaxes[taxIds[j]];
-                sum += round_pr(taxAmount, this.pos.currency.rounding);
-            }
-            return sum;
-        } else {
-            return round_pr(
-                this.orderlines.reduce(function (sum, orderLine) {
-                    return sum + orderLine.get_tax();
-                }, 0),
-                this.pos.currency.rounding
-            );
-        }
-    }
     get_total_paid() {
         return round_pr(
             this.paymentlines.reduce(function (sum, paymentLine) {
@@ -1947,35 +1753,6 @@ export class Order extends PosModel {
             }, 0),
             this.pos.currency.rounding
         );
-    }
-    get_tax_details() {
-        var details = {};
-        var fulldetails = [];
-
-        this.orderlines.forEach(function (line) {
-            var ldetails = line.get_tax_details();
-            for (var id in ldetails) {
-                if (Object.hasOwnProperty.call(ldetails, id)) {
-                    details[id] = {
-                        amount: (details[id]?.amount || 0) + ldetails[id].amount,
-                        base: (details[id]?.base || 0) + ldetails[id].base,
-                    };
-                }
-            }
-        });
-
-        for (var id in details) {
-            if (Object.hasOwnProperty.call(details, id)) {
-                fulldetails.push({
-                    amount: details[id].amount,
-                    base: details[id].base,
-                    tax: this.pos.taxes_by_id[id],
-                    name: this.pos.taxes_by_id[id].name,
-                });
-            }
-        }
-
-        return fulldetails;
     }
     get_total_for_taxes(tax_id) {
         var total = 0;
@@ -2272,31 +2049,5 @@ export class Order extends PosModel {
         } else {
             return true;
         }
-    }
-    _get_qr_code_data() {
-        if (this.pos.company.point_of_sale_use_ticket_qr_code) {
-            // Use the unique access token to ensure the authenticity of the request. Use the order reference as a second check just in case.
-            return this._make_qr_code_data(
-                `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
-            );
-        } else {
-            return false;
-        }
-    }
-    _make_qr_code_data(url) {
-        const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
-        const qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(url, 150, 150));
-        return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
-    }
-    /**
-     * Returns a random 5 digits alphanumeric code
-     * @returns {string}
-     */
-    _generateTicketCode() {
-        let code = "";
-        while (code.length != 5) {
-            code = Math.random().toString(36).slice(2, 7);
-        }
-        return code;
     }
 }

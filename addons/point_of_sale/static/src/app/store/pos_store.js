@@ -525,11 +525,9 @@ export class PosStore extends Reactive {
         }
     }
     createReactiveOrder(json) {
-        const options = { pos: this };
-        if (json) {
-            options.json = json;
-        }
-        return this.makeOrderReactive(new Order({ env: this.env }, options));
+        return this.makeOrderReactive(
+            new Order({ env: this.env, pos: this, cashier: this.get_cashier() }, json)
+        );
     }
     makeOrderReactive(order) {
         const batchedCallback = batched(() => {

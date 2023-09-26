@@ -50,6 +50,10 @@ export const contextualUtilsService = {
             default_pricelist: pos_data["default_pricelist"],
             taxes_by_id: pos_data["taxes_by_id"],
             units_by_id: pos_data["units_by_id"],
+            pos_session: pos_data["pos.session"],
+            fiscal_positions: pos_data["account.fiscal.position"],
+            user: pos_data["res.users"],
+            cash_rounding: pos_data["account.cash.rounding"],
         };
 
         const productUoMDecimals = cache.dp["Product Unit of Measure"];

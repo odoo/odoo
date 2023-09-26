@@ -6,6 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Order.prototype, {
     setup(options) {
         super.setup(...arguments);
+        // FIXME: options.json is always falsy because json is in the 2nd argument.
         if (!options.json && this.pos.config.module_pos_hr) {
             this.cashier = this.pos.get_cashier();
         }
