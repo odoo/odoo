@@ -973,7 +973,7 @@ class Channel(models.Model):
             channel._broadcast(partners_to)
         return channel._channel_info()[0]
 
-    def channel_fold(self, state=None):
+    def channel_fold(self, state=None, state_count=0):
         """ Update the fold_state of the given session. In order to syncronize web browser
             tabs, the change will be broadcast to themselves (the current user channel).
             Note: the user need to be logged
@@ -997,6 +997,7 @@ class Channel(models.Model):
                 session_state.write(vals)
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {
                 'Thread': {
+                    'foldStateCount': state_count,
                     'id': session_state.channel_id.id,
                     'model': 'discuss.channel',
                     'serverFoldState': state,
