@@ -10,6 +10,7 @@ class ApplicantSendMail(models.TransientModel):
 
     applicant_ids = fields.Many2many('hr.applicant', string='Applications', required=True)
     author_id = fields.Many2one('res.partner', 'Author', required=True, default=lambda self: self.env.user.partner_id.id)
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachments', readonly=False, store=True)
 
     @api.depends('subject')
     def _compute_render_model(self):
@@ -29,6 +30,11 @@ class ApplicantSendMail(models.TransientModel):
                 }
             }
 
+        if self.template_id:
+            subjects = self.template_id._render_field('subject', res_ids=self.applicant_ids.ids)
+        else:
+            subjects = {applicant.id: self.subject for applicant in self.applicant_ids}
+
         for applicant in self.applicant_ids:
             if not applicant.partner_id:
                 applicant.partner_id = self.env['res.partner'].create({
@@ -39,11 +45,17 @@ class ApplicantSendMail(models.TransientModel):
                     'mobile': applicant.partner_mobile,
                 })
 
+            attachment_ids = []
+            for attachment_id in self.attachment_ids:
+                new_attachment = attachment_id.copy({'res_model': 'hr.applicant', 'res_id': applicant.id})
+                attachment_ids.append(new_attachment.id)
+
             applicant.message_post(
                 author_id=self.author_id.id,
                 body=self.body,
                 email_layout_xmlid='mail.mail_notification_light',
                 message_type='comment',
                 partner_ids=applicant.partner_id.ids,
-                subject=self.subject,
+                subject=subjects[applicant.id],
+                attachment_ids=attachment_ids
             )
