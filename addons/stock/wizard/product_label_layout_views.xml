@@ -8,10 +8,10 @@
         <field name="inherit_id" ref="product.product_label_layout_form"/>
         <field name="arch" type="xml">
             <xpath expr='//field[@name="custom_quantity"]' position="before">
-                <field name="picking_quantity"/>
+                <field name="move_quantity"/>
             </xpath>
             <xpath expr="//field[@name='custom_quantity']" position="attributes">
-                <attribute name="invisible">picking_quantity == 'picking'</attribute>
+                <attribute name="invisible">move_quantity == 'move'</attribute>
             </xpath>
         </field>
     </record>

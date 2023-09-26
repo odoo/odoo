@@ -5,12 +5,13 @@ from collections import defaultdict
 from odoo import fields, models
 from odoo.tools import float_compare, float_is_zero
 
+
 class ProductLabelLayout(models.TransientModel):
     _inherit = 'product.label.layout'
 
     move_ids = fields.Many2many('stock.move')
-    picking_quantity = fields.Selection([
-        ('picking', 'Transfer Quantities'),
+    move_quantity = fields.Selection([
+        ('move', 'Operation Quantities'),
         ('custom', 'Custom')], string="Quantity to print", required=True, default='custom')
     print_format = fields.Selection(selection_add=[
         ('zpl', 'ZPL Labels'),
@@ -25,7 +26,7 @@ class ProductLabelLayout(models.TransientModel):
 
         quantities = defaultdict(int)
         uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
-        if self.picking_quantity == 'picking' and self.move_ids and all(float_is_zero(ml.quantity, precision_rounding=ml.product_uom_id.rounding) for ml in self.move_ids.move_line_ids):
+        if self.move_quantity == 'move' and self.move_ids and all(float_is_zero(ml.quantity, precision_rounding=ml.product_uom_id.rounding) for ml in self.move_ids.move_line_ids):
             for move in self.move_ids:
                 if move.product_uom.category_id == uom_unit:
                     use_reserved = float_compare(move.quantity, 0, precision_rounding=move.product_uom.rounding) > 0
@@ -33,7 +34,7 @@ class ProductLabelLayout(models.TransientModel):
                     if not float_is_zero(useable_qty, precision_rounding=move.product_uom.rounding):
                         quantities[move.product_id.id] += useable_qty
             data['quantity_by_product'] = {p: int(q) for p, q in quantities.items()}
-        elif self.picking_quantity == 'picking' and self.move_ids.move_line_ids:
+        elif self.move_quantity == 'move' and self.move_ids.move_line_ids:
             custom_barcodes = defaultdict(list)
             for line in self.move_ids.move_line_ids:
                 if line.product_uom_id.category_id == uom_unit:

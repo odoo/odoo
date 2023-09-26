@@ -285,7 +285,7 @@ class StockPickingBatch(models.Model):
             'context': {
                 'default_product_ids': self.move_line_ids.product_id.ids,
                 'default_move_ids': self.move_ids.ids,
-                'default_picking_quantity': 'picking'},
+                'default_move_quantity': 'move'},
         }
 
     # -------------------------------------------------------------------------
