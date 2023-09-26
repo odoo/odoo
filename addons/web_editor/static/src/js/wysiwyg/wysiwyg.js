@@ -1337,10 +1337,17 @@ const Wysiwyg = Widget.extend({
      * @param {HTMLElement} element
      */
     setCSSVariables(element) {
-        const stylesToCopy = weUtils.EDITOR_COLOR_CSS_VARIABLES;
+        const stylesToCopy = [
+            ...weUtils.EDITOR_COLOR_CSS_VARIABLES, 
+            ...weUtils.EDITOR_FONT_CSS_VARIABLES,
+        ];
 
         for (const style of stylesToCopy) {
-            element.style.setProperty(`--we-cp-${style}`, weUtils.getCSSVariableValue(style));
+            let value = weUtils.getCSSVariableValue(style);
+            if (value === "'SYSTEM_FONTS'") {
+                value = "var(--o-system-fonts)";
+            }
+            element.style.setProperty(`--we-cp-${style}`, value);
         }
 
         element.classList.toggle('o_we_has_btn_outline_primary',

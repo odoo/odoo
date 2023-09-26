@@ -5,7 +5,7 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 
 let editableWindow = window;
 const _setEditableWindow = (ew) => editableWindow = ew;
-
+const EDITOR_FONT_CSS_VARIABLES = ["headings-font", "navbar-font", "buttons-font", "font"];
 const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
 
 /**
@@ -466,6 +466,7 @@ return {
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
     DEFAULT_PALETTE: DEFAULT_PALETTE,
     EDITOR_COLOR_CSS_VARIABLES: EDITOR_COLOR_CSS_VARIABLES,
+    EDITOR_FONT_CSS_VARIABLES: EDITOR_FONT_CSS_VARIABLES,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
