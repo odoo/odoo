@@ -60,6 +60,8 @@ class ReportBomStructure(models.AbstractModel):
         docs = []
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
+            if not bom:
+                continue
             variant = data.get('variant')
             candidates = variant and self.env['product.product'].browse(int(variant)) or bom.product_id or bom.product_tmpl_id.product_variant_ids
             quantity = float(data.get('quantity', bom.product_qty))
