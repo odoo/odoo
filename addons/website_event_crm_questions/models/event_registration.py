@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import models, _
 
 
@@ -18,7 +19,7 @@ class EventRegistration(models.Model):
             answer_value = answer.value_answer_id.name if answer.question_type == "simple_choice" else answer.value_text_box
             answer_value = "<br/>".join(["    %s" % line for line in answer_value.split('\n')])
             answer_descriptions.append("  - %s<br/>%s" % (answer.question_id.title, answer_value))
-        return "%s%s<br/>%s" % (reg_description, _("Questions"), '<br/>'.join(answer_descriptions))
+        return Markup("%s%s<br/>%s" % (reg_description, _("Questions"), '<br/>'.join(answer_descriptions)))
 
     def _get_lead_description_fields(self):
         res = super(EventRegistration, self)._get_lead_description_fields()
