@@ -6,7 +6,6 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
 import { useState } from "@odoo/owl";
-import { AlertPopup } from "@point_of_sale/app/utils/alert_popup/alert_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { identifyError } from "@point_of_sale/app/errors/error_handlers";
@@ -26,7 +25,6 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         "other_payment_methods",
         "is_manager",
         "amount_authorized_diff",
-        "state",
         // TODO: set the props for all popups
         "id",
         "keepBehind",
@@ -229,13 +227,11 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async handleClosingError(response) {
-        const body = response.message;
-        if (response.type == "alert") {
-            await this.popup.add(AlertPopup, { title: response.title || "", body });
-        } else {
-            await this.popup.add(ErrorPopup, { title: "Error", body });
-        }
-
+        await this.popup.add(ErrorPopup, {
+            title: response.title || "Error",
+            body: response.message,
+            sound: response.type !== "alert",
+        });
         if (response.redirect) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
