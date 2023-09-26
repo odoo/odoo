@@ -95,21 +95,6 @@
     }
 }
 
-.o_attendee_border {
-    border-width: 2px;
-    border-style: solid;
-}
-
-.o_attendee_border_accepted {
-    border-color: map-get($theme-colors, 'success');
-}
-.o_attendee_border_declined {
-    border-color: map-get($theme-colors, 'danger');
-}
-.o_attendee_border_tentative {
-    border-color: map-get($theme-colors, 'light');
-}
-
 @for $i from 1 through length($o-colors-complete) {
     $color: nth($o-colors-complete, $i);
 

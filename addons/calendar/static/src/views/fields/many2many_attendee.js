@@ -6,7 +6,13 @@ import {
     many2ManyTagsAvatarField,
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
+import { AttendeeTagsList } from "@calendar/views/fields/attendee_tags_list";
 
+const ICON_BY_STATUS = {
+    accepted: "fa-check",
+    declined: "fa-times",
+    tentative: "fa-question",
+};
 export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
     setup() {
         super.setup();
@@ -28,7 +34,8 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
         const tags = super.tags.map((tag) => {
             const partner = partnerIds.find((partner) => tag.resId === partner.id);
             if (partner) {
-                tag.imageClass = `o_attendee_border o_attendee_border_${partner.status}`;
+                tag.status = partner.status;
+                tag.statusIcon = ICON_BY_STATUS[partner.status];
             }
             return tag;
         });
@@ -47,6 +54,10 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
 }
 
 Many2ManyAttendee.template = "calendar.Many2ManyAttendee";
+Many2ManyAttendee.components = {
+    ...Many2ManyAttendee.components,
+    TagsList: AttendeeTagsList,
+};
 
 export const many2ManyAttendee = {
     ...many2ManyTagsAvatarField,
