@@ -8,23 +8,24 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-center align-items-center flex-column text-center">
-            <h1 class="m-0">We're preparing<br/>your order!</h1>
-            <div class="d-flex flex-column justify-content-center align-items-center w-50 h-25 my-5 border rounded  bg-view">
+        <div class="d-flex justify-content-center align-items-center flex-column h-100 px-3 text-center">
+            <h1 class="mb-4">We're preparing your order!</h1>
+            <div class="d-inline-flex flex-column border rounded py-4 px-5 bg-view mb-3">
                 <t t-if="selfOrder.currentOrder.take_away || selfOrder.config.self_ordering_service_mode !== 'table'">
                     <span class="fs-2 text-muted">Your order number</span>
-                    <span class="number m-0" t-esc="selfOrder.currentOrder.tracking_number" />
+                    <span class="number lh-1" t-esc="selfOrder.currentOrder.tracking_number" />
                 </t>
                 <t t-else="">
-                    <span class="fs-2 text-muted">Your table number</span>
-                    <span class="number m-0" t-esc="selfOrder.tablePadNumber" />
-                    <h2 class="m-0 text-muted">Order number: <t t-esc="selfOrder.currentOrder.tracking_number" /></h2>
+                    <span class="fs-2 text-muted">Your table number:</span>
+                    <span class="number lh-1 mb-4" t-esc="selfOrder.tablePadNumber" />
+                    <span class="fs-2 text-muted">Order number:</span>
+                    <span class="number lh-1" t-esc="selfOrder.currentOrder.tracking_number" />
                 </t>
             </div>
             <h2 class="m-0 text-muted">Get your ticket below</h2>
         </div>
-        <div class="d-flex flex-row w-100 gap-3">
-            <button class="btn btn-primary w-100 h-100 p-0 m-0 fs-2 text-uppercase" t-on-click="backToHome">Close</button>
+        <div class="px-3 py-4 text-center">
+            <button class="btn btn-primary btn-lg" t-on-click="backToHome">Close</button>
         </div>
     </t>
 </templates>

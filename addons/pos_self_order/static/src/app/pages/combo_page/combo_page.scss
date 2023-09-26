@@ -1,56 +1,9 @@
-.breadcrumb {
-    max-height: 99px;
-
-    div:first-child {
-        margin-left: -15px;
-    }
-
-    div:last-child {
-        padding-right: 15px;
-        > span:after, > span:before {
-            border: none;
-        }
-    }
-
-    div > span {
-        padding: 1% 0 1% 60px;
-        padding-right: 20px;
-
-        &:after,
-        &:before {
-            content: " ";
-            border-top: 50px solid transparent;
-            border-bottom: 50px solid transparent;
-            position: absolute;
-            top: 50%;
-            margin-top: -50px;
-            margin-left: -1px;
-        }
-
-        &:after {
-            border-left: 30px solid $o-gray-200;
-            left: 100%;
-            z-index: 2;
-        }
-
-        &:before {
-            border-left: 30px solid $o-gray-300;
-            margin-left: 1px;
-            left: 100%;
-            z-index: 1;
-        }
-    }
-
-    div.active-step span {
-        &:after {
-            border-left: 30px solid $o-gray-100;
-        }
+.pos_self_order_breadcrumb {
+    .pos_self_order_breadcrumb_pill {
+        width: 3rem;
     }
 }
 
-.o_kiosk-combo {
-    .o_self_order_item_card_image {
-        aspect-ratio: 1/1;
-        object-fit: contain;
-    }
+.pos_self_order_combo_image {
+    width: 3rem;
 }

@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.OrderWidget">
-        <div class="page-buttons fixed-bottom w-100 shadow-sm bg-white">
-            <div class="row m-2 h-100 ">
-                <button t-attf-class="btn btn-secondary col-3 p-0 m-0 text-uppercase {{ cancelAvailable ? '' : 'disabled' }}" t-on-click="cancel">
-                    Cancel Order
-                </button>
-                <div class="col-6 p-2 m-0">
+        <div
+            class="page-buttons d-flex flex-nowrap justify-content-between py-2 px-3 gap-2 gap-md-3 bg-view z-index-1"
+            t-att-class="{
+                'shadow-lg border-top' : !props.removeTopClasses
+            }">
+            <button t-attf-class="btn btn-secondary btn-lg btn-close h-auto w-auto opacity-75 px-4 d-sm-none {{ cancelAvailable ? '' : 'd-none' }}" t-on-click="cancel">
+                <span class="px-1"/><!-- Spacer -->
+            </button>
+            <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap {{ cancelAvailable ? '' : 'd-none' }}" t-on-click="cancel">
+                Cancel Order
+            </button>
+            <div class="d-flex align-items-center flex-grow-1 w-100 w-md-auto">
+                <div class="to-order">
                     <span t-if="!this.selfOrder.currentOrder.isSavedOnServer">To Order</span>
                     <span t-else="">To Pay</span>
-                    <div class="m-2">
-                        <span class="p-2 bg-300 rounded" t-esc="lineNotSend.count" />
-                        <span class="mx-2" t-if="selfOrder.currentOrder.lines.length" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
+                    <div class="d-flex align-items-center">
+                        <span class="o-so-tabular-nums badge text-bg-secondary rounded" t-esc="lineNotSend.count"/>
+                        <span class="o-so-tabular-nums mx-2" t-if="selfOrder.currentOrder.lines.length" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
                     </div>
                 </div>
-                <button t-attf-class="col-3 cart btn btn-primary col-3 p-0 m-0 text-uppercase {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label" />
             </div>
+            <button t-attf-class="cart btn btn-primary btn-lg flex-grow-1 flex-md-grow-0 {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label"/>
         </div>
     </t>
 </templates>
