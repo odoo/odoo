@@ -1629,14 +1629,14 @@ class PosSession(models.Model):
             [('attribute_id', 'in', product_attributes.ids)],
             ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra'],
         )
-        product_template_attribute_values.product_attribute_value_id.fetch(['name', 'is_custom', 'html_color'])
+        product_template_attribute_values.product_attribute_value_id.fetch(['name', 'is_custom', 'html_color', 'image'])
 
         key1 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
         key2 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id)
         res = {}
         for key, group in groupby(sorted(product_template_attribute_values, key=key1), key=key2):
             attribute_line_id, attribute = key
-            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
+            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color', 'image'])[0],
                        'price_extra': ptav.price_extra} for ptav in list(group)]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
