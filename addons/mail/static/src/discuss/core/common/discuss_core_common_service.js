@@ -237,7 +237,7 @@ export class DiscussCoreCommon {
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.messages.push(message);
-            } else if (channel.state === "loading") {
+            } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
