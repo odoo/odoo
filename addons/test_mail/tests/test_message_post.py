@@ -969,9 +969,9 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                                 },
                             },
                             'mail_mail_values': {
-                                'headers': repr({
+                                'headers': {
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
-                                }),
+                                },
                             },
                             'message_values': {
                                 'author_id': self.user_erp_manager.partner_id,

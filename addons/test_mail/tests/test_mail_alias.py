@@ -293,6 +293,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
     @users('employee')
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_alias_mixin(self):
+        """ Various base checks on alias mixin behavior """
         record = self.env['mail.test.container'].create({
             'name': 'Test Record',
             'alias_name': 'alias.test',
@@ -380,8 +381,10 @@ class TestMailAliasMixin(TestMailAliasCommon):
         self.assertFalse(list(filter(None, existing_aliases.mapped('alias_name'))))
 
     @users('employee')
-    def test_alias_mixin_copy_content(self):
-        self.assertFalse(self.env.user.has_group('base.group_system'), 'Test user should not have Administrator access')
+    def test_copy_content(self):
+        self.assertFalse(
+            self.env.user.has_group('base.group_system'),
+            'Test user should not have Administrator access')
 
         record = self.env['mail.test.container'].create({
             'name': 'Test Record',
@@ -389,9 +392,16 @@ class TestMailAliasMixin(TestMailAliasCommon):
             'alias_contact': 'followers',
             'alias_bounced_content': False,
         })
+        record_alias = record.alias_id
         self.assertFalse(record.alias_bounced_content)
         record_copy = record.copy()
+        record_alias_copy = record_copy.alias_id
+        self.assertNotEqual(record_alias, record_alias_copy)
+        self.assertEqual(record_alias.alias_force_thread_id, record.id)
+        self.assertEqual(record_alias_copy.alias_force_thread_id, record_copy.id)
         self.assertFalse(record_copy.alias_bounced_content)
+        self.assertEqual(record_copy.alias_contact, record.alias_contact)
+        self.assertFalse(record_copy.alias_name, 'Copy should not duplicate name')
 
         new_content = '<p>Bounced Content</p>'
         record_copy.write({'alias_bounced_content': new_content})
@@ -400,7 +410,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
         self.assertEqual(record_copy2.alias_bounced_content, new_content)
 
     @users('erp_manager')
-    def test_alias_mixin_mc(self):
+    def test_multi_company_setup(self):
         """ Test company change does not impact anything at alias domain level """
         record = self.env['mail.test.container.mc'].create({
             'name': 'Test Record',

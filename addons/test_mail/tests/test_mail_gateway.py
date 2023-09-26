@@ -929,35 +929,27 @@ class TestMailgateway(MailCommon):
         """ Incoming email: check that if domains are set in the optional system
         parameter `mail.catchall.domain.allowed` only incoming emails from these
         domains will generate records."""
-        MailTestGatewayModel = self.env['mail.test.gateway']
-        MailTestContainerModel = self.env['mail.test.container']
-
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
             'alias_contact': 'everyone',
-            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_model_id': self.env['ir.model']._get_id('mail.test.container.mc'),
             'alias_name': 'test',
             'alias_user_id': False,
         })
 
-        allowed_domain = 'hello.com'
-        for (alias_right_part, allowed_domain), (gateway_created, container_created) in zip(
+        test_domain = 'hello.com'
+        for (alias_right_part, allowed_domain), container_created in zip(
             [
                 # Test with 'mail.catchall.domain.allowed' not set in system parameters
                 # and with a domain not allowed
                 ('bonjour.com', ""),
                 # Test with 'mail.catchall.domain.allowed' set in system parameters
                 # and with a domain not allowed
-                ('bonjour.com', allowed_domain),
+                ('bonjour.com', test_domain),
                 # Test with 'mail.catchall.domain.allowed' set in system parameters
                 # and with a domain allowed
-                (allowed_domain, allowed_domain),
-            ], [
-                (True, True),
-                (True, False),
-                (True, True),
-            ]
-        ):
+                (test_domain, test_domain),
+            ], [True, False, True]):
             with self.subTest(alias_right_part=alias_right_part, allowed_domain=allowed_domain):
                 self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', allowed_domain)
 
@@ -970,9 +962,9 @@ class TestMailgateway(MailCommon):
                     target_model=self.alias.alias_model_id.model
                 )
 
-                res_alias_1 = MailTestGatewayModel.search([('name', '=', subject)])
-                res_alias_2 = MailTestContainerModel.search([('name', '=', subject)])
-                self.assertEqual(bool(res_alias_1), gateway_created)
+                res_alias_1 = self.env['mail.test.gateway'].search([('name', '=', subject)])
+                res_alias_2 = self.env['mail.test.container.mc'].search([('name', '=', subject)])
+                self.assertTrue(bool(res_alias_1), 'First alias should always be respected')
                 self.assertEqual(bool(res_alias_2), container_created)
 
     # --------------------------------------------------
