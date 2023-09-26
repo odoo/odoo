@@ -1994,7 +1994,12 @@ export class Order extends BaseOrder {
      */
     getOrderReceiptEnv() {
         // Formerly get_receipt_render_env defined in ScreenWidget.
-        const receipt = this.export_for_printing();
+        const receipt = this.export_for_printing({
+            rounding_applied: this.get_rounding_applied(),
+            total_discount: this.get_total_discount(),
+            total_paid: this.get_total_paid(),
+            change: this.locked ? this.amount_return : this.get_change(),
+        });
         const getOrderlineTaxes = (line) =>
             Object.keys(line.tax_details).map((taxId) => this.pos.taxes_by_id[taxId]);
         return {
