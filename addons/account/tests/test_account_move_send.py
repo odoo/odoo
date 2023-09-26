@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
+from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
@@ -847,6 +849,33 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertFalse(wizard.exists())
+
+    def test_unlink_wizard_invoice_single(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+            raise UserError('Test Error')
+
+        def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+            invoice_data['error'] = 'test_error'
+
+        # Process with an error so that the wizard doesn't reach 'done' state
+        with (
+            patch.object(type(wizard), '_hook_if_errors', _hook_if_errors),
+            patch.object(type(wizard), '_hook_invoice_document_before_pdf_report_render', _hook_invoice_document_before_pdf_report_render)
+        ):
+            with self.assertRaises(UserError), self.cr.savepoint():
+                wizard.action_send_and_print(allow_fallback_pdf=False)
+
+        # If cron is triggered within the same day wizard is still exists. We don't want to delete an opened wizard.
+        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertTrue(wizard.exists())
+
+        # If cron is triggered one day or later than the creation it should be garbage collected.
+        with freeze_time(fields.Date.today() + relativedelta(days=1)):
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+            self.assertFalse(wizard.exists())
 
     def test_with_empty_mail_template(self):
         """ Test you can use the send & print wizard without any mail template. """
