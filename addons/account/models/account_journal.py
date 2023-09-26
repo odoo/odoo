@@ -652,7 +652,8 @@ class AccountJournal(models.Model):
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
-                default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
+                start_code = liquidity_account_prefix.ljust(digits, '0')
+                default_account_code = self.env['account.account']._search_new_account_code(start_code, company)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
             if journal_type in ('cash', 'bank') and not has_profit_account:
