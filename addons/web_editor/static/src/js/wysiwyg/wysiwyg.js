@@ -1367,16 +1367,18 @@ export class Wysiwyg extends Component {
             }
         } else {
             const historyStepIndex = this.odooEditor.historySize() - 1;
+            let shouldRevertHistoryStep = true;
             this.odooEditor.historyPauseSteps();
             let { link } = getOrCreateLink({
                 containerNode: this.odooEditor.editable,
                 startNode: options.link,
             });
             if (!link) {
-                return
+                this.odooEditor.historyUnpauseSteps();
+                return;
             }
             this._shouldDelayBlur = true;
-            this.env.services.dialog.add(LinkDialog, {
+            const closeDialog = this.env.services.dialog.add(LinkDialog, {
                 ...this.options.linkOptions,
                 editable: this.odooEditor.editable,
                 link,
@@ -1386,6 +1388,8 @@ export class Wysiwyg extends Component {
                     if (!data) {
                         return;
                     }
+                    shouldRevertHistoryStep = false;
+                    closeDialog();
                     getDeepRange(this.$editable[0], {range: data.range, select: true});
                     if (this.options.userGeneratedContent) {
                         data.rel = 'ugc';
@@ -1397,10 +1401,13 @@ export class Wysiwyg extends Component {
                     setSelection(link, 0, link, link.childNodes.length, false);
                     link.focus();
                 },
-                close: () => {
+            }, {
+                onClose: () => {
                     this.odooEditor.historyUnpauseSteps();
-                    this.odooEditor.historyRevertUntil(historyStepIndex)
-                }
+                    if (shouldRevertHistoryStep) {
+                        this.odooEditor.historyRevertUntil(historyStepIndex);
+                    }
+                },
             });
         }
     }

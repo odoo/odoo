@@ -64,7 +64,6 @@ export class LinkDialog extends Link {
             };
         }
         data.linkDialog = this;
-        this.props.close();
         this.props.onSave(data);
     }
 
