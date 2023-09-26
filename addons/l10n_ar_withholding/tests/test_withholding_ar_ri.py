@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import tagged
 from odoo import Command, fields
-from odoo.tests.common import TransactionCase, Form
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
 
     @classmethod
@@ -14,30 +12,20 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
 
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        # Sequence Witholding Tax
-        cls.tax_wth_seq_test_1 = cls.env['ir.sequence'].create({
-        'implementation': 'standard',
-        'name': 'tax wth test',
-        'padding': 8,
-        'number_increment' :1,
-        })
-
         # Witholding 1: 1% untaxed_amount
-        cls.tax_wth_test_1 = cls.env.ref('account.%i_ri_tax_withholding_iibb_caba_applied' % cls.env.company.id).copy()
+        cls.tax_wth_test_1 = cls.env.ref('account.%i_ri_tax_withholding_iibb_caba_applied' % cls.env.company.id)
         cls.tax_wth_test_1.write({
             'l10n_ar_withholding_amount_type': 'untaxed_amount',
             'amount': 10,
             'amount_type': 'percent',
-            'l10n_ar_withholding_sequence_id': cls.tax_wth_seq_test_1.id,
         })
 
         # Witholding 2: 1% total_amount
-        cls.tax_wth_test_2 = cls.env.ref('account.%i_ri_tax_withholding_iibb_caba_applied' % cls.env.company.id).copy()
+        cls.tax_wth_test_2 = cls.env.ref('account.%i_ri_tax_withholding_iibb_ba_applied' % cls.env.company.id)
         cls.tax_wth_test_2.write({
             'l10n_ar_withholding_amount_type': 'total_amount',
             'amount': 10,
             'amount_type': 'percent',
-            'l10n_ar_withholding_sequence_id': cls.tax_wth_seq_test_1.id,
         })
 
         # Add witholding to product
@@ -68,7 +56,6 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
             'date': fields.Date.today(),
             'invoice_date': fields.Date.today(),
             'partner_id': self.partner_a.id,
-            #'currency_id': self.currency_data['currency'].id,
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.tax_21.ids)]})],
             'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id,
             'l10n_latam_document_number': l10n_latam_document_number,
@@ -83,7 +70,6 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
             'date': fields.Date.today(),
             'invoice_date': fields.Date.today(),
             'partner_id': self.partner_a.id,
-            #'currency_id': self.currency_data['currency'].id,
             'invoice_line_ids': [
                 (0, 0, {'product_id': self.product_b.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.tax_21.ids)]})
             ],
@@ -115,7 +101,7 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
     def new_payment_register(self, active_ids, values = {}):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create(values)
         taxes = wizard._get_withholding_tax()
-        wizard.withholding_ids =[Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0 , 'amount': 0}) for x in taxes]
+        wizard.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0 , 'amount': 0}) for x in taxes]
         wizard.withholding_ids._compute_base_amount()
         wizard.withholding_ids._compute_amount()
         return wizard
@@ -123,8 +109,7 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
     def _search_tax(self, tax_type, type_tax_use='sale'):
         res = self.env['account.tax'].with_context(active_test=False).search([
             ('type_tax_use', '=', type_tax_use),
-            ('company_id', '=', self.env.company.id),
-            ('tax_group_id', '=', self.env.ref(f'account.{self.env.company.id}_tax_group_{tax_type}').id)], limit=1)
+            ('company_id', '=', self.env.company.id)], limit=1)
         self.assertTrue(res, '%s Tax was not found' % (tax_type))
         return res
 
@@ -138,13 +123,13 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
         payment = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment.line_ids.sorted('balance'), [
             # Liquidity line:
-            { 'debit': 0.0, 'credit': 1110.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1110.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 1110.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1110.0, 'reconciled': False},
             # base line:
-            { 'debit': 0.0, 'credit': 1000.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1000.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 1000.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1000.0, 'reconciled': False},
             # witholding line:
-            { 'debit': 0.0, 'credit': 100.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -100.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 100.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -100.0, 'reconciled': False},
             # base line:
-            { 'debit': 1000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1000.0, 'reconciled': False}, 
+            { 'debit': 1000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1000.0, 'reconciled': False},
             # Receivable line:
             { 'debit': 1210.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1210.0, 'reconciled': True}
         ])
@@ -166,13 +151,13 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payment_1.line_ids.sorted('balance'), [
             # Liquidity line:
-            { 'debit': 0.0, 'credit': 555.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -555.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 555.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -555.0, 'reconciled': False},
             # base line:
-            { 'debit': 0.0, 'credit': 500.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -500.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 500.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -500.0, 'reconciled': False},
             # witholding line:
-            { 'debit': 0.0, 'credit': 50.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -50.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 50.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -50.0, 'reconciled': False},
             # base line:
-            { 'debit': 500, 'credit': 0.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': 500, 'reconciled': False}, 
+            { 'debit': 500, 'credit': 0.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': 500, 'reconciled': False},
             # Receivable line:
             { 'debit': 605.0, 'credit': 0.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': 605.0, 'reconciled': True}
         ])
@@ -180,13 +165,13 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payment_2.line_ids.sorted('balance'), [
             # Liquidity line:
-            { 'debit': 0.0, 'credit': 555.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -555.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 555.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -555.0, 'reconciled': False},
             # base line:
-            { 'debit': 0.0, 'credit': 500.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -500.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 500.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -500.0, 'reconciled': False},
             # witholding line:
-            { 'debit': 0.0, 'credit': 50.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -50.0, 'reconciled': False}, 
+            { 'debit': 0.0, 'credit': 50.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -50.0, 'reconciled': False},
             # base line:
-            { 'debit': 500, 'credit': 0.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': 500, 'reconciled': False}, 
+            { 'debit': 500, 'credit': 0.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': 500, 'reconciled': False},
             # Receivable line:
             { 'debit': 605.0, 'credit': 0.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': 605.0, 'reconciled': True}
         ])
