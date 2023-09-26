@@ -1042,7 +1042,7 @@ export class Record extends DataPoint {
             const otherChanges = await this.model._onchange(this.config, {
                 changes: localChanges,
                 fieldNames: onChangeFields,
-                evalContext: this.evalContext, //toRaw(this.evalContext)
+                evalContext: toRaw(this.evalContext),
                 onError: (e) => {
                     this._applyChanges(initialData);
                     throw e;
