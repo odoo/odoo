@@ -71,6 +71,16 @@ class PeerTest {
             connectionClientId: this.peerId,
         });
     }
+    async removeDataChannel(peer) {
+        this._connections.delete(peer);
+        peer._connections.delete(this);
+        const ptpFrom = this.wysiwyg.ptp;
+        const ptpTo = peer.wysiwyg.ptp;
+        delete ptpFrom.clientsInfos[peer.peerId];
+        delete ptpTo.clientsInfos[this.peerId];
+        this.onlineMutex = new Mutex();
+        this._onlineResolver = undefined;
+    }
     makeStep(fn) {
         fn(this);
     }
@@ -133,6 +143,8 @@ class PeerPool {
 
 async function createPeers(peers) {
     const pool = new PeerPool();
+
+    let lastGeneratedId = 0;
 
     for (const peerId of peers) {
         const peerWysiwygWrapper = document.createElement('div');
@@ -239,6 +251,18 @@ async function createPeers(peers) {
             _getCollaborationClientAvatarUrl() {
                 return '';
             },
+            async startEdition() {
+                await this._super(...arguments);
+                patch(this.odooEditor, 'odooEditor', {
+                    _generateId() {
+                        // Ensure the id are deterministically gererated for
+                        // when we need to sort by them. (eg. in the
+                        // callaboration sorting of steps)
+                        lastGeneratedId++;
+                        return lastGeneratedId.toString();
+                    },
+                });
+            }
         });
         pool.peers[peerId] = new PeerTest({
             peerId,
@@ -780,6 +804,84 @@ QUnit.module('web_editor', {
                         removePeers(peers);
                     });
                 });
+            });
+        });
+        QUnit.module('Disconnect & reconnect', {}, () => {
+            QUnit.test('should sync history when disconnecting and reconnecting to internet', async (assert) => {
+                assert.expect(2);
+                const pool = await createPeers(['p1', 'p2']);
+                const peers = pool.peers;
+
+                await peers.p1.startEditor();
+                await peers.p2.startEditor();
+
+                await peers.p1.focus();
+                await peers.p2.focus();
+                await peers.p1.openDataChannel(peers.p2);
+
+                await peers.p1.makeStep(insert('b'));
+
+                await peers.p1.setOffline();
+                peers.p1.removeDataChannel(peers.p2);
+
+                const setSelection = (peer) => {
+                    const selection = peer.document.getSelection();
+                    const pElement = peer.wysiwyg.odooEditor.editable.querySelector('p')
+                    const range = new Range();
+                    range.setStart(pElement, 1);
+                    range.setEnd(pElement, 1);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+                const addP = (peer, content) => {
+                    const p = document.createElement('p');
+                    p.textContent = content;
+                    peer.wysiwyg.odooEditor.editable.append(p);
+                    peer.wysiwyg.odooEditor.historyStep();
+                }
+
+                setSelection(peers.p1);
+                await peers.p1.makeStep(insert('c'));
+                addP(peers.p1, 'd');
+
+                setSelection(peers.p2);
+                await peers.p2.makeStep(insert('e'));
+                addP(peers.p2, 'f');
+
+                peers.p1.setOnline();
+                peers.p2.setOnline();
+
+                // todo: p1PromiseForMissingStep and p2PromiseForMissingStep
+                // should be removed when the fix of undetected missing step
+                // will be merged. (task-3208277)
+                const p1PromiseForMissingStep = new Promise((resolve) => {
+                    patch(peers.p2.wysiwyg, 'missingSteps', {
+                        async _processMissingSteps() {
+                            const _super = this._super;
+                            // Wait for the p2PromiseForMissingStep to resolve
+                            // to avoid undetected missing step.
+                            await p2PromiseForMissingStep;
+                            _super(...arguments);
+                            resolve();
+                        }
+                    })
+                });
+                const p2PromiseForMissingStep = new Promise((resolve) => {
+                    patch(peers.p1.wysiwyg, 'missingSteps', {
+                        async _processMissingSteps() {
+                            this._super(...arguments);
+                            resolve();
+                        }
+                    })
+                });
+
+                await peers.p1.openDataChannel(peers.p2);
+                await p1PromiseForMissingStep;
+
+                assert.equal(peers.p1.getValue(), `<p>ac[]eb</p><p>d</p><p>f</p>`, 'p1 should have the value merged with p2');
+                assert.equal(peers.p2.getValue(), `<p>ace[]b</p><p>d</p><p>f</p>`, 'p2 should have the value merged with p1');
+
+                removePeers(peers);
             });
         });
     });
