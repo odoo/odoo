@@ -273,11 +273,25 @@ class Channel(models.Model):
             failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+        notifications = []
+        for channel in self:
+            current_val = channel.read(vals.keys())[0]
+            diff = {}
+            for key in vals.keys():
+                if current_val.get(key) != vals.get(key) and key != "image_128":
+                    diff[key] = vals[key]
+            if diff:
+                notifications.append([channel, "mail.record/insert", {
+                    "Thread": {
+                        "id": current_val["id"],
+                        "model": "discuss.channel",
+                        **diff
+                    }
+                }])
         result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         if 'image_128' in vals:
-            notifications = []
             for channel in self:
                 notifications.append([channel, 'mail.record/insert', {
                     'Channel': {
@@ -285,7 +299,7 @@ class Channel(models.Model):
                         'id': channel.id,
                     }
                 }])
-            self.env['bus.bus']._sendmany(notifications)
+        self.env['bus.bus']._sendmany(notifications)
         return result
 
     def init(self):
@@ -1001,7 +1015,7 @@ class Channel(models.Model):
                     'foldStateCount': state_count,
                     'id': session_state.channel_id.id,
                     'model': 'discuss.channel',
-                    'serverFoldState': state,
+                    'fold_state': state,
                 }
             })
 
@@ -1112,24 +1126,10 @@ class Channel(models.Model):
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Thread': {
-                'id': self.id,
-                'model': 'discuss.channel',
-                'name': name,
-            }
-        })
 
     def channel_change_description(self, description):
         self.ensure_one()
         self.write({'description': description})
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Thread': {
-                'id': self.id,
-                'description': description,
-                'model': 'discuss.channel',
-            }
-        })
 
     def channel_join(self):
         """ Shortcut to add the current user as member of self channels.

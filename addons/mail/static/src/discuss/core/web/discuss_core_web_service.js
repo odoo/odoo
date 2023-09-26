@@ -87,10 +87,10 @@ export class DiscussCoreWeb {
             if (payload.Thread) {
                 const data = payload.Thread;
                 const thread = this.store.Thread.get(data);
-                if (data.serverFoldState && thread && data.foldStateCount > thread.foldStateCount) {
+                if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
                     thread.foldStateCount = data.foldStateCount;
-                    if (data.serverFoldState !== thread.state) {
-                        thread.state = data.serverFoldState;
+                    if (data.fold_state !== thread.state) {
+                        thread.state = data.fold_state;
                         if (thread.state === "closed") {
                             const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
                                 chatWindow.thread?.eq(thread)

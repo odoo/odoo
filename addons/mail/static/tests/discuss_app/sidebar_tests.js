@@ -7,6 +7,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
 import { click, contains, insertText } from "@web/../tests/utils";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss sidebar");
 
@@ -1157,4 +1158,22 @@ QUnit.test("Unpinning channel closes its chat window", async () => {
     });
     await openFormView("discuss.channel");
     await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
+});
+
+QUnit.test("Update channel data via bus notification", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Sales",
+        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
+        channel_type: "channel",
+        create_uid: pyEnv.currentUserId,
+    });
+    const tab1 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true });
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: tab1.target });
+    await insertText(".o-mail-Discuss-threadName", "test", { target: tab1.target });
+    await triggerHotkey("Enter");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: tab2.target });
 });

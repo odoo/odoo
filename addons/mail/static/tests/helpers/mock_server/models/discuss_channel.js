@@ -10,6 +10,40 @@ import { Command } from "@mail/../tests/helpers/command";
 const { DateTime } = luxon;
 
 patch(MockServer.prototype, {
+    /**
+     * @override
+     */
+    mockWrite(model, args) {
+        const notifications = [];
+        if (model == "discuss.channel") {
+            const vals = args[1];
+            const [channel] = this.getRecords(model, [["id", "=", args[0][0]]]);
+            if (channel) {
+                const diff = {};
+                for (const key in vals) {
+                    if (channel[key] != vals[key] && key !== "image_128") {
+                        diff[key] = vals[key];
+                    }
+                }
+                notifications.push([
+                    channel,
+                    "mail.record/insert",
+                    {
+                        Thread: {
+                            id: channel.id,
+                            model: "discuss.channel",
+                            ...diff,
+                        },
+                    },
+                ]);
+            }
+        }
+        const mockWriteResult = super.mockWrite(...arguments);
+        if (notifications.length) {
+            this.pyEnv["bus.bus"]._sendmany(notifications);
+        }
+        return mockWriteResult;
+    },
     async _performRPC(route, args) {
         if (args.model === "discuss.channel" && args.method === "execute_command_help") {
             return this._mockDiscussChannelExecuteCommandHelp(args.args[0], args.model);
@@ -488,7 +522,7 @@ patch(MockServer.prototype, {
                     foldStateCount: state_count,
                     id: channel.id,
                     model: "discuss.channel",
-                    serverFoldState: foldState,
+                    fold_state: foldState,
                 },
             });
         }
@@ -777,24 +811,10 @@ patch(MockServer.prototype, {
     _mockDiscussChannelChannelRename(ids, name) {
         const channel = this.getRecords("discuss.channel", [["id", "in", ids]])[0];
         this.pyEnv["discuss.channel"].write([channel.id], { name });
-        this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Thread: {
-                id: channel.id,
-                model: "discuss.channel",
-                name: name,
-            },
-        });
     },
     _mockDiscussChannelChannelChangeDescription(ids, description) {
         const channel = this.getRecords("discuss.channel", [["id", "in", ids]])[0];
         this.pyEnv["discuss.channel"].write([channel.id], { description });
-        this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Thread: {
-                id: channel.id,
-                model: "discuss.channel",
-                description: description,
-            },
-        });
     },
     /**
      * Simulates `channel_set_custom_name` on `discuss.channel`.
