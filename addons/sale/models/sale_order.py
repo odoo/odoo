@@ -1796,14 +1796,18 @@ class SaleOrder(models.Model):
     def _get_product_documents(self):
         self.ensure_one()
 
-        return (
+        documents = (
             self.order_line.product_id.product_document_ids
             | self.order_line.product_template_id.product_document_ids
-        ).filtered(
+        )
+        return self._filter_product_documents(documents).sorted()
+
+    def _filter_product_documents(self, documents):
+        return documents.filtered(
             lambda document:
                 document.attached_on == 'quotation'
                 or (self.state == 'sale' and document.attached_on == 'sale_order')
-        ).sorted()
+        )
 
     #=== HOOKS ===#
 
