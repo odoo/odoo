@@ -1763,7 +1763,7 @@ class IrQWeb(models.AbstractModel):
         """Compile `t-elif` expressions into a python code as a list of
         strings. This method is linked with the `t-if` directive.
 
-        Check if this directive is valide, the t-qweb-skip flag and call
+        Check if this directive is valid, the t-qweb-skip flag and call
         `t-if` directive
         """
         if not el.attrib.pop('t-else-valid', None):
@@ -1775,10 +1775,10 @@ class IrQWeb(models.AbstractModel):
         """Compile `t-else` expressions into a python code as a list of strings.
         This method is linked with the `t-if` directive.
 
-        Check if this directive is valide and add the t-qweb-skip flag.
+        Check if this directive is valid and add the t-qweb-skip flag.
         """
         if not el.attrib.pop('t-else-valid', None):
-            raise SyntaxError("t-elif directive must be preceded by t-if or t-elif directive")
+            raise SyntaxError("t-else directive must be preceded by t-if or t-elif directive")
         el.attrib.pop('t-else')
         return []
 
