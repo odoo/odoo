@@ -639,7 +639,7 @@ class AccountMove(models.Model):
                   JOIN account_move_account_move_send_rel move_send_rel
                     ON move_send_rel.account_move_id in %(move_ids)s
                    AND send.id = move_send_rel.account_move_send_id
-                 WHERE send.mode != 'done'
+                 WHERE send.mode = 'invoice_multi'
                 """,
                 params={'move_ids': tuple(self.ids)}
             )
@@ -4116,11 +4116,17 @@ class AccountMove(models.Model):
         :param with_commit: Flag indicating a commit should be made between each job.
         '''
         # Clean already processed wizards.
-        self.env['account.move.send'].search([('mode', '=', 'done')]).unlink()
+        self.env['account.move.send'].search([
+            '|',
+            ('mode', '=', 'done'),
+            '&',
+            ('mode', '=', 'invoice_single'),
+            ('create_date', '<=', fields.Date.context_today(self) - relativedelta(days=1)),
+        ]).unlink()
 
         # Process.
         limit = job_count + 1
-        to_process = self.env['account.move.send'].search([('mode', '!=', 'done')], limit=limit)
+        to_process = self.env['account.move.send'].search([('mode', '=', 'invoice_multi')], limit=limit)
 
         need_retrigger = len(to_process) > job_count
 
