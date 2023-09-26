@@ -501,7 +501,7 @@ export class Messaging {
         if (!channel.messages.includes(message)) {
             if (!channel.loadNewer) {
                 channel.messages.push(message);
-            } else if (channel.state === "loading") {
+            } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
