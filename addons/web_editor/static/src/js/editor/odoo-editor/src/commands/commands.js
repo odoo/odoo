@@ -386,11 +386,21 @@ export const editorCommands = {
         }
     },
     removeFormat: editor => {
+        const textAlignStyles = new Map();
+        getTraversedNodes(editor.editable).forEach((element) => {
+            const block = closestBlock(element);
+            if (block.style.textAlign) {
+                textAlignStyles.set(block, block.style.textAlign);
+            }
+        });
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {
             // The only possible background image on text is the gradient.
             closestElement(node).style.backgroundImage = '';
         }
+        textAlignStyles.forEach((textAlign, block) => {
+            block.style.setProperty('text-align', textAlign);
+        });
     },
 
     // Align
