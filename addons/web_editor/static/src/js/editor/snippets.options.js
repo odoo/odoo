@@ -5111,15 +5111,6 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 registry.layout_column = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    cleanForSave() {
-        // Remove the padding highlights.
-        this.$target[0].querySelectorAll('.o_we_padding_highlight').forEach(highlightedEl => {
-            highlightedEl._removePaddingPreview();
-        });
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -5266,24 +5257,6 @@ registry.layout_column = SnippetOptionWidget.extend({
         gridUtils._resizeGrid(rowEl);
         this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
-    /**
-     * @override
-     */
-    async selectStyle(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (params.cssProperty.startsWith('--grid-item-padding')) {
-            // Reset the animations.
-            this._removePaddingPreview();
-            void this.$target[0].offsetWidth; // Trigger a DOM reflow.
-
-            // Highlight the padding when changing it, by adding a pseudo-
-            // element with an animated colored border inside the grid items.
-            const rowEl = this.$target[0];
-            rowEl.classList.add('o_we_padding_highlight');
-            rowEl._removePaddingPreview = this._removePaddingPreview.bind(this);
-            rowEl.addEventListener('animationend', rowEl._removePaddingPreview);
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -5381,10 +5354,18 @@ registry.layout_column = SnippetOptionWidget.extend({
      * @private
      * @param {Element} rowEl
      */
-    _toggleNormalMode(rowEl) {
+    async _toggleNormalMode(rowEl) {
         // Removing the grid class
         rowEl.classList.remove('o_grid_mode');
         const columnEls = rowEl.children;
+        // Removing the grid previews (if any).
+        await new Promise(resolve => {
+            this.trigger_up("clean_ui_request", {
+                targetEl: this.$target[0].closest("section"),
+                onSuccess: resolve,
+            });
+        });
+
         for (const columnEl of columnEls) {
             // Reloading the images.
             gridUtils._reloadLazyImages(columnEl);
@@ -5393,20 +5374,70 @@ registry.layout_column = SnippetOptionWidget.extend({
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
+        // Kept for compatibility.
         rowEl.style.removeProperty('--grid-item-padding-x');
         rowEl.style.removeProperty('--grid-item-padding-y');
     },
+});
+
+registry.GridColumns = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    cleanUI() {
+        // Remove the padding highlights.
+        this._removePaddingPreview();
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (["--grid-item-padding-y", "--grid-item-padding-x"].includes(params.cssProperty)) {
+            // Reset the animation.
+            this._removePaddingPreview();
+            void this.$target[0].offsetWidth; // Trigger a DOM reflow.
+
+            // Highlight the padding when changing it, by adding a pseudo-
+            // element with an animated colored border inside the grid item.
+            this.options.wysiwyg.odooEditor.observerUnactive("addPaddingPreview");
+            this.$target[0].classList.add("o_we_padding_highlight");
+            this.options.wysiwyg.odooEditor.observerActive("addPaddingPreview");
+            this.removePaddingPreview = this._removePaddingPreview.bind(this);
+            this.$target[0].addEventListener("animationend", this.removePaddingPreview);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (["grid_padding_y_opt", "grid_padding_x_opt"].includes(widgetName)) {
+            return this.$target[0].parentElement.classList.contains("o_grid_mode");
+        }
+        return this._super(...arguments);
+    },
     /**
      * Removes the padding highlights that were added when changing the grid
-     * items padding.
+     * item padding.
      *
      * @private
      */
     _removePaddingPreview() {
-        const rowEl = this.$target[0];
-        rowEl.removeEventListener('animationend', rowEl._removePaddingPreview);
-        rowEl.classList.remove('o_we_padding_highlight');
-        delete rowEl._removePaddingPreview;
+        this.options.wysiwyg.odooEditor.observerUnactive("removePaddingPreview");
+        this.$target[0].removeEventListener("animationend", this.removePaddingPreview);
+        this.$target[0].classList.remove("o_we_padding_highlight");
+        delete this.removePaddingPreview;
+        this.options.wysiwyg.odooEditor.observerActive("removePaddingPreview");
     },
 });
 
