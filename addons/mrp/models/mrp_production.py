@@ -2707,7 +2707,7 @@ class MrpProduction(models.Model):
             'context': {
                 'default_product_ids': self.move_finished_ids.product_id.ids,
                 'default_move_ids': self.move_finished_ids.ids,
-                'default_picking_quantity': 'picking'},
+                'default_move_quantity': 'move'},
         }
 
     def action_open_label_type(self):
@@ -2720,6 +2720,6 @@ class MrpProduction(models.Model):
                 'res_model': 'picking.label.type',
                 'views': [(view.id, 'form')],
                 'target': 'new',
-                'context': {'default_picking_ids': self.move_finished_ids},
+                'context': {'default_production_ids': self.ids},
             }
         return self.action_open_label_layout()
