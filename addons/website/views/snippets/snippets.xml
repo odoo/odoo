@@ -361,6 +361,10 @@
         <we-button class="o_we_bg_brand_primary o_grid" data-add-element="text" title="Text" data-name="text">Text</we-button>
         <we-button class="o_we_bg_brand_primary o_grid" data-add-element="button" title="Button" data-name="button">Button</we-button>
     </we-button-group>
+    <we-row t-att-class="indent and 'o_we_sublevel_1'" string="Spacing (Y, X)">
+        <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="row-gap" data-unit="px" data-prevent-important="true" data-apply-to=".row"/>
+        <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="column-gap" data-unit="px" data-max="60" data-prevent-important="true" data-apply-to=".row"/>
+    </we-row>
 </template>
 
 <template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">

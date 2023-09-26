@@ -29,7 +29,8 @@ export function _getGridProperties(rowEl) {
  * @param {Element} rowEl the parent grid element of the element
  */
 export function _setElementToMaxZindex(element, rowEl) {
-    const childrenEls = [...rowEl.children].filter(el => el !== element);
+    const childrenEls = [...rowEl.children].filter(el => el !== element
+        && !el.classList.contains("o_we_grid_preview"));
     element.style.zIndex = Math.max(...childrenEls.map(el => el.style.zIndex)) + 1;
 }
 /**

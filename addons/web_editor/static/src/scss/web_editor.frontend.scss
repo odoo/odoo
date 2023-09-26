@@ -34,6 +34,11 @@
 
 // GRID LAYOUT
 .o_grid_mode {
+    @include media-breakpoint-down(lg) {
+        // No gaps in mobile view.
+        row-gap: 0px !important;
+        column-gap: 0px !important;
+    }
     @include media-breakpoint-up(lg) {
         display: grid !important;
         grid-auto-rows: 50px;
