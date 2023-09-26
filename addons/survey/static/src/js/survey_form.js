@@ -223,7 +223,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                                 dependingQuestion.removeClass('d-none');
 
                                 // Add answer to selected answer
-                                self.selectedAnswers.push(parseInt($target.val()));
+                                var $value = parseInt($target.val());
+                                if (self.selectedAnswers.indexOf($value) < 0) {
+                                    self.selectedAnswers.push($value);
+                                }
                             }
                         });
                     }
@@ -258,7 +261,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     if (!isInputSelected) {
                         self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
                     } else {
-                        self.selectedAnswers.push(parseInt($target.val()));
+                        var $value = parseInt($target.val());
+                        if (self.selectedAnswers.indexOf($value) < 0) {
+                            self.selectedAnswers.push($value);
+                        }
                     }
                 }
             }
