@@ -10,7 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_hr_kuna_template_data(self):
         return {
             'name': 'RRIF-ov računski plan za poduzetnike',
-            'code_digits': '0',
+            'code_digits': '6',
             'use_storno_accounting': True,
             'property_account_receivable_id': 'kp_rrif1200',
             'property_account_payable_id': 'kp_rrif2200',
