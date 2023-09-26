@@ -6,6 +6,7 @@ import email
 import email.policy
 import time
 
+from ast import literal_eval
 from collections import defaultdict
 from contextlib import contextmanager
 from functools import partial
@@ -398,12 +399,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self.assertTrue(bool(mail))
         if content:
             self.assertIn(content, mail.body_html)
-        for fname, fvalue in (fields_values or {}).items():
-            with self.subTest(fname=fname, fvalue=fvalue):
-                self.assertEqual(
-                    mail[fname], fvalue,
-                    'Mail: expected %s for %s, got %s' % (fvalue, fname, mail[fname])
-                )
+        for fname, expected_fvalue in (fields_values or {}).items():
+            with self.subTest(fname=fname, expected_fvalue=expected_fvalue):
+                if fname == 'headers':
+                    fvalue = literal_eval(mail[fname])
+                    self.assertDictEqual(fvalue, expected_fvalue)
+                else:
+                    self.assertEqual(
+                        mail[fname], expected_fvalue,
+                        'Mail: expected %s for %s, got %s' % (expected_fvalue, fname, mail[fname])
+                    )
         if status == 'sent':
             if email_to_recipients:
                 recipients = email_to_recipients  # already formatted
