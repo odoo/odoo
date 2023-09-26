@@ -227,6 +227,20 @@ describe('Editor', () => {
                         stepFunction: deleteForward,
                         contentAfter: '<p>ab[]</p>',
                     });
+                    // Before recent rebase (3000 commits), this is the only
+                    // test that failed because of the `isMediaElement` removal
+                    // from the `isDeletable` function.
+                    // This is an unrelated test. I investigated: the test case
+                    // tested here actually did not work. The test currently
+                    // passed in master because in the test environment, the
+                    // element that followed the ZWS from the `deleteForward`
+                    // code point of view was an icon... which was an icon in
+                    // the table edition UI. It seemed that the `deleteForward`
+                    // behavior depended on non editable elements, worse:
+                    // depended on the editor UI around the edited content.
+                    // SINCE RECENT REBASE, THIS TEST STILL PASSES DESPITE MY
+                    // CODE CHANGE... BUT STILL BY MISTAKE (THE REAL CASE IS
+                    // STILL BROKEN).
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>de[]\u200B</p>',
                         stepFunction: deleteForward,
@@ -1990,6 +2004,9 @@ X[]
                     });
                 });
                 it('should remove a fontawesome', async () => {
+                    // This test was added by 6f9110bfb0a4496205c220960bfa432c079756d8
+                    // but the removal of the related solution does not seem to
+                    // break it.
                     await testEditor(BasicEditor, {
                         contentBefore: `<div><p>abc</p><span class="fa"></span><p>[]def</p></div>`,
                         stepFunction: async editor => {
@@ -1999,6 +2016,9 @@ X[]
                     });
                 });
                 it('should remove a media element', async () => {
+                    // This test was added by 6f9110bfb0a4496205c220960bfa432c079756d8
+                    // but the removal of the related solution does not seem to
+                    // break it.
                     await testEditor(BasicEditor, {
                         contentBefore: `<p>abc</p><div class="o_image"></div><p>[]def</p>`,
                         stepFunction: async editor => {
@@ -2712,6 +2732,8 @@ X[]
                     // view: we delete "an image" and expect the paragraph
                     // container to be filled with a `<br>`. This is currently
                     // not the case.
+                    // Note: this new test is not solved by the `isMediaElement`
+                    // removal from the `isDeletable` unfortunately.
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><i class="fa fa-bug" contenteditable="false"></i>[]</p>',
                         stepFunction: deleteBackward,

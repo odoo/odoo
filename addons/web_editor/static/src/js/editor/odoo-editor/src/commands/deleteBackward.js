@@ -22,7 +22,6 @@ import {
     paragraphRelatedElements,
     prepareUpdate,
     setSelection,
-    isMediaElement,
     isSelfClosingElement,
     isNotEditableNode,
     createDOMPathGenerator,
@@ -45,7 +44,7 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
 };
 
 const isDeletable = (node) => {
-    return isMediaElement(node) || isNotEditableNode(node);
+    return isNotEditableNode(node);
 }
 
 HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, offsetLimit) {
