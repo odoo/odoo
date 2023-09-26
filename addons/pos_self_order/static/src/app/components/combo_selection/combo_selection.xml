@@ -1,44 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ComboSelection">
-        <div class="self_order_attribute_selection h-100 p-4">
-            <t t-if="!props.comboState.selectedProduct">
-                <div class="attribute_name py-1 mt-3 mb-4 fw-bold">
-                    <h1>Choose your <t t-esc="props.combo.name" /></h1>
-                </div>
-                <div class="combo-list align-items-center justify-content-start">
-                    <div class="row row-cols-3 g-3">
-                        <t t-foreach="props.combo.combo_line_ids" t-as="line" t-key="line.id">
-                            <div class="col">
-                                <div
-                                t-attf-for="{{ props.combo.id }}_{{ line.id }}"
-                                class="position-relative btn btn-light d-flex flex-column align-items-center justify-content-center p-3 rounded border overflow-hidden"
-                                t-on-click="() => this.productClicked(line.id)">
-                                    <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id[0]]"/>
-                                    <img
-                                        class="h-100 w-100 rounded bg-view"
-                                        t-attf-src="/menu/get-image/{{ product.id }}/512?unique={{product.write_date}}"
-                                        alt="Product image"
-                                        loading="lazy"
-                                        onerror="this.remove()" />
-                                    <div class="name d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 pt-3 text-center">
-                                        <h2 class="m-0" t-esc="line.product_id[1]" />
-                                        <span t-if="line.combo_price" class="position-absolute top-0 end-0 m-1 px-2 rounded border border-white text-bg-primary bg-opacity-75 fs-4">
-                                            + <t t-esc="selfOrder.formatMonetary(line.combo_price)" />
-                                        </span>
-                                        <div class="text-center ms-2 fs-lighter" t-if="!this.selfOrder.productByIds[line.product_id[0]].self_order_available">
-                                            <div class="fs-lighter bg-secondary rounded">Out of stock</div>
-                                        </div>
-                                    </div>
+        <div t-if="!props.comboState.selectedProduct" class="self_order_attribute_selection p-3 mt-3">
+            <h2 class="attribute_name mb-5 mb-md-3"><small class="text-muted">Choose your</small> <strong t-esc="props.combo.name" /></h2>
+            <div class="combo-list align-items-center justify-content-start">
+                <div class="combo-list-products o-so-products-row">
+                    <t t-foreach="props.combo.combo_line_ids" t-as="line" t-key="line.id">
+                        <t t-set="isOutOfStock" t-value="!this.selfOrder.productByIds[line.product_id[0]].self_order_available"/>
+
+                        <article
+                            t-attf-for="{{ props.combo.id }}_{{ line.id }}"
+                            t-on-click="() => this.productClicked(line.id)"
+                            class="self_order_product_card d-flex flex-row-reverse flex-md-column align-items-start gap-2 user-select-none"
+                            role="button"
+                            >
+                            <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id[0]]"/>
+
+                            <div
+                                class="ratio ratio-1x1 w-25 w-sm-50 w-md-100"
+                                t-att-class="{
+                                    'd-none d-md-block': !product.has_image
+                                }">
+                                <div class="placeholder-glow">
+                                    <div class="placeholder w-100 h-100 bg-300 rounded"/>
+                                </div>
+                                <img
+                                    class="o_self_order_item_card_image w-100 rounded"
+                                    t-attf-src="/menu/get-image/{{ product.id }}/512?unique={{product.write_date}}"
+                                    alt="Product image"
+                                    loading="lazy"
+                                    onerror="this.remove()"/>
+                            </div>
+                            <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 w-100 lh-1">
+                                <strong t-esc="product.name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
+                                <div class="d-flex justify-content-between gap-3">
+                                    <span
+                                        t-if="line.combo_price"
+                                        class="badge rounded-pill fs-4"
+                                        t-att-class="isOutOfStock ? 'text-bg-secondary' : 'text-bg-primary'">
+                                        + <t t-out="selfOrder.formatMonetary(line.combo_price)"/>
+                                    </span>
+                                    <span t-if="isOutOfStock" class="badge text-bg-danger rounded-pill fs-4">
+                                        Out of stock
+                                    </span>
                                 </div>
                             </div>
-                        </t>
-                    </div>
+                        </article>
+                    </t>
                 </div>
-            </t>
-            <t t-else="">
-                <AttributeSelection toggleQtyBtn.bind="toggleQtyBtn" product="props.comboState.selectedProduct" />
-            </t>
+            </div>
         </div>
+        <t t-else="">
+            <AttributeSelection toggleQtyBtn.bind="toggleQtyBtn" product="props.comboState.selectedProduct" />
+        </t>
     </t>
 </templates>

@@ -25,36 +25,39 @@ export class ProductCard extends Component {
             return;
         }
 
-        const cartButton = document.querySelector(".cart");
-        if (!cartButton || window.getComputedStyle(cartButton).display === "none") {
+        const toOrder = document.querySelector(".to-order");
+        if (!toOrder || window.getComputedStyle(toOrder).display === "none") {
             return;
         }
 
-        const clonedCard = productCardEl.cloneNode(true);
-        const cardRect = productCardEl.getBoundingClientRect();
-        const cartRect = cartButton.getBoundingClientRect();
+        const pic = this.selfRef.el.querySelector(".o_self_order_item_card_image");
+        if (!pic) {
+            return;
+        }
 
-        clonedCard.style.position = "absolute";
-        clonedCard.style.top = `${cardRect.top}px`;
-        clonedCard.style.left = `${cardRect.left}px`;
-        clonedCard.style.width = `${cardRect.width}px`;
-        clonedCard.style.height = `${cardRect.height}px`;
-        clonedCard.style.opacity = ".85";
-        clonedCard.style.transition =
-            "top 1s cubic-bezier(0.95, 0.1, 0.25, 0.95), left 1s cubic-bezier(0.95, 0.1, 0.25, 0.95), width 1s cubic-bezier(0.95, 0.1, 0.25, 0.95), height 1s cubic-bezier(0.95, 0.1, 0.25, 0.95), opacity 0.6s 0.2s ease-in-out";
+        const picRect = pic.getBoundingClientRect();
+        const clonedPic = pic.cloneNode(true);
+        const toOrderRect = toOrder.getBoundingClientRect();
 
-        document.body.appendChild(clonedCard);
+        clonedPic.classList.remove('w-100', 'h-100');
+        clonedPic.classList.add('position-fixed', 'border', 'border-white', 'border-4', 'z-index-1');
+        clonedPic.style.top = `${picRect.top}px`;
+        clonedPic.style.left = `${picRect.left}px`;
+        clonedPic.style.width = `${picRect.width}px`;
+        clonedPic.style.height = `${picRect.height}px`;
+        clonedPic.style.transition = "all 400ms cubic-bezier(0.6, 0, 0.9, 1.000)";
+
+        document.body.appendChild(clonedPic);
 
         requestAnimationFrame(() => {
-            clonedCard.style.top = `${cartRect.top}px`;
-            clonedCard.style.left = `${cartRect.left * 1.25}px`;
-            clonedCard.style.width = `${cardRect.width * 0.8}px`;
-            clonedCard.style.height = `${cardRect.height * 0.8}px`;
-            clonedCard.style.opacity = "0"; // Fading out the card
+            let offsetTop = (toOrderRect.top - picRect.top) - picRect.height * 0.5;
+            let offsetLeft = (toOrderRect.left - picRect.left) - picRect.width * 0.25;
+            clonedPic.style.transform = 'translateY(' + offsetTop +'px) translateX(' + offsetLeft +'px) scale(0.5)';
+            clonedPic.style.opacity = "0"; // Fading out the card
         });
 
-        clonedCard.addEventListener("transitionend", () => {
-            clonedCard.remove();
+        clonedPic.addEventListener("transitionend", () => {
+            clonedPic.remove();
         });
     }
 

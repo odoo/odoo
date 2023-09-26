@@ -1,17 +1,11 @@
 .self_order_attribute_selection {
-
-    .attribute-option {
-        height: 250px;
-        aspect-ratio: 1/1;
-
-        &.active {
-            border: 1px solid #714B67;
+    .self_order_attribute_selection_option {
+        @include media-breakpoint-down(sm) {
+            --aspect-ratio: #{map-get($aspect-ratios, "21x9")};
         }
-    }
-}
 
-.attribute-selection-content {
-    .o_kiosk-card {
-        aspect-ratio: 1/1;
+        > .active {
+            transform: scale(.95);
+        }
     }
 }

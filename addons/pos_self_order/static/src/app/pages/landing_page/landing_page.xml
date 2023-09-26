@@ -17,23 +17,26 @@
                 </div>
             </div>
         </div>
-        <div class="position-absolute bottom-0 end-0 w-100 py-3 px-3">
-            <t t-if="showMyOrderBtn()">
-                <hr class="bg-500"/>
-                <a
-                    type="button"
-                    t-on-click="() => this.router.navigate('orderHistory')"
-                    class="btn btn-primary h-100 w-100 p-0 m-0 fs-1 text-uppercase mb-2">
-                    My Orders
-                </a>
-            </t>
-            <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
-                <a type="button"
-                    t-on-click="() => this.clickCustomLink(link)"
-                    t-attf-class="btn btn-{{link.style}} h-100 w-100 p-0 m-0 fs-1 text-uppercase mb-2">
-                    <t t-esc="link.name"/>
-                </a>
-            </t>
+        <div class="o_pos_landing_footer position-absolute bottom-0 end-0 d-flex w-100 gap-3 p-3">
+            <div class="d-flex gap-3" t-att-class="{'flex-grow-1 justify-content-around': !selfOrder.custom_links.length}">
+                <t t-if="showMyOrderBtn()">
+                    <a
+                        type="button"
+                        t-on-click="() => this.router.navigate('orderHistory')"
+                        class="btn btn-lg btn-primary">
+                        My Orders
+                    </a>
+                </t>
+            </div>
+            <div t-if="selfOrder.custom_links.length" class="d-flex gap-3 flex-grow-1">
+                <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
+                    <a type="button"
+                        t-on-click="(event) => this.clickCustomLink(link)"
+                        t-attf-class="btn btn-lg btn-{{link.style}}">
+                        <t t-esc="link.name"/>
+                    </a>
+                </t>
+            </div>
         </div>
     </t>
 </templates>
