@@ -19,23 +19,3 @@ class AccountJournal(models.Model):
             account_vals['tag_ids'].append((4, self.env.ref('l10n_dk.account_tag_liquidity').id))
 
         return account_vals
-
-    def create(self, vals_list):
-        # EXTENDS account
-        journals = super().create(vals_list)
-        for journal in journals:
-            if journal.type in ('sale', 'purchase') and journal.country_code == 'DK':
-                # For Denmark we force hashing the entries for sales and purchase journals.
-                journal.restrict_mode_hash_table = True
-        return journals
-
-    def write(self, vals):
-        # EXTENDS account
-        if 'restrict_mode_hash_table' in vals and not vals['restrict_mode_hash_table']:
-            for journal in self:
-                if journal.country_code == 'DK' and journal.type in ('sale', 'purchase'):
-                    # For Denmark we force hashing the entries for sales and purchase journals.
-                    del vals['restrict_mode_hash_table']
-                    break
-        res = super().write(vals)
-        return res
