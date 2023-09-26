@@ -211,7 +211,6 @@ export function useDragAndDrop(initialParams) {
 export class dragAndDropHelper {
     constructor(odooEditor, draggedItemEl, bodyEl) {
         this.dragState = {};
-        this.dropped = false;
         this.draggedItemEl = draggedItemEl;
         this.odooEditor = odooEditor;
         this.bodyEl = bodyEl;
@@ -249,7 +248,7 @@ export class dragAndDropHelper {
 
             gridUtils._gridCleanUp(rowEl, this.draggedItemEl);
             this._removeGridAndDragHelper(rowEl);
-        } else if (this.draggedItemEl.classList.contains("o_grid_item") && this.dropped) {
+        } else if (this.draggedItemEl.classList.contains("o_grid_item") && this.isDropped()) {
             // Case when dropping a grid item in a non-grid dropzone
             this.odooEditor.observerActive("dragAndDropMoveSnippet");
             gridUtils._convertToNormalColumn(this.draggedItemEl);
@@ -289,7 +288,7 @@ export class dragAndDropHelper {
             gridUtils._convertToNormalColumn(this.draggedItemEl);
             this.odooEditor.observerUnactive("dragAndDropMoveSnippet");
         }
-        this.dropped = true;
+        this.dragState.currentDropzoneEl = dropzoneEl;
     }
     /**
      * Handles the insertion of an element in a dropzone.
@@ -298,7 +297,6 @@ export class dragAndDropHelper {
      * dragged.
      */
     dropzoneOver(dropzoneEl) {
-        this.dropped = true;
         dropzoneEl.after(this.draggedItemEl);
         dropzoneEl.classList.add("invisible");
 
@@ -376,7 +374,6 @@ export class dragAndDropHelper {
             const rowCount = parseInt(rowEl.dataset.rowCount);
             dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
         }
-        this.dropped = false;
         this.draggedItemEl.remove();
         dropzoneEl.classList.remove("invisible");
 
@@ -412,6 +409,15 @@ export class dragAndDropHelper {
         filterOutSelectorGrids($selectorSiblings, (el) => el.parentElement);
         filterOutSelectorGrids($selectorChildren, (el) => el);
         return selectorGrids;
+    }
+    /**
+     * Checks if we are currently over a dropzone, that is, if
+     * `currentDropzoneEl` is defined.
+     *
+     * @returns {Boolean}
+     */
+    isDropped() {
+        return !!this.dragState.currentDropzoneEl;
     }
     /**
      * Places a column in a grid on mouse move.

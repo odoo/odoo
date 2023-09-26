@@ -952,7 +952,7 @@ var SnippetEditor = publicWidget.Widget.extend({
                 this.dragAndDropHelper.dropzoneOver(dropzoneEl);
             },
             dropzoneOut: ({ dropzone }) => {
-                if (!this.dragState.currentDropzoneEl) {
+                if (!this.dragAndDropHelper.isDropped()) {
                     // The "over" has been cancelled due to glued dropzone ->
                     // don't do anything.
                     return;
@@ -1214,7 +1214,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.dragAndDropHelper.dragAndDropStopGrid();
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
-        if (!this.dragAndDropHelper.dropped) {
+        if (!this.dragAndDropHelper.isDropped()) {
             let $el = $(closest(this.$body[0].querySelectorAll('.oe_drop_zone'), {x, y}));
             // Some drop zones might have been disabled.
             $el = $el.filter(this.$dropZones);
@@ -1253,7 +1253,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         $clone.remove();
 
         this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-        if (this.dragAndDropHelper.dropped) {
+        if (this.dragAndDropHelper.isDropped()) {
             if (prev) {
                 this.$target.insertAfter(prev);
             } else if (next) {
