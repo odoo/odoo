@@ -719,8 +719,11 @@ class PosConfig(models.Model):
         """
         self.env.cr.execute(query, params + [20000])
         product_ids = self.env.cr.fetchall()
-        products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
-        return products
+        products = self.env['product.product'].search([('id', 'in', product_ids)])
+        product_combo = products.filtered(lambda p: p['detailed_type'] == 'combo')
+        product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
+        products_available = products | product_in_combo
+        return products_available.read(fields)
 
     def get_limited_partners_loading(self):
         self.env.cr.execute("""

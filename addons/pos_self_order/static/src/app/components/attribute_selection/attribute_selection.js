@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
+import { ProductCustomAttribute } from "@point_of_sale/app/store/models/product_custom_attribute";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
 
@@ -18,7 +19,7 @@ export class AttributeSelection extends Component {
             editMode: false,
             showResume: false,
             showNext: false,
-            showCustomInput: false, // FIXME: need to implement this correctly here and in the PoS, maybe add a field ?
+            showCustomInput: false,
         });
 
         this.selectedValues = useState(this.env.selectedValues);
@@ -35,9 +36,16 @@ export class AttributeSelection extends Component {
         return this.props.product.attributes[this.state.currentAttribute];
     }
 
+    get availableAttributeValue() {
+        return this.selfOrder.config.self_ordering_mode === "kiosk"
+            ? this.attribute.values.filter((a) => !a.is_custom)
+            : this.attribute.values;
+    }
+
     get attributeSelected() {
         const flatAttribute = attributeFlatter(this.selectedValues);
-        return attributeFormatter(this.selfOrder.attributeById, flatAttribute);
+        const customAttribute = this.env.customValues;
+        return attributeFormatter(this.selfOrder.attributeById, flatAttribute, customAttribute);
     }
 
     initAttribute() {
@@ -53,11 +61,17 @@ export class AttributeSelection extends Component {
         }
 
         for (const attribute of attributeSingle) {
-            if (this.selfOrder.editedLine) {
-                for (const value of attribute.values) {
-                    if (this.selfOrder.editedLine.selected_attributes.includes(value.id)) {
+            for (const value of attribute.values) {
+                if (this.selfOrder.editedLine) {
+                    if (this.selfOrder.editedLine.attribute_value_ids.includes(value.id)) {
                         this.selectedValues[attribute.id] = value.id;
                     }
+                }
+
+                if (value.is_custom) {
+                    this.env.customValues[value.id] = new ProductCustomAttribute({
+                        custom_product_template_attribute_value_id: value.id,
+                    });
                 }
             }
         }
@@ -67,11 +81,17 @@ export class AttributeSelection extends Component {
 
             for (const value of attrMulti.values) {
                 if (this.selfOrder.editedLine) {
-                    if (this.selfOrder.editedLine.selected_attributes.includes(value.id)) {
+                    if (this.selfOrder.editedLine.attribute_value_ids.includes(value.id)) {
                         this.selectedValues[attrMulti.id][value.id] = true;
                     }
                 } else {
                     this.selectedValues[attrMulti.id][value.id] = false;
+                }
+
+                if (value.is_custom) {
+                    this.env.customValues[value.id] = new ProductCustomAttribute({
+                        custom_product_template_attribute_value_id: value.id,
+                    });
                 }
             }
         }

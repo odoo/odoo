@@ -57,8 +57,6 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    // In case of self_order_mode === "meal", we keep the same order until the user pays
-    // In case of self_order_mode === "each", we create a new order each time the user orders somethings
     get currentOrder() {
         if (this.editedOrder) {
             return this.editedOrder;
@@ -81,6 +79,16 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
+        this.currentLanguage = this.config.self_ordering_available_language_ids.find(
+            (l) => l.code === this.cookie.current.frontend_lang
+        );
+
+        if (this.config.self_ordering_default_language_id && !this.currentLanguage) {
+            this.currentLanguage = this.config.self_ordering_default_language_id;
+        }
+
+        this.cookie.setCookie("frontend_lang", this.currentLanguage.code);
+
         this.products = this.products.map((p) => {
             const product = new Product(p, this.config.iface_tax_included);
             this.productByIds[product.id] = product;
@@ -124,15 +132,6 @@ export class SelfOrder extends Reactive {
 
     initKioskData() {
         this.ordering = true;
-        this.currentLanguage = this.config.self_ordering_available_language_ids.find(
-            (l) => l.code === this.cookie.current.frontend_lang
-        );
-
-        if (this.config.self_ordering_default_language_id && !this.currentLanguage) {
-            this.currentLanguage = this.config.self_ordering_default_language_id;
-        }
-
-        this.cookie.setCookie("frontend_lang", this.currentLanguage.code);
     }
 
     async initMobileData() {
@@ -179,7 +178,7 @@ export class SelfOrder extends Reactive {
             if (change) {
                 line.qty = change.qty;
                 line.customer_note = change.customer_note;
-                line.selected_attributes = change.selected_attributes;
+                line.attribute_value_ids = change.attribute_value_ids;
                 keptLines.push(line);
             }
         }
@@ -213,11 +212,13 @@ export class SelfOrder extends Reactive {
             this.updateOrdersFromServer([order], [order.access_token]);
             this.editedOrder.updateLastChanges();
 
-            if (this.self_order_mode === "each") {
+            if (this.config.self_ordering_pay_after === "each") {
                 this.editedOrder = null;
             }
 
-            this.notification.add(_t("Your order has been placed!"), { type: "success" });
+            if (this.config.self_ordering_mode !== "kiosk") {
+                this.notification.add(_t("Your order has been placed!"), { type: "success" });
+            }
 
             return order;
         } catch (error) {

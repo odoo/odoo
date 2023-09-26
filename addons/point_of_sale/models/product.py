@@ -117,6 +117,10 @@ class ProductProduct(models.Model):
             'variants': variant_list
         }
 
+class ProductAttributeCustomValue(models.Model):
+    _inherit = "product.attribute.custom.value"
+
+    pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
 
 class UomCateg(models.Model):
     _inherit = 'uom.category'

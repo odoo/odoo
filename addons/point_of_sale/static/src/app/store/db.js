@@ -35,6 +35,9 @@ export class PosDB {
         this.product_by_category_id = {};
         this.product_packaging_by_barcode = {};
 
+        this.attribute_by_id = {};
+        this.attribute_value_by_id = {};
+
         this.partner_sorted = [];
         this.partner_by_id = {};
         this.partner_by_barcode = {};
@@ -52,6 +55,15 @@ export class PosDB {
         this.combo_line_by_id = {};
     }
 
+    add_attributes(attribute) {
+        for (const attr of Object.values(attribute)) {
+            this.attribute_by_id[attr.id] = attr;
+            for (const val of attr.values) {
+                val.attribute_id = attr.id;
+                this.attribute_value_by_id[val.id] = val;
+            }
+        }
+    }
     /**
      * sets an uuid to prevent conflict in locally stored data between multiple PoS Configs. By
      * using the uuid of the config the local storage from other configs will not get effected nor
@@ -340,7 +352,7 @@ export class PosDB {
         }
     }
     add_packagings(productPackagings) {
-        productPackagings?.forEach(productPackaging => {
+        productPackagings?.forEach((productPackaging) => {
             if (productPackaging.product_id[0] in this.product_by_id) {
                 this.product_packaging_by_barcode[productPackaging.barcode] = productPackaging;
             }

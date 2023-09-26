@@ -13,7 +13,7 @@ export class LanguagePopup extends Component {
     }
 
     get languages() {
-        return this.selfOrder.kiosk_available_languages;
+        return this.selfOrder.config.self_ordering_available_language_ids;
     }
 
     get currentLanguage() {

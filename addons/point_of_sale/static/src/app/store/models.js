@@ -22,6 +22,7 @@ import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configu
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { ProductCustomAttribute } from "./models/product_custom_attribute";
 
 const { DateTime } = luxon;
 
@@ -143,9 +144,10 @@ export class Product extends PosModel {
     }
     async getAddProductOptions(code) {
         let price_extra = 0.0;
-        let draftPackLotLines, description, packLotLinesToEdit, attribute_value_ids;
+        let draftPackLotLines, packLotLinesToEdit, attribute_value_ids;
         let quantity = 1;
         let comboLines = [];
+        let attribute_custom_values = {};
 
         if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
@@ -165,8 +167,8 @@ export class Product extends PosModel {
             );
 
             if (confirmed) {
-                description = payload.selected_attributes.join(", ");
                 attribute_value_ids = payload.attribute_value_ids;
+                attribute_custom_values = payload.attribute_custom_values;
                 price_extra += payload.price_extra;
                 quantity = payload.quantity;
             } else {
@@ -238,7 +240,7 @@ export class Product extends PosModel {
         return {
             draftPackLotLines,
             quantity,
-            description,
+            attribute_custom_values,
             price_extra,
             comboLines,
             attribute_value_ids,
@@ -380,13 +382,13 @@ export class Orderline extends PosModel {
         options.quantity ? this.set_quantity(options.quantity) : this.set_quantity(1);
         this.discount = 0;
         this.note = "";
+        this.custom_attribute_value_ids = [];
         this.hasChange = false;
         this.skipChange = false;
         this.discountStr = "0";
         this.selected = false;
-        this.description = "";
         this.price_extra = 0;
-        this.full_product_name = options.description || "";
+        this.full_product_name = "";
         this.id = orderline_id++;
         this.customerNote = this.customerNote || "";
         this.saved_quantity = 0;
@@ -404,10 +406,15 @@ export class Orderline extends PosModel {
         this.price_type = json.price_type;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
-        this.set_description(json.description);
         this.attribute_value_ids = json.attribute_value_ids || [];
         this.set_price_extra(json.price_extra);
-        this.set_full_product_name(json.full_product_name);
+        this.custom_attribute_value_ids = json.custom_attribute_value_ids.map((attr) => {
+            if (attr.length > 0) {
+                attr = attr[2];
+            }
+            return new ProductCustomAttribute(attr);
+        });
+        this.set_full_product_name();
         this.id = json.server_id || json.id || orderline_id++;
         orderline_id = Math.max(this.id + 1, orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
@@ -440,6 +447,7 @@ export class Orderline extends PosModel {
             }
         );
         orderline.order = null;
+        orderline.custom_attribute_value_ids = this.custom_attribute_value_ids;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
@@ -555,14 +563,31 @@ export class Orderline extends PosModel {
     get_discount_str() {
         return this.discountStr;
     }
-    set_description(description) {
-        this.description = description || "";
-    }
     set_price_extra(price_extra) {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
-    set_full_product_name(full_product_name) {
-        this.full_product_name = full_product_name || "";
+    set_full_product_name() {
+        let attributeString = "";
+
+        if (this.attribute_value_ids && this.attribute_value_ids.length > 0) {
+            for (const valId of this.attribute_value_ids) {
+                const value = this.pos.db.attribute_value_by_id[valId];
+                if (value.is_custom) {
+                    const customValue = this.custom_attribute_value_ids.find(
+                        (cus) => cus.custom_product_template_attribute_value_id == parseInt(valId)
+                    );
+                    attributeString += customValue
+                        ? `${value.name}: ${customValue.custom_value}, `
+                        : `${value.name}, `;
+                } else {
+                    attributeString += `${value.name}, `;
+                }
+            }
+            attributeString = attributeString.slice(0, -2);
+            attributeString = `(${attributeString})`;
+        }
+
+        this.full_product_name = `${this.product.display_name} ${attributeString}`;
     }
     get_price_extra() {
         return this.price_extra;
@@ -696,14 +721,7 @@ export class Orderline extends PosModel {
         return this.product;
     }
     get_full_product_name() {
-        if (this.full_product_name) {
-            return this.full_product_name;
-        }
-        var full_name = this.product.display_name;
-        if (this.description) {
-            full_name += ` (${this.description})`;
-        }
-        return full_name;
+        return this.full_product_name || this.product.display_name;
     }
     // selects or deselects this orderline
     set_selected(selected) {
@@ -746,7 +764,7 @@ export class Orderline extends PosModel {
                 this.product.tracking === "lot" &&
                 (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
             ) &&
-            this.description === orderline.description &&
+            this.full_product_name === orderline.full_product_name &&
             orderline.get_customer_note() === this.get_customer_note() &&
             !this.refunded_orderline_id &&
             !this.isPartOfCombo() &&
@@ -770,6 +788,7 @@ export class Orderline extends PosModel {
         return {
             uuid: this.uuid,
             skip_change: this.skipChange,
+            custom_attribute_value_ids: this.custom_attribute_value_ids.map((attr) => [0, 0, attr]),
             qty: this.get_quantity(),
             price_unit: this.get_unit_price(),
             price_subtotal: this.get_price_without_tax(),
@@ -779,8 +798,7 @@ export class Orderline extends PosModel {
             tax_ids: [[6, false, this.get_applicable_taxes().map((tax) => tax.id)]],
             id: this.id,
             pack_lot_ids: pack_lot_ids,
-            description: this.description,
-            attribute_value_ids: this.attribute_value_ids,
+            attribute_value_ids: this.attribute_value_ids || [],
             full_product_name: this.get_full_product_name(),
             price_extra: this.get_price_extra(),
             customer_note: this.get_customer_note(),
@@ -818,6 +836,7 @@ export class Orderline extends PosModel {
             customer_note: this.get_customer_note(),
             taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
             isPartOfCombo: this.isPartOfCombo(),
+            custom_attribute_value_ids: this.custom_attribute_value_ids,
             unitDisplayPriceBeforeDiscount: this.getUnitDisplayPriceBeforeDiscount(),
         };
     }
@@ -1084,7 +1103,7 @@ export class Orderline extends PosModel {
         return !selectedLine ? false : last_id === selectedLine.cid;
     }
     set_customer_note(note) {
-        this.customerNote = note;
+        this.customerNote = note || "";
     }
     get_customer_note() {
         return this.customerNote;
@@ -2106,7 +2125,7 @@ export class Order extends PosModel {
         this.fix_tax_included_price(line);
 
         this.set_orderline_options(line, options);
-
+        line.set_full_product_name();
         var to_merge_orderline;
         for (var i = 0; i < this.orderlines.length; i++) {
             if (this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false) {
@@ -2195,9 +2214,29 @@ export class Order extends PosModel {
             orderline.set_discount(options.discount);
         }
 
-        if (options.description !== undefined) {
-            orderline.description += options.description;
-            orderline.attribute_value_ids = options.attribute_value_ids;
+        if (options.attribute_value_ids) {
+            orderline.attribute_value_ids = options.attribute_value_ids || [];
+        }
+
+        if (
+            options.attribute_custom_values &&
+            Object.keys(options.attribute_custom_values).length > 0
+        ) {
+            const customAttributeValues = [];
+            for (const [id, value] of Object.entries(options.attribute_custom_values)) {
+                if (!value) {
+                    continue;
+                }
+
+                customAttributeValues.push(
+                    new ProductCustomAttribute({
+                        custom_product_template_attribute_value_id: parseInt(id),
+                        custom_value: value,
+                    })
+                );
+            }
+
+            orderline.custom_attribute_value_ids = customAttributeValues;
         }
 
         if (options.extras !== undefined) {
