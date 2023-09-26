@@ -40,7 +40,7 @@ def test_get_data(self, template_code):
             },
         },
         'account.account.tag': {
-            'account_tax_tag_1': {
+            'account.account_tax_tag_1': {
                 'name': 'tax_tag_name_1',
                 'applicability': 'taxes',
                 'country_id': 'base.be',
@@ -249,7 +249,7 @@ class TestChartTemplate(TransactionCase):
         """ When a tax is close enough from an existing tax we want to update that tax with the new values. """
         def local_get_data(self, template_code):
             data = test_get_data(self, template_code)
-            data['account.account.tag']['account_tax_tag_1']['name'] += ' [DUP]'
+            data['account.account.tag']['account.account_tax_tag_1']['name'] += ' [DUP]'
             return data
 
         tax_existing = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', 'Tax 1')])
