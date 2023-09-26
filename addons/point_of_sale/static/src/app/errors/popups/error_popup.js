@@ -5,14 +5,20 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { onMounted } from "@odoo/owl";
 
-// formerly ErrorPopupWidget
 export class ErrorPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.ErrorPopup";
+    static props = {
+        confirmText: String,
+        title: String,
+        body: String,
+        cancelKey: Boolean,
+        sound: Boolean,
+    };
     static defaultProps = {
         confirmText: _t("Ok"),
         title: _t("Error"),
-        body: "",
         cancelKey: false,
+        sound: true,
     };
 
     setup() {
@@ -21,6 +27,8 @@ export class ErrorPopup extends AbstractAwaitablePopup {
         this.sound = useService("sound");
     }
     onMounted() {
-        this.sound.play("error");
+        if (this.sound) {
+            this.sound.play("error");
+        }
     }
 }
