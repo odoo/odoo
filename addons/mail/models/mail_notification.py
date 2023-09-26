@@ -41,6 +41,8 @@ class MailNotification(models.Model):
         ("mail_bounce", "Bounce"),
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email address"),
+        ("mail_from_invalid", "Invalid from address"),
+        ("mail_from_missing", "Missing from address"),
         ("mail_smtp", "Connection failed (outgoing mail server problem)"),
         ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)

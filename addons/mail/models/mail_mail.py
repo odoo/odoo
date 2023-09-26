@@ -74,6 +74,8 @@ class MailMail(models.Model):
         # mail
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email"),
+        ("mail_from_invalid", "Invalid from address"),
+        ("mail_from_missing", "Missing from address"),
         ("mail_smtp", "Connection failed (outgoing mail server problem)"),
         # mass mode
         ("mail_bl", "Blacklisted Address"),
@@ -561,6 +563,7 @@ class MailMail(models.Model):
 
         for mail_id in self.ids:
             success_pids = []
+            failure_reason = None
             failure_type = None
             processing_pid = None
             mail = None
@@ -667,10 +670,36 @@ class MailMail(models.Model):
                     mail.id, mail.message_id)
                 raise
             except Exception as e:
-                failure_reason = tools.ustr(e)
+                if isinstance(e, AssertionError):
+                    # Handle assert raised in IrMailServer to try to catch notably from-specific errors.
+                    # Note that assert may raise several args, a generic error string then a specific
+                    # message for logging in failure type
+                    error_code = e.args[0]
+                    if len(e.args) > 1 and error_code == IrMailServer.NO_VALID_FROM:
+                        # log failing email in additional arguments message
+                        failure_reason = tools.ustr(e.args[1])
+                    else:
+                        failure_reason = error_code
+                    if error_code == IrMailServer.NO_VALID_FROM:
+                        failure_type = "mail_from_invalid"
+                    elif error_code in (IrMailServer.NO_FOUND_FROM, IrMailServer.NO_FOUND_SMTP_FROM):
+                        failure_type = "mail_from_missing"
+                # generic (unknown) error as fallback
+                if not failure_reason:
+                    failure_reason = tools.ustr(e)
+                if not failure_type:
+                    failure_type = "unknown"
+
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
-                mail.write({'state': 'exception', 'failure_reason': failure_reason})
-                mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='unknown')
+                mail.write({
+                    "failure_reason": failure_reason,
+                    "failure_type": failure_type,
+                    "state": "exception",
+                })
+                mail._postprocess_sent_message(
+                    success_pids=success_pids,
+                    failure_reason=failure_reason, failure_type=failure_type
+                )
                 if raise_exception:
                     if isinstance(e, (AssertionError, UnicodeEncodeError)):
                         if isinstance(e, UnicodeEncodeError):

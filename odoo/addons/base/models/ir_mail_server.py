@@ -91,6 +91,12 @@ class IrMailServer(models.Model):
 
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
+    NO_FOUND_FROM = ("You must either provide a sender address explicitly or configure "
+          "using the combination of `mail.catchall.domain` and `mail.default.from` "
+          "ICPs, in the server configuration file or with the --email-from startup "
+          "parameter.")
+    NO_FOUND_SMTP_FROM = "The Return-Path or From header is required for any outbound email"
+    NO_VALID_FROM = "Malformed 'Return-Path' or 'From' address. It should contain one valid plain ASCII email"
 
     name = fields.Char(string='Name', required=True, index=True)
     from_filter = fields.Char(
@@ -472,10 +478,7 @@ class IrMailServer(models.Model):
            :return: the new RFC2822 email message
         """
         email_from = email_from or self._get_default_from_address()
-        assert email_from, "You must either provide a sender address explicitly or configure "\
-                           "using the combination of `mail.catchall.domain` and `mail.default.from` "\
-                           "ICPs, in the server configuration file or with the "\
-                           "--email-from startup parameter."
+        assert email_from, self.NO_FOUND_FROM
 
         headers = headers or {}         # need valid dict later
         email_cc = email_cc or []
@@ -556,7 +559,7 @@ class IrMailServer(models.Model):
         # Path (VERP) to detect no-longer valid email addresses.
         bounce_address = message['Return-Path'] or self._get_default_bounce_address() or message['From']
         smtp_from = message['From'] or bounce_address
-        assert smtp_from, "The Return-Path or From header is required for any outbound email"
+        assert smtp_from, self.NO_FOUND_SMTP_FROM
 
         email_to = message['To']
         email_cc = message['Cc']
@@ -599,9 +602,12 @@ class IrMailServer(models.Model):
 
         # The email's "Envelope From" (Return-Path) must only contain ASCII characters.
         smtp_from_rfc2822 = extract_rfc2822_addresses(smtp_from)
-        assert smtp_from_rfc2822, (
-            f"Malformed 'Return-Path' or 'From' address: {smtp_from} - "
-            "It should contain one valid plain ASCII email")
+        if not smtp_from_rfc2822:
+            raise AssertionError(
+                self.NO_VALID_FROM,
+                f"Malformed 'Return-Path' or 'From' address: {smtp_from} - "
+                "It should contain one valid plain ASCII email"
+            )
         smtp_from = smtp_from_rfc2822[-1]
 
         return smtp_from, smtp_to_list, message
