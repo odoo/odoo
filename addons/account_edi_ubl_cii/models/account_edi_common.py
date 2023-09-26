@@ -20,7 +20,7 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_hour': 'HUR',
     'uom.product_uom_ton': 'TNE',
     'uom.product_uom_meter': 'MTR',
-    'uom.product_uom_km': 'KTM',
+    'uom.product_uom_km': 'KMT',
     'uom.product_uom_cm': 'CMT',
     'uom.product_uom_litre': 'LTR',
     'uom.product_uom_cubic_meter': 'MTQ',
