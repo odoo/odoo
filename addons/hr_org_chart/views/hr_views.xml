@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_hr_employee_org_chart" model="ir.actions.act_window">
+        <field name="name">Org Chart</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">hierarchy,kanban,tree,form,activity,graph,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'chat_icon': True}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new employee
+            </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+            </p>
+        </field>
+    </record>
+
     <record id="hr_employee_view_form_inherit_org_chart" model="ir.ui.view">
         <field name="name">hr.employee.view.form.inherit.org_chart</field>
         <field name="model">hr.employee</field>
