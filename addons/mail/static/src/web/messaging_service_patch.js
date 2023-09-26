@@ -46,17 +46,22 @@ patch(Messaging.prototype, "mail/web", {
         if (notif.payload.Thread) {
             const data = notif.payload.Thread;
             const thread = this.store.threads[createLocalId(data.model, data.id)];
-            if (data.serverFoldState && data.serverFoldState !== thread.state && thread) {
-                thread.state = data.serverFoldState;
-                if (thread.state === "closed") {
-                    const chatWindow = this.store.chatWindows.find(
-                        (chatWindow) => chatWindow.threadLocalId === thread.localId
-                    );
-                    if (chatWindow) {
-                        this.chatWindowService.close(chatWindow);
+            if (data.serverFoldState && thread && (!data.foldStateCount || data.foldStateCount > thread.foldStateCount)) {
+                if (data.foldStateCount) {
+                    thread.foldStateCount = data.foldStateCount;
+                }
+                if (data.serverFoldState !== thread.state) {
+                    thread.state = data.serverFoldState;
+                    if (thread.state === "closed") {
+                        const chatWindow = this.store.chatWindows.find(
+                            (chatWindow) => chatWindow.threadLocalId === thread.localId
+                        );
+                        if (chatWindow) {
+                            this.chatWindowService.close(chatWindow);
+                        }
+                    } else {
+                        this.chatWindowService.insert({ thread, folded: thread.state === "folded" });
                     }
-                } else {
-                    this.chatWindowService.insert({ thread, folded: thread.state === "folded" });
                 }
             }
         }
