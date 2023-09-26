@@ -504,6 +504,25 @@ class TestChannelInternals(MailCommon):
         test_channel.image_128 = base64.b64encode(("<svg/>").encode())
         self.assertEqual(test_channel.avatar_128, test_channel.image_128)
 
+    def test_channel_write_should_send_notification(self):
+        channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
+        # do the operation once before the assert to grab the value to expect
+        with self.assertBus(
+            [(self.cr.dbname, 'discuss.channel', channel.id)],
+            [{
+                "type": "mail.record/insert",
+                "payload": {
+                    'Thread': {
+                        "id": channel.id,
+                        "model": "discuss.channel",
+                        "name": "test test",
+                    }
+                },
+            }]
+        ):
+            channel.name = "test test"
+            channel.description = "test"
+
     def test_channel_write_should_send_notification_if_image_128_changed(self):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
         # do the operation once before the assert to grab the value to expect
