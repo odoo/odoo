@@ -280,9 +280,12 @@ class Channel(models.Model):
             notifications = []
             for channel in self:
                 notifications.append([channel, 'mail.record/insert', {
-                    'Channel': {
-                        'avatarCacheKey': channel._get_avatar_cache_key(),
-                        'id': channel.id,
+                    "Thread": {
+                        "id": channel.id,
+                        "model": "discuss.channel",
+                        "channel": {
+                            "avatarCacheKey": channel._get_avatar_cache_key(),
+                        }
                     }
                 }])
             self.env['bus.bus']._sendmany(notifications)
@@ -340,10 +343,13 @@ class Channel(models.Model):
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Channel': {
-                'channelMembers': [('insert-and-unlink', {'id': member_id})],
-                'id': self.id,
-                'memberCount': self.member_count,
+            "Thread": {
+                "id": self.id,
+                "model": "discuss.channel",
+                'channel': {
+                    'channelMembers': [('insert-and-unlink', {'id': member_id})],
+                    'memberCount': self.member_count,
+                },
             }
         })
 
@@ -416,10 +422,13 @@ class Channel(models.Model):
                         'channel': member.channel_id.sudo()._channel_info()[0],
                     }))
             notifications.append((channel, 'mail.record/insert', {
-                'Channel': {
-                    'channelMembers': [('insert', list(new_members._discuss_channel_member_format().values()))],
-                    'id': channel.id,
-                    'memberCount': channel.member_count,
+                "Thread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    'channel': {
+                        'channelMembers': [('insert', list(new_members._discuss_channel_member_format().values()))],
+                        'memberCount': channel.member_count,
+                    }
                 }
             }))
             if existing_members:
@@ -427,10 +436,13 @@ class Channel(models.Model):
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
                 notifications.append((current_partner or current_guest, 'mail.record/insert', {
-                    'Channel': {
-                        'channelMembers': [('insert', list(existing_members._discuss_channel_member_format().values()))],
-                        'id': channel.id,
-                        'memberCount': channel.member_count,
+                    "Thread": {
+                        "id": channel.id,
+                        "model": "discuss.channel",
+                        "channel": {
+                            "channelMembers": [("insert", list(existing_members._discuss_channel_member_format().values()))],
+                            "memberCount": channel.member_count,
+                        }
                     }
                 }))
         if invite_to_rtc_call:
@@ -1101,9 +1113,12 @@ class Channel(models.Model):
         member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         member.write({'custom_channel_name': name})
         self.env['bus.bus']._sendone(member.partner_id, 'mail.record/insert', {
-            'Channel': {
-                'custom_channel_name': name,
+            "Thread": {
                 'id': self.id,
+                "model": "discuss.channel",
+                'channel': {
+                    'custom_channel_name': name,
+                },
             }
         })
 

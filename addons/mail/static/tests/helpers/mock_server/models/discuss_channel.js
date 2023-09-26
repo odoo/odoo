@@ -230,12 +230,15 @@ patch(MockServer.prototype, {
             id: channel.id,
         });
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Channel: {
+            Thread: {
                 id: channel.id,
-                channelMembers: [["insert-and-unlink", { id: channelMember.id }]],
-                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                    ["channel_id", "=", channel.id],
-                ]),
+                model: "discuss.channel",
+                channel: {
+                    channelMembers: [["insert-and-unlink", { id: channelMember.id }]],
+                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                        ["channel_id", "=", channel.id],
+                    ]),
+                },
             },
         });
 
@@ -265,7 +268,7 @@ patch(MockServer.prototype, {
         const partners = this.getRecords("res.partner", [["id", "in", partner_ids]]);
         for (const partner of partners) {
             if (partner.id === this.pyEnv.currentPartnerId) {
-                continue;  // adding 'yourself' to the conversation is handled below
+                continue; // adding 'yourself' to the conversation is handled below
             }
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
@@ -301,19 +304,22 @@ patch(MockServer.prototype, {
             ]) > 0;
         if (isSelfMember) {
             this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-                Channel: {
+                Thread: {
                     id: channel.id,
-                    channelMembers: [
-                        [
-                            "insert",
-                            this._mockDiscussChannelMember_DiscussChannelMemberFormat(
-                                insertedChannelMembers
-                            ),
+                    model: "discuss.channel",
+                    channel: {
+                        channelMembers: [
+                            [
+                                "insert",
+                                this._mockDiscussChannelMember_DiscussChannelMemberFormat(
+                                    insertedChannelMembers
+                                ),
+                            ],
                         ],
-                    ],
-                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                        ["channel_id", "=", channel.id],
-                    ]),
+                        memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                            ["channel_id", "=", channel.id],
+                        ]),
+                    },
                 },
             });
         }
@@ -809,9 +815,12 @@ patch(MockServer.prototype, {
             custom_channel_name: name,
         });
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
-            Channel: {
-                custom_channel_name: name,
+            Thread: {
                 id: channelId,
+                model: "discuss.channel",
+                channel: {
+                    custom_channel_name: name,
+                },
             },
         });
     },
@@ -958,9 +967,12 @@ patch(MockServer.prototype, {
         });
         const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Channel: {
-                avatarCacheKey: channel.avatarCacheKey,
+            Thread: {
                 id: id,
+                model: "discuss.channel",
+                channel: {
+                    avatarCacheKey: channel.avatarCacheKey,
+                },
             },
         });
     },

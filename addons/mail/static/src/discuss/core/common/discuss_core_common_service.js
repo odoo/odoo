@@ -150,15 +150,6 @@ export class DiscussCoreCommon {
                     }
                 }
             });
-            this.busService.subscribe("mail.record/insert", (payload) => {
-                if (payload.Channel) {
-                    this.store.Thread.insert({
-                        id: payload.Channel.id,
-                        model: "discuss.channel",
-                        channel: payload.Channel,
-                    });
-                }
-            });
         });
     }
 

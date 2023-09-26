@@ -83,7 +83,7 @@ export class DiscussCoreWeb {
                 this.store.ChatWindow.insert({ thread: chat });
             }
         });
-        this.busService.subscribe("mail.record/insert", async (payload) => {
+        this.busService.subscribe("mail.record/insert", (payload) => {
             if (payload.Thread) {
                 const data = payload.Thread;
                 const thread = this.store.Thread.get(data);
