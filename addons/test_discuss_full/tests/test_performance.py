@@ -12,6 +12,8 @@ from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
+    _query_count = 59
+
     def setUp(self):
         super().setUp()
         self.group_user = self.env.ref('base.group_user')
@@ -109,7 +111,7 @@ class TestDiscussFullPerformance(HttpCase):
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
-        with self.assertQueryCount(emp=self._get_query_count()):
+        with self.assertQueryCount(emp=self._query_count):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, self._get_init_messaging_result())
@@ -1038,10 +1040,3 @@ class TestDiscussFullPerformance(HttpCase):
                 'volume_settings_ids': [('insert', [])],
             },
         }
-
-    def _get_query_count(self):
-        """
-            Returns the expected query count.
-            The point of having a separate getter is to allow it to be overriden.
-        """
-        return 59
