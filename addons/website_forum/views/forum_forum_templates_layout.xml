@@ -95,13 +95,13 @@
             </div>
             <div t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
-                    <span t-if="tag"><i class="fa fa-tag me-1 text-muted"/><t t-out="tag.name"></t></span>
+                    <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"></t></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
-                       class="p-1 text-decoration-none text-muted"><i class="oi oi-close d-inline-block"/></a>
+                       class="p-1 text-decoration-none text-reset opacity-50"><i class="oi oi-close d-inline-block"/></a>
                 </span>
                 <span t-if="search" class="btn btn-light rounded ps-2">
                     <em t-if="search" class="text-muted">"<t t-out="search"/>"</em>
-                    <a t-attf-href="?#{ keep_query('sorting', 'my') }" class="p-1 text-decoration-none text-muted">
+                    <a t-attf-href="?#{ keep_query('sorting', 'my') }" class="p-1 text-decoration-none text-reset opacity-50">
                         <i class="oi oi-close d-inline-block"/>
                     </a>
                 </span>
@@ -208,12 +208,12 @@
         </t>
         <t t-else="">
             <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
-            <div id="wrap" t-attf-class="o_wforum_wrapper position-relative container d-flex d-xl-grid px-lg-0 #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
+            <div id="wrap" t-attf-class="o_wforum_wrapper position-relative container row mx-auto px-0 #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
                 <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
                 <t t-set="_forum_path" t-value="url_for('/forum') + '/' + _forum_slug"/>
                 <t t-call="website_forum.user_sidebar"/>
                 <t t-call="website_forum.user_sidebar_mobile"/>
-                <div class="o_wforum_content_wrapper w-100 w-xl-auto px-lg-3">
+                <div class="o_wforum_content_wrapper col-lg-9">
                     <div class="o_wprofile_email_validation_container row g-0 justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
                         <t t-call="website_profile.email_validation_banner">
                             <t t-set="redirect_url" t-value="'/forum/%s' % forum.id if forum else '/forum/all/'"/>
@@ -231,7 +231,7 @@
 
 <!-- User sidebar -->
 <template id="user_sidebar">
-    <aside class="o_wforum_sidebar z-index-1 d-none d-lg-flex flex-column o_cc o_cc2">
+    <aside class="o_wforum_sidebar col-3 d-none d-lg-flex flex-column z-index-1">
         <div class="flex-grow-1 px-2">
             <t t-call="website_forum.user_sidebar_header"/>
             <t t-call="website_forum.user_sidebar_body"/>
@@ -276,7 +276,7 @@
             <img class="o_wforum_avatar rounded-circle" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
                 <h6 class="mb-1" t-out="user_id.name"/>
-                <small class="text-muted"><t t-out="user_id.karma"/> XP</small>
+                <small class="text-reset opacity-50"><t t-out="user_id.karma"/> XP</small>
             </div>
         </a>
     </div>
@@ -286,17 +286,17 @@
     <div class="o_wforum_sidebar_section">
         <t t-set="location" t-valuef="#{ _forum_path }#{ ('/tag/' + slug(tag) + '/questions') if (tag and not tags) else '' }?"/>
         <!-- All Posts -->
-        <a t-attf-class="nav-link my-1 py-1 #{ 'bg-primary-light text-primary disabled' if request.httprequest.path ==  _forum_path and no_filters and not any([my, queue_type, tags]) else 'text-reset' }" t-att-href="location">
+        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if request.httprequest.path ==  _forum_path and no_filters and not any([my, queue_type, tags]) else 'text-reset' }" t-att-href="location">
             <i t-attf-class="fa fa-list fa-fw #{ 'opacity-50' if request.httprequest.path != _forum_path or my or queue_type else '' }"/> Posts
         </a>
         <t t-if="uid">
             <!-- My Posts -->
-            <a t-attf-class="nav-link my-1 py-1 #{ 'bg-primary-light text-primary disabled' if my == 'mine' else 'text-reset' }" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
+            <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if my == 'mine' else 'text-reset' }" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
                 <i t-attf-class="fa fa-user-circle fa-fw #{ 'opacity-50' if my != 'mine' else ''}"/> My Posts
             </a>
 
             <!-- My Favourites -->
-            <a t-attf-class="nav-link my-1 py-1 #{ 'bg-primary-light text-primary disabled' if my == 'favourites' else 'text-reset' }" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='favourites')">
+            <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if my == 'favourites' else 'text-reset' }" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='favourites')">
                 <i t-attf-class="fa fa-star fa-fw #{ 'opacity-50' if my != 'favourites' else ''}"/> Favourites
             </a>
         </t>
@@ -313,15 +313,15 @@
     <div t-if="forum and user.karma>=forum.karma_moderate" class="o_wforum_sidebar_section pt-3">
         <!-- Moderation Tools -->
         <div class="px-3 pb-1 fw-bold">Moderation tools</div>
-        <a t-attf-class="nav-link my-1 py-1 #{ 'bg-primary-light text-primary disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/validation_queue">
+        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/validation_queue">
             <i t-attf-class="fa fa-check-square-o fa-fw #{ 'opacity-50' if queue_type != 'validation' else ''}"/> To Validate
             <span id="count_posts_queue_validation" t-attf-class="badge #{ 'text-bg-warning' if forum.count_posts_waiting_validation > 0 else 'd-none'}" t-out="forum.count_posts_waiting_validation"/>
         </a>
-        <a t-attf-class="nav-link my-1 py-1 #{'bg-primary-light text-primary disabled' if queue_type == 'offensive' or queue_type == 'flagged' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/flagged_queue">
+        <a t-attf-class="nav-link my-1 py-1 #{'rounded text-bg-light disabled' if queue_type == 'offensive' or queue_type == 'flagged' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/flagged_queue">
             <i t-attf-class="fa fa-flag fa-fw #{ 'opacity-50' if queue_type != 'flagged' else ''}"/> Flagged
             <span id="count_posts_queue_flagged" t-attf-class="badge #{ 'text-bg-danger' if forum.count_flagged_posts > 0 else 'd-none'}" t-out="forum.count_flagged_posts"/>
         </a>
-        <a t-attf-class="nav-link my-1 py-1 #{ 'bg-primary-light text-primary disabled' if queue_type == 'close' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/closed_posts">
+        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'close' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/closed_posts">
             <i t-attf-class="fa fa-window-close fa-fw #{ 'opacity-50' if queue_type != 'close' else '' }"/> Closed
         </a>
     </div>
