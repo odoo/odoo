@@ -102,8 +102,8 @@ QUnit.module(
                 "the tag should be correctly named"
             );
             assert.hasClass(
-                badges[0].querySelector('img'),
-                "o_attendee_border_accepted",
+                badges[0].querySelector(".attendee_tag_status"),
+                "o_attendee_status_accepted",
                 "Jesus should attend the meeting"
             );
             assert.strictEqual(
@@ -112,8 +112,8 @@ QUnit.module(
                 "the tag should be correctly named"
             );
             assert.hasClass(
-                badges[1].querySelector('img'),
-                "o_attendee_border_tentative",
+                badges[1].querySelector(".attendee_tag_status"),
+                "o_attendee_status_tentative",
                 "Mohamet should still confirm his attendance to the meeting"
             );
             assert.containsOnce(badges[0], "img", "should have img tag");
