@@ -5,9 +5,12 @@ import { ChatWindowService } from "@mail/core/common/chat_window_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(ChatWindowService.prototype, {
-    async _onClose(chatWindow) {
+    async _onClose(chatWindow, options) {
+        const { notifyState = true } = options;
         await super._onClose(...arguments);
-        this.notifyState(chatWindow);
+        if (notifyState) {
+            this.notifyState(chatWindow);
+        }
     },
     hide(chatWindow) {
         super.hide(...arguments);

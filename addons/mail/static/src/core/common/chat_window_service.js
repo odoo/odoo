@@ -109,7 +109,8 @@ export class ChatWindowService {
         chatWindow.thread.state = "folded";
     }
 
-    async close(chatWindow, { escape = false } = {}) {
+    async close(chatWindow, options = {}) {
+        const { escape = false } = options;
         if (!chatWindow.hidden && this.maxVisible < this.store.discuss.chatWindows.length) {
             const swaped = this.hidden[0];
             swaped.hidden = false;
@@ -126,10 +127,10 @@ export class ChatWindowService {
         if (escape && this.store.discuss.chatWindows.length > 0) {
             this.focus(this.store.discuss.chatWindows[index - 1]);
         }
-        await this._onClose(chatWindow);
+        await this._onClose(chatWindow, options);
         chatWindow.delete();
     }
-    async _onClose(chatWindow) {}
+    async _onClose(chatWindow, options) {}
 }
 
 export const chatWindowService = {
