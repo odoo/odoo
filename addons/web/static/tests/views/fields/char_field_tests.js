@@ -721,6 +721,41 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.skip(
+        "input field: change value before pending onchange returns",
+        async function (assert) {
+            serverData.models.partner.onchanges = {
+                foo(obj) {
+                    obj.foo = "yop";
+                },
+            };
+
+            let def;
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="foo" />
+                        </sheet>
+                    </form>`,
+                async mockRPC(route, { method }) {
+                    if (method === "onchange") {
+                        await def;
+                    }
+                },
+            });
+
+            assert.strictEqual(target.querySelector("[name='foo'] input").value, "yop");
+
+            await editInput(target, "[name='foo'] input", "tralala");
+            assert.strictEqual(target.querySelector("[name='foo'] input").value, "yop");
+        }
+    );
+
     QUnit.test(
         "input field: change value before pending onchange returns (with fieldDebounce)",
         async function (assert) {

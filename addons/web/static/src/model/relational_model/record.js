@@ -546,7 +546,9 @@ export class Record extends DataPoint {
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 const commands = value._getCommands({ withReadonly });
-                result[fieldName] = commands;
+                if (this.isNew || commands.length || withReadonly) {
+                    result[fieldName] = commands;
+                }
             } else {
                 result[fieldName] = this._formatServerValue(field.type, value);
             }
@@ -973,6 +975,20 @@ export class Record extends DataPoint {
         }
     }
 
+    filterMany2oneChanges(changes) {
+        const result = { ...changes };
+        for (const fieldName in result) {
+            if (this.fields[fieldName].type === "many2one") {
+                const curVal = toRaw(this.data[fieldName]);
+                const nextVal = result[fieldName];
+                if (curVal && nextVal && curVal[0] === nextVal[0] && curVal[1] === nextVal[1]) {
+                    delete result[fieldName];
+                }
+            }
+        }
+        return result;
+    }
+
     async _update(changes, { withoutOnchange, withoutParentUpdate, save } = {}) {
         this.dirty = true;
         const prom = this._preprocessChanges(changes);
@@ -1004,10 +1020,15 @@ export class Record extends DataPoint {
                 delete changes[field.name];
             }
         }
+        let globalChanges = { ...changes };
         const onChangeFields = Object.keys(changes).filter(
             (fieldName) => this.activeFields[fieldName] && this.activeFields[fieldName].onChange
         );
+        let initialData = {};
         if (onChangeFields.length && !this.model._urgentSave && !withoutOnchange && !save) {
+            const changesToApply = this.filterMany2oneChanges(changes);
+            initialData = pick(toRaw(this.data), ...Object.keys(changesToApply));
+            this._applyChanges(changesToApply);
             const localChanges = this._getChanges(
                 { ...this._changes, ...changes },
                 { withReadonly: true }
@@ -1021,35 +1042,30 @@ export class Record extends DataPoint {
             const otherChanges = await this.model._onchange(this.config, {
                 changes: localChanges,
                 fieldNames: onChangeFields,
-                evalContext: this.evalContext,
+                evalContext: this.evalContext, //toRaw(this.evalContext)
                 onError: (e) => {
-                    for (const fieldName in localChanges) {
-                        this._setInvalidField(fieldName);
-                    }
+                    this._applyChanges(initialData);
                     throw e;
                 },
             });
-            Object.assign(changes, this._parseServerValues(otherChanges, this.data));
+            changes = this._parseServerValues(otherChanges, this.data);
         }
         // changes inside the record set as value for a many2one field must trigger the onchange,
         // but can't be considered as changes on the parent record, so here we detect if many2one
         // fields really changed, and if not, we delete them from changes
-        for (const fieldName in changes) {
-            if (this.fields[fieldName].type === "many2one") {
-                const curVal = toRaw(this.data[fieldName]);
-                const nextVal = changes[fieldName];
-                if (curVal && nextVal && curVal[0] === nextVal[0] && curVal[1] === nextVal[1]) {
-                    delete changes[fieldName];
-                }
-            }
-        }
+
+        // check to remove or adapt
+        changes = this.filterMany2oneChanges(changes);
+        globalChanges = { ...globalChanges, ...changes };
         if (Object.keys(changes).length > 0) {
-            const initialChanges = pick(this.data, ...Object.keys(changes));
+            initialData = { ...initialData, ...pick(toRaw(this.data), ...Object.keys(changes)) };
             this._applyChanges(changes);
+        }
+        if (Object.keys(globalChanges).length > 0) {
             try {
                 await this._onUpdate({ withoutParentUpdate });
             } catch (e) {
-                this._applyChanges(initialChanges);
+                this._applyChanges(initialData);
                 throw e;
             }
             await this.model.hooks.onRecordChanged(this, this._getChanges());

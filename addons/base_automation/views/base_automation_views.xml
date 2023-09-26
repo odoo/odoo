@@ -37,7 +37,7 @@
                                         />
                                         <field name="trg_field_ref" placeholder="Select a value..." class="oe_inline"
                                             widget="base_automation_trigger_reference"
-                                            invisible="trigger not in ['on_stage_set', 'on_tag_set']"
+                                            invisible="trigger not in ['on_stage_set', 'on_tag_set'] or not trg_field_ref_model_name"
                                             required="trigger in ['on_stage_set', 'on_tag_set']"
                                         />
                                         <field name="trg_field_ref_model_name" invisible="1" />
