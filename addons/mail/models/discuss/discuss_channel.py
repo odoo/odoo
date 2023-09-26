@@ -273,11 +273,24 @@ class Channel(models.Model):
             failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+        notifications = []
+        for channel in self:
+            current_val = channel.read(vals.keys())[0]
+            diff = {}
+            for key in vals.keys():
+                if current_val.get(key) != vals.get(key) and key != "image_128":
+                    diff[key] = vals[key]
+                    notifications.append([channel, "mail.record/insert", {
+                        "Thread": {
+                            "id": current_val["id"],
+                            "model": "discuss.channel",
+                            **diff
+                        }
+                    }])
         result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         if 'image_128' in vals:
-            notifications = []
             for channel in self:
                 notifications.append([channel, 'mail.record/insert', {
                     "Thread": {
@@ -288,7 +301,7 @@ class Channel(models.Model):
                         }
                     }
                 }])
-            self.env['bus.bus']._sendmany(notifications)
+        self.env['bus.bus']._sendmany(notifications)
         return result
 
     def init(self):
