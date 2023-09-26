@@ -526,7 +526,7 @@ export class PosStore extends Reactive {
     }
     createReactiveOrder(json) {
         return this.makeOrderReactive(
-            new Order({ env: this.env, pos: this, cashier: this.get_cashier() }, json)
+            new Order({ env: this.env }, { pos: this, cashier: this.get_cashier(), json })
         );
     }
     makeOrderReactive(order) {

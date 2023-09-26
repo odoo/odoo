@@ -30,26 +30,26 @@ export class PosModel {
         this.setup(...arguments);
     }
     /**
-     * Create an object with cid. If no cid is in the defaultObj,
-     * cid is computed based on its id. Override _getCID if you
+     * Create an object with cid. If no cid is in `obj`,
+     * cid is computed based on its id. Override `getCID` if you
      * don't want this default calculation of cid.
-     * @param {Object?} defaultObj its props copied to this instance.
+     * @param {Object?} obj its props copied to this instance.
      */
-    setup(defaultObj) {
-        this.setup_base(defaultObj);
+    setup(obj) {
+        this.setup_base(obj);
     }
-    setup_base(defaultObj) {
-        defaultObj = defaultObj || {};
-        if (!defaultObj.cid) {
-            defaultObj.cid = this._getCID(defaultObj);
+    setup_base(obj) {
+        obj = obj || {};
+        if (!obj.cid) {
+            obj.cid = this.getCID(obj);
         }
-        Object.assign(this, defaultObj);
+        Object.assign(this, obj);
     }
     /**
      * Default cid getter. Used as local identity of this object.
      * @param {Object} obj
      */
-    _getCID(obj) {
+    getCID(obj) {
         if (obj.id) {
             if (typeof obj.id == "string") {
                 return obj.id;

@@ -174,9 +174,9 @@ export class Product extends BaseProduct {
 // An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
 export class Orderline extends BaseOrderline {
-    setup(defaultObj, options) {
+    setup(obj, options) {
         if (options.json) {
-            this.setup_base(defaultObj);
+            this.setup_base(obj);
             this.selected = false;
             this.saved_quantity = 0;
             this.order = options.order;
@@ -828,8 +828,10 @@ export class Payment extends PosModel {
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
 export class Order extends BaseOrder {
-    setup(_obj, json) {
+    setup(_obj, options) {
         super.setup(...arguments);
+        this.pos = options.pos;
+        this.temporary = options.temporary || false;
         this.locked = false;
         this.selected_orderline = undefined;
         this.selected_paymentline = undefined;
@@ -855,8 +857,8 @@ export class Order extends BaseOrder {
             },
         };
 
-        if (json) {
-            this.init_from_JSON(json);
+        if (options.json) {
+            this.init_from_JSON(options.json);
             const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
             for (const line of this.orderlines) {
                 line.comboLines = line.combo_line_ids?.map((id) => linesById[id]);

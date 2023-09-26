@@ -9,9 +9,10 @@ import { roundPrecision } from "@web/core/utils/numbers";
 const { DateTime } = luxon;
 
 export class BaseOrder extends PosModel {
-    setup() {
-        super.setup(...arguments);
+    setup(obj, options) {
+        super.setup(obj);
         const pos_session = this.env.cache.pos_session;
+        this.cashier = options.cashier;
         this.orderlines = new PosCollection();
         this.paymentlines = new PosCollection();
         this.partner = null;

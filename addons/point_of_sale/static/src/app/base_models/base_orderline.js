@@ -20,7 +20,7 @@ export const setOrderlineId = (id) => {
 };
 
 export class BaseOrderline extends PosModel {
-    setup(_defaultObj, options) {
+    setup(_obj, options) {
         super.setup(...arguments);
         this.id = incOrderlineId();
         this.uuid = uuidv4();
