@@ -109,7 +109,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "iframe a:contains(ADD TO CART)",
+            trigger: "iframe a:contains(Add to cart)",
         },
         {
             content: "check quantity",
