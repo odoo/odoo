@@ -20,12 +20,14 @@ patch(ChatWindowService.prototype, "discuss/core/web", {
             return;
         }
         if (chatWindow.thread?.model === "discuss.channel") {
+            chatWindow.thread.foldStateCount++;
             return this.orm.silent.call(
                 "discuss.channel",
                 "channel_fold",
                 [[chatWindow.thread.id]],
                 {
                     state: chatWindow.thread.state,
+                    context: { state_count: chatWindow.thread.foldStateCount },
                 }
             );
         }
