@@ -19,7 +19,8 @@ class MailingTrace(models.Model):
         # generic
         'unknown',
         # mass_mailing
-        "mail_email_invalid", "mail_smtp", "mail_email_missing"
+        "mail_email_invalid", "mail_smtp", "mail_email_missing",
+        "mail_from_invalid", "mail_from_missing",
         # mass mailing mass mode specific codes
         "mail_bl", "mail_optout", "mail_dup"
         # mass_mailing_sms
@@ -93,6 +94,8 @@ class MailingTrace(models.Model):
         ("mail_bounce", "Bounce"),
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email address"),
+        ("mail_from_invalid", "Invalid from address"),
+        ("mail_from_missing", "Missing from address"),
         ("mail_smtp", "Connection failed (outgoing mail server problem)"),
         # mass mode
         ("mail_bl", "Blacklisted Address"),
