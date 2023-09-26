@@ -29,7 +29,8 @@ patch(MockServer.prototype, {
         if (args.model === "discuss.channel" && args.method === "channel_fold") {
             const ids = args.args[0];
             const state = args.args[1] || args.kwargs.state;
-            return this._mockDiscussChannelChannelFold(ids, state);
+            const state_count = args.args[2] || args.kwargs.state_count;
+            return this._mockDiscussChannelChannelFold(ids, state, state_count);
         }
         if (args.model === "discuss.channel" && args.method === "channel_create") {
             const name = args.args[0];
@@ -464,8 +465,9 @@ patch(MockServer.prototype, {
      * @private
      * @param {number} ids
      * @param {state} [state]
+     * @param {number} [state_count]
      */
-    _mockDiscussChannelChannelFold(ids, state) {
+    _mockDiscussChannelChannelFold(ids, state, state_count) {
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
@@ -483,6 +485,7 @@ patch(MockServer.prototype, {
             this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
                 Thread: {
+                    foldStateCount: state_count,
                     id: channel.id,
                     model: "discuss.channel",
                     serverFoldState: foldState,
