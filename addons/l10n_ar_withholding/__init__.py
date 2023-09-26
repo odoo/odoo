@@ -2,6 +2,8 @@
 
 from . import models
 from . import wizards
+from . import demo
+
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -16,7 +18,7 @@ def _l10n_ar_withholding_post_init(env):
             for model in [
                 'account.account',
                 'account.tax.group',
-                'account.tax',                
+                'account.tax',
             ]
         }
         env['account.chart.template']._deref_account_tags(template_code, data['account.tax'])
@@ -24,3 +26,6 @@ def _l10n_ar_withholding_post_init(env):
             _logger.info("Company %s already has the Argentinean localization installed, updating...", company.name)
             env['account.chart.template'].with_company(company)._load_data(data)
             env['account.chart.template'].with_company(company)._post_load_data(template_code, company, data)
+
+        if template_code in ['ar_ri'] and env.ref('base.module_l10n_ar_withholding').demo:
+            env['account.chart.template']._post_load_demo_data(company)

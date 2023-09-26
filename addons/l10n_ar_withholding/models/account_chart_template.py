@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     # ar base
     @template('ar_base', 'account.account')
     def _get_ar_base_withholding_account_account(self):
-        return self._parse_csv('ar_base', 'account.account', module='l10n_ar_withholding')    
+        return self._parse_csv('ar_base', 'account.account', module='l10n_ar_withholding')
 
     # ri chart
     @template('ar_ri', 'account.tax.group')
@@ -34,18 +34,6 @@ class AccountChartTemplate(models.AbstractModel):
         self._deref_account_tags('ar_ex', additionnal)
 
     def _post_load_data(self, template_code, company, template_data):
-        result = super()._post_load_data(template_code, company, template_data)
+        super()._post_load_data(template_code, company, template_data)
         if template_code in ['ar_base', 'ar_ri', 'ar_ex']:
             company.l10n_ar_tax_base_account_id = self.ref('base_tax_account')
-
-
-        # As the char templates are installed via post_init_hook, the tax records (account.tax) 
-        # are not available for modification via data demo. Update here the tax data for test/demo purposes.   
-        if template_code in ['ar_ri'] and self.ref('base.module_l10n_ar_withholding').demo:
-            self.env['account.tax'].search([('l10n_ar_withholding', '!=', False)]).write({'amount_type': 'percent', 'amount' : 1})
-            caba_wth = self.env.ref('account.%i_ri_tax_withholding_iibb_caba_applied' % company.id).id
-            arba_wth = self.env.ref('account.%i_ri_tax_withholding_iibb_ba_applied' % company.id ).id
-            self.env.ref('product.product_product_2').with_company(company.id).l10n_ar_supplier_withholding_taxes_ids = [(6, 0, [caba_wth])]
-            self.env.ref('product.product_product_27').with_company(company.id).l10n_ar_supplier_withholding_taxes_ids = [(6, 0, [arba_wth])]
-            self.env.ref('l10n_ar.product_product_telefonia').with_company(company.id).l10n_ar_supplier_withholding_taxes_ids = [(6, 0, [caba_wth, arba_wth])]
-        return result

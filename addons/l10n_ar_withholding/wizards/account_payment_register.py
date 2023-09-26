@@ -11,10 +11,10 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
     _name = 'account.payment.register.withholding'
     _description = 'Payment register withholding lines'
 
-    payment_register_id = fields.Many2one('account.payment.register', required=True, ondelete='cascade',)
+    payment_register_id = fields.Many2one('account.payment.register', required=True, ondelete='cascade')
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
     name = fields.Char(string='Number', required=False, default='/')
-    tax_id = fields.Many2one('account.tax', required=True,)
+    tax_id = fields.Many2one('account.tax', required=True)
     l10n_ar_withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
@@ -79,10 +79,10 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('line_ids', 'can_group_payments', 'group_payment')
     def _compute_withholdings(self):
-        supplier_recs = self.filtered(lambda x: x.partner_type == 'supplier' and (not x.can_group_payments or (x.can_group_payments and x.group_payment)))        
+        supplier_recs = self.filtered(lambda x: x.partner_type == 'supplier' and (not x.can_group_payments or (x.can_group_payments and x.group_payment)))
         for rec in supplier_recs:
             taxes = rec._get_withholding_tax()
-            rec.withholding_ids =[Command.clear()] + [Command.create({'tax_id': x.id}) for x in taxes]
+            rec.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id}) for x in taxes]
         (self - supplier_recs).withholding_ids = False
 
     @api.depends('withholding_ids.amount', 'amount', 'l10n_latam_check_id')
@@ -133,7 +133,7 @@ class AccountPaymentRegister(models.TransientModel):
                 if line.tax_id.l10n_ar_withholding_sequence_id:
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
-                    raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
+                    raise UserError(_('Please enter withholding number for tax %s') % line.tax_id.name)
             dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
             balance = self.company_currency_id.round(line.amount * conversion_rate)
             payment_vals['write_off_line_vals'].append({

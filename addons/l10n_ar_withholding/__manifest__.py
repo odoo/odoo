@@ -3,20 +3,13 @@
 {
     'name': 'Argentina - Payment Withholdings',
     'version': "1.0",
-    'description': """
-Functional
-----------
-
-
-Technical
----------
-""",
+    'description': """Allows to register withholdings during the payment of an invoice.""",
     'author': 'ADHOC SA',
     'category': 'Accounting/Localizations',
     'depends': [
         'account',
-        'l10n_ar',  # ONLY FOR CHART TEMPLATE
-        'l10n_latam_check',  # ONLY FOR CHART TEMPLATE
+        'l10n_ar',
+        'l10n_latam_check',
     ],
     'data': [
         'views/account_tax_views.xml',
