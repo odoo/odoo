@@ -692,9 +692,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         def create_foreign_tax_account(existing_account, additional_label):
             new_code = self.env['account.account']._search_new_account_code(
+                existing_account.code,
                 existing_account.company_id,
-                len(existing_account.code),
-                existing_account.code[:-2]
             )
             return self.env['account.account'].create({
                 'name': f"{existing_account.name} - {additional_label}",

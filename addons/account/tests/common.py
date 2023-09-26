@@ -42,7 +42,7 @@ class AccountTestInvoicingCommon(TransactionCase):
             if account.search_count([('company_id', '=', account.company_id.id), ('code', '=', new_code)]):
                 suffix_nb += 1
             else:
-                return account.copy(default={**(default or {}), 'code': new_code})
+                return account.copy(default={**(default or {}), 'code': new_code, 'name': account.name})
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):

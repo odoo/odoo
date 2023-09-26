@@ -7,7 +7,6 @@ from odoo.tools import mute_logger
 import psycopg2
 from freezegun import freeze_time
 
-
 @tagged('post_install', '-at_install')
 class TestAccountAccount(AccountTestInvoicingCommon):
 
@@ -177,9 +176,8 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         existing_account = self.env['account.account'].search([], limit=1)
         # account_type should be computed
         new_account_code = self.env['account.account']._search_new_account_code(
-            company=existing_account.company_id,
-            digits=len(existing_account.code),
-            prefix=existing_account.code[:-1])
+            start_code=existing_account.code,
+            company=existing_account.company_id)
         new_account = self.env['account.account'].create({
             'code': new_account_code,
             'name': 'A new account'
@@ -188,11 +186,34 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         # account_type should not be altered
         alternate_account = self.env['account.account'].search([('account_type', '!=', existing_account.account_type)], limit=1)
         alternate_code = self.env['account.account']._search_new_account_code(
-            company=alternate_account.company_id,
-            digits=len(alternate_account.code),
-            prefix=alternate_account.code[:-1])
+            start_code=alternate_account.code,
+            company=alternate_account.company_id)
         new_account.code = alternate_code
         self.assertEqual(new_account.account_type, existing_account.account_type)
+
+    def test_search_new_account_code(self):
+        """ Test whether the account codes tested for availability are the ones we expect. """
+        # pylint: disable=bad-whitespace
+        tests = [
+            # start_code  Expected tested codes
+            ('102100',    ['102101', '102102', '102103', '102104']),
+            ('1598',      ['1599', '1600', '1601', '1602']),
+            ('10.01.08',  ['10.01.09', '10.01.10', '10.01.11', '10.01.12']),
+            ('10.01.97',  ['10.01.98', '10.01.99', '10.01.97.copy', '10.01.97.copy2']),
+            ('1021A',     ['1022A', '1023A', '1024A', '1025A']),
+            ('hello',     ['hello.copy', 'hello.copy2', 'hello.copy3', 'hello.copy4']),
+            ('9998',      ['9999', '9998.copy', '9998.copy2', '9998.copy3']),
+        ]
+        for start_code, expected_tested_codes in tests:
+            start_account = self.env['account.account'].create({
+                'code': start_code,
+                'name': 'Test',
+                'company_id': self.company_data['company'].id,
+                'account_type': 'asset_receivable',
+            })
+            tested_codes = [start_account.copy().code for _ in expected_tested_codes]
+
+            self.assertListEqual(tested_codes, expected_tested_codes)
 
     def test_compute_current_balance(self):
         """ Test if an account's current_balance is computed correctly """

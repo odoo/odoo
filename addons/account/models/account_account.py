@@ -10,6 +10,7 @@ import re
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
+ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
 
 class AccountAccount(models.Model):
     _name = "account.account"
@@ -359,14 +360,58 @@ class AccountAccount(models.Model):
             record.used = record.id in ids
 
     @api.model
-    def _search_new_account_code(self, company, digits, prefix, cache=None):
-        for num in range(1, 10000):
-            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
-            if new_code in (cache or []):
-                continue
-            rec = self.search([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
-            if not rec:
+    def _search_new_account_code(self, start_code, company, cache=None):
+        """ Get an available account code by starting from an existing code
+            and incrementing it until an available code is found.
+
+            Examples:
+                |  start_code  |  codes checked for availability                            |
+                +--------------+------------------------------------------------------------+
+                |    102100    |  102101, 102102, 102103, 102104, ...                       |
+                |     1598     |  1599, 1600, 1601, 1602, ...                               |
+                |   10.01.08   |  10.01.09, 10.01.10, 10.01.11, 10.01.12, ...               |
+                |   10.01.97   |  10.01.98, 10.01.99, 10.01.97.copy2, 10.01.97.copy3, ...   |
+                |    1021A     |  1021A, 1022A, 1023A, 1024A, ...                           |
+                |    hello     |  hello.copy, hello.copy2, hello.copy3, hello.copy4, ...    |
+                |     9998     |  9999, 9998.copy, 9998.copy2, 9998.copy3, ...              |
+
+            :param start_code str: the code to increment until an available one is found
+            :param res.company company: the company for which to find an available account code
+            :param set[str] cache: a set of codes which you know are already used
+                                    (optional, to speed up the method).
+                                    If none is given, the method will use cache = {start_code}.
+                                    i.e. the method will return the first available code
+                                    *strictly* greater than start_code.
+                                    If you want the method to start at start_code, you should
+                                    explicitly pass cache={}.
+
+            :return str: an available new account code for `company`.
+                         It will normally have length `len(start_code)`.
+                         If incrementing the last digits starting from `start_code` does
+                         not work, the method will try as a fallback
+                         '{start_code}.copy', '{start_code}.copy2', ... '{start_code}.copy99'.
+        """
+        if cache is None:
+            cache = {start_code}
+
+        def code_is_available(new_code):
+            return new_code not in cache and not self.search_count([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
+
+        if code_is_available(start_code):
+            return start_code
+
+        start_str, digits_str, end_str = ACCOUNT_CODE_NUMBER_REGEX.match(start_code).groups()
+
+        if digits_str != '':
+            d, n = len(digits_str), int(digits_str)
+            for num in range(n+1, 10**d):
+                if code_is_available(new_code := f'{start_str}{num:0{d}}{end_str}'):
+                    return new_code
+
+        for num in range(99):
+            if code_is_available(new_code := f'{start_code}.copy{num and num + 1 or ""}'):
                 return new_code
+
         raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_current_balance(self):
@@ -625,20 +670,12 @@ class AccountAccount(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        if default.get('code', False):
-            return super(AccountAccount, self).copy(default)
-        try:
-            default['code'] = (str(int(self.code) + 10) or '').zfill(len(self.code))
-            default.setdefault('name', _("%s (copy)", self.name or ''))
-            while self.env['account.account'].search([
-                *self.env['account.account']._check_company_domain(default.get('company_id', False) or self.company_id),
-                ('code', '=', default['code']),
-            ], limit=1):
-                default['code'] = (str(int(default['code']) + 10) or '')
-                default['name'] = _("%s (copy)", self.name or '')
-        except ValueError:
-            default['code'] = _("%s.copy", self.code or '')
-            default['name'] = self.name
+        if 'code' not in default:
+            company = default.get('company_id', self.company_id)
+            company = company if isinstance(company, models.BaseModel) else self.env['res.company'].browse(company)
+            default['code'] = self._search_new_account_code(self.code, company)
+        if 'name' not in default:
+            default['name'] = _("%s (copy)", self.name or '')
         return super(AccountAccount, self).copy(default)
 
     def copy_translations(self, new, excluded=()):
@@ -733,7 +770,9 @@ class AccountAccount(models.Model):
             if 'prefix' in vals:
                 company = self.env['res.company'].browse(vals.get('company_id')) or self.env.company
                 cache = cache_map[company.id]
-                vals['code'] = self._search_new_account_code(company, vals.pop('code_digits'), vals.pop('prefix'), cache)
+                prefix, digits = vals.pop('prefix'), vals.pop('code_digits')
+                start_code = prefix.ljust(digits-1, '0') + '1' if len(prefix) < digits else prefix
+                vals['code'] = self._search_new_account_code(start_code, company, cache)
                 cache.append(vals['code'])
         return super().create(vals_list)
 
