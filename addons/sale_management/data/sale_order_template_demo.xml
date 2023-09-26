@@ -6,14 +6,14 @@
         </record>
 
         <record id="sale_order_template_1" model="sale.order.template">
-            <field name="name">4 Person Desk</field>
+            <field name="name">Large Meeting Table</field>
             <field name="number_of_days">45</field>
         </record>
 
         <record id="sale_order_template_line_1" model="sale.order.template.line">
             <field name="sale_order_template_id" ref="sale_order_template_1"/>
-            <field name="name">4 Person Desk</field>
-            <field name="product_id" ref="product.consu_delivery_03"/>
+            <field name="name">Large Meeting Table</field>
+            <field name="product_id" ref="product.consu_delivery_02"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
         </record>

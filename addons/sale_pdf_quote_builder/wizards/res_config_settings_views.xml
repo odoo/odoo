@@ -12,12 +12,14 @@
                          help="Make your quote attractive by adding header pages, product descriptions and footer pages to your quote."
                          company_dependent="1">
                     <div class="mt16">
+                        <field name="sale_header_name" invisible="1"/>
                         <label for="sale_header" class="me-2"/>
-                        <field name="sale_header" options="{'accepted_file_extensions': '.pdf'}"/>
+                        <field name="sale_header" filename="sale_header_name" options="{'accepted_file_extensions': '.pdf'}"/>
                     </div>
                     <div class="mt16">
+                        <field name="sale_footer_name" invisible="1"/>
                         <label for="sale_footer" class="me-2"/>
-                        <field name="sale_footer" options="{'accepted_file_extensions': '.pdf'}"/>
+                        <field name="sale_footer" filename="sale_footer_name" options="{'accepted_file_extensions': '.pdf'}"/>
                     </div>
                 </setting>
             </setting>

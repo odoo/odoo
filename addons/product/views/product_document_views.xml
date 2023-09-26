@@ -92,7 +92,7 @@
         <field name="name">product.document.list</field>
         <field name="model">product.document</field>
         <field name="arch" type="xml">
-            <tree multi_edit="true">
+            <tree editable="top" multi_edit="true">
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>

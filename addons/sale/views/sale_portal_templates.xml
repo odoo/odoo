@@ -136,11 +136,8 @@
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                                 </a>
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                                    <div class="btn-group flex-grow-1 me-1 mb-1">
-                                        <a class="btn btn-secondary o_download_btn" t-att-href="sale_order.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
-                                    </div>
                                     <div class="btn-group flex-grow-1 mb-1">
-                                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
                                     </div>
                                 </div>
                             </li>
