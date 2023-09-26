@@ -127,7 +127,7 @@ class AccountMove(models.Model):
         """
         it_tax_report_vj_lines = self.env['account.report.line'].search([
             ('report_id.country_id.code', '=', 'IT'),
-            ('code', 'like', 'VJ%'),
+            ('code', '=like', 'VJ%'),
         ])
         vj_lines_tags = it_tax_report_vj_lines.expression_ids._get_matching_tags()
         for move in self:

@@ -156,7 +156,7 @@ class StockWarehouse(models.Model):
 
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
-        count = self.env['ir.sequence'].search_count([('prefix', 'like', self.code + '/SBC%/%')])
+        count = self.env['ir.sequence'].search_count([('prefix', '=like', self.code + '/SBC%/%')])
         values.update({
             'subcontracting_type_id': {
                 'name': self.name + ' ' + _('Sequence subcontracting'),

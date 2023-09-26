@@ -372,7 +372,7 @@ class PaymentTransaction(models.Model):
             # query wouldn't help either as the selector is arbitrary and doing that would be an
             # open-door to SQL injections.
             same_prefix_references = self.sudo().search(
-                [('reference', 'like', f'{prefix}{separator}%')]
+                [('reference', '=like', f'{prefix}{separator}%')]
             ).with_context(prefetch_fields=False).mapped('reference')
 
             # A final regex search is necessary to figure out the next sequence number. The previous

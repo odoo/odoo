@@ -137,7 +137,7 @@ class AccountReport(models.Model):
             # as their sections
             if report.root_report_id:
                 report[field_name] = report.root_report_id[field_name]
-            elif len(report.section_main_report_ids) == 1 and not self.env['ir.actions.client'].search_count([('context', 'ilike', f"%'report_id': {report.id}"), ('tag', '=', 'account_report')]):
+            elif len(report.section_main_report_ids) == 1 and not self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')]):
                 report[field_name] = report.section_main_report_ids[field_name]
             else:
                 report[field_name] = default_value

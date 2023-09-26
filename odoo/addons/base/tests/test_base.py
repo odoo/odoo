@@ -127,15 +127,15 @@ class TestGroups(TransactionCase):
     def test_res_groups_fullname_search(self):
         all_groups = self.env['res.groups'].search([])
 
-        groups = all_groups.search([('full_name', 'like', '%Sale%')])
+        groups = all_groups.search([('full_name', 'like', 'Sale')])
         self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Sale' in g.full_name],
                               "did not match search for 'Sale'")
 
-        groups = all_groups.search([('full_name', 'like', '%Technical%')])
+        groups = all_groups.search([('full_name', 'like', 'Technical')])
         self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Technical' in g.full_name],
                               "did not match search for 'Technical'")
 
-        groups = all_groups.search([('full_name', 'like', '%Sales /%')])
+        groups = all_groups.search([('full_name', 'like', 'Sales /')])
         self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Sales /' in g.full_name],
                               "did not match search for 'Sales /'")
 

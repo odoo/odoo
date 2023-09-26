@@ -601,7 +601,7 @@ class AccountJournal(models.Model):
         journal_code_base = prefix_map.get(journal_type)
         existing_codes = set(self.env['account.journal'].with_context(active_test=False).search([
             *self.env['account.journal']._check_company_domain(company),
-            ('code', 'like', journal_code_base + '%'),
+            ('code', '=like', journal_code_base + '%'),
         ]).mapped('code') + (cache or []))
 
         for num in range(1, 100):
