@@ -72,3 +72,22 @@ class TestProductBarcode(TransactionCase):
         self.assertEqual(package.barcode, '1234')
         product.packaging_ids = False
         product.barcode = '1234'
+
+    def test_delete_product_and_reuse_barcode(self):
+        """ Test that the barcode of the package can be used when the package is removed from the product."""
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'packaging_ids': [(0, 0, {
+                'name': 'packing',
+                'barcode': '1234',
+            })]
+        })
+        product.unlink()
+
+        self.env['product.product'].create({
+            'name': 'product2',
+            'packaging_ids': [(0, 0, {
+                'name': 'packing2',
+                'barcode': '1234',
+            })]
+        })

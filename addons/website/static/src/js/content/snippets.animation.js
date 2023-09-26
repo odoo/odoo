@@ -996,6 +996,9 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
+        if (this.$target[0].pathname !== window.location.pathname) {
+            return;
+        }
         var hash = this.$target[0].hash;
         if (hash === '#top' || hash === '#bottom') {
             // If the anchor targets #top or #bottom, directly call the
