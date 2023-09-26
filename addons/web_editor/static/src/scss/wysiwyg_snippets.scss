@@ -1268,21 +1268,11 @@
 
         // Color Pickers
         .o_we_so_color_palette.o_we_user_value_widget {
-            &:first-of-type {
-                margin-right: $o-we-sidebar-content-field-multi-spacing * 4;
-            }
-
-            + .o_we_so_color_palette {
-                // Countering the margin of the first colorpicker and targeting
-                // the div to avoid misalignment of we-title (theme tab)
-                &:nth-of-type(2) {
-                    > div {
-                        margin-left: -$o-we-sidebar-content-field-multi-spacing * 4;
-                    }
-                    we-title + div {
-                        margin-left: 0;
-                    }
-                }
+            // Add a margin between color pickers and button groups / widgets
+            // when next to another without impacting the margin of sibling
+            // color pickers
+            + .o_we_user_value_widget:not(.o_we_so_color_palette) {
+                margin-left: $o-we-sidebar-content-field-multi-spacing * 4 !important;
             }
 
             .o_we_color_preview {
@@ -1305,7 +1295,9 @@
                 .o_we_color_preview {
                     border: 2px solid $o-we-accent;
                 }
-                .o_we_dropdown_caret {
+
+                // "span" added to make the selector more specific
+                span.o_we_dropdown_caret {
                     &::before, &::after {
                         right: $o-we-sidebar-content-field-colorpicker-size / 2;
                     }
