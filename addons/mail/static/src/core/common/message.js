@@ -34,6 +34,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
+import { cookie } from "@web/core/browser/cookie";
 
 /**
  * @typedef {Object} Props
@@ -152,8 +153,7 @@ export class Message extends Component {
                 const body = document.createElement("span");
                 body.innerHTML = this.message.body;
                 this.insertReadMoreLess($(body));
-                const color =
-                    this.env.services.cookie?.current.color_scheme === "dark" ? "white" : "black";
+                const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 this.shadowStyle = document.createElement("style");
                 this.shadowStyle.innerHTML = `
                     * {

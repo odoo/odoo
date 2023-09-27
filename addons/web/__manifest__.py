@@ -67,7 +67,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/name_and_signature.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
-            'web/static/src/legacy/js/core/cookie_utils.js',
 
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
@@ -160,7 +159,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
-            'web/static/src/legacy/js/core/cookie_utils.js',
+            'web/static/src/core/browser/cookie.js',
             'web/static/src/legacy/js/public/lazyloader.js',
         ],
         'web.assets_frontend': [
@@ -276,7 +275,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/legacy/js/promise_extension.js'),
             ('remove', 'web/static/src/module_loader.js'),
             ('remove', 'web/static/src/session.js'),
-            ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
+            ('remove', 'web/static/src/core/browser/cookie.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
         # Optional Bundle for PDFJS lib

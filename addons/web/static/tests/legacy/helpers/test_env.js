@@ -33,7 +33,6 @@
             bus: env.bus || new Bus(),
             debug: env.debug || false,
             services: {
-                getCookie() {},
                 httpRequest(/* route, params = {}, readMethod = 'json' */) {
                     return Promise.resolve('');
                 },
