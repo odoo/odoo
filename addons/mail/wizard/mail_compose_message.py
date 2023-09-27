@@ -722,8 +722,10 @@ class MailComposer(models.TransientModel):
         }
 
     def create_mail_template(self):
-        """ creates a mail template with the information form the current mail composer """
+        """ creates a mail template with the current mail composer's fields """
         self.ensure_one()
+        if not self.model or not self.model in self.env:
+            raise UserError(_('Template creation from composer requires a valid model.'))
         model_id = self.env['ir.model']._get_id(self.model)
         values = {
             'name': self.subject,
