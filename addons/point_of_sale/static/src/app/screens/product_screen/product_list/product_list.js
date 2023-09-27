@@ -3,7 +3,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
@@ -153,11 +152,7 @@ export class ProductsWidget extends Component {
             this.updateProductList();
             return ProductIds;
         } catch (error) {
-            const identifiedError = identifyError(error);
-            if (
-                identifiedError instanceof ConnectionLostError ||
-                identifiedError instanceof ConnectionAbortedError
-            ) {
+            if (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError) {
                 return this.popup.add(OfflineErrorPopup, {
                     title: _t("Network Error"),
                     body: _t(
