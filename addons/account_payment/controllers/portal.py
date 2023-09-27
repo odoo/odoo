@@ -43,9 +43,21 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             partner_sudo, invoice_company
         )
 
+<<<<<<< HEAD
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
+||||||| parent of 1699372dff6 (temp)
+        fees_by_provider = {
+            pro_sudo: pro_sudo._compute_fees(
+                invoice.amount_total, invoice.currency_id, invoice.partner_id.country_id
+            ) for pro_sudo in providers_sudo.filtered('fees_active')
+=======
+        fees_by_provider = {
+            pro_sudo: pro_sudo._compute_fees(
+                invoice.amount_residual, invoice.currency_id, invoice.partner_id.country_id
+            ) for pro_sudo in providers_sudo.filtered('fees_active')
+>>>>>>> 1699372dff6 (temp)
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
