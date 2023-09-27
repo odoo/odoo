@@ -121,12 +121,15 @@ const DynamicSnippet = publicWidget.Widget.extend({
             const filterFragments = await rpc(
                 '/website/snippet/filters',
                 Object.assign({
-                    'filter_id': parseInt(nodeData.filterId),
-                    'template_key': nodeData.templateKey,
-                    'limit': parseInt(nodeData.numberOfRecords),
-                    'search_domain': this._getSearchDomain(),
-                    'with_sample': this.editableMode,
-                }, this._getRpcParameters())
+                        'filter_id': parseInt(nodeData.filterId),
+                        'template_key': nodeData.templateKey,
+                        'limit': parseInt(nodeData.numberOfRecords),
+                        'search_domain': this._getSearchDomain(),
+                        'with_sample': this.editableMode,
+                    },
+                    this._getRpcParameters(),
+                    JSON.parse(this.el.dataset?.customTemplateData || "{}")
+                )
             );
             this.data = filterFragments.map(markup);
         } else {
