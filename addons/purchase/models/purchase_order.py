@@ -877,7 +877,7 @@ class PurchaseOrder(models.Model):
         )
         if seller:
             product_infos.update(
-                price=seller.price,
+                price=seller.price_discounted,
                 min_qty=seller.min_qty,
             )
         # Check if the product uses some packaging.
@@ -990,8 +990,8 @@ class PurchaseOrder(models.Model):
                 uom_id=pol.product_uom)
             if seller:
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = seller.price
-        return pol.price_unit
+                pol.price_unit = seller.price_discounted
+        return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):
         note = Markup('<p>%s</p>\n') % _('%s modified receipt dates for the following products:', self.partner_id.name)
