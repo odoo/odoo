@@ -14,9 +14,15 @@ class ImportController(http.Controller):
     # pylint: disable=redefined-builtin
     def set_file(self, id):
         file = request.httprequest.files.getlist('ufile')[0]
+        file_data = file.read()
+        if(len(file_data) > request.env['ir.http'].session_info()['max_file_upload_size']):
+            return json.dumps({
+                'import_size_exceeded': True,
+                'result': False,
+            })
 
         written = request.env['base_import.import'].browse(int(id)).write({
-            'file': file.read(),
+            'file': file_data,
             'file_name': file.filename,
             'file_type': file.content_type,
         })

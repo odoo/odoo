@@ -121,7 +121,13 @@ export class ImportAction extends Component {
     // File
     //--------------------------------------------------------------------------
 
-    async handleFilesUpload(files) {
+    async handleFilesUpload(data, files) {
+        if (data.import_size_exceeded) {
+            return this.notification.add(
+                this.env._t("This file is too large to be imported."),
+                { type: "danger" }
+            );
+        }
         if (!files || files.length <= 0) {
             return;
         }

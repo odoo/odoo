@@ -11,7 +11,7 @@
                     </t>
                     <FileInput
                         acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
-                        onUpload.bind="(data, files) => this.handleFilesUpload(files)"
+                        onUpload.bind="(data, files) => this.handleFilesUpload(data, files)"
                         resId="model.id"
                         resModel="this.resModel"
                         route="'/base_import/set_file'"
