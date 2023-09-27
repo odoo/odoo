@@ -8,12 +8,7 @@ import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_trac
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { _t } from "@web/core/l10n/translation";
 
-export function identifyError(error) {
-    return error && error.legacy ? error.message : error;
-}
-
 function rpcErrorHandler(env, error, originalError) {
-    error = identifyError(originalError);
     if (error instanceof RPCError) {
         const { message, data } = error;
         if (odooExceptionTitleMap.has(error.exceptionName)) {
@@ -31,7 +26,6 @@ function rpcErrorHandler(env, error, originalError) {
 registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
 
 function offlineErrorHandler(env, error, originalError) {
-    error = identifyError(originalError);
     if (error instanceof ConnectionLostError) {
         env.services.popup.add(OfflineErrorPopup);
         return true;
@@ -40,7 +34,6 @@ function offlineErrorHandler(env, error, originalError) {
 registry.category("error_handlers").add("offlineErrorHandler", offlineErrorHandler);
 
 function defaultErrorHandler(env, error, originalError) {
-    originalError = identifyError(originalError);
     if (error instanceof Error) {
         env.services.popup.add(ErrorTracebackPopup, {
             title: `${originalError.name}: ${originalError.message}`,

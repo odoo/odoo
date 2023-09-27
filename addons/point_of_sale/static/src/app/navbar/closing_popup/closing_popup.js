@@ -8,7 +8,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useState } from "@odoo/owl";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
-import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -207,7 +206,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             }
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         } catch (error) {
-            if (identifyError(error) instanceof ConnectionLostError) {
+            if (error instanceof ConnectionLostError) {
                 // Cannot redirect to backend when offline, let error handlers show the offline popup
                 // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
                 // although it's impossible to close again because this.closeSessionClicked isn't reset to false
