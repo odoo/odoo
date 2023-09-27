@@ -32,10 +32,6 @@ class ResConfigSettings(models.TransientModel):
             ], limit=1)
             config.l10n_it_edi_demo_mode = edi_user.edi_mode
 
-    def _set_l10n_it_edi_demo_mode(self):
-        for config in self:
-            self.env['ir.config_parameter'].set_param('account_edi_proxy_client.demo', config.l10n_it_edi_demo_mode)
-
     @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
     def _compute_is_edi_proxy_active(self):
         for config in self:
@@ -65,13 +61,14 @@ class ResConfigSettings(models.TransientModel):
             ], limit=1)
 
             real_proxy_users = self.env['account_edi_proxy_client.user'].sudo().search([
+                ('company_id', '=', config.company_id.id),
                 ('id_client', 'not like', 'demo'),
             ])
 
             # Update the config as per the selected radio button
             previous_demo_state = proxy_user.edi_mode
             edi_mode = config.l10n_it_edi_demo_mode
-            self.env['ir.config_parameter'].set_param('account_edi_proxy_client.demo', edi_mode)
+
             # If the user is trying to change from a state in which they have a registered official or testing proxy client
             # to another state, we should stop them
             if real_proxy_users and previous_demo_state != edi_mode:
@@ -86,5 +83,8 @@ class ResConfigSettings(models.TransientModel):
                 # If there is a demo user, and we are transitioning from demo to test or production, we should
                 # delete all demo users and then create the new user.
                 elif proxy_user.id_client[:4] == 'demo' and edi_mode != 'demo':
-                    self.env['account_edi_proxy_client.user'].search([('id_client', '=like', 'demo%')]).sudo().unlink()
+                    self.env['account_edi_proxy_client.user'].search([
+                        ('company_id', '=', config.company_id.id),
+                        ('id_client', '=like', 'demo%'),
+                    ]).sudo().unlink()
                     self._create_proxy_user(config.company_id, edi_mode)
