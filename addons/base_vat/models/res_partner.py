@@ -47,7 +47,7 @@ _ref_vat = {
     'fr': 'FR23334175221',
     'gb': 'GB123456782 or XI123456782',
     'gr': 'GR12345670',
-    'hu': 'HU12345676',
+    'hu': 'HU12345676 or 12345678-1-11',
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
     'in': "12AAAAA1234AAZA",
@@ -295,6 +295,19 @@ class ResPartner(models.Model):
         if len(number) == 10 and self.__check_vat_al_re.match(number):
             return True
         return False
+
+    __check_vat_hu_re = re.compile(r'^\d{8}-\d-\d{2}$')
+    def check_vat_hu(self, vat):
+        """
+            Check Hungary VAT number
+        """
+        match = self.__check_vat_hu_re.match(vat)
+        if match:
+            return True
+        elif len(vat) == 10 and vat[:2] == 'HU':
+            return True
+        else:
+            return False
 
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
