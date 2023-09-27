@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-  <t t-name="website_slides.CategoryAddDialog" t-inherit="web.ConfirmationDialog" owl="1">
+  <t t-name="website_slides.CategoryAddDialog" t-inherit="web.ConfirmationDialog">
     <xpath expr="//p[hasclass('text-prewrap')]" position="replace">
         <div>
             <form t-on-submit.prevent="_confirm" action="/slides/category/add" method="POST" id="slide_category_add_form">

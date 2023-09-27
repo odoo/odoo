@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-  <t t-name="website_slides.SlideUnsubscribeDialog" owl="1">
+  <t t-name="website_slides.SlideUnsubscribeDialog">
     <Dialog size="'md'" title="state.title">
       <div>
         <t t-if="state.mode === 'subscription'">
@@ -19,7 +19,7 @@
         </t>
       </div>
 
-      <t t-set-slot="footer" owl="1">
+      <t t-set-slot="footer">
         <t t-if="state.mode === 'subscription'">
             <button class="btn btn-primary" t-att-disabled="state.buttonDisabled" t-on-click="() => this.onClickSubscriptionSubmit()">Save</button>
             <button class="btn" t-att-disabled="state.buttonDisabled" t-on-click="() => this.props.close()">Discard</button>

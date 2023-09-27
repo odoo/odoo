@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="point_of_sale.input" owl="1">
+    <t t-name="point_of_sale.input">
         <div t-attf-class="{{props.class}} d-flex align-items-center">
             <button t-if="props.isSmall" 
                 class="p-3 rounded" 
@@ -25,7 +25,7 @@
             </div>
         </div>
     </t>
-    <t t-name="point_of_sale.inputIcon" owl="1">
+    <t t-name="point_of_sale.inputIcon">
         <i t-if="props.icon.type === 'fa'" t-attf-class="fa {{props.icon.value}} {{margin}}"/>
         <span t-if="props.icon.type === 'string'" t-attf-class="{{margin}}" t-esc="props.icon.value"/>
     </t>
