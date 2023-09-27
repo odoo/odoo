@@ -648,6 +648,61 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         po_line.write({'product_qty': 4})
         self.assertEqual(40.0, po_line.price_unit, "Unit price should be set to 40.0 for 4 quantity")
 
+    def test_supplier_discounted_price(self):
+        """ Check the lower price (discount included) is used.
+        """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        supplierinfo_common_vals = {
+            'partner_id': self.partner_a.id,
+            'product_id': self.product_order.id,
+            'product_tmpl_id': self.product_order.product_tmpl_id.id,
+        }
+        supplierinfo = self.env['product.supplierinfo'].create([
+            {
+                **supplierinfo_common_vals,
+                'price': 100.0,
+                'discount': 0,  # Real price by unit: 100.00
+            }, {
+                **supplierinfo_common_vals,
+                'price': 120.0,
+                'discount': 20,  # Real price by unit: 96.00
+            }, {
+                **supplierinfo_common_vals,
+                'min_qty': 10,
+                'price': 140.0,
+                'discount': 50,  # Real price by unit: 70.00
+            },
+        ])
+        self.assertRecordValues(supplierinfo, [
+            {'price_discounted': 100},
+            {'price_discounted': 96},
+            {'price_discounted': 70},
+        ])
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.product_id = self.product_order
+            po_line_form.product_qty = 1
+        po = po_form.save()
+        po_line = po.order_line[0]
+        self.assertEqual(120.0, po_line.price_unit)
+        self.assertEqual(20, po_line.discount)
+        self.assertEqual(96.0, po_line.price_unit_discounted)
+        self.assertEqual(96.0, po_line.price_subtotal)
+
+        # Increase the PO line quantity: it should take another price if min. qty. is reached.
+        po_form = Form(po)
+        with po_form.order_line.edit(0) as po_line_form:
+            po_line_form.product_uom = uom_dozen
+            po_line_form.product_qty = 3
+        po = po_form.save()
+        po_line = po.order_line[0]
+
+        self.assertEqual(1680.0, po_line.price_unit, "140.0 * 12 = 1680.0")
+        self.assertEqual(50, po_line.discount)
+        self.assertEqual(840.0, po_line.price_unit_discounted, "1680.0 * 0.5 = 840.0")
+        self.assertEqual(2520.0, po_line.price_subtotal, "840.0 * 3 = 2520.0")
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):

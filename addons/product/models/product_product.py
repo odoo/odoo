@@ -3,6 +3,7 @@
 
 import re
 from collections import defaultdict
+from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -676,13 +677,18 @@ class ProductProduct(models.Model):
             sellers |= seller
         return sellers
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price', params=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
+        # Always sort by discounted price but another field can take the primacy through the `ordered_by` param.
+        sort_key = itemgetter('price_discounted', 'sequence', 'id')
+        if ordered_by != 'price_discounted':
+            sort_key = itemgetter(ordered_by, 'price_discounted', 'sequence', 'id')
+
         sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
         res = self.env['product.supplierinfo']
         for seller in sellers:
             if not res or res.partner_id == seller.partner_id:
                 res |= seller
-        return res and res.sorted(ordered_by)[:1]
+        return res and res.sorted(sort_key)[:1]
 
     def _get_product_price_context(self, combination):
         self.ensure_one()
