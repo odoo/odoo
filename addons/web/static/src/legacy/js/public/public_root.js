@@ -327,10 +327,6 @@ export async function createPublicRoot(RootWidget) {
     // add a bunch of mapping services that will redirect service calls from the legacy env
     // to the wowl env
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
-    for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
-        serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
-    }
     await whenReady();
     const wowlEnv = makeEnv();
 

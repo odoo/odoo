@@ -126,7 +126,6 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/views/fields/file_handler.*',
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
-            ('remove', 'bus/static/src/services/legacy/**/*'),
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
 
