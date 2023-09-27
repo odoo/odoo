@@ -7,8 +7,11 @@ import {
     many2OneAvatarUserField,
     kanbanMany2OneAvatarUserField,
 } from "@mail/views/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
+import { EmployeeFieldRelationMixin } from "@hr/views/fields/employee_field_relation_mixin";
 
-export class Many2OneAvatarEmployeeField extends Many2OneAvatarUserField { }
+export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
+    Many2OneAvatarUserField
+) {}
 
 export const many2OneAvatarEmployeeField = {
     ...many2OneAvatarUserField,
@@ -26,7 +29,9 @@ export const many2OneAvatarEmployeeField = {
 
 registry.category("fields").add("many2one_avatar_employee", many2OneAvatarEmployeeField);
 
-export class KanbanMany2OneAvatarEmployeeField extends KanbanMany2OneAvatarUserField { }
+export class KanbanMany2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
+    KanbanMany2OneAvatarUserField
+) {}
 
 export const kanbanMany2OneAvatarEmployeeField = {
     ...kanbanMany2OneAvatarUserField,
@@ -34,7 +39,7 @@ export const kanbanMany2OneAvatarEmployeeField = {
     extractProps: (fieldInfo, dynamicInfo) => ({
         ...kanbanMany2OneAvatarUserField.extractProps(fieldInfo, dynamicInfo),
         relation: fieldInfo.options?.relation,
-    })
+    }),
 };
 
 registry
