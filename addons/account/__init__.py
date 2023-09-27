@@ -37,7 +37,7 @@ def _auto_install_l10n(env):
 
 def _auto_install_avatax(env):
     """ Install the avatax module automatically if the company is in a country that uses avatax """
-    avatax_country_codes = ['US', 'BR']
+    avatax_country_codes = ['US', 'CA']
 
     country = env.company.country_id
     country_code = country.code
