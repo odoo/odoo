@@ -9,24 +9,27 @@ patch(Order.prototype, {
             return false;
         }
         try {
-            const opData = await orm.call("pos.order", "get_and_set_online_payments_data", [this.server_id, next_online_payment_amount]);
+            const opData = await orm.call("pos.order", "get_and_set_online_payments_data", [
+                this.server_id,
+                next_online_payment_amount,
+            ]);
             return this.process_online_payments_data_from_server(opData);
         } catch (ex) {
             console.error("update_online_payments_data_with_server failed: ", ex);
             return null;
         }
     },
-    async process_online_payments_data_from_server(opData) {
+    process_online_payments_data_from_server(opData) {
         if (!opData) {
             return false;
         }
         if (opData.id !== this.server_id) {
             console.error("Called process_online_payments_data_from_server on the wrong order.");
         }
-
         if ("paid_order" in opData) {
             opData.is_paid = true;
-            this.uiState.PaymentScreen?.onlinePaymentPopup?.setReceivedOrderServerOPData(opData);
+            // only one line will have the `online_payment_resolver` method
+            this.paymentlines.forEach((line) => line.onlinePaymentResolver?.());
             return opData;
         } else {
             opData.is_paid = false;
@@ -40,11 +43,15 @@ patch(Order.prototype, {
         let newDoneOnlinePayment = false;
 
         const opLinesToUpdate = this.paymentlines.filter(
-            (line) => line.payment_method.is_online_payment && ["waiting", "done"].includes(line.get_payment_status())
+            (line) =>
+                line.payment_method.is_online_payment &&
+                ["waiting", "done"].includes(line.get_payment_status())
         );
         for (const op of opData.online_payments) {
             const matchingLineIndex = opLinesToUpdate.findIndex(
-                (pl) => pl.payment_method.id === op.payment_method_id && floatIsZero(pl.amount - op.amount, this.pos.currency.decimal_places)
+                (pl) =>
+                    pl.payment_method.id === op.payment_method_id &&
+                    floatIsZero(pl.amount - op.amount, this.pos.currency.decimal_places)
             );
             let opLine = null;
             if (matchingLineIndex > -1) {
@@ -62,7 +69,7 @@ patch(Order.prototype, {
                     }
                 );
                 this.paymentlines.add(opLine);
-                opData['modified_payment_lines'] = true;
+                opData["modified_payment_lines"] = true;
             }
             opLine.set_amount(op.amount);
             opLine.can_be_reversed = false;
@@ -74,11 +81,12 @@ patch(Order.prototype, {
         for (const missingInServerLine of opLinesToUpdate) {
             if (missingInServerLine.get_payment_status() === "done") {
                 this.paymentlines.remove(missingInServerLine);
-                opData['modified_payment_lines'] = true;
+                opData["modified_payment_lines"] = true;
             }
         }
-        if (newDoneOnlinePayment || opData['modified_payment_lines']) {
-            this.uiState.PaymentScreen?.onlinePaymentPopup?.cancel();
+        if (newDoneOnlinePayment || opData["modified_payment_lines"]) {
+            // only one line will have the `online_payment_resolver` method
+            this.paymentlines.forEach((line) => line.onlinePaymentResolver?.());
         }
 
         return opData;

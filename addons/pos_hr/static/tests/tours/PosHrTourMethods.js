@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 
 export function clickLoginButton() {
@@ -46,12 +47,13 @@ export function cashierNameIs(name) {
     ];
 }
 export function login(name, pin) {
-    const res = clickLoginButton();
-    res.push(...SelectionPopup.clickItem(name));
-    if (pin) {
-        res.push(...NumberPopup.pressNumpad(pin.split("").join(" ")));
-        res.push(...NumberPopup.inputShownIs("••••"));
-        res.push(...NumberPopup.clickConfirm());
+    const res = [...clickLoginButton(), ...SelectionPopup.has(name, { run: "click" })];
+    if (!pin) {
+        return res;
     }
-    return res;
+    return res.concat([
+        ...NumberPopup.pressNumpad(pin.split("").join(" ")),
+        ...NumberPopup.isShown("••••"),
+        Dialog.confirm(),
+    ]);
 }

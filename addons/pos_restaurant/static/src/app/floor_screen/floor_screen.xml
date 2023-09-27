@@ -5,7 +5,7 @@
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-100 text-start overflow-hidden">
             <EditBar t-if="pos.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors"
                         floorMapScrollTop="state.floorMapScrollTop" isColorPicker="state.isColorPicker" toggleColorPicker.bind="toggleColorPicker"
-                        createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
+                        createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" rename.bind="rename"
                         changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare"
                         setTableColor.bind="setTableColor" setFloorColor.bind="setFloorColor" deleteFloorOrTable.bind="deleteFloorOrTable"
                         toggleEditMode.bind="toggleEditMode"

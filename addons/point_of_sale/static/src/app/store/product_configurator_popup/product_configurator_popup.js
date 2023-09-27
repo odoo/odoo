@@ -1,7 +1,6 @@
 /** @odoo-module */
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 
 export class BaseProductAttribute extends Component {
     setup() {
@@ -87,29 +86,24 @@ export class MultiProductAttribute extends BaseProductAttribute {
     }
 }
 
-export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
+export class ProductConfiguratorPopup extends Component {
     static template = "point_of_sale.ProductConfiguratorPopup";
     static components = {
         RadioProductAttribute,
         SelectProductAttribute,
         ColorProductAttribute,
         MultiProductAttribute,
+        Dialog,
     };
 
     setup() {
-        super.setup();
         useSubEnv({ attribute_components: [] });
-        this.state = useState({
-            quantity: this.props.quantity || 1,
-        });
-        this.ui = useService("ui");
     }
 
-    getPayload() {
+    computePayload() {
         const attribute_custom_values = [];
         let attribute_value_ids = [];
         var price_extra = 0.0;
-        const quantity = this.state.quantity;
 
         this.env.attribute_components.forEach((attribute_component) => {
             const { valueIds, extra, custom_value } = attribute_component.getValue();
@@ -128,7 +122,6 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
             attribute_value_ids,
             attribute_custom_values,
             price_extra,
-            quantity,
         };
     }
     get imageUrl() {
@@ -138,13 +131,8 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
     get unitPrice() {
         return this.env.utils.formatCurrency(this.props.product.lst_price);
     }
-    addOneQuantity() {
-        ++this.state.quantity;
-    }
-    removeOneQuantity() {
-        if (this.state.quantity == 1) {
-            return;
-        }
-        --this.state.quantity;
+    confirm() {
+        this.props.getPayload(this.computePayload());
+        this.props.close();
     }
 }

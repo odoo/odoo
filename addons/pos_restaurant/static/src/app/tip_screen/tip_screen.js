@@ -3,19 +3,18 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { registry } from "@web/core/registry";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 import { TipReceipt } from "@pos_restaurant/app/tip_receipt/tip_receipt";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
     setup() {
         this.pos = usePos();
         this.posReceiptContainer = useRef("pos-receipt-container");
-        this.popup = useService("popup");
         this.orm = useService("orm");
         this.printer = useService("printer");
         this.state = this.currentOrder.uiState.TipScreen;
@@ -51,7 +50,7 @@ export class TipScreen extends Component {
         const serverId = this.pos.validated_orders_name_server_id_map[order.name];
 
         if (!serverId) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
                     "This order is not yet synced to server. Make sure it is synced then try again."
@@ -67,7 +66,7 @@ export class TipScreen extends Component {
         }
 
         if (amount > 0.25 * this.totalAmount) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: "Are you sure?",
                 body: `${this.env.utils.formatCurrency(
                     amount

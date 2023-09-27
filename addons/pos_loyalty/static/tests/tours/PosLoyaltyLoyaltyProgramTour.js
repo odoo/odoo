@@ -2,6 +2,7 @@
 
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
@@ -9,7 +10,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             // Order1: Generates 2 points.
@@ -151,7 +152,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             // Generates 10.2 points and use points to get the reward product with zero sale price
@@ -175,9 +176,8 @@ registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
     url: "/pos/web",
     steps: () =>
         [
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.confirmOpeningPopup(),
-
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             ProductScreen.addOrderline("Test Product 1", "1.00", "100"),

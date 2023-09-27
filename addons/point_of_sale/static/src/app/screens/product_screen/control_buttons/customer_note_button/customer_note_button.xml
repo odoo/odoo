@@ -2,10 +2,9 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderlineCustomerNoteButton">
-        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.onClick()">
-            <i class="fa fa-sticky-note me-1" />
-            <span> </span>
-            <span>Customer Note</span>
+        <button class="control-button btn btn-light rounded-0 fw-bolder" t-att-disabled="!pos.get_order()?.get_selected_orderline()" t-on-click="onClick">
+            <i t-attf-class="{{this.props.icon}} me-1" />
+            <span t-esc="this.props.label"/>
         </button>
     </t>
 

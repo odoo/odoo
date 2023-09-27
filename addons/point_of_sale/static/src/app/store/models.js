@@ -16,14 +16,14 @@ import {
     roundPrecision as round_pr,
     floatIsZero,
 } from "@web/core/utils/numbers";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/store/product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
 import { omit } from "@web/core/utils/objects";
+import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const { DateTime } = luxon;
 
@@ -158,33 +158,28 @@ export class Product extends PosModel {
             const attributes = this.attribute_line_ids
                 .map((id) => this.pos.attributes_by_ptal_id[id])
                 .filter((attr) => attr !== undefined);
-            const { confirmed, payload } = await this.env.services.popup.add(
+            const payload = await makeAwaitable(
+                this.env.services.dialog,
                 ProductConfiguratorPopup,
                 {
                     product: this,
                     attributes: attributes,
-                    quantity: quantity,
                 }
             );
-
-            if (confirmed) {
-                attribute_value_ids = payload.attribute_value_ids;
-                attribute_custom_values = payload.attribute_custom_values;
-                price_extra += payload.price_extra;
-                quantity = payload.quantity;
-            } else {
+            if (!payload) {
                 return;
             }
+            attribute_value_ids = payload.attribute_value_ids;
+            attribute_custom_values = payload.attribute_custom_values;
+            price_extra += payload.price_extra;
         }
         if (this.combo_ids.length) {
-            const { confirmed, payload } = await this.env.services.popup.add(
-                ComboConfiguratorPopup,
-                { product: this }
-            );
-            if (!confirmed) {
+            comboLines = await makeAwaitable(this.env.services.dialog, ComboConfiguratorPopup, {
+                product: this,
+            });
+            if (!comboLines) {
                 return;
             }
-            comboLines = payload;
         }
         // Gather lot information if required.
         if (this.isTracked()) {
@@ -593,7 +588,7 @@ export class Orderline extends PosModel {
             const maxQtyToRefund =
                 toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
             if (quant > 0) {
-                this.env.services.popup.add(ErrorPopup, {
+                this.env.services.dialog.add(AlertDialog, {
                     title: _t("Positive quantity not allowed"),
                     body: _t(
                         "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
@@ -605,7 +600,7 @@ export class Orderline extends PosModel {
             } else if (-quant <= maxQtyToRefund) {
                 toRefundDetail.qty = -quant;
             } else {
-                this.env.services.popup.add(ErrorPopup, {
+                this.env.services.dialog.add(AlertDialog, {
                     title: _t("Greater than allowed"),
                     body: _t(
                         "The requested quantity to be refunded is higher than the refundable quantity of %s.",
@@ -1751,13 +1746,11 @@ export class Order extends PosModel {
             ) &&
             (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
         ) {
-            const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.env.services.dialog, {
                 title: _t("Some Serial/Lot Numbers are missing"),
                 body: _t(
                     "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
                 ),
-                confirmText: _t("Yes"),
-                cancelText: _t("No"),
             });
             if (confirmed) {
                 this.pos.mobile_pane = "right";
@@ -1986,7 +1979,7 @@ export class Order extends PosModel {
             this._isRefundOrder() &&
             (!options.quantity || options.quantity > 0)
         ) {
-            this.pos.env.services.popup.add(ErrorPopup, {
+            this.pos.dialog.add(AlertDialog, {
                 title: _t("Refund and Sales not allowed"),
                 body: _t("It is not allowed to mix refunds and sales"),
             });

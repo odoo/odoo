@@ -6,10 +6,9 @@ import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/utils
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { DatePickerPopup } from "@point_of_sale/app/utils/date_picker_popup/date_picker_popup";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
@@ -19,6 +18,7 @@ import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -32,7 +32,7 @@ export class PaymentScreen extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.orm = useService("orm");
-        this.popup = useService("popup");
+        this.dialog = useService("dialog");
         this.report = useService("report");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
@@ -77,7 +77,7 @@ export class PaymentScreen extends Component {
     }
 
     showMaxValueError() {
-        this.popup.add(ErrorPopup, {
+        this.dialog.add(AlertDialog, {
             title: _t("Maximum value reached"),
             body: _t(
                 "The amount cannot be higher than the due amount if you don't have a cash payment method configured."
@@ -126,7 +126,7 @@ export class PaymentScreen extends Component {
             this.numberBuffer.reset();
             return true;
         } else {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Error"),
                 body: _t("There is already an electronic payment in progress."),
             });
@@ -187,26 +187,25 @@ export class PaymentScreen extends Component {
         const change = this.currentOrder.get_change();
         const value = tip === 0 && change > 0 ? change : tip;
 
-        const { confirmed, payload } = await this.popup.add(NumberPopup, {
+        this.dialog.add(NumberPopup, {
             title: tip ? _t("Change Tip") : _t("Add Tip"),
             startingValue: value,
             isInputSelected: true,
             nbrDecimal: this.pos.currency.decimal_places,
             inputSuffix: this.pos.currency.symbol,
+            getPayload: (num) => {
+                this.currentOrder.set_tip(parseFloat(num));
+            },
         });
-
-        if (confirmed) {
-            this.currentOrder.set_tip(parseFloat(payload));
-        }
     }
     async toggleShippingDatePicker() {
         if (!this.currentOrder.getShippingDate()) {
-            const { confirmed, payload: shippingDate } = await this.popup.add(DatePickerPopup, {
+            this.dialog.add(DatePickerPopup, {
                 title: _t("Select the shipping date"),
+                getPayload: (shippingDate) => {
+                    this.currentOrder.setShippingDate(shippingDate);
+                },
             });
-            if (confirmed) {
-                this.currentOrder.setShippingDate(shippingDate);
-            }
         } else {
             this.currentOrder.setShippingDate(false);
         }
@@ -238,7 +237,7 @@ export class PaymentScreen extends Component {
         this.numberBuffer.capture();
         if (this.pos.config.cash_rounding) {
             if (!this.pos.get_order().check_paymentlines_rounding()) {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Rounding error in payment lines"),
                     body: _t(
                         "The amount of your payment lines must be rounded to validate the transaction."
@@ -320,7 +319,7 @@ export class PaymentScreen extends Component {
     async postPushOrderResolve(ordersServerId) {
         const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
         if (!postPushResult) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Error: no internet connection."),
                 body: _t("Some, if not all, post-processing after syncing order failed."),
             });
@@ -333,16 +332,16 @@ export class PaymentScreen extends Component {
 
         // Ask the user to sync the remaining unsynced orders.
         if (suggestToSync && this.pos.db.get_orders().length) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            this.dialog.add(ConfirmationDialog, {
                 title: _t("Remaining unsynced orders"),
                 body: _t("There are unsynced orders. Do you want to sync these orders?"),
+                confirm: () => {
+                    // NOTE: Not yet sure if this should be awaited or not.
+                    // If awaited, some operations like changing screen
+                    // might not work.
+                    this.pos.push_orders();
+                },
             });
-            if (confirmed) {
-                // NOTE: Not yet sure if this should be awaited or not.
-                // If awaited, some operations like changing screen
-                // might not work.
-                this.pos.push_orders();
-            }
         }
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
@@ -407,7 +406,7 @@ export class PaymentScreen extends Component {
     }
     async _isOrderValid(isForceValidate) {
         if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Empty Order"),
                 body: _t(
                     "There must be at least one product in your order before it can be validated and invoiced."
@@ -421,7 +420,7 @@ export class PaymentScreen extends Component {
         );
         if (splitPayments.length && !this.currentOrder.get_partner()) {
             const paymentMethod = splitPayments[0].payment_method;
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: _t("Customer Required"),
                 body: _t("Customer is required for %s payment method.", paymentMethod.name),
             });
@@ -435,7 +434,7 @@ export class PaymentScreen extends Component {
             (this.currentOrder.is_to_invoice() || this.currentOrder.getShippingDate()) &&
             !this.currentOrder.get_partner()
         ) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: _t("Please select the Customer"),
                 body: _t(
                     "You need to select the customer before you can invoice or ship an order."
@@ -452,7 +451,7 @@ export class PaymentScreen extends Component {
             this.currentOrder.getShippingDate() &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Incorrect address for shipping"),
                 body: _t("The selected customer needs an address."),
             });
@@ -473,7 +472,7 @@ export class PaymentScreen extends Component {
 
         if (this.currentOrder.has_not_valid_rounding()) {
             var line = this.currentOrder.has_not_valid_rounding();
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Incorrect rounding"),
                 body: _t(
                     "You have to round your payments lines." + line.amount + " is not rounded."
@@ -491,7 +490,7 @@ export class PaymentScreen extends Component {
             ) > 0.00001
         ) {
             if (!this.pos.payment_methods.some((pm) => pm.is_cash_count)) {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Cannot return change without a cash payment method"),
                     body: _t(
                         "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration"
@@ -507,25 +506,20 @@ export class PaymentScreen extends Component {
             this.currentOrder.get_total_with_tax() > 0 &&
             this.currentOrder.get_total_with_tax() * 1000 < this.currentOrder.get_total_paid()
         ) {
-            this.popup
-                .add(ConfirmPopup, {
-                    title: _t("Please Confirm Large Amount"),
-                    body:
-                        _t("Are you sure that the customer wants to  pay") +
-                        " " +
-                        this.env.utils.formatCurrency(this.currentOrder.get_total_paid()) +
-                        " " +
-                        _t("for an order of") +
-                        " " +
-                        this.env.utils.formatCurrency(this.currentOrder.get_total_with_tax()) +
-                        " " +
-                        _t('? Clicking "Confirm" will validate the payment.'),
-                })
-                .then(({ confirmed }) => {
-                    if (confirmed) {
-                        this.validateOrder(true);
-                    }
-                });
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Please Confirm Large Amount"),
+                body:
+                    _t("Are you sure that the customer wants to  pay") +
+                    " " +
+                    this.env.utils.formatCurrency(this.currentOrder.get_total_paid()) +
+                    " " +
+                    _t("for an order of") +
+                    " " +
+                    this.env.utils.formatCurrency(this.currentOrder.get_total_with_tax()) +
+                    " " +
+                    _t('? Clicking "Confirm" will validate the payment.'),
+                confirm: () => this.validateOrder(true),
+            });
             return false;
         }
 

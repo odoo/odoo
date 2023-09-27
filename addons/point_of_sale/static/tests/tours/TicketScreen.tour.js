@@ -1,13 +1,14 @@
 /** @odoo-module */
 
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as PartnerListScreen from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
-import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -16,7 +17,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
@@ -25,14 +26,14 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0002"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             TicketScreen.clickDiscard(),
             ProductScreen.orderIsEmpty(),
             ProductScreen.addOrderline("Desk Pad", "1", "2"),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0001"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             TicketScreen.clickDiscard(),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
@@ -109,7 +110,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.selectOrder("-0005"),
             inLeftSide(Order.hasLine()),
             TicketScreen.clickControlButton("Invoice"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             PartnerListScreen.isShown(),
             PartnerListScreen.clickPartner("Colleen Diaz"),
             TicketScreen.invoicePrinted(),
@@ -131,11 +132,11 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("-0005"),
             TicketScreen.partnerIs("Colleen Diaz"),
-            inLeftSide(Order.hasLine({ productName: "Desk Pad", withClass: ".selected" })),
-            ProductScreen.pressNumpad("3"),
-            // Error should show because 2 is more than the number
-            // that can be refunded.
-            ErrorPopup.clickConfirm(),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Desk Pad", withClass: ".selected" }),
+                Numpad.click("3"),
+                Dialog.confirm(),
+            ]),
             TicketScreen.clickDiscard(),
             ProductScreen.goBackToMainScreen(),
             ProductScreen.isShown(),
@@ -149,14 +150,16 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.goBackToMainScreen(),
             ProductScreen.isShown(),
             ProductScreen.selectedOrderlineHas("Desk Pad", "-1.00"),
-            // Try changing the refund line to positive number.
-            // Error popup should show.
-            ProductScreen.pressNumpad("2"),
-            ErrorPopup.clickConfirm(),
-            // Change the refund line quantity to -3 -- not allowed
-            // so error popup.
-            ProductScreen.pressNumpad("+/-", "3"),
-            ErrorPopup.clickConfirm(),
+            inLeftSide([
+                // Try changing the refund line to positive number.
+                // Error popup should show.
+                Numpad.click("2"),
+                Dialog.confirm(),
+                // Change the refund line quantity to -3 -- not allowed
+                // so error popup.
+                ...["+/-", "3"].map(Numpad.click),
+                Dialog.confirm(),
+            ]),
             // Change the refund line quantity to -2 -- allowed.
             ProductScreen.pressNumpad("+/-", "2"),
             ProductScreen.selectedOrderlineHas("Desk Pad", "-2.00"),
@@ -184,7 +187,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Product Test"),
             ProductScreen.totalAmountIs("100.00"),
@@ -212,7 +215,7 @@ registry.category("web_tour.tours").add("LotRefundTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("123456789"),

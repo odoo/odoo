@@ -2,6 +2,7 @@
 
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
@@ -13,7 +14,7 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
             // If we try to use the barcode parser before its initiation, we will have
             // some inconsistent JS errors:
             // TypeError: Cannot read properties of undefined (reading 'parse_barcode')
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
 
             // Add a product with its barcode
             ProductScreen.scan_barcode("0123456789"),
@@ -41,7 +42,7 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
 
             // Add the product with its barcode
             ProductScreen.scan_barcode("12345601"),
@@ -63,7 +64,7 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
 
             // Add the Product 1 with GS1 barcode
             ProductScreen.scan_barcode("0108431673020125100000001"),

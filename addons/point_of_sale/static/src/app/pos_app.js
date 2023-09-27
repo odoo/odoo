@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ErrorHandler } from "@web/core/utils/components";
@@ -17,8 +16,6 @@ export class Chrome extends Component {
     static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();
-        this.popup = useService("popup");
-
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;

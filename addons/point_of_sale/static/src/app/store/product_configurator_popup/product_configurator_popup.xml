@@ -17,7 +17,7 @@
                             </span>
                         </div>
                     </div>
-                    <div t-if="value.id == state.attribute_value_ids &amp;&amp; value.is_custom" class="custom-value-cell">
+                    <div t-if="value.id == state.attribute_value_ids and value.is_custom" class="custom-value-cell">
                         <input class="custom_value form-control form-control-lg mt-2" type="text" t-model="state.custom_value"/>
                     </div>
                 </t>
@@ -78,68 +78,17 @@
     </t>
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
-        <t t-if="!ui.isSmall">
-            <div class="popup popup-text popup-med product-configurator-popup">
-                <div class="modal-header drag-handle">
-                    <h4 class="modal-title"><t t-esc="props.product.display_name" /></h4>
-                </div>
-
-                <main class="body modal-body product_configurator_attributes m-0 text-start">
-                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
-                        <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.name"/>
-                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
-                        <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
-                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
-                        <MultiProductAttribute t-elif="attribute.display_type === 'multi'" attribute="attribute"/>
-                    </div>
-                </main>
-
-                <footer class="footer footer-flex modal-footer">
-                    <div class="button highlight confirm btn btn-lg btn-primary" t-on-click="confirm">
-                        Add
-                    </div>
-                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                        Cancel
-                    </div>
-                </footer>
+        <Dialog title="props.product.display_name">
+            <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
+                <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.name"/>
+                <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
+                <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
+                <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                <MultiProductAttribute t-elif="attribute.display_type === 'multi'" attribute="attribute"/>
             </div>
-        </t>
-        <t t-else="">
-            <div class="popup mobile popup-text popup-med product-configurator-popup">
-                <div class="modal-header">
-                    <h4 class="modal-title"><t t-esc="props.product.display_name" /></h4>
-                    <span><t t-esc="unitPrice" ></t></span>
-                </div>
-                <main class="body modal-body mobile product_configurator_attributes d-flex flex-column text-start">
-                    <div class="product-img d-flex justify-content-center h-50 p-2" >
-                        <img class="h-100" t-att-src="imageUrl" t-att-alt="props.product.display_name" />
-                    </div>
-                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
-                        <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.name"/>
-                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
-                        <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
-                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
-                    </div>
-                </main>
-
-                <footer class="footer footer-flex mobile modal-footer">
-                    <div class="quantity-selector d-flex align-items-center justify-content-center w-100 py-2 fw-bolder">
-                        <button class="btn btn-lg btn-secondary" t-on-click="removeOneQuantity">
-                            <i class="fa fa-minus" aria-hidden="true"></i>
-                        </button>
-                        <span class="quantity mx-3"><t t-esc="state.quantity"></t></span>
-                        <button class="btn btn-lg btn-secondary" t-on-click="addOneQuantity">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="button highlight confirm btn btn-lg btn-primary" t-on-click="confirm">
-                        Add
-                    </div>
-                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
-                        Cancel
-                    </div>
-                </footer>
-            </div>
-        </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+            </t>
+        </Dialog>
     </t>
 </templates>

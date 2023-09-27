@@ -7,22 +7,22 @@ import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons_popup";
 import { ConnectionAbortedError, ConnectionLostError } from "@web/core/network/rpc_service";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
-import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+
 export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "point_of_sale.ProductScreen";
     static components = {
@@ -40,8 +40,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
-        this.popup = useService("popup");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
         this.state = useState({
@@ -57,6 +57,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             // the callbacks in `onMounted` hook.
             this.numberBuffer.reset();
         });
+        this.barcodeReader = useService("barcode_reader");
         useExternalListener(window, "click", this.clickEvent.bind(this));
 
         useBarcodeReader({
@@ -198,7 +199,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             if (key === "Backspace") {
                 this._setValue("remove");
             } else {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Cannot modify a tip"),
                     body: _t("Customer tips, cannot be modified directly"),
                 });
@@ -209,7 +210,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             if (key === "Backspace") {
                 this._setValue("remove");
             } else {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Invalid action"),
                     body: _t(
                         "The quantity of a combo item cannot be changed. A combo can only be deleted."
@@ -224,7 +225,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
 
             if (selectedLine.noDecrease) {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Invalid action"),
                     body: _t("You are not allowed to change this quantity"),
                 });
@@ -291,7 +292,12 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     async _barcodeProductAction(code) {
         const product = await this._getProductByBarcode(code);
         if (!product) {
-            return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
+            return this.dialog.add(AlertDialog, {
+                title: `Unknown Barcode: ${this.barcodeReader.codeRepr(code)}`,
+                body: _t(
+                    "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
+                ),
+            });
         }
         const options = await product.getAddProductOptions(code);
         // Do not proceed on adding the product when no options is returned.
@@ -345,7 +351,12 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
             return;
         }
-        return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
+        return this.dialog.add(AlertDialog, {
+            title: `Unknown Barcode: ${this.barcodeReader.codeRepr(code)}`,
+            body: _t(
+                "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
+            ),
+        });
     }
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.get_last_orderline();
@@ -370,25 +381,30 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         );
         if (!product) {
             const productBarcode = parsed_results.find((element) => element.type === "product");
-            return this.popup.add(ErrorBarcodePopup, { code: productBarcode.base_code });
+            return this.dialog.add(AlertDialog, {
+                title: `Unknown Barcode: ${this.barcodeReader.codeRepr(productBarcode)}`,
+                body: _t(
+                    "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
+                ),
+            });
         }
         const options = await product.getAddProductOptions(lotBarcode);
         await this.currentOrder.add_product(product, { ...options, ...customProductOptions });
         this.numberBuffer.reset();
     }
-    async displayAllControlPopup() {
-        await this.popup.add(ControlButtonPopup, {
+    displayAllControlPopup() {
+        this.dialog.add(ControlButtonPopup, {
             controlButtons: this.controlButtons,
         });
     }
     async _showDecreaseQuantityPopup() {
         this.numberBuffer.reset();
-        const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
+        const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
             startingValue: 0,
             title: _t("Set the new quantity"),
         });
         const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
-        if (confirmed && newQuantity !== null) {
+        if (newQuantity !== null) {
             const order = this.pos.get_order();
             const selectedLine = order.get_selected_orderline();
             const currentQuantity = selectedLine.get_quantity();
@@ -526,7 +542,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             return ProductIds;
         } catch (error) {
             if (error instanceof ConnectionLostError || error instanceof ConnectionAbortedError) {
-                return this.popup.add(OfflineErrorPopup, {
+                return this.dialog.add(AlertDialog, {
                     title: _t("Network Error"),
                     body: _t(
                         "Product is not loaded. Tried loading the product from the server but there is a network error."
@@ -546,7 +562,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 [this.pos.pos_session.id]
             );
             if (!successful) {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Demo products are no longer available"),
                     body: _t(
                         "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
@@ -582,7 +598,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     }
     async onProductInfoClick(product) {
         const info = await this.pos.getProductInfo(product, 1);
-        this.popup.add(ProductInfoPopup, { info: info, product: product });
+        this.dialog.add(ProductInfoPopup, { info: info, product: product });
     }
 }
 

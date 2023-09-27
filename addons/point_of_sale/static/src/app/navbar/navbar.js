@@ -32,13 +32,12 @@ export class Navbar extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.debug = useService("debug");
-        this.popup = useService("popup");
+        this.dialog = useService("dialog");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.state = useState({ isMenuOpened: false });
         useExternalListener(window, "mouseup", this.onOutsideClick);
     }
-
     onOutsideClick() {
         if (this.state.isMenuOpened) {
             this.state.isMenuOpened = false;
@@ -49,11 +48,13 @@ export class Navbar extends Component {
         return this.pos.config.iface_customer_facing_display;
     }
     get showCashMoveButton() {
-        return Boolean(this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission);
+        return Boolean(
+            this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission
+        );
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
-        this.popup.add(CashMovePopup);
+        this.dialog.add(CashMovePopup);
     }
     async onTicketButtonClick() {
         if (this.isTicketScreenShown) {
@@ -102,7 +103,7 @@ export class Navbar extends Component {
 
     async closeSession() {
         const info = await this.pos.getClosePosInfo();
-        this.popup.add(ClosePosPopup, { ...info, keepBehind: true });
+        this.dialog.add(ClosePosPopup, info);
     }
 
     showBackButton() {

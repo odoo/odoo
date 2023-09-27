@@ -6,6 +6,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScr
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
 import { nbsp } from "@web/core/utils/strings";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
@@ -54,8 +55,8 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickTipButton(),
             NumberPopup.enterValue("1"),
-            NumberPopup.inputShownIs("1"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("1"),
+            Dialog.confirm(),
             PaymentScreen.emptyPaymentlines("31.0"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -78,7 +79,7 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Test Product", "1"),
             ProductScreen.selectPriceList("special_pricelist"),
@@ -95,7 +96,7 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.addOrderline("Desk Pad", "5", "5"),
             ProductScreen.selectedOrderlineHas("Desk Pad", "5"),
             ProductScreen.clickPayButton(),
@@ -110,23 +111,23 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             ProductScreen.clickCloseButton(),
             ProductScreen.closeWithCashAmount("25"),
             ProductScreen.cashDifferenceIs("0.00"),
-            ProductScreen.clickCloseSession(),
+            Dialog.confirm("Close Session"),
             ProductScreen.lastClosingCashIs("25.00"),
         ].flat(),
 });
 
-registry
-    .category("web_tour.tours")
-    .add("ReceiptTrackingMethodTour", {
-        test: true,
-        url: "/pos/ui",
-        steps: () => [
+registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.clickDisplayedProduct('Product A'),
-            ProductScreen.enterLotNumber('123456789'),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumber("123456789"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod('Cash'),
+            PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.trackingMethodIsLot(),
         ].flat(),
-    });
+});

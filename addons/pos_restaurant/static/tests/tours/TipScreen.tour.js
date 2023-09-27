@@ -3,6 +3,7 @@
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
@@ -19,7 +20,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
         [
             // Create order that is synced when draft.
             // order 1
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "1", "2"),
             ProductScreen.totalAmountIs("2.0"),
@@ -129,13 +130,18 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.isShown(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickTipButton(),
-            NumberPopup.isShown(),
+
             NumberPopup.enterValue("1"),
-            NumberPopup.inputShownIs("1"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("1"),
+            Dialog.confirm(),
             PaymentScreen.emptyPaymentlines("5.0"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.isShown(),
 
             // order 5
@@ -149,6 +155,11 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
             TipScreen.clickSettle(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.isShown(),
             ReceiptScreen.clickNextOrder(),
             FloorScreen.isShown(),

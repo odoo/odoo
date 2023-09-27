@@ -1,6 +1,7 @@
 /** @odoo-module */
 
-import * as TextAreaPopup from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
@@ -33,9 +34,8 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             // Test OrderlineNoteButton
             ProductScreen.clickNoteButton(),
-            TextAreaPopup.isShown(),
-            TextAreaPopup.inputText("test note"),
-            TextAreaPopup.clickConfirm(),
+            TextInputPopup.inputText("test note"),
+            Dialog.confirm(),
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",
@@ -53,14 +53,14 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test GuestButton
             ProductScreen.clickGuestButton(),
             NumberPopup.enterValue("15"),
-            NumberPopup.inputShownIs("15"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("15"),
+            Dialog.confirm(),
             ProductScreen.guestNumberIs("15"),
 
             ProductScreen.clickGuestButton(),
             NumberPopup.enterValue("5"),
-            NumberPopup.inputShownIs("5"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("5"),
+            Dialog.confirm(),
             ProductScreen.guestNumberIs("5"),
         ].flat(),
 });

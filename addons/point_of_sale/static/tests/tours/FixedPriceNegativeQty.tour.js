@@ -2,6 +2,7 @@
 
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { registry } from "@web/core/registry";
 
@@ -10,8 +11,8 @@ registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
     url: "/pos/ui",
     steps: () =>
         [
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
-
             ProductScreen.clickDisplayedProduct("Zero Amount Product"),
             ProductScreen.selectedOrderlineHas("Zero Amount Product", "1.0", "1.0"),
             ProductScreen.pressNumpad("+/-", "1"),

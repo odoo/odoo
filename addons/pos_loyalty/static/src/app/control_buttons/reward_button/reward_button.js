@@ -6,14 +6,15 @@ import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class RewardButton extends Component {
     static template = "pos_loyalty.RewardButton";
 
     setup() {
-        this.popup = useService("popup");
         this.pos = usePos();
         this.notification = useService("pos_notification");
+        this.dialog = useService("dialog");
     }
 
     /**
@@ -72,11 +73,11 @@ export class RewardButton extends Component {
                 label: this.pos.db.get_product_by_id(product_id).display_name,
                 item: product_id,
             }));
-            const { confirmed, payload: selectedProduct } = await this.popup.add(SelectionPopup, {
+            const selectedProduct = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Please select a product for this reward"),
                 list: productsList,
             });
-            if (!confirmed) {
+            if (!selectedProduct) {
                 return false;
             }
             args["product"] = selectedProduct;
@@ -107,19 +108,18 @@ export class RewardButton extends Component {
                 description: reward.reward.program_id.name,
                 item: reward,
             }));
-            const { confirmed, payload: selectedReward } = await this.popup.add(SelectionPopup, {
+            this.dialog.add(SelectionPopup, {
                 title: _t("Please select a reward"),
                 list: rewardsList,
+                getPayload: (selectedReward) => {
+                    this._applyReward(
+                        selectedReward.reward,
+                        selectedReward.coupon_id,
+                        selectedReward.potentialQty
+                    );
+                },
             });
-            if (confirmed) {
-                return this._applyReward(
-                    selectedReward.reward,
-                    selectedReward.coupon_id,
-                    selectedReward.potentialQty
-                );
-            }
         }
-        return false;
     }
 }
 

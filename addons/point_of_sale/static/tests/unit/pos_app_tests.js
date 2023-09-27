@@ -8,7 +8,7 @@ import { numberBufferService } from "@point_of_sale/app/utils/number_buffer_serv
 import { barcodeReaderService } from "@point_of_sale/app/barcode/barcode_reader_service";
 import { EventBus } from "@odoo/owl";
 import { uiService } from "@web/core/ui/ui_service";
-import { popupService } from "@point_of_sale/app/popup/popup_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
 
 const mockContextualUtilsService = {
     dependencies: ["pos", "localization"],
@@ -34,7 +34,7 @@ QUnit.module("Chrome", {
             .add("number_buffer", numberBufferService)
             .add("barcode_reader", barcodeReaderService)
             .add("ui", uiService)
-            .add("popup", popupService)
+            .add("dialog", dialogService)
             .add("contextual_utils_service", mockContextualUtilsService)
             .add("barcode", {
                 start() {

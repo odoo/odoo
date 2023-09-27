@@ -3,17 +3,18 @@
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class eWalletButton extends Component {
     static template = "point_of_sale.eWalletButton";
 
     setup() {
-        this.popup = useService("popup");
         this.pos = usePos();
+        this.dialog = useService("dialog");
     }
 
     _getEWalletRewards(order) {
@@ -36,7 +37,7 @@ export class eWalletButton extends Component {
             if (eWalletPrograms.length == 1) {
                 selectedProgram = eWalletPrograms[0];
             } else {
-                const { confirmed, payload } = await this.popup.add(SelectionPopup, {
+                selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
                     title: _t("Refund with eWallet"),
                     list: eWalletPrograms.map((program) => ({
                         id: program.id,
@@ -44,9 +45,6 @@ export class eWalletButton extends Component {
                         label: program.name,
                     })),
                 });
-                if (confirmed) {
-                    selectedProgram = payload;
-                }
             }
             if (selectedProgram) {
                 const eWalletProduct = this.pos.db.get_product_by_id(
@@ -63,7 +61,7 @@ export class eWalletButton extends Component {
             if (eWalletRewards.length == 1) {
                 eWalletReward = eWalletRewards[0];
             } else {
-                const { confirmed, payload } = await this.popup.add(SelectionPopup, {
+                eWalletReward = await makeAwaitable(this.dialog, SelectionPopup, {
                     title: _t("Use eWallet to pay"),
                     list: eWalletRewards.map(({ reward, coupon_id }) => ({
                         id: reward.id,
@@ -71,9 +69,6 @@ export class eWalletButton extends Component {
                         label: `${reward.description} (${reward.program_id.name})`,
                     })),
                 });
-                if (confirmed) {
-                    eWalletReward = payload;
-                }
             }
             if (eWalletReward) {
                 const result = order._applyReward(
@@ -83,7 +78,7 @@ export class eWalletButton extends Component {
                 );
                 if (result !== true) {
                     // Returned an error
-                    this.popup.add(ErrorPopup, {
+                    this.dialog.add(AlertDialog, {
                         title: _t("Error"),
                         body: result,
                     });

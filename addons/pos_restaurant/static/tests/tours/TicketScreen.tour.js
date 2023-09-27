@@ -3,6 +3,7 @@
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
@@ -13,7 +14,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             // New Ticket button should not be in the ticket screen if no table is selected.
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
@@ -44,7 +45,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0003"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             TicketScreen.doubleClickOrder("-0002"),
             ProductScreen.isShown(),
             ProductScreen.totalAmountIs("2.0"),
@@ -59,7 +60,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0004"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             TicketScreen.clickDiscard(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("5"),

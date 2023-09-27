@@ -3,6 +3,7 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
@@ -13,7 +14,7 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.orderTotalIs("50.00"),
@@ -43,13 +44,12 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             // Pay the 5$ gift card.
             ProductScreen.clickDisplayedProduct("Gift Card"),
-            TextInputPopup.isShown(),
             TextInputPopup.inputText("044123456"),
-            TextInputPopup.clickConfirm(),
+            Dialog.confirm(),
             PosLoyalty.orderTotalIs("5.00"),
             PosLoyalty.finalizeOrder("Cash", "5"),
             // Partially use the gift card. (4$)
@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Magnetic Board", "1"), // 1.98
             PosLoyalty.orderTotalIs("1.98"),

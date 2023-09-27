@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
 export function clickSplitBillButton() {
     return [
@@ -32,10 +33,7 @@ export function clickPrintBillButton() {
             content: "click print bill button",
             trigger: ".control-buttons .control-button.order-printbill",
         },
-        {
-            content: "Close printing error",
-            trigger: ".popup-error .cancel",
-        },
+        Dialog.confirm(),
     ];
 }
 export function clickSubmitButton() {
@@ -64,15 +62,6 @@ export function clickOrderButton() {
 }
 export function orderlinesHaveNoChange() {
     return Order.doesNotHaveLine({ withClass: ".has-change" });
-}
-export function isPrintingError() {
-    // because we don't have printer in the test.
-    return [
-        {
-            content: "Cancel printing changes",
-            trigger: ".modal-dialog .cancel",
-        },
-    ];
 }
 export function orderlineIsToOrder(name) {
     return Order.hasLine({

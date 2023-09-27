@@ -4,10 +4,11 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
@@ -18,7 +19,7 @@ patch(PosStore.prototype, {
         const linkedPrograms = linkedProgramIds.map((id) => this.program_by_id[id]);
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
-            const { confirmed, payload: program } = await this.popup.add(SelectionPopup, {
+            selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Select program"),
                 list: linkedPrograms.map((program) => ({
                     id: program.id,
@@ -26,10 +27,7 @@ patch(PosStore.prototype, {
                     label: program.name,
                 })),
             });
-            if (confirmed) {
-                selectedProgram = program;
-            } else {
-                // Do nothing here if the selection is cancelled.
+            if (!selectedProgram) {
                 return;
             }
         } else if (linkedPrograms.length === 1) {
@@ -86,12 +84,12 @@ patch(PosStore.prototype, {
 
         // If gift card program setting is 'scan_use', ask for the code.
         if (this.config.gift_card_settings == "scan_use") {
-            const { confirmed, payload: code } = await this.env.services.popup.add(TextInputPopup, {
+            const code = await makeAwaitable(this.dialog, TextInputPopup, {
                 title: _t("Generate a Gift Card"),
                 startingValue: "",
                 placeholder: _t("Enter the gift card code"),
             });
-            if (!confirmed) {
+            if (!code) {
                 return false;
             }
             const trimmedCode = code.trim();
@@ -109,7 +107,7 @@ patch(PosStore.prototype, {
                 // There should be maximum one gift card for a given code.
                 const giftCard = fetchedGiftCard[0];
                 if (giftCard && giftCard.source_pos_order_id) {
-                    this.popup.add(ErrorPopup, {
+                    this.dialog.add(AlertDialog, {
                         title: _t("This gift card has already been sold"),
                         body: _t("You cannot sell a gift card that has already been sold."),
                     });
@@ -161,8 +159,10 @@ patch(PosStore.prototype, {
         const result = [];
         for (const couponProgram of allCouponPrograms) {
             const program = this.program_by_id[couponProgram.program_id];
-            if (program.pricelist_ids.length > 0
-                && (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))) {
+            if (
+                program.pricelist_ids.length > 0 &&
+                (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))
+            ) {
                 continue;
             }
 
@@ -207,7 +207,7 @@ patch(PosStore.prototype, {
             reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
         }
 
-        this.fieldTypes = loadedData['field_types'];
+        this.fieldTypes = loadedData["field_types"];
         await super._processData(loadedData);
         this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
         this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
@@ -235,10 +235,10 @@ patch(PosStore.prototype, {
 
         try {
             products
-                .map(product => {
+                .map((product) => {
                     const modifiedProduct = { ...product };
-                    Object.keys(modifiedProduct).forEach(key => {
-                        if (this.fieldTypes['product.product'][key] === 'many2one') {
+                    Object.keys(modifiedProduct).forEach((key) => {
+                        if (this.fieldTypes["product.product"][key] === "many2one") {
                             modifiedProduct[key] = modifiedProduct[key][1];
                         }
                     });
@@ -252,7 +252,7 @@ patch(PosStore.prototype, {
             }
             const index = this.rewards.indexOf(reward);
             if (index != -1) {
-                this.env.services.popup.add(ErrorPopup, {
+                this.env.services.dialog.add(AlertDialog, {
                     title: _t("A reward could not be loaded"),
                     body: _t(
                         'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client',

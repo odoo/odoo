@@ -4,9 +4,10 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { PaymentTransactionPopup } from "@pos_mercury/app/payment_transaction_popup/payment_transaction_popup";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 // Lookup table to store status and error messages
 const lookUpCodeTransaction = {
@@ -193,7 +194,7 @@ patch(PaymentScreen.prototype, {
     credit_code_transaction(parsed_result, old_deferred, retry_nr) {
         const order = this.pos.get_order();
         if (order.get_due(order.selected_paymentline) < 0) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Refunds not supported"),
                 body: _t(
                     "Credit card refunds are not supported. Instead select your credit card payment method, click 'Validate' and refund the original charge manually through the Vantiv backend."
@@ -209,7 +210,7 @@ patch(PaymentScreen.prototype, {
         var decodedMagtek = this.pos.decodeMagtek(parsed_result.code);
 
         if (!decodedMagtek) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Could not read card"),
                 body: _t(
                     "This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International)."
@@ -244,7 +245,7 @@ patch(PaymentScreen.prototype, {
         // the transaction deferred is used to update transaction status
         // if we have a previous deferred it indicates that this is a retry
         if (!old_deferred) {
-            this.popup.add(PaymentTransactionPopup, {
+            this.dialog.add(PaymentTransactionPopup, {
                 transaction: def,
             });
             def.notify({
@@ -391,19 +392,17 @@ patch(PaymentScreen.prototype, {
                 isSelected: false,
                 item: paymentMethod.item,
             }));
-            this.popup
-                .add(SelectionPopup, {
-                    title: _t("Pay with: "),
-                    list: selectionList,
-                })
-                .then(({ confirmed, payload: selectedPaymentMethod }) => {
-                    if (confirmed) {
-                        parsed_result.payment_method_id = selectedPaymentMethod;
-                        this.credit_code_transaction(parsed_result);
-                    } else {
-                        this.credit_code_cancel();
-                    }
-                });
+            makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Pay with: "),
+                list: selectionList,
+            }).then((selectedPaymentMethod) => {
+                if (selectedPaymentMethod) {
+                    parsed_result.payment_method_id = selectedPaymentMethod;
+                    this.credit_code_transaction(parsed_result);
+                } else {
+                    this.credit_code_cancel();
+                }
+            });
         }
     },
     remove_paymentline_by_ref(line) {
@@ -417,7 +416,7 @@ patch(PaymentScreen.prototype, {
 
         // show the transaction popup.
         // the transaction deferred is used to update transaction status
-        this.popup.add(PaymentTransactionPopup, {
+        this.dialog.add(PaymentTransactionPopup, {
             transaction: def,
         });
 

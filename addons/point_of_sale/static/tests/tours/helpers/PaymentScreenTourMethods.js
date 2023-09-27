@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
 export function clickPaymentMethod(name) {
     return [
@@ -109,13 +110,13 @@ export function fillPaymentLineAmountMobile(lineName, keys) {
         },
         {
             content: `'${keys}' inputed in the number popup`,
-            trigger: ".popup .payment-input-number",
+            trigger: ".payment-input-number",
+            in_modal: true,
             run: `text ${keys}`,
             mobile: true,
         },
         {
-            content: "click confirm button",
-            trigger: ".popup .footer .confirm",
+            ...Dialog.confirm(),
             mobile: true,
         },
     ];

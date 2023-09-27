@@ -4,6 +4,8 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 
 function add_product_to_order(product_name) {
     return [
@@ -11,13 +13,7 @@ function add_product_to_order(product_name) {
             content: "buy " + product_name,
             trigger: '.product-list .product-name:contains("' + product_name + '")',
         },
-        ProductScreen.clickReview(),
-        ...Order.hasLine({ productName: product_name }),
-        {
-            content: "go back to the products",
-            trigger: ".floor-button",
-            mobile: true,
-        },
+        ...inLeftSide(Order.hasLine({ productName: product_name })),
     ];
 }
 
@@ -35,7 +31,8 @@ function set_fiscal_position_on_order(fp_name) {
         },
         {
             content: "choose fiscal position " + fp_name + " to add to the order",
-            trigger: '.popups .popup .selection .selection-item:contains("' + fp_name + '")',
+            trigger: `.selection-item:contains("${fp_name}")`,
+            in_modal: true,
         },
         {
             content: "click more button",
@@ -48,15 +45,15 @@ function set_fiscal_position_on_order(fp_name) {
             run: function () {},
         },
         {
+            ...Dialog.cancel(),
+            mobile: true,
+        },
+        {
             content: "go back to the products",
             trigger: ".floor-button",
             mobile: true,
         },
     ];
-}
-
-function press_payment_numpad(val) {
-    return [{ ...Numpad.click(val), mobile: false }];
 }
 
 function fillPaymentLineAmountMobile(lineName, keys) {
@@ -68,32 +65,20 @@ function fillPaymentLineAmountMobile(lineName, keys) {
         },
         {
             content: `'${keys}' inputed in the number popup`,
-            trigger: ".popup .payment-input-number",
+            trigger: `.payment-input-number`,
+            in_modal: true,
             run: `text ${keys}`,
             mobile: true,
         },
         {
-            content: "click confirm button",
-            trigger: ".popup .footer .confirm",
+            ...Dialog.confirm(),
             mobile: true,
         },
     ];
 }
 
 function fillPaymentValue(lineName, val) {
-    return [...press_payment_numpad(val), ...fillPaymentLineAmountMobile(lineName, val)];
-}
-
-function press_product_numpad(val) {
-    return [
-        ProductScreen.clickReview(),
-        Numpad.click(val),
-        {
-            content: "go back to the products",
-            trigger: ".floor-button",
-            mobile: true,
-        },
-    ];
+    return [Numpad.click(val, { mobile: false }), ...fillPaymentLineAmountMobile(lineName, val)];
 }
 
 function selected_payment_has(name, val) {
@@ -108,27 +93,9 @@ function selected_payment_has(name, val) {
 }
 
 function selected_orderline_has({ product, price = null, quantity = null }) {
-    return [
-        ProductScreen.clickReview(),
-        ...Order.hasLine({ productName: product, quantity, price, withClass: ".selected" }),
-        {
-            content: "go back to the products",
-            trigger: ".floor-button",
-            mobile: true,
-        },
-    ];
-}
-
-function verify_order_total(total_str) {
-    return [
-        ProductScreen.clickReview(),
-        Order.hasTotal(total_str),
-        {
-            content: "go back to the products",
-            trigger: ".floor-button",
-            mobile: true,
-        },
-    ];
+    return inLeftSide(
+        Order.hasLine({ productName: product, quantity, price, withClass: ".selected" })
+    );
 }
 
 function goto_payment_screen_and_select_payment_method() {
@@ -194,10 +161,10 @@ var steps = [
 ];
 steps = steps.concat(...ProductScreen.clickHomeCategory());
 steps = steps.concat(add_product_to_order("Desk Organizer"));
-steps = steps.concat(verify_order_total("5.10"));
+steps = steps.concat(inLeftSide(Order.hasTotal("5.10")));
 
 steps = steps.concat(add_product_to_order("Desk Organizer"));
-steps = steps.concat(verify_order_total("10.20"));
+steps = steps.concat(inLeftSide(Order.hasTotal("10.20")));
 steps = steps.concat(goto_payment_screen_and_select_payment_method());
 
 /*  add payment line of only 5.20
@@ -258,15 +225,15 @@ steps = steps.concat(finish_order());
 // test opw-672118 orderline subtotal rounding
 steps = steps.concat(add_product_to_order("Desk Organizer"));
 steps = steps.concat(selected_orderline_has({ product: "Desk Organizer", quantity: "1.0" }));
-steps = steps.concat(press_product_numpad("."));
+steps = steps.concat(inLeftSide(Numpad.click(".")));
 steps = steps.concat(
     selected_orderline_has({ product: "Desk Organizer", quantity: "0.0", price: "0.0" })
 );
-steps = steps.concat(press_product_numpad("9"));
+steps = steps.concat(inLeftSide(Numpad.click("9")));
 steps = steps.concat(
     selected_orderline_has({ product: "Desk Organizer", quantity: "0.9", price: "4.59" })
 );
-steps = steps.concat(press_product_numpad("9"));
+steps = steps.concat(inLeftSide(Numpad.click("9")));
 steps = steps.concat(
     selected_orderline_has({ product: "Desk Organizer", quantity: "0.99", price: "5.05" })
 );
@@ -277,9 +244,9 @@ steps = steps.concat(finish_order());
 // Test fiscal position one2many map (align with backend)
 steps = steps.concat(add_product_to_order("Letter Tray"));
 steps = steps.concat(selected_orderline_has({ product: "Letter Tray", quantity: "1.0" }));
-steps = steps.concat(verify_order_total("5.28"));
+steps = steps.concat(inLeftSide(Order.hasTotal("5.28")));
 steps = steps.concat(set_fiscal_position_on_order("FP-POS-2M"));
-steps = steps.concat(verify_order_total("5.52"));
+steps = steps.concat(inLeftSide(Order.hasTotal("5.52")));
 
 steps = steps.concat([
     {

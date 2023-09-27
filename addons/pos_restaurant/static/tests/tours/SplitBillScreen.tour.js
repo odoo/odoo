@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
@@ -18,7 +19,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
@@ -63,7 +64,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "1", "2.0"),
             ProductScreen.addOrderline("Minute Maid", "1", "2.0"),
@@ -99,7 +100,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "2", "2", "4.00"),
             ProductScreen.clickSplitBillButton(),
@@ -133,59 +134,70 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
     test: true,
     url: "/pos/ui",
-    steps: () => [
-        ...ProductScreen.confirmOpeningPopup(),
-        ...FloorScreen.clickTable("2"),
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            FloorScreen.clickTable("2"),
 
-        ...ProductScreen.clickHomeCategory(),
-        ...ProductScreen.clickDisplayedProduct("Office Combo"),
-        combo.select("Combo Product 3"),
-        combo.select("Combo Product 5"),
-        combo.select("Combo Product 8"),
-        combo.confirm(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 3"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
 
-        ...ProductScreen.clickDisplayedProduct("Office Combo"),
-        combo.select("Combo Product 2"),
-        combo.select("Combo Product 4"),
-        combo.select("Combo Product 7"),
-        combo.confirm(),
+            ...ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 7"),
+            Dialog.confirm(),
 
-        ...ProductScreen.addOrderline("Water", "1"),
-        ...ProductScreen.addOrderline("Minute Maid", "1"),
+            ProductScreen.addOrderline("Water", "1"),
+            ProductScreen.addOrderline("Minute Maid", "1"),
 
-        // The water and the first combo will go in the new splitted order
-        // we will then check if the rest of the items from this combo
-        // are automatically sent to the new order.
-        ...ProductScreen.clickSplitBillButton(),
-        ...SplitBillScreen.clickOrderline("Water"),
-        ...SplitBillScreen.clickOrderline("Combo Product 3"),
-        // we check that all the lines in the combo are splitted together
-        ...SplitBillScreen.orderlineHas("Water", "1", "1"),
-        ...SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
-        ...SplitBillScreen.orderlineHas("Combo Product 3", "1", "1"),
-        ...SplitBillScreen.orderlineHas("Combo Product 5", "1", "1"),
-        ...SplitBillScreen.orderlineHas("Combo Product 8", "1", "1"),
-        ...SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
-        ...SplitBillScreen.orderlineHas("Combo Product 2", "1", "0"),
-        ...SplitBillScreen.orderlineHas("Combo Product 4", "1", "0"),
-        ...SplitBillScreen.orderlineHas("Combo Product 7", "1", "0"),
+            // The water and the first combo will go in the new splitted order
+            // we will then check if the rest of the items from this combo
+            // are automatically sent to the new order.
+            ProductScreen.clickSplitBillButton(),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickOrderline("Combo Product 3"),
+            // we check that all the lines in the combo are splitted together
+            SplitBillScreen.orderlineHas("Water", "1", "1"),
+            SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
+            SplitBillScreen.orderlineHas("Combo Product 3", "1", "1"),
+            SplitBillScreen.orderlineHas("Combo Product 5", "1", "1"),
+            SplitBillScreen.orderlineHas("Combo Product 8", "1", "1"),
+            SplitBillScreen.orderlineHas("Office Combo", "1", "1"),
+            SplitBillScreen.orderlineHas("Combo Product 2", "1", "0"),
+            SplitBillScreen.orderlineHas("Combo Product 4", "1", "0"),
+            SplitBillScreen.orderlineHas("Combo Product 7", "1", "0"),
 
-        ...SplitBillScreen.subtotalIs("54.13"),
-        ...SplitBillScreen.clickPay(),
-        ...PaymentScreen.clickPaymentMethod("Bank"),
-        ...PaymentScreen.clickValidate(),
-        ...ReceiptScreen.clickContinueOrder(),
-        // Check if there is still water in the order
-        ...ProductScreen.isShown(),
-        // now we check that all the lines that remained in the order are correct
-        ...ProductScreen.selectedOrderlineHas("Minute Maid", "1.0"),
-        ...ProductScreen.clickOrderline("Office Combo"),
-        ...ProductScreen.clickOrderline("Combo Product 2"),
-        ...ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "6.67", "Office Combo"),
-        ...ProductScreen.clickOrderline("Combo Product 4"),
-        ...ProductScreen.selectedOrderlineHas("Combo Product 4", "1.0", "14.66", "Office Combo"),
-        ...ProductScreen.clickOrderline("Combo Product 7"),
-        ...ProductScreen.selectedOrderlineHas("Combo Product 7", "1.0", "22.00", "Office Combo"),
-        ...ProductScreen.totalAmountIs("45.86"),
-    ],
+            ...SplitBillScreen.subtotalIs("54.13"),
+            ...SplitBillScreen.clickPay(),
+            ...PaymentScreen.clickPaymentMethod("Bank"),
+            ...PaymentScreen.clickValidate(),
+            ...ReceiptScreen.clickContinueOrder(),
+            // Check if there is still water in the order
+            ...ProductScreen.isShown(),
+            // now we check that all the lines that remained in the order are correct
+            ...ProductScreen.selectedOrderlineHas("Minute Maid", "1.0"),
+            ...ProductScreen.clickOrderline("Office Combo"),
+            ...ProductScreen.clickOrderline("Combo Product 2"),
+            ...ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "6.67", "Office Combo"),
+            ...ProductScreen.clickOrderline("Combo Product 4"),
+            ...ProductScreen.selectedOrderlineHas(
+                "Combo Product 4",
+                "1.0",
+                "14.66",
+                "Office Combo"
+            ),
+            ...ProductScreen.clickOrderline("Combo Product 7"),
+            ...ProductScreen.selectedOrderlineHas(
+                "Combo Product 7",
+                "1.0",
+                "22.00",
+                "Office Combo"
+            ),
+            ...ProductScreen.totalAmountIs("45.86"),
+        ].flat(),
 });

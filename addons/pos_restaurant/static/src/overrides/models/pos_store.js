@@ -49,8 +49,7 @@ patch(PosStore.prototype, {
         }
     },
     async actionAfterIdle() {
-        const isPopupClosed = this.popup.closePopupsButError();
-        if (isPopupClosed) {
+        if (document.querySelector(".modal-open")) {
             this.closeTempScreen();
             const table = this.table;
             const order = this.get_order();

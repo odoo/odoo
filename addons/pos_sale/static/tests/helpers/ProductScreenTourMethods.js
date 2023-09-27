@@ -1,5 +1,8 @@
 /** @odoo-module */
 
+import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+
 export function clickQuotationButton() {
     return [
         {
@@ -42,13 +45,7 @@ export function downPaymentFirstOrder() {
             content: `click on select the order`,
             trigger: `.selection-item:contains('Apply a down payment')`,
         },
-        {
-            content: `click on +10 button`,
-            trigger: `div.numpad.row button.col:contains("+10")`,
-        },
-        {
-            content: `click on ok button`,
-            trigger: `.button.confirm`,
-        },
+        Numpad.click("+10"),
+        Dialog.confirm(),
     ];
 }

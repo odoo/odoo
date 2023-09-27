@@ -4,16 +4,15 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
 import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 
 export class BarcodeReader {
-    static serviceDependencies = ["popup", "hardware_proxy"];
-    constructor(parser, { popup, hardware_proxy }) {
+    static serviceDependencies = ["dialog", "hardware_proxy"];
+    constructor(parser, { dialog, hardware_proxy }) {
         this.parser = parser;
-        this.popup = popup;
+        this.dialog = dialog;
         this.hardwareProxy = hardware_proxy;
         this.setup();
     }
@@ -56,8 +55,11 @@ export class BarcodeReader {
         let parseBarcode;
         try {
             parseBarcode = this.parser.parse_barcode(code);
-            if (Array.isArray(parseBarcode) && !parseBarcode.some(element => element.type === 'product')) {
-                throw new GS1BarcodeError('The GS1 barcode must contain a product.');
+            if (
+                Array.isArray(parseBarcode) &&
+                !parseBarcode.some((element) => element.type === "product")
+            ) {
+                throw new GS1BarcodeError("The GS1 barcode must contain a product.");
             }
         } catch (error) {
             if (this.fallbackParser && error instanceof GS1BarcodeError) {
@@ -71,7 +73,12 @@ export class BarcodeReader {
         } else {
             const cbs = cbMaps.map((cbMap) => cbMap[parseBarcode.type]).filter(Boolean);
             if (cbs.length === 0) {
-                this.popup.add(ErrorBarcodePopup, { code: this.codeRepr(parseBarcode) });
+                this.dialog.add(AlertDialog, {
+                    title: `Unknown Barcode: ${this.codeRepr(parseBarcode)}`,
+                    body: _t(
+                        "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
+                    ),
+                });
             }
             for (const cb of cbs) {
                 await cb(parseBarcode);
@@ -115,9 +122,9 @@ export class BarcodeReader {
 }
 
 export const barcodeReaderService = {
-    dependencies: [...BarcodeReader.serviceDependencies, "popup", "barcode", "orm"],
+    dependencies: [...BarcodeReader.serviceDependencies, "dialog", "barcode", "orm"],
     async start(env, deps) {
-        const { popup, barcode, orm } = deps;
+        const { dialog, barcode, orm } = deps;
         let barcodeReader = null;
 
         if (session.nomenclature_id) {
@@ -143,7 +150,7 @@ export const barcodeReaderService = {
             if (barcodeReader) {
                 barcodeReader.scan(ev.detail.barcode);
             } else {
-                popup.add(ErrorPopup, {
+                dialog.add(AlertDialog, {
                     title: _t("Unable to parse barcode"),
                     body: _t(
                         "No barcode nomenclature has been configured. This can be changed in the configuration settings."

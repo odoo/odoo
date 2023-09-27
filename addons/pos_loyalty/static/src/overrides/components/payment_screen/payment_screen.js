@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 patch(PaymentScreen.prototype, {
     //@override
@@ -61,7 +61,7 @@ patch(PaymentScreen.prototype, {
                         );
                 }
                 if (!successful) {
-                    this.popup.add(ErrorPopup, {
+                    this.dialog.add(AlertDialog, {
                         title: _t("Error validating rewards"),
                         body: payload.message,
                     });
