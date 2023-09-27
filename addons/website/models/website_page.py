@@ -22,7 +22,7 @@ class Page(models.Model):
     _description = 'Page'
     _order = 'website_id'
 
-    url = fields.Char('Page URL')
+    url = fields.Char('Page URL', required=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
