@@ -45,6 +45,7 @@ import {
 } from "@odoo/owl";
 import { isCSSColor } from '@web/core/utils/colors';
 import { EmojiPicker } from '@web/core/emoji_picker/emoji_picker';
+import { Tooltip } from "@web/core/tooltip/tooltip";
 
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -2156,9 +2157,9 @@ export class Wysiwyg extends Component {
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
                     this.odooEditor.observerUnactive();
-                    $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                    const removeTooltip = this.popover.add(e.target, Tooltip, { tooltip: _t('Double-click to edit') });
                     this.odooEditor.observerActive();
-                    this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
+                    this.tooltipTimeouts.push(setTimeout(() => removeTooltip(), 800));
                 });
             }, 400));
         }
