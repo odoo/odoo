@@ -518,8 +518,12 @@ class Task(models.Model):
     def _compute_access_warning(self):
         super(Task, self)._compute_access_warning()
         for task in self.filtered(lambda x: x.project_id.privacy_visibility != 'portal'):
+            visibility_field = self.env['ir.model.fields'].search([('model', '=', 'project.project'), ('name', '=', 'privacy_visibility')], limit=1)
+            visibility_public = self.env['ir.model.fields.selection'].search([('field_id', '=', visibility_field.id), ('value', '=', 'portal')])
             task.access_warning = _(
-                "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to 'Visible by following customers' in order to make it accessible by the recipient(s).")
+                "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to '%(visibility)s' in order to make it accessible by the recipient(s).",
+                visibility=visibility_public.name,
+            )
 
     @api.depends('child_ids.allocated_hours')
     def _compute_subtask_allocated_hours(self):
@@ -805,10 +809,11 @@ class Task(models.Model):
         if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
+                unauthorized_field_list = ', '.join(unauthorized_fields)
                 if operation == 'read':
-                    error_message = _('You cannot read %s fields in task.', ', '.join(unauthorized_fields))
+                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
                 else:
-                    error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
+                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
                 raise AccessError(error_message)
 
     def read(self, fields=None, load='_classic_read'):
@@ -848,7 +853,7 @@ class Task(models.Model):
     def _ensure_portal_user_can_write(self, fields):
         for field in fields:
             if field not in self.SELF_WRITABLE_FIELDS:
-                raise AccessError(_('You have not write access of %s field.', field))
+                raise AccessError(_("You don't have write access on the %(field)s field.", field=field))
 
     def _load_records_create(self, vals_list):
         for vals in vals_list:
@@ -1039,7 +1044,7 @@ class Task(models.Model):
         if 'parent_id' in vals:
             parent_id = vals['parent_id']
             if parent_id in self.ids:
-                raise UserError(_("Sorry. You can't set a task as its parent task."))
+                raise UserError(_("You cannot set a task as its parent task."))
             elif not parent_id:
                 # unset the parent => "I want to display the task back in the project"
                 #                    => set `display_in_project` to True
@@ -1696,7 +1701,7 @@ class Task(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'danger',
-                'message': _('Private tasks cannot be converted into sub-tasks. Please set a project for the task to gain access to this feature.'),
+                'message': _('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
             }
         }
 

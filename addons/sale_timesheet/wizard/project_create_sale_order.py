@@ -21,7 +21,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
         if 'project_id' in fields and active_id:
             project = self.env['project.project'].browse(active_id)
             if project.sale_order_id:
-                raise UserError(_("The project has already a sale order."))
+                raise UserError(_("The project already has a Sales Order."))
             result['project_id'] = active_id
             if not result.get('partner_id', False):
                 result['partner_id'] = project.partner_id.id

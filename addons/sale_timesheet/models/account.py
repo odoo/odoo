@@ -182,7 +182,7 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Sale Order'),
+            'name': _('Sales Order'),
             'res_model': 'sale.order',
             'views': [[False, 'form']],
             'context': {'create': False, 'show_sale': True},
