@@ -13,6 +13,7 @@ class PosOrderReport(models.Model):
     date = fields.Datetime(string='Order Date', readonly=True)
     order_id = fields.Many2one('pos.order', string='Order', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
+    partner_category = fields.Many2one('res.partner.category', string='Partner Category')
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', readonly=True)
     state = fields.Selection(
@@ -54,6 +55,7 @@ class PosOrderReport(models.Model):
                 SUM(cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') AS INT)) AS delay_validation,
                 s.id as order_id,
                 s.partner_id AS partner_id,
+                rprpcr.category_id  as partner_category,
                 s.state AS state,
                 s.user_id AS user_id,
                 s.company_id AS company_id,
@@ -79,6 +81,7 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN res_company co ON (s.company_id=co.id)
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
+                LEFT JOIN res_partner_res_partner_category_rel rprpcr on (rprpcr.partner_id=s.partner_id)
         """
 
     def _group_by(self):
@@ -90,7 +93,8 @@ class PosOrderReport(models.Model):
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
-                ps.config_id
+                ps.config_id,
+                rprpcr.category_id
         """
 
     def init(self):
