@@ -8,12 +8,11 @@ import {
     kanbanMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import { EmployeeFieldRelationMixin } from "@hr/views/fields/employee_field_relation_mixin";
 
-export class Many2ManyTagsAvatarEmployeeField extends Many2ManyTagsAvatarUserField {
-    get relation() {
-        return 'hr.employee.public';
-    }
-}
+export class Many2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin(
+    Many2ManyTagsAvatarUserField
+) {}
 
 export const many2ManyTagsAvatarEmployeeField = {
     ...many2ManyTagsAvatarUserField,
@@ -25,16 +24,15 @@ export const many2ManyTagsAvatarEmployeeField = {
     extractProps: (fieldInfo, dynamicInfo) => ({
         ...many2ManyTagsAvatarUserField.extractProps(fieldInfo, dynamicInfo),
         canQuickCreate: false,
+        relation: fieldInfo.options?.relation,
     }),
 };
 
 registry.category("fields").add("many2many_avatar_employee", many2ManyTagsAvatarEmployeeField);
 
-export class KanbanMany2ManyTagsAvatarEmployeeField extends KanbanMany2ManyTagsAvatarUserField {
-    get relation() {
-        return 'hr.employee.public';
-    }
-}
+export class KanbanMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin(
+    KanbanMany2ManyTagsAvatarUserField
+) {}
 
 export const kanbanMany2ManyTagsAvatarEmployeeField = {
     ...kanbanMany2ManyTagsAvatarUserField,
@@ -43,6 +41,10 @@ export const kanbanMany2ManyTagsAvatarEmployeeField = {
         ...kanbanMany2ManyTagsAvatarUserField.additionalClasses,
         "o_field_many2many_avatar_user",
     ],
+    extractProps: (fieldInfo, dynamicInfo) => ({
+        ...kanbanMany2ManyTagsAvatarUserField.extractProps(fieldInfo, dynamicInfo),
+        relation: fieldInfo.options?.relation,
+    }),
 };
 
 registry

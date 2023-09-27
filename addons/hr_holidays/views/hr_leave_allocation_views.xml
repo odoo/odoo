@@ -174,14 +174,12 @@
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
                     invisible="holiday_type != 'employee' or not employee_id or state == 'confirm'"
                     readonly="state in ['refuse', 'validate']"
-                    widget="many2one_avatar_employee"
-                    options="{'relation': 'hr.employee.public'}"/>
+                    widget="many2one_avatar_employee"/>
                 <field name="employee_ids" widget="many2many_avatar_employee"
                     groups="hr_holidays.group_hr_holidays_user"
                     invisible="holiday_type != 'employee' or state != 'confirm' and employee_id"
                     readonly="state in ['refuse', 'validate']"
-                    required="holiday_type == 'employee' and state == 'confirm'"
-                    options="{'relation': 'hr.employee.public'}"/>
+                    required="holiday_type == 'employee' and state == 'confirm'"/>
             </field>
             <field name="employee_id" position="after">
                 <field name="category_id"
