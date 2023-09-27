@@ -89,15 +89,25 @@ class SaleOrder(models.Model):
         total_qty = sum(self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).mapped('product_uom_qty'))
         # Remove needed quantity from reward quantity if same reward and rule product
         if program._get_valid_products(program.reward_product_id):
-            # number of times the program should be applied
-            program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
-            # multipled by the reward qty
-            reward_product_qty = program.reward_product_quantity * program_in_order
+            # number of times the program could be applied by quantity
+            nbr_program_by_qtt = (
+                max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            )
             # do not give more free reward than products
-            reward_product_qty = min(reward_product_qty, total_qty)
+            nbr_program_less_than_products = total_qty // program.reward_product_quantity
+            program_in_order = min(nbr_program_by_qtt, nbr_program_less_than_products)
             if program.rule_minimum_amount:
-                order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
-                reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
+                # Ensure the minimum amount for the reward is met
+                min_amount_with_reward = (
+                    program.rule_minimum_amount
+                    + program.reward_product_quantity * program.reward_product_id.lst_price
+                )
+                nbr_program_by_amount = (
+                    sum(order_lines.mapped('price_total')) // min_amount_with_reward
+                )
+                program_in_order = min(program_in_order, nbr_program_by_amount)
+            # multiplied by the reward qty
+            reward_product_qty = program_in_order * program.reward_product_quantity
         else:
             program_in_order = max_product_qty // program.rule_min_quantity
             reward_product_qty = min(program.reward_product_quantity * program_in_order, total_qty)
