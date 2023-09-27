@@ -23,10 +23,6 @@ export const legacySetupProm = new Promise((resolve) => {
     // add a service to redirect rpc events triggered on the bus in the
     // legacy env on the bus in the wowl env
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
-    for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
-        serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
-    }
     await whenReady();
     legacyEnv.templates = templates;
     legacySetupResolver(legacyEnv);

@@ -57,7 +57,6 @@ export const registryNamesToCloneWithCleanup = [
     "main_components",
     "view_widgets",
     "views",
-    "wowlToLegacyServiceMappers",
 ];
 
 export const utils = {
@@ -74,7 +73,6 @@ export const utils = {
         clearRegistryWithCleanup(registry.category("favoriteMenu"));
         clearRegistryWithCleanup(registry.category("ir.actions.report handlers"));
         clearRegistryWithCleanup(registry.category("main_components"));
-        clearRegistryWithCleanup(registry.category("wowlToLegacyServiceMappers"));
 
         clearRegistryWithCleanup(registry.category("services"));
         clearServicesMetadataWithCleanup();
