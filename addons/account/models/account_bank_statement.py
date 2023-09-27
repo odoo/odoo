@@ -13,6 +13,7 @@ class AccountBankStatement(models.Model):
 
     name = fields.Char(
         string='Reference',
+        compute='_compute_name', store=True, readonly=False,
         copy=False,
     )
 
@@ -104,6 +105,12 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('create_date')
+    def _compute_name(self):
+        for stmt in self:
+            stmt.name = _("%s Statement %s", stmt.journal_id.code, stmt.date)
+
     @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_date_index(self):
         for stmt in self:
