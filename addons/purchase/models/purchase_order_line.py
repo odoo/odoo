@@ -38,6 +38,7 @@ class PurchaseOrderLine(models.Model):
     price_unit = fields.Float(
         string='Unit Price', required=True, digits='Product Price',
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
+    price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
@@ -125,6 +126,11 @@ class PurchaseOrderLine(models.Model):
             # filter taxes by company
             taxes = line.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(line.company_id))
             line.taxes_id = fpos.map_tax(taxes)
+
+    @api.depends('discount', 'price_unit')
+    def _compute_price_unit_discounted(self):
+        for line in self:
+            line.price_unit_discounted = line.price_unit * (1 - line.discount / 100)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
@@ -497,7 +503,7 @@ class PurchaseOrderLine(models.Model):
             }
             catalog_info.update(
                 quantity=self.product_qty,
-                price=self.price_unit,
+                price=self.price_unit * (1 - self.discount / 100),
                 readOnly=self.order_id._is_readonly(),
                 uom=uom,
             )

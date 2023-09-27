@@ -39,6 +39,7 @@ class SupplierInfo(models.Model):
     price = fields.Float(
         'Price', default=0.0, digits='Product Price',
         required=True, help="The price to purchase a product")
+    price_discounted = fields.Float('Discounted Price', compute='_compute_price_discounted')
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company.id, index=1)
@@ -66,6 +67,11 @@ class SupplierInfo(models.Model):
         string="Discount (%)",
         digits='Discount',
         readonly=False)
+
+    @api.depends('discount', 'price')
+    def _compute_price_discounted(self):
+        for rec in self:
+            rec.price_discounted = rec.price * (1 - rec.discount / 100)
 
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):
