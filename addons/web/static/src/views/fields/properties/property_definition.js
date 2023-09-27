@@ -305,7 +305,7 @@ export class PropertyDefinition extends Component {
     onViewInKanbanChange(newValue) {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
-            view_in_kanban: newValue,
+            view_in_cards: newValue,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
