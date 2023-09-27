@@ -52,6 +52,7 @@ export class MoOverviewLine extends Component {
             onClose: (closeInfo) => {
                 if (closeInfo?.done) {
                     // Trigger the reload only if a replenishment was done.
+                    this.env.overviewBus.trigger("update-folded", { indexes: [this.props.nextIndex], isFolded: false });
                     this.env.overviewBus.trigger("reload");
                 }
             },
@@ -176,5 +177,6 @@ MoOverviewLine.props = {
     },
     hasFoldButton: { type: Boolean, optional: true },
     isFolded: { type: Boolean, optional: true },
+    nextIndex: { type: String, optional: true },
     toggleFolded: { type: Function, optional: true },
 };

@@ -15,6 +15,7 @@
                     data="replenishment.summary"
                     hasFoldButton="hasComponents(replenishment)"
                     isFolded="state.fold[replenishment.summary.index]"
+                    nextIndex="getNextIndex(component)"
                     showOptions="props.showOptions"
                     toggleFolded.bind="onToggleFolded"/>
                 <t t-if="hasComponentsBlock(replenishment)">

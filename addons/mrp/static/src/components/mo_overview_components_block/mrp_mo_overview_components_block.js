@@ -71,6 +71,15 @@ export class MoOverviewComponentsBlock extends Component {
     hasComponentsBlock(replenishment) {
         return this.hasComponents(replenishment) && !this.state.fold[replenishment?.summary.index];
     }
+
+    getNextIndex(component) {
+        if (!this.hasReplenishments(component)) return `${component.index}0`;
+        // Get the highest index of the replenishments of the component
+        const levelIndexes = component.replenishments.map(rep => rep.summary.index.substring(component.summary.index.length))
+                                                     .filter(index => !isNaN(index))
+                                                     .map(index => parseInt(index));
+        return levelIndexes.length > 0 ? `${component.summary.index}${Math.max(...levelIndexes) + 1}` : `${component.summary.index}0`;
+    }
 }
 
 MoOverviewComponentsBlock.components = {
