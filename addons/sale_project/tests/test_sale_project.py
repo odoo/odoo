@@ -4,6 +4,7 @@
 from odoo import Command
 from odoo.tests.common import new_test_user
 from .common import TestSaleProjectCommon
+from odoo.tests import Form
 from odoo.tests.common import tagged
 
 @tagged('post_install', '-at_install')
@@ -556,3 +557,73 @@ class TestSaleProject(TestSaleProjectCommon):
         project_B.write({'active': False})
         action = sale_order.action_view_project_ids()
         self.assertEqual(len(get_project_ids_from_action_domain(action)), 2, "Domain should contain 2 projects. (one archived, one not)")
+
+    def test_sale_order_line_view_form_editable(self):
+        """ Check the behavior of the form view editable of `sale.order.line` introduced in that module
+
+            Test Case:
+            =========
+            1. create SO to use it as default_order_id when the SOL will be created by the editable form
+            2. open form view of `sale.order.line` to create and edit a SOL
+            3. create on the fly a product and check default values of that product
+                3.1. type should be "service"
+                3.2. service_policy should be "ordered_prepaid" (Prepaid/Fixed Price)
+            4. check if the qty_delivered is editable
+                4.1. if sale_timesheet is installed then the field should be readonly otherwise editable
+            5. change the product set on the SOL form view to service product with invoice policy to 'delivered_milestones'
+            6. check if the qty_delivered field is readonly
+            7. change the product set on the SOL form view to service product with invoice policy to 'ordered_prepaid'
+            8. check if the qty_delivered is editable
+                8.1. if sale_timesheet is installed then the field should be readonly otherwise editable
+            9. change the product set on the SOL form view to service product with invoice policy to 'delivered_manual'
+            10. check if the qty_delivered is editable
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        so.action_confirm()
+        SaleOrderLine = self.env['sale.order.line'].with_context(default_order_id=so.id)
+        self.assertEqual(self.product_service_ordered_prepaid.service_policy, 'ordered_prepaid')
+        self.assertEqual(self.product_service_delivered_milestone.service_policy, 'delivered_milestones')
+        self.assertEqual(self.product_service_delivered_manual.service_policy, 'delivered_manual')
+        with Form(SaleOrderLine, 'sale_project.sale_order_line_view_form_editable') as sol_form:
+            product_context = sol_form._get_context('product_id')
+            product = sol_form.product_id.with_context(product_context).new({
+                'name': 'Test product',
+            })
+            self.assertEqual(product.detailed_type, 'service')
+            self.assertEqual(product.type, 'service')
+            self.assertEqual(product.service_policy, 'ordered_prepaid')
+            sol_form.product_id = product
+            is_readonly = product.service_type != 'manual'
+            self.assertEqual(sol_form._get_modifier('qty_delivered', 'readonly'), is_readonly)
+            if is_readonly:
+                self.assertEqual(sol_form.qty_delivered_method, 'timesheet')
+                self.assertEqual(sol_form.qty_delivered, 0, 'quantity delivered is readonly')
+            else:
+                sol_form.qty_delivered = 1
+                self.assertEqual(sol_form.qty_delivered_method, 'manual')
+                self.assertEqual(sol_form.qty_delivered, 1, 'quantity delivered is editable')
+                sol_form.qty_delivered = 0  # reset for the next test case
+
+            sol_form.product_id = self.product_service_delivered_milestone
+            self.assertTrue(sol_form._get_modifier('qty_delivered', 'readonly'))
+            self.assertEqual(sol_form.qty_delivered_method, 'milestones')
+
+            sol_form.product_id = self.product_service_ordered_prepaid
+            is_readonly = self.product_service_ordered_prepaid.service_type != 'manual'
+            self.assertEqual(sol_form._get_modifier('qty_delivered', 'readonly'), is_readonly)
+            if is_readonly:  # then sale_timesheet module installed
+                self.assertEqual(sol_form.qty_delivered_method, 'timesheet')
+                self.assertEqual(sol_form.qty_delivered, 0, 'quantity delivered is readonly')
+            else:
+                sol_form.qty_delivered = 1
+                self.assertEqual(sol_form.qty_delivered_method, 'manual')
+                self.assertEqual(sol_form.qty_delivered, 1, 'quantity delivered is editable')
+                sol_form.qty_delivered = 0  # reset for the next test case
+
+            sol_form.product_id = self.product_service_delivered_manual
+            self.assertFalse(sol_form._get_modifier('qty_delivered', 'readonly'))
+            sol_form.qty_delivered = 1
+            self.assertEqual(sol_form.qty_delivered_method, 'manual')
+            self.assertEqual(sol_form.qty_delivered, 1, 'quantity delivered is editable')
