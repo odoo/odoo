@@ -1177,8 +1177,8 @@ class PosSession(models.Model):
                                 % (product.name, product.id))
             return order_line.order_id.fiscal_position_id.map_account(income_account)
 
-        tax_ids = order_line.tax_ids_after_fiscal_position\
-                    .filtered(lambda t: t.company_id.id == order_line.order_id.company_id.id)
+        company_domain = self.env['account.tax']._check_company_domain(order_line.order_id.company_id)
+        tax_ids = order_line.tax_ids_after_fiscal_position.filtered_domain(company_domain)
         sign = -1 if order_line.qty >= 0 else 1
         price = sign * order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
         # The 'is_refund' parameter is used to compute the tax tags. Ultimately, the tags are part
