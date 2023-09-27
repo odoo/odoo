@@ -361,7 +361,14 @@ var DataImport = AbstractAction.extend({
         this.$form.find('.oe_import_box').toggle(import_toggle);
         jsonp(this.$form, {
             url: '/base_import/set_file'
-        }, this.proxy('settings_changed'));
+        }, (res) => {
+            if (res.result) {
+                this.proxy('settings_changed');
+            }
+            if (res.import_size_exceeded) {
+                this.do_notify(false, _t('The file is too large to be imported.'))
+            }
+        });
     },
     onpreviewing: function () {
         var self = this;

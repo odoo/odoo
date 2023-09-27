@@ -13,9 +13,16 @@ class ImportController(http.Controller):
     @http.route('/base_import/set_file', methods=['POST'])
     def set_file(self, file, import_id, jsonp='callback'):
         import_id = int(import_id)
+        file_data = file.read()
+
+        if (len(file_data) > request.env['ir.http'].session_info()['max_file_upload_size']):
+            return 'window.top.%s(%s)' % (misc.html_escape(jsonp), json.dumps({
+                'import_size_exceeded': True,
+                'result': False,
+            }))
 
         written = request.env['base_import.import'].browse(import_id).write({
-            'file': file.read(),
+            'file': file_data,
             'file_name': file.filename,
             'file_type': file.content_type,
         })
