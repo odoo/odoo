@@ -12,6 +12,14 @@
                     readonly="0"
                     invisible="display_type != 'certification'"/>
             </xpath>
+            <field name="employee_id" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </field>
+            <field name="survey_id" position="attributes">
+                <attribute name="context">
+                    {'default_certification': True}
+                </attribute>
+            </field>
         </field>
     </record>
 </odoo>
