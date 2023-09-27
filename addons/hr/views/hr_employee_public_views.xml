@@ -150,7 +150,7 @@
                                     <li id="last_login"/>
                                     <li id="presence">
                                         <t t-if="record.show_hr_icon_display.raw_value">
-                                            <div class="o_employee_availability align-items-center">
+                                            <div class="o_employee_availability d-flex align-items-start">
                                                 <!-- Employee is present/connected and it is normal according to his work schedule  -->
                                                 <span t-if="record.hr_icon_display.raw_value == 'presence_present'"
                                                       class="fa fa-2x fa-circle text-success" name="presence_present" role="img"

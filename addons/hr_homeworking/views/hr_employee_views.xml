@@ -87,10 +87,11 @@
                 <t t-set="location" t-value="record.hr_icon_display.raw_value.split('_')[1]"/>
                 <t t-set="icon" t-value="location_map[location]"/>
                 <t t-if="location !== 'holiday'">
-                    <span class="fa fa-2x" t-attf-class="{{icon}} {{text_color}}" role="img"
+                    <span class="fa fa-2x" t-attf-class="{{icon}} {{text_color}} d-flex me-2" role="img"
                         t-att-aria-label="`Working from ${location}`" t-att-title="`Working from ${location}`"
                         t-att-name="`presence ${record.hr_presence_state.raw_value} at ${location}`"
                     />
+                    <field name="name_work_location_display" string="Work Location"/>
                 </t>
             </xpath>
         </field>
