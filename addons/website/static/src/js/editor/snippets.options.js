@@ -658,6 +658,12 @@ options.Class.include({
     /**
      * @see this.selectClass for parameters
      */
+    customizeWebsiteVariables: async function (previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, 'variables');
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
     customizeWebsiteColor: async function (previewMode, widgetValue, params) {
         await this._customizeWebsite(previewMode, widgetValue, params, 'color');
     },
@@ -757,6 +763,16 @@ options.Class.include({
                 break;
             case 'variable':
                 await this._customizeWebsiteVariable(widgetValue, params);
+                break;
+            case "variables":
+                const defaultVariables = params.defaultVariables ?
+                    Object.fromEntries(params.defaultVariables.split(",")
+                        .map((variable) => variable.split(":").map(v => v.trim()))) :
+                    {};
+                const overriddenVariables = Object.fromEntries(widgetValue.split(",")
+                    .map((variable) => variable.split(":").map(v => v.trim())));
+                const variables = Object.assign(defaultVariables, overriddenVariables);
+                await this._customizeWebsiteVariables(variables, params.nullValue);
                 break;
             case 'color':
                 await this._customizeWebsiteColor(widgetValue, params);

@@ -1108,6 +1108,10 @@ header {
         }
         border-radius: o-website-value('menu-border-radius') !important;
         box-shadow: o-website-value('menu-box-shadow') !important;
+
+        &.o_header_force_no_radius {
+            border-radius: 0 !important;
+        }
     }
     // Prevent the color of the header to impact the color of the nav.
     &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {

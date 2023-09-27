@@ -300,6 +300,7 @@
         <t t-set="with_bs_class" t-value="True"/>
     </t>
     <we-input string="Round Corners"
+              t-if="not no_border_radius"
               t-att-data-apply-to="apply_to"
               t-att-data-dependencies="not so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
               data-select-style="0" data-css-property="border-radius"
@@ -331,6 +332,20 @@
         <!-- for the we-multi widget to work properly. -->
         <we-checkbox data-name="fake_inset_shadow_opt" data-select-style="inset"/>
     </we-multi>
+</template>
+
+<template id="snippet_options_header_box">
+    <t t-call="website.snippet_options_border_widgets">
+        <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        <t t-set="width_variable" t-value="'menu-border-width'"/>
+        <t t-set="style_variable" t-value="'menu-border-style'"/>
+        <t t-set="color_variable" t-value="'menu-border-color'"/>
+        <t t-set="radius_variable" t-value="'menu-border-radius'"/>
+        <t t-set="no_border_radius" t-value="_no_border_radius"/>
+    </t>
+    <t t-call="website.snippet_options_shadow_widgets">
+        <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
+    </t>
 </template>
 
 <template id="snippet_options_conditional_visibility">
@@ -735,59 +750,73 @@
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-select string="Template" data-variable="header-template" data-reload="/" data-no-preview="true">
+        <we-select string="Template" data-variable="header-template"
+                   data-default-variables="header-links-style: default"
+                   data-reload="/" data-no-preview="true">
             <we-button title="Default"
                        data-name="header_default_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_default"
                        data-customize-website-variable="'default'"
                        data-img="/website/static/src/img/snippets_options/header_template_default.svg"/>
             <we-button title="Hamburger menu"
                        data-name="header_hamburger_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_hamburger, website.no_autohide_menu"
                        data-customize-website-variable="'hamburger'"
                        data-img="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
             <we-button title="Rounded box menu"
                        data-name="header_boxed_opt"
-                       data-customize-website-views="website.template_header_boxed"
+                       data-trigger="over_content_header_visibility_opt"
+                       data-customize-website-views="website.header_navbar_pills_style,website.template_header_boxed"
                        data-customize-website-variable="'boxed'"
+                       data-customize-website-variables="header-links-style: pills"
                        data-img="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
             <we-button title="Stretch menu"
                        data-name="header_stretch_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_stretch"
                        data-customize-website-variable="'stretch'"
                        data-img="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
             <we-button title="Vertical"
                        data-name="header_vertical_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_vertical"
                        data-customize-website-variable="'vertical'"
                        data-img="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
             <we-button title="Menu with Search bar"
                        data-name="header_search_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_search"
                        data-customize-website-variable="'search'"
                        data-img="/website/static/src/img/snippets_options/header_template_search.svg"/>
             <we-button title="Menu - Sales 1"
                        data-name="header_sales_one_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_sales_one"
                        data-customize-website-variable="'sales_one'"
                        data-img="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
             <we-button title="Menu - Sales 2"
                        data-name="header_sales_two_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_sales_two"
                        data-customize-website-variable="'sales_two'"
                        data-img="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
             <we-button title="Menu - Sales 3"
                        data-name="header_sales_three_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_sales_three"
                        data-customize-website-variable="'sales_three'"
                        data-img="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
             <we-button title="Menu - Sales 4"
                        data-name="header_sales_four_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_sales_four"
                        data-customize-website-variable="'sales_four'"
                        data-img="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
             <we-button title="Sidebar"
                        data-name="header_sidebar_opt"
+                       data-trigger="regular_header_visibility_opt"
                        data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
                        data-customize-website-variable="'sidebar'"
                        data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
@@ -843,19 +872,21 @@
     <!-- Header - Borders & Shadows -->
     <div data-js="HeaderBox"
          id="option_header_shadow"
-         data-selector="#wrapwrap > header"
+         data-selector="#wrapwrap > header:not(:has(.o_header_force_no_radius))"
          data-target="nav"
          data-no-check="true"
          groups="website.group_website_designer">
-        <t t-call="website.snippet_options_border_widgets">
-            <t t-set="so_rounded_no_dependencies" t-value="True"/>
-            <t t-set="width_variable" t-value="'menu-border-width'"/>
-            <t t-set="style_variable" t-value="'menu-border-style'"/>
-            <t t-set="color_variable" t-value="'menu-border-color'"/>
-            <t t-set="radius_variable" t-value="'menu-border-radius'"/>
-        </t>
-        <t t-call="website.snippet_options_shadow_widgets">
-            <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
+        <t t-call="website.snippet_options_header_box"/>
+    </div>
+
+    <div data-js="HeaderBox"
+         id="option_header_shadow"
+         data-selector="#wrapwrap > header:has(.o_header_force_no_radius)"
+         data-target="nav"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <t t-call="website.snippet_options_header_box">
+            <t t-set="_no_border_radius" t-value="True"/>
         </t>
     </div>
 
@@ -927,7 +958,8 @@
          data-no-check="true">
         <we-select string="Header Position" data-no-preview="true"
                    data-dependencies="!header_sidebar_opt">
-            <we-button data-visibility="transparent">Over The Content</we-button>
+            <we-button data-name="over_content_header_visibility_opt"
+                       data-visibility="transparent">Over The Content</we-button>
             <we-button data-name="regular_header_visibility_opt"
                        data-visibility="regular">Regular</we-button>
             <we-button data-visibility="hidden">Hidden</we-button>
