@@ -200,18 +200,16 @@ if (window.QUnit) {
     QUnit.testStart(() => (hasUsedContainsPositively = false));
 }
 /**
+ * @typedef {[string, ContainsOptions]} ContainsTuple tuple representing params of the contains
+ *  function, where the first element is the selector, and the second element is the options param.
  * @typedef {Object} ContainsOptions
- * @property {[string, ContainsOptions]} [after] if provided, the found element(s) must be after the
- *  element matched by this param.
- * @property {[string, ContainsOptions]} [before] if provided, the found element(s) must be before the
- *  element matched by this param.
+ * @property {ContainsTuple} [after] if provided, the found element(s) must be after the element
+ *  matched by this param.
+ * @property {ContainsTuple} [before] if provided, the found element(s) must be before the element
+ *  matched by this param.
  * @property {Object} [click] if provided, clicks on the first found element
- * @property {[string, ContainsOptions]} [contains] if provided, a sub-contains check will be applied
- *  having the result of the main contains as target. The first param is the sub-selector, and the
- *  secound param are options to forward to the sub-call. Having sub-contains only makes sense with
- *  a count of 1.
- * @property {Array<[string, ContainsOptions]>} [containsMulti] similar than contains param but with
- *  multiple rules that have to match at the same time.
+ * @property {ContainsTuple|ContainsTuple[]} [contains] if provided, the found element(s) must
+ *  contain the provided sub-elements.
  * @property {number} [count=1] numbers of elements to be found to declare the contains check
  *  as successful. Elements are counted after applying all other filters.
  * @property {Object[]} [dragenterFiles] if provided, dragenters the given files on the found element
@@ -220,7 +218,7 @@ if (window.QUnit) {
  * @property {Object[]} [inputFiles] if provided, inputs the given files on the found element
  * @property {{content:string, replace:boolean}} [insertText] if provided, adds to (or replace) the
  *  value of the first found element by the given content.
- * @property {[string, ContainsOptions]} [parent] if provided, the found element(s) must have as
+ * @property {ContainsTuple} [parent] if provided, the found element(s) must have as
  *  parent the node matching the parent parameter.
  * @property {Object[]} [pasteFiles] if provided, pastes the given files on the found element
  * @property {number|"bottom"} [scroll] if provided, the scrollTop of the found element(s)
@@ -267,9 +265,6 @@ class Contains {
         if (this.options.contains) {
             selectorMessage = `${selectorMessage} with a specified sub-contains`;
         }
-        if (this.options.containsMulti) {
-            selectorMessage = `${selectorMessage} with multiple specified sub-contains`;
-        }
         if (this.options.text !== undefined) {
             selectorMessage = `${selectorMessage} with text "${this.options.text}"`;
         }
@@ -289,9 +284,8 @@ class Contains {
             selectorMessage = `${selectorMessage} before a specified element`;
         }
         this.selectorMessage = selectorMessage;
-        this.options.containsMulti ??= [];
-        if (this.options.contains !== undefined) {
-            this.options.containsMulti.push(this.options.contains);
+        if (this.options.contains && !Array.isArray(this.options.contains[0])) {
+            this.options.contains = [this.options.contains];
         }
         if (this.options.count) {
             hasUsedContainsPositively = true;
@@ -549,8 +543,8 @@ class Contains {
                     condition = false;
                 }
             }
-            if (condition) {
-                for (const param of this.options.containsMulti) {
+            if (condition && this.options.contains) {
+                for (const param of this.options.contains) {
                     const childContains = new Contains(param[0], { ...param[1], target: el });
                     if (
                         !childContains.runOnce(`as child of el ${currentIndex + 1})`, {

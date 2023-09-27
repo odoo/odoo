@@ -428,7 +428,7 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     openDiscuss();
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-DiscussSidebarChannel", {
-        containsMulti: [
+        contains: [
             ["span", { text: "General" }],
             [".badge", { text: "2" }],
         ],
@@ -437,7 +437,7 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
     await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-DiscussSidebarChannel", {
-        containsMulti: [
+        contains: [
             ["span", { text: "General" }],
             [".badge", { count: 0 }],
         ],

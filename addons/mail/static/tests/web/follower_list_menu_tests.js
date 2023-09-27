@@ -197,13 +197,13 @@ QUnit.test(
         await click(".o-mail-Followers-button");
         await contains("a", { count: 0, text: "Add Followers" });
         await contains(":nth-child(1 of .o-mail-Follower)", {
-            containsMulti: [
+            contains: [
                 ["button[title='Edit subscription']"],
                 ["button[title='Remove this follower']"],
             ],
         });
         await contains(":nth-child(2 of .o-mail-Follower)", {
-            containsMulti: [
+            contains: [
                 ["button[title='Edit subscription']", { count: 0 }],
                 ["button[title='Remove this follower']", { count: 0 }],
             ],
@@ -320,13 +320,13 @@ QUnit.test(
         await click(".o-mail-Followers-button");
         await contains("a", { text: "Add Followers" });
         await contains(":nth-child(1 of .o-mail-Follower)", {
-            containsMulti: [
+            contains: [
                 ["button[title='Edit subscription']"],
                 ["button[title='Remove this follower']"],
             ],
         });
         await contains(":nth-child(2 of .o-mail-Follower)", {
-            containsMulti: [
+            contains: [
                 ["button[title='Edit subscription']"],
                 ["button[title='Remove this follower']"],
             ],
