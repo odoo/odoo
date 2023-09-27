@@ -356,6 +356,7 @@ export class Wysiwyg extends Component {
 
         let editorCollaborationOptions;
         if (this._isCollaborationEnabled(options)) {
+            this._currentClientId = this._generateClientId();
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             if (this.options.collaborativeTrigger === 'start') {
                 this._joinPeerToPeer();
@@ -692,7 +693,6 @@ export class Wysiwyg extends Component {
             this.busService.deleteChannel(this._collaborationChannelName);
         }
 
-        this._currentClientId = this._generateClientId();
         this._startCollaborationTime = new Date().getTime();
 
         this._checkConnectionChange = () => {
@@ -3165,12 +3165,14 @@ export class Wysiwyg extends Component {
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
         if (!this._isCollaborationEnabled(this.options)) {
+            this._currentClientId = undefined;
             this.resetValue(value);
             return;
         }
+        this._currentClientId = this._generateClientId();
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.resetValue(value);
         this.setupCollaboration(collaborationChannel);
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         if (this.options.collaborativeTrigger === 'start') {
             this._joinPeerToPeer();
         } else if (this.options.collaborativeTrigger === 'focus') {
