@@ -79,13 +79,7 @@ function getOpenFormView(openView) {
  * web clients.
  */
 function resetRegistries() {
-    const categories = [
-        "actions",
-        "main_components",
-        "services",
-        "systray",
-        "wowlToLegacyServiceMappers",
-    ];
+    const categories = ["actions", "main_components", "services", "systray"];
     for (const name of categories) {
         clearRegistryWithCleanup(registry.category(name));
     }

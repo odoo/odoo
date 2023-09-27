@@ -190,7 +190,6 @@ For more specific needs, you may also assign custom-defined actions
 
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
-            ('remove', 'bus/static/src/services/legacy/**/*'),
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
 
