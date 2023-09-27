@@ -2610,6 +2610,24 @@ class IrQWeb(models.AbstractModel):
         """
         _logger.runbot('Pregenerating assets bundles')
 
+        js_bundles, css_bundles = self._get_bundles_to_pregenarate()
+
+        links = []
+        start = time.time()
+        for bundle in sorted(js_bundles):
+            links += self._generate_asset_links(bundle, css=False, js=True)
+        _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
+        start = time.time()
+        for bundle in sorted(css_bundles):
+            links += self._generate_asset_links(bundle, css=True, js=False)
+        _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
+        return links
+
+    def _get_bundles_to_pregenarate(self):
+        """
+        Returns the list of bundles to pregenerate.
+        """
+
         views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
@@ -2622,16 +2640,8 @@ class IrQWeb(models.AbstractModel):
                     js_bundles.add(asset)
                 if css:
                     css_bundles.add(asset)
-        links = []
-        start = time.time()
-        for bundle in sorted(js_bundles):
-            links += self._generate_asset_links(bundle, css=False, js=True)
-        _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
-        start = time.time()
-        for bundle in sorted(css_bundles):
-            links += self._generate_asset_links(bundle, css=True, js=False)
-        _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
-        return links
+
+        return (js_bundles, css_bundles)
 
 
 def render(template_name, values, load, **options):
