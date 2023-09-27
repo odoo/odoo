@@ -13,7 +13,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import format_date, Query
+from odoo.tools import format_date
 
 
 class HrEmployeePrivate(models.Model):
