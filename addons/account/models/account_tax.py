@@ -186,6 +186,7 @@ class AccountTax(models.Model):
                     ('name', '=', record.name),
                     ('type_tax_use', '=', record.type_tax_use),
                     ('tax_scope', '=', record.tax_scope),
+                    ('country_id', '=', record.country_id.id),
                     ('id', '!=', record.id),
                 ])
         if duplicates := self.search(expression.OR(domains)):
@@ -383,6 +384,8 @@ class AccountTax(models.Model):
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
             if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
                 name += ' (%s)' % record.company_id.display_name
+            if record.country_id != record.company_id.account_fiscal_country_id:
+                name += ' (%s)' % record.country_code
             record.display_name = name
 
     @api.onchange('amount')
