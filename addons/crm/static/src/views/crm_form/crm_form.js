@@ -67,7 +67,7 @@ class CrmFormController extends formView.Controller {
             localData._changes = changes;
         }
 
-        if ("stage_id" in changes) {
+        if ("stage_id" in changes && changes.stage_id) {
             const bm = record.model.__bm__;
             let oldStageId = false;
             if (bm.localData[recordID].data.stage_id) {
