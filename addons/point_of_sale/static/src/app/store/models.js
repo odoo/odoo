@@ -1278,6 +1278,14 @@ export class Order extends PosModel {
         }
         return json;
     }
+    async updateWithServerData(data) {
+        if ("id" in data) {
+            this.server_id = data.id;
+        }
+        if ("account_move" in data) {
+            this.account_move = data.account_move;
+        }
+    }
     export_for_printing() {
         // If order is locked (paid), the 'change' is saved as negative payment,
         // and is flagged with is_change = true. A receipt that is printed first
@@ -2477,9 +2485,6 @@ export class Order extends PosModel {
             return { name: "PaymentScreen" };
         }
         return screen;
-    }
-    wait_for_push_order() {
-        return false;
     }
     updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;

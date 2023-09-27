@@ -16,15 +16,20 @@ patch(Order.prototype, {
         result.l10n_co_dian = this.get_l10n_co_dian();
         return result;
     },
+    async updateWithServerData(data) {
+        await super.updateWithServerData(data);
+        if ("name" in data) {
+            this.set_l10n_co_dian(data.name);
+        }
+    },
+    init_from_JSON(json) {
+        super.init_from_JSON(...arguments);
+        this.set_l10n_co_dian(json.l10n_co_dian);
+    },
     set_l10n_co_dian(l10n_co_dian) {
         this.l10n_co_dian = l10n_co_dian;
     },
     get_l10n_co_dian() {
         return this.l10n_co_dian;
-    },
-    wait_for_push_order() {
-        var result = super.wait_for_push_order(...arguments);
-        result = Boolean(result || this.pos.is_colombian_country());
-        return result;
     },
 });

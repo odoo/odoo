@@ -147,13 +147,15 @@ class PosOrder(models.Model):
             pos_order = existing_order
             pos_order.lines.unlink()
             order['user_id'] = pos_order.user_id.id
-            pos_order.write(self._order_fields(order))
+            data_to_write = self._order_fields(order)
+            data_to_write.pop('access_token', None)
+            pos_order.write(data_to_write)
 
         pos_order._link_combo_items(order)
         pos_order = pos_order.with_company(pos_order.company_id)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
-        return pos_order._process_saved_order(draft)
+        return pos_order._process_saved_order(draft, order)
 
     def _link_combo_items(self, order_vals):
         self.ensure_one()
@@ -166,7 +168,7 @@ class PosOrder(models.Model):
             if line.get('combo_parent_id'):
                 line_by_uuid[line['uuid']].combo_parent_id = line_by_uuid[uuid_by_cid[line['combo_parent_id']]]
 
-    def _process_saved_order(self, draft):
+    def _process_saved_order(self, draft, order_data=None):
         self.ensure_one()
         if not draft:
             try:
@@ -182,7 +184,7 @@ class PosOrder(models.Model):
         if self.to_invoice and self.state == 'paid':
             self._generate_pos_order_invoice()
 
-        return self.id
+        return {'id': self.id}
 
     def _clean_payment_lines(self):
         self.ensure_one()
@@ -917,6 +919,10 @@ class PosOrder(models.Model):
         return payment_moves
 
     @api.model
+    def _get_create_from_ui_returned_fields_name(self):
+        return ['id', 'pos_reference', 'account_move']
+
+    @api.model
     def create_from_ui(self, orders, draft=False):
         """ Create and update Orders from the frontend PoS application.
 
@@ -930,7 +936,7 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
-        order_ids = []
+        orders_extra_data = {}
         for order in orders:
             existing_draft_order = None
 
@@ -949,13 +955,25 @@ class PosOrder(models.Model):
                 existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
 
             if existing_draft_order:
-                order_ids.append(self._process_order(order, draft, existing_draft_order))
+                process_order_data = self._process_order(order, draft, existing_draft_order)
+                orders_extra_data[process_order_data.pop('id')] = process_order_data
             else:
                 existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
                 if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
-                    order_ids.append(self._process_order(order, draft, False))
+                    process_order_data = self._process_order(order, draft, False)
+                    orders_extra_data[process_order_data.pop('id')] = process_order_data
 
-        return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        res = self.env['pos.order'].search_read(
+            domain=[('id', 'in', list(orders_extra_data.keys()))],
+            fields=self._get_create_from_ui_returned_fields_name(),
+            load=False
+        ) if orders_extra_data.keys() else []
+        for res_order_data in res:
+            order_extra_data = orders_extra_data.get(res_order_data['id'])
+            if order_extra_data:
+                res_order_data['extra_data'] = order_extra_data
+
+        return res
 
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]

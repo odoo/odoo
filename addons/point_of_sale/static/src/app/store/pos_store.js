@@ -1225,13 +1225,13 @@ export class PosStore extends Reactive {
             ]);
 
             const orderToRemove = serverIds.map((sid) => sid.pos_reference.split(" ")[1]);
-            for (const serverId of serverIds) {
-                const order = this.env.services.pos.orders.find(
-                    (order) => order.name === serverId.pos_reference
+            for (const serverOrderData of serverIds) {
+                const order = this.orders.find(
+                    (order) => order.name === serverOrderData.pos_reference
                 );
 
                 if (order) {
-                    order.server_id = serverId.id;
+                    await order.updateWithServerData(serverOrderData);
                 }
             }
 

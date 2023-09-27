@@ -1,13 +1,167 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from collections import defaultdict
-from odoo import _, models
+from collections import defaultdict, OrderedDict
+from odoo import api, models, _
 from odoo.tools import float_compare
 import base64
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
+
+    # This whole file is temporary and will be fixed in the future.
+
+    def _process_saved_order(self, draft, order_data=None):
+        self.ensure_one()
+        res = super()._process_saved_order(draft, order_data)
+
+        loyalty_coupons_data = order_data.get('loyalty_coupons_data') if order_data else None
+        is_loyalty_coupons_data_provided = loyalty_coupons_data is not None
+
+        if self.state in ('paid', 'done', 'invoiced'):
+            if is_loyalty_coupons_data_provided:
+                self._delete_coupons_data()
+                if loyalty_coupons_data:
+                    res.update(self._confirm_coupon_programs(loyalty_coupons_data))
+            else:
+                res.update(self._apply_saved_coupons_data())
+        elif is_loyalty_coupons_data_provided:
+            self._save_coupons_data(loyalty_coupons_data)
+
+        return res
+
+    def _save_coupons_data(self, coupons_data):
+        self.ensure_one()
+        self._delete_coupons_data()
+
+        # Keys are stringified when using rpc
+        coupons_data = {int(coupon_temp_id): coupon_data for coupon_temp_id, coupon_data in coupons_data.items()}
+        self._check_existing_loyalty_cards(coupons_data)
+
+        # Check that the provided positive loyalty.card ids are valid, otherwise ignore them
+        existing_coupons_to_add_points_id = [coupon_id for coupon_id, coupon_data in coupons_data.items() if coupon_id > 0 and not coupon_data.get('giftCardId')]
+        existing_coupons_read_result = self.env['loyalty.card'].search_read(domain=[('id', 'in', existing_coupons_to_add_points_id)], fields=['id']) if existing_coupons_to_add_points_id else []
+        coupons_to_add_points_temp_id_by_real_id = {coupon_read['id']: coupon_read['id'] for coupon_read in existing_coupons_read_result}
+
+        # Create the coupons that were awarded with the order.
+        coupons_to_create = OrderedDict({coupon_temp_id: coupon_data for coupon_temp_id, coupon_data in coupons_data.items() if coupon_temp_id < 0 and not coupon_data.get('giftCardId')})
+
+        created_coupons = self.env['loyalty.card'].with_context(action_no_send_mail=True).sudo().create([{
+            'program_id': coupon_data['program_id'],
+            'partner_id': self._get_partner_id(coupon_data.get('partner_id', False)),
+            'code': coupon_data.get('barcode') or self.env['loyalty.card']._generate_code(),
+            'points': 0,
+            'source_pos_order_id': self.id,
+        } for coupon_data in coupons_to_create.values()])
+
+        # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
+        gift_cards_to_update = [coupon_data for coupon_data in coupons_data.values() if coupon_data.get('giftCardId')]
+
+        self.env['pos.loyalty.points.change'].sudo().create([{
+            'order_id': self.id,
+            'coupon_id': coupon_data['giftCardId'],
+            'points': coupon_data['points'],
+            'add_points': False,
+            'is_coupon_created': False,
+            'coupon_new_partner_id': self._get_partner_id(coupon_data.get('partner_id', False)),
+            'temporary_id': 0, # Unused
+        } for coupon_data in gift_cards_to_update])
+
+        # Map the newly created coupons
+        # By sorting created_coupons, coupons_to_create and created_coupons should be in the same order.
+        for created_coupon_temp_id, created_coupon in zip(coupons_to_create.keys(), created_coupons.sorted(key=lambda r: r.id)):
+            coupons_to_add_points_temp_id_by_real_id[created_coupon.id] = created_coupon_temp_id
+
+        self.env['pos.loyalty.points.change'].sudo().create([{
+            'order_id': self.id,
+            'coupon_id': coupon_id,
+            'points': coupons_data[coupon_temp_id]['points'],
+            'add_points': True,
+            'is_coupon_created': coupon_id in created_coupons.ids,
+            'temporary_id': coupon_temp_id,
+        } for coupon_id, coupon_temp_id in coupons_to_add_points_temp_id_by_real_id.items()])
+
+        lines_per_reward_code = defaultdict(lambda: self.env['pos.order.line'])
+        for line in self.lines:
+            if not line.reward_identifier_code:
+                continue
+            lines_per_reward_code[line.reward_identifier_code] |= line
+
+        for coupon_id, coupon_temp_id in coupons_to_add_points_temp_id_by_real_id.items():
+            for reward_code in coupons_data[coupon_temp_id].get('line_codes', []):
+                lines_per_reward_code[reward_code].coupon_id = coupon_id
+
+    def _delete_coupons_data(self):
+        points_changes_sudo = self.env['pos.loyalty.points.change'].sudo().search([('order_id', 'in', self.ids)])
+
+        self.lines.filtered('coupon_id').coupon_id = False
+
+        if points_changes_sudo:
+            created_coupons = points_changes_sudo.filtered('is_coupon_created').coupon_id
+            points_changes_sudo.unlink()
+            created_coupons.unlink()
+
+    def _apply_saved_coupons_data(self):
+        self.ensure_one()
+        points_changes_sudo = self.env['pos.loyalty.points.change'].sudo().search([('order_id', '=', self.id)]).with_context(bypass_pos_loyalty_card_modifiable_check=True)
+
+        updated_gift_cards = self.env['loyalty.card']
+        if points_changes_sudo:
+            for points_change in points_changes_sudo:
+                if points_change.add_points:
+                    points_change.coupon_id.points += points_change.points
+                else:
+                    if points_change.coupon_id.program_type == 'gift_card':
+                        points_change.coupon_id.write({
+                            'points': points_change.points,
+                            'source_pos_order_id': self.id,
+                            'partner_id': points_change.coupon_new_partner_id.id,
+                        })
+                        updated_gift_cards |= points_change.coupon_id
+                    else: # Currently unused
+                        points_change.coupon_id.points = points_change.points
+
+        created_coupons = points_changes_sudo.filtered('is_coupon_created').coupon_id
+        # Send creation email
+        created_coupons.with_context(action_no_send_mail=False)._send_creation_communication()
+
+        # Reports per program
+        report_per_program = {}
+        coupon_per_report = defaultdict(list)
+        # Important to include the updated gift cards so that it can be printed. Check coupon_report.
+        for coupon in created_coupons | updated_gift_cards:
+            if coupon.program_id not in report_per_program:
+                report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
+                    filtered(lambda c: c.trigger == 'create').pos_report_print_id
+            for report in report_per_program[coupon.program_id]:
+                coupon_per_report[report.id].append(coupon.id)
+
+        added_points_coupons_by_temp_id = {points_change.temporary_id: points_change.coupon_id for points_change in points_changes_sudo.filtered('add_points')}
+        points_changes_sudo.unlink()
+        return {
+            'coupon_updates': [{
+                'old_id': coupon_temp_id,
+                'id': coupon.id,
+                'points': coupon.points,
+                'code': coupon.code,
+                'program_id': coupon.program_id.id,
+                'partner_id': coupon.partner_id.id,
+            } for coupon_temp_id, coupon in added_points_coupons_by_temp_id.items() if coupon.program_id.is_nominative],
+            'program_updates': [{
+                'program_id': coupon.program_id.id,
+                'usages': coupon.program_id.total_order_count,
+            } for coupon in added_points_coupons_by_temp_id.values()],
+            'new_coupon_info': [{
+                'program_name': coupon.program_id.name,
+                'expiration_date': coupon.expiration_date,
+                'code': coupon.code,
+            } for coupon in created_coupons if (
+                coupon.program_id.applies_on == 'future'
+                # Don't send the coupon code for the gift card and ewallet programs.
+                # It should not be printed in the ticket.
+                and coupon.program_id.program_type not in ['gift_card', 'ewallet']
+            )],
+            'coupon_report': coupon_per_report,
+        }
 
     def validate_coupon_programs(self, point_changes, new_codes):
         """
@@ -52,7 +206,11 @@ class PosOrder(models.Model):
             'payload': {},
         }
 
-    def confirm_coupon_programs(self, coupon_data):
+    @api.model
+    def _get_partner_id(self, partner_id):
+        return partner_id and self.env['res.partner'].browse(partner_id).exists() and partner_id or False
+
+    def _confirm_coupon_programs(self, coupon_data):
         """
         This is called after the order is created.
 
@@ -192,3 +350,7 @@ class PosOrder(models.Model):
                         attachment += [(4, gift_card_pdf.id)]
 
         return attachment
+
+    def unlink(self):
+        self._delete_coupons_data()
+        return super().unlink()

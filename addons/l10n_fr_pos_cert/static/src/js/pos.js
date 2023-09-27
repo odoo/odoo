@@ -36,6 +36,16 @@ patch(Order.prototype, {
         this.l10n_fr_hash = this.l10n_fr_hash || false;
         this.save_to_db();
     },
+    init_from_JSON(json) {
+        super.init_from_JSON(...arguments);
+        this.set_l10n_fr_hash(json.l10n_fr_hash);
+    },
+    async updateWithServerData(data) {
+        await super.updateWithServerData(data);
+        if ("l10n_fr_hash" in data) {
+            this.set_l10n_fr_hash(data.l10n_fr_hash);
+        }
+    },
     export_for_printing() {
         var result = super.export_for_printing(...arguments);
         result.l10n_fr_hash = this.get_l10n_fr_hash();
@@ -46,11 +56,6 @@ patch(Order.prototype, {
     },
     get_l10n_fr_hash() {
         return this.l10n_fr_hash;
-    },
-    wait_for_push_order() {
-        var result = super.wait_for_push_order(...arguments);
-        result = Boolean(result || this.pos.is_french_country());
-        return result;
     },
 });
 

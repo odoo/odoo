@@ -87,3 +87,8 @@ class PosSession(models.Model):
                 reward['reward_product_domain'] = self._replace_ilike_with_in(reward['reward_product_domain'])
 
         return result
+
+    def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
+        res = super()._validate_session(balancing_account, amount_to_balance, bank_payment_method_diffs)
+        self.order_ids.filtered(lambda o: o.state == 'cancel')._delete_coupons_data()
+        return res

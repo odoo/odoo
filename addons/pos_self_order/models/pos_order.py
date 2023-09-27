@@ -78,8 +78,8 @@ class PosOrder(models.Model):
 
         return super().create_from_ui(orders, draft)
 
-    def _process_saved_order(self, draft):
-        res = super()._process_saved_order(draft)
+    def _process_saved_order(self, draft, order_data=None):
+        res = super()._process_saved_order(draft, order_data)
 
         if self.env.context.get('from_self') is not True:
             self._send_notification(self)

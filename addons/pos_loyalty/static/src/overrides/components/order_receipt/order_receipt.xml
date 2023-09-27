@@ -19,7 +19,6 @@
                         <div><t t-esc="_loyaltyStat.points.name"/> Spent: <span t-esc='_loyaltyStat.points.spent' class="pos-receipt-right-align"/></div>
                     </t>
                     <!-- Don't use points.total, it's wrong in this context (after the order synced). -->
-                    <!-- Show balance as it's updated during _postPushOrderResolve. -->
                     <t t-if='_loyaltyStat.points.balance'>
                         <div>Balance <t t-esc="_loyaltyStat.points.name"/>: <span t-esc='_loyaltyStat.points.balance' class="pos-receipt-right-align"/></div>
                     </t>
@@ -41,7 +40,7 @@
                                 <t t-esc="coupon_info['program_name']"/>
                             </div>
                             <div>
-                                <span>Valid until: </span> 
+                                <span>Valid until: </span>
                                 <t t-if="coupon_info['expiration_date']">
                                     <t t-esc="coupon_info['expiration_date']"/>
                                 </t>
