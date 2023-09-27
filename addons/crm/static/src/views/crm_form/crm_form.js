@@ -41,8 +41,28 @@ class CrmFormRecord extends formView.Model.Record {
             this._changes.phone = this._values.phone;
         }
 
+<<<<<<< HEAD
         if ("stage_id" in this._changes) {
             changeStage = this._values.stage_id !== this.data.stage_id;
+||||||| parent of ce969ece8dd (temp)
+        if ("stage_id" in changes) {
+            const bm = record.model.__bm__;
+            let oldStageId = false;
+            if (bm.localData[recordID].data.stage_id) {
+                oldStageId = bm.get(bm.localData[recordID].data.stage_id).data.id;
+            }
+            const newStageId = bm.get(bm.localData[recordID]._changes.stage_id).data.id;
+            this.changedStage = oldStageId !== newStageId;
+=======
+        if ("stage_id" in changes && changes.stage_id) {
+            const bm = record.model.__bm__;
+            let oldStageId = false;
+            if (bm.localData[recordID].data.stage_id) {
+                oldStageId = bm.get(bm.localData[recordID].data.stage_id).data.id;
+            }
+            const newStageId = bm.get(bm.localData[recordID]._changes.stage_id).data.id;
+            this.changedStage = oldStageId !== newStageId;
+>>>>>>> ce969ece8dd (temp)
         }
 
         const res = await super._save(...arguments);
