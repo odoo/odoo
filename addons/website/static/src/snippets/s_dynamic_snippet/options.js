@@ -56,6 +56,13 @@ const dynamicSnippetOptions = options.Class.extend({
         // template values are applied (numberOfElements, rowPerSlide, etc.)
         return this._refreshPublicWidgets();
     },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.customTemplateData = JSON.parse(this.$target[0].dataset?.customTemplateData || "{}");
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -75,6 +82,15 @@ const dynamicSnippetOptions = options.Class.extend({
         if (params.attributeName === 'templateKey' && previewMode === false) {
             this._templateUpdated(widgetValue, params.activeValue);
         }
+    },
+    /**
+     * Saves the template data that will be handled later by the public widget.
+     *
+     * @see this.selectClass for parameters
+     */
+    customizeTemplateValues(previewMode, widgetValue, params) {
+        this.customTemplateData[params.customizeTemplateKey] = widgetValue === "true";
+        this.$target[0].dataset.customTemplateData = JSON.stringify(this.customTemplateData);
     },
 
     //--------------------------------------------------------------------------
@@ -128,6 +144,16 @@ const dynamicSnippetOptions = options.Class.extend({
         }
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     * @private
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === "customizeTemplateValues") {
+            return `${this.customTemplateData[params.customizeTemplateKey] || false}`;
+        }
+        return this._super(...arguments);
     },
     /**
      * @override

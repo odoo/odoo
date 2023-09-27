@@ -26,8 +26,21 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
      * @private
      */
     _computeWidgetVisibility: function (widgetName, params) {
+        const templateKey = this.$target.get(0).dataset.templateKey;
+
         if (widgetName === 'hover_effect_opt') {
-            return this.$target.get(0).dataset.templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture';
+            return templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture';
+        } else if (widgetName === 'picture_size_opt') {
+            return templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture' ||
+            templateKey === 'website_blog.dynamic_filter_template_blog_post_horizontal' ||
+            templateKey === 'website_blog.dynamic_filter_template_blog_post_card';
+        } else if (widgetName === 'teaser_opt') {
+            return templateKey === 'website_blog.dynamic_filter_template_blog_post_card' ||
+            templateKey === 'website_blog.dynamic_filter_template_blog_post_list';
+        } else if (widgetName === 'date_opt') {
+            return templateKey === 'website_blog.dynamic_filter_template_blog_post_card' ||
+            templateKey === 'website_blog.dynamic_filter_template_blog_post_horizontal' ||
+            templateKey === 'website_blog.dynamic_filter_template_blog_post_list';
         }
         return this._super.apply(this, arguments);
     },

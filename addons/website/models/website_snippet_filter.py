@@ -54,7 +54,7 @@ class WebsiteSnippetFilter(models.Model):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in “%s”", record.field_names))
 
-    def _render(self, template_key, limit, search_domain=None, with_sample=False):
+    def _render(self, template_key, limit, search_domain=None, with_sample=False, **custom_template_data):
         """Renders the website dynamic snippet items"""
         self.ensure_one()
         assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
@@ -74,6 +74,7 @@ class WebsiteSnippetFilter(models.Model):
         content = self.env['ir.qweb'].with_context(inherit_branding=False)._render(template_key, dict(
             records=records,
             is_sample=is_sample,
+            **custom_template_data,
         ))
         return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
 
