@@ -136,3 +136,11 @@ class IrQWeb(models.AbstractModel):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m[1], url_adapter(m[2])), atts['style'])
         return atts
+
+    def _get_bundles_to_pregenarate(self):
+        js_assets, css_assets = super(IrQWeb, self)._get_bundles_to_pregenarate()
+        assets = {
+            'website.backend_assets_all_wysiwyg',
+            'website.assets_all_wysiwyg',
+        }
+        return (js_assets | assets, css_assets | assets)
