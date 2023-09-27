@@ -63,7 +63,7 @@ setup(
         'xlwt',
         'zeep',
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.10',
     extras_require={
         'ldap': ['python-ldap'],
     },
