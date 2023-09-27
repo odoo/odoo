@@ -13,7 +13,7 @@ from odoo.osv.expression import AND
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated to this sale')
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', search='_search_tasks_ids', string='Tasks associated with this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)

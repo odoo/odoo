@@ -232,7 +232,7 @@ class AccountAnalyticLine(models.Model):
         if values.get('employee_id'):
             employee = self.env['hr.employee'].browse(values['employee_id'])
             if not employee.active:
-                raise UserError(_('You cannot set an archived employee to the existing timesheets.'))
+                raise UserError(_('You cannot set an archived employee on existing timesheets.'))
         if 'name' in values and not values.get('name'):
             values['name'] = '/'
         if 'company_id' in values and not values.get('company_id'):

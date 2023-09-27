@@ -586,12 +586,12 @@ class Project(models.Model):
         for project in self:
             if project.stage_id.company_id and project.stage_id.company_id != project.company_id:
                 raise UserError(
-                    _('This project is associated with %s, whereas the selected stage belongs to %s. '
+                    _('This project is associated with %(project_company)s, whereas the selected stage belongs to %(stage_company)s. '
                     'There are a couple of options to consider: either remove the company designation '
                     'from the project or from the stage. Alternatively, you can update the company '
-                    'information for these records to align them under the same company.', project.company_id.name, project.stage_id.company_id.name)
+                    'information for these records to align them under the same company.', project_company=project.company_id.name, stage_company=project.stage_id.company_id.name)
                     if project.company_id else
-                    _('This project is not associated to any company, while the stage is associated to %s. '
+                    _('This project is not associated with any company, while the stage is associated with %s. '
                     'There are a couple of options to consider: either change the project\'s company '
                     'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
                 )
@@ -682,7 +682,7 @@ class Project(models.Model):
 
     def action_view_tasks(self):
         action = self.env['ir.actions.act_window'].with_context({'active_id': self.id})._for_xml_id('project.act_project_project_2_project_task_all')
-        action['display_name'] = _("%(name)s", name=self.name)
+        action['display_name'] = self.name
         context = action['context'].replace('active_id', str(self.id))
         context = ast.literal_eval(context)
         context.update({

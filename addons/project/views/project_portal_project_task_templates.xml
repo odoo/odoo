@@ -79,8 +79,11 @@
                                 </td>
                                 <td>
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
-                                    <div t-if="assignees" class="row flex-nowrap">
-                                        <span t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees.mapped('name'))"/>
+                                    <div t-if="assignees" class="row flex-nowrap ps-3">
+                                        <img class="rounded-circle o_portal_contact_img me-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_1024)}" alt="User" style="width: 20px; height: 20px;"/>
+                                        <span t-att-title="'\n'.join(assignees.mapped('name'))">
+                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1"> + <span t-out="len(assignees) - 1"/> others</span>
+                                        </span>
                                     </div>
                                 </td>
                                 <td t-if="groupby != 'milestone' and allow_milestone" name="project_portal_milestones">
