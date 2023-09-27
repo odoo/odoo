@@ -27,7 +27,9 @@ let nextId = 0;
 
 export class PosModel {
     constructor() {
-        this.setup(...arguments);
+        // This allows creation of reactive instance by
+        // returning reactive `this` in the setup override.
+        return this.setup(...arguments);
     }
     /**
      * Create an object with cid. If no cid is in `obj`,
@@ -36,7 +38,7 @@ export class PosModel {
      * @param {Object?} obj its props copied to this instance.
      */
     setup(obj) {
-        this.setup_base(obj);
+        return this.setup_base(obj);
     }
     setup_base(obj) {
         obj = obj || {};
@@ -44,6 +46,7 @@ export class PosModel {
             obj.cid = this.getCID(obj);
         }
         Object.assign(this, obj);
+        return this;
     }
     /**
      * Default cid getter. Used as local identity of this object.

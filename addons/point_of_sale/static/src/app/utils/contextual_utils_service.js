@@ -53,7 +53,6 @@ export const contextualUtilsService = {
             pos_session: pos_data["pos.session"],
             fiscal_positions: pos_data["account.fiscal.position"],
             user: pos_data["res.users"],
-            cash_rounding: pos_data["account.cash.rounding"],
         };
 
         const productUoMDecimals = cache.dp["Product Unit of Measure"];

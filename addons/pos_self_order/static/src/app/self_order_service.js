@@ -384,7 +384,7 @@ export class SelfOrder extends Reactive {
 }
 
 export const selfOrderService = {
-    dependencies: ["rpc", "notification", "router", "cookie"],
+    dependencies: ["rpc", "notification", "router", "cookie", "contextual_utils_service"],
     async start(env, { rpc, notification, router, cookie }) {
         return new SelfOrder(env, { rpc, notification, router, cookie }).ready;
     },

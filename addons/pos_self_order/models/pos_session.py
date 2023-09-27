@@ -40,3 +40,21 @@ class PosSession(models.Model):
             })
 
         return sessions
+
+    def _pos_ui_models_to_load(self):
+        if self.config_id.self_ordering_mode != 'nothing':
+            return [
+                'account.tax',
+                'uom.uom',
+                'res.company',
+                'res.currency',
+                'product.pricelist',
+                'pos.config',
+                'decimal.precision',
+                'stock.picking.type',
+                'pos.session',
+                'account.fiscal.position',
+                'res.users',
+            ]
+        else:
+            return super()._pos_ui_models_to_load()

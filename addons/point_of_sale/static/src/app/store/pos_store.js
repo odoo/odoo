@@ -191,16 +191,7 @@ export class PosStore extends Reactive {
         }
         return this.default_pricelist;
     }
-    async load_product_uom_unit() {
-        const uom_id = await this.orm.call("ir.model.data", "check_object_reference", [
-            "uom",
-            "product_uom_unit",
-        ]);
-        this.uom_unit_id = uom_id[1];
-    }
-
     async after_load_server_data() {
-        await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
         Object.assign(this.toRefundLines, this.db.load("TO_REFUND_LINES") || {});
@@ -222,6 +213,7 @@ export class PosStore extends Reactive {
         this.dp = loadedData["decimal.precision"];
         this.units = loadedData["uom.uom"];
         this.units_by_id = loadedData["units_by_id"];
+        this.uom_unit_id = loadedData["uom_unit_id"];
         this.states = loadedData["res.country.state"];
         this.countries = loadedData["res.country"];
         this.langs = loadedData["res.lang"];

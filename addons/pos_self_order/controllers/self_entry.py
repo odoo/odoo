@@ -62,6 +62,30 @@ class PosSelfKiosk(http.Controller):
                 }
             )
 
+    @http.route("/pos-self/load-pos-data", methods=["POST"], type="json", auth="public")
+    def load_pos_data(self, config_id=None, access_token=None, table_identifier=None):
+        if not config_id or not config_id.isnumeric():
+            raise werkzeug.exceptions.NotFound()
+
+        if access_token:
+            pos_config_sudo = request.env["pos.config"].sudo().search([
+                ("id", "=", config_id), ('access_token', '=', access_token)], limit=1)
+        else:
+            pos_config_sudo = request.env["pos.config"].sudo().search([
+                ("id", "=", config_id)], limit=1)
+
+        if not pos_config_sudo or pos_config_sudo.self_ordering_mode == 'nothing':
+            raise werkzeug.exceptions.NotFound()
+
+        company = pos_config_sudo.company_id
+        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_ordering_default_user_id
+        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user)
+
+        if not pos_config:
+            raise werkzeug.exceptions.NotFound()
+
+        return pos_config.current_session_id.load_pos_data()
+
     @http.route(
         "/pos-self/get-category-image/<int:category_id>",
         methods=["GET"],

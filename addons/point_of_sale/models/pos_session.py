@@ -1658,12 +1658,13 @@ class PosSession(models.Model):
         for fiscal_position in loaded_data['account.fiscal.position']:
             fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
 
+        uom = self.env['ir.model.data'].check_object_reference('uom', 'product_uom_unit')
+        loaded_data['uom_unit_id'] = uom and uom[1] or False
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
         loaded_data['base_url'] = self.get_base_url()
         loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
         loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
 
-    @api.model
     def _pos_ui_models_to_load(self):
         models_to_load = [
             'res.company',
