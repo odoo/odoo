@@ -4361,7 +4361,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsNone(target, "tr.o_data_row");
 
-        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "web_save"]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "onchange"]);
     });
 
     QUnit.test("discard O2M field with close button", async function (assert) {
@@ -6203,7 +6203,7 @@ QUnit.module("Fields", (hooks) => {
                             assert.deepEqual(fieldValues.trululu, {
                                 foo: "hello",
                                 id: 1,
-                                p: [[1, 1, { display_name: "new val" }]],
+                                p: [[1, 1, { display_name: "new val", foo: "new foo" }]],
                             });
                         }
                         count++;
@@ -9008,8 +9008,9 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=turtle_foo] input", "pinky");
         await click(target, ".o_form_view");
         assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").textContent, "foo");
-        assert.hasClass(target.querySelector(".o_field_widget[name=turtles]"), "o_field_invalid");
-        assert.ok(target.querySelector(".o_form_button_save").disabled);
+
+        await clickSave(target);
+        assert.verifySteps([]);
     });
 
     QUnit.test("propagate context to sub views without default_* keys", async function (assert) {
@@ -13055,7 +13056,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
 
         await clickSave(target);
-        assert.verifySteps(["web_save"]);
+        assert.verifySteps([]);
     });
 
     QUnit.test("toggle boolean in o2m with the formView in edition", async function (assert) {
