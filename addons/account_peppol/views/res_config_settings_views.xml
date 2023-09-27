@@ -5,11 +5,11 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//block[@id='analytic']" position="after">
+            <block id="analytic" position="after">
+                <block title="PEPPOL Electronic Document Invoicing">
                 <field name="is_account_peppol_eligible" invisible="1"/>
                 <div invisible="not is_account_peppol_eligible">
-                    <h2>PEPPOL Electronic Document Invoicing</h2>
-                    <div class="row mt16 o_settings_container" id='account_peppol'>
+                    <div id='account_peppol'>
                         <div class="col-12 col-lg-12 o_setting_box">
                             <field name="account_peppol_proxy_state" invisible="1"/>
                             <div class="o_setting_left_pane">
@@ -21,10 +21,7 @@
                                     <label for="is_account_peppol_participant" string='Use PEPPOL Invoicing'/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
                                     <div class="text-muted">
-                                        Our staff members will first review your request within two working days.
-                                    </div>
-                                    <div class="text-muted">
-                                        Start sending and receiving documents via Peppol as soon as you receive our email notification.
+                                        Start sending and receiving documents via Peppol as soon as your registration is complete.
                                     </div>
                                     <div class="alert alert-warning mt-3"
                                          role="alert"
@@ -164,7 +161,8 @@
                         </div>
                     </div>
                 </div>
-            </xpath>
+                </block>
+            </block>
         </field>
     </record>
 </odoo>
