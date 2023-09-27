@@ -100,8 +100,8 @@ def data_method_provider(chart_template_name, country_code):
             'account.tax': {
                 xmlid: _tax_vals(name, amount, external_id_prefix)
                 for name, xmlid, amount in (
-                    (f'{external_id_prefix}Tax 1', 'test_tax_1_template', 15),
-                    (f'{external_id_prefix}Tax 2', 'test_tax_2_template', 0),
+                    ('Tax 1', 'test_tax_1_template', 15),
+                    ('Tax 2', 'test_tax_2_template', 0),
                 )
             },
         }
