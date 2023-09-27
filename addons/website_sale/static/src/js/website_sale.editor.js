@@ -587,8 +587,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $ribbons.removeClass(htmlClasses);
 
         $ribbons.addClass(ribbon.html_class || '');
+        $ribbons.attr('style', `background-color: ${ribbon.bg_color || ''} !important`);
         $ribbons.css('color', ribbon.text_color || '');
-        $ribbons.css('background-color', ribbon.bg_color || '');
 
         if (!this.ribbons[ribbonId]) {
             $editableDocument.find(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
