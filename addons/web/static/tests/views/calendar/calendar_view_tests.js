@@ -4811,7 +4811,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 string: "My Char",
                 type: "char",
                 value: "hello",
-                view_in_kanban: true,
+                view_in_cards: true,
             },
             {
                 name: "property_2",
@@ -4824,14 +4824,14 @@ QUnit.module("Views", ({ beforeEach }) => {
                 ],
                 value: "b",
                 default: "c",
-                view_in_kanban: true,
+                view_in_cards: true,
             },
             {
                 name: "property_3",
                 string: "Hidden Char",
                 type: "char",
                 value: "hidden",
-                view_in_kanban: false,
+                view_in_cards: false,
             },
         ];
 
