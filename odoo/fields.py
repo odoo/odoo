@@ -3800,7 +3800,7 @@ class PropertiesDefinition(Field):
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
-        'selection', 'tags', 'domain', 'view_in_kanban',
+        'selection', 'tags', 'domain', 'view_in_cards',
     )
     # those keys will be removed if the types does not match
     PROPERTY_PARAMETERS_MAP = {
