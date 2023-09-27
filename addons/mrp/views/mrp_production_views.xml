@@ -584,7 +584,7 @@
                     <filter string="To Close" name="filter_to_close" domain="[('state', '=', 'to_close')]"/>
                     <separator/>
                     <filter string="Awaiting Components" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
-                    <filter string="Ready to Start" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
+                    <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
