@@ -137,3 +137,11 @@ class IrQWeb(models.AbstractModel):
             atts = OrderedDict(atts)
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m.group(1), url_adapter(m.group(2))), atts['style'])
         return atts
+
+    def _get_bundles_to_pregenarate(self):
+        js_assets, css_assets = super(IrQWeb, self)._get_bundles_to_pregenarate()
+        assets = {
+            'website.backend_assets_all_wysiwyg',
+            'website.assets_all_wysiwyg',
+        }
+        return (js_assets | assets, css_assets | assets)
