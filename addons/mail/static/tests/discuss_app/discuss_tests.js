@@ -511,7 +511,7 @@ QUnit.test("sidebar: channel rendering with needaction counter", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        containsMulti: [
+        contains: [
             ["span", { text: "general" }],
             [".badge", { text: "1" }],
         ],
@@ -529,7 +529,7 @@ QUnit.test("sidebar: chat rendering with unread counter", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        containsMulti: [
+        contains: [
             [".badge", { text: "100" }],
             [".o-mail-DiscussSidebarChannel-commands", { text: "Unpin Conversation", count: 0 }], // weak test, no guarantee this selector is valid in the first place
         ],
@@ -657,7 +657,7 @@ QUnit.test("Unfollow message", async function () {
     await contains(".o-mail-Message", { count: 3 });
     await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(1 of .o-mail-Message)", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-header small", { text: "on Thread followed" }],
             [".o-mail-Message-moreMenu"],
             ["span[title='Unfollow']"],
@@ -665,7 +665,7 @@ QUnit.test("Unfollow message", async function () {
     });
     await click(":nth-child(2 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(2 of .o-mail-Message)", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-header small", { text: "on Thread followed" }],
             [".o-mail-Message-moreMenu"],
             ["span[title='Unfollow']"],
@@ -673,7 +673,7 @@ QUnit.test("Unfollow message", async function () {
     });
     await click(":nth-child(3 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(3 of .o-mail-Message)", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-header small", { text: "on Thread not followed" }],
             [".o-mail-Message-moreMenu"],
             ["span[title='Unfollow']", { count: 0 }],
@@ -684,7 +684,7 @@ QUnit.test("Unfollow message", async function () {
     await contains(".o-mail-Message", { count: 2 }); // Unfollowing message 0 marks it as read -> Message removed
     await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(1 of .o-mail-Message)", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-header small", { text: "on Thread followed" }],
             [".o-mail-Message-moreMenu"],
             ["span[title='Unfollow']", { count: 0 }],
@@ -692,7 +692,7 @@ QUnit.test("Unfollow message", async function () {
     });
     await click(":nth-child(2 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(2 of .o-mail-Message)", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-header small", { text: "on Thread not followed" }],
             [".o-mail-Message-moreMenu"],
             ["span[title='Unfollow']", { count: 0 }],

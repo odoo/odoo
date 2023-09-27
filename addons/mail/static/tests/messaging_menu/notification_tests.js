@@ -34,7 +34,7 @@ QUnit.test("basic layout", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
-        containsMulti: [
+        contains: [
             [".o-mail-NotificationItem-name", { text: "Channel" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-date", { text: "now" }],
