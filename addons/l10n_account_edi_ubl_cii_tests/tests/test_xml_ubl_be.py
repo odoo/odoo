@@ -236,10 +236,11 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         `peppol_endpoint`).
         """
         # Setup a public admin in Luxembourg
-        self.partner_2.update({
+        self.partner_2.write({
             'vat': None,
-            'peppol_endpoint': '00005000041',
             'peppol_eas': '9938',
+            'peppol_endpoint': '00005000041',
+            'country_id': self.env.ref('base.lu').id,
         })
 
         invoice = self._generate_move(
