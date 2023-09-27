@@ -584,7 +584,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>`,
         });
         assert.containsOnce(target, "div.o_graph_canvas_container canvas");
-        checkLabels(assert, graph, ["Undefined", "black", "red"]);
+        checkLabels(assert, graph, ["None", "black", "red"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: "#1f77b4",
             borderColor: undefined,
@@ -595,7 +595,7 @@ QUnit.module("Views", (hooks) => {
         checkTooltip(
             assert,
             graph,
-            { lines: [{ label: "Undefined", value: "8" }], title: "Revenue" },
+            { lines: [{ label: "None", value: "8" }], title: "Revenue" },
             0
         );
         checkTooltip(
@@ -627,7 +627,7 @@ QUnit.module("Views", (hooks) => {
                 </graph>`,
         });
         assert.containsOnce(target, "div.o_graph_canvas_container canvas");
-        checkLabels(assert, graph, ["Undefined", "black", "red", "red (2)"]);
+        checkLabels(assert, graph, ["None", "black", "red", "red (2)"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
             backgroundColor: "#1f77b4",
             borderColor: undefined,
@@ -638,7 +638,7 @@ QUnit.module("Views", (hooks) => {
         checkTooltip(
             assert,
             graph,
-            { lines: [{ label: "Undefined", value: "8" }], title: "Revenue" },
+            { lines: [{ label: "None", value: "8" }], title: "Revenue" },
             0
         );
         checkTooltip(
@@ -1715,17 +1715,17 @@ QUnit.module("Views", (hooks) => {
             `,
         });
         assert.containsOnce(target, "div.o_graph_canvas_container canvas");
-        checkLabels(assert, graph, ["Undefined", "black", "red"]);
+        checkLabels(assert, graph, ["None", "black", "red"]);
         checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
             backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
             borderColor: getBorderWhite(),
             data: [8, 10, 13],
         });
-        checkLegend(assert, graph, ["Undefined", "black", "red"]);
+        checkLegend(assert, graph, ["None", "black", "red"]);
         checkTooltip(
             assert,
             graph,
-            { lines: [{ label: "Undefined", value: "8 (25.81%)" }], title: "Revenue" },
+            { lines: [{ label: "None", value: "8 (25.81%)" }], title: "Revenue" },
             0
         );
         checkTooltip(
@@ -2453,26 +2453,26 @@ QUnit.module("Views", (hooks) => {
         });
 
         checkLabels(assert, graph, ["xphone", "xpad"]);
-        checkLegend(assert, graph, ["false / Undefined", "true / Undefined", "true / red", "Sum"]);
+        checkLegend(assert, graph, ["false / None", "true / None", "true / red", "Sum"]);
 
         await selectMode(target, "line");
 
         checkLabels(assert, graph, ["xphone", "xpad"]);
-        checkLegend(assert, graph, ["false / Undefined", "true / Undefined", "true / red"]);
+        checkLegend(assert, graph, ["false / None", "true / None", "true / red"]);
 
         await selectMode(target, "pie");
 
         checkLabels(assert, graph, [
-            "xphone / false / Undefined",
-            "xphone / true / Undefined",
+            "xphone / false / None",
+            "xphone / true / None",
             "xphone / true / red",
-            "xpad / false / Undefined",
+            "xpad / false / None",
         ]);
         checkLegend(assert, graph, [
-            "xphone / false / Undefined",
-            "xphone / true / Undefined",
+            "xphone / false / None",
+            "xphone / true / None",
             "xphone / true / red",
-            "xpad / false / Undefined",
+            "xpad / false / None",
         ]);
     });
 
@@ -2531,7 +2531,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["xphone", "xpad"]);
         await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Color");
-        checkLabels(assert, graph, ["Undefined", "red"]);
+        checkLabels(assert, graph, ["None", "red"]);
     });
 
     QUnit.test("save params succeeds", async function (assert) {
@@ -3062,7 +3062,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
-        "Undefined should appear in bar, pie graph but not in line graph with multiple groupbys",
+        "None should appear in bar, pie graph but not in line graph with multiple groupbys",
         async function (assert) {
             assert.expect(4);
             const graph = await makeView({
@@ -3076,17 +3076,17 @@ QUnit.module("Views", (hooks) => {
                     </graph>
                 `,
             });
-            function someUndefined() {
-                return getChart(graph).data.labels.some((l) => /Undefined/.test(l));
+            function someNone() {
+                return getChart(graph).data.labels.some((l) => /None/.test(l));
             }
-            assert.notOk(someUndefined());
+            assert.notOk(someNone());
             await selectMode(target, "bar");
-            assert.ok(someUndefined());
+            assert.ok(someNone());
             await selectMode(target, "pie");
-            assert.ok(someUndefined());
-            // Undefined should not appear after switching back to line chart
+            assert.ok(someNone());
+            // None should not appear after switching back to line chart
             await selectMode(target, "line");
-            assert.notOk(someUndefined());
+            assert.notOk(someNone());
         }
     );
 
@@ -3953,7 +3953,7 @@ QUnit.module("Views", (hooks) => {
             "January 2016",
             "March 2016",
             "May 2016",
-            "Undefined",
+            "None",
             "April 2016",
         ]);
         checkDatasets(assert, graph, "data", { data: [56, 26, 4, 105, 48] });
@@ -4110,14 +4110,14 @@ QUnit.module("Views", (hooks) => {
         });
 
         checkModeIs(assert, graph, "bar");
-        checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "Undefined"]);
+        checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "None"]);
         checkLegend(assert, graph, "Count");
 
         await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Favorite");
 
         checkModeIs(assert, graph, "bar");
-        checkLabels(assert, graph, ["Undefined", "red"]);
+        checkLabels(assert, graph, ["None", "red"]);
         checkLegend(assert, graph, "Revenue");
     });
 
@@ -4274,15 +4274,7 @@ QUnit.module("Views", (hooks) => {
 
         await selectMode(target, "pie");
 
-        checkLabels(assert, graph, [
-            "xphone / None",
-            "xphone / red",
-            "xpad / None",
-        ]);
-        checkLegend(assert, graph, [
-            "xphone / None",
-            "xphone / red",
-            "xpad / None",
-        ]);
+        checkLabels(assert, graph, ["xphone / None", "xphone / red", "xpad / None"]);
+        checkLegend(assert, graph, ["xphone / None", "xphone / red", "xpad / None"]);
     });
 });

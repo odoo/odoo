@@ -379,7 +379,7 @@ export class GraphModel extends Model {
      * @returns {string}
      */
     _getDefaultFilterLabel(field) {
-        return _t("Undefined");
+        return _t("None");
     }
 
     /**
@@ -392,7 +392,7 @@ export class GraphModel extends Model {
         let processedDataPoints = [];
         if (mode === "line") {
             processedDataPoints = this.dataPoints.filter(
-                (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0]),
+                (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0])
             );
         } else if (mode === "pie") {
             processedDataPoints = this.dataPoints.filter(
