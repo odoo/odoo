@@ -198,11 +198,11 @@ class AccountMoveSend(models.Model):
             invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
             wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
 
-            if wizard.mode == 'invoice_multi' and wizard.checkbox_send_mail and invoices_without_mail_data:
+            if invoices_without_mail_data:
                 wizard.send_mail_warning_message = _(
                     "The partners on the following invoices have no email address, "
                     "so those invoices will not be sent: %s"
-                ) % ", ".join(invoices_without_mail_data.mapped('name'))
+                ) % ", ".join(sorted(invoices_without_mail_data.mapped('name')))
 
     @api.depends('move_ids')
     def _compute_checkbox_send_mail(self):
@@ -283,6 +283,32 @@ class AccountMoveSend(models.Model):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+
+    @api.model
+    def action_open_partners_without_email(self, wizard_ids=None):
+        if not wizard_ids:
+            return
+        partners = self.env['res.partner']
+        for wizard in self.browse(wizard_ids):
+            partners |= wizard.move_ids.mapped("partner_id").filtered(lambda x: not x.email)
+        if len(partners) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'form',
+                'target': 'current',
+                'res_id': partners.id
+            }
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Partners without email'),
+                'view_mode': 'tree,form',
+                'res_model': 'res.partner',
+                'context': {'create': False, 'delete': False},
+                'domain': [('id', 'in', partners.ids)],
+                'target': 'current',
+            }
 
     def _need_invoice_document(self, invoice):
         """ Determine if we need to generate the documents for the invoice passed as parameter.
