@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
@@ -142,6 +143,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
     url: "/pos/ui",
     steps: () =>
         [
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.totalAmountIs("100.00"),
@@ -163,7 +165,7 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
     steps: () =>
         [
             ProductScreen.enterOpeningAmount("90"),
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.checkSecondCashClosingDetailsLineAmount("10.00", "-"),
         ].flat(),
 });
@@ -173,7 +175,7 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
 
             ProductScreen.clickHomeCategory(),
 

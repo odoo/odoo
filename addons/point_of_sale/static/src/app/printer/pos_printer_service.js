@@ -2,14 +2,13 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { PrinterService } from "@point_of_sale/app/printer/printer_service";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const posPrinterService = {
-    dependencies: ["hardware_proxy", "popup", "renderer"],
-    start(env, { hardware_proxy, popup, renderer }) {
-        return new PosPrinterService(env, { hardware_proxy, popup, renderer });
+    dependencies: ["hardware_proxy", "dialog", "renderer"],
+    start(env, { hardware_proxy, dialog, renderer }) {
+        return new PosPrinterService(env, { hardware_proxy, dialog, renderer });
     },
 };
 class PosPrinterService extends PrinterService {
@@ -17,17 +16,17 @@ class PosPrinterService extends PrinterService {
         super(...args);
         this.setup(...args);
     }
-    setup(env, { hardware_proxy, popup, renderer }) {
+    setup(env, { hardware_proxy, dialog, renderer }) {
         this.renderer = renderer;
         this.hardware_proxy = hardware_proxy;
-        this.popup = popup;
+        this.dialog = dialog;
         this.device = hardware_proxy.printer;
     }
     printWeb() {
         try {
             return super.printWeb(...arguments);
         } catch {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Printing is not supported on some browsers"),
                 body: _t("It is possible to print your tickets by making use of an IoT Box."),
             });
@@ -39,17 +38,16 @@ class PosPrinterService extends PrinterService {
         try {
             return await super.printHtml(...arguments);
         } catch (error) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            this.dialog.add(ConfirmationDialog, {
                 title: error.title || _t("Printing error"),
                 body: error.body + _t("Do you want to print using the web printer? "),
+                confirm: async () => {
+                    // We want to call the _printWeb when the dialog is fully gone
+                    // from the screen which happens after the next animation frame.
+                    await new Promise(requestAnimationFrame);
+                    this.printWeb(...arguments);
+                },
             });
-            if (!confirmed) {
-                return false;
-            }
-            // We want to call the _printWeb when the popup is fully gone
-            // from the screen which happens after the next animation frame.
-            await new Promise(requestAnimationFrame);
-            return await this.printWeb(...arguments);
         }
     }
 }

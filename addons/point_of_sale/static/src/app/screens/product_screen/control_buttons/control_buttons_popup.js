@@ -1,22 +1,9 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
-import { _t } from "@web/core/l10n/translation";
+import { Component } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 
-export class ControlButtonPopup extends AbstractAwaitablePopup {
+export class ControlButtonPopup extends Component {
     static template = "point_of_sale.ControlButtonPopup";
-    static defaultProps = {
-        cancelText: _t("Back"),
-        controlButtons: [],
-        confirmKey: false,
-    };
-
-    /**
-     * @param {Object} props
-     * @param {string} props.startingValue
-     */
-    setup() {
-        super.setup();
-        this.controlButtons = this.props.controlButtons;
-    }
+    static components = { Dialog };
 }

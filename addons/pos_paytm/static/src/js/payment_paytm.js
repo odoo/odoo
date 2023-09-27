@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const REQUEST_TIMEOUT = 5000
 
@@ -152,7 +152,7 @@ export class PaymentPaytm extends PaymentInterface {
         localStorage.setItem(uid, ++retry);
     }
     _showError(error_msg, title) {
-        this.env.services.popup.add(ErrorPopup, {
+        this.env.services.dialog.add(AlertDialog, {
             title: title || _t('PayTM Error'),
             body: error_msg,
         });

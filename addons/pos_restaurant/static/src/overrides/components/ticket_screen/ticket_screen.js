@@ -5,8 +5,8 @@ import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_sc
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { parseFloat } from "@web/views/fields/parsers";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { Component, useState } from "@odoo/owl";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 patch(TicketScreen.prototype, {
     _getScreenToStatusMap() {
@@ -100,7 +100,7 @@ patch(TicketScreen.prototype, {
             this.pos.removeOrder(order);
             return true;
         } catch {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: "Failed to set tip",
                 body: `Failed to set tip to ${order.name}. Do you want to proceed on setting the tips of the remaining?`,
             });

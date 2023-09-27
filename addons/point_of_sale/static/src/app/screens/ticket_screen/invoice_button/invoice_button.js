@@ -1,11 +1,10 @@
 /** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useRef } from "@odoo/owl";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class InvoiceButton extends Component {
     static template = "point_of_sale.InvoiceButton";
@@ -13,7 +12,7 @@ export class InvoiceButton extends Component {
     setup() {
         this.pos = usePos();
         this.invoiceButton = useRef("invoice-button");
-        this.popup = useService("popup");
+        this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.report = useService("report");
     }
@@ -48,7 +47,7 @@ export class InvoiceButton extends Component {
                 throw error;
             } else {
                 // NOTE: error here is most probably undefined
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Network Error"),
                     body: _t("Unable to download invoice."),
                 });
@@ -75,14 +74,13 @@ export class InvoiceButton extends Component {
         // Part 1: Handle missing partner.
         // Write to pos.order the selected partner.
         if (!order.get_partner()) {
-            const { confirmed: confirmedPopup } = await this.popup.add(ConfirmPopup, {
+            const _confirmed = await ask(this.dialog, {
                 title: _t("Need customer to invoice"),
                 body: _t("Do you want to open the customer list to select customer?"),
             });
-            if (!confirmedPopup) {
+            if (!_confirmed) {
                 return;
             }
-
             const { confirmed: confirmedTempScreen, payload: newPartner } =
                 await this.pos.showTempScreen("PartnerListScreen");
             if (!confirmedTempScreen) {

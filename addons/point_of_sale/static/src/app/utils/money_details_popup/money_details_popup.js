@@ -1,14 +1,14 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
-import { useState } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
+import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { NumericInput } from "@point_of_sale/app/generic_components/inputs/numeric_input/numeric_input";
 
-export class MoneyDetailsPopup extends AbstractAwaitablePopup {
+export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
-    static components = { NumericInput };
+    static components = { NumericInput, Dialog };
 
     setup() {
         super.setup();
@@ -19,6 +19,14 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
                 ? { ...this.props.moneyDetails }
                 : Object.fromEntries(this.pos.bills.map((bill) => [bill.value, 0])),
         });
+        this.env.dialogData.dismiss = () => {
+            if (
+                this.pos.config.iface_cashdrawer &&
+                this.pos.hardwareProxy.connectionInfo.status === "connected"
+            ) {
+                this.pos.logEmployeeMessage(this.props.action, "ACTION_CANCELLED");
+            }
+        };
     }
     computeTotal(moneyDetails = this.state.moneyDetails) {
         return Object.entries(moneyDetails).reduce(
@@ -26,8 +34,7 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
             0
         );
     }
-    //@override
-    async getPayload() {
+    confirm() {
         let moneyDetailsNotes = !floatIsZero(this.computeTotal(), this.currency.decimal_places)
             ? "Money details: \n"
             : null;
@@ -38,20 +45,12 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
                 } x ${this.env.utils.formatCurrency(bill.value)}\n`;
             }
         });
-        return {
+        this.props.getPayload({
             total: this.computeTotal(),
             moneyDetailsNotes,
             moneyDetails: { ...this.state.moneyDetails },
             action: this.props.action,
-        };
-    }
-    async cancel() {
-        super.cancel();
-        if (
-            this.pos.config.iface_cashdrawer &&
-            this.pos.hardwareProxy.connectionInfo.status === "connected"
-        ) {
-            this.pos.logEmployeeMessage(this.props.action, "ACTION_CANCELLED");
-        }
+        });
+        this.props.close();
     }
 }

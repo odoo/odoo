@@ -4,8 +4,8 @@ import * as PosHr from "@pos_hr/../tests/tours/PosHrTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
-import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { registry } from "@web/core/registry";
 
@@ -16,45 +16,44 @@ registry.category("web_tour.tours").add("PosHrTour", {
         [
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.isShown(),
-            SelectionPopup.hasSelectionItem("Pos Employee1"),
-            SelectionPopup.hasSelectionItem("Pos Employee2"),
-            SelectionPopup.hasSelectionItem("Mitchell Admin"),
-            SelectionPopup.clickItem("Pos Employee1"),
-            NumberPopup.isShown(),
+            SelectionPopup.has("Pos Employee1"),
+            SelectionPopup.has("Pos Employee2"),
+            SelectionPopup.has("Mitchell Admin"),
+            SelectionPopup.has("Pos Employee1", { run: "click" }),
             NumberPopup.enterValue("25"),
-            NumberPopup.inputShownIs("••"),
+            NumberPopup.isShown("••"),
             NumberPopup.pressNumpad("8 1"),
             NumberPopup.fillPopupValue("2581"),
-            NumberPopup.inputShownIs("••••"),
-            NumberPopup.clickConfirm(),
-            ErrorPopup.isShown(),
-            ErrorPopup.clickConfirm(),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            // after trying to close the number popup, the error popup should be shown
+            // successfully confirming the dialog would imply that the error popup is actually shown
+            Dialog.confirm(),
             PosHr.clickLoginButton(),
-            SelectionPopup.clickItem("Pos Employee1"),
-            NumberPopup.isShown(),
+            SelectionPopup.has("Pos Employee1", { run: "click" }),
+
             NumberPopup.enterValue("25"),
-            NumberPopup.inputShownIs("••"),
+            NumberPopup.isShown("••"),
             NumberPopup.pressNumpad("8 0"),
             NumberPopup.fillPopupValue("2580"),
-            NumberPopup.inputShownIs("••••"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            Dialog.confirm("Open session"),
             ProductScreen.isShown(),
-            ProductScreen.confirmOpeningPopup(),
             PosHr.cashierNameIs("Pos Employee1"),
             PosHr.clickCashierName(),
-            SelectionPopup.clickItem("Mitchell Admin"),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.cashierNameIs("Mitchell Admin"),
             Chrome.clickMenuButton(),
             PosHr.clickLockButton(),
             PosHr.clickLoginButton(),
-            SelectionPopup.clickItem("Pos Employee2"),
+            SelectionPopup.has("Pos Employee2", { run: "click" }),
             NumberPopup.enterValue("12"),
-            NumberPopup.inputShownIs("••"),
+            NumberPopup.isShown("••"),
             NumberPopup.pressNumpad("3 4"),
             NumberPopup.fillPopupValue("1234"),
-            NumberPopup.inputShownIs("••••"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
             ProductScreen.isShown(),
             ProductScreen.clickHomeCategory(),
 
@@ -80,7 +79,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
 
             // order for admin
             PosHr.clickCashierName(),
-            SelectionPopup.clickItem("Mitchell Admin"),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.cashierNameIs("Mitchell Admin"),
             TicketScreen.clickNewTicket(),
             ProductScreen.addOrderline("Desk Pad", "1", "8"),

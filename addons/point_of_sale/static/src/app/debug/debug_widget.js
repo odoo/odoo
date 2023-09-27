@@ -4,13 +4,13 @@ import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
 import { constrain, getLimits, useMovable } from "@point_of_sale/app/utils/movable_hook";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { OrderImportPopup } from "@point_of_sale/app/debug/order_import_popup/order_import_popup";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 import { useEffect, useRef, useState, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 const { DateTime } = luxon;
 
 export class DebugWidget extends Component {
@@ -20,10 +20,10 @@ export class DebugWidget extends Component {
     setup() {
         this.pos = usePos();
         this.debug = useService("debug");
-        this.popup = useService("popup");
         this.barcodeReader = useService("barcode_reader");
         this.hardwareProxy = useService("hardware_proxy");
         const numberBuffer = useService("number_buffer");
+        this.dialog = useService("dialog");
         useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
             barcodeInput: "",
@@ -93,28 +93,28 @@ export class DebugWidget extends Component {
         await this.barcodeReader.scan(ean);
     }
     async deleteOrders() {
-        const { confirmed } = await this.popup.add(ConfirmPopup, {
+        this.dialog.add(ConfirmationDialog, {
             title: _t("Delete Paid Orders?"),
             body: _t(
                 "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
             ),
+            confirm: () => {
+                this.pos.db.remove_all_orders();
+                this.pos.set_synch("connected", 0);
+            },
         });
-        if (confirmed) {
-            this.pos.db.remove_all_orders();
-            this.pos.set_synch("connected", 0);
-        }
     }
     async deleteUnpaidOrders() {
-        const { confirmed } = await this.popup.add(ConfirmPopup, {
+        this.dialog.add(ConfirmationDialog, {
             title: _t("Delete Unpaid Orders?"),
             body: _t(
                 "This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone."
             ),
+            confirm: () => {
+                this.pos.db.remove_all_unpaid_orders();
+                window.location = "/";
+            },
         });
-        if (confirmed) {
-            this.pos.db.remove_all_unpaid_orders();
-            window.location = "/";
-        }
     }
     _createBlob(contents) {
         if (typeof contents !== "string") {
@@ -165,7 +165,7 @@ export class DebugWidget extends Component {
         const file = event.target.files[0];
         if (file) {
             const report = this.pos.import_orders(await file.text());
-            await this.popup.add(OrderImportPopup, { report });
+            this.dialog.add(OrderImportPopup, { report });
         }
     }
     refreshDisplay() {

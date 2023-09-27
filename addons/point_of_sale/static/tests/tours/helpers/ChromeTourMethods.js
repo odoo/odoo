@@ -1,12 +1,8 @@
 /** @odoo-module */
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
 export function confirmPopup() {
-    return [
-        {
-            content: "confirm popup",
-            trigger: ".popups .modal-dialog .button.confirm",
-        },
-    ];
+    return [Dialog.confirm()];
 }
 export function clickTicketButton() {
     return [
@@ -36,7 +32,7 @@ export function closeSession() {
         },
         {
             content: "click on the close session popup button",
-            trigger: ".close-pos-popup .footer .button.highlight",
+            trigger: ".close-pos-popup .modal-footer .button.highlight",
         },
         {
             content: "check that the session is closed without error",

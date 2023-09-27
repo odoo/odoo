@@ -13,7 +13,7 @@ export class EditBar extends Component {
         toggleColorPicker: Function,
         createTable: Function,
         duplicateTableOrFloor: Function,
-        renameTable: Function,
+        rename: Function,
         changeSeatsNum: Function,
         changeToCircle: Function,
         changeToSquare: Function,

@@ -2,17 +2,17 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class SetPricelistButton extends Component {
     static template = "point_of_sale.SetPricelistButton";
 
     setup() {
         this.pos = usePos();
-        this.popup = useService("popup");
+        this.dialog = useService("dialog");
     }
     get currentOrder() {
         return this.pos.get_order();
@@ -42,14 +42,11 @@ export class SetPricelistButton extends Component {
             });
         }
 
-        const { confirmed, payload: selectedPricelist } = await this.popup.add(SelectionPopup, {
+        this.dialog.add(SelectionPopup, {
             title: _t("Select the pricelist"),
             list: selectionList,
+            getPayload: (x) => this.currentOrder.set_pricelist(x),
         });
-
-        if (confirmed) {
-            this.currentOrder.set_pricelist(selectedPricelist);
-        }
     }
 }
 

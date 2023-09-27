@@ -2,17 +2,17 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { getDataURLFromFile } from "@web/core/utils/urls";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { useService } from "@web/core/utils/hooks";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class PartnerDetailsEdit extends Component {
     static template = "point_of_sale.PartnerDetailsEdit";
 
     setup() {
-        this.popup = useService("popup");
         this.pos = usePos();
+        this.dialog = useService("dialog");
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
         this.changes = useState({
@@ -76,7 +76,7 @@ export class PartnerDetailsEdit extends Component {
         }
 
         if ((!this.props.partner.name && !processedChanges.name) || processedChanges.name === "") {
-            return this.popup.add(ErrorPopup, {
+            return this.dialog.add(AlertDialog, {
                 title: _t("A Customer Name Is Required"),
             });
         }
@@ -86,7 +86,7 @@ export class PartnerDetailsEdit extends Component {
     async uploadImage(event) {
         const file = event.target.files[0];
         if (!file.type.match(/image.*/)) {
-            await this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Unsupported File Format"),
                 body: _t("Only web-compatible Image formats such as .png or .jpeg are supported."),
             });
@@ -130,7 +130,7 @@ export class PartnerDetailsEdit extends Component {
             const img = new Image();
             img.addEventListener("load", () => resolve(img));
             img.addEventListener("error", () => {
-                this.popup.add(ErrorPopup, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Loading Image Error"),
                     body: _t("Encountered error when loading image. Please try again."),
                 });

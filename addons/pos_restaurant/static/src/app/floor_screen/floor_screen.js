@@ -8,9 +8,7 @@ import { registry } from "@web/core/registry";
 
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { EditableTable } from "@pos_restaurant/app/floor_screen/editable_table";
 import { EditBar } from "@pos_restaurant/app/floor_screen/edit_bar";
 import { Table } from "@pos_restaurant/app/floor_screen/table";
@@ -25,6 +23,7 @@ import {
     useState,
     onWillStart,
 } from "@odoo/owl";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class FloorScreen extends Component {
     static components = { EditableTable, EditBar, Table };
@@ -34,7 +33,7 @@ export class FloorScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.popup = useService("popup");
+        this.dialog = useService("dialog");
         this.orm = useService("orm");
         const floor = this.pos.currentFloor;
         this.state = useState({
@@ -289,9 +288,6 @@ export class FloorScreen extends Component {
             this.pos.tables_by_id[tableId] = table;
         }
     }
-    async _renameFloor(floorId, newName) {
-        await this.orm.call("restaurant.floor", "rename_floor", [floorId, newName]);
-    }
     get activeFloor() {
         return this.state.selectedFloorId
             ? this.pos.floors_by_id[this.state.selectedFloorId]
@@ -380,22 +376,21 @@ export class FloorScreen extends Component {
         }
     }
     async addFloor() {
-        const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
+        this.dialog.add(TextInputPopup, {
             title: _t("New Floor"),
             placeholder: _t("Floor name"),
+            getPayload: async (newName) => {
+                const floor = await this.orm.call("restaurant.floor", "create_from_ui", [
+                    newName,
+                    "#ACADAD",
+                    this.pos.config.id,
+                ]);
+                this.pos.floors_by_id[floor.id] = floor;
+                this.pos.floors.push(floor);
+                this.selectFloor(floor);
+                this.pos.isEditMode = true;
+            },
         });
-        if (!confirmed) {
-            return;
-        }
-        const floor = await this.orm.call("restaurant.floor", "create_from_ui", [
-            newName,
-            "#ACADAD",
-            this.pos.config.id,
-        ]);
-        this.pos.floors_by_id[floor.id] = floor;
-        this.pos.floors.push(floor);
-        this.selectFloor(floor);
-        this.pos.isEditMode = true;
     }
     async createTable() {
         const newTable = await this._createTableHelper();
@@ -435,59 +430,57 @@ export class FloorScreen extends Component {
             }
         }
     }
-    async renameTable() {
-        const selectedTables = this.selectedTables;
-        const selectedFloor = this.activeFloor;
-        if (selectedTables.length > 1) {
+    async rename() {
+        if (this.selectedTables.length > 1) {
             return;
         }
-        if (selectedTables.length == 0) {
-            const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
-                startingValue: selectedFloor.name,
-                title: _t("Floor Name ?"),
-            });
-            if (!confirmed) {
-                return;
-            }
-            if (newName !== selectedFloor.name) {
-                selectedFloor.name = newName;
-                await this._renameFloor(selectedFloor.id, newName);
-            }
-            return;
-        }
-        const selectedTable = selectedTables[0];
-        const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
-            startingValue: selectedTable.name,
-            title: _t("Table Name?"),
-        });
-        if (!confirmed) {
-            return;
-        }
-        if (newName !== selectedTable.name) {
-            selectedTable.name = newName;
-            await this._save(selectedTable);
-        }
+        this.dialog.add(
+            TextInputPopup,
+            this.selectedTables.length === 1
+                ? {
+                      startingValue: this.selectedTables[0].name,
+                      title: _t("Table Name ?"),
+                      getPayload: (newName) => {
+                          if (newName !== this.selectedTables[0].name) {
+                              this.selectedTables[0].name = newName;
+                              this._save(this.selectedTables[0]);
+                          }
+                      },
+                  }
+                : {
+                      startingValue: this.activeFloor.name,
+                      title: _t("Floor Name ?"),
+                      getPayload: (newName) => {
+                          if (newName !== this.activeFloor.name) {
+                              this.activeFloor.name = newName;
+                              this.orm.call("restaurant.floor", "rename_floor", [
+                                  this.activeFloor.id,
+                                  newName,
+                              ]);
+                          }
+                      },
+                  }
+        );
     }
     async changeSeatsNum() {
         const selectedTables = this.selectedTables;
         if (selectedTables.length == 0) {
             return;
         }
-        const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
+        this.dialog.add(NumberPopup, {
             startingValue: 0,
             cheap: true,
             title: _t("Number of Seats?"),
             isInputSelected: true,
-        });
-        if (!confirmed) {
-            return;
-        }
-        const newSeatsNum = parseInt(inputNumber, 10);
-        selectedTables.forEach(async (selectedTable) => {
-            if (newSeatsNum !== selectedTable.seats) {
-                selectedTable.seats = newSeatsNum;
-                await this._save(selectedTable);
-            }
+            getPayload: (num) => {
+                const newSeatsNum = parseInt(num, 10);
+                selectedTables.forEach((selectedTable) => {
+                    if (newSeatsNum !== selectedTable.seats) {
+                        selectedTable.seats = newSeatsNum;
+                        this._save(selectedTable);
+                    }
+                });
+            },
         });
     }
     async changeToCircle() {
@@ -526,7 +519,7 @@ export class FloorScreen extends Component {
     }
     async deleteFloorOrTable() {
         if (this.selectedTables.length == 0) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: `Removing floor ${this.activeFloor.name}`,
                 body: sprintf(
                     _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
@@ -565,7 +558,7 @@ export class FloorScreen extends Component {
             }
             return;
         }
-        const { confirmed } = await this.popup.add(ConfirmPopup, {
+        const confirmed = await ask(this.dialog, {
             title: _t("Are you sure?"),
             body: _t("Removing a table cannot be undone"),
         });
@@ -590,7 +583,7 @@ export class FloorScreen extends Component {
                 delete this.pos.tables_by_id[id];
             }
         } else {
-            await this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Delete Error"),
                 body: _t("You cannot delete a table with orders still in draft for this table."),
             });

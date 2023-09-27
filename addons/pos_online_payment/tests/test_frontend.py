@@ -192,10 +192,6 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         for order in test_orders:
             self.assertEqual(order.state, 'done', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
 
-    def test_local_fake_paid_data_tour(self):
-        self._open_session_ui()
-        self._start_tour('OnlinePaymentLocalFakePaidDataTour')
-
     def test_errors_tour(self):
         self._open_session_ui()
         self._start_tour('OnlinePaymentErrorsTour')

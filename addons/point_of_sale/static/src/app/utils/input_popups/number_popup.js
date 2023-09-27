@@ -1,20 +1,16 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { useService } from "@web/core/utils/hooks";
-import { useState, useRef, onMounted } from "@odoo/owl";
+import { useState, useRef, onMounted, Component } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 
-export class NumberPopup extends AbstractAwaitablePopup {
+export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
-    static components = { Numpad };
+    static components = { Numpad, Dialog };
     static defaultProps = {
-        confirmText: _t("Confirm"),
-        cancelText: _t("Discard"),
         title: _t("Confirm?"),
-        subtitle: "",
-        body: "",
         cheap: false,
         startingValue: null,
         isPassword: false,
@@ -28,13 +24,9 @@ export class NumberPopup extends AbstractAwaitablePopup {
      * @param {Boolean} props.isPassword Show password popup.
      * @param {number|null} props.startingValue Starting value of the popup.
      * @param {Boolean} props.isInputSelected Input is highlighted and will reset upon a change.
-     *
-     * Resolve to { confirmed, payload } when used with showPopup method.
-     * @confirmed {Boolean}
-     * @payload {String}
      */
     setup() {
-        super.setup();
+        this.ui = useState(useService("ui"));
         let startingBuffer = "";
         let startingPayload = null;
         if (typeof this.props.startingValue === "number" && this.props.startingValue > 0) {
@@ -94,12 +86,11 @@ export class NumberPopup extends AbstractAwaitablePopup {
             return this.state.buffer;
         }
     }
-    confirm(event) {
-        if (this.numberBuffer.get() || this.state.payload) {
-            super.confirm();
-        }
+    confirm() {
+        this.props.getPayload(this.computePayload());
+        this.props.close();
     }
-    getPayload() {
+    computePayload() {
         let startingPayload = null;
         if (typeof this.props.startingValue === "number" && this.props.startingValue > 0) {
             startingPayload = this.props.startingValue.toFixed(this.props.nbrDecimal);
@@ -108,8 +99,5 @@ export class NumberPopup extends AbstractAwaitablePopup {
             return this.state.payload;
         }
         return this.numberBuffer.get();
-    }
-    isMobile() {
-        return window.innerWidth <= 768;
     }
 }

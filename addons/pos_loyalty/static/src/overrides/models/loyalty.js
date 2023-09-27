@@ -5,7 +5,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const mutex = new Mutex(); // Used for sequential cache updates
 const updateRewardsMutex = new Mutex();
@@ -173,7 +173,7 @@ patch(Order.prototype, {
             (line) => line.getEWalletGiftCardProgramType() === "ewallet"
         );
         if (eWalletLine && !this.get_partner()) {
-            const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.env.services.dialog, {
                 title: _t("Customer needed"),
                 body: _t("eWallet requires a customer to be selected"),
             });
@@ -1531,7 +1531,7 @@ patch(Order.prototype, {
                 // Allow rejecting a gift card that is not yet paid.
                 const program = this.pos.program_by_id[payload.program_id];
                 if (program && program.program_type === "gift_card" && !payload.has_source_order) {
-                    const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
+                    const confirmed = await ask(this.env.services.dialog, {
                         title: _t("Unpaid gift card"),
                         body: _t(
                             "This gift card is not linked to any order. Do you really want to apply its reward?"

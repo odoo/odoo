@@ -1,22 +1,16 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { Component } from "@odoo/owl";
 
-/**
- * Props:
- *  {
- *      info: {object of data}
- *  }
- */
-export class ProductInfoPopup extends AbstractAwaitablePopup {
+export class ProductInfoPopup extends Component {
     static template = "point_of_sale.ProductInfoPopup";
-    static defaultProps = { confirmKey: false };
+    static components = { Dialog };
+    static props = ["info", "product", "close"];
 
     setup() {
-        super.setup();
         this.pos = usePos();
-        Object.assign(this, this.props.info);
     }
     searchProduct(productName) {
         this.pos.setSelectedCategoryId(0);

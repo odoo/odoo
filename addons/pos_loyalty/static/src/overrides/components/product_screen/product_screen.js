@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { patch } from "@web/core/utils/patch";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 patch(ProductScreen.prototype, {
@@ -39,7 +39,7 @@ patch(ProductScreen.prototype, {
             (key === "Backspace" || key === "Delete")
         ) {
             const reward = this.pos.reward_by_id[selectedLine.reward_id];
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: _t("Deactivating reward"),
                 body: _t(
                     "Are you sure you want to remove %s from this order?\n You will still be able to claim it through the reward button.",

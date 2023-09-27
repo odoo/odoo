@@ -3,7 +3,8 @@
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
-import * as TextAreaPopup from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
 export function clickLine(productName, quantity = "1.0") {
     return inLeftSide([
@@ -134,9 +135,6 @@ export function clickRefund() {
         },
     ];
 }
-export function confirmOpeningPopup() {
-    return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
-}
 export function selectPriceList(name) {
     return inLeftSide([
         {
@@ -193,15 +191,9 @@ export function clickCloseButton() {
 export function closeWithCashAmount(val) {
     return [
         {
-            trigger: "div.popup.close-pos-popup input",
+            trigger: ".close-pos-popup .cash-input input",
+            in_modal: true,
             run: `text ${val}`,
-        },
-    ];
-}
-export function clickCloseSession() {
-    return [
-        {
-            trigger: "footer .button:contains('Close Session')",
         },
     ];
 }
@@ -252,10 +244,7 @@ export function enterLotNumber(number) {
             trigger: ".list-line-input:first()",
             run: "text " + number,
         },
-        {
-            content: "click validate lot number",
-            trigger: ".popup .button.confirm",
-        },
+        Dialog.confirm(),
     ];
 }
 
@@ -407,8 +396,8 @@ export function addCustomerNote(note) {
                 content: "click customer note button",
                 trigger: '.control-buttons .control-button span:contains("Customer Note")',
             },
-            TextAreaPopup.inputText(note),
-            TextAreaPopup.clickConfirm(),
+            TextInputPopup.inputText(note),
+            Dialog.confirm(),
         ].flat()
     );
 }
@@ -419,7 +408,7 @@ export function checkOrderlinesNumber(number) {
             content: `check orderlines number`,
             trigger: `.order .orderlines .orderline`,
             run: () => {
-                const orderline_amount = $('.order .orderlines .orderline').length;
+                const orderline_amount = $(".order .orderlines .orderline").length;
                 if (orderline_amount !== number) {
                     throw new Error(`Expected ${number} orderlines, got ${orderline_amount}`);
                 }
