@@ -169,7 +169,7 @@ QUnit.module('hr_timesheet', function (hooks) {
         });
 
         checkLabels(assert, graph, ["🔒 Private", "Project 1"]);
-        checkLegend(assert, graph, ["Undefined", "Milestone 1", "Sum"]);
+        checkLegend(assert, graph, ["None", "Milestone 1", "Sum"]);
 
         await selectMode(target, "line");
 
@@ -179,11 +179,11 @@ QUnit.module('hr_timesheet', function (hooks) {
         await selectMode(target, "pie");
 
         checkLabels(assert, graph, [
-            "🔒 Private / Undefined",
+            "🔒 Private / None",
             "Project 1 / Milestone 1"
         ]);
         checkLegend(assert, graph, [
-            "🔒 Private / Undefined",
+            "🔒 Private / None",
             "Project 1 / Milestone 1"
         ]);
     });
