@@ -22,7 +22,9 @@ Model({
     lifecycleHooks: {
         _willDelete() {
             this.video.removeEventListener("loadeddata", this._onVideoPlay);
-            this.selfieSegmentation.reset();
+            if (this.selfieSegmentation) {
+                this.selfieSegmentation.reset();
+            }
             this.video.srcObject = null;
             if (this.rejectStreamPromise) {
                 this.rejectStreamPromise(
@@ -50,6 +52,9 @@ Model({
          * @private
          */
         _onChangeBackgroundBlurAmountSetting() {
+            if (!this.selfieSegmentation) {
+                return;
+            }
             this.selfieSegmentation.setOptions({
                 backgroundBlur: this.userSetting.backgroundBlurAmount,
             });
@@ -58,6 +63,9 @@ Model({
          * @private
          */
         _onChangeEdgeBlurAmountSetting() {
+            if (!this.selfieSegmentation) {
+                return;
+            }
             this.selfieSegmentation.setOptions({
                 edgeBlurAmount: this.userSetting.edgeBlurAmount,
             });
@@ -67,7 +75,9 @@ Model({
          */
         async _onChangeSrcStream() {
             this.video.srcObject = null;
-            this.selfieSegmentation.reset();
+            if (this.selfieSegmentation) {
+                this.selfieSegmentation.reset();
+            }
             if (this.rejectStreamPromise) {
                 this.rejectStreamPromise(
                     new Error(
@@ -91,6 +101,12 @@ Model({
                 rejectStreamPromise,
                 resolveStreamPromise,
             });
+            if (!this.selfieSegmentation) {
+                rejectStreamPromise(
+                    new Error(this.env._t("The selfie segmentation library was not loaded"))
+                );
+                return;
+            }
             this.video.srcObject = this.srcStream.webMediaStream;
             this.video.load();
             this.selfieSegmentation.setOptions({
@@ -199,11 +215,13 @@ Model({
         resolveStreamPromise: attr(),
         rtc: one("Rtc", { identifying: true, inverse: "blurManager" }),
         selfieSegmentation: attr({
-            default: new window.SelfieSegmentation({
-                locateFile: (file) => {
-                    return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/${file}`;
-                },
-            }),
+            default: window.SelfieSegmentation
+                ? new window.SelfieSegmentation({
+                      locateFile: (file) => {
+                          return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/${file}`;
+                      },
+                  })
+                : undefined,
         }),
         /**
          * mail.MediaStream, source stream for which the blur effect is computed.
