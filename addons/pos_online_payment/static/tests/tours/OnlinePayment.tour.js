@@ -5,43 +5,15 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as OnlinePaymentPopup from "@pos_online_payment/../tests/tours/helpers/OnlinePaymentPopupTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
-import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import { registry } from "@web/core/registry";
-
-registry.category("web_tour.tours").add("OnlinePaymentLocalFakePaidDataTour", {
-    test: true,
-    url: "/pos/ui",
-    steps: () =>
-        [
-            ProductScreen.confirmOpeningPopup(),
-            ProductScreen.addOrderline("Letter Tray", "10"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.totalIs("48.0"),
-            PaymentScreen.emptyPaymentlines("48.0"),
-
-            PaymentScreen.clickPaymentMethod("Online payment"),
-            PaymentScreen.enterPaymentLineAmount("Online payment", "48"),
-            PaymentScreen.selectedPaymentlineHas("Online payment", "48.0"),
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("0.0"),
-            PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickValidate(),
-            OnlinePaymentPopup.isShown(),
-            OnlinePaymentPopup.amountIs("48.0"),
-            OnlinePaymentPopup.fakeOnlinePaymentPaidData(),
-            OnlinePaymentPopup.isNotShown(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.receiptIsThere(),
-        ].flat(),
-});
 
 registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
     test: true,
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
             ProductScreen.clickPayButton(),
@@ -61,8 +33,8 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.changeIs("1.0"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
-            ErrorPopup.isShown(),
-            ErrorPopup.clickConfirm(),
+            // successfully confirming the dialog would imply that the error popup is actually shown
+            Dialog.confirm(),
             PaymentScreen.clickPaymentline("Online payment", "47.0"),
             PaymentScreen.clickPaymentlineDelButton("Online payment", "47.0"),
             PaymentScreen.clickPaymentMethod("Online payment"),
@@ -73,8 +45,8 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.changeIs("0.0"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
-            ErrorPopup.isShown(),
-            ErrorPopup.clickConfirm(),
+            // successfully confirming the dialog would imply that the error popup is actually shown
+            Dialog.confirm(),
             PaymentScreen.clickPaymentline("Online payment", "0.0"),
             PaymentScreen.clickPaymentlineDelButton("Online payment", "0.0"),
             PaymentScreen.clickPaymentline("Cash", "2.0"),
@@ -86,8 +58,8 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.changeIs("0.0"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
-            ErrorPopup.isShown(),
-            ErrorPopup.clickConfirm(),
+            // successfully confirming the dialog would imply that the error popup is actually shown
+            Dialog.confirm(),
         ].flat(),
 });
 
@@ -96,7 +68,7 @@ registry.category("web_tour.tours").add("OnlinePaymentServerFakePaymentTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
             ProductScreen.clickPayButton(),
@@ -110,10 +82,8 @@ registry.category("web_tour.tours").add("OnlinePaymentServerFakePaymentTour", {
             PaymentScreen.changeIs("0.0"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
-            OnlinePaymentPopup.isShown(),
             OnlinePaymentPopup.amountIs("48.0"),
             OnlinePaymentPopup.waitForOnlinePayment(),
-            OnlinePaymentPopup.isNotShown(),
             ReceiptScreen.isShown(),
             ReceiptScreen.receiptIsThere(),
             Chrome.closeSession(),

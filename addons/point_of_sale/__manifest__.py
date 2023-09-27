@@ -114,6 +114,7 @@
             # JS framework
             ('include', 'web._assets_core'),
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
+            ('remove', '/web/static/src/core/dialog/dialog.scss'),
             # formatMonetary
             'web/static/src/views/fields/formatters.js',
             # barcode scanner

@@ -7,6 +7,7 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/Product
 import * as ProductScreenSale from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenSale };
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { registry } from "@web/core/registry";
 
@@ -15,7 +16,7 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
             ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
@@ -35,7 +36,7 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             // The second item in the list is the first sale.order.
             ProductScreen.selectNthOrder(2),
@@ -57,7 +58,7 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
             ProductScreen.clickOrderline("Product A", "1"),
@@ -78,6 +79,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
     url: "/pos/ui",
     steps: () =>
         [
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             ProductScreen.downPaymentFirstOrder(),
             ProductScreen.clickPayButton(),
@@ -107,7 +109,7 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
             ProductScreen.totalAmountIs(40),
@@ -123,7 +125,7 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
@@ -135,16 +137,15 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
         ].flat(),
 });
 
-registry
-    .category("web_tour.tours")
-    .add('PosSettleOrderNotGroupable', {
-        test: true,
-        url: '/pos/ui',
-        steps: () => [
-            ProductScreen.confirmOpeningPopup(),
+registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
             ProductScreen.totalAmountIs(34.5),
             ProductScreen.checkOrderlinesNumber(3),
         ].flat(),
-    });
+});

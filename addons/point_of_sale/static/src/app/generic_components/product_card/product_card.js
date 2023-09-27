@@ -16,6 +16,7 @@ export class ProductCard extends Component {
     };
     static defaultProps = {
         onClick: () => {},
+        onProductInfoClick: () => {},
         class: "",
     };
 }

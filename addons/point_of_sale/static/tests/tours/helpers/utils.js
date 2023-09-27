@@ -16,6 +16,12 @@ export function inLeftSide(steps) {
     ];
 }
 
-export function negate(selector) {
-    return `body:not(:has(${selector}))`;
+export function negate(selector, parent = "body") {
+    return `${parent}:not(:has(${selector}))`;
+}
+export function negateStep(step) {
+    return {
+        ...step,
+        trigger: negate(step.trigger),
+    };
 }

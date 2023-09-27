@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
@@ -10,7 +11,7 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             ProductScreen.addOrderline("Desk Organizer", "2"),
@@ -114,18 +115,18 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.pressNumpad("⌫"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - [Desk Pad, Monitor Stand]"),
-            SelectionPopup.hasSelectionItem("Monitor Stand"),
-            SelectionPopup.hasSelectionItem("Desk Pad"),
-            SelectionPopup.clickItem("Desk Pad"),
+            SelectionPopup.has("Monitor Stand"),
+            SelectionPopup.has("Desk Pad"),
+            SelectionPopup.has("Desk Pad", { run: "click" }),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.hasRewardLine("Free Product", "-1.98", "1.00"),
             ProductScreen.pressNumpad("⌫"),
             ProductScreen.pressNumpad("⌫"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - [Desk Pad, Monitor Stand]"),
-            SelectionPopup.hasSelectionItem("Monitor Stand"),
-            SelectionPopup.hasSelectionItem("Desk Pad"),
-            SelectionPopup.clickItem("Monitor Stand"),
+            SelectionPopup.has("Monitor Stand"),
+            SelectionPopup.has("Desk Pad"),
+            SelectionPopup.has("Monitor Stand", { run: "click" }),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.selectedOrderlineHas("Monitor Stand", "1.00", "3.19"),
             PosLoyalty.hasRewardLine("Free Product", "-3.19", "1.00"),
@@ -139,7 +140,7 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickPartnerButton(),
@@ -147,7 +148,7 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
             ProductScreen.addOrderline("Test Product A", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
-            SelectionPopup.clickItem("Free Product - Test Product A"),
+            SelectionPopup.has("Free Product - Test Product A", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product - Test Product A", "-11.50", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
@@ -158,7 +159,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Test Product A"),
@@ -166,7 +167,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
             ProductScreen.clickDisplayedProduct("Test Product B"),
             ProductScreen.selectedOrderlineHas("Test Product B", "1.00", "40.00"),
             PosLoyalty.clickRewardButton(),
-            SelectionPopup.clickItem("$ 10 on specific products"),
+            SelectionPopup.has("$ 10 on specific products", { run: "click" }),
             PosLoyalty.hasRewardLine("$ 10 on specific products", "-10.00", "1.00"),
             PosLoyalty.orderTotalIs("60.00"),
         ].flat(),
@@ -177,7 +178,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Test Product A"),
@@ -185,6 +186,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
             PosLoyalty.orderTotalIs("130.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.clickRewardButton(),
+            Dialog.cancel(),
             PosLoyalty.orderTotalIs("130.00"),
         ].flat(),
 });
@@ -194,7 +196,7 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             ProductScreen.clickDisplayedProduct("Product A"),

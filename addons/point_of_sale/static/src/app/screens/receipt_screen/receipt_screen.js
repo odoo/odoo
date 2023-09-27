@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
-import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { useRef, useState, onWillStart, Component } from "@odoo/owl";
@@ -21,6 +21,7 @@ export class ReceiptScreen extends Component {
         this.ui = useState(useService("ui"));
         this.orm = useService("orm");
         this.renderer = useService("renderer");
+        this.dialog = useService("dialog");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
         this.buttonPrintReceipt = useRef("order-print-receipt-button");
         this.currentOrder = this.pos.get_order();
@@ -158,7 +159,7 @@ export class ReceiptScreen extends Component {
         const orderName = order.get_name();
         const order_server_id = this.pos.validated_orders_name_server_id_map[orderName];
         if (!order_server_id) {
-            this.popup.add(OfflineErrorPopup, {
+            this.dialog.add(ConfirmationDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
                     "This order is not yet synced to server. Make sure it is synced then try again."

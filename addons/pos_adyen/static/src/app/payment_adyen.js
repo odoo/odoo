@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { sprintf } from "@web/core/utils/strings";
 const { DateTime } = luxon;
 
@@ -298,7 +298,7 @@ export class PaymentAdyen extends PaymentInterface {
         if (!title) {
             title = _t("Adyen Error");
         }
-        this.env.services.popup.add(ErrorPopup, {
+        this.env.services.dialog.add(AlertDialog, {
             title: title,
             body: msg,
         });

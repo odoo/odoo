@@ -1,26 +1,23 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
-export class PaymentTransactionPopup extends AbstractAwaitablePopup {
+export class PaymentTransactionPopup extends Component {
     static template = "pos_mercury.PaymentTransactionPopup";
+    static components = { Dialog };
     static defaultProps = {
-        confirmText: _t("Ok"),
         title: _t("Online Payment"),
-        body: "",
-        cancelKey: false,
     };
 
     setup() {
-        super.setup();
         this.state = useState({ message: "", confirmButtonIsShown: false });
         this.props.transaction
             .then((data) => {
                 if (data.auto_close) {
                     setTimeout(() => {
-                        this.confirm();
+                        this.props.close();
                     }, 2000);
                 } else {
                     this.state.confirmButtonIsShown = true;

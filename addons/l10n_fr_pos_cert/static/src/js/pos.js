@@ -4,13 +4,13 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 patch(PosStore.prototype, {
     is_french_country() {
         var french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
         if (!this.company.country) {
-            this.env.services.popup.add(ErrorPopup, {
+            this.env.services.dialog.add(AlertDialog, {
                 title: _t("Missing Country"),
                 body: _t("The company %s doesn't have a country set.", this.company.name),
             });

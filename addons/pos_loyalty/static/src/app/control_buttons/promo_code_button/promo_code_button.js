@@ -12,21 +12,21 @@ export class PromoCodeButton extends Component {
 
     setup() {
         this.pos = usePos();
-        this.popup = useService("popup");
+        this.dialog = useService("dialog");
     }
 
     async click() {
-        let { confirmed, payload: code } = await this.popup.add(TextInputPopup, {
+        this.dialog.add(TextInputPopup, {
             title: _t("Enter Code"),
             startingValue: "",
             placeholder: _t("Gift card or Discount code"),
+            getPayload: (code) => {
+                code = code.trim();
+                if (code !== "") {
+                    this.pos.get_order().activateCode(code);
+                }
+            },
         });
-        if (confirmed) {
-            code = code.trim();
-            if (code !== "") {
-                this.pos.get_order().activateCode(code);
-            }
-        }
     }
 }
 

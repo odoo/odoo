@@ -1,23 +1,20 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { odooExceptionTitleMap } from "@web/core/errors/error_dialogs";
+import { odooExceptionTitleMap, ErrorDialog } from "@web/core/errors/error_dialogs";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_traceback_popup";
-import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 function rpcErrorHandler(env, error, originalError) {
     if (error instanceof RPCError) {
-        const { message, data } = error;
+        const { data } = error;
         if (odooExceptionTitleMap.has(error.exceptionName)) {
             const title = odooExceptionTitleMap.get(error.exceptionName).toString();
-            env.services.popup.add(ErrorPopup, { title, body: data.message });
+            env.services.dialog.add(AlertDialog, { title, body: data.message });
         } else {
-            env.services.popup.add(ErrorTracebackPopup, {
-                title: message,
-                body: data.message + "\n" + data.debug + "\n",
+            env.services.dialog.add(ErrorDialog, {
+                traceback: data.message + "\n" + data.debug + "\n",
             });
         }
         return true;
@@ -27,7 +24,13 @@ registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
 
 function offlineErrorHandler(env, error, originalError) {
     if (error instanceof ConnectionLostError || originalError instanceof ConnectionLostError) {
-        env.services.popup.add(OfflineErrorPopup);
+        env.services.dialog.add(AlertDialog, {
+            title: _t("Connection Lost"),
+            body: _t(
+                "Until the connection is reestablished, Odoo Point of Sale will operate with limited functionality."
+            ),
+            confirmLabel: _t("Continue with limited functionality"),
+        });
         return true;
     }
 }
@@ -35,12 +38,11 @@ registry.category("error_handlers").add("offlineErrorHandler", offlineErrorHandl
 
 function defaultErrorHandler(env, error, originalError) {
     if (error instanceof Error) {
-        env.services.popup.add(ErrorTracebackPopup, {
-            title: `${originalError.name}: ${originalError.message}`,
-            body: error.traceback,
+        env.services.dialog.add(ErrorDialog, {
+            traceback: error.traceback,
         });
     } else {
-        env.services.popup.add(ErrorPopup, {
+        env.services.dialog.add(AlertDialog, {
             title: _t("Unknown Error"),
             body: _t("Unable to show information about this error."),
         });

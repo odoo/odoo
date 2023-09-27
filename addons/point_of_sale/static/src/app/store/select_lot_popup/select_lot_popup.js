@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { Dialog } from "@web/core/dialog/dialog";
 import { useAutoFocusToLast } from "@point_of_sale/app/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_list_input/edit_list_input";
 
 /**
@@ -23,14 +23,11 @@ import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_li
  *   const names = [{ id: 1, text: 'Joseph'}, { id: 2, text: 'Kaykay' }];
  *
  *   // supply the items to the popup and wait for user's response
- *   // when user pressed `confirm` in the popup, the changes he made will be returned by the showPopup function.
- *   const { confirmed, payload: newNames } = await this.popup.add(EditListPopup, {
+ *   this.dialog.add(EditListPopup, {
  *     title: "Can you confirm this item?",
- *     array: names })
- *
- *   // we then consume the new data. In this example, it is only logged.
- *   if (confirmed) {
- *     console.log(newNames);
+ *     array: names ,
+ *     getPayload: (newNames) => console.log(newNames),
+ * })
  *     // the above might log the following:
  *     // [{ _id: 1, id: 1, text: 'Joseph Caburnay' }, { _id: 2, id: 2, 'Kaykay' }, { _id: 3, 'James' }]
  *     // The result showed that the original item with id=1 was changed to have text 'Joseph Caburnay' from 'Joseph'
@@ -38,8 +35,8 @@ import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_li
  *   }
  * ```
  */
-export class EditListPopup extends AbstractAwaitablePopup {
-    static components = { EditListInput };
+export class EditListPopup extends Component {
+    static components = { EditListInput, Dialog };
     static template = "point_of_sale.EditListPopup";
     static defaultProps = {
         confirmText: _t("Add"),
@@ -54,7 +51,6 @@ export class EditListPopup extends AbstractAwaitablePopup {
      * @param {Boolean} [props.isSingleItem=false] true if only allowed to edit single item (the first item)
      */
     setup() {
-        super.setup();
         this._id = 0;
         this.state = useState({ array: this._initialize(this.props.array) });
         useAutoFocusToLast();
@@ -101,14 +97,12 @@ export class EditListPopup extends AbstractAwaitablePopup {
         }
         this.state.array.push(this._emptyItem());
     }
-    /**
-     * @override
-     */
-    getPayload() {
-        return {
-            newArray: this.state.array
+    confirm() {
+        this.props.getPayload(
+            this.state.array
                 .filter((item) => item.text.trim() !== "")
-                .map((item) => Object.assign({}, item)),
-        };
+                .map((item) => Object.assign({}, item))
+        );
+        this.props.close();
     }
 }

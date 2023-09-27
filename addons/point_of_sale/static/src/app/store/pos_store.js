@@ -7,12 +7,11 @@ import { PosDB } from "@point_of_sale/app/store/db";
 import { markRaw, reactive } from "@odoo/owl";
 import { roundPrecision as round_pr, floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
@@ -21,7 +20,8 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { renderToString } from "@web/core/utils/render";
 import { batched } from "@web/core/utils/timing";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
-import { EditListPopup } from "./select_lot_popup/select_lot_popup";
+import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
+import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -76,26 +76,26 @@ export class PosStore extends Reactive {
     tempScreen = null;
 
     static serviceDependencies = [
-        "popup",
         "orm",
         "number_buffer",
         "barcode_reader",
         "hardware_proxy",
         "ui",
+        "dialog",
     ];
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui }) {
+    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui, dialog }) {
         this.env = env;
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
         this.ui = ui;
-
+        this.dialog = dialog;
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
@@ -1666,7 +1666,7 @@ export class PosStore extends Reactive {
                 if (changes.cancelled.length > 0 || changes.new.length > 0) {
                     const isPrintSuccessful = await order.printChanges(cancelled);
                     if (!isPrintSuccessful) {
-                        this.popup.add(ErrorPopup, {
+                        this.dialog.add(AlertDialog, {
                             title: _t("Printing failed"),
                             body: _t("Failed in printing the changes in the order"),
                         });
@@ -1758,7 +1758,7 @@ export class PosStore extends Reactive {
                           "not close the session before the issue " +
                           "has been resolved."
                   );
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: _t("Offline Orders"),
                 body: reason,
             });
@@ -1775,7 +1775,7 @@ export class PosStore extends Reactive {
         }
         const currentPartner = currentOrder.get_partner();
         if (currentPartner && currentOrder.getHasRefundLines()) {
-            this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Can't change customer"),
                 body: _t(
                     "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer.",
@@ -1813,20 +1813,20 @@ export class PosStore extends Reactive {
     }
 
     async getEditedPackLotLines(isAllowOnlyOneLot, packLotLinesToEdit, productName) {
-        const { confirmed, payload } = await this.env.services.popup.add(EditListPopup, {
+        const payload = await makeAwaitable(this.dialog, EditListPopup, {
             title: _t("Lot/Serial Number(s) Required"),
             name: productName,
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,
         });
-        if (!confirmed) {
+        if (!payload) {
             return;
         }
         // Segregate the old and new packlot lines
         const modifiedPackLotLines = Object.fromEntries(
-            payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+            payload.filter((item) => item.id).map((item) => [item.id, item.text])
         );
-        const newPackLotLines = payload.newArray
+        const newPackLotLines = payload
             .filter((item) => !item.id)
             .map((item) => ({ lot_name: item.text }));
 
@@ -1849,7 +1849,17 @@ export class PosStore extends Reactive {
     }
     openCashControl() {
         if (this.shouldShowCashControl()) {
-            this.popup.add(CashOpeningPopup, { keepBehind: true });
+            this.dialog.add(
+                CashOpeningPopup,
+                {},
+                {
+                    onClose: () => {
+                        if (this.pos_session.state !== "opened") {
+                            this.closePos();
+                        }
+                    },
+                }
+            );
         }
     }
     shouldShowCashControl() {

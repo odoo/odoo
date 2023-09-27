@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
@@ -34,7 +35,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
 
             // Create first order
             FloorScreen.clickTable("5"),
@@ -47,7 +48,11 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.orderlineIsToOrder("Water"),
             ProductScreen.orderlineIsToSkip("Coca-Cola"),
             ProductScreen.clickOrderButton(),
-            ProductScreen.isPrintingError(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ProductScreen.orderlinesHaveNoChange(),
             ProductScreen.totalAmountIs("4.40"),
 
@@ -63,6 +68,11 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.clickNextOrder(),
 
             // After clicking next order, floor screen is shown.
@@ -90,7 +100,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0001"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             isSyncStatusPending(),
             isSyncStatusConnected(),
             TicketScreen.selectOrder("-0003"),
@@ -128,6 +143,11 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 

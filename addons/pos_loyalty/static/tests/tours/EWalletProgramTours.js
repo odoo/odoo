@@ -3,7 +3,7 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
-import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as PartnerListScreen from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
 import { registry } from "@web/core/registry";
 
@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
     url: "/pos/web",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
 
             // Topup 50$ for partner_aaa
@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
             PosLoyalty.orderTotalIs("50.00"),
             ProductScreen.clickPayButton(false),
             // If there's no partner, we asked to redirect to the partner list screen.
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             PartnerListScreen.isShown(),
             PartnerListScreen.clickPartner("AAAAAAA"),
             PosLoyalty.finalizeOrder("Cash", "50"),

@@ -3,6 +3,7 @@
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
@@ -15,7 +16,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
 
             // Create first order and pay it
             FloorScreen.clickTable("2"),
@@ -29,6 +30,11 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.clickNextOrder(),
 
             // Go to another table and refund one of the products

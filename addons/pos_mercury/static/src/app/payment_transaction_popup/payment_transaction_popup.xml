@@ -2,19 +2,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_mercury.PaymentTransactionPopup">
-            <div class="popup">
-                <p class="title">
-                    <t t-esc="props.title"></t>
-                </p>
-                <p class="body">
-                    <t t-esc="state.message"></t>
-                </p>
-                <div t-if="state.confirmButtonIsShown" class="footer">
-                    <div class="button cancel" t-on-click="confirm">
-                        <t t-esc="props.confirmText"></t>
-                    </div>
+        <Dialog title="props.title">
+            <t t-esc="state.message"></t>
+            <t t-set-slot="footer">
+                <div class="button cancel" t-if="state.confirmButtonIsShown" t-on-click="props.close()">
+                    OK
                 </div>
-            </div>
+            </t>
+        </Dialog>
     </t>
 
 </templates>

@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
 import { registry } from "@web/core/registry";
@@ -10,21 +11,19 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             // Go by default to home category
             ProductScreen.clickHomeCategory(),
 
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
-            ProductConfigurator.isShown(),
 
             // Cancel configuration, not product should be in order
-            ProductConfigurator.cancelAttributes(),
+            Dialog.cancel(),
             ProductScreen.orderIsEmpty(),
 
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
-            ProductConfigurator.isShown(),
 
             // Pick Color
             ProductConfigurator.pickColor("Red"),
@@ -39,7 +38,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
 
             // Confirm configuration
-            ProductConfigurator.confirmAttributes(),
+            Dialog.confirm(),
 
             // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
@@ -55,7 +54,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickSelect("Metal"),
             ProductConfigurator.pickRadio("Other"),
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
-            ProductConfigurator.confirmAttributes(),
+            Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair (Red, Metal, Other: Custom Fabric)",
                 "2.0",
@@ -68,7 +67,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickColor("Blue"),
             ProductConfigurator.pickSelect("Metal"),
             ProductConfigurator.pickRadio("Leather"),
-            ProductConfigurator.confirmAttributes(),
+            Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair (Blue, Metal, Leather)",
                 "1.0",

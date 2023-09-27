@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
@@ -36,9 +36,9 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickAddTable(),
             FloorScreen.selectedTableIs("1"),
             FloorScreen.clickRename(),
-            TextInputPopup.isShown(),
+
             TextInputPopup.inputText("100"),
-            TextInputPopup.clickConfirm(),
+            Dialog.confirm(),
             FloorScreen.clickTable("100"),
             FloorScreen.selectedTableIs("100"),
 
@@ -47,9 +47,9 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             // the name is the first number available on the floor
             FloorScreen.selectedTableIs("1"),
             FloorScreen.clickRename(),
-            TextInputPopup.isShown(),
+
             TextInputPopup.inputText("1111"),
-            TextInputPopup.clickConfirm(),
+            Dialog.confirm(),
             FloorScreen.clickTable("1111"),
             FloorScreen.selectedTableIs("1111"),
 
@@ -70,7 +70,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
 
             //test delete multiple tables
             FloorScreen.clickTrash(),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
 
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.hasTable("2"),
@@ -80,10 +80,10 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.hasTable("1111"),
 
             // test delete table
-            FloorScreen.clickTable("2"),
-            FloorScreen.selectedTableIs("2"),
+            FloorScreen.clickTable("1111"),
+            FloorScreen.selectedTableIs("1111"),
             FloorScreen.clickTrash(),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
 
             // change number of seats
             FloorScreen.clickTable("4"),
@@ -91,8 +91,8 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickSeats(),
             NumberPopup.pressNumpad("⌫ 9"),
             NumberPopup.fillPopupValue("9"),
-            NumberPopup.inputShownIs("9"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("9"),
+            Dialog.confirm(),
             FloorScreen.tableSeatIs("4", "9"),
 
             // change number of seat when the input is already selected
@@ -100,8 +100,8 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.selectedTableIs("4"),
             FloorScreen.clickSeats(),
             NumberPopup.enterValue("15"),
-            NumberPopup.inputShownIs("15"),
-            NumberPopup.clickConfirm(),
+            NumberPopup.isShown("15"),
+            Dialog.confirm(),
             FloorScreen.tableSeatIs("4", "15"),
 
             // change shape

@@ -11,8 +11,8 @@ export class PaymentScreenPaymentLines extends Component {
 
     setup() {
         this.ui = useState(useService("ui"));
-        this.popup = useService("popup");
         this.pos = usePos();
+        this.dialog = useService("dialog");
     }
 
     formatLineAmount(paymentline) {
@@ -26,19 +26,16 @@ export class PaymentScreenPaymentLines extends Component {
     }
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.cid);
-
         if (this.ui.isSmall) {
-            const { confirmed, payload } = await this.popup.add(NumberPopup, {
+            this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 startingValue: parseFloat(paymentline.amount),
                 isInputSelected: true,
                 nbrDecimal: this.pos.currency.decimal_places,
+                getPayload: (num) => {
+                    this.props.updateSelectedPaymentline(parseFloat(num));
+                },
             });
-
-            if (confirmed) {
-                this.props.updateSelectedPaymentline(parseFloat(payload));
-            }
         }
-        return;
     }
 }

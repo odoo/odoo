@@ -2,9 +2,10 @@
 
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as TextInputPopup from "@point_of_sale/../tests/tours/helpers/TextInputPopupTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
-import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 
 export function selectRewardLine(rewardName) {
     return [
@@ -21,22 +22,14 @@ export function selectRewardLine(rewardName) {
     ];
 }
 export function enterCode(code) {
-    const steps = [
+    return [
         {
             content: "open code input dialog",
             trigger: '.control-button:contains("Enter Code")',
         },
-        {
-            content: `enter code value: ${code}`,
-            trigger: '.popup-textinput input[type="text"]',
-            run: `text ${code}`,
-        },
-        {
-            content: "confirm inputted code",
-            trigger: ".popup-textinput .button.confirm",
-        },
+        TextInputPopup.inputText(code),
+        Dialog.confirm(),
     ];
-    return steps;
 }
 export function resetActivePrograms() {
     return [
@@ -79,14 +72,6 @@ export function clickDiscountButton() {
         {
             content: "click discount button",
             trigger: ".js_discount",
-        },
-    ];
-}
-export function clickConfirmButton() {
-    return [
-        {
-            content: "click confirm button",
-            trigger: ".button.confirm",
         },
     ];
 }
@@ -156,5 +141,5 @@ export function finalizeOrder(paymentMethod, amount) {
     ];
 }
 export function removeRewardLine(name) {
-    return [...selectRewardLine(name), ...ProductScreen.pressNumpad("⌫"), ...Chrome.confirmPopup()];
+    return [selectRewardLine(name), ProductScreen.pressNumpad("⌫"), Dialog.confirm()].flat();
 }

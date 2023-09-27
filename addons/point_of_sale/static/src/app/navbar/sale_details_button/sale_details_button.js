@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
@@ -12,8 +12,8 @@ export class SaleDetailsButton extends Component {
     setup() {
         super.setup(...arguments);
         this.pos = usePos();
-        this.popup = useService("popup");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
         this.hardwareProxy = useService("hardware_proxy");
     }
 
@@ -36,7 +36,7 @@ export class SaleDetailsButton extends Component {
         );
         const { successful, message } = await this.hardwareProxy.printer.printReceipt(report);
         if (!successful) {
-            await this.popup.add(ErrorPopup, {
+            this.dialog.add(AlertDialog, {
                 title: message.title,
                 body: message.body,
             });

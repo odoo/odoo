@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
@@ -81,9 +82,9 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
             ProductScreen.addOrderline("Letter Tray", "1", "10"),
             ProductScreen.clickPayButton(),
 
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.enterPaymentLineAmount("Bank", "1000"),
-
+            PaymentScreen.enterPaymentLineAmount("Bank", "99"),
+            // trying to put 99 as an amount should throw an error. We thus confirm the dialog.
+            Dialog.confirm(),
             PaymentScreen.remainingIs("0.0"),
             PaymentScreen.changeIs("0.0"),
         ].flat(),
@@ -94,6 +95,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
     url: "/pos/ui",
     steps: () =>
         [
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
@@ -124,6 +126,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
     url: "/pos/ui",
     steps: () =>
         [
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
@@ -154,7 +157,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test 1.2", "1"),
             ProductScreen.clickPayButton(),
@@ -213,7 +216,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test 40", "1"),
             ProductScreen.clickPartnerButton(),
@@ -262,7 +265,6 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),

@@ -2,6 +2,7 @@
 
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
@@ -12,7 +13,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
     url: "/pos/ui",
     steps: () =>
         [
-            ProductScreen.confirmOpeningPopup(),
+            Dialog.confirm("Open session"),
             Chrome.clickMenuButton(),
             Chrome.isCashMoveButtonShown(),
             Chrome.clickMenuButton(),
@@ -105,7 +106,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // the 2nd-row order and it has payment status
             TicketScreen.nthRowContains(2, "Payment"),
             TicketScreen.deleteOrder("-0002"),
-            Chrome.confirmPopup(),
+            Dialog.confirm(),
             TicketScreen.clickNewTicket(),
 
             // Invoice an order

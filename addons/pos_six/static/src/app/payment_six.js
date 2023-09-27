@@ -3,7 +3,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { escape } from "@web/core/utils/strings";
 
 window.onTimApiReady = function () {};
@@ -117,7 +117,7 @@ export class PaymentSix extends PaymentInterface {
 
         if (event.exception) {
             if (event.exception.resultCode !== timapi.constants.ResultCode.apiCancelEcr) {
-                this.env.services.popup.add(ErrorPopup, {
+                this.env.services.dialog.add(AlertDialog, {
                     title: _t("Transaction was not processed correctly"),
                     body: event.exception.errorText,
                 });
@@ -140,7 +140,7 @@ export class PaymentSix extends PaymentInterface {
 
     _onBalanceComplete(event, data) {
         if (event.exception) {
-            this.env.services.popup.add(ErrorPopup, {
+            this.env.services.dialog.add(AlertDialog, {
                 title: _t("Balance Failed"),
                 body: _t("The balance operation failed."),
             });

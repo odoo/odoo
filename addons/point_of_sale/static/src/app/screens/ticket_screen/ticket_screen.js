@@ -6,10 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime, deserializeDate, formatDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
-
-import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
@@ -20,6 +17,7 @@ import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/s
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const { DateTime } = luxon;
 
@@ -51,8 +49,8 @@ export class TicketScreen extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
-        this.popup = useService("popup");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
@@ -141,7 +139,7 @@ export class TicketScreen extends Component {
             ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
             order.get_orderlines().length > 0
         ) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
+            const confirmed = await ask(this.dialog, {
                 title: _t("Existing orderlines"),
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
@@ -236,7 +234,7 @@ export class TicketScreen extends Component {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
                     this.numberBuffer.reset();
-                    this.popup.add(ErrorPopup, {
+                    this.dialog.add(AlertDialog, {
                         title: _t("Maximum Exceeded"),
                         body: _t(
                             "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
@@ -293,7 +291,7 @@ export class TicketScreen extends Component {
 
         //Add a check too see if the fiscal position exist in the pos
         if (order.fiscal_position_not_found) {
-            this.showPopup("ErrorPopup", {
+            this.dialog.add(AlertDialog, {
                 title: _t("Fiscal Position not found"),
                 body: _t(
                     "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
