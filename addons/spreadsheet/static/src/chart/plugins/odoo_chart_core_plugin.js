@@ -3,8 +3,11 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { loadJS } from "@web/core/assets";
+import { odooChartToImage } from "../../helpers/model";
 
 const { CorePlugin } = spreadsheet;
+const { chartRegistry } = spreadsheet.registries;
 
 /**
  * @typedef {Object} Chart
@@ -191,6 +194,37 @@ export default class OdooChartCorePlugin extends CorePlugin {
         };
         this.history.update("charts", charts);
     }
+
+    exportForExcel(data) {
+        for (let sheet of data.sheets) {
+            const images = [];
+            for (const figure of sheet.figures) {
+                if (!figure || figure.tag !== "chart") {
+                    continue;
+                }
+                const figureId = figure.id;
+                const type = this.getters.getChartType(figureId);
+                if (type.startsWith("odoo_")) {
+                    loadJS("/web/static/lib/Chart/Chart.js");
+                    const chart = this.getters.getChart(figureId);
+                    const runtime = chartRegistry.get(type).getChartRuntime(chart);
+                    const img = odooChartToImage(runtime, figure);
+                    images.push({
+                        ...figure,
+                        tag: "image",
+                        data: {
+                            mimetype:"image/png",
+                            path: img,
+                            size: { width: figure.width, height: figure.height },
+                        }
+                    });
+                }
+            }
+            sheet.images = [...sheet.images, ...images];
+        }
+        return data;
+    }
+
 }
 
 OdooChartCorePlugin.getters = [

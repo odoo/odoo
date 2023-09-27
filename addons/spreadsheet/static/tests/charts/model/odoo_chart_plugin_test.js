@@ -10,6 +10,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { RPCError } from "@web/core/network/rpc_service";
 
 const { toZone } = spreadsheet.helpers;
+const { Model } = spreadsheet;
 
 QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
     QUnit.test("Can add an Odoo Bar chart", async (assert) => {
@@ -195,6 +196,13 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         const chartId = m1.getters.getChartIds(sheetId)[0];
         assert.ok(m1.getters.getChartDataSource(chartId));
         assert.strictEqual(m1.getters.getChartRuntime(chartId).chartJsConfig.type, "line");
+    });
+
+    QUnit.test("Odoo chart is exported as an image in .xlsx", async (assert) => {
+        const model = await createModelWithDataSource();
+        insertChartInSpreadsheet(model, "odoo_line");
+        const exported = model.exportXLSX();
+        assert.equal(exported.files.filter(f => "imageSrc" in f).length, 1);
     });
 
     QUnit.test("Can undo/redo an Odoo chart creation", async (assert) => {
