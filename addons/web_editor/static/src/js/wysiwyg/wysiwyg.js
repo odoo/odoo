@@ -175,6 +175,7 @@ const Wysiwyg = Widget.extend({
             options.collaborationChannel &&
             this._hasICEServers()
         ) {
+            this._currentClientId = this._generateClientId();
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             if (this.options.collaborativeTrigger === 'start') {
                 this._joinPeerToPeer();
@@ -520,7 +521,6 @@ const Wysiwyg = Widget.extend({
             this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
         }
 
-        this._currentClientId = this._generateClientId();
         this._startCollaborationTime = new Date().getTime();
 
         this._checkConnectionChange = () => {
@@ -2965,12 +2965,14 @@ const Wysiwyg = Widget.extend({
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
         if (!collaborationChannel || !collaborationChannel.collaborationResId) {
+            this._currentClientId = undefined;
             this.resetValue(value);
             return;
         }
+        this._currentClientId = this._generateClientId();
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.resetValue(value);
         this.setupCollaboration(collaborationChannel);
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         if (this.options.collaborativeTrigger === 'start') {
             this._joinPeerToPeer();
         } else if (this.options.collaborativeTrigger === 'focus') {
