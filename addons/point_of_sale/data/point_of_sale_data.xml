@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
+        <function model="stock.warehouse" name="_create_missing_pos_picking_types"/>
+    </data>
+
     <data noupdate="1">
         <!-- After closing the PoS, open the dashboard menu -->
         <record id="action_client_pos_menu" model="ir.actions.client">
@@ -7,8 +11,6 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
         </record>
-
-        <function model="stock.warehouse" name="_create_missing_pos_picking_types"/>
 
         <record id="product_category_pos" model="product.category">
             <field name="parent_id" ref="product.product_category_1"/>

@@ -2620,7 +2620,7 @@ msgid ""
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
 "\n"
-"如果在一個已售產品上啟用按訂單生產 (MTO)，則增加銷售訂單和採購訂單之間的關係訊息.\n"
+"若出售產品已啟用特別訂製（MTO），會加入銷售訂單與採購訂單之間的關係資訊。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -7644,9 +7644,6 @@ msgid ""
 "This is a bridge module that adds multi-website support for payment acquirers.\n"
 "    "
 msgstr ""
-"\n"
-"This is a bridge module that adds multi-website support for payment acquirers.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -9646,7 +9643,7 @@ msgstr " 在潛在客戶表單檢視上增加一個統計按鈕以存取他們�
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery_mondialrelay
 msgid " Let's choose Point Relais® on your ecommerce "
-msgstr " Let's choose Point Relais® on your ecommerce "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
@@ -11522,9 +11519,6 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
-"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
-"    notably for selling mouse traps. With that trick he cut\n"
-"    IT budget by almost half within the last 2 years."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_report_measures
@@ -13185,7 +13179,7 @@ msgstr "空白"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blogs"
-msgstr "部落格"
+msgstr "網誌"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -16556,45 +16550,6 @@ msgid ""
 "* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
 "* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 msgstr ""
-"Electronic Accounting for Mexico and Fiscal Reports\n"
-"===================================================\n"
-"\n"
-"Add the financial reports to Mexican Electronic Invoice\n"
-"\n"
-"- COA\n"
-"- Trial Balance\n"
-"- Journal Items\n"
-"\n"
-"Add other operative reports like DIOT.\n"
-"\n"
-"- DIOT\n"
-"\n"
-"Known leak of features:\n"
-"\n"
-"- Save the generated xml in order to make available an history of Fiscal declared documents.\n"
-"- Unit tests to increase the coverage of this module and avoid regressions in the future.\n"
-"\n"
-"Notes:\n"
-"------\n"
-"\n"
-"  - In the taxes could be set the account `Base Tax Received Account` that is the\n"
-"    account that will be set on lines created in cash basis journal entry and\n"
-"    used to keep track of the tax base amount, this account is not considered in\n"
-"    the Mexican reports.\n"
-"\n"
-"Configuration\n"
-"=============\n"
-"\n"
-"To configure this module, it is strongly recommended your chart of account depends of the l10n_mx data and structure,\n"
-"you can set this afterwards if you CoA do not depends of what l10n_mx does, but you will need extra manual work.\n"
-"\n"
-"Credits\n"
-"=======\n"
-"\n"
-"**Contributors**\n"
-"\n"
-"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
-"* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi
@@ -16841,6 +16796,15 @@ msgstr "錯誤"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "違反約束時返回的錯誤消息."
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -17506,32 +17470,32 @@ msgstr "欄位名稱"
 #: model:ir.module.category,name:base.module_category_services_field_service
 #: model:ir.module.module,shortdesc:base.module_industry_fsm
 msgid "Field Service"
-msgstr "欄位服務"
+msgstr "外勤服務"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_forecast
 msgid "Field Service - Project Forecast"
-msgstr "欄位服務 - 專案預測"
+msgstr "外勤服務 － 專案預測"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
 msgid "Field Service - Sale"
-msgstr "欄位服務 - 銷售"
+msgstr "外勤服務 － 銷售"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr "欄位服務報表"
+msgstr "外勤服務報表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
 msgid "Field Service Reports - Sale"
-msgstr "欄位服務報表 - 銷售"
+msgstr "外勤服務報表 － 銷售"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
 msgid "Field Service Stock"
-msgstr "欄位服務庫存"
+msgstr "外勤服務庫存"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__ttype
@@ -18198,8 +18162,6 @@ msgid ""
 "Gemini Furniture brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
-"Gemini Furniture brings honesty and seriousness to wood industry while "
-"helping customers deal with trees, flowers and fungi."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -18257,7 +18219,7 @@ msgstr "建立定期憑單並管理續訂"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_links
 msgid "Generate trackable & short URLs"
-msgstr "建立可追蹤的 & 短連結URLs"
+msgstr "產生可追蹤的簡短網址"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_property_view_search
@@ -19457,7 +19419,7 @@ msgstr "圖像"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_1024
 #: model:ir.model.fields,field_description:base.field_res_users__image_1024
 msgid "Image 1024"
-msgstr "畫素 1024"
+msgstr "圖像 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__image_128
@@ -19465,7 +19427,7 @@ msgstr "畫素 1024"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_128
 #: model:ir.model.fields,field_description:base.field_res_users__image_128
 msgid "Image 128"
-msgstr "畫素 128"
+msgstr "圖像 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__image_256
@@ -19473,7 +19435,7 @@ msgstr "畫素 128"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_256
 #: model:ir.model.fields,field_description:base.field_res_users__image_256
 msgid "Image 256"
-msgstr "畫素 256"
+msgstr "圖像 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__image_512
@@ -19481,7 +19443,7 @@ msgstr "畫素 256"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_512
 #: model:ir.model.fields,field_description:base.field_res_users__image_512
 msgid "Image 512"
-msgstr "畫素 512"
+msgstr "圖像 512"
 
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
@@ -21265,7 +21227,7 @@ msgstr "長"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
 msgid "Loyalty Program"
-msgstr "忠誠計劃"
+msgstr "會員計劃"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_loyalty
@@ -29431,7 +29393,7 @@ msgstr "社群 Marketing"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "Social Media"
-msgstr "社群媒體"
+msgstr "社交媒體"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
@@ -29836,7 +29798,7 @@ msgstr "街道..."
 #: model:ir.model.fields,field_description:base.field_res_partner__street2
 #: model:ir.model.fields,field_description:base.field_res_users__street2
 msgid "Street2"
-msgstr "街道2"
+msgstr "街道第二行"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_stripe
@@ -29935,7 +29897,7 @@ msgstr "補充參數"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
-msgstr "支援直播曲目: 流媒體、參與、youtube"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
@@ -31338,7 +31300,7 @@ msgstr "千位分隔符"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__4
 msgid "Thursday"
-msgstr "四"
+msgstr "星期四"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
@@ -31745,7 +31707,7 @@ msgstr "嘗試搜索其他關鍵字"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__2
 msgid "Tuesday"
-msgstr "二"
+msgstr "星期二"
 
 #. module: base
 #: model:res.country,name:base.tn
@@ -31800,12 +31762,12 @@ msgstr "推特片段"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
 msgid "Twitter Wall"
-msgstr "推特牆"
+msgstr "Twitter 訊息牆"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
 msgid "Twitter scroller snippet in website"
-msgstr "網站上的推特(Twitter)滾動條代碼段"
+msgstr "網站內 Twitter 捲動小資料"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp
@@ -33127,7 +33089,7 @@ msgstr "網站簡介"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
 msgid "Wednesday"
-msgstr "三"
+msgstr "星期三"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__weeks
@@ -33868,7 +33830,7 @@ msgstr "例如 法語"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "e.g. John Doe"
-msgstr "例如: John Doe"
+msgstr "例：陳大文"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

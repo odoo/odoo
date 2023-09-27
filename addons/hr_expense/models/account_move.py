@@ -18,3 +18,8 @@ class AccountMove(models.Model):
             if line.expense_id:
                 line.expense_id.sheet_id.write({'state': 'post'})
         return super().button_draft()
+
+    def _post(self, soft=True):
+        company_sheets = self.line_ids.expense_id.sheet_id.filtered(lambda sheet: sheet.payment_mode == 'company_account')
+        company_sheets.paid_expense_sheets()
+        return super()._post(soft)

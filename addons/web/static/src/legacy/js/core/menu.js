@@ -97,6 +97,7 @@ export async function initAutoMoreMenu(el, options) {
     }
 
     function _adapt() {
+        el.dispatchEvent(new Event("autoMoreMenu.willAdapt", {bubbles: true}));
         if (options.loadingStyleClasses.length) {
             el.classList.add(...options.loadingStyleClasses);
         }
@@ -202,6 +203,16 @@ export async function initAutoMoreMenu(el, options) {
         extraItemsToggle.appendChild(extraItemsToggleLink);
         extraItemsToggle.appendChild(dropdownMenu);
         el.insertBefore(extraItemsToggle, target);
+        // TODO Adapt in 16.0: The dropdown menu is closed when clicking inside
+        // the extra menu items. The goal here is to prevent this default
+        // behaviour on "edit" mode to allow correct editing of extra menu
+        // items, mega menu content... This should be simply replaced by the BS5
+        // `autoClose` option.
+        if (window.jQuery && document.body.classList.contains("editor_enable")) {
+            $(extraItemsToggle).on("hide.bs.dropdown", e => {
+                return !e.clickEvent || !e.clickEvent.target.closest(".o_extra_menu_items");
+            });
+        }
         return dropdownMenu;
     }
 

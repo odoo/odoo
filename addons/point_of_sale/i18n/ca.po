@@ -19,12 +19,12 @@
 # oscaryuu, 2022
 # CristianCruzParra, 2022
 # marcescu, 2023
-# Josep Anton Belchi, 2023
 # Jonatan Gk, 2023
 # Arnau Ros, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Ivan Espinola, 2023
 # Quim - eccit <quim@eccit.com>, 2023
+# Josep Anton Belchi, 2023
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-18 08:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2023\n"
+"Last-Translator: Josep Anton Belchi, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1679,7 +1679,7 @@ msgstr "Nota del client"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_orderline_customer_notes
 msgid "Customer Notes"
-msgstr ""
+msgstr "Notes del client"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2305,6 +2305,13 @@ msgstr "Importació de comandes finalitzada"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "Posició fiscal"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "No s'ha trobat la posició fiscal"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3983,7 +3990,7 @@ msgstr "Sessió POS"
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "POS error"
-msgstr ""
+msgstr "Error TPV"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6035,6 +6042,15 @@ msgstr ""
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr "El mòdul de dades fiscals ha trobat un error en rebre la comanda."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip

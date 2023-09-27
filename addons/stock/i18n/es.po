@@ -15,8 +15,8 @@
 # juankfj, 2022
 # marcescu, 2022
 # Martin Trigaux, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Pere Martínez, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Pere Martínez, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3765,6 +3765,8 @@ msgid ""
 "It is not allowed to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
+"No está permitido importar cantidades reservadas. Debe utilizar la cantidad "
+"directamente."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -4333,8 +4335,8 @@ msgstr "Gestionar las categorías de almacenamiento"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
 msgstr ""
-"Administrar paquetes de productos (por ejemplo, paquete de 6 botellas, caja "
-"de 10 unidades)"
+"Administrar empaquetados de productos (por ejemplo, paquete de 6 botellas, "
+"caja de 10 unidades)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -4420,7 +4422,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr "Peso máximo a enviar en este paquete"
+msgstr "Peso máximo a enviar en este empaquetado"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__5
@@ -5340,7 +5342,7 @@ msgstr "Empaquetado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
 msgid "Packaging Height"
-msgstr "Altura del paquete"
+msgstr "Altura del empaquetado"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__packaging_length
@@ -5711,7 +5713,7 @@ msgstr "Empaquetado del producto"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
 msgid "Product Packaging (ZPL)"
-msgstr "Paquete del producto (ZPL)"
+msgstr "Empaquetado del producto (ZPL)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -6475,12 +6477,8 @@ msgid ""
 "Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
 "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
 msgstr ""
-"Reservar solo empaquetados completos: no se reservarán empaquetados "
-"parciales. Si el cliente ordena 2 tarimas de 1000 unidades cada una y solo "
-"tiene 1600 en existencias, entonces solo se reservarán 1000Reservar "
-"empaquetados parciales: permite reservar empaquetados parciales. Si el "
-"cliente pide 2 tarimas de 1000 unidades cada una y solo tiene 1600, entonces"
-" se reservarán 1600"
+"Reservar solo empaquetados completos: no se reservarán empaquetados parciales. Si el cliente ordena 2 tarimas de 1000 unidades cada una y solo tiene 1600 en existencias, entonces solo se reservarán 1000\n"
+"Reservar empaquetados parciales: permite reservar empaquetados parciales. Si el cliente pide 2 tarimas de 1000 unidades cada una y solo tiene 1600, entonces se reservarán 1600"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
@@ -6490,7 +6488,7 @@ msgstr "Reservar empaquetados"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr "Reservar empaquetado parcial"
+msgstr "Reservar empaquetados parciales"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -8196,6 +8194,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"La compañía de este producto no se puede cambiar mientras haya movimientos "
+"de existencias perteneciendo a otra compañía."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9374,10 +9374,10 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"No puede dividir un movimiento de almacén que se haya establecido en "
-"'Listo'."
+"No puede dividir un movimiento de existencias que se haya establecido en "
+"'Realizado' o 'Cancelado'."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0

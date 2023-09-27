@@ -21,8 +21,9 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Teija Hölttä <teija.holtta@gmail.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
@@ -178,6 +179,16 @@ msgstr "<i class=\"fa fa-print\"/> Tulosta"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
 msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>LISÄÄ OSTOSKORIIN"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Maa...</option>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr "<option value=\"\">Osavaltio / maakunta...</option>"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -1082,6 +1093,14 @@ msgstr ""
 "liitetty tiliisi. Jos tämä toiminto täytyy tehdä, ota meihin yhteyttä."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Alikategoriat"
@@ -1148,7 +1167,10 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Yrityksen nimi"
 
@@ -1243,11 +1265,6 @@ msgstr "Sohvat"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Maa"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Maa..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1734,6 +1751,15 @@ msgstr "Kuva 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Kuvan nimi"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2323,6 +2349,13 @@ msgstr "Polkimiin perustuva avausjärjestelmä"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Puhelin"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Puhelinnumero"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3078,11 +3111,6 @@ msgid "State / Province"
 msgstr "Osavaltio / provinssi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Osavaltio / provinssi..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
@@ -3683,6 +3711,20 @@ msgid ""
 msgstr ""
 "Osoitteesi\n"
 "                                        <small> tai </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Sähköpostisi"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Nimesi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

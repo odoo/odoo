@@ -26,7 +26,7 @@ const GalleryWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
-        if (this.$modal) {
+        if (this.$modal || ev.currentTarget.matches("a > img")) {
             return;
         }
         var self = this;

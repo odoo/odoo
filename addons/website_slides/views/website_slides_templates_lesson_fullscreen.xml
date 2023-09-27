@@ -122,18 +122,18 @@
                         <i t-if="slide_completed and is_member" class="o_wslides_slide_completed fa fa-check fa-fw text-success" t-att-data-slide-id="slide.id"/>
                         <i t-if="not slide_completed and is_member" class="fa fa-circle-thin fa-fw" t-att-data-slide-id="slide.id"/>
                     </span>
-                    <div class="ml-2">
+                    <div class="ml-2 overflow-hidden">
                         <a t-if="can_access" class="d-block pt-1" href="#">
                             <div class="d-flex ">
                                 <t t-call="website_slides.slide_icon"/>
-                                <div class="o_wslides_fs_slide_name" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-truncate" t-esc="slide.name"/>
                             </div>
                         </a>
                         <span t-else="" class="d-block pt-1" href="#">
                             <div class="d-flex ">
                                 <t t-set="icon_class" t-value="'mr-2 text-600'"/>
                                 <t t-call="website_slides.slide_icon"/>
-                                <div class="o_wslides_fs_slide_name text-600" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-600 text-truncate" t-esc="slide.name"/>
                             </div>
                         </span>
                         <ul class="list-unstyled w-100 pt-2 small" t-if="slide.link_ids or slide._has_additional_resources() or (slide.question_ids and not slide.slide_type =='quiz')" >

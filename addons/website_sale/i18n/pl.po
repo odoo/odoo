@@ -36,6 +36,7 @@
 # Maksym <ms@myodoo.pl>, 2023
 # Tymoteusz Motylewski, 2023
 # danielkowalczyk007, 2023
+# Wil Odoo, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -191,6 +192,16 @@ msgstr "<i class=\"fa fa-print\"/> Drukuj"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
 msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>DODAJ DO KOSZYKA"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Kraj...</option>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr "<option value=\"\">Stan / województwo...</option>"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -991,6 +1002,14 @@ msgstr ""
 "konta. Prosimy o bezpośredni kontakt w sprawie tej operacji."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Kategorie podrzędne"
@@ -1057,7 +1076,10 @@ msgid "Companies"
 msgstr "Firmy"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Nazwa firmy"
 
@@ -1152,11 +1174,6 @@ msgstr "Kanapy"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Kraj"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Kraj..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2250,6 +2267,13 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Numer Telefonu"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
 msgstr "Wprowadź prawidłowy adres URL filmu."
@@ -3005,11 +3029,6 @@ msgid "State / Province"
 msgstr "Województwo"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Województwo..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
@@ -3612,6 +3631,20 @@ msgid ""
 msgstr ""
 "Twój adres\n"
 "                                        <small> lub </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Twój email"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Twoja nazwa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

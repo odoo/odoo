@@ -13,6 +13,7 @@
 # Linkup <link-up@naver.com>, 2021
 # Heesoo Choi, 2021
 # Martin Trigaux, 2023
+# Daye Jeong, 2023
 # Sarah Park, 2023
 # 
 msgid ""
@@ -894,7 +895,7 @@ msgstr "마감된 세션에서는 청구서를 발행할 수 없습니다."
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "팁 항목을 수정할 수 없습니다."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1647,7 +1648,7 @@ msgstr "고객에게 %s 결제 방법이 필수입니다."
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "고객이 결제한 팁입니다. 직접 수정할 수 없습니다."
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -1988,7 +1989,7 @@ msgstr "고객 목록을 열어서 고객을 선택하시겠습니까?"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "웹 프린터로 프린트 할까요?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2239,6 +2240,13 @@ msgstr "주문 가져오기 완료됨"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "회계 포지션"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "재정 상태를 찾을 수 없습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3550,7 +3558,7 @@ msgstr "현금에만 반올림 적용"
 #, python-format
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
-msgstr ""
+msgstr "'현금' 또는 '은행 계좌' 유형의 전표만 결제 수단으로 사용할 수 있습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5906,6 +5914,15 @@ msgstr "기본 가격표는 회사나 POS상의 회사에 대한 것이 아니�
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr "주문을 받는 중 재무 데이터 모듈에 오류가 발생했습니다."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip

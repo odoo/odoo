@@ -7,6 +7,7 @@
 # Martin Trigaux, 2021
 # Paul Andrawes, 2021
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
+# Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -4481,6 +4482,21 @@ msgstr ""
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr "يجب أن تكون السعة قيمة موجبة. "
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "The component %s should not be the same as the product to produce."
+msgstr "يجب ألا يكون المكون %s نفس المنتج المراد إنتاجه. "
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+"التهيئة الحالية غير صحيحة لأنها ستتسبب في إنشاء حلقة بين هذه المنتجات: %s. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model

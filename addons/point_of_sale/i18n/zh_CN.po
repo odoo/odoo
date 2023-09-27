@@ -14,6 +14,7 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # digitalliuzg8888, 2023
 # Martin Trigaux, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-18 08:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -893,7 +894,7 @@ msgstr "已结束的营业区间无法进行开票操作。"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "无法修改提示"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1646,7 +1647,7 @@ msgstr "客户被要求 %s 付款方式。"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "客户提示，无法直接修改"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -1987,7 +1988,7 @@ msgstr "您需要打开客户清单来选择客户吗？"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "您想使用网络打印机打印吗？"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2234,6 +2235,13 @@ msgstr "导入订单已经完成"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "财政状况"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "未找到财政状况"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3540,7 +3548,7 @@ msgstr "仅对现金应用四舍五入"
 #, python-format
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
-msgstr ""
+msgstr "只有类型为 “现金” 或 “银行” 的日记账才能与支付方式一起使用。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5894,6 +5902,15 @@ msgid ""
 msgstr "财务数据模块在接收您的订单时遇到错误."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr "原始订单中使用的财务状况未加载。请确保通过在 POS 配置中添加该财务状况来加载它。"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
 msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
@@ -6983,7 +7000,7 @@ msgstr "您没有任何产品"
 msgid ""
 "You don't have the access rights to get the point of sale closing control "
 "data."
-msgstr ""
+msgstr "您没有获取销售点关闭控制数据的访问权限。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

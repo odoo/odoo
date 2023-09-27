@@ -9,14 +9,12 @@
 # Adi Sharashov <Adi@laylinetech.com>, 2021
 # yoav sc <yoav19991@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Fishfur A Banter <fishfurbanter@gmail.com>, 2021
 # ExcaliberX <excaliberx@gmail.com>, 2021
 # שהאב חוסיין <shhab89@gmail.com>, 2021
 # דודי מלכה <Dudimalka6@gmail.com>, 2021
 # Amit Spilman <amit@laylinetech.com>, 2021
 # david danilov, 2021
 # Jonathan Spier, 2021
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # shaked <shaked@laylinetech.com>, 2021
 # Netta Waizer, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
@@ -25,6 +23,8 @@
 # Roy Sayag, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
 # NoaFarkash, 2022
+# Fishfur A Banter <fishfurbanter@gmail.com>, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,6 +176,16 @@ msgstr "<i class=\"fa fa-print\"/> הדפס"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
 msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>הוספה לסל"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -973,6 +983,14 @@ msgstr ""
 "לצורך פעולה זו."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "תתי קטגוריות"
@@ -1038,7 +1056,10 @@ msgid "Companies"
 msgstr "חברות"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "שם החברה"
 
@@ -1133,11 +1154,6 @@ msgstr "ספות"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "ארץ"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "ארץ..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1615,6 +1631,15 @@ msgstr "תמונה 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "שם תמונה"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2199,6 +2224,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "טלפון"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "מספר טלפון"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -2946,11 +2978,6 @@ msgid "State / Province"
 msgstr "מדינה \\ מחוז"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "מדינה \\ מחוז ..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
@@ -3536,6 +3563,20 @@ msgid ""
 msgstr ""
 "הכתובת שלך\n"
 "                                        <small> או </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "הדוא\"ל שלך"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "השם שלך"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

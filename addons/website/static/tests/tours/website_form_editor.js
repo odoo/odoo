@@ -34,7 +34,8 @@ odoo.define('website.tour.form_editor', function (require) {
     const getQuotesEncodedName = function (name) {
             return name.replaceAll(/"/g, character => `&quot;`)
                        .replaceAll(/'/g, character => `&apos;`)
-                       .replaceAll(/`/g, character => `&lsquo;`);
+                       .replaceAll(/`/g, character => `&lsquo;`)
+                       .replaceAll("\\", character => `&bsol;`);
     };
 
     const getFieldByLabel = (label) => {
@@ -111,6 +112,9 @@ odoo.define('website.tour.form_editor', function (require) {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
             const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
             testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
+            // Because 'testText' will be used as selector to verify the content
+            // of the label, the `\` character needs to be escaped.
+            testText = testText.replaceAll("\\", "\\\\");
         }
         ret.push({
             content: "Check the resulting field",
@@ -517,11 +521,12 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        // The next four calls to "addCustomField" are there to ensure such
+        // characters do not make the form editor crash.
         ...addCustomField("char", "text", "''", false),
         ...addCustomField("char", "text", '""', false),
         ...addCustomField("char", "text", "``", false),
-        ...addCustomField("char", "text", "Same name", false),
-        ...addCustomField("char", "text", "Same name", false),
+        ...addCustomField("char", "text", "\\", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
@@ -532,21 +537,6 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'body:not(.editor_enable)',
             // We have to this that way because the input type = hidden.
             extra_trigger: 'form:has(input[name="email_to"][value="test@test.test"])',
-        },
-        {
-            content: "Check that the 'Same name 1' field is visible",
-            trigger: ".s_website_form_field .s_website_form_label_content:contains('Same name 1')",
-            run: () => null,
-        },
-        {
-            content: "Check that there is only one field 'Same name' visible",
-            trigger: ".s_website_form",
-            run: () => {
-                const sameNameEls = document.querySelectorAll(".s_website_form_field input[name='Same name']");
-                if (sameNameEls.length !== 1) {
-                    console.error("One and only one field with the label 'Same name' should be visible");
-                }
-            },
         },
     ]);
 

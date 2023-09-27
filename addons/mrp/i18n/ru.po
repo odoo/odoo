@@ -17,9 +17,9 @@
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Evgeniia Kotova, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # valmasone, 2022
 # Alena Vlasova, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Alena Vlasova, 2023\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -573,7 +573,7 @@ msgstr "Разрешено с предупреждением"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "Альтернативные участки"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -581,6 +581,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Альтернативные производственные участки, на которые может быть "
+"перераспределена работа с этого участка"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -1049,7 +1051,7 @@ msgstr "Контрольная сумма/SHA1"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
 msgid "Cleanup Time"
-msgstr ""
+msgstr "Время на очистку"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -3791,7 +3793,7 @@ msgstr "Связанные вложения"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Replan"
-msgstr ""
+msgstr "Перепланировать"
 
 #. module: mrp
 #. openerp-web
@@ -3916,7 +3918,7 @@ msgstr ""
 #: code:addons/mrp/static/src/js/mrp_workorder_popover.js:0
 #, python-format
 msgid "Scheduling Information"
-msgstr ""
+msgstr "Информация о расписании"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4037,7 +4039,7 @@ msgstr "Настройки"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
 msgid "Setup Time"
-msgstr ""
+msgstr "Время на наладку"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_apply
@@ -4456,6 +4458,20 @@ msgid "The capacity must be strictly positive."
 msgstr "Объём должен быть строго положительным."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "The component %s should not be the same as the product to produce."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
 msgid "The database object this attachment will be attached to."
 msgstr "Объект базы данных, к которому будет прикреплено это вложение."
@@ -4577,7 +4593,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "The work order should have already been processed."
-msgstr ""
+msgstr "Операция уже должна была быть выполнена."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__theme_template_id
@@ -5139,7 +5155,7 @@ msgstr "Ожидание компонентов"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
-msgstr ""
+msgstr "Ожидает завершения предыдущей операции с %(start)s по %(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -5382,6 +5398,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Заказы на выполнение работ - это операции, выполняемые в рамках производственного заказа.\n"
+"Операции определяются в спецификации или добавляются непосредственно в производственный заказ."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -5392,6 +5410,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Заказы на выполнение работ - это операции, выполняемые в рамках производственного заказа.\n"
+"Операции определяются в спецификации или добавляются непосредственно в производственный заказ."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban

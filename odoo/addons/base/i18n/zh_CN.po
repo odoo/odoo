@@ -16,6 +16,7 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Wil Odoo, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14572,7 +14573,7 @@ msgstr "计算"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Compute method cannot depend on field 'id'"
-msgstr ""
+msgstr "计算方法不能依赖于字段 \"id\""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -17068,6 +17069,18 @@ msgstr "错误"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "违反约束时返回的错误消息."
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"解析视图时出错：\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -20293,7 +20306,7 @@ msgstr "无效的「分组」参数"
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "默认值字段中的 JSON 格式无效。"
 
 #. module: base
 #: code:addons/models.py:0
@@ -33880,7 +33893,7 @@ msgstr "您不能停用您当前登录的用户."
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot delete a group linked with a settings field."
-msgstr ""
+msgstr "不能删除与设置字段链接的组。"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -33916,7 +33929,7 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
-msgstr ""
+msgstr "您不能删除 %s 记录。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -33951,7 +33964,7 @@ msgstr "您不能减少已在会计分录中使用的货币的小数位数."
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot rename config parameters with keys %s"
-msgstr ""
+msgstr "不能重命名键值为%s的配置参数"
 
 #. module: base
 #: code:addons/models.py:0
@@ -34726,4 +34739,4 @@ msgstr "奥兰群岛"
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "This currency is set on a company and therefore cannot be deactivated."
-msgstr ""
+msgstr "该货币以公司为单位设置，因此无法停用。"

@@ -9,6 +9,8 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # digitalliuzg8888, 2022
+# Wil Odoo, 2023
+# Levi Siuzdak (sile), 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: digitalliuzg8888, 2022\n"
+"Last-Translator: Levi Siuzdak (sile), 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,6 +165,16 @@ msgstr "<i class=\"fa fa-print\"/> 打印"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
 msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>添加到购物车"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">国家/地区...</option>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr "<option value=\"\">州/省...</option>"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -1045,6 +1057,14 @@ msgid ""
 msgstr "为您的帐户签发文件后，不允许更改公司名称。请直接联系我们进行此操作。"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "儿童类"
@@ -1108,7 +1128,10 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "公司名称"
 
@@ -1203,11 +1226,6 @@ msgstr "沙发"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "国家"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "国家..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1685,6 +1703,15 @@ msgstr "图像 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "图像名称"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2269,6 +2296,13 @@ msgstr "基于踏板的开启系统"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "电话"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "电话号码"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3015,11 +3049,6 @@ msgid "State / Province"
 msgstr "州/省"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "州/省..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr "网站销售状态入职付款收单机构步骤"
@@ -3605,6 +3634,20 @@ msgid ""
 msgstr ""
 "您的地址\n"
 "                                        <small> 或 </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "您的电子邮件"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "您的姓名"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

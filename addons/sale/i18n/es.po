@@ -825,8 +825,9 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Posibilidad de seleccionar un tipo de paquete en pedidos de venta y forzar "
-"una cantidad que es un múltiplo de la cantidad de unidades por paquete."
+"Posibilidad de seleccionar un tipo de empaquetado en pedidos de venta y "
+"forzar una cantidad que es un múltiplo de la cantidad de unidades por "
+"empaquetado."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2035,7 +2036,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr "Si es verdad, el paquete se puede utilizar para las órdenes de venta"
+msgstr ""
+"Si se activa, el empaquetado se puede utilizar para los pedidos de venta"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2876,7 +2878,7 @@ msgstr "Empaquetado"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "Cantidad de embalaje"
+msgstr "Cantidad de empaquetado"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3708,7 +3710,7 @@ msgstr "Vender y comprar productos en diferentes unidades de medida"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr "Vender productos por múltiplo de unidad # por paquete"
+msgstr "Vender productos por múltiplo de nº de unidades por empaquetado"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4319,8 +4321,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
-"Este producto lo empacó %(pack_size).2f%(pack_name)s. Debería "
-"vender%(quantity).2f%(unit)s."
+"Este producto se envasa en %(pack_name)s, en múltiplos de %(pack_size).2f. "
+"Debería vender %(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all

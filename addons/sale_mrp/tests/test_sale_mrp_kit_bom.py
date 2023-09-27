@@ -162,9 +162,9 @@ class TestSaleMrpKitBom(TransactionCase):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.stock_output_account)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertAlmostEqual(stock_out_aml.credit, 1.53, "Should not include the value of consumable component")
+        self.assertAlmostEqual(stock_out_aml.credit, 1.53, msg="Should not include the value of consumable component")
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.expense_account)
-        self.assertAlmostEqual(cogs_aml.debit, 1.53, "Should not include the value of consumable component")
+        self.assertAlmostEqual(cogs_aml.debit, 1.53, msg="Should not include the value of consumable component")
         self.assertEqual(cogs_aml.credit, 0)
 
     def test_reset_avco_kit(self):

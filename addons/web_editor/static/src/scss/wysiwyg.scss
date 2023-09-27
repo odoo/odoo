@@ -335,9 +335,6 @@ $o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
     // Specific elements
     #decoration {
         #removeFormat {
-            display: none;
-        }
-        .active ~ #removeFormat {
             display: flex;
         }
     }
@@ -411,7 +408,7 @@ $o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
 
 
 body:not(.editor_has_snippets) {
-    .oe-toolbar {
+    > .oe-toolbar {
         // Bootstrap sets .modal z-index at 1050. Ensure toolbar is visible in
         // modals. Only apply this to the toolbar if it's not in a snippets menu.
         z-index: 1051;
@@ -747,7 +744,8 @@ img::selection {
 .o_we_crop_widget {
     background-color: rgba(128, 128, 128, 0.5);
     @include o-position-absolute(0, 0, 0, 0);
-    z-index: 1024;
+    /* This value must be higher than dialog z-index in bootstrap */
+    z-index: 1056;
 
     .o_we_cropper_wrapper {
         position: absolute;

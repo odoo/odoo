@@ -924,6 +924,27 @@ X[]
                         ),
                     });
                 });
+                it('should delete the list item', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: unformat(
+                            `<table><tbody>
+                                <tr>
+                                    <td><ul><li>[a</li><li>b</li><li>c]</li></ul></td>
+                                    <td><ul><li>A</li><li>B</li><li>C</li></ul></td>
+                                </tr>
+                            </tbody></table>`,
+                        ),
+                        stepFunction: deleteForward,
+                        contentAfter: unformat(
+                            `<table><tbody>
+                                <tr>
+                                    <td><ul><li>[]<br></li></ul></td>
+                                    <td><ul><li>A</li><li>B</li><li>C</li></ul></td>
+                                </tr>
+                            </tbody></table>`,
+                        ),
+                    });
+                });
                 it('should delete an image that is displayed as a block', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: unformat(`<div>a[b<img style="display: block;"/>c]d</div>`),

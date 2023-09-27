@@ -62,7 +62,7 @@ class StockRule(models.Model):
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
-                    date=procurement_date_planned.date(),
+                    date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
@@ -142,6 +142,13 @@ class StockRule(models.Model):
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty
                         continue
                     # If it does not exist a PO line for current procurement.
+                    # Check if we need to advance the order date for the new line
+                    order_date_planned = procurement.values['date_planned'] - relativedelta(days=procurement.values['supplier'].delay)
+                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
+                        if fields.Date.to_date(order_date_planned) > fields.Date.today():
+                            po.date_order = order_date_planned
+                        else:
+                            procurement.values['date_planned'] = po.date_order + relativedelta(days=procurement.values['supplier'].delay)
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.
                     partner = procurement.values['supplier'].name
@@ -149,11 +156,6 @@ class StockRule(models.Model):
                         procurement.product_id, procurement.product_qty,
                         procurement.product_uom, procurement.company_id,
                         procurement.values, po))
-                    # Check if we need to advance the order date for the new line
-                    order_date_planned = procurement.values['date_planned'] - relativedelta(
-                        days=procurement.values['supplier'].delay)
-                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
-                        po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
     def _get_lead_days(self, product, **values):

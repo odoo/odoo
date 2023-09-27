@@ -3,9 +3,8 @@
 # 	* base_vat
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Kevin Harrings <kha@odoo.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -56,7 +55,7 @@ msgstr "Kontakt"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr "Steuerzuordnung"
+msgstr "Steuerposition"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -87,7 +86,7 @@ msgid ""
 "Note: the expected format is %(expected_format)s"
 msgstr ""
 "Die %(vat_label)s-Nummer [%(wrong_vat)s] für %(record_label)s scheint nicht gültig zu sein. \n"
-"Notiz: das erwartete Format ist %(expected_format)s"
+"Hinweis: Das erwartete Format ist %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -97,6 +96,9 @@ msgid ""
 "the VIES VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Die %(vat_label)s-Nummer [%(wrong_vat)s] für %(record_label)s hat entweder "
+"die MwSt.-Validierungsprüfung des MIAS nicht bestanden oder entspricht nicht"
+" dem erwarteten Format %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -112,7 +114,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "VAT"
-msgstr "USt."
+msgstr "MwSt."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
@@ -124,21 +126,21 @@ msgstr "MwSt./Steuer-ID"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "MwSt-Identifikationsnr. überprüfen"
+msgstr "MwSt.-Nummern überprüfen"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "MwSt-Identifikationsnr. mit dem europäischen VIES-Service überprüfen"
+msgstr "MwSt.-Nummern mit dem europäischen MIAS-Service überprüfen"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr "Steuerzuordnung [%s]"
+msgstr "Steuerposition [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr "Kontakt [%s]"
+msgstr "Partner [%s]"

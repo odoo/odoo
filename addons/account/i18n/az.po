@@ -12264,8 +12264,8 @@ msgstr "Asma Hesab"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Geri ödəmə/kredit-nota keçin"
+msgid "Switch into invoice/credit note"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -13724,6 +13724,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__carry_over_condition_method
 msgid "The method used to determine if this line should be carried over."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
 
 #. module: account
@@ -15959,6 +15966,12 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
 msgstr ""
 
 #. module: account

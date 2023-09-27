@@ -1752,6 +1752,18 @@ class Website(models.Model):
                 similarities=sql.SQL(', ').join(similarities)
             )
 
+            where_clause = sql.SQL("")
+            # Filter unpublished records for portal and public user for
+            # performance.
+            # TODO: Same for `active` field?
+            filter_is_published = (
+                'is_published' in model._fields
+                and model._fields['is_published'].base_field.model_name == model_name
+                and not self.env.user.has_group('base.group_user')
+            )
+            if filter_is_published:
+                where_clause = sql.SQL("WHERE is_published")
+
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
             # Specific handling for fields being actually part of another model
             # through the `inherits` mechanism.
@@ -1770,12 +1782,14 @@ class Website(models.Model):
             query = sql.SQL("""
                 SELECT {table}.id, {best_similarity} AS _best_similarity
                 {from_clause}
+                {where_clause}
                 ORDER BY _best_similarity desc
                 LIMIT 1000
             """).format(
                 table=sql.Identifier(model._table),
                 best_similarity=best_similarity,
                 from_clause=from_clause,
+                where_clause=where_clause,
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
@@ -1811,20 +1825,31 @@ class Website(models.Model):
                         search=unaccent(sql.Placeholder('search')),
                         field=unaccent(sql.SQL('value'))
                     )
-                    names = ['%s,%s' % (model._name, field) for field in fields]
-                    query = sql.SQL("""
-                        SELECT res_id, {similarity} AS _similarity
-                        FROM ir_translation
+                    where_clause = """
                         WHERE lang = {lang}
                         AND name = ANY({names})
                         AND type = 'model'
                         AND value IS NOT NULL
+                    """
+                    if filter_is_published:
+                        # TODO: This should also filter out unpublished records
+                        # if this `is_published` field is not part of the model
+                        # table directly but part of an `inherits` table.
+                        where_clause += f"AND res_id in (SELECT id FROM {model._table} WHERE is_published) "
+                    where_clause = sql.SQL(where_clause).format(
+                        lang=sql.Placeholder('lang'),
+                        names=sql.Placeholder('names'),
+                    )
+                    names = ['%s,%s' % (model._name, field) for field in fields]
+                    query = sql.SQL("""
+                        SELECT res_id, {similarity} AS _similarity
+                        FROM ir_translation
+                        {where_clause}
                         ORDER BY _similarity desc
                         LIMIT 1000
                     """).format(
                         similarity=similarity,
-                        lang=sql.Placeholder('lang'),
-                        names=sql.Placeholder('names'),
+                        where_clause=where_clause,
                     )
                 self.env.cr.execute(query, {'lang': self.env.lang, 'names': names, 'search': search})
                 ids.update(row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold)

@@ -19,7 +19,6 @@
 # xmo_odoo, 2022
 # Christophe Klopfert, 2022
 # Thomas Charpentier, 2022
-# laje_odoo, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2023
 # Jonathan Quique <jqu@odoo.com>, 2023
@@ -2272,7 +2271,7 @@ msgstr ""
 "\n"
 "    À l'aide de filtres ou de tris, sélectionnez les paiements à inclure. Sous *Actions*, choisissez *Créer un paiement par lot*.\n"
 "\n"
-"- *Fournisseurs > Paiements en groupe*\n"
+"- *Fournisseurs > Paiements par lot*\n"
 "\n"
 "    Lors de la validation d'un paiement par lot, le fichier ABA sera généré. Il peut être régénéré. Ce fichier peut ensuite être téléchargé auprès de la banque.\n"
 
@@ -3398,9 +3397,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Paiements groupés\n"
+"Paiements par lot\n"
 "=======================================\n"
-"Les paiements groupés permettent de regrouper les paiements.\n"
+"Les paiements par lot permettent de regrouper les paiements.\n"
 "\n"
 "Ils servent notamment, mais pas seulement, à regrouper plusieurs chèques avant de les déposer en un seul lot à la banque.\n"
 "Le montant total déposé apparaîtra alors comme une seule transaction sur votre relevé bancaire.\n"
@@ -13222,7 +13221,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr "Paiement groupé"
+msgstr "Paiement par lot"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
@@ -17219,6 +17218,18 @@ msgstr "Erreur"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Message d'erreur renvoyé quand la contrainte n'est pas respectée. "
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"Erreur lors de l'analyse de la vue :\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0

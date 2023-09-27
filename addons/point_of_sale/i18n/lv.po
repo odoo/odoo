@@ -9,10 +9,10 @@
 # JanisJanis <jbojars@gmail.com>, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Anzelika Adejanova, 2022
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Will Sensors, 2023
 # Martin Trigaux, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-18 08:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1704,12 +1704,12 @@ msgstr "Noklusējuma Pārdošanas Nodoklis"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Sales Tax"
-msgstr ""
+msgstr "Noklusējuma pārdošanas nodoklis"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default sales tax for products"
-msgstr ""
+msgstr "Noklusējuma pārdošanas nodoklis par produktiem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
@@ -2222,6 +2222,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "Nodokļu Profils"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5861,6 +5868,15 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
 msgstr ""
 
 #. module: point_of_sale

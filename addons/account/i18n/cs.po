@@ -20,8 +20,8 @@
 # Petr Hemza, 2023
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Jiří Podhorecký, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Tomáš Píšek, 2023
 # 
 msgid ""
@@ -12539,8 +12539,8 @@ msgstr "Pozastavený účet"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Přepněte na refundaci / dobropis"
+msgid "Switch into invoice/credit note"
+msgstr "Změnit na fakturu/dobropis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -14091,7 +14091,7 @@ msgstr "Metoda použitá k určení, zda má být tento řádek přenesen."
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "Pohyb nemohl být odeslán z následujících důvodů: %(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -14163,7 +14163,7 @@ msgstr "Mateřské daňové přiznání tohoto řádku"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "Partner nemůže být smazán, protože je použit v Účetnictví."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -15736,7 +15736,7 @@ msgstr "Upozornění na %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Varování pro metodu zaokrouhlení: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16464,6 +16464,12 @@ msgstr ""
 "párování stále čekají."
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Nemůžete změnit typ zaúčtovaného dokladu."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
@@ -16548,7 +16554,7 @@ msgstr "V deníku pokladny musíte definovat „Interní převodový účet“."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Musíte zadat účet zisku (závisí na společnosti)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

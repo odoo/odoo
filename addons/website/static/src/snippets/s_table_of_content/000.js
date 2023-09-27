@@ -13,6 +13,11 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     async start() {
         this._stripNavbarStyles();
+
+        // Those links will be recreated when entering edit mode, see
+        // `_generateNav`. No need to recreate those.
+        this.$target.find('.table_of_content_link:hidden').remove();
+
         await this._super(...arguments);
         this.$scrollingElement = this.$target.closest(".s_table_of_content").closestScrollable();
         this.previousPosition = -1;

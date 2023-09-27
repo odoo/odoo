@@ -34,7 +34,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid " REFUND"
-msgstr "DEVOLUÇÃO"
+msgstr "REEMBOLSO"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -420,7 +420,7 @@ msgstr "Adicionar nota do cliente"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Add Tip"
-msgstr "Adicionar dica"
+msgstr "Adicionar gorjeta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -919,7 +919,7 @@ msgstr "Não é possível faturar o pedido da sessão fechada."
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "Não é possível modificar gorjeta"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1679,7 +1679,7 @@ msgstr "O cliente é obrigatório para o %s método de pagamento."
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "Gorjetas de cliente não podem ser modificadas diretamente"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2026,7 +2026,7 @@ msgstr "Deseja abrir a lista de clientes para selecionar o cliente?"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "Deseja imprimir usando a impressora web?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2279,6 +2279,13 @@ msgstr "Importação de pedidos concluída"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "Posição Fiscal"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "Posição fiscal não encontrada"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3613,6 +3620,8 @@ msgstr "Apenas aplicar arredondamento para dinheiro"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
+"Somente diários do tipo 'Caixa' ou 'Banco' podem ser usados com formas de "
+"pagamento."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4943,7 +4952,7 @@ msgstr "Atualizar exibição"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Refund"
-msgstr "Devolução"
+msgstr "Reembolso"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -6007,6 +6016,17 @@ msgstr ""
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr "O módulo de dados fiscais encontrou um erro ao receber seu pedido."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+"A posição fiscal usada no pedido original não está carregada. Certifique-se "
+"de que ela esteja carregada adicionando-a na configuração do PDV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip

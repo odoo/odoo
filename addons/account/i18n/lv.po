@@ -11,8 +11,8 @@
 # Martin Trigaux, 2022
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
 # Anzelika Adejanova, 2022
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Will Sensors, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # 
 msgid ""
@@ -1159,7 +1159,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "Var iestatīt brīdinājumu partnerim (Konts)"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -2062,7 +2062,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr ""
+msgstr "Atļaut naudas noapaļošanas pārvaldību"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3713,7 +3713,7 @@ msgstr "Uzņēmums"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "Uzņēmuma bankas konts"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -8197,7 +8197,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Mark as Sent"
-msgstr ""
+msgstr "Atzīmēt kā nosūtītu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
@@ -9374,7 +9374,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Invoices"
-msgstr ""
+msgstr "Apmaksātie rēķini"
 
 #. module: account
 #. openerp-web
@@ -9441,7 +9441,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__partial
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 msgid "Partially Paid"
-msgstr ""
+msgstr "Daļēji apmaksāts"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -11980,7 +11980,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
+msgid "Switch into invoice/credit note"
 msgstr ""
 
 #. module: account
@@ -12270,7 +12270,7 @@ msgstr "Nodokļu Šabloni"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr ""
+msgstr "Nodokļa tips"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -13361,6 +13361,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__carry_over_condition_method
 msgid "The method used to determine if this line should be carried over."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
 
 #. module: account
@@ -14491,7 +14498,7 @@ msgstr "Neapliekamā Summa"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr ""
+msgstr "Summa bez nodokļa Parakstīts"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
@@ -15455,6 +15462,12 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
 msgstr ""
 
 #. module: account

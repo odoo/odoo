@@ -643,6 +643,7 @@ class AccountReconcileModel(models.Model):
             AND move.state = 'posted'
             AND account.reconcile IS TRUE
             AND aml.reconciled IS FALSE
+            AND (account.internal_type NOT IN ('receivable', 'payable') OR aml.payment_id IS NULL)
         '''
 
         # Add conditions to handle each of the statement lines we want to match

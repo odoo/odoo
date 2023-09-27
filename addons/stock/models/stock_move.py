@@ -1124,6 +1124,9 @@ class StockMove(models.Model):
     def _assign_picking_post_process(self, new=False):
         pass
 
+    def _filter_by_product(self, prod):
+        return self.filtered(lambda sm: sm.product_id == prod)
+
     def _generate_serial_move_line_commands(self, lot_names, origin_move_line=None):
         """Return a list of commands to update the move lines (write on
         existing ones or create new ones).

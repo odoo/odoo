@@ -12,6 +12,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Junko Augias, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,19 +31,19 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "(not verified)"
-msgstr ""
+msgstr "(未検証)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid ""
 ". Collect points on the forum or on the eLearning platform. Those points "
 "will make you reach new ranks."
-msgstr ""
+msgstr "フォーラムやeラーニング・プラットフォームでポイントを集めましょう。そのポイントで新しいランクに到達できます。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr ""
+msgstr "。また検索してみて下さい。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -73,6 +74,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr "<i class=\"text-muted\"> 受賞者</i>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">国...</option>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -137,19 +143,19 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">バッジ</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">XP</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
-msgstr ""
+msgstr "<span id=\"email_validated_message\">おめでとうございます。あなたのeメールが検証されました。</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -261,7 +267,7 @@ msgstr "すべてのユーザ"
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All time"
-msgstr ""
+msgstr "常に"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -277,6 +283,8 @@ msgid ""
 "                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
 "                        appear on your profile page, and your posts."
 msgstr ""
+"質問や回答をすることで高い評価を得ることができます。\n"
+"　　　　　　特に役に立った場合にはバッジを獲得できます。<br class=\"d-none d-lg-inline-block\"/>バッジはプロフィールページと投稿に表示されます。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -305,18 +313,13 @@ msgstr "閉じる"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Country..."
-msgstr "国..."
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit"
 msgstr "編集"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit Profile"
-msgstr ""
+msgstr "プロフィールを編集"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
@@ -331,12 +334,12 @@ msgstr "ホーム"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I earn badges?"
-msgstr ""
+msgstr "バッジを取得するには？"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I score more points?"
-msgstr ""
+msgstr "より多くのポイントを獲得するには？"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
@@ -351,12 +354,12 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Keep learning with"
-msgstr ""
+msgstr "以下で継続して学ぶ:"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_website__karma_profile_min
 msgid "Minimal karma to see other user's profile"
-msgstr ""
+msgstr "他のユーザのプロフィールを閲覧するための最小カルマ"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -381,12 +384,12 @@ msgstr "次のランク:"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "No badges yet!"
-msgstr ""
+msgstr "まだバッジがありません！"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid "No user found for"
-msgstr ""
+msgstr "以下のユーザが見つかりません"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -413,7 +416,7 @@ msgstr "ランク"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "Return to the website."
-msgstr ""
+msgstr "ウェブサイトに戻る。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -428,7 +431,7 @@ msgstr "コースを検索"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search users"
-msgstr ""
+msgstr "ユーザを検索"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
@@ -464,7 +467,7 @@ msgstr "更新"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "User rank"
-msgstr ""
+msgstr "ユーザランク"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
@@ -490,7 +493,7 @@ msgstr "ウェブサイトURL"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
-msgstr ""
+msgstr "コースを終了したり、マイルストーンを達成したりすると、バッジを獲得できます。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -505,6 +508,7 @@ msgid ""
 "content. Points can also be earned on the forum. Follow this link to the "
 "guidelines of the forum."
 msgstr ""
+"コースの各コンテンツの最後にあるクイズに答えることで、より多くのポイントを獲得できます。また、フォーラムでもポイントを獲得できます。このリンクからフォーラムのガイドラインをご覧下さい。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -515,7 +519,7 @@ msgstr "パンくず"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "point"
-msgstr ""
+msgstr "ポイント"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -535,9 +539,9 @@ msgstr "xp"
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
 msgid "{{ object.company_id.name }} Profile validation"
-msgstr ""
+msgstr "{{ object.company_id.name }} プロフィール検証"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "└ Users"
-msgstr ""
+msgstr "└ ユーザ"

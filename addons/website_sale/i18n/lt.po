@@ -12,7 +12,6 @@
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Naglis Jonaitis, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
 # Arminas Grigonis <arminas@versada.lt>, 2022
@@ -21,6 +20,7 @@
 # Gailius Kazlauskas, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # 
 msgid ""
@@ -172,6 +172,16 @@ msgstr "<i class=\"fa fa-print\"/> Spausdinti"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
 msgstr ""
 
 #. module: website_sale
@@ -975,6 +985,14 @@ msgstr ""
 "keitimas yra neleidžiamas. Dėl šio veiksmo susisiekite su mumis tiesiogiai."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Dukterinės kategorijos"
@@ -1042,7 +1060,10 @@ msgid "Companies"
 msgstr "Įmonės"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Įmonės pavadinimas"
 
@@ -1137,11 +1158,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Valstybė"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Šalis..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2225,6 +2241,13 @@ msgid "Phone"
 msgstr "Telefonas"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefono numeris"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
 msgstr ""
@@ -2974,11 +2997,6 @@ msgid "State / Province"
 msgstr "Valstija / Apskritis"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Valstija / Apskritis..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr "Svetainės pardavimo pradinio mokėjimo surinkėjo žingsnio būsena"
@@ -3576,6 +3594,20 @@ msgid ""
 msgstr ""
 "Jūsų adresas\n"
 "                                        <small> arba </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Jūsų el. pašto adresas"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Jūsų vardas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

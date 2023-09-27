@@ -13,14 +13,14 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Martin Talts <martin.t@avalah.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Marek Pontus, 2022
 # Leaanika Randmets, 2023
 # Anna, 2023
 # JanaAvalah, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -174,6 +174,16 @@ msgstr "<i class=\"fa fa-print\"/> Prindi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
 msgstr ""
 
 #. module: website_sale
@@ -986,6 +996,14 @@ msgstr ""
 "otse ühendust."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Alamkategooriad"
@@ -1053,7 +1071,10 @@ msgid "Companies"
 msgstr "Ettevõtted"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Ettevõtte nimi"
 
@@ -1148,11 +1169,6 @@ msgstr "Diivanid"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Riik"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Maa..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1635,6 +1651,15 @@ msgstr "Pilt 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Pildi nimi"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2225,6 +2250,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefoninumber"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -2977,11 +3009,6 @@ msgid "State / Province"
 msgstr "Maakond"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Maakond"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr "State of the website sale onboarding payment acquirer step"
@@ -3580,6 +3607,20 @@ msgid ""
 msgstr ""
 "Sinu aadress\n"
 "                                        <small> või </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Sinu e-post"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Sinu nimi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

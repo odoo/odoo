@@ -8,6 +8,7 @@
 # Martin Trigaux, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Wil Odoo, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -9563,7 +9564,7 @@ msgstr "上級表模板"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__parent_id
 msgid "Parent Line"
-msgstr "上級明細"
+msgstr "母項資料行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__parent_id
@@ -12148,8 +12149,8 @@ msgstr "暫記項目"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "切換至折讓/貸記單"
+msgid "Switch into invoice/credit note"
+msgstr "切換至發票/貸記單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -15711,6 +15712,12 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr "如果某些部分對帳仍待處理，則您無法切換項目以阻止對帳."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "已過賬文件不能更改類別。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

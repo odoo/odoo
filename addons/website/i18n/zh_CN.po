@@ -27,6 +27,8 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
+# Wil Odoo, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +56,12 @@ msgstr "添加图像"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "’警告带有"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL from\" can not be empty."
+msgstr "\"来源网址\" 不能为空。"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -6683,7 +6691,7 @@ msgstr "手机"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile Alignment"
-msgstr ""
+msgstr "移动设备对齐方式"
 
 #. module: website
 #. openerp-web
@@ -7643,6 +7651,13 @@ msgstr "模式"
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Pay"
 msgstr "支付"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "电话号码"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -9108,6 +9123,13 @@ msgid "Sub Menus"
 msgstr "子菜单"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Subject"
+msgstr "主题"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
 #: model_terms:website.page,arch_db:website.contactus_page
@@ -9658,6 +9680,16 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"This font already exists, you can only add it as a local font to replace the"
+" server version."
+msgstr "该字体已存在，只能添加为本地字体，以替换服务器版本。"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9716,7 +9748,7 @@ msgstr "此页面将发布于 {{ date_formatted }}"
 #: code:addons/website/static/src/js/menu/translate.js:0
 #, python-format
 msgid "This translation is not editable."
-msgstr ""
+msgstr "此翻译不可编辑。"
 
 #. module: website
 #. openerp-web
@@ -9953,8 +9985,15 @@ msgstr "翻译属性"
 #. openerp-web
 #: code:addons/website/static/src/js/menu/translate.js:0
 #, python-format
+msgid "Translate Selection Option"
+msgstr "翻译选择选项"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/translate.js:0
+#, python-format
 msgid "Translate header in the text. Menu is generated automatically."
-msgstr ""
+msgstr "翻译文本中的标题。菜单会自动生成。"
 
 #. module: website
 #. openerp-web
@@ -11200,6 +11239,13 @@ msgid "Your Client ID:"
 msgstr "您的客户 ID："
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Company"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
@@ -11208,10 +11254,31 @@ msgstr "您的动态片段将显示在此处... 显示此消息是因为您没�
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Email"
+msgstr "您的电子邮件"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Your Measurement ID:"
 msgstr "您的计量单位 ID："
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Name"
+msgstr "您的姓名"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/form_editor_registry.js:0
+#, python-format
+msgid "Your Question"
+msgstr ""
 
 #. module: website
 #. openerp-web

@@ -505,7 +505,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Blocking</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Bloccato</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1648,6 +1648,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Persone alle quali sarà visibile il progetto e le rispettive attività.\n"
+"\n"
+"-Utenti interni invitati: quando si segue un progetto, gli utenti interni avranno accesso a tutte le attività senza distinzioni. In caso contrario, otterranno l'accesso solo alle attività specifiche che stanno seguendo.\n"
+" Un utente con il progetto > Il livello di accesso dell'amministratore può comunque accedere a questo progetto e ai suoi compiti, anche se non fanno esplicitamente parte dei seguaci.\n"
+"\n"
+"-Tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e a tutte le attività correlate senza distinzioni.\n"
+"\n"
+"-Utenti del portale invitati e tutti gli utenti interni: tutti gli utenti interni possono accedere al progetto e alle attivitò correlate senza distinzioni.\n"
+"Quando si segue un progetto, gli utenti del portale otterranno l'accesso a tutte le attivitò senza distinzioni. In caso contrario, otterranno l'accesso solo per le attività specifiche che stanno seguendo.\n"
+"\n"
+" Quando un progetto è condiviso nella modalità di sola lettura, l'utente del portale viene reindirizzato al portale. È possibile visualizzare l'attività ma non modificarla.\n"
+"Quando un progetto viene condiviso in modalità di modifica, l'utente del portale viene reindirizzato alle viste kanban ed elenco delle attività. Nelle attività è possibile modificare un determinato numero di campi.\n"
+"\n"
+"In ogni caso, un utente interno senza alcun diritto di accesso al progetto può comunque accedere all'attività, a condizione che venga fornito loro l'URL corrispondente (e che facciano parte dei follower se il progetto è privato)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2896,7 +2910,7 @@ msgstr "Nome"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__name_cropped
 msgid "Name Cropped"
-msgstr ""
+msgstr "Nome ritagliato"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3190,7 +3204,7 @@ msgstr "Ottobre"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__off_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 msgid "Off Track"
-msgstr ""
+msgstr "Fuori pista"
 
 #. module: project
 #: model:project.project,name:project.project_project_1
@@ -3219,7 +3233,7 @@ msgstr "In attesa"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 msgid "On Track"
-msgstr ""
+msgstr "In pista"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -5365,14 +5379,14 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "Non è possibile leggere i campi %s nell'attività."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
-msgstr ""
+msgstr "Non è possibile scrivere sui campi %s nell'attività."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5389,7 +5403,7 @@ msgstr "Sei stato assegnato a "
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You have not write access of %s field."
-msgstr ""
+msgstr "Non possiedi l'accesso in scrittura per il campo %s."
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -9,10 +9,10 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Pruebas, 2022
 # marcescu, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
 # Patricia Lorenzo Bartolomé, 2023
 # Martin Trigaux, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-18 08:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -169,7 +169,7 @@ msgstr "<span class=\"o_form_label\">Códigos de Barra</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Default Pricelist</span>"
-msgstr "<span class=\"o_form_label\">Lista de precios por defecto</span>"
+msgstr "<span class=\"o_form_label\">Tarifa por defecto</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2046,7 +2046,7 @@ msgstr "¿Desea abrir la lista de clientes para seleccionar un cliente? "
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "¿Desea imprimir usando la impresora web?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2300,6 +2300,13 @@ msgstr "Finalizando importación de órdenes"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "Posición fiscal"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6017,9 +6024,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
-"La lista de precios por defecto debe incluirse en las listas de los precios "
-"disponibles."
+msgstr "La tarifa por defecto debe incluirse en las tarifas disponibles."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6028,8 +6033,8 @@ msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
 msgstr ""
-"La lista de precios predeterminadas no deben pertenecer a ninguna empresa o "
-"a la empresa del Punto de venta."
+"La tarifa por defecto no debe pertenecer a ninguna compañía o a la compañía "
+"del punto de venta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6039,6 +6044,15 @@ msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr ""
 "El módulo de datos fiscales encontró un error al recibir su solicitud."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip

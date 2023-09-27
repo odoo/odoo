@@ -414,6 +414,8 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             raise UserError(_("You cannot report expenses for different employees in the same report."))
         if any(not expense.product_id for expense in self):
             raise UserError(_("You can not create report without category."))
+        if len(self.company_id) != 1:
+            raise UserError(_("You cannot report expenses for different companies in the same report."))
 
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
         if len(todo) == 1:
@@ -638,9 +640,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             # link move lines to move, and move to expense sheet
             move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
             expense.sheet_id.write({'account_move_id': move.id})
-
-            if expense.payment_mode == 'company_account':
-                expense.sheet_id.paid_expense_sheets()
 
         # post the moves
         for move in move_group_by_sheet.values():

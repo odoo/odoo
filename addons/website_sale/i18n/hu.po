@@ -6,16 +6,16 @@
 # Kovács Tibor <kovika@gmail.com>, 2021
 # Zsolt Godó <zsolttokio@gmail.com>, 2021
 # Zsofia Biro <zsbiro1205@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Istvan <leki69@gmail.com>, 2021
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # sixsix six, 2022
 # krnkris, 2022
 # A . <tiboreu@protonmail.com>, 2022
 # Tamás Dombos, 2022
-# gezza <geza.nagy@oregional.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Szabolcs Rádi, 2023
+# Martin Trigaux, 2023
+# gezza <geza.nagy@oregional.hu>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # 
 msgid ""
@@ -168,6 +168,16 @@ msgstr "<i class=\"fa fa-print\"/> Nyomtatás"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
 msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>Kosárba"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Ország...</option>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
@@ -965,6 +975,14 @@ msgstr ""
 "kapcsolatot."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Alkategóriák"
@@ -1033,7 +1051,10 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Vállalat neve"
 
@@ -1128,11 +1149,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Ország"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Ország..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2217,6 +2233,13 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefonszám"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
 msgstr ""
@@ -2969,11 +2992,6 @@ msgid "State / Province"
 msgstr "Állam / Megye"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Állam / megye..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
@@ -3572,6 +3590,20 @@ msgid ""
 msgstr ""
 "Cím megadása\n"
 "                                        <small> vagy </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Az Ön e-mail címe"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Az Ön neve"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

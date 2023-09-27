@@ -3,12 +3,12 @@
 # 	* stock_picking_batch
 # 
 # Translators:
-# Martin Trigaux, 2021
 # b69269ad567b7550d53748df6a5b0869_97d08cd, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -33,17 +33,17 @@ msgstr "<strong>VON</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Chargen-/Seriennummer</strong>"
+msgstr "<strong>Los-/Seriennummer</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Package</strong>"
-msgstr "<strong>Verpackung</strong>"
+msgstr "<strong>Paket</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Product Barcode</strong>"
-msgstr "<strong>Produkt Barcode</strong>"
+msgstr "<strong>Produktbarcode</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -73,7 +73,7 @@ msgstr "Aktivitäten"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme Dekoration"
+msgstr "Aktivitätsausnahme-Dekoration"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -83,7 +83,7 @@ msgstr "Status der Aktivität"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Symbol des Aktivitätstyps"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
@@ -101,7 +101,7 @@ msgstr "Kommissionierung hinzufügen zu"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add to"
-msgstr "Füge hinzu"
+msgstr "Hinzufügen zu"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
@@ -109,17 +109,17 @@ msgstr "Füge hinzu"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Zuordnen zu Welle"
+msgstr "Zur Welle hinzufügen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
-msgstr "Zum Batch hinzufügen"
+msgstr "Zum Stapel hinzufügen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
 msgid "Add to wave"
-msgstr "Zu Wave hinzufügen"
+msgstr "Zur Welle hinzufügen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -134,7 +134,7 @@ msgstr "Erlaubte Kommissionierung"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_backorder_confirmation
@@ -157,12 +157,12 @@ msgstr "Barcode"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Transfer"
-msgstr "Batch-Transfer"
+msgstr "Stapeltransfer"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr "Batch Transfer-Zeilen"
+msgstr "Stapeltransferzeilen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
@@ -173,18 +173,18 @@ msgstr "Stapeltransfers"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Batch-Transfers nicht abgeschlossen"
+msgstr "Stapeltransfers nicht abgeschlossen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "Zu diesem Transfer gehörende Charge"
+msgstr "Zu diesem Transfer gehörender Stapel"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Batches"
-msgstr "Batches"
+msgstr "Stapel"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -202,7 +202,7 @@ msgstr "Abgebrochen"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr "Wave Transfer kann nicht erstellt werden"
+msgstr "Wellen-Transfer kann nicht erstellt werden"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -213,7 +213,7 @@ msgstr "Verfügbarkeit prüfen"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr "Label Layout auswählen"
+msgstr "Etikettenlayout auswählen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -230,7 +230,7 @@ msgstr "Bestätigen"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "Anzahl der Kommissionierungsstapel"
+msgstr "Anzahl Kommissionierstapel"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
@@ -245,7 +245,7 @@ msgstr "Einen neuen Stapeltransfer erstellen"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "Einen neuen Wave Transfer erstellen"
+msgstr "Einen neuen Wellen-Transfer erstellen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -288,17 +288,17 @@ msgstr "Entwurf"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z.B. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -330,24 +330,25 @@ msgstr "Icon"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
+msgstr ""
+"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "In Progress"
-msgstr "Laufend"
+msgstr "In Bearbeitung"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
@@ -357,14 +358,14 @@ msgstr "In Bearbeitung"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave____last_update
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch____last_update
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
@@ -393,17 +394,17 @@ msgstr "Zeile"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr "Liste der mit diesem Batch verbundenen Transfers"
+msgstr "Liste der mit diesem Stapel verbundenen Transfers"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhänge"
+msgstr "Hauptanhang"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
@@ -424,7 +425,7 @@ msgstr "Buchungszeilen"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline für meine Aktivitäten"
+msgstr "Frist für meine Aktivitäten"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
@@ -444,7 +445,7 @@ msgstr "Nächste Aktivitätsfrist"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung nächste Aktion"
+msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
@@ -469,7 +470,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread_counter
@@ -479,7 +480,7 @@ msgstr "Anzahl ungelesener Nachrichten"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
 msgid "Operation Type"
-msgstr "Vorgangstyp"
+msgstr "Vorgangsart"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -500,12 +501,12 @@ msgstr "Verantwortlicher für diesen Wave Transfer"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
-msgstr "Liefervorgang"
+msgstr "Kommissionierung"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Vorgangstyp"
+msgstr "Kommissionierart"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -513,7 +514,7 @@ msgstr "Vorgangstyp"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
-"Bitte fügen Sie der Batch-Kommissionierung 'Erledigte' Mengen hinzu, um ein "
+"Bitte fügen Sie der Stapelkommissionierung „Erledigte“ Mengen hinzu, um ein "
 "neues Paket zu erstellen."
 
 #. module: stock_picking_batch
@@ -524,7 +525,7 @@ msgstr "Drucken"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Print Labels"
-msgstr "Labels drucken"
+msgstr "Etiketten drucken"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -534,7 +535,7 @@ msgstr "Produkt"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produktbewegungen (Lagerbewegung)"
+msgstr "Produktbewegungen (Lagerbuchung)"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -557,12 +558,12 @@ msgstr "Verantwortlich"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Zustellungsfehler"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
@@ -578,15 +579,15 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
-"Geplantes Datum, an dem die Transfers bearbeitet werden sollen..\n"
-"              - Wenn manuell eingestellt, wird das geplante Datum für alle Stapeltransfers automatisch auf dieses Datum aktualisiert..\n"
+"Geplantes Datum, an dem die Transfers bearbeitet werden sollen.\n"
+"              - Wenn manuell eingestellt, wird das geplante Datum für alle Stapeltransfers automatisch auf dieses Datum aktualisiert.\n"
 "              - Wenn nicht manuell geändert und Transfers hinzugefügt/entfernt/aktualisiert, ist dies ihr frühestes geplantes Datum, \n"
 "                aber dieses geplante Datum wird nicht für alle Stapeltransfers festgelegt."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Batch-Transfer suchen"
+msgstr "Stapeltransfer suchen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -627,7 +628,7 @@ msgstr ""
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
 #: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
 msgid "Stage Changed"
-msgstr "Stufe geändert"
+msgstr "Phase geändert"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
@@ -650,7 +651,7 @@ msgid ""
 msgstr ""
 "Status basierend auf Aktivitäten\n"
 "Überfällig: Fälligkeitsdatum bereits überschritten\n"
-"Heute: Aktivität besitzt heutiges Datum\n"
+"Heute: Aktivitätsdatum ist heute\n"
 "Geplant: anstehende Aktivitäten."
 
 #. module: stock_picking_batch
@@ -662,17 +663,17 @@ msgstr "Berstand Stapeltransfer"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Lagerpaket Zielort"
+msgstr "Bestand Paketziel"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
-msgstr "Bestandsbewegungszeilen"
+msgstr "Lagerbuchungenszeilen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
 msgid "Stock moves"
-msgstr "Lagerbewegungen"
+msgstr "Lagerbuchungen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -713,7 +714,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Die folgenden Überweisungen können nicht zur Sammelüberweisung %s hinzugefügt werden. Bitte überprüfen Sie Status und Vorgangsarten, wenn es sich nicht um Sofortüberweisungen handelt.\n"
+"Die folgenden Transfers können nicht zum Stapeltransfer %s hinzugefügt werden. Bitte überprüfen Sie Status und Vorgangsarten, wenn es sich nicht um Soforttransfers handelt.\n"
 "\n"
 "Inkompatibilitäten: %s"
 
@@ -726,7 +727,7 @@ msgid ""
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
 "Ziel des Stapeltransfers ist es, Vorgänge zu gruppieren, die zusammen ausgeführt werden können (oder müssen), um ihre Effizienz zu erhöhen.\n"
-"Er kann auch nützlich sein, um Aufgaben zuzuweisen (eine Person = ein Batch) oder\n"
+"Er kann auch nützlich sein, um Aufgaben zuzuweisen (eine Person = ein Stapel) oder\n"
 "die zeitliche Steuerung von Vorgängen zu erleichtern (Aufgaben, die um 13 Uhr erledigt werden sollen)."
 
 #. module: stock_picking_batch
@@ -754,7 +755,8 @@ msgstr ""
 #, python-format
 msgid "The selected pickings should belong to an unique company."
 msgstr ""
-"Die ausgewählten Pickings sollten zu einem einzigen Unternehmen gehören."
+"Die ausgewählten Kommissionierungen sollten zu einem einzigen Unternehmen "
+"gehören."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
@@ -767,12 +769,12 @@ msgstr ""
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr "Die ausgewählten Transfers sollten zum selben Vorgangstyp gehören"
+msgstr "Die ausgewählten Transfers sollten zur selben Vorgangsart gehören"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
 msgid "This batch is a wave"
-msgstr "Diese Charge ist eine Welle"
+msgstr "Dieser Stapel ist eine Welle"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -789,18 +791,18 @@ msgstr "Transfer"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
-msgstr "Umgelagert von"
+msgstr "Verschoben von"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Transfers"
-msgstr "Bewegungen"
+msgstr "Transfers"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
 msgid "Type of Operation"
-msgstr "Vorgangstyp"
+msgstr "Vorgangsart"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
@@ -820,23 +822,23 @@ msgstr "Anzahl ungelesener Nachrichten"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Validate"
-msgstr "Bestätigen"
+msgstr "Validieren"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Wave Transfer"
+msgstr "Wellen-Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Wave Transfer-Zeilen"
+msgstr "Wellen-Transferszeilen"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "Wave Transfers"
+msgstr "Wellen-Transfers"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -857,13 +859,13 @@ msgstr "Website-Kommunikationshistorie"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "Sie können abgeschlossene Batch-Transfers nicht entfernen."
+msgstr "Sie können abgeschlossene Stapeltransfers nicht löschen."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Sie müssen einige Pickings zu Batches zusammenfassen."
+msgstr "Sie müssen einige Kommissionierungen zu Stapeln zusammenfassen."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
@@ -873,7 +875,7 @@ msgstr "ein neuer Stapeltransfer"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "ein neuer Wave Transfer"
+msgstr "ein neuer Wellen-Transfer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
@@ -883,4 +885,4 @@ msgstr "ein bestehender Stapeltransfer"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "ein bestehender Wave Transfer"
+msgstr "ein bestehender Wellen-Transfer"

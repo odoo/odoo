@@ -719,8 +719,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Agregar información cuando hacemos la descripción de un cliente potencial para incluir\n"
-"        las preguntas y respuestas vinculadas a los registros.\n"
+"        Agregar información cuando hacemos la descripción de una oportunidad para incluir\n"
+"        las preguntas y respuestas vinculadas a las inscripciones.\n"
 "    "
 
 #. module: base
@@ -4117,16 +4117,16 @@ msgid ""
 "this event.\n"
 msgstr ""
 "\n"
-"Crear registros con ordenes de venta.\n"
-"========================================\n"
+"Crear inscripciones con pedidos de venta.\n"
+"=========================================\n"
 "\n"
-"Este módulo permite automatizar y conectar la creación del registro con el flujo de venta\n"
-"principal y, por tanto, disponer de la opción de facturación de los registros.\n"
+"Este módulo permite automatizar y conectar la creación de la inscripción con el flujo de venta\n"
+"principal y, por tanto, disponer de la opción de facturación de las inscripciones.\n"
 "\n"
-"Indica un nuevo tipo de productos de servicio que te ofrece la posibilidad de\n"
-"elegir una categoría de un evento asociado a este. Cuando codifique un pedido para\n"
+"Indica un nuevo tipo de productos de servicio que le ofrece la posibilidad de\n"
+"elegir una categoría de un evento asociado al mismo. Cuando introduzca un pedido para\n"
 "ese producto, podrá elegir un evento existente de esa categoría y,\n"
-"cuando confirme su pedido automáticamente, se creará un registro para\n"
+"cuando confirme su pedido automáticamente, se creará una inscripción para\n"
 "este evento.\n"
 
 #. module: base
@@ -8605,7 +8605,7 @@ msgid ""
 msgstr ""
 "\n"
 "Este módulo permite usar el escaneado de códigos de barras en el sistema de gestión de\n"
-"eventos. Se genera un código de barras para cada asistente y se imprime en la insignia. Una vez escaneado, se confirma el registro.\n"
+"eventos. Se genera un código de barras para cada asistente y se imprime en la credencial. Una vez escaneado, se confirma la inscripción.\n"
 "    "
 
 #. module: base
@@ -11754,8 +11754,8 @@ msgid ""
 "Add information of sale order linked to the registration for the creation of"
 " the lead."
 msgstr ""
-"Agrega información de la orden de venta para el registro de la creación del "
-"cliente potencial."
+"Agrega información del pedido de venta enlazado a la inscripción en la "
+"creación de la oportunidad."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
@@ -14757,7 +14757,7 @@ msgstr "Calcular"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Compute method cannot depend on field 'id'"
-msgstr ""
+msgstr "El método compute no puede depender del campo 'id'"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -15394,7 +15394,7 @@ msgstr "Crear una nueva iniciativa desde una conversación de chat "
 #. module: base
 #: model:ir.module.module,description:base.module_event_crm
 msgid "Create leads from event registrations."
-msgstr "Crea leads a partir de los registros de un evento"
+msgstr "Crea oportunidades a partir de las inscripciones de un evento"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_livechat
@@ -17312,6 +17312,18 @@ msgstr "Error"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Mensaje de error devuelto cuando se viola la restricción."
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"Ocurrió un error al procesar la vista:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -20650,7 +20662,7 @@ msgstr "Parametro 'group by' no valido"
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "Formato JSON no válido en el campo \"valor predeterminado\"."
 
 #. module: base
 #: code:addons/models.py:0
@@ -21151,7 +21163,7 @@ msgstr "LGPL versión 3"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
 msgid "Lithuania - Accounting Reports"
-msgstr ""
+msgstr "Lituania - Informes contables "
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -32171,7 +32183,7 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"Este módulo ayuda a analizar los registros de los eventos..\n"
+"Este módulo ayuda a analizar las inscripciones de los eventos..\n"
 "Para lograrlo, agrega\n"
 "\n"
 "  * un análisis cohort en los asistentes;\n"
@@ -34518,7 +34530,7 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
-msgstr ""
+msgstr "No puede eliminar el registro %s."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -34556,6 +34568,8 @@ msgstr ""
 #, python-format
 msgid "You cannot rename config parameters with keys %s"
 msgstr ""
+"No puede cambiar el nombre de los parámetros de configuración con las claves"
+" %s"
 
 #. module: base
 #: code:addons/models.py:0

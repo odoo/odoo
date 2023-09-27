@@ -151,7 +151,7 @@ msgstr "<strong>Aviso:</strong> você deve estar logado para pagar."
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Já existe uma transação de pagamento com a referência %s."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -281,7 +281,7 @@ msgstr "Montante"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Valor disponível para reembolso"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -835,7 +835,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Tem um reembolso pendente"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -951,7 +951,7 @@ msgstr "Faturas"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "Contagem de faturas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1046,7 +1046,7 @@ msgstr "Manual"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Reembolso máximo permitido"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1362,7 +1362,7 @@ msgstr "Ref de Pagamento"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Assistente de reembolso de pagamento"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1553,17 +1553,17 @@ msgstr "A referência deve ser única!"
 #: model_terms:ir.ui.view,arch_db:payment.view_account_payment_form_inherit_payment
 #, python-format
 msgid "Refund"
-msgstr "Devolução"
+msgstr "Reembolso"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Valor do reembolso"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Valor reembolsado"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1600,7 +1600,7 @@ msgstr "Débito direto SEPA"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "CONFIGURAÇÃO"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1615,7 +1615,7 @@ msgstr "Salvar informações de pagamento"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Token de pagamento salvo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
@@ -1703,7 +1703,7 @@ msgstr "Sips"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Pagamento de origem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1750,7 +1750,7 @@ msgstr "Stripe Secret Key"
 #: model:ir.model.fields,field_description:payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Token de pagamento adequado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1805,6 +1805,7 @@ msgstr ""
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
+"O valor a ser reembolsado deve ser positivo e não pode ser superior a %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
@@ -1915,7 +1916,7 @@ msgstr "A rota para a qual o usuário é redirecionado após a transação"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "O pagamento de origem dos pagamentos de reembolso relacionados"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2086,7 +2087,7 @@ msgstr "Atualização"
 #: model:ir.model.fields,field_description:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Usar forma de pagamento eletrônico"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation

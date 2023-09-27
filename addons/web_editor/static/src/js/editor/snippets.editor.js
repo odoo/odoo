@@ -1550,19 +1550,13 @@ var SnippetsMenu = Widget.extend({
                 this.options.wysiwyg.odooEditor.addEventListener('observerApply', () => {
                     $(this.options.wysiwyg.odooEditor.editable).trigger('content_changed');
                 });
-                this.options.wysiwyg.odooEditor.addEventListener('historyRevert', _.debounce(() => {
-                    this.trigger_up('widgets_start_request', {
-                        $target: this.options.wysiwyg.$editable,
-                        editableMode: true,
-                    });
-                }, 50));
             }
 
             // Trigger a resize event once entering edit mode as the snippets
             // menu will take part of the screen width (delayed because of
             // animation). (TODO wait for real animation end)
             setTimeout(() => {
-                this.$window.trigger('resize');
+                this.$window[0].dispatchEvent(new Event("resize"));
             }, 1000);
         });
     },
@@ -2241,16 +2235,18 @@ var SnippetsMenu = Widget.extend({
         // It still make sense for potential editable areas though. Although it
         // should be reviewed if we are to handle more hierarchy of nodes being
         // editable despite their non editable environment.
-        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable :not([contenteditable="true"])`;
+        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
         let filterFunc = function () {
-            if (!$(this).is(exclude)) {
-                return true;
+            // Exclude what it is asked to exclude.
+            if ($(this).is(exclude)) {
+                return false;
             }
+            // `o_editable_media` bypasses the `o_not_editable` class.
             if (this.classList.contains('o_editable_media')) {
                 return shouldEditableMediaBeEditable(this);
             }
-            return false;
+            return !$(this).is('.o_not_editable :not([contenteditable="true"])');
         };
         if (target) {
             const oldFilter = filterFunc;

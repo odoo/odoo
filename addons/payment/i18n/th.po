@@ -8,6 +8,7 @@
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +143,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "มีธุรกรรมการชำระเงินที่มีการอ้างอิง %s อยู่แล้ว"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -156,7 +157,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "ต้องใช้โทเค็นเพื่อสร้างธุรกรรมการชำระเงินใหม่"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -229,7 +230,7 @@ msgstr "เปิดใช้งาน"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Activate Stripe"
-msgstr ""
+msgstr "เปิดใช้งาน Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -272,7 +273,7 @@ msgstr "จำนวน"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "จำนวนเงินที่สามารถขอคืนเงินได้"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -333,7 +334,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
 msgid "Authorized"
-msgstr ""
+msgstr "ได้รับอนุญาต"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -822,7 +823,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "มีการคืนเงินที่ค้างอยู่"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -924,7 +925,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "ใบแจ้งหนี้"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -936,7 +937,7 @@ msgstr "ใบแจ้งหนี้"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "จำนวนใบแจ้งหนี้"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1031,7 +1032,7 @@ msgstr "ด้วยตนเอง"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "อนุญาตให้คืนเงินสูงสุดได้"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1110,7 +1111,7 @@ msgstr "ยังไม่เสร็จ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
-msgstr ""
+msgstr "ยังไม่ได้รับการยืนยัน"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1152,7 +1153,7 @@ msgstr "ตกลง"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Online Payments"
-msgstr ""
+msgstr "การชำระเงินออนไลน์"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1343,7 +1344,7 @@ msgstr "อ้างอิงการชำระเงิน"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "โปรแกรมการคืนเงินการชำระเงิน"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1539,12 +1540,12 @@ msgstr "คืนเงิน"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "จำนวนการคืนเงิน"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "จำนวนเงินที่คืน"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1556,7 +1557,7 @@ msgstr "การคืนเงิน"
 #: model:ir.model.fields,field_description:payment.field_account_payment__refunds_count
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "จำนวนการคืนเงิน"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment_register
@@ -1581,7 +1582,7 @@ msgstr "เดบิต"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "การตั้งค่า"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1596,12 +1597,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "โทเค็นการชำระเงินที่บันทึกไว้"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "โทเค็นการชำระเงินที่บันทึกไว้"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1684,7 +1685,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "แหล่งที่มาของการชำระเงิน"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1731,7 +1732,7 @@ msgstr "Stripe Secret Key"
 #: model:ir.model.fields,field_description:payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "โทเค็นการชำระเงินที่เหมาะสม"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1768,7 +1769,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "โทเค็นการเข้าถึงไม่ถูกต้อง"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
@@ -1785,7 +1786,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "จำนวนเงินที่จะคืนต้องเป็นจำนวนบวกและไม่อาจเหนือกว่าได้ %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
@@ -1889,7 +1890,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "แหล่งที่มาของการชำระเงินของการคืนเงินที่เกี่ยวข้อง"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2036,7 +2037,7 @@ msgstr "ธุรกรรม"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "ประเภทของการคืนเงินที่รองรับ"
 
 #. module: payment
 #. openerp-web
@@ -2055,7 +2056,7 @@ msgstr "อัพเกรด"
 #: model:ir.model.fields,field_description:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "ใช้วิธีการชำระเงินทางอิเล็กทรอนิกส์"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation

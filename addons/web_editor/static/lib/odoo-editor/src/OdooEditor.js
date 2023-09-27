@@ -192,6 +192,7 @@ export class OdooEditor extends EventTarget {
                 getContextFromParentRect: () => {
                     return { top: 0, left: 0 };
                 },
+                getScrollContainerRect: () => document.body.getBoundingClientRect(),
                 toSanitize: true,
                 isRootEditable: true,
                 placeholder: false,
@@ -1002,7 +1003,6 @@ export class OdooEditor extends EventTarget {
                 this._activateContenteditable();
             }
             this.historySetSelection(step);
-            this.dispatchEvent(new Event('historyRevert'));
         }
     }
     /**
@@ -1513,7 +1513,8 @@ export class OdooEditor extends EventTarget {
             doJoin &&
             next &&
             !(next.previousSibling && next.previousSibling === joinWith) &&
-            this.editable.contains(next)
+            this.editable.contains(next) &&
+            closestElement(joinWith, "TD") === closestElement(next, "TD")
         ) {
             const restore = preserveCursor(this.document);
             this.observerFlush();
@@ -2210,7 +2211,8 @@ export class OdooEditor extends EventTarget {
     _positionToolbar() {
         const OFFSET = 10;
         let isBottom = false;
-        this.toolbar.classList.toggle('toolbar-bottom', false);
+        // Toolbar display must not be none in order to calculate width and height.
+        this.toolbar.classList.toggle('d-none', false);
         this.toolbar.style.maxWidth = window.innerWidth - OFFSET * 2 + 'px';
         const sel = this.document.getSelection();
         const range = sel.getRangeAt(0);
@@ -2228,6 +2230,7 @@ export class OdooEditor extends EventTarget {
         const toolbarHeight = this.toolbar.offsetHeight;
         const editorRect = this.editable.getBoundingClientRect();
         const parentContextRect = this.options.getContextFromParentRect();
+        const scrollContainerRect = this.options.getScrollContainerRect();
         const editorTopPos = Math.max(0, editorRect.top);
         const scrollX = document.defaultView.scrollX;
         const scrollY = document.defaultView.scrollY;
@@ -2244,14 +2247,12 @@ export class OdooEditor extends EventTarget {
 
         // Get top position.
         let top = correctedSelectionRect.top - toolbarHeight - OFFSET;
-        // Ensure the toolbar doesn't overflow the editor on the top.
-        if (top < editorTopPos) {
+        // Ensure the toolbar doesn't overflow the editor or scroll container on the top.
+        if (top < editorTopPos || top + parentContextRect.top - scrollContainerRect.top < OFFSET / 2) {
             // Position the toolbar below the selection.
             top = correctedSelectionRect.bottom + OFFSET;
             isBottom = true;
         }
-        // Ensure the toolbar doesn't overflow the editor on the bottom.
-        top = Math.min(window.innerHeight - OFFSET - toolbarHeight, top);
         // Offset top to compensate for parent context position (eg. Iframe).
         top += parentContextRect.top;
         this.toolbar.style.top = scrollY + top + 'px';
@@ -2263,12 +2264,18 @@ export class OdooEditor extends EventTarget {
         // Ensure the arrow doesn't overflow the toolbar on the right.
         arrowLeftPos = Math.min(toolbarWidth - OFFSET - 20, arrowLeftPos);
         this.toolbar.style.setProperty('--arrow-left-pos', arrowLeftPos + 'px');
-        if (isBottom) {
-            this.toolbar.classList.toggle('toolbar-bottom', true);
-            this.toolbar.style.setProperty('--arrow-top-pos', -17 + 'px');
-        } else {
-            this.toolbar.style.setProperty('--arrow-top-pos', toolbarHeight - 3 + 'px');
-        }
+        const arrowTopPos = isBottom ? -17 : toolbarHeight - 3;
+        this.toolbar.classList.toggle('toolbar-bottom', isBottom);
+        this.toolbar.style.setProperty('--arrow-top-pos', arrowTopPos + 'px');
+
+        // Calculate toolbar dimensions including the arrow.
+        const toolbarTop = Math.min(top , top + arrowTopPos);
+        const toolbarBottom = Math.max(top + toolbarHeight, top + arrowTopPos + 20);
+
+        // Hide toolbar if it overflows the scroll container.
+        const distToScrollContainer = Math.min(toolbarTop - scrollContainerRect.top,
+                                                scrollContainerRect.bottom - toolbarBottom);
+        this.toolbar.classList.toggle('d-none', distToScrollContainer < OFFSET / 2);
     }
 
     // PASTING / DROPPING
@@ -3287,7 +3294,12 @@ export class OdooEditor extends EventTarget {
             if (files.length && !clipboardElem.content.querySelector('table')) {
                 this.addImagesFiles(files).then(html => this._applyCommand('insertHTML', this._prepareClipboardData(html)));
             } else {
-                this._applyCommand('insertHTML', clipboardElem.content);
+                if(closestElement(sel.anchorNode, 'a')) {
+                    this._applyCommand('insertText', clipboardElem.content.textContent);
+                }
+                else {
+                    this._applyCommand('insertHTML', clipboardElem.content);
+                }
             }
         } else {
             const text = ev.clipboardData.getData('text/plain');
@@ -3395,7 +3407,16 @@ export class OdooEditor extends EventTarget {
                         const textFragments = splitAroundUrl[i].split(/\r?\n/);
                         let textIndex = 1;
                         for (const textFragment of textFragments) {
-                            this._applyCommand('insertText', textFragment);
+                            // Replace consecutive spaces by alternating nbsp.
+                            const modifiedTextFragment = textFragment.replace(/( {2,})/g, match => {
+                                let alertnateValue = false;
+                                return match.replace(/ /g, () => {
+                                    alertnateValue = !alertnateValue;
+                                    const replaceContent = alertnateValue ? '\u00A0' : ' ';
+                                    return replaceContent;
+                                });
+                            });
+                            this._applyCommand('insertText', modifiedTextFragment);
                             if (textIndex < textFragments.length) {
                                 this._applyCommand('oShiftEnter');
                             }

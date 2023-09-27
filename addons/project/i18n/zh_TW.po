@@ -5,6 +5,8 @@
 # Translators:
 # Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Tony Ng, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,8 +373,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
-"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"箭嘴圖示\" title=\"箭嘴\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"箭嘴圖示\" title=\"箭嘴\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -408,7 +410,7 @@ msgstr "<p><em>任務數目： %(tasks_count)s</em></p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Stage:</small>"
-msgstr "<small class=\"text-right\">階段:</small>"
+msgstr "<small class=\"text-right\">階段：</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -533,7 +535,7 @@ msgstr "<strong class=\"d-block mb-2\">附件</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr "<strong>執行者</strong>"
+msgstr "<strong>受指派人</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -934,7 +936,7 @@ msgstr "指派給"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr "執行者"
+msgstr "受指派人"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1976,7 +1978,7 @@ msgstr "五"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__fri
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__fri
 msgid "Friday"
-msgstr "五"
+msgstr "星期五"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -2105,12 +2107,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
 msgstr "這個專案進展如何？"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "我來做"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -2751,7 +2747,7 @@ msgstr "一"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__mon
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__mon
 msgid "Monday"
-msgstr "一"
+msgstr "星期一"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
@@ -3980,7 +3976,7 @@ msgstr "六"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sat
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sat
 msgid "Saturday"
-msgstr "六"
+msgstr "星期六"
 
 #. module: project
 #. openerp-web
@@ -3993,7 +3989,7 @@ msgstr "腳本"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr "<span class=\"nolabel\"> (在內容中)</span>搜尋"
+msgstr "<span class=\"nolabel\">(在內容中)</span> 搜尋"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4009,49 +4005,49 @@ msgstr "搜索更新"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in All"
-msgstr "在全部範圍內搜尋"
+msgstr "搜尋任何資料"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "在執行者中搜尋"
+msgstr "搜尋受指派人"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
-msgstr "在消息中搜尋"
+msgstr "搜尋訊息"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr ""
+msgstr "搜尋優先次序"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "在專案中搜尋"
+msgstr "搜尋專案"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Ref"
-msgstr "在參考資料中搜索"
+msgstr "搜尋參考編號"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "在階段中搜尋"
+msgstr "搜尋階段"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr "在狀態中搜索"
+msgstr "搜尋狀態"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
@@ -4326,7 +4322,7 @@ msgstr "日"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sun
 msgid "Sunday"
-msgstr "日"
+msgstr "星期日"
 
 #. module: project
 #. openerp-web
@@ -4743,7 +4739,7 @@ msgstr "四"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__thu
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__thu
 msgid "Thursday"
-msgstr "四"
+msgstr "星期四"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4867,7 +4863,7 @@ msgstr "二"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__tue
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__tue
 msgid "Tuesday"
-msgstr "二"
+msgstr "星期二"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
@@ -5073,7 +5069,7 @@ msgstr "三"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__wed
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__wed
 msgid "Wednesday"
-msgstr "三"
+msgstr "星期三"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly

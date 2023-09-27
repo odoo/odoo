@@ -39,6 +39,7 @@
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12483,8 +12484,8 @@ msgstr "Tangguhkan AKun"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Switch into refund/credit note"
+msgid "Switch into invoice/credit note"
+msgstr "Ganti menjadi faktur/nota kredit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -13987,6 +13988,7 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
+"Pergerakkan tidak dapat diposting karena alasan berikut: %(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -15623,7 +15625,7 @@ msgstr "Peringatan untuk %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Peringatan untuk Metode Pembulatan Kas: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16153,6 +16155,9 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"Anda tidak dapat menghapus entri ini, karena sudah menggunakan nomor "
+"sequence dan bukan merupakan yang terakhir di rantai. Anda sebaiknya "
+"mengembalikkan hal tersebut terlebih dahulu."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -16356,6 +16361,12 @@ msgstr ""
 "reconciliations are still pending."
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Anda tidak dapat mengganti tipe dari dokumen yang sudah di-post."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
@@ -16445,7 +16456,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Anda harus menentukan Profit Account (company dependent)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 
-from datetime import datetime, timedelta, time
+from datetime import date, datetime, timedelta
 
 from odoo import fields
-from odoo.tests import Form
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.tests import Form, tagged
+from odoo.addons.base.tests.common import HttpCase, SavepointCaseWithUserDemo
 import pytz
 import re
 
@@ -374,3 +374,29 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(len(event.attendee_ids), 2)
         self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))
         self.assertTrue(self.env.user.partner_id in event.attendee_ids.mapped('partner_id'))
+
+@tagged('post_install', '-at_install')
+class TestCalendarTour(HttpCase):
+
+    def test_calendar_delete_tour(self):
+        """
+            Check that we can delete events with the "Everybody's calendars" filter.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/web#action=" + str(action_id.id) + '&view_type=calendar'
+        self.start_tour(url, 'test_calendar_delete_tour', login='admin')
+        event = self.env['calendar.event'].search([('name', '=', 'Test Event')])
+        self.assertFalse(event) # Check if the event has been correctly deleted

@@ -12648,8 +12648,8 @@ msgstr "Cuenta transitoria"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Cambiar a reembolso/factura rectificativa"
+msgid "Switch into invoice/credit note"
+msgstr "Cambiar a factura/factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -16661,8 +16661,14 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"No puedes cambiar una cuenta para evitar la conciliación si todavía hay "
+"No puede cambiar una cuenta para evitar la conciliación si todavía hay "
 "pendientes algunas conciliaciones parciales."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "No puede cambiar el tipo de un documento publicado."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

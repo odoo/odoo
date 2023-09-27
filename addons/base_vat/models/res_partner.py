@@ -166,20 +166,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
-        """ Checks a VAT number, either syntactically or using VIES, depending
-        on the active company's configuration.
-        A first check is made by using the first two characters of the VAT as
-        the country code. It it fails, a second one is made using default_country instead.
-
-        :param vat_number: a string with the VAT number to check.
-        :param default_country: a res.country object
-        :param partner_is_company: True if the partner is a company, else False
-
-        :return: The country code (in lower case) of the country the VAT number
-                 was validated for, if it was validated. False if it could not be validated
-                 against the provided or guessed country. None if no country was available
-                 for the check, and no conclusion could be made with certainty.
-        """
+        # OVERRIDE account
         # Get company
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])

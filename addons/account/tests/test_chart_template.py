@@ -359,15 +359,6 @@ class TestChartTemplate(TransactionCase):
         ])
         self.assertEqual(len(tax_test_model_data), 1, "Taxes should have been created even if the chart_template is installed through fiscal position system.")
 
-    def test_update_taxes_chart_template_country_check(self):
-        """ We can't update taxes that don't match the chart_template's country. """
-        self.company.chart_template_id.country_id = self.env.ref('base.lu')
-        # We provoke one recreation and one update
-        self.tax_template_1.amount += 1
-        self.tax_template_2.invoice_repartition_line_ids.tag_ids.name = 'tag_name_2_modified'
-        with self.assertRaises(ValidationError):
-            update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
-
     def test_update_taxes_fiscal_country_check(self):
         """ If there is no country set on chart_template, the taxes can only be updated if
         their country matches the fiscal country. """

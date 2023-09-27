@@ -6,6 +6,8 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:55+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +71,16 @@ msgstr "<i class=\"fa fa-pencil\"/> Modifica"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr "<i title=\"Documentazione\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Nazione...</option>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "<option value=\"\">select...</option>"
+msgstr "<option value=\"\">seleziona...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -190,7 +202,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "Chiave API pronta"
 
 #. module: portal
 #. openerp-web
@@ -373,11 +385,6 @@ msgid "Country"
 msgstr "Nazione"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Country..."
-msgstr "Nazione..."
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
@@ -545,6 +552,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Ecco la tua nuova chiave API, utilizzala al posto di una password per l'accesso RPC.\n"
+"                Il login è ancora necessario per l'utilizzo interattivo."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -658,7 +667,7 @@ msgstr "Lascia un commento"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Let your customers create developer API keys"
-msgstr ""
+msgstr "Permetti ai clienti di creare chiavi API per sviluppatori"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -739,6 +748,7 @@ msgstr "Logo Odoo"
 #, python-format
 msgid "Only internal and portal users can create API keys"
 msgstr ""
+"Le chiavi API possono essere create solo da utenti interni e del portale"
 
 #. module: portal
 #. openerp-web
@@ -1014,7 +1024,7 @@ msgstr "Il documento non esiste o mancano i diritti di accesso."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "La chiave non può essere recuperata più tardi e fornisce"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -1297,7 +1307,7 @@ msgstr "commenti"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "accesso completo"
 
 #. module: portal
 #. openerp-web
@@ -1307,6 +1317,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"sarà l'unico modo per\n"
+"                individuare la chiave una volta creata"
 
 #. module: portal
 #. openerp-web
@@ -1331,11 +1343,6 @@ msgid "res.users.apikeys.description"
 msgstr "res.users.apikeys.description"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "select..."
-msgstr "seleziona..."
-
-#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
@@ -1348,3 +1355,4 @@ msgstr "per inviare un commento."
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"per il tuo account utente, è molto importante custodirlo in sicurezza."

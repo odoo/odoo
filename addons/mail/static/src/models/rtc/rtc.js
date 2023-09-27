@@ -1216,7 +1216,7 @@ function factory(dependencies) {
             if (!this.channel) {
                 return;
             }
-            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev, { ignoreModifiers: true })) {
+            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev)) {
                 return;
             }
             if (!this.currentRtcSession.isTalking) {

@@ -329,12 +329,12 @@ msgstr "Accepter des paiements avec un terminal de paiement SIX"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Vantiv payment terminal"
-msgstr "Acceptez les paiements avec un terminal de paiement Vantiv"
+msgstr "Accepter les paiements avec un terminal de paiement Vantiv"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
-msgstr "Acceptez les paiements avec un terminal de paiement Adyen"
+msgstr "Accepter les paiements avec un terminal de paiement Adyen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -2060,7 +2060,7 @@ msgstr "Souhaitez vous ouvrir la liste des clients pour en sélectionner un ?"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "Souhaitez-vous imprimer à l'aide de l'imprimante web ?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2314,6 +2314,13 @@ msgstr "Fin de l'importation des commandes"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "Position fiscale"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "Position fiscale non trouvée"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6062,6 +6069,17 @@ msgid ""
 msgstr ""
 "Le module de données fiscales a rencontré une erreur lors de la réception de"
 " votre commande"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+"La position fiscale utilisée dans l'ordre original n'est pas chargée. "
+"Veillez à la charger en l'ajoutant dans la configuration PdV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip

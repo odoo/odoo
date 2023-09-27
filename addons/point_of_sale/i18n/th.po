@@ -2267,6 +2267,13 @@ msgid "Fiscal Position"
 msgstr "ฐานะทางการเงิน"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
 msgstr "ฐานะทางการเงินต่อคำสั่ง"
@@ -4984,7 +4991,7 @@ msgstr "ลบออก"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Replenishment"
-msgstr ""
+msgstr "การเติมสินค้า"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -5337,7 +5344,7 @@ msgstr "เลขลำดับ"
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListInput.xml:0
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "หมายเลขซีเรียล/ล็อต"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5779,7 +5786,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "ทั้งหมด"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
@@ -5933,6 +5940,15 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
 msgstr ""
 
 #. module: point_of_sale
@@ -6499,7 +6515,7 @@ msgstr "ส่วนลดทั้งหมด"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Total Due"
-msgstr ""
+msgstr "ครบกำหนดชำระทั้งหมด"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6516,7 +6532,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "จำนวนเงินที่ชำระทั้งหมด"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total

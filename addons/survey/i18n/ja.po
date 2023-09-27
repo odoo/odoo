@@ -34,7 +34,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
 msgid "$100"
-msgstr ""
+msgstr "$100"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_1
@@ -44,22 +44,22 @@ msgstr "$20"
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_5
 msgid "$200"
-msgstr ""
+msgstr "$200"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_6
 msgid "$300"
-msgstr ""
+msgstr "$300"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_2
 msgid "$50"
-msgstr ""
+msgstr "$50"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_3
 msgid "$80"
-msgstr ""
+msgstr "$80"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -176,6 +176,8 @@ msgid ""
 "<b>Certificate</b>\n"
 "                            <br/>"
 msgstr ""
+"<b>証明書</b>\n"
+"                            <br/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -190,7 +192,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "<br/>by"
-msgstr ""
+msgstr "<br/>次により:"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p4_q6
@@ -586,6 +588,8 @@ msgid ""
 "<span class=\"o_survey_session_answer_count\">0</span>\n"
 "                                     /"
 msgstr ""
+"<span class=\"o_survey_session_answer_count\">0</span>\n"
+"                                     /"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -696,13 +700,13 @@ msgstr "正のスコアが正しい選択を示しています。負またはnul
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 msgid "A problem has occurred"
-msgstr ""
+msgstr "問題が発生しました"
 
 #. module: survey
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "A question can either be skipped or answered, not both."
-msgstr ""
+msgstr "質問はスキップまたは回答するかのどちらかで、両方はできません。"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -881,7 +885,7 @@ msgstr "回答期限"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
 msgid "Answer that will trigger the display of the current question."
-msgstr ""
+msgstr "現在の質問を表示するトリガとなる回答。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -1016,7 +1020,7 @@ msgstr "平均所要時間"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
 msgid "Average duration of the survey (in hours)"
-msgstr ""
+msgstr "アンケートの平均所要時間 (時間)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_score_avg
@@ -1113,7 +1117,7 @@ msgstr "認定バッジ"
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
-msgstr ""
+msgstr "証明書バッジはアンケート %(survey_name)s用には作成されません。"
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
@@ -1135,7 +1139,7 @@ msgstr "認定テンプレート"
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "Certification n°"
-msgstr ""
+msgstr "証明書番号"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
@@ -1145,7 +1149,7 @@ msgstr "認定テンプレート"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: {{ object.survey_id.display_name }}"
-msgstr ""
+msgstr "検定: {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -1675,12 +1679,12 @@ msgstr "最後のメッセージ"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__end_datetime
 msgid "End date and time"
-msgstr ""
+msgstr "終了日時"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Enter Session Code"
-msgstr ""
+msgstr "セッションコードを入力"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -2312,7 +2316,7 @@ msgstr "日本"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Join Session"
-msgstr ""
+msgstr "セッションに参加"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -2691,7 +2695,7 @@ msgstr "試行が残っていません。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "No question yet, come back later."
-msgstr ""
+msgstr "まだ質問がありません。後で戻って来て下さい。"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -2902,7 +2906,7 @@ msgstr "送信メールサーバ"
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Overall Performance"
-msgstr ""
+msgstr "総合成績"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug5
@@ -2977,7 +2981,7 @@ msgstr "パーセント"
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Performance by Section"
-msgstr ""
+msgstr "セクションごとの成績"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q6_sug3
@@ -4605,7 +4609,7 @@ msgstr "スコアリングメカニズムを持っているアンケートのた
 msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
-msgstr ""
+msgstr "ライブセッション開催中に、アンケート \"%(survey_names)s\" を削除することはできません。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -4613,7 +4617,7 @@ msgstr ""
 msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey has no sections."
-msgstr ""
+msgstr "アンケートにセクションがない場合、 \"セクションごとに1ページ\"アンケート用の招待状を送ることはできません。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -4621,7 +4625,7 @@ msgstr ""
 msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
-msgstr ""
+msgstr "アンケートに空のセクションしかない場合、 \"セクションごとに1ページ\"アンケート用の招待状を送ることはできません。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -4668,12 +4672,12 @@ msgstr "回試行"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. No one can solve challenges like you do"
-msgstr ""
+msgstr "例: あなたのように課題を解決できる人はいません"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. Problem Solver"
-msgstr ""
+msgstr "例: 問題解決者"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -4707,7 +4711,7 @@ msgstr "の"
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "of achievement"
-msgstr ""
+msgstr "成果の"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -4737,7 +4741,7 @@ msgstr "有効期限切れアンケート"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "survey is empty"
-msgstr ""
+msgstr "アンケートは空欄です。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page

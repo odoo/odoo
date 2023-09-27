@@ -3,8 +3,8 @@
 # 	* crm
 # 
 # Translators:
-# Martin Trigaux, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -355,7 +355,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">潛在客戶 / 潛在銷售對象新動向</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">潛在客戶 / 銷售機會新動向</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">對你的產品感興趣</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
@@ -377,11 +377,11 @@ msgstr ""
 "                            歡迎來到 <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>，\n"
 "                            很高興認識你！現在你已能夠進入系統，將可以發掘 <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> 有售的產品和提供的服務。我的名字是 <t t-out=\"object.user_id.name or ''\">Marc Demo</t>，會協助你探索和好好利用 Odoo 各項功能。首先，我們能在短期內會面，讓我先簡單示範系統功能嗎？<br/>\n"
 "                            如有任何疑問，歡迎隨時聯絡我。<br/><br/>\n"
-"                            順祝 安康<br/>\n"
+"                            順祝  安康<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
 "                                <br/>電郵： <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br/>電話： <t t-out=\"object.user_id.phone or ''\">+852 2632 9300</t>\n"
+"                                <br/>電話： <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -398,7 +398,7 @@ msgstr ""
 "            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
 "            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
-"                <t t-out=\"object.company_id.phone or ''\">+852 2632 9300</t>\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
 "                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                </t>\n"
@@ -413,7 +413,7 @@ msgstr ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    由 <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo 系統</a>驅動\n"
+"    由 <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a> 驅動\n"
 "</td></tr>\n"
 "</table>\n"
 "        "
@@ -1289,7 +1289,7 @@ msgstr "編輯"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Email"
-msgstr "Email"
+msgstr "電郵"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -2271,7 +2271,7 @@ msgstr "我的商機"
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead1
 msgid "New"
-msgstr "新增"
+msgstr "新潛在客戶"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
@@ -2821,7 +2821,7 @@ msgstr "概率(%)"
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
-msgstr "建議"
+msgstr "提案"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
@@ -2841,7 +2841,7 @@ msgstr ""
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
 msgid "Qualified"
-msgstr "驗證"
+msgstr "已評估"
 
 #. module: crm
 #. openerp-web
@@ -3208,7 +3208,7 @@ msgstr "街道..."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street2
 msgid "Street2"
-msgstr "街道 2"
+msgstr "街道第二行"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -3697,7 +3697,7 @@ msgstr "Welcome Demo"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
-msgstr "贏得"
+msgstr "成交"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count

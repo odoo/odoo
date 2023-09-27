@@ -4,6 +4,8 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Wil Odoo, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,17 +37,19 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-" 記錄時程表 </p><p>\n"
-" 您可以每天按專案註冊和跟蹤工作時間。每\n"
-"次花費在專案上的時間都將成為成本, \n"
-"如果需要, 可以向客戶重新開立應收憑單。\n"
-"                </p>"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    記錄工時表\n"
+"                </p><p>\n"
+"                    你可按個別專案項目，登記並追蹤你每天的工作時間。\n"
+"                    任何花費在專案的工作時間，都會成為成本，並可按需要\n"
+"                    重新向客戶開立發票。\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
 msgid " Candidate Orders"
-msgstr ""
+msgstr "候選訂單"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_percentage
@@ -93,9 +97,7 @@ msgstr "<em class=\"font-weight-normal text-muted\">銷售訂單的工時表：<
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
-msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\"/>"
+msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭嘴圖示\" title=\"箭嘴\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -547,7 +549,7 @@ msgstr "已顯示警告追加銷售"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "有多個銷售訂單資料行"
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
@@ -582,7 +584,7 @@ msgstr "進行中"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 msgid "Info Invoice"
-msgstr ""
+msgstr "資訊發票"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
@@ -1568,7 +1570,7 @@ msgstr "當完成的工作超過預計時數，提醒銷售人員注意追加SO�
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
 msgid "Warning Employee Rate"
-msgstr ""
+msgstr "警告員工收費率"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id

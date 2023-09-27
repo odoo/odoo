@@ -20,6 +20,7 @@
 # Martin Trigaux, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
+# Wil Odoo, 2023
 # Chloe Wang, 2023
 # 
 msgid ""
@@ -12188,8 +12189,8 @@ msgstr "暂记帐户"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "切换到退款通知/退款通知"
+msgid "Switch into invoice/credit note"
+msgstr "切换至发票/贷项凭单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -13605,7 +13606,7 @@ msgstr "用于确定该行是否应继续的方法。"
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "分录未能过账，原因：%(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -15749,6 +15750,12 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr "在局部调账还在挂账状态，您不能切换一个科目到回避调整状态。"
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "不能切换已过账单据的类型。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

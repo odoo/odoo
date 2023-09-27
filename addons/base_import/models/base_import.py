@@ -1039,6 +1039,10 @@ class Import(models.TransientModel):
         import_fields = [f for f in fields if f]
 
         _file_length, rows_to_import = self._read_file(options)
+        if len(rows_to_import[0]) != len(fields):
+            raise ImportValidationError(
+                _("Error while importing records: all rows should be of the same size, but the title row has %d entries while the first row has %d. You may need to change the separator character.", len(fields), len(rows_to_import[0]))
+            )
 
         if options.get('has_headers'):
             rows_to_import = rows_to_import[1:]
@@ -1188,8 +1192,8 @@ class Import(models.TransientModel):
     def _parse_date_from_data(self, data, index, name, field_type, options):
         dt = datetime.datetime
         fmt = fields.Date.to_string if field_type == 'date' else fields.Datetime.to_string
-        d_fmt = options.get('date_format')
-        dt_fmt = options.get('datetime_format')
+        d_fmt = options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT
+        dt_fmt = options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT
         for num, line in enumerate(data):
             if not line[index]:
                 continue

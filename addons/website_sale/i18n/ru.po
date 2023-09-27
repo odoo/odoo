@@ -14,14 +14,14 @@
 # Sergey Vilizhanin, 2021
 # Viktor Pogrebniak <vp@aifil.ru>, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2021
-# ILMIR <karamov@it-projects.info>, 2021
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2021
 # Oleg Kuryan <oleg@ventor.tech>, 2021
 # Константин Коровин <korovin74@gmail.com>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Alena Vlasova, 2022
+# ILMIR <karamov@it-projects.info>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Alena Vlasova, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,6 +166,16 @@ msgstr "<i class=\"fa fa-print\"/> Печать"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
 msgstr ""
 
 #. module: website_sale
@@ -950,6 +960,14 @@ msgstr ""
 "вашей учетной записи. Свяжитесь с нами напрямую, чтобы сделать это."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Детские категории"
@@ -1017,7 +1035,10 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Название компании"
 
@@ -1112,11 +1133,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Страна"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Страна..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1601,6 +1617,15 @@ msgstr "Изображение 512"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Название изображения"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2188,6 +2213,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Телефон"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Номер телефона"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -2943,11 +2975,6 @@ msgid "State / Province"
 msgstr "Регион"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "Штат / Провинция..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr "Состояние продажи сайта на платформе приобретение платежного эквайера"
@@ -3545,6 +3572,20 @@ msgid ""
 msgstr ""
 "Ваш адрес\n"
 "                                        <small> или </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Ваш электронный адрес"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Ваше имя"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

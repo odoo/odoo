@@ -4,7 +4,7 @@
     <t t-name="web.UserMenu" owl="1">
         <Dropdown class="o_user_menu" t-on-dropdown-item-selected.stop="onDropdownItemSelected">
             <t t-set-slot="toggler">
-                <img class="rounded-circle o_user_avatar" t-att-src="source" alt="User"/> <span class="oe_topbar_name"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
+                <img class="rounded-circle o_user_avatar" t-att-src="source" alt="User"/> <span class="oe_topbar_name text-truncate"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
             </t>
             <t t-foreach="getElements()" t-as="element" t-key="element_index">
                 <t t-if="!element.hide">

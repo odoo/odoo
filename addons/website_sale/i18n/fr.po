@@ -15,6 +15,7 @@
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,6 +172,16 @@ msgid "<i class=\"fa fa-shopping-cart mr-2\"/>ADD TO CART"
 msgstr "<i class=\"fa fa-shopping-cart mr-2\"/>AJOUTER AU PANIER"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Pays...</option>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr "<option value=\"\">État / Province...</option>"
+
+#. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -300,7 +311,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">Courriel de confirmation</span>"
+msgstr "<span class=\"o_form_label\">Email de confirmation</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -726,7 +737,7 @@ msgstr "Ajouter"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add price per base unit of measure on your Products"
-msgstr "Ajoutez un prix par unité de mesure de base sur vos articles"
+msgstr "Ajouter un prix par unité de mesure de base sur vos articles"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_add_to_cart
@@ -770,7 +781,7 @@ msgstr "Tous les résultats"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
-"Autorisez les clients à comparer les articles en se basant sur leurs "
+"Autoriser les clients à comparer les produits en se basant sur leurs "
 "attributs"
 
 #. module: website_sale
@@ -812,7 +823,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply specific prices per country, discounts, etc."
-msgstr "Appliquez des prix spécifiques par pays, promotions, etc. "
+msgstr "Appliquer des prix spécifiques par pays, promotions, etc. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1077,6 +1088,17 @@ msgstr ""
 "directement pour cette opération."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once documents have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Il n'est pas autorisé de changer votre nom une fois que des documents ont "
+"été émis pour votre compte. Veuillez nous contacter directement pour "
+"effectuer ce changement."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Catégories enfants"
@@ -1145,7 +1167,10 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Nom de la société"
 
@@ -1240,11 +1265,6 @@ msgstr "Canapés"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Pays"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "Pays..."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1887,7 +1907,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a shipping address"
-msgstr "Laissez le client entrer une adresse de livraison"
+msgstr "Laisser le client saisir une adresse d'expédition"
 
 #. module: website_sale
 #. openerp-web
@@ -2349,6 +2369,13 @@ msgid "Phone"
 msgstr "Téléphone"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
 msgstr "Veuillez indiquer une URL Vidéo valide."
@@ -2555,7 +2582,7 @@ msgstr "Noms de l'article"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
-msgstr "Affichez le prix des articles dans le catalogue web"
+msgstr "Afficher le prix des articles dans le catalogue web"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
@@ -2889,7 +2916,7 @@ msgstr "Échantillon"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Search Abandoned Sales Orders"
-msgstr "Rechercher les Bons de Commandes abandonnés"
+msgstr "Rechercher les commandes abandonnées"
 
 #. module: website_sale
 #. openerp-web
@@ -3102,11 +3129,6 @@ msgstr "Sources"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
 msgstr "État / Province"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "État / Province..."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
@@ -3348,7 +3370,7 @@ msgstr "Ce code promo n'est pas disponible."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Thumbnails Position"
-msgstr "Position des vignettes"
+msgstr "Position vignettes"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
@@ -3720,6 +3742,20 @@ msgid ""
 msgstr ""
 "Votre Adresse\n"
 "                                        <small> ou </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Votre email"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Votre nom"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

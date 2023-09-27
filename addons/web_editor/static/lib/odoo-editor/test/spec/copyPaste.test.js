@@ -132,7 +132,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'x    y');
                     },
-                    contentAfter: '<p>abx    y[]cd</p>',
+                    contentAfter: '<p>abx&nbsp; &nbsp; y[]cd</p>',
                 });
             });
             it('should paste a text in a span', async () => {
@@ -186,7 +186,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'x    y');
                     },
-                    contentAfter: '<p>ax    y[]d</p>',
+                    contentAfter: '<p>ax&nbsp; &nbsp; y[]d</p>',
                 });
             });
             it('should paste a text in a span', async () => {
@@ -1365,6 +1365,15 @@ describe('Copy and paste', () => {
                         window.chai.expect(editor.commandBar._active).to.be.false;
                     },
                     contentAfter: `<p><a href="${url}">${url}</a> abc <a href="${videoUrl}">${videoUrl}</a> def <a href="${imgUrl}">${imgUrl}</a>[]</p>`,
+                });
+            });
+            it('should paste plain text inside non empty link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="#">a[]b</a></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<span>123</span>');
+                    },
+                    contentAfter: '<p><a href="#">a123[]b</a></p>',
                 });
             });
         });

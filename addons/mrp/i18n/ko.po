@@ -10,8 +10,9 @@
 # Linkup <link-up@naver.com>, 2021
 # Link Up링크업 <linkup.way@gmail.com>, 2021
 # Heesoo Choi, 2021
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Wil Odoo, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4428,6 +4429,20 @@ msgstr "%(attribute)s설정값의 %(product)s 품목이 BoM 품목 %(bom_product
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr "수량은 양수입니다."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "The component %s should not be the same as the product to produce."
+msgstr "부품 %s 은 생산할 품목과 동일할 수 없습니다."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr "현재 설정은 품목 간에 주기를 생성하므로 올바르지 않습니다: %s."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model

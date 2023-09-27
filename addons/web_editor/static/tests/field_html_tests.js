@@ -290,6 +290,7 @@ QUnit.module('web_editor', {}, function () {
             });
 
             await testUtils.form.clickEdit(form);
+            await new Promise(resolve => setTimeout(resolve, 50));
             var $field = form.$('.oe_form_field[name="body"]');
 
             // select the text
@@ -311,7 +312,6 @@ QUnit.module('web_editor', {}, function () {
                 return openingProm;
             }
 
-            await new Promise((resolve)=>setTimeout(resolve, 50));
             await openColorpicker('#toolbar .note-back-color-preview');
             assert.ok($('.note-back-color-preview').hasClass('show'),
                 "should display the color picker");
