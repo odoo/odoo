@@ -96,13 +96,13 @@ QUnit.test("list activity widget with activities", async (assert) => {
         views: [[false, "list"]],
     });
     await contains(":nth-child(1 of .o_data_row)", {
-        containsMulti: [
+        contains: [
             [".o-mail-ActivityButton i.text-warning.fa-phone"],
             [".o-mail-ListActivity-summary", { text: "Call with Al" }],
         ],
     });
     await contains(":nth-child(2 of .o_data_row)", {
-        containsMulti: [
+        contains: [
             [".o-mail-ActivityButton i.text-success.fa-clock-o"],
             [".o-mail-ListActivity-summary", { text: "Type 2" }],
         ],

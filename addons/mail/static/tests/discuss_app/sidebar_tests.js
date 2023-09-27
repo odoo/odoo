@@ -374,7 +374,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-down"],
                 ["span", { text: "Channels" }],
                 [".badge", { count: 0 }],
@@ -422,7 +422,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-down"],
                 ["span", { text: "Channels" }],
                 [".badge", { count: 0 }],
@@ -443,7 +443,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-right"],
                 ["span", { text: "Channels" }],
                 [".badge", { count: 0 }],
@@ -491,7 +491,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-right"],
                 ["span", { text: "Channels" }],
                 [".badge", { text: "2" }],
@@ -517,7 +517,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-down"],
                 ["span", { text: "Direct messages" }],
                 [".badge", { count: 0 }],
@@ -546,7 +546,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-down"],
                 ["span", { text: "Direct messages" }],
                 [".badge", { count: 0 }],
@@ -572,7 +572,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-right"],
                 ["span", { text: "Direct messages" }],
                 [".badge", { count: 0 }],
@@ -612,7 +612,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
-            containsMulti: [
+            contains: [
                 ["i.oi.oi-chevron-right"],
                 ["span", { text: "Direct messages" }],
                 [".badge", { text: "2" }],
@@ -625,7 +625,7 @@ QUnit.test("chat - command: should have add command when category is unfolded", 
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", {
-        containsMulti: [
+        contains: [
             ["i.oi.oi-chevron-down"],
             ["span", { text: "Direct messages" }],
             ["i[title='Start a conversation']"],
@@ -643,7 +643,7 @@ QUnit.test("chat - command: should not have add command when category is folded"
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory", {
-        containsMulti: [
+        contains: [
             ["i.oi.oi-chevron-right"],
             ["span", { text: "Direct messages" }],
             ["i[title='Start a conversation']", { count: 0 }],

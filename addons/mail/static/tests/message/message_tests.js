@@ -657,14 +657,14 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-content", { text: "body1" }],
             [".o-mail-Message-header"],
             [".o-mail-Message-sidebar", { contains: [".o-mail-Message-date", { count: 0 }] }],
         ],
     });
     await contains(".o-mail-Message", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-content", { text: "body2" }],
             [".o-mail-Message-header", { count: 0 }],
             [".o-mail-Message-sidebar", { contains: [".o-mail-Message-date", { count: 0 }] }],
@@ -672,7 +672,7 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     });
     await click(".o-mail-Message", { text: "body2" });
     await contains(".o-mail-Message", {
-        containsMulti: [
+        contains: [
             [".o-mail-Message-content", { text: "body2" }],
             [".o-mail-Message-sidebar .o-mail-Message-date"],
         ],

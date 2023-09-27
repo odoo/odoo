@@ -366,7 +366,7 @@ QUnit.test("mark failure as read", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], {
-        containsMulti: [
+        contains: [
             [".o-mail-NotificationItem-name", { text: "Channel" }],
             [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
         ],

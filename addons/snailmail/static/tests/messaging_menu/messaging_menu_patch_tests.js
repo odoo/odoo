@@ -78,14 +78,14 @@ QUnit.test("notifications grouped by notification_type", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", {
-        containsMulti: [
+        contains: [
             [".o-mail-NotificationItem-name", { text: "Partner" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
         ],
     });
     await contains(":nth-child(2 of .o-mail-NotificationItem)", {
-        containsMulti: [
+        contains: [
             [".o-mail-NotificationItem-name", { text: "Partner" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [

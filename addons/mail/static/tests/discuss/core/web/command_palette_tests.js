@@ -78,13 +78,13 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     await insertText(".o_command_palette_search input", "@", { replace: true });
     advanceTime(commandSetupRegistry.get("@").debounceDelay);
     await contains(".o_command_palette .o_command_category", {
-        containsMulti: [
+        contains: [
             ["span.fw-bold", { text: "Mentions" }],
             [".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" }],
         ],
     });
     await contains(".o_command_palette .o_command_category", {
-        containsMulti: [
+        contains: [
             [".o_command_name", { text: "Mario" }],
             [".o_command_name", { text: "Mitchell Admin" }],
         ],
@@ -104,7 +104,7 @@ QUnit.test("Max 3 most recent channels in command palette of Discuss app with #"
     await insertText(".o_command_palette_search input", "#", { replace: true });
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
     await contains(".o_command_palette .o_command_category", {
-        containsMulti: [
+        contains: [
             ["span.fw-bold", { text: "Recent" }],
             [".o_command", { count: 3 }],
         ],
