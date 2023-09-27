@@ -544,9 +544,9 @@ class AccountMoveLine(models.Model):
                 )
                 SELECT * FROM previous
                 UNION ALL
-                SELECT * FROM properties
-                UNION ALL
                 SELECT * FROM default_properties
+                UNION ALL
+                SELECT * FROM properties
                 UNION ALL
                 SELECT * FROM fallback
             """, {
