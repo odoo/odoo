@@ -4,9 +4,9 @@ import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA } from "@web/core/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
-import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
+import { cookie } from "@web/core/browser/cookie";
 
 export class JournalDashboardGraphField extends Component {
     static template = "web.JournalDashboardGraphField";
@@ -17,7 +17,6 @@ export class JournalDashboardGraphField extends Component {
 
     setup() {
         this.chart = null;
-        this.cookies = useService("cookie");
         this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.record.data[this.props.name]);
 
@@ -53,7 +52,7 @@ export class JournalDashboardGraphField extends Component {
         const labels = this.data[0].values.map(function (pt) {
             return pt.x;
         });
-        const color10 = getColor(10, this.cookies.current.color_scheme);
+        const color10 = getColor(10, cookie.get("color_scheme"));
         const borderColor = this.data[0].is_sample_data ? hexToRGBA(color10, 0.1) : color10;
         const backgroundColor = this.data[0].is_sample_data
             ? hexToRGBA(color10, 0.05)
@@ -105,8 +104,8 @@ export class JournalDashboardGraphField extends Component {
         const labels = [];
         const backgroundColor = [];
 
-        const color13 = getColor(13, this.cookies.current.color_scheme);
-        const color19 = getColor(19, this.cookies.current.color_scheme);
+        const color13 = getColor(13, cookie.get("color_scheme"));
+        const color19 = getColor(19, cookie.get("color_scheme"));
         this.data[0].values.forEach((pt) => {
             data.push(pt.value);
             labels.push(pt.label);

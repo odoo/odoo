@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
+import { cookie } from "@web/core/browser/cookie";
 import dom from "@web/legacy/js/core/dom";
 import {throttleForAnimation} from "@web/core/utils/timing";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
@@ -93,7 +93,7 @@ const PopupWidget = publicWidget.Widget.extend({
             // "Contact us" page to open a popup on the homepage).
             this._showPopupOnClick();
         } else {
-            this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
+            this._popupAlreadyShown = !!cookie.get(this.$el.attr('id'));
             if (!this._popupAlreadyShown) {
                 this._bindPopup();
             }
@@ -212,7 +212,7 @@ const PopupWidget = publicWidget.Widget.extend({
      */
     _onHideModal: function () {
         const nbDays = this.$el.find('.modal').data('consentsDuration');
-        setCookie(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, 'required');
+        cookie.set(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, 'required');
         this._popupAlreadyShown = true && !this.modalShownOnClickEl;
 
         this.$el.find('.media_iframe_video iframe').each((i, iframe) => {

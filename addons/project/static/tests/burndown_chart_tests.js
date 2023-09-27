@@ -5,10 +5,9 @@ import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils
 import { setupControlPanelServiceRegistry, toggleSearchBarMenu, toggleMenuItem, toggleMenuItemOption } from "@web/../tests/search/helpers";
 import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { makeFakeNotificationService, fakeCookieService } from "@web/../tests/helpers/mock_services";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { getFirstElementForXpath } from './project_test_utils';
 
-const serviceRegistry = registry.category("services");
 QUnit.module("Project", {}, () => {
     QUnit.module("Views", (hooks) => {
         let makeViewParams;
@@ -79,7 +78,6 @@ QUnit.module("Project", {}, () => {
             registry.category("services").add("notification", makeFakeNotificationService(notificationMock), {
                 force: true,
             });
-            serviceRegistry.add("cookie", fakeCookieService);
         });
 
         QUnit.module("BurndownChart");

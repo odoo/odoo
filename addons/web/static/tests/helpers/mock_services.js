@@ -203,25 +203,6 @@ export const fakeCommandService = {
     },
 };
 
-export const fakeCookieService = {
-    start() {
-        const cookie = {};
-        return {
-            get current() {
-                return cookie;
-            },
-            setCookie(key, value) {
-                if (value !== undefined) {
-                    cookie[key] = value;
-                }
-            },
-            deleteCookie(key) {
-                delete cookie[key];
-            },
-        };
-    },
-};
-
 export const fakeTitleService = {
     start() {
         let current = {};
@@ -333,7 +314,6 @@ export const mocks = {
     color_scheme: () => fakeColorSchemeService,
     company: () => fakeCompanyService,
     command: () => fakeCommandService,
-    cookie: () => fakeCookieService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,
     notification: makeFakeNotificationService,

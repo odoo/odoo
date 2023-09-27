@@ -3,7 +3,7 @@
 import { markup } from "@odoo/owl";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import dom from "@web/legacy/js/core/dom";
-import {setCookie} from "@web/legacy/js/core/cookie_utils";
+import { cookie } from "@web/core/browser/cookie";;
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { session } from "@web/session";
@@ -538,7 +538,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onCloseIntroClick: function (ev) {
         ev.preventDefault();
-        setCookie('forum_welcome_message', false, 24 * 60 * 60 * 365, 'optional');
+        cookie.set('forum_welcome_message', false, 24 * 60 * 60 * 365, 'optional');
         $('.forum_intro').slideUp();
         return true;
     },

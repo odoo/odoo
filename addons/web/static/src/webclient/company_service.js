@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
+import { cookie } from "@web/core/browser/cookie";
 
 const CIDS_HASH_SEPARATOR = "-";
 
@@ -35,8 +36,8 @@ function computeAllowedCompanyIds(cids) {
 }
 
 export const companyService = {
-    dependencies: ["user", "router", "cookie", "action"],
-    start(env, { user, router, cookie, action }) {
+    dependencies: ["user", "router", "action"],
+    start(env, { user, router, action }) {
         let cids;
         const hash = router.current.hash;
         if ("cids" in hash) {
@@ -47,8 +48,8 @@ export const companyService = {
                 separator = ",";
             }
             cids = parseCompanyIds(hash.cids, separator);
-        } else if ("cids" in cookie.current) {
-            cids = parseCompanyIds(cookie.current.cids);
+        } else if (cookie.get("cids")) {
+            cids = parseCompanyIds(cookie.get("cids"));
         }
 
         const availableCompanies = session.user_companies.allowed_companies;
@@ -69,7 +70,7 @@ export const companyService = {
 
         const cidsHash = formatCompanyIds(allowedCompanyIds, CIDS_HASH_SEPARATOR);
         router.replaceState({ cids: cidsHash }, { lock: true });
-        cookie.setCookie("cids", formatCompanyIds(allowedCompanyIds));
+        cookie.set("cids", formatCompanyIds(allowedCompanyIds));
         user.updateContext({ allowed_company_ids: allowedCompanyIds });
 
         // reload the page if changes are being done to `res.company`
@@ -115,7 +116,7 @@ export const companyService = {
                     { cids: formatCompanyIds(next, CIDS_HASH_SEPARATOR) },
                     { lock: true }
                 );
-                cookie.setCookie("cids", formatCompanyIds(next));
+                cookie.set("cids", formatCompanyIds(next));
                 browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
             },
         };

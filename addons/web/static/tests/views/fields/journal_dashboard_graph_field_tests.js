@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
@@ -85,7 +83,6 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
-        registry.category("services").add("cookie", fakeCookieService);
     });
 
     async function reloadKanbanView(target) {

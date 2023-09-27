@@ -2,6 +2,7 @@
 
 import { Component, onMounted, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
+import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 
 // This component is only use in Kiosk mode
@@ -12,7 +13,6 @@ export class PaymentSuccessPage extends Component {
         this.selfOrder = useSelfOrder();
         this.selfOrder.isOrder();
         this.router = useService("router");
-        this.cookie = useService("cookie");
         this.state = useState({
             onReload: false,
         });
@@ -33,7 +33,7 @@ export class PaymentSuccessPage extends Component {
     setDefautLanguage() {
         const defaultLanguage = this.selfOrder.config.self_ordering_default_language_id;
         if (this.selfOrder.currentLanguage.code !== defaultLanguage.code && !this.state.onReload) {
-            this.cookie.setCookie("frontend_lang", defaultLanguage.code);
+            cookie.set("frontend_lang", defaultLanguage.code);
             window.location.reload();
             this.state.onReload = true;
             return true;

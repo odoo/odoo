@@ -3,6 +3,7 @@
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -55,7 +56,6 @@ export class LivechatService {
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
-     * cookie: ReturnType<typeof import("@web/core/browser/cookie_service").cookieService.start>,
      * bus_service: ReturnType<typeof import("@bus/services/bus_service").busService.start>,
      * rpc: ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>,
      * "mail.chat_window": import("@mail/core/common/chat_window_service").ChatWindowService>,
@@ -64,7 +64,6 @@ export class LivechatService {
      */
     setup(env, services) {
         this.env = env;
-        this.cookie = services.cookie;
         this.busService = services.bus_service;
         this.chatWindowService = services["mail.chat_window"];
         this.rpc = services.rpc;
@@ -106,16 +105,16 @@ export class LivechatService {
      * @param {Object} values
      */
     updateSession(values) {
-        const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
+        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
         Object.assign(session, {
             visitor_uid: this.visitorUid,
             ...values,
         });
-        this.cookie.deleteCookie(this.SESSION_COOKIE);
-        this.cookie.deleteCookie(this.OPERATOR_COOKIE);
-        this.cookie.setCookie(this.SESSION_COOKIE, JSON.stringify(session), 60 * 60 * 24); // 1 day cookie.
+        cookie.delete(this.SESSION_COOKIE);
+        cookie.delete(this.OPERATOR_COOKIE);
+        cookie.set(this.SESSION_COOKIE, JSON.stringify(session), 60 * 60 * 24); // 1 day cookie.
         if (session?.operator_pid) {
-            this.cookie.setCookie(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
+            cookie.set(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
         }
     }
 
@@ -126,12 +125,12 @@ export class LivechatService {
      * never be called if the session was not persisted.
      */
     async leaveSession({ notifyServer = true } = {}) {
-        const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
+        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
         if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
             this.busService.deleteChannel(session.uuid);
             await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
         }
-        this.cookie.deleteCookie(this.SESSION_COOKIE);
+        cookie.delete(this.SESSION_COOKIE);
         this.state = SESSION_STATE.NONE;
         this.sessionInitialized = false;
     }
@@ -187,7 +186,7 @@ export class LivechatService {
                     channel_id: this.options.channel_id,
                     anonymous_name: this.userName,
                     chatbot_script_id: chatbotScriptId,
-                    previous_operator_id: this.cookie.current[this.OPERATOR_COOKIE],
+                    previous_operator_id: cookie.get(this.OPERATOR_COOKIE),
                     persisted: persist,
                 },
                 { shadow: true }
@@ -196,7 +195,7 @@ export class LivechatService {
         if (!threadData?.operator_pid) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.state = SESSION_STATE.NONE;
-            this.cookie.deleteCookie(this.SESSION_COOKIE);
+            cookie.delete(this.SESSION_COOKIE);
             return;
         }
         this.updateSession(threadData);
@@ -236,14 +235,14 @@ export class LivechatService {
     }
 
     get sessionCookie() {
-        return JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "false");
+        return JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "false");
     }
 
     get shouldRestoreSession() {
         if (this.state !== SESSION_STATE.NONE) {
             return false;
         }
-        return Boolean(this.cookie.current[this.SESSION_COOKIE]);
+        return Boolean(cookie.get(this.SESSION_COOKIE));
     }
 
     /**
@@ -274,7 +273,6 @@ export class LivechatService {
 export const livechatService = {
     dependencies: [
         "bus_service",
-        "cookie",
         "mail.chat_window",
         "mail.store",
         "notification",

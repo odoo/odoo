@@ -2,14 +2,13 @@
 
 import { Component } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
-import { useService } from "@web/core/utils/hooks";
+import { cookie } from "@web/core/browser/cookie";
 
 export class LanguagePopup extends Component {
     static template = "pos_self_order.LanguagePopup";
 
     setup() {
         this.selfOrder = useSelfOrder();
-        this.cookie = useService("cookie");
     }
 
     get languages() {
@@ -21,7 +20,7 @@ export class LanguagePopup extends Component {
     }
 
     onClickLanguage(language) {
-        this.cookie.setCookie("frontend_lang", language.code);
+        cookie.set("frontend_lang", language.code);
         window.location.reload();
     }
 }

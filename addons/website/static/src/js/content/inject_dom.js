@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import {getCookie} from '@web/legacy/js/core/cookie_utils';
-import { session } from '@web/session';
+import { cookie as cookieManager } from "@web/core/browser/cookie";
+import { session } from "@web/session";
 
 /**
  * Unhide elements that are hidden by default and that should be visible
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'utm_campaign': 'utmCampaign',
     };
     for (const [name, dsName] of Object.entries(cookieNamesToDataNames)) {
-        const cookie = getCookie(`odoo_${name}`);
+        const cookie = cookieManager.get(`odoo_${name}`);
         if (cookie) {
             // Remove leading and trailing " and '
             htmlEl.dataset[dsName] = cookie.replace(/(^["']|["']$)/g, '');

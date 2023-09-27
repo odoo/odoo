@@ -3,7 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
-import {getCookie, setCookie, deleteCookie} from "@web/legacy/js/core/cookie_utils";
+import { cookie } from "@web/core/browser/cookie";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
@@ -57,8 +57,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             self.imgZoomer = false;
 
             // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
-            if (!getCookie('survey_' + self.options.surveyToken)) {
-                setCookie('survey_' + self.options.surveyToken, self.options.answerToken, 60 * 60 * 24, 'optional');
+            if (!cookie.get('survey_' + self.options.surveyToken)) {
+                cookie.set('survey_' + self.options.surveyToken, self.options.answerToken, 60 * 60 * 24, 'optional');
             }
 
             // Init fields
@@ -426,7 +426,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var selectorsToFadeout = ['.o_survey_form_content'];
         if (options.isFinish && !this.nextScreenResult.has_skipped_questions) {
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
-            deleteCookie('survey_' + self.options.surveyToken);
+            cookie.delete('survey_' + self.options.surveyToken);
         }
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();

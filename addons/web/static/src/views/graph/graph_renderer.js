@@ -12,6 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { cookie } from "@web/core/browser/cookie";
 
 const NO_DATA = _t("No data");
 
@@ -50,7 +51,6 @@ export class GraphRenderer extends Component {
         this.rootRef = useRef("root");
         this.canvasRef = useRef("canvas");
         this.containerRef = useRef("container");
-        this.cookies = useService("cookie");
         this.actionService = useService("action");
 
         this.chart = null;
@@ -220,11 +220,11 @@ export class GraphRenderer extends Component {
                 dataset.stack = domains[dataset.originIndex].description || "";
             }
             // set dataset color
-            dataset.backgroundColor = getColor(index, this.cookies.current.color_scheme);
+            dataset.backgroundColor = getColor(index, cookie.get("color_scheme"));
         }
         if (lineOverlayDataset) {
             // Mutate the lineOverlayDataset to include the config on how it will be displayed.
-            const color = this.cookies.current.color_scheme === "dark" ? "ffffff" : "000000";
+            const color = cookie.get("color_scheme") === "dark" ? "ffffff" : "000000";
             Object.assign(lineOverlayDataset, {
                 type: "line",
                 order: -1,
@@ -316,7 +316,7 @@ export class GraphRenderer extends Component {
                         const fillStyle =
                             label === NO_DATA
                                 ? DEFAULT_BG
-                                : getColor(index, this.cookies.current.color_scheme);
+                                : getColor(index, cookie.get("color_scheme"));
                         return { text, fullText, fillStyle, hidden, index };
                     });
                     return labels;
@@ -357,8 +357,8 @@ export class GraphRenderer extends Component {
     getLineChartData() {
         const { groupBy, domains, stacked, cumulated } = this.model.metaData;
         const data = this.model.data;
-        const color0 = getColor(0, this.cookies.current.color_scheme);
-        const color1 = getColor(1, this.cookies.current.color_scheme);
+        const color0 = getColor(0, cookie.get("color_scheme"));
+        const color1 = getColor(1, cookie.get("color_scheme"));
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
             if (groupBy.length <= 1 && domains.length > 1) {
@@ -369,10 +369,10 @@ export class GraphRenderer extends Component {
                 } else if (dataset.originIndex === 1) {
                     dataset.borderColor = color1;
                 } else {
-                    dataset.borderColor = getColor(index, this.cookies.current.color_scheme);
+                    dataset.borderColor = getColor(index, cookie.get("color_scheme"));
                 }
             } else {
-                dataset.borderColor = getColor(index, this.cookies.current.color_scheme);
+                dataset.borderColor = getColor(index, cookie.get("color_scheme"));
             }
             if (data.labels.length === 1) {
                 // shift of the real value to right. This is done to
@@ -416,10 +416,8 @@ export class GraphRenderer extends Component {
         const data = this.model.data;
         // style/complete data
         // give same color to same groups from different origins
-        const colors = data.labels.map((_, index) =>
-            getColor(index, this.cookies.current.color_scheme)
-        );
-        const borderColor = getBorderWhite(this.cookies.current.color_scheme);
+        const colors = data.labels.map((_, index) => getColor(index, cookie.get("color_scheme")));
+        const borderColor = getBorderWhite(cookie.get("color_scheme"));
         for (const dataset of data.datasets) {
             dataset.backgroundColor = colors;
             dataset.borderColor = borderColor;

@@ -2,13 +2,14 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { Component, useState } from "@odoo/owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { formatText } from "@web/views/fields/formatters";
+import { cookie } from "@web/core/browser/cookie";
 
 export class AceField extends Component {
     static template = "web.AceField";
@@ -22,8 +23,6 @@ export class AceField extends Component {
     static components = { CodeEditor };
 
     setup() {
-        this.cookies = useService("cookie");
-
         this.state = useState({});
         useRecordObserver((record) => {
             this.state.initialValue = formatText(record.data[this.props.name]);
@@ -42,7 +41,7 @@ export class AceField extends Component {
         return this.props.mode === "xml" ? "qweb" : this.props.mode;
     }
     get theme() {
-        return this.cookies.current.color_scheme === "dark" ? "monokai" : "";
+        return cookie.get("color_scheme") === "dark" ? "monokai" : "";
     }
 
     handleChange(editedValue) {
