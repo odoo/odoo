@@ -105,18 +105,27 @@ class TeamMember(models.Model):
         auto_commit = not getattr(threading.current_thread(), 'testing', False)
         result_data = {}
         commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
+        quota_per_member = {member: member._get_assignment_quota(force_quota=force_quota) for member in self}
         counter = 0
         for team in self.crm_team_id:
             team_members = self.filtered(lambda member:
                 member.crm_team_id == team and
                 not member.assignment_optout and
                 member.assignment_max > 0 and
-                member._get_assignment_quota() > 0
-            ).sorted("lead_day_count")
+                quota_per_member.get(member, 0) > 0
+            ).sorted(key=lambda m: quota_per_member.get(m, 0), reverse=True)
             if not team_members:
                 continue
-            quota_per_member = {member: member._get_assignment_quota(force_quota=force_quota) for member in team_members}
-            result_data.update({member: {'assigned': self.env['crm.lead'], "quota": quota} for member, quota in quota_per_member.items()})
+            leads_per_member = {
+                member: self.env["crm.lead"].search(member._get_assignment_domain())
+                for member in team_members
+            }
+            result_data.update(
+                {
+                    member: {"assigned": self.env["crm.lead"], "quota": quota_per_member[member]}
+                    for member in team_members
+                }
+            )
             members_dom = {m: literal_eval(m.assignment_domain or '[]') for m in team_members}
             leads = self.env["crm.lead"].search([
                     ('user_id', '=', False),
@@ -129,7 +138,7 @@ class TeamMember(models.Model):
                     break
                 counter += 1
                 for member in team_members:
-                    if not lead.filtered_domain(members_dom[member]):
+                    if not lead in leads_per_member[member]:
                         continue
                     lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
                         lead.partner_id,
@@ -165,3 +174,9 @@ class TeamMember(models.Model):
         if force_quota:
             return quota
         return quota - self.lead_day_count
+
+    def _get_assignment_domain(self):
+        return expression.AND([
+            literal_eval(self.assignment_domain or '[]'),
+            ['&', '&', ('user_id', '=', False), ('date_open', '=', False), ('team_id', '=', self.crm_team_id.id)]
+        ])

@@ -28,7 +28,7 @@ class Lead(models.Model):
 
     @api.model
     def _iap_enrich_leads_cron(self):
-        ENRICH_DELAY = int(self.env['ir.config_parameter'].sudo().get_param('crm.enrich.delay', default=1))
+        ENRICH_DELAY = float(self.env['ir.config_parameter'].sudo().get_param('crm.enrich.delay', default=1))
         timeDelta = fields.datetime.now() - datetime.timedelta(hours=ENRICH_DELAY)
         # Get all leads not lost nor won (lost: active = False)
         leads = self.search([
