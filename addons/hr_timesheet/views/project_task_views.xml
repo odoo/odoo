@@ -163,7 +163,7 @@
                     <field name="effective_hours" column_invisible="True"/>
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" invisible="allocated_hours == 0" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-Tasks Total Effective Hours" optional="hide"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-tasks Total Effective Hours" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" invisible="allocated_hours == 0"/>
                     <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" options="{'overflow_class': 'bg-danger'}" />
