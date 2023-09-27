@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_self_order_sale.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_self_order_sale.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('absolute-content-price')]" position="before">
             <div t-if="optionalProducts.length" class="upsale-content d-flex flex-column justify-content-center gap-3 h-75 border-top bg-100 pt-5 p-4">
                 <h2 class="m-0 fw-bolder">Want to add something ?</h2>
