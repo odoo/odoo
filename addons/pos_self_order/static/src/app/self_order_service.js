@@ -13,6 +13,7 @@ import { batched } from "@web/core/utils/timing";
 import { useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/browser/cookie";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -20,11 +21,10 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { rpc, notification, router, cookie }) {
+    async setup(env, { rpc, notification, router }) {
         // services
         this.notification = notification;
         this.router = router;
-        this.cookie = cookie;
         this.env = env;
         this.rpc = rpc;
 
@@ -80,14 +80,14 @@ export class SelfOrder extends Reactive {
 
     initData() {
         this.currentLanguage = this.config.self_ordering_available_language_ids.find(
-            (l) => l.code === this.cookie.current.frontend_lang
+            (l) => l.code === cookie.get("frontend_lang")
         );
 
         if (this.config.self_ordering_default_language_id && !this.currentLanguage) {
             this.currentLanguage = this.config.self_ordering_default_language_id;
         }
 
-        this.cookie.setCookie("frontend_lang", this.currentLanguage.code);
+        cookie.set("frontend_lang", this.currentLanguage.code);
 
         this.products = this.products.map((p) => {
             const product = new Product(p, this.config.iface_tax_included);
@@ -437,9 +437,9 @@ export class SelfOrder extends Reactive {
 }
 
 export const selfOrderService = {
-    dependencies: ["rpc", "notification", "router", "cookie"],
-    async start(env, { rpc, notification, router, cookie }) {
-        return new SelfOrder(env, { rpc, notification, router, cookie }).ready;
+    dependencies: ["rpc", "notification", "router"],
+    async start(env, { rpc, notification, router }) {
+        return new SelfOrder(env, { rpc, notification, router }).ready;
     },
 };
 

@@ -2,7 +2,7 @@
 
 import dom from '@web/legacy/js/core/dom';
 import legacyEnv from '@web/legacy/js/public/public_env';
-import {getCookie} from '@web/legacy/js/core/cookie_utils';
+import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { registry } from '@web/core/registry';
 
@@ -32,7 +32,7 @@ function getLang() {
     var html = document.documentElement;
     return (html.getAttribute('lang') || 'en_US').replace('-', '_');
 }
-const lang = getCookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
+const lang = cookie.get('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 // momentjs don't have config for en_US, so avoid useless RPC
 var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
 

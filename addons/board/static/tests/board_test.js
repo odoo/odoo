@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { BoardAction } from "@board/board_action";
-import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
@@ -726,8 +725,6 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("graphs in dashboard aren't squashed", async function (assert) {
-        registry.category("services").add("cookie", fakeCookieService);
-
         serverData.views["partner,4,graph"] =
             '<graph><field name="int_field" type="measure"/></graph>';
 

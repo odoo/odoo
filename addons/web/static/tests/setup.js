@@ -16,6 +16,7 @@ transitionConfig.disabled = true;
 import { patch } from "@web/core/utils/patch";
 import { App, EventBus, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
+import { cookie } from "@web/core/browser/cookie";
 
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
@@ -66,6 +67,28 @@ function patchOwlApp() {
             if (!this.destroyed) {
                 super.destroy(...arguments);
                 this.destroyed = true;
+            }
+        },
+    });
+}
+
+function patchCookie() {
+    const cookieJar = {};
+
+    patchWithCleanup(cookie, {
+        get _cookieMonster() {
+            return Object.entries(cookieJar)
+                .filter(([, value]) => value !== "kill")
+                .map((cookie) => cookie.join("="))
+                .join("; ");
+        },
+        set _cookieMonster(value) {
+            const cookies = value.split("; ");
+            for (const cookie of cookies) {
+                const [key, value] = cookie.split(/=(.*)/);
+                if (!["path", "max-age"].includes(key)) {
+                    cookieJar[key] = value;
+                }
             }
         },
     });
@@ -338,6 +361,7 @@ export async function setupTests() {
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
+        patchCookie();
         patchBodyAddEventListener();
         patchEventBus();
         patchLegacyBus();

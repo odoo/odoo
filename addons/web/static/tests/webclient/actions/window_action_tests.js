@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeServerError } from "@web/../tests/helpers/mock_server";
-import { fakeCookieService, makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 import { browser } from "@web/core/browser/browser";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
@@ -1042,7 +1042,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("restore previous view state when switching back", async function (assert) {
-        registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.unshift([false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });
@@ -1083,7 +1082,6 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("view switcher is properly highlighted in graph view", async function (assert) {
         assert.expect(4);
-        registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.splice(1, 1, [false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });

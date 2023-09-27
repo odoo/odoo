@@ -151,7 +151,6 @@ Featuring
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
-            'web/static/src/legacy/js/core/cookie_utils.js',
 
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',

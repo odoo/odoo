@@ -2,11 +2,12 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start, setCookie, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
+import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 
 import { contains } from "@web/../tests/utils";
+import { cookie } from "@web/core/browser/cookie";
 
 QUnit.module("autopopup");
 
@@ -25,7 +26,7 @@ QUnit.test("persisted session", async () => {
         livechat_operator_id: pyEnv.adminPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    setCookie("im_livechat_session", JSON.stringify(channelInfo));
+    cookie.set("im_livechat_session", JSON.stringify(channelInfo));
     start();
     await contains(".o-mail-ChatWindow");
 });

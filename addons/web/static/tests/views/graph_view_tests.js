@@ -29,7 +29,6 @@ import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
 import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
-import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { Domain } from "@web/core/domain";
 import { SampleServer } from "@web/model/sample_server";
 
@@ -315,7 +314,6 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
 
         target = getFixture();
-        registry.category("services").add("cookie", fakeCookieService);
     });
 
     QUnit.module("GraphView");

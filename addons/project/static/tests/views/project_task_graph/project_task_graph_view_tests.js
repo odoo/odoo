@@ -1,8 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-
-import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { getFixture } from "@web/../tests/helpers/utils";
 import { checkLabels, checkLegend, selectMode } from "@web/../tests/views/graph_view_tests";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -61,7 +58,6 @@ QUnit.module("Project", (hooks) => {
         setupViewRegistries();
 
         target = getFixture();
-        registry.category("services").add("cookie", fakeCookieService);
     });
 
     QUnit.module("ProjectTaskGraphView");
