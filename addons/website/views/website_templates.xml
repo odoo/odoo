@@ -899,7 +899,7 @@
 <template id="template_header_sales_one" inherit_id="website.layout" name="Template Header Sale 1" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
-            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
+            <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
             <div id="o_main_nav">
                 <div aria-label="Top" class="container d-flex justify-content-between py-3">
@@ -967,6 +967,7 @@
         </t>
         <t t-call="website.template_header_mobile">
             <t t-set="_txt_elt_content" t-valuef="list"/>
+            <t t-set="_extra_navbar_classes" t-valuef="o_header_force_no_radius"/>
         </t>
     </xpath>
 </template>
@@ -990,7 +991,7 @@
 <template id="template_header_sales_two" inherit_id="website.layout" name="Template Header Sale 2" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
-            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
+            <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
             <div id="o_main_nav">
                 <div class="o_header_hide_on_scroll">
@@ -1073,6 +1074,7 @@
         </t>
         <t t-call="website.template_header_mobile">
             <t t-set="_txt_elt_content" t-valuef="sentence"/>
+            <t t-set="_extra_navbar_classes" t-valuef="o_header_force_no_radius"/>
         </t>
     </xpath>
 </template>
@@ -1093,7 +1095,7 @@
 <template id="template_header_sales_three" inherit_id="website.layout" name="Template Header Sale 3" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
-            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
+            <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm rounded-0"/>
 
             <div id="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')"
@@ -1169,6 +1171,7 @@
         </t>
         <t t-call="website.template_header_mobile">
             <t t-set="_txt_elt_content" t-valuef="list"/>
+            <t t-set="_extra_navbar_classes" t-valuef="o_header_force_no_radius"/>
         </t>
     </xpath>
 </template>
@@ -1177,7 +1180,7 @@
 <template id="template_header_sales_four" inherit_id="website.layout" name="Template Header Sale 4" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar">
-            <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top d-none d-lg-block p-0 shadow-sm z-index-1"/>
+            <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 shadow-sm z-index-1"/>
 
             <div id="o_main_nav">
                 <div aria-label="Top" class="container d-flex">
@@ -1258,6 +1261,7 @@
         </t>
         <t t-call="website.template_header_mobile">
             <t t-set="_txt_elt_content" t-valuef="mail"/>
+            <t t-set="_extra_navbar_classes" t-valuef="o_header_force_no_radius"/>
         </t>
     </xpath>
 </template>
