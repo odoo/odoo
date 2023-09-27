@@ -119,6 +119,7 @@ export const mailCoreWeb = {
     start(env, services) {
         const mailCoreWeb = reactive(new MailCoreWeb(env, services));
         mailCoreWeb.setup();
+        mailCoreWeb.messagingService.initialize();
         return mailCoreWeb;
     },
 };

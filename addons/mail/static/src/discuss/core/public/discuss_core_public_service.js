@@ -28,6 +28,7 @@ export const discussCorePublic = {
     start(env, services) {
         const discussPublic = reactive(new DiscussCorePublic(env, services));
         discussPublic.setup();
+        discussPublic.messagingService.initialize();
         return discussPublic;
     },
 };

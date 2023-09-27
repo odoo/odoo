@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussClientAction">
-        <Discuss/>
+        <Discuss t-if="this.messaging.isReady"/>
     </t>
 
 </templates>

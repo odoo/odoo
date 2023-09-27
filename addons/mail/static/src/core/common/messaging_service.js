@@ -179,7 +179,6 @@ export const messagingService = {
      */
     start(env, services) {
         const messaging = new Messaging(env, services);
-        messaging.initialize();
         return messaging;
     },
 };
