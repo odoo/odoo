@@ -2558,7 +2558,7 @@ class Order extends PosModel {
                 return paymentline.export_for_printing();
             });
         let partner = this.partner;
-        let cashier = this.pos.get_cashier();
+        let cashier = this.cashier;
         let company = this.pos.company;
         let date    = new Date();
 
