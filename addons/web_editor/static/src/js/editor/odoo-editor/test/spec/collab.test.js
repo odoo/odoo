@@ -574,7 +574,7 @@ describe('Collaboration', () => {
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
                 afterCreate: clientInfos => {
-                    clientInfos.c1.editor.editable.prepend(...parseHTML(unformat(`
+                    clientInfos.c1.editor.editable.prepend(...parseHTML(clientInfos.c1.editor.document, unformat(`
                         <div data-oe-protected="true">
                             <p id="true"><br></p>
                             <div data-oe-protected="false">
@@ -621,7 +621,7 @@ describe('Collaboration', () => {
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
                 afterCreate: clientInfos => {
-                    clientInfos.c1.editor.editable.prepend(...parseHTML(unformat(`
+                    clientInfos.c1.editor.editable.prepend(...parseHTML(clientInfos.c1.editor.document, unformat(`
                         <div data-oe-transient-content="true">
                             <p>secret</p>
                         </div>
@@ -666,13 +666,13 @@ describe('Collaboration', () => {
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
                 afterCreate: async clientInfos => {
-                    clientInfos.c1.editor.editable.append(...parseHTML(unformat(`
+                    clientInfos.c1.editor.editable.append(...parseHTML(clientInfos.c1.editor.document, unformat(`
                         <div class="process">
                             <p>secret</p>
                         </div>
                     `)).children);
                     clientInfos.c1.editor.historyStep();
-                    clientInfos.c1.editor.editable.append(...parseHTML(unformat(`
+                    clientInfos.c1.editor.editable.append(...parseHTML(clientInfos.c1.editor.document, unformat(`
                         <p>post-process</p>
                     `)).children);
                     clientInfos.c1.editor.historyStep();

@@ -15,7 +15,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
@@ -27,7 +27,7 @@ describe('insert HTML', () => {
                 // This scenario is only possible with the allowInlineAtRoot option.
                 contentBefore: '<p><br></p>[]',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
@@ -38,7 +38,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[]b<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
@@ -49,7 +49,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[]b<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
@@ -60,7 +60,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[]e<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<p>b</p><p>c</p><p>d</p>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>b</p><p>c</p><p>d</p>'));
                 },
                 contentAfter: '<p>ab</p><p>c</p><p>d[]e<br></p>',
             });
@@ -69,7 +69,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<div><p>content</p></div>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<div><p>content</p></div>'));
                 },
                 contentAfter: '<div><p>content</p></div><p>[]<br></p>',
             });
@@ -78,7 +78,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<pre>abc[]<br>ghi</pre>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<pre>def</pre>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<pre>def</pre>'));
                 },
                 contentAfter: '<pre>abcdef[]<br>ghi</pre>',
             });
@@ -87,7 +87,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>content[]</p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>'));
                 },
                 contentAfter: '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
             });
@@ -97,7 +97,7 @@ describe('insert HTML', () => {
                 contentBefore: '<p>content</p>',
                 stepFunction: async editor => {
                     setCursorEnd(editor.editable, false);
-                    await editor.execCommand('insert', parseHTML('<p>def</p>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>def</p>'));
                 },
                 contentAfter: '<p>content</p><p>def[]</p>',
             });
@@ -107,7 +107,7 @@ describe('insert HTML', () => {
                 contentBefore: '<p>content</p>',
                 stepFunction: async editor => {
                     setCursorEnd(editor.editable, false);
-                    await editor.execCommand('insert', parseHTML('<div>abc</div><p>def</p>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<div>abc</div><p>def</p>'));
                 },
                 contentAfter: '<p>content</p><div>abc</div><p>def[]</p>',
             });
@@ -118,7 +118,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[a]<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
                 contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
@@ -128,7 +128,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b]c<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
+                    await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]c<br></p>',
