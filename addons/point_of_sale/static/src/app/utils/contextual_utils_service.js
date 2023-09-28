@@ -403,6 +403,48 @@ export const contextualUtilsService = {
             }
             return taxes;
         }
+        function _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
+            if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
+                correspondingProduct.applicablePricelistItems[pricelist.id] = [];
+            }
+            correspondingProduct.applicablePricelistItems[pricelist.id].push(pricelistItem);
+        }
+        function initializeProducts(products, productClass, params) {
+            const productMap = {};
+            const productTemplateMap = {};
+
+            const modelProducts = products.map((product) => {
+                product.applicablePricelistItems = {};
+                productMap[product.id] = product;
+                productTemplateMap[product.product_tmpl_id[0]] = (
+                    productTemplateMap[product.product_tmpl_id[0]] || []
+                ).concat(product);
+                return new productClass({ env, ...params }, product);
+            });
+
+            for (const pricelist of cache.pricelists) {
+                for (const pricelistItem of pricelist.items) {
+                    if (pricelistItem.product_id) {
+                        const product_id = pricelistItem.product_id[0];
+                        const correspondingProduct = productMap[product_id];
+                        if (correspondingProduct) {
+                            _assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                        }
+                    } else if (pricelistItem.product_tmpl_id) {
+                        const product_tmpl_id = pricelistItem.product_tmpl_id[0];
+                        const correspondingProducts = productTemplateMap[product_tmpl_id];
+                        for (const correspondingProduct of correspondingProducts || []) {
+                            _assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                        }
+                    } else {
+                        for (const correspondingProduct of products) {
+                            _assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                        }
+                    }
+                }
+            }
+            return modelProducts;
+        }
 
         env.utils = {
             formatCurrency,
@@ -415,6 +457,7 @@ export const contextualUtilsService = {
             computePriceAfterFp,
             get_taxes_after_fp,
             getTaxesByIds,
+            initializeProducts,
         };
         env.cache = cache;
     },

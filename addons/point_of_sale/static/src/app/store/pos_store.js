@@ -278,48 +278,8 @@ export class PosStore extends Reactive {
     addPartners(partners) {
         return this.db.add_partners(partners);
     }
-    _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
-        if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
-            correspondingProduct.applicablePricelistItems[pricelist.id] = [];
-        }
-        correspondingProduct.applicablePricelistItems[pricelist.id].push(pricelistItem);
-    }
     _loadProductProduct(products) {
-        const productMap = {};
-        const productTemplateMap = {};
-
-        const modelProducts = products.map((product) => {
-            product.pos = this;
-            product.applicablePricelistItems = {};
-            productMap[product.id] = product;
-            productTemplateMap[product.product_tmpl_id[0]] = (
-                productTemplateMap[product.product_tmpl_id[0]] || []
-            ).concat(product);
-            return new Product({ env: this.env }, product);
-        });
-
-        for (const pricelist of this.pricelists) {
-            for (const pricelistItem of pricelist.items) {
-                if (pricelistItem.product_id) {
-                    const product_id = pricelistItem.product_id[0];
-                    const correspondingProduct = productMap[product_id];
-                    if (correspondingProduct) {
-                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
-                    }
-                } else if (pricelistItem.product_tmpl_id) {
-                    const product_tmpl_id = pricelistItem.product_tmpl_id[0];
-                    const correspondingProducts = productTemplateMap[product_tmpl_id];
-                    for (const correspondingProduct of correspondingProducts || []) {
-                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
-                    }
-                } else {
-                    for (const correspondingProduct of products) {
-                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
-                    }
-                }
-            }
-        }
-        this.db.add_products(modelProducts);
+        this.db.add_products(this.env.utils.initializeProducts(products, Product, { pos: this }));
     }
     _loadPosPaymentMethod() {
         // need to do this for pos_iot due to reference, this is a temporary fix
