@@ -275,6 +275,13 @@ class MergePartnerAutomatic(models.TransientModel):
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
+
+        # remove address fields if dst_partner has some set
+        address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+        if any(getattr(dst_partner, attr, None) for attr in address_fields):
+            for address_field in address_fields:
+                values.pop(address_field, None)
+
         dst_partner.write(values)
         for company, vals in values_by_company.items():
             dst_partner.with_company(company).sudo().write(vals)
