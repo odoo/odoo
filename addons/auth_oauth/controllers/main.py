@@ -149,6 +149,8 @@ class OAuthController(http.Controller):
                 resp = request.redirect(_get_login_redirect_url(pre_uid, url), 303)
                 resp.autocorrect_location_header = False
 
+                # force the transaction on request.env to reload
+                request.env.cr.commit()
                 # Since /web is hardcoded, verify user has right to land on it
                 if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user._is_internal():
                     resp.location = '/'
