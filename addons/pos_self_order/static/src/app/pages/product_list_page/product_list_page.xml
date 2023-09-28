@@ -58,7 +58,7 @@
                     <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
                     <h2 t-if="availableProducts.length > 0" class="pt-3 pb-1 px-4 m-0 fs-3" t-esc="category.name" />
                     <t t-foreach="availableProducts" t-as="product" t-key="product.id">
-                        <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard" />
+                        <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard"/>
                     </t>
                 </section>
                 <p t-if="getFilteredProducts(selfOrder.products).length === 0" class="mx-auto mt-3 text-center">No products found</p>

@@ -48,13 +48,6 @@ class ProductTemplate(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
     )
-    description_ecommerce = fields.Html(
-        string="eCommerce Description",
-        translate=html_translate,
-        sanitize_overridable=True,
-        sanitize_attributes=False,
-        sanitize_form=False,
-    )
 
     alternative_product_ids = fields.Many2many(
         string="Alternative Products",

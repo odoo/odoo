@@ -117,7 +117,7 @@ class ProductProduct(models.Model):
                 "attributes": self._get_attributes(pos_config),
                 "name": self._get_name(),
                 "id": self.id,
-                "description_sale": self.description_sale,
+                "description_ecommerce": self.description_ecommerce,
                 "pos_categ_ids": self.pos_categ_ids.mapped("name") or ["Other"],
                 "pos_combo_ids": self.combo_ids.mapped("id") or False,
                 "is_pos_groupable": self.uom_id.is_pos_groupable,

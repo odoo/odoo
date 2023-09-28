@@ -12,9 +12,9 @@
                     onerror="this.remove()" />
                 <div class="d-flex flex-column flex-grow-1 w-75 justify-content-start p-4 rounded shadow-sm bg-view overflow-auto">
                     <h1 class="fw-bolder" t-esc="product.name"/>
-                    <span t-if="product.description_sale"
+                    <span t-if="product.description_ecommerce"
                         class="o_self_order_main_desc flex-grow-1 pb-3 mb-3 bg-view text-muted "
-                        t-esc="product.description_sale"
+                        t-esc="product.description_ecommerce"
                     />
                     <span class="fs-3 fw-bolder" t-esc="selfOrder.formatMonetary(product.prices)"/>
                 </div>
