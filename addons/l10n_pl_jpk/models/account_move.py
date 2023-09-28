@@ -27,7 +27,7 @@ class AccountMove(models.Model):
     )
     l10n_pl_show_delivery_date = fields.Boolean(compute='_compute_l10n_pl_show_delivery_date')
 
-    @api.depends('l10n_pl_delivery_date')
+    @api.depends('country_code', 'l10n_pl_delivery_date')
     def _compute_l10n_pl_show_delivery_date(self):
         for move in self:
-            move.l10n_pl_show_delivery_date = move.l10n_pl_delivery_date and move.is_sale_document()
+            move.l10n_pl_show_delivery_date = move.l10n_pl_delivery_date and move.is_sale_document() and move.country_code == 'PL'
