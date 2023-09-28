@@ -446,7 +446,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'PeriodoLiquidacion': {'Ejercicio': '2019', 'Periodo': '01'},
                 'FacturaExpedida': {
                     'TipoFactura': 'F1',
-                    'ClaveRegimenEspecialOTrascendencia': '01',
+                    'ClaveRegimenEspecialOTrascendencia': '02',
                     'DescripcionOperacion': 'manual',
                     'TipoDesglose': {
                         'DesgloseTipoOperacion': {

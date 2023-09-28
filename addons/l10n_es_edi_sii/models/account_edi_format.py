@@ -286,11 +286,8 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-
-                if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02' if export_exempts else '01'
             else:
                 info['IDFactura']['IDEmisorFactura'] = partner_info
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
