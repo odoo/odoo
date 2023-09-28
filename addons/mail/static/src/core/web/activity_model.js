@@ -53,6 +53,9 @@ export class Activity extends Record {
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];
         }
+        if (!data.icon) {
+            data.icon = "fa-tasks";
+        }
         assignDefined(activity, data);
         if (broadcast) {
             this.env.services["mail.activity"].broadcastChannel?.postMessage({
