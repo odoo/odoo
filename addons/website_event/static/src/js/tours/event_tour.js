@@ -4,12 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 import { markup } from "@odoo/owl";
+import { patch } from "@web/core/utils/patch";
 
-EventAdditionalTourSteps.include({
-
-    init: function() {
-        this._super.apply(this, arguments);
-    },
+patch(EventAdditionalTourSteps.prototype, {
 
     _get_website_event_steps: function () {
         this._super.apply(this, arguments);

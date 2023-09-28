@@ -1,16 +1,14 @@
 /** @odoo-module **/
 
-    import Class from "@web/legacy/js/core/class";
+class FinalSteps {
 
-    var FinalSteps = Class.extend({
+    _getSteps() {
+        return [{
+            trigger: 'h3:contains("Booth Registration completed!")',
+            run: function() {},
+        }];
+    }
 
-        _getSteps: function () {
-            return [{
-                trigger: 'h3:contains("Booth Registration completed!")',
-                run: function() {},
-            }];
-        },
+}
 
-    });
-
-    export default FinalSteps;
+export default FinalSteps;

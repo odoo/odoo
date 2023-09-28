@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import Class from "@web/legacy/js/core/class";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 /**
@@ -148,8 +147,8 @@ OdooEvent.prototype.is_stopped = function () {
  * http://backbonejs.org
  *
  */
-var Events = Class.extend({
-    on : function (events, callback, context) {
+class Events {
+    on(events, callback, context) {
         var ev;
         events = events.split(/\s+/);
         var calls = this._callbacks || (this._callbacks = {});
@@ -161,9 +160,9 @@ var Events = Class.extend({
             list.tail = tail.next = {};
         }
         return this;
-    },
+    }
 
-    off : function (events, callback, context) {
+    off(events, callback, context) {
         var ev, calls, node;
         if (!events) {
             delete this._callbacks;
@@ -183,9 +182,9 @@ var Events = Class.extend({
             }
         }
         return this;
-    },
+    }
 
-    callbackList: function () {
+    callbackList() {
         var lst = [];
         for (const [eventName, el] of Object.entries(this._callbacks || {})) {
             var node = el;
@@ -194,9 +193,9 @@ var Events = Class.extend({
             }
         }
         return lst;
-    },
+    }
 
-    trigger : function (events) {
+    trigger(events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
             return this;
@@ -227,7 +226,7 @@ var Events = Class.extend({
         }
         return this;
     }
-});
+}
 
 /**
  * Mixin containing an event system. Events are also registered by specifying the target object
