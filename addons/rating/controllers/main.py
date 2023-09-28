@@ -26,6 +26,13 @@ class Rating(http.Controller):
 
         rating, record_sudo = self._get_rating_and_record(token)
 
+        if not request.env.user._is_public() and \
+                request.env.user.partner_id.commercial_partner_id != rating.partner_id.commercial_partner_id:
+            return request.render('rating.rating_external_page_invalid_partner', {
+                'model_name': request.env['ir.model']._get(rating.res_model).display_name,
+                'name': record_sudo.display_name,
+                'web_base_url': rating.get_base_url(),
+            })
         record_sudo.rating_apply(
             rate,
             rating=rating,
