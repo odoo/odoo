@@ -156,7 +156,8 @@
                 <field name="name"/>
                 <field name="date_start"/>
                 <field string="Reference Working Time" name="resource_calendar_id" optional="hide"/>
-                <field name="under_contract_state" widget="state_selection" optional="hide"/>
+                <field name="under_contract_state" widget="state_selection" optional="hide"
+                    options="{'hide_label': False}"/>
                 <field name="structure_type_id" optional="hide"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="wage" optional="hide"/>
