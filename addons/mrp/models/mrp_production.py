@@ -2225,7 +2225,7 @@ class MrpProduction(models.Model):
             'default_next_serial_count': self.product_qty - self.qty_produced,
             'default_multiple_lot_components_names': ",".join(c.display_name for c in multiple_lot_components) if multiple_lot_components else None,
             'default_mark_as_done': mark_as_done,
-            'default_list_of_component': list_of_component
+            'default_list_of_component': list_of_component,
         }
         return action
 
@@ -2754,3 +2754,7 @@ class MrpProduction(models.Model):
         else:
             placeholder_value = ""
         return placeholder_value
+
+    def action_generate_lot_for_finish_product(self, first_lot, count):
+        generated_serial_numbers = "\n".join(lot['lot_name'] for lot in self.env['stock.lot'].generate_lot_names(first_lot, count))
+        return generated_serial_numbers

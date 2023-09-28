@@ -10,17 +10,28 @@
                         <field name="production_id" invisible="1"/>
                         <field name="next_serial_number" invisible="1"/>
                     </group>
+                    <group>
+                        <group>
+                            <field name="next_serial_number"/>
+                        </group>
+                        <group>
+                            <label for="next_serial_count"/>
+                            <div class="o_row">
+                                <span><field name="next_serial_count"/></span>
+                                <button name="generate_serial_numbers_production" type="object" class="btn btn-secondary" title="Generate Serial Numbers">
+                                    <span>Generate</span>
+                                </button>
+                            </div>
+                        </group>
+                    </group>
                     <span>Write one line per finished product to produce, with serial numbers as follows:</span><br/><br/>
                     <field name="list_of_component" readonly="1"/>
                     <field class="form-control my-2" name="lot_numbers" placeholder="" widget="lot_numbers"/>
                     <footer class="d-flex justify-content-between">
                         <div class="d-flex gap-1">
-                            <button name="apply" string="Produce" type="object" class="btn-primary" context="{'make_mo_done': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
-                            <button name="apply" string="Prepare MO" type="object" class="btn-primary" context="{'make_mo_confirmed': True}" modifiers="{'invisible': [('show_apply', '=', False)]}" />
+                            <button name="apply" string="Produce" type="object" class="btn-primary" context="{'make_mo_done': True}" invisible="not show_apply"/>
+                            <button name="apply" string="Prepare MO" type="object" class="btn-primary" context="{'make_mo_confirmed': True}" invisible="not show_apply"/>
                             <button string="Cancel" class="btn-secondary" special="cancel" />
-                        </div>
-                        <div>
-                            <button name="action_open_generate_serial_production" string="Generate Serials" type="object" class="float-end btn-link"/>
                         </div>
                     </footer>
                 </form>
