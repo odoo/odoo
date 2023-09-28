@@ -28,24 +28,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="product_configurator">
+                        <div class="col-12 col-lg-6 o_setting_box" invisble="1" id="product_configurator">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_product_configurator"/>
+                                <field name="module_sale_product_configurator" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_sale_product_configurator"/>
-                                <div class="text-muted">
+                                <label for="module_sale_product_configurator" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Select product attributes and optional products from the sales order
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="product_matrix">
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="1" id="product_matrix">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_product_matrix"/>
+                                <field name="module_sale_product_matrix" invisible="1" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_sale_product_matrix" string="Variant Grid Entry"/>
-                                <div class="text-muted">
+                                <label for="module_sale_product_matrix" invisible="1" string="Variant Grid Entry"/>
+                                <div class="text-muted" invisible="1">
                                     Add several variants to an order from a grid
                                 </div>
                             </div>
@@ -95,28 +95,28 @@
                     </div>
                     <h2>Pricing</h2>
                     <div class="row mt16 o_settings_container" id="pricing_setting_container">
-                      <div class="col-12 col-lg-6 o_setting_box"
+                      <div class="col-12 col-lg-6 o_setting_box" invisible="1"
                            id="discount_sale_order_lines"
                            title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration).">
                            <div class="o_setting_left_pane">
-                               <field name="group_discount_per_so_line"/>
+                               <field name="group_discount_per_so_line" invisible="1"/>
                            </div>
                            <div class="o_setting_right_pane">
-                               <label for="group_discount_per_so_line"/>
-                               <div class="text-muted">
+                               <label for="group_discount_per_so_line" invisible="1"/>
+                               <div class="text-muted" invisible="1">
                                    Grant discounts on sales order lines
                                </div>
                            </div>
                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box"
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="1"
                             id="coupon_settings"
                             title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_coupon"/>
+                                <field name="module_sale_coupon" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_sale_coupon"/>
-                                <div class="text-muted" id="sale_coupon">
+                                <label for="module_sale_coupon" invisible="1"/>
+                                <div class="text-muted" invisible="1" id="sale_coupon">
                                     Manage promotion &amp; coupon programs
                                 </div>
                             </div>
@@ -157,15 +157,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box"
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="1"
                             id="show_margins"
                             title="The margin is computed as the sum of product sales prices minus the cost set in their detail form.">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_margin"/>
+                                <field name="module_sale_margin" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_sale_margin"/>
-                                <div class="text-muted">
+                                <label for="module_sale_margin" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Show margins on orders
                                 </div>
                             </div>
