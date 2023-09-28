@@ -595,7 +595,7 @@ export class OdooEditor extends EventTarget {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
                         html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
                         html += '</span>';
-                        this.execCommand('insert', parseHTML(html));
+                        this.execCommand('insert', parseHTML(this.document, html));
                     },
                 },
                 {
@@ -608,7 +608,7 @@ export class OdooEditor extends EventTarget {
                         let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
                         html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
                         html += '</span>';
-                        this.execCommand('insert', parseHTML(html));
+                        this.execCommand('insert', parseHTML(this.document, html));
                     },
                 },
                 ...(this.options.commands || []),
@@ -3206,7 +3206,7 @@ export class OdooEditor extends EventTarget {
      */
     _prepareClipboardData(clipboardData) {
         const container = document.createElement('fake-container');
-        container.append(parseHTML(clipboardData));
+        container.append(parseHTML(this.document, clipboardData));
 
         for (const tableElement of container.querySelectorAll('table')) {
             tableElement.classList.add('table', 'table-bordered', 'o_table');
@@ -3714,7 +3714,7 @@ export class OdooEditor extends EventTarget {
                 this._onTabulationInTable(ev);
             } else if (!ev.shiftKey && sel.isCollapsed && !closestLi) {
                 // Indent text (collapsed selection).
-                this.execCommand('insert', parseHTML(tabHtml));
+                this.execCommand('insert', parseHTML(this.document, tabHtml));
             } else {
                 // Indent/outdent selection.
                 // Split traversed nodes into list items and the rest.
@@ -3776,7 +3776,7 @@ export class OdooEditor extends EventTarget {
                         tab.remove();
                     };
                 } else {
-                    const tab = parseHTML(tabHtml);
+                    const tab = parseHTML(this.document, tabHtml);
                     for (const block of new Set([...nonListItems].map(node => closestBlock(node)).filter(node => node))) {
                         block.prepend(tab.cloneNode(true));
                     }
@@ -4675,7 +4675,7 @@ export class OdooEditor extends EventTarget {
             setSelection(...start, ...start, false);
         }
         if (odooEditorHtml && targetSupportsHtmlContent) {
-            const fragment = parseHTML(odooEditorHtml);
+            const fragment = parseHTML(this.document, odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);

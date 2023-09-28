@@ -2536,7 +2536,7 @@ export function rgbToHex(rgb = '', node = null) {
     }
 }
 
-export function parseHTML(html) {
+export function parseHTML(document, html) {
     const fragment = document.createDocumentFragment();
     const parser = new DOMParser();
     const parsedDocument = parser.parseFromString(html, 'text/html');

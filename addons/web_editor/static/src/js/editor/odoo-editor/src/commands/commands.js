@@ -657,7 +657,7 @@ export const editorCommands = {
             const newPosition = rightPos(newAnchorNode);
             setSelection(...newPosition, ...newPosition, false);
         }
-        const [table] = editorCommands.insert(editor, parseHTML(tableHtml));
+        const [table] = editorCommands.insert(editor, parseHTML(editor.document, tableHtml));
         setCursorStart(table.querySelector('td'));
     },
     addColumn: (editor, beforeOrAfter, referenceCell) => {
