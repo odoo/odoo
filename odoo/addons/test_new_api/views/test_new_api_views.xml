@@ -372,5 +372,82 @@
             </field>
         </record>
 
+        <!-- python expression in view and groups -->
+        <record id="view_model_some_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_new_api.model.some_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="a" readonly="not d" groups="base.group_erp_manager"/>
+                    <field name="a" readonly="not k" groups="base.group_public"/>  <!-- valid from 'ir.model.access': 'base.group_public' -->
+                    <field name="b" readonly="not d" groups="base.group_system"/>
+                    <field name="c" readonly="d" groups="base.group_erp_manager,base.group_system"/>
+                    <field name="d" readonly="a" groups="base.group_portal"/>
+                    <field name="d" readonly="e"/>
+                    <field name="f" readonly="e"/>
+                    <field name="f" readonly="e" groups="base.group_system"/>
+                    <field name="f" readonly="e" groups="base.group_user"/>
+                    <field name="h" readonly="g"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_some_access_tree" model="ir.ui.view">
+            <field name="name">Test attrs and groups tree</field>
+            <field name="model">test_new_api.model.some_access</field>
+            <field name="arch" type="xml">
+                <tree string="Test python expression in tree" decoration-muted="a == 1">
+                    <field name="b"/>
+                    <field name="c"/>
+                    <field name="d" decoration-warning="c"/>
+                    <groupby name="g_id">
+                        <button string="Action" type="object" name="action_full" invisible="ab != 1"/>
+                    </groupby>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_model_all_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_new_api.model.all_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ab" readony="cd" groups="base.group_system"/>
+                    <field name="cd" readonly="ab"/>
+                    <field name="cd" readonly="ab" groups="base.group_system"/>
+                    <field name="cd" readonly="ab" groups="!base.group_system"/>
+                    <div invisible="ef">stuff</div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_no_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_new_api.model.no_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ab" readony="cd" groups="base.group_system"/>
+                    <field name="cd" readonly="ab"/>
+                    <field name="cd" readonly="ab" groups="base.group_system"/>
+                    <field name="cd" readonly="ab" groups="!base.group_system"/>
+                    <field name="ab" readonly="cd"/>  <!-- allowed because they are no access rights -->
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model2_some_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups_sub</field>
+            <field name="model">test_new_api.model2.some_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="g_id" groups="base.group_erp_manager"/>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

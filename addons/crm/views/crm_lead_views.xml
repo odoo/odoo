@@ -793,7 +793,6 @@
                     <field name="activity_ids" optional="hide" widget="list_activity"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="my_activity_date_deadline" optional="hide" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
-                    <field name="activity_calendar_event_id" column_invisible="True"/>
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
@@ -815,9 +814,11 @@
                     <field name="lead_properties"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
                     <button name="action_reschedule_meeting" class="text-warning" type="object" string="Reschedule"
-                        icon="fa-calendar" invisible="not my_activity_date_deadline or not activity_calendar_event_id"/>
+                        icon="fa-calendar" invisible="not my_activity_date_deadline or not activity_calendar_event_id"
+                        groups="base.group_user"/>
                     <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d"
-                        icon="fa-bell-slash" invisible="not my_activity_date_deadline or activity_calendar_event_id"/>
+                        icon="fa-bell-slash" invisible="not my_activity_date_deadline or activity_calendar_event_id"
+                        groups="base.group_user"/>
                 </tree>
             </field>
         </record>

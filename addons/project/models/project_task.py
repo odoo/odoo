@@ -191,7 +191,7 @@ class Task(models.Model):
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
         ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
-        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stages')
+        domain="[('user_id', '=', uid)]", string='Personal Stages')
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
         compute='_compute_personal_stage_id', help="The current user's personal stage.")

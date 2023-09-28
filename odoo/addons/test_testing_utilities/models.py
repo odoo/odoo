@@ -177,6 +177,7 @@ class O2MRef(models.Model):
 
     value = fields.Integer(default=1)
     subs = fields.One2many('test_testing_utilities.ref.sub', 'parent_id')
+    x = fields.Integer()
 
 class O2MRefSub(models.Model):
     _name = 'test_testing_utilities.ref.sub'
@@ -185,6 +186,7 @@ class O2MRefSub(models.Model):
     a = fields.Integer()
     b = fields.Integer()
     c = fields.Integer()
+    z = fields.Integer()
     parent_id = fields.Many2one('test_testing_utilities.ref')
 
 class O2MDefault(models.Model):

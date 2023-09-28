@@ -1964,6 +1964,7 @@ class IrModelAccess(models.Model):
     def group_names_with_access(self, model_name, access_mode):
         """ Return the names of visible groups which have been granted
             ``access_mode`` on the model ``model_name``.
+
            :rtype: list
         """
         assert access_mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
@@ -1980,6 +1981,25 @@ class IrModelAccess(models.Model):
           ORDER BY c.name, g.name NULLS LAST
         """, [lang, lang, model_name])
         return [('%s/%s' % x) if x[0] else x[1] for x in self._cr.fetchall()]
+
+    @api.model
+    @tools.ormcache('model_name', 'access_mode')
+    def _get_access_groups(self, model_name, access_mode='read'):
+        """ Return the group expression object that represents the users who
+        have ``access_mode`` to the model ``model_name``.
+        """
+        assert access_mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
+        model = self.env['ir.model']._get(model_name)
+        accesses = self.sudo().search([
+            (f'perm_{access_mode}', '=', True), ('model_id', '=', model.id),
+        ])
+
+        group_definitions = self.env['res.groups']._get_group_definitions()
+        if not accesses:
+            return group_definitions.empty
+        if not all(access.group_id for access in accesses):  # there is some global access
+            return group_definitions.universe
+        return group_definitions.from_ids(accesses.group_id.ids)
 
     # The context parameter is useful when the method translates error messages.
     # But as the method raises an exception in that case,  the key 'lang' might

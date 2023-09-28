@@ -29,7 +29,7 @@ class ProjectMilestone(models.Model):
     is_deadline_future = fields.Boolean(compute="_compute_is_deadline_future")
     task_count = fields.Integer('# of Tasks', compute='_compute_task_count', groups='project.group_project_milestone')
     done_task_count = fields.Integer('# of Done Tasks', compute='_compute_task_count', groups='project.group_project_milestone')
-    can_be_marked_as_done = fields.Boolean(compute='_compute_can_be_marked_as_done', groups='project.group_project_milestone')
+    can_be_marked_as_done = fields.Boolean(compute='_compute_can_be_marked_as_done')
 
     @api.depends('is_reached')
     def _compute_reached_date(self):

@@ -31,7 +31,7 @@
                                 <li>
                                     Request a Compliance Certificate (CCSID)
                                     <i class="fa fa-check text-success ms-1"
-                                       invisible="not l10n_sa_compliance_csid_json"/>
+                                       invisible="not l10n_sa_compliance_csid_json" groups="base.group_system"/>
                                 </li>
                                 <li>
                                     Complete the Compliance Checks
@@ -41,12 +41,12 @@
                                 <li>
                                     Request a Production Certificate (PCSID)
                                     <i class="fa fa-check text-success ms-1"
-                                       invisible="not l10n_sa_production_csid_json"/>
+                                       invisible="not l10n_sa_production_csid_json" groups="base.group_system"/>
                                 </li>
                             </ol>
                         </p>
                         <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
-                             invisible="l10n_sa_csr_errors or l10n_sa_compliance_csid_json">
+                             invisible="l10n_sa_csr_errors or l10n_sa_compliance_csid_json" groups="base.group_system">
                             <p class="mb-0">
                                 Onboard the Journal by completing each step
                             </p>
@@ -56,6 +56,7 @@
                             </button>
                         </div>
                         <div class="alert alert-danger d-flex flex-column align-items-end" role="alert"
+                             groups="base.group_system"
                              invisible="not l10n_sa_csr_errors or l10n_sa_compliance_csid_json or l10n_sa_production_csid_json">
                             <div class="w-100">
                                 <h4 role="alert" class="alert-heading">Journal could not be onboarded. Please make sure the Company VAT/Identification Number are correct.</h4>
@@ -68,6 +69,7 @@
                             </button>
                         </div>
                         <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                             groups="base.group_system"
                              invisible="not l10n_sa_compliance_checks_passed or not l10n_sa_production_csid_json">
                             <p class="mb-0">
                                 The Production certificate is valid until

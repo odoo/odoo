@@ -238,6 +238,7 @@
         <field name="model">test_testing_utilities.ref</field>
         <field name="arch" type="xml">
             <form>
+                <field name="x" invisible="True" readonly="True"/>
                 <field name="value"/>
                 <field name="subs"
                     invisible="value == 666"
@@ -274,12 +275,11 @@
         <field name="arch" type="xml">
             <tree editable="bottom">
                 <field name="a"/>
-                <field name="b" readonly="parent.value == 42"/>
+                <field name="b" readonly="parent.value == 42 and not parent.x and not z"/>
                 <field name="c" column_invisible="context.get('hide_c')"/>
             </tree>
         </field>
     </record>
-
 
     <record id="o2m_widget_m2m" model="ir.ui.view">
         <field name="name">Treat o2m as m2m</field>

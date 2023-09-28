@@ -1515,6 +1515,59 @@ class Group(models.Model):
     user_ids = fields.Many2many('test_new_api.user')
 
 
+class ModelNoAccess(models.Model):
+    _name = 'test_new_api.model.no_access'
+    _description = "Testing Utilities attrs and groups: if never access rights"
+
+    ab = fields.Integer(default=1)
+    cd = fields.Integer(default=1, groups="base.group_portal")
+
+
+class ModelAllAccess(models.Model):
+    _name = 'test_new_api.model.all_access'
+    _description = "Testing Utilities attrs and groups: if free access rights"
+
+    ab = fields.Integer(default=1)
+    cd = fields.Integer(default=1, groups="base.group_portal")
+    ef = fields.Integer(default=1)
+
+    def action_full(self):
+        return
+
+class ModelSomeAccess(models.Model):
+    _name = 'test_new_api.model.some_access'
+    _description = 'Testing Utilities attrs and groups'
+
+    a = fields.Integer()
+    b = fields.Integer()
+    c = fields.Integer()
+    d = fields.Integer(default=1, groups="base.group_erp_manager")
+    e = fields.Integer(default=1, groups="base.group_erp_manager,base.group_multi_company")
+    f = fields.Integer(groups="base.group_erp_manager,base.group_portal")
+    g = fields.Integer(default=1, groups="base.group_erp_manager,base.group_multi_company,!base.group_portal")
+    h = fields.Integer(default=1, groups="base.group_erp_manager,!base.group_portal")
+    i = fields.Integer(default=1, groups="!base.group_portal")
+    j = fields.Integer(default=1, groups="base.group_portal")
+    k = fields.Integer(default=1, groups="base.group_public")
+    g_id = fields.Many2one("test_new_api.model.all_access", string="m2o g_id")
+
+
+class Model2SomeAccess(models.Model):
+    _name = 'test_new_api.model2.some_access'
+    _description = 'Testing Utilities attrs and groups sub'
+
+    g_id = fields.Many2one('test_new_api.model.some_access', domain='[("a", "=", g_d)]')
+    g_d = fields.Integer(related='g_id.d')
+
+
+class Model3SomeAccess(models.Model):
+    _name = 'test_new_api.model3.some_access'
+    _description = 'Testing Utilities attrs and groups sub sub'
+
+    xxx_id = fields.Many2one('test_new_api.model2.some_access')
+    xxx_sub_id = fields.Many2one(related='xxx_id.g_id')
+
+
 class ComputeEditable(models.Model):
     _name = _description = 'test_new_api.compute_editable'
 

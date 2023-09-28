@@ -81,12 +81,12 @@ class IrUiMenu(models.Model):
         context = {'ir.ui.menu.full_list': True}
         menus = self.with_context(context).search_fetch([], ['action', 'parent_id']).sudo()
 
-        groups = self.env.user.groups_id
-        if not debug:
-            groups = groups - self.env.ref('base.group_no_one')
         # first discard all menus with groups the user does not have
+        group_ids = set(self.env.user._get_group_ids())
+        if not debug:
+            group_ids = group_ids - {self.env['ir.model.data']._xmlid_to_res_id('base.group_no_one', raise_if_not_found=False)}
         menus = menus.filtered(
-            lambda menu: not menu.groups_id or menu.groups_id & groups)
+            lambda menu: not (menu.groups_id and group_ids.isdisjoint(menu.groups_id._ids)))
 
         # take apart menus that have an action
         actions_by_model = defaultdict(set)

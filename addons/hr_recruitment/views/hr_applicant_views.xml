@@ -148,7 +148,7 @@
                         <field name="department_id"/>
                         <field name="company_id" groups="base.group_multi_company" invisible="1" options='{"no_open":True}' />
                     </group>
-                    <group string="Contract" name="recruitment_contract">
+                    <group string="Contract" name="recruitment_contract" groups="hr_recruitment.group_hr_recruitment_user">
                         <label for="salary_expected"/>
                         <div class="o_row">
                             <field name="salary_expected"/>

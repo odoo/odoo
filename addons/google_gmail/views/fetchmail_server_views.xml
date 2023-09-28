@@ -7,10 +7,9 @@
         <field name="inherit_id" ref="mail.view_email_server_form"/>
         <field name="arch" type="xml">
             <field name="user" position="after">
-                <field name="google_gmail_uri" invisible="1"/>
-                <field name="google_gmail_refresh_token" invisible="1"/>
                 <div invisible="server_type != 'gmail'"
-                    class="d-flex flex-row align-items-center" colspan="2">
+                    class="d-flex flex-row align-items-center" colspan="2"
+                    groups="base.group_system">
                     <span invisible="server_type != 'gmail' or not google_gmail_refresh_token"
                         class="badge text-bg-success">
                         Gmail Token Valid
