@@ -55,7 +55,7 @@
                         </group>
                     </div>
                     <notebook invisible="composition_mode != 'mass_mail'">
-                        <page string="Content">
+                        <page string="Content" name="page_content">
                             <div>
                                 <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" readonly="not can_edit_body" force_save="1"/>
                                 <group>
@@ -67,7 +67,7 @@
                                 </group>
                             </div>
                         </page>
-                        <page string="Settings">
+                        <page string="Settings" name="page_settings">
                             <!-- mass mailing -->
                             <field name="reply_to_force_new" invisible="1"/>
                             <field name="reply_to_mode" invisible="composition_mode != 'mass_mail'" widget="radio"/>
