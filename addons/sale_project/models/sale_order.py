@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
     project_id = fields.Many2one('project.project', 'Project',
         help='Select a non billable project on which tasks can be created.')
-    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user,project.group_project_milestone", help="Projects used in this sales order.")
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
     milestone_count = fields.Integer(compute='_compute_milestone_count')
     is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')

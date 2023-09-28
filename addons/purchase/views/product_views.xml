@@ -25,12 +25,26 @@
                 <xpath expr="//field[@name='product_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
                     <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                    <attribute name="domain">[('product_tmpl_id', '=', parent.id)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='delay']" position="attributes">
                     <attribute name="optional">show</attribute>
                 </xpath>
                 <xpath expr="//field[@name='min_qty']" position="attributes">
                     <attribute name="optional">show</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_supplierinfo_tree_view2" model="ir.ui.view">
+            <field name="name">product.supplierinfo.tree.view2.product</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="purchase.product_supplierinfo_tree_view2"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="attributes">
+                    <attribute name="domain">[('product_tmpl_id', '=', parent.product_tmpl_id)]</attribute>
                 </xpath>
             </field>
         </record>
@@ -78,10 +92,10 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="seller_ids" position="attributes">
-                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
+                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
                 </field>
                 <field name="variant_seller_ids" position="attributes">
-                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
+                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
                 </field>
             </field>
         </record>

@@ -14,7 +14,7 @@
     <record id="group_hr_holidays_user" model="res.groups">
         <field name="name">Officer: Manage all requests</field>
         <field name="category_id" ref="base.module_category_human_resources_time_off"/>
-        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_responsible'))]"/>
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_responsible')), (4, ref('hr.group_hr_user'))]"/>
     </record>
 
     <record id="group_hr_holidays_manager" model="res.groups">

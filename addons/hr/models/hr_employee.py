@@ -43,8 +43,8 @@ class HrEmployeePrivate(models.Model):
     resource_calendar_id = fields.Many2one(tracking=True)
     department_id = fields.Many2one(tracking=True)
     company_id = fields.Many2one('res.company', required=True)
-    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="hr.group_hr_user")
-    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="hr.group_hr_user")
+    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
+    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user")
     # private info
     private_street = fields.Char(string="Private Street", groups="hr.group_hr_user")
     private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user")

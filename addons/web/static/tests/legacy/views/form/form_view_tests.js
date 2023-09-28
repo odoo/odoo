@@ -1044,7 +1044,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Form and subview with _view_ref contexts", async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         serverData.models.product.fields.partner_type_ids = {
             string: "one2many field",
@@ -1088,11 +1088,6 @@ QUnit.module("Views", (hooks) => {
                     );
                 }
                 if (args.model === "partner_type") {
-                    assert.strictEqual(
-                        context.base_model_name,
-                        undefined,
-                        "The correct base_model_name should be removed from the context before sent to the server for the subview"
-                    );
                     assert.strictEqual(
                         context.tree_view_ref,
                         "some_other_tree_view",
@@ -1164,7 +1159,6 @@ QUnit.module("Views", (hooks) => {
         });
         expectedContexts.set("onchange:partner_type", {
             ...userContext,
-            base_model_name: "partner",
             form_view_ref: "foo_partner_type_form_view",
         });
         await makeView({

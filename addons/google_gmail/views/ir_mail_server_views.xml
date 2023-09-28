@@ -6,10 +6,9 @@
         <field name="inherit_id" ref="base.ir_mail_server_form"/>
         <field name="arch" type="xml">
             <field name="smtp_user" position="after">
-                <field name="google_gmail_uri" invisible="1"/>
-                <field name="google_gmail_refresh_token" invisible="1"/>
                 <div invisible="smtp_authentication != 'gmail'"
-                    class="d-flex flex-row align-items-center" colspan="8">
+                    class="d-flex flex-row align-items-center" colspan="8"
+                    groups="base.group_system">
                     <span invisible="smtp_authentication != 'gmail' or not google_gmail_refresh_token"
                         class="badge text-bg-success">
                         Gmail Token Valid

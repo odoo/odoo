@@ -425,7 +425,7 @@ class TestFieldGroupFeedback(Feedback):
 Operation: read
 User: %s
 Fields:
-- forbidden (allowed for groups 'Extra Rights / Multi Companies', 'User types / Public', 'Test Group')"""
+- forbidden (allowed for groups 'User types / Portal', 'Test Group')"""
     % self.user.id
         )
 
@@ -449,6 +449,7 @@ Fields:
         })
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'forbidden': 1, 'forbidden2': 2})
+
         self.assertEqual(
             ctx.exception.args[0],
             """You do not have enough rights to access the fields "forbidden,forbidden2" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
@@ -456,7 +457,7 @@ Fields:
 Operation: write
 User: %s
 Fields:
-- forbidden (allowed for groups 'Extra Rights / Multi Companies', 'User types / Public', 'Test Group')
+- forbidden (allowed for groups 'User types / Portal', 'Test Group')
 - forbidden2 (allowed for groups 'Test Group')"""
     % self.user.id
         )

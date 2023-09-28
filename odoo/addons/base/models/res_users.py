@@ -29,7 +29,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
-from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
+from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property, SetDefinitions
 
 _logger = logging.getLogger(__name__)
 
@@ -1089,7 +1089,6 @@ class Users(models.Model):
             result = result and bool(request and request.session.debug)
         return result
 
-    @tools.ormcache('self.id', 'group_ext_id')
     def _has_group(self, group_ext_id: str) -> bool:
         """ Return whether user ``self`` belongs to the given group.
 
@@ -1099,14 +1098,14 @@ class Users(models.Model):
         :return: True if user ``self`` is a member of the group with the
            given external ID (XML ID), else False.
         """
-        try:
-            module, ext_id = group_ext_id.split('.')
-        except (AttributeError, ValueError):
-            raise ValueError(f"External ID {group_ext_id!r} must be fully qualified") from None
-        self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
-                            (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s AND model='res.groups')""",
-                         (self.id, module, ext_id))
-        return bool(self._cr.fetchone())
+        group_id = self.env['res.groups']._get_group_definitions().get_id(group_ext_id)
+        return group_id in self._get_group_ids()
+
+    @tools.ormcache('self.id')
+    def _get_group_ids(self):
+        """ Return ``self``'s group ids (as a tuple)."""
+        self.ensure_one()
+        return self.groups_id._ids
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a tree view"""
@@ -1417,6 +1416,34 @@ class GroupsImplied(models.Model):
                 # do not remove inactive users (e.g. default)
                 implied_group.with_context(active_test=False).write(
                     {'users': [Command.unlink(user.id) for user in users_to_unlink]})
+
+    @api.model
+    @tools.ormcache()
+    def _get_group_definitions(self):
+        """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
+        groups = self.sudo().search([], order='id')
+        id_to_ref = groups.get_external_id()
+
+        # The 'base.group_no_one' is not actually involved by any other group because it is session dependent.
+        group_no_one_id = {gid for gid, ref in id_to_ref.items() if ref == 'base.group_no_one'}
+
+        data = {
+            group.id: {
+                'ref': id_to_ref[group.id] or str(group.id),
+                'supersets': set(group.implied_ids.ids) - group_no_one_id,
+            }
+            for group in groups
+        }
+
+        # determine exclusive groups (will be disjoint for the set expression)
+        user_types_category_id = self.env['ir.model.data']._xmlid_to_res_id('base.module_category_user_type', raise_if_not_found=False)
+        if user_types_category_id:
+            user_type_ids = self.sudo().search([('category_id', '=', user_types_category_id)]).ids
+            for user_type_id in user_type_ids:
+                data[user_type_id]['disjoints'] = set(user_type_ids) - {user_type_id}
+
+        return SetDefinitions(data)
+
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'

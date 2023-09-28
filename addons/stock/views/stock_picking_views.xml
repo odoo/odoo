@@ -126,19 +126,6 @@
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Transfer" js_class="picking_form">
-
-                <field name="is_locked" invisible="1"/>
-                <field name="show_check_availability" invisible="1"/>
-                <field name="show_lots_text" invisible="1"/>
-                <field name="picking_type_code" invisible="1"/>
-                <field name="hide_picking_type" invisible="1"/>
-                <field name="show_allocation" invisible="1"/>
-                <field name="move_line_exist" invisible="1"/>
-                <field name="has_packages" invisible="1"/>
-                <field name="picking_type_entire_packs" invisible="1"/>
-                <field name="use_create_lots" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="q"/>
                     <button name="action_assign" invisible="not show_check_availability" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
@@ -160,8 +147,6 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <field name="has_scrap_move" invisible="True"/>
-                        <field name="has_tracking" invisible="True"/>
                         <button name="action_see_returns" type="object"
                             class="oe_stat_button" icon="fa-rotate-left"
                             invisible="return_count == 0">
