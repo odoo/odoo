@@ -165,10 +165,10 @@ export const editorCommands = {
         const containerFirstChild = document.createElement('fake-element-fc');
         const containerLastChild = document.createElement('fake-element-lc');
 
-        if (content instanceof editor.document.defaultView.Node) {
-            container.replaceChildren(content);
-        } else {
+        if (typeof content === 'string') {
             container.textContent = content;
+        } else {
+            container.replaceChildren(content);
         }
 
         // In case the html inserted starts with a list and will be inserted within
