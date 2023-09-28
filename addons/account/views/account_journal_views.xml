@@ -96,7 +96,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page id="inbound_payment_settings" string="Incoming Payments" invisible="type not in ['cash', 'bank']">
+                            <page id="inbound_payment_settings" string="Incoming Payments" name="page_incoming_payments" invisible="type not in ['cash', 'bank']">
                                 <field name="available_payment_method_ids" invisible="1"/>
                                 <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
                                     <tree string="Payment Methods" editable="bottom">
@@ -115,7 +115,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page id="outbound_payment_settings" string="Outgoing Payments" invisible="type not in ['cash', 'bank']">
+                            <page id="outbound_payment_settings" string="Outgoing Payments" name="page_outgoing_payments" invisible="type not in ['cash', 'bank']">
                                     <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
                                         <tree string="Payment Methods" editable="bottom" nolabel="1">
                                             <field name="available_payment_method_ids" column_invisible="True"/>

@@ -11,17 +11,17 @@
                         <field name="name"/>
                     </group>
                     <notebook>
-                        <page string="Product Templates">
+                        <page string="Product Templates" name="page_product_templates">
                             <field name="product_template_ids"
                                    context="{'tree_view_ref':'product.product_template_view_tree_tag'}"
                             />
                         </page>
-                        <page string="Product Variants">
+                        <page string="Product Variants" name="page_product_variants">
                             <field name="product_product_ids"
                                    context="{'tree_view_ref':'product.product_product_view_tree_tag'}"
                             />
                         </page>
-                        <page string="All Products" invisible="not product_ids">
+                        <page string="All Products" name="page_all_products" invisible="not product_ids">
                             <field name="product_ids"
                                    context="{'tree_view_ref':'product.product_product_view_tree_tag'}"
                             />

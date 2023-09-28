@@ -34,14 +34,14 @@
     <field name="arch" type="xml">
         <form>
             <notebook>
-                <page string="Name">
+                <page string="Name" name="page_name">
                     <group class="mt-4">
                         <field name="name" string="Page Name" placeholder="e.g. Home Page"/>
                         <field name="website_id" invisible="1"/>
                         <field name="url" string="Page URL" widget="page_url"/>
                     </group>
                 </page>
-                <page string="Publish">
+                <page string="Publish" name="page_publish">
                     <group class="mt-4">
                         <field name="is_in_menu" string="Show in Top Menu" widget="boolean_toggle"/>
                         <field name="is_homepage" string="Use as Homepage" widget="boolean_toggle"/>
