@@ -16,11 +16,3 @@ class AccountMove(models.Model):
         string='B_MPV_Prowizja',
         help="Supply of agency and other services pertaining to the transfer of a single-purpose voucher",
     )
-
-    @api.depends('country_code', 'move_type')
-    def _compute_show_delivery_date(self):
-        # EXTENDS 'account'
-        super()._compute_show_delivery_date()
-        for move in self:
-            if move.country_code == 'PL':
-                move.show_delivery_date = move.is_sale_document()
