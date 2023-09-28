@@ -146,9 +146,6 @@
             var scope = this._getScope();
             return navigator.serviceWorker
                 .register(scope + "/service-worker.js", { scope: scope })
-                .then(function (registration) {
-                    console.info("Registration successful, scope is:", registration.scope);
-                })
                 .catch(function (error) {
                     console.error("Service worker registration failed, error:", error);
                 });
