@@ -691,6 +691,9 @@ class AccountPayment(models.Model):
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
 
+            # Update the reference of the account move according to the account payment
+            vals['ref'] = vals.get('ref') or vals.get('payment_reference')
+
         payments = super(AccountPayment, self.with_context(is_payment=True))\
             .create([{'name': '/', **vals} for vals in vals_list])\
             .with_context(is_payment=False)
