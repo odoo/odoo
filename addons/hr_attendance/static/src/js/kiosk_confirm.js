@@ -52,6 +52,7 @@ var KioskConfirm = AbstractAction.extend({
             context: session.user_context,
         })
         .then(function(result) {
+            self.pin_is_send = true
             if (result.action) {
                 self.do_action(result.action);
             } else if (result.warning) {
@@ -70,6 +71,7 @@ var KioskConfirm = AbstractAction.extend({
         this.employee_state = action.employee_state;
         this.employee_hours_today = field_utils.format.float_time(action.employee_hours_today);
 
+        this.pin_is_send = false
         this._send_pin_debounced = _.debounce(this._sendPin, 200, true);
 
         window.addEventListener("keydown", (ev) => {
@@ -88,7 +90,7 @@ var KioskConfirm = AbstractAction.extend({
             if (key.length == 1) {
                 pinBox.val(pinBox.val() + key);
             }
-            else if (key == 'Enter') {
+            else if (key == 'Enter' && !this.pin_is_send) {
                 this._send_pin_debounced();
             }
             else if (key == 'Backspace') {
