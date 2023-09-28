@@ -112,14 +112,14 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Detailed Operations" invisible="state == 'draft'">
+                        <page string="Detailed Operations" name="page_detailed_operations" invisible="state == 'draft'">
                             <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}" readonly="state not in ['draft', 'in_progress']"/>
                             <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
                         </page>
-                        <page string="Operations" invisible="state == 'draft'">
+                        <page string="Operations" name="page_operations" invisible="state == 'draft'">
                             <field name="move_ids" context="{'tree_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
                         </page>
-                        <page string="Transfers">
+                        <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
                             <field name="picking_ids" widget="many2many" mode="tree,kanban"
                                 context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited'}" readonly="state not in ['draft', 'in_progress']"/>

@@ -118,11 +118,13 @@
                     </group>
                     <notebook>
                         <page string="Description"
+                            name="page_description"
                             invisible="exhibitor_type == 'sponsor'">
                             <field name="website_description" nolabel="1" options="{'noVideos': False}" 
                                 placeholder='e.g. "Openwood specializes in home decoration..."'/>
                         </page>
                         <page string="Online"
+                            name="page_online"
                             invisible="exhibitor_type != 'online'">
                             <group>
                                 <group>
