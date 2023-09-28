@@ -16,6 +16,35 @@
             </t>
         </template>
 
+        <!-- External page: Invalid partner rating -->
+        <template id="rating_external_page_invalid_partner" name="Not allows to rating">
+            <t t-call="web.frontend_layout">
+                <section class="mt128">
+                    <div class="container">
+                        <div class="row" >
+                            <div class="col-lg-4">
+                                <img class="img img-fluid mx-auto" src="/rating/static/src/img/503.svg" alt=""/>
+                            </div>
+                            <div class="col-lg-8 text-lg-start">
+                                <h1>You cannot rate this <t t-out="model_name"/></h1>
+                                <p>
+                                    Only the customer of "<t t-out="name"/>" or someone from the same company can give it a rating.
+                                </p>
+                            </div>
+                            <hr class="my-5 opacity-100"/>
+                            <div class="mb128 col-lg-12">
+                                <ul class="list-inline text-center">
+                                    <li>
+                                        <a t-att-href="web_base_url" class="btn btn-primary">Home</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
         <!-- External page: rate and submit feedback -->
         <template id="rating_external_page_submit" name="Rate our Services">
             <t t-call="web.frontend_layout">
