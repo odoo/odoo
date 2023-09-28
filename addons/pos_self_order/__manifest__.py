@@ -59,6 +59,8 @@
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             "pos_self_order/static/src/app/**/*",
             "point_of_sale/static/src/app/store/models/product_custom_attribute.js",
+            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
+            'web_editor/static/src/scss/web_editor.common.scss',
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

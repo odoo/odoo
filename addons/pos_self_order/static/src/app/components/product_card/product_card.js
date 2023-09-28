@@ -4,6 +4,7 @@ import { Component, useRef } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { useService, useForwardRefToParent } from "@web/core/utils/hooks";
 import { Line } from "@pos_self_order/app/models/line";
+import { ProductInfoPopup } from "@pos_self_order/app/components/product_info_popup/product_info_popup";
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
@@ -15,6 +16,7 @@ export class ProductCard extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+        this.dialog = useService("dialog");
 
         useForwardRefToParent("currentProductCard");
     }
@@ -108,5 +110,12 @@ export class ProductCard extends Component {
             }
             await this.selfOrder.getPricesFromServer();
         }
+    }
+
+    getProductInfo() {
+        this.dialog.add(ProductInfoPopup, {
+            product: this.props.product,
+            title: this.props.product.name,
+        });
     }
 }
