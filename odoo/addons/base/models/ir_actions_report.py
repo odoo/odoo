@@ -1,40 +1,34 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-from markupsafe import Markup
-
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError
-from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path, ustr
-from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
-from odoo.http import request
-from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
-
 import io
+import json
 import logging
 import os
-import lxml.html
-import tempfile
-import subprocess
 import re
-import json
-
-from lxml import etree
-from contextlib import closing
-from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader
+import subprocess
+import tempfile
 from collections import OrderedDict
 from collections.abc import Iterable
-from PIL import Image, ImageFile
+from contextlib import closing
 from itertools import islice
+
+import lxml.html
+from PIL import Image, ImageFile
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2.errors import PdfReadError
+from lxml import etree
+from markupsafe import Markup
+from reportlab.graphics.barcode import createBarcodeDrawing
+
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError, AccessError
+from odoo.http import request
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
+from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
+from odoo.tools.misc import find_in_path, ustr
+from odoo.tools.safe_eval import safe_eval, time
 
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-try:
-    from PyPDF2.errors import PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
 
@@ -651,7 +645,7 @@ class IrActionsReport(models.Model):
         for stream in streams:
             try:
                 reader = PdfFileReader(stream)
-                writer.appendPagesFromReader(reader)
+                writer.append_pages_from_reader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError):
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
@@ -772,10 +766,10 @@ class IrActionsReport(models.Model):
             # pages one by one.
             html_ids_wo_none = [x for x in html_ids if x]
             reader = PdfFileReader(pdf_content_stream)
-            if reader.numPages == len(res_ids_wo_stream):
-                for i in range(reader.numPages):
+            if len(reader.pages) == len(res_ids_wo_stream):
+                for i, page in enumerate(reader.pages):
                     attachment_writer = PdfFileWriter()
-                    attachment_writer.addPage(reader.getPage(i))
+                    attachment_writer.add_page(page)
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids[i]]['stream'] = stream
@@ -814,10 +808,10 @@ class IrActionsReport(models.Model):
                 if has_same_number_of_outlines and has_top_level_heading:
                     # Split the PDF according to outlines.
                     for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
+                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else len(reader.pages)
                         attachment_writer = PdfFileWriter()
                         for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
+                            attachment_writer.add_page(reader.pages[j])
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids[i]]['stream'] = stream

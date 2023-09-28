@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-from odoo import api, models
-from odoo.tools.pdf import OdooPdfFileReader
-
-from lxml import etree
-from struct import error as StructError
-try:
-    from PyPDF2.errors import PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfReadError
 import io
 import logging
+
+from lxml import etree
+from PyPDF2.errors import PdfReadError
+from struct import error as StructError
+
+from odoo import api, models
+from odoo.tools.pdf import OdooPdfFileReader
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +48,7 @@ class IrAttachment(models.Model):
         """
         try:
             buffer = io.BytesIO(content)
-            pdf_reader = OdooPdfFileReader(buffer, strict=False)
+            pdf_reader = OdooPdfFileReader(buffer)
         except Exception as e:
             # Malformed pdf
             _logger.warning("Error when reading the pdf: %s", e, exc_info=True)
@@ -59,7 +57,7 @@ class IrAttachment(models.Model):
         # Process embedded files.
         to_process = []
         try:
-            for xml_name, xml_content in pdf_reader.getAttachments():
+            for xml_name, xml_content in pdf_reader.get_attachments():
                 to_process.extend(self._decode_edi_xml(xml_name, xml_content))
         except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)

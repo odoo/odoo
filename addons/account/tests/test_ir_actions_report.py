@@ -17,7 +17,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         super().setUp()
         self.file = file_open('base/tests/minimal.pdf', 'rb').read()
         self.minimal_reader_buffer = io.BytesIO(self.file)
-        self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
+        self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer, strict=True)
 
     def test_download_one_corrupted_pdf(self):
         """
@@ -51,10 +51,8 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         attach_name = 'original_vendor_bill.pdf'
         # we need to encrypt the file
         with file_open('base/tests/minimal.pdf', 'rb') as pdf_file:
-            pdf_reader = PdfFileReader(pdf_file)
             pdf_writer = PdfFileWriter()
-            for page_num in range(pdf_reader.getNumPages()):
-                pdf_writer.addPage(pdf_reader.getPage(page_num))
+            pdf_writer.append_pages_from_reader(PdfFileReader(pdf_file))
             # Encrypt the PDF
             pdf_writer.encrypt('', use_128bit=True)
             # Get the binary
@@ -75,7 +73,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         })
 
         in_invoice_1.message_main_attachment_id = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(encrypted_file),
+            'raw': encrypted_file,
             'name': attach_name,
             'mimetype': 'application/pdf',
             'res_model': 'account.move',
@@ -87,7 +85,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         in_invoice_2 = in_invoice_1.copy()
 
         in_invoice_2.message_main_attachment_id = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(self.file),
+            'raw': self.file,
             'name': attach_name,
             'mimetype': 'application/pdf',
             'res_model': 'account.move',

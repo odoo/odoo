@@ -521,12 +521,12 @@ class SnailmailLetter(models.Model):
         canvas.save()
         pdf_buf.seek(0)
 
-        new_pdf = PdfFileReader(pdf_buf)
+        new_page = PdfFileReader(pdf_buf).pages[0]
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
         for page in curr_pdf.pages:
-            page.mergePage(new_pdf.getPage(0))
-            out.addPage(page)
+            page.merge_page(new_page)
+            out.add_page(page)
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()

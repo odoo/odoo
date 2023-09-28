@@ -2,39 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import re
-
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
-from zlib import compress, decompress
+from zlib import compress, decompress, decompressobj
+
+import PyPDF2.filters
 from PIL import Image, PdfImagePlugin
+from PyPDF2 import PdfReader, PdfWriter
+from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, create_string_object, ByteStringObject
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
-from odoo.tools.parse_version import parse_version
-
-try:
-    # class were renamed in PyPDF2 > 2.0
-    # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
-    from PyPDF2 import PdfReader
-    import PyPDF2
-    # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
-    # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
-    class PdfFileReader(PdfReader):
-        def __init__(self, *args, **kwargs):
-            if "strict" not in kwargs and len(args) < 2:
-                kwargs["strict"] = True  # maintain the default
-            kwargs = {k:v for k, v in kwargs.items() if k in ('strict', 'stream')}
-            super().__init__(*args, **kwargs)
-
-    PyPDF2.PdfFileReader = PdfFileReader
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    PdfFileWriter._addObject = PdfFileWriter._add_object
-except ImportError:
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-
-from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 
 try:
     import fontTools
@@ -43,6 +23,7 @@ except ImportError:
     TTFont = None
 
 from odoo.tools.misc import file_open
+from odoo.tools.parse_version import parse_version
 
 _logger = getLogger(__name__)
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
@@ -52,6 +33,13 @@ REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
 
 # Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
 PdfImagePlugin.__name__
+
+
+# ensure that zlib does not throw error -5 when decompressing some corrupted
+# PDFs pypdf has its own fix (py-pdf/pypdf#603) but that falls back on
+# decompressing the file byte by byte, so keep this patch; not entirely clear
+# why this is a fix
+PyPDF2.filters.decompress = decompressobj().decompress
 
 # make sure values are unwrapped by calling the specialized __getitem__
 def _unwrapping_get(self, key, default=None):
@@ -64,10 +52,10 @@ def _unwrapping_get(self, key, default=None):
 DictionaryObject.get = _unwrapping_get
 
 
-class BrandedFileWriter(PdfFileWriter):
+class BrandedFileWriter(PdfWriter):
     def __init__(self):
         super().__init__()
-        self.addMetadata({
+        self.add_metadata({
             '/Creator': "Odoo",
             '/Producer': "Odoo",
         })
@@ -84,9 +72,7 @@ def merge_pdf(pdf_data):
     '''
     writer = PdfFileWriter()
     for document in pdf_data:
-        reader = PdfFileReader(io.BytesIO(document), strict=False)
-        for page in range(0, reader.getNumPages()):
-            writer.addPage(reader.getPage(page))
+        writer.append_pages_from_reader(PdfReader(io.BytesIO(document)))
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
@@ -99,11 +85,9 @@ def rotate_pdf(pdf):
     :return: a PDF rotated
     '''
     writer = PdfFileWriter()
-    reader = PdfFileReader(io.BytesIO(pdf), strict=False)
-    for page in range(0, reader.getNumPages()):
-        page = reader.getPage(page)
-        page.rotateClockwise(90)
-        writer.addPage(page)
+    for page in PdfReader(io.BytesIO(pdf), strict=False).pages:
+        page.rotate_clockwise(90)
+        writer.add_page(page)
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
@@ -121,26 +105,25 @@ def to_pdf_stream(attachment) -> io.BytesIO:
     _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
 
 
-def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
+def add_banner(pdf_stream: io.BytesIO, text: str, logo: bool = False, thickness: float = 2*cm) -> io.BytesIO:
     """ Add a banner on a PDF in the upper right corner, with Odoo's logo (optionally).
 
-    :param pdf_stream (BytesIO):    The PDF stream where the banner will be applied.
-    :param text (str):              The text to be displayed.
-    :param logo (bool):             Whether to display Odoo's logo in the banner.
-    :param thickness (float):       The thickness of the banner in pixels.
-    :return (BytesIO):              The modified PDF stream.
+    :param pdf_stream:    The PDF stream where the banner will be applied.
+    :param text:              The text to be displayed.
+    :param logo:             Whether to display Odoo's logo in the banner.
+    :param thickness:       The thickness of the banner in pixels.
+    :return:              The modified PDF stream.
     """
 
-    old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
+    old_pdf = PdfReader(pdf_stream)
     packet = io.BytesIO()
     can = canvas.Canvas(packet)
     odoo_logo = Image.open(file_open('base/static/img/main_partner-image.png', mode='rb'))
     odoo_color = colors.Color(113 / 255, 75 / 255, 103 / 255, 0.8)
 
-    for p in range(old_pdf.getNumPages()):
-        page = old_pdf.getPage(p)
-        width = float(abs(page.mediaBox.getWidth()))
-        height = float(abs(page.mediaBox.getHeight()))
+    for page in old_pdf.pages:
+        width = float(abs(page.mediabox.width))
+        height = float(abs(page.mediabox.width))
 
         can.translate(width, height)
         can.rotate(-45)
@@ -158,23 +141,22 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
         can.setFontSize(10)
         can.setFillColor(colors.white)
         can.drawRightString(0.75 * thickness, -1.45 * thickness, text)
-        logo and can.drawImage(
-            ImageReader(odoo_logo), 0.25 * thickness, -2.05 * thickness, 40, 40, mask='auto', preserveAspectRatio=True)
+        if logo:
+            can.drawImage(ImageReader(odoo_logo), 0.25 * thickness, -2.05 * thickness, 40, 40, mask='auto', preserveAspectRatio=True)
 
         can.showPage()
 
     can.save()
 
     # Merge the old pages with the watermark
-    watermark_pdf = PdfFileReader(packet, overwriteWarnings=False)
+    watermark_pdf = PdfReader(packet, strict=True)
     new_pdf = PdfFileWriter()
-    for p in range(old_pdf.getNumPages()):
-        new_page = old_pdf.getPage(p)
+    for page, mark in zip(old_pdf.pages, watermark_pdf.pages):
         # Remove annotations (if any), to prevent errors in PyPDF2
-        if '/Annots' in new_page:
-            del new_page['/Annots']
-        new_page.mergePage(watermark_pdf.getPage(p))
-        new_pdf.addPage(new_page)
+        if '/Annots' in page:
+            del page['/Annots']
+        page.merge_page(mark)
+        new_pdf.add_page(page)
 
     # Write the new pdf into a new output stream
     output = io.BytesIO()
@@ -182,22 +164,14 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
 
     return output
 
-
-# by default PdfFileReader will overwrite warnings.showwarning which is what
-# logging.captureWarnings does, meaning it essentially reverts captureWarnings
-# every time it's called which is undesirable
-old_init = PdfFileReader.__init__
-PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
-    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
-
-class OdooPdfFileReader(PdfFileReader):
+class OdooPdfFileReader(PdfReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
 
     ''' Returns the files inside the PDF.
     :raises NotImplementedError: if document is encrypted and uses an unsupported encryption method.
     '''
-    def getAttachments(self):
-        if self.isEncrypted:
+    def get_attachments(self):
+        if self.is_encrypted:
             # If the PDF is owner-encrypted, try to unwrap it by giving it an empty user password.
             self.decrypt('')
 
@@ -207,8 +181,8 @@ class OdooPdfFileReader(PdfFileReader):
             if not file_path:
                 return []
             for i in range(0, len(file_path), 2):
-                attachment = file_path[i+1].getObject()
-                yield (attachment["/F"], attachment["/EF"]["/F"].getObject().getData())
+                attachment = file_path[i+1].get_object()
+                yield (attachment["/F"], attachment["/EF"]["/F"].get_object().get_data())
         except Exception:
             # malformed pdf (i.e. invalid xref page)
             return []
@@ -225,7 +199,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         self._reader = None
         self.is_pdfa = False
 
-    def addAttachment(self, name, data, subtype=None):
+    def add_attachment(self, name, data, subtype=None):
         """
         Add an attachment to the pdf. Supports adding multiple attachment, while respecting PDF/A rules.
         :param name: The name of the attachement
@@ -251,10 +225,10 @@ class OdooPdfFileWriter(PdfFileWriter):
         })
         if self._root_object.get('/Names') and self._root_object['/Names'].get('/EmbeddedFiles'):
             names_array = self._root_object["/Names"]["/EmbeddedFiles"]["/Names"]
-            names_array.extend([attachment.getObject()['/F'], attachment])
+            names_array.extend([attachment.get_object()['/F'], attachment])
         else:
             names_array = ArrayObject()
-            names_array.extend([attachment.getObject()['/F'], attachment])
+            names_array.extend([attachment.get_object()['/F'], attachment])
 
             embedded_files_names_dictionary = DictionaryObject()
             embedded_files_names_dictionary.update({
@@ -274,17 +248,17 @@ class OdooPdfFileWriter(PdfFileWriter):
         else:
             # Create a new object containing an array referencing embedded file
             # And reference this array in the root catalogue
-            attachment_array = self._addObject(ArrayObject([attachment]))
+            attachment_array = self._add_object(ArrayObject([attachment]))
             self._root_object.update({
                 NameObject("/AF"): attachment_array
             })
 
     def embed_odoo_attachment(self, attachment, subtype=None):
         assert attachment, "embed_odoo_attachment cannot be called without attachment."
-        self.addAttachment(attachment.name, attachment.raw, subtype=subtype or attachment.mimetype)
+        self.add_attachment(attachment.name, attachment.raw, subtype=subtype or attachment.mimetype)
 
-    def cloneReaderDocumentRoot(self, reader):
-        super().cloneReaderDocumentRoot(reader)
+    def clone_reader_document_root(self, reader):
+        super().clone_reader_document_root(reader)
         self._reader = reader
         # Try to read the header coming in, and reuse it in our new PDF
         # This is done in order to allows modifying PDF/A files after creating them (as PyPDF does not read it)
@@ -329,24 +303,24 @@ class OdooPdfFileWriter(PdfFileWriter):
             icc_profile_file_data = compress(icc_profile.read())
 
         icc_profile_stream_obj = DecodedStreamObject()
-        icc_profile_stream_obj.setData(icc_profile_file_data)
+        icc_profile_stream_obj.set_data(icc_profile_file_data)
         icc_profile_stream_obj.update({
             NameObject("/Filter"): NameObject("/FlateDecode"),
             NameObject("/N"): NumberObject(3),
             NameObject("/Length"): NameObject(str(len(icc_profile_file_data))),
         })
 
-        icc_profile_obj = self._addObject(icc_profile_stream_obj)
+        icc_profile_obj = self._add_object(icc_profile_stream_obj)
 
         output_intent_dict_obj = DictionaryObject()
         output_intent_dict_obj.update({
             NameObject("/S"): NameObject("/GTS_PDFA1"),
-            NameObject("/OutputConditionIdentifier"): createStringObject("sRGB"),
+            NameObject("/OutputConditionIdentifier"): create_string_object("sRGB"),
             NameObject("/DestOutputProfile"): icc_profile_obj,
             NameObject("/Type"): NameObject("/OutputIntent"),
         })
 
-        output_intent_obj = self._addObject(output_intent_dict_obj)
+        output_intent_obj = self._add_object(output_intent_dict_obj)
         self._root_object.update({
             NameObject("/OutputIntents"): ArrayObject([output_intent_obj]),
         })
@@ -359,9 +333,9 @@ class OdooPdfFileWriter(PdfFileWriter):
             fonts = {}
             # First browse through all the pages of the pdf file, to get a reference to all the fonts used in the PDF.
             for page in pages:
-                for font in page.getObject()['/Resources']['/Font'].values():
-                    for descendant in font.getObject()['/DescendantFonts']:
-                        fonts[descendant.idnum] = descendant.getObject()
+                for font in page.get_object()['/Resources']['/Font'].values():
+                    for descendant in font.get_object()['/DescendantFonts']:
+                        fonts[descendant.idnum] = descendant.get_object()
 
             # Then for each font, rewrite the width array with the information taken directly from the font file.
             # The new width are calculated such as width = round(1000 * font_glyph_width / font_units_per_em)
@@ -385,11 +359,11 @@ class OdooPdfFileWriter(PdfFileWriter):
         else:
             _logger.warning('The fonttools package is not installed. Generated PDF may not be PDF/A compliant.')
 
-        outlines = self._root_object['/Outlines'].getObject()
+        outlines = self._root_object['/Outlines'].get_object()
         outlines[NameObject('/Count')] = NumberObject(1)
 
         # Set odoo as producer
-        self.addMetadata({
+        self.add_metadata({
             '/Creator': "Odoo",
             '/Producer': "Odoo",
         })
@@ -407,7 +381,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         footer = b'<?xpacket end="w"?>'
         metadata = b'%s%s%s' % (header, metadata_content, footer)
         file_entry = DecodedStreamObject()
-        file_entry.setData(metadata)
+        file_entry.set_data(metadata)
         file_entry.update({
             NameObject("/Type"): NameObject("/Metadata"),
             NameObject("/Subtype"): NameObject("/XML"),
@@ -415,7 +389,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         })
 
         # Add the new metadata to the pdf, then redirect the reference to refer to this new object.
-        metadata_object = self._addObject(file_entry)
+        metadata_object = self._add_object(file_entry)
         self._root_object.update({NameObject("/Metadata"): metadata_object})
 
     def _create_attachment_object(self, attachment):
@@ -428,13 +402,13 @@ class OdooPdfFileWriter(PdfFileWriter):
         :return:
         '''
         file_entry = DecodedStreamObject()
-        file_entry.setData(attachment['content'])
+        file_entry.set_data(attachment['content'])
         file_entry.update({
             NameObject("/Type"): NameObject("/EmbeddedFile"),
             NameObject("/Params"):
                 DictionaryObject({
-                    NameObject('/CheckSum'): createStringObject(md5(attachment['content']).hexdigest()),
-                    NameObject('/ModDate'): createStringObject(datetime.now().strftime(DEFAULT_PDF_DATETIME_FORMAT)),
+                    NameObject('/CheckSum'): create_string_object(md5(attachment['content']).hexdigest()),
+                    NameObject('/ModDate'): create_string_object(datetime.now().strftime(DEFAULT_PDF_DATETIME_FORMAT)),
                     NameObject('/Size'): NameObject(f"/{len(attachment['content'])}"),
                 }),
         })
@@ -442,8 +416,8 @@ class OdooPdfFileWriter(PdfFileWriter):
             file_entry.update({
                 NameObject("/Subtype"): NameObject(attachment['subtype']),
             })
-        file_entry_object = self._addObject(file_entry)
-        filename_object = createStringObject(attachment['filename'])
+        file_entry_object = self._add_object(file_entry)
+        filename_object = create_string_object(attachment['filename'])
         filespec_object = DictionaryObject({
             NameObject("/AFRelationship"): NameObject("/Data"),
             NameObject("/Type"): NameObject("/Filespec"),
@@ -456,5 +430,5 @@ class OdooPdfFileWriter(PdfFileWriter):
             NameObject("/UF"): filename_object,
         })
         if attachment.get('description'):
-            filespec_object.update({NameObject("/Desc"): createStringObject(attachment['description'])})
-        return self._addObject(filespec_object)
+            filespec_object.update({NameObject("/Desc"): create_string_object(attachment['description'])})
+        return self._add_object(filespec_object)

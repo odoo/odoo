@@ -1,19 +1,8 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import models, fields, api, _
-from odoo.tools.pdf import OdooPdfFileReader
-from odoo.osv import expression
 from odoo.tools import html_escape
-from odoo.exceptions import RedirectWarning
 
-from lxml import etree
-from struct import error as StructError
-import base64
-import io
-import logging
-import pathlib
-import re
 
 _logger = logging.getLogger(__name__)
 

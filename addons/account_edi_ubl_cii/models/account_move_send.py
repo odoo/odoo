@@ -150,9 +150,9 @@ class AccountMoveSend(models.Model):
 
         # Post-process.
         writer = OdooPdfFileWriter()
-        writer.cloneReaderDocumentRoot(reader)
+        writer.clone_reader_document_root(reader)
 
-        writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
+        writer.add_attachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
         # PDF-A.
         if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
