@@ -421,7 +421,7 @@ class MicrosoftSync(models.AbstractModel):
             if token:
                 self._ensure_attendees_have_email()
                 res = microsoft_service.patch(event_id, values, token=token, timeout=timeout)
-                self.write({
+                self.with_context(dont_notify=True).write({
                     'need_sync_m': not res,
                 })
 
