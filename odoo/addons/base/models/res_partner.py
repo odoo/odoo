@@ -1009,11 +1009,25 @@ class Partner(models.Model):
 
     @api.model
     def _get_default_address_format(self):
-        return "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+        current_company_id = self.company_id or self.env.company
+
+        return current_company_id._recurse_country_id().address_format or "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+
+    def _recurse_country_id(self):
+        self.ensure_one()
+
+        current_id = self
+        country_id = current_id.country_id
+
+        while current_id and not country_id:
+            current_id = current_id.parent_id
+            country_id = current_id.country_id
+
+        return country_id
 
     @api.model
     def _get_address_format(self):
-        return self.country_id.address_format or self._get_default_address_format()
+        return self._recurse_country_id().address_format or self._get_default_address_format()
 
     def _prepare_display_address(self, without_company=False):
         # get the information that will be injected into the display format

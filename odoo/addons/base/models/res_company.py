@@ -198,6 +198,18 @@ class Company(models.Model):
     def cache_restart(self):
         self.clear_caches()
 
+    def _recurse_country_id(self):
+        self.ensure_one()
+
+        current_id = self
+        country_id = current_id.partner_id.country_id
+
+        while current_id and not country_id:
+            current_id = current_id.parent_id
+            country_id = current_id.partner_id.country_id
+
+        return country_id
+
     @api.model
     def create(self, vals):
         if not vals.get('favicon'):
