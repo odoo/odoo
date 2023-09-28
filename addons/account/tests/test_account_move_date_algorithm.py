@@ -156,7 +156,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         exchange_move = amls.matched_debit_ids.exchange_move_id
 
         self.assertRecordValues(exchange_move, [{
-            'date': fields.Date.from_string('2017-02-01'),
+            'date': fields.Date.from_string('2017-02-12'),
             'amount_total_signed': 200.0,
         }])
 

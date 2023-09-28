@@ -416,7 +416,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': full_reconcile.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(full_reconcile.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(full_reconcile.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(full_reconcile.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -478,7 +478,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': full_reconcile.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.01,
@@ -495,7 +495,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'account_id': self.exch_income_account.id,
             },
         ])
-        self.assertRecordValues(full_reconcile.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(full_reconcile.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(full_reconcile.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -598,7 +598,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -646,7 +646,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_2.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -694,7 +694,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -742,7 +742,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_1.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -791,7 +791,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -840,7 +840,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -889,7 +889,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_2.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -938,7 +938,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_2.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -987,7 +987,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1036,7 +1036,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1085,7 +1085,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_1.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1134,7 +1134,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_1.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1209,7 +1209,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1260,7 +1260,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_2.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1311,7 +1311,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             }
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1362,7 +1362,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_1.id,
             }
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1414,7 +1414,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1466,7 +1466,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1518,7 +1518,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_2.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1570,7 +1570,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_2.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1622,7 +1622,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1674,7 +1674,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': partials.exchange_move_id.line_ids[0].id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.0,
@@ -1726,7 +1726,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_1.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -1778,7 +1778,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': line_1.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 20.0,
@@ -2003,7 +2003,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': refund1_rec_line.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-24')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-30')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 6.34,
@@ -2065,7 +2065,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': pay1_rec_line.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-28')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-30')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 312.54,
@@ -2124,7 +2124,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': pay2_rec_line.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-09-24')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-09-30')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.06,
@@ -2313,7 +2313,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': pay1_rec_line.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-28')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-30')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 312.54,
@@ -2372,7 +2372,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': refund1_rec_line.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-24')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-06-30')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 6.34,
@@ -2424,7 +2424,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit_move_id': pay2_rec_line.id,
             },
         ])
-        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-09-24')}])
+        self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2019-09-30')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
             {
                 'debit': 0.06,
