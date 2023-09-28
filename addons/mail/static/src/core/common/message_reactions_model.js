@@ -13,9 +13,10 @@ export class MessageReactions extends Record {
      * @returns {import("models").MessageReactions}
      */
     static insert(data) {
-        let reaction = this.store.Message.get(data.message.id)?.reactions.find(
-            ({ content }) => content === data.content
-        );
+        if (data.message && !(data.message instanceof Record)) {
+            data.message = this.store.Message.insert(data.message);
+        }
+        let reaction = data.message.reactions.find(({ content }) => content === data.content);
         if (!reaction) {
             /** @type {import("models").MessageReactions} */
             reaction = this.preinsert(data);
@@ -46,7 +47,7 @@ export class MessageReactions extends Record {
             count: data.count,
             content: data.content,
             message: data.message,
-            personas: reaction.personas.filter((p) => !personasToUnlink.has(p)),
+            personas: reaction.personas.filter((p) => !personasToUnlink.has(p.localId)),
         });
         return reaction;
     }

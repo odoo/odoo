@@ -78,7 +78,10 @@ patch(MockServer.prototype, {
                         guests: [],
                         message: { id: messageId },
                         partners: [
-                            ["ADD", { id: this.pyEnv.currentPartnerId, name: currentPartner.name }],
+                            [
+                                action === "add" ? "ADD" : "DELETE",
+                                { id: this.pyEnv.currentPartnerId, name: currentPartner.name },
+                            ],
                         ],
                     },
                 ],

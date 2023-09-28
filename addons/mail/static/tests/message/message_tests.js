@@ -531,6 +531,8 @@ QUnit.test("Two users reacting with the same emoji", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅2" });
     await click(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction", { text: "😅1" });
+    await click(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReaction", { text: "😅2" });
 });
 
 QUnit.test("Reaction summary", async () => {
