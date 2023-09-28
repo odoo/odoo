@@ -204,7 +204,7 @@ QUnit.test(
         patchUiSize({ size: SIZES.SM });
         const { openDiscuss } = await start();
         await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
-        await click("span:contains(channel)");
+        await click(".o-mail-NotificationItem:contains(channel)");
         await click("button[aria-label='GIFs']");
         assert.containsNone($, ".popover .o-discuss-GifPicker");
         assert.containsOnce($, ".o-mail-Composer-footer .o-discuss-GifPicker");
