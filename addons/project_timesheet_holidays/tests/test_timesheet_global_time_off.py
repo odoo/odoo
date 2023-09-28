@@ -184,3 +184,90 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         leaves_types_with_task_id.write({'timesheet_task_id': False})
         self.env['project.task'].search([('is_timeoff_task', '!=', False)])
+
+    def test_timesheet_creation_and_deletion_for_calendar_update(self):
+        """
+            Check that employee's timesheets are correctly updated when the employee's calendar
+            is modified for public holidays after today's date.
+        """
+        attendance_ids_40h = [
+            Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+        ]
+        attendance_ids_35h = [
+            Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+        ]
+        calendar_40h, calendar_35h = self.env['resource.calendar'].create([
+            {
+                'name': 'Calendar 40h',
+                'company_id': self.test_company.id,
+                'hours_per_day': 8,
+                'attendance_ids': attendance_ids_40h,
+            },
+            {
+                'name': 'Calendar 35h',
+                'company_id': self.test_company.id,
+                'hours_per_day': 8,
+                'attendance_ids': attendance_ids_35h,
+            }
+        ])
+        gto_09_04, gto_09_11, gto_11_06, gto_11_13 = self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Global Time Off 4 Setpember',
+                'date_from': datetime(2023, 9, 4, 7, 0, 0, 0),
+                'date_to': datetime(2023, 9, 4, 18, 0, 0, 0),
+                'calendar_id': calendar_40h.id,
+            },
+            {
+                'name': 'Global Time Off 11 Setpember',
+                'date_from': datetime(2023, 9, 11, 7, 0, 0, 0),
+                'date_to': datetime(2023, 9, 11, 18, 0, 0, 0),
+                'calendar_id': calendar_35h.id,
+            },
+            {
+                'name': 'Global Time Off 6 November',
+                'date_from': datetime(2023, 11, 6, 7, 0, 0, 0),
+                'date_to': datetime(2023, 11, 6, 18, 0, 0, 0),
+                'calendar_id': calendar_40h.id,
+            },
+            {
+                'name': 'Global Time Off 13 November',
+                'date_from': datetime(2023, 11, 13, 7, 0, 0, 0),
+                'date_to': datetime(2023, 11, 13, 18, 0, 0, 0),
+                'calendar_id': calendar_35h.id,
+            }
+        ])
+
+        with freeze_time('2023-08-10'):
+            self.full_time_employee.resource_calendar_id = calendar_40h.id
+        timesheets_employee_40h = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
+        global_leaves_ids_40h = timesheets_employee_40h.global_leave_id
+        self.assertEqual(len(global_leaves_ids_40h), 2)
+        self.assertIn(gto_09_04, global_leaves_ids_40h)
+        self.assertIn(gto_11_06, global_leaves_ids_40h)
+
+        with freeze_time('2023-10-10'):
+            self.full_time_employee.resource_calendar_id = calendar_35h.id
+        timesheets_employee_35h = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
+        global_leaves_ids_35h = timesheets_employee_35h.global_leave_id
+        self.assertEqual(len(global_leaves_ids_35h), 2)
+        self.assertIn(gto_09_04, global_leaves_ids_35h)
+        self.assertIn(gto_11_13, global_leaves_ids_35h)
+        self.assertNotIn(gto_09_11, global_leaves_ids_35h)
