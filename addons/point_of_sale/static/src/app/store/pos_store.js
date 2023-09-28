@@ -465,11 +465,7 @@ export class PosStore extends Reactive {
                 const newPackLotLines = [{ lot_name: code.code }];
                 draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
             } else {
-                draftPackLotLines = await this.getEditedPackLotLines(
-                    product.isAllowOnlyOneLot(),
-                    packLotLinesToEdit,
-                    product.display_name
-                );
+                draftPackLotLines = await this.editLots(product, packLotLinesToEdit);
             }
             if (!draftPackLotLines) {
                 return;
@@ -1907,25 +1903,65 @@ export class PosStore extends Reactive {
         this.numberBuffer.reset();
     }
 
-    async getEditedPackLotLines(isAllowOnlyOneLot, packLotLinesToEdit, productName) {
+    async editLots(product, packLotLinesToEdit) {
+        const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
+        let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
+
+        let existingLots = [];
+        try {
+            existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
+                this.company.id,
+                product.id,
+            ]);
+            if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("No existing serial/lot number"),
+                    body: _t(
+                        "There is no serial/lot number for the selected product, and their creation is not allowed from the Point of Sale app."
+                    ),
+                });
+                return null;
+            }
+        } catch (ex) {
+            console.error("Collecting existing lots failed: ", ex);
+            const confirmed = await ask(this.dialog, {
+                title: _t("Server communication problem"),
+                body: _t(
+                    "The existing serial/lot numbers could not be retrieved. \nContinue without checking the validity of serial/lot numbers ?"
+                ),
+                confirmLabel: _t("Yes"),
+                cancelLabel: _t("No"),
+            });
+            if (!confirmed) {
+                return null;
+            }
+            canCreateLots = true;
+        }
+
+        const existingLotsName = existingLots.map((l) => l.name);
+
         const payload = await makeAwaitable(this.dialog, EditListPopup, {
             title: _t("Lot/Serial Number(s) Required"),
-            name: productName,
+            name: product.display_name,
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,
+            options: existingLotsName,
+            customInput: canCreateLots,
+            uniqueValues: product.tracking === "serial",
         });
-        if (!payload) {
-            return;
-        }
-        // Segregate the old and new packlot lines
-        const modifiedPackLotLines = Object.fromEntries(
-            payload.filter((item) => item.id).map((item) => [item.id, item.text])
-        );
-        const newPackLotLines = payload
-            .filter((item) => !item.id)
-            .map((item) => ({ lot_name: item.text }));
+        if (payload) {
+            // Segregate the old and new packlot lines
+            const modifiedPackLotLines = Object.fromEntries(
+                payload.filter((item) => item.id).map((item) => [item.id, item.text])
+            );
+            const newPackLotLines = payload
+                .filter((item) => !item.id)
+                .map((item) => ({ lot_name: item.text }));
 
-        return { modifiedPackLotLines, newPackLotLines };
+            return { modifiedPackLotLines, newPackLotLines };
+        } else {
+            return null;
+        }
     }
 
     openCashControl() {

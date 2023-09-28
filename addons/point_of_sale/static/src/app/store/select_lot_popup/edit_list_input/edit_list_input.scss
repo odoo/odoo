@@ -1,0 +1,39 @@
+.pos .edit-list-inputs .popup-input.form-control {
+    background-color: unset;
+}
+
+.pos .edit-list-inputs .input-group {
+    position: relative;
+}
+
+.pos .edit-list-inputs .options-dropdown {
+    padding: 1px;
+    border: 1px solid $gray-200;
+    width: 100%;
+    font-size: medium;
+    font-weight: normal;
+    text-align: left;
+    position: fixed;
+    top: 100%;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    max-height: 15rem;
+    z-index: 1000000;
+    background-color: #fff;
+}
+
+.pos .edit-list-inputs .options-dropdown .no-match {
+    padding: .5rem;
+    font-style: italic;
+}
+
+.pos .edit-list-inputs .options-dropdown .option {
+    padding: .5rem;
+    cursor: pointer;
+}
+
+.pos .edit-list-inputs .options-dropdown .option.selected,
+.pos .edit-list-inputs .options-dropdown .option:hover {
+    background-color: $gray-200;
+}
