@@ -57,6 +57,9 @@ class HrWorkEntry(models.Model):
     def _get_duration_is_valid(self):
         return self.work_entry_type_id and self.work_entry_type_id.is_leave
 
+    def _get_calendar(self):
+        return self.contract_id.resource_calendar_id or super()._get_calendar()
+
     @api.onchange('employee_id', 'date_start', 'date_stop')
     def _onchange_contract_id(self):
         vals = {
