@@ -37,7 +37,7 @@ export class AttributeSelection extends Component {
 
     get attributeSelected() {
         const flatAttribute = attributeFlatter(this.selectedValues);
-        return attributeFormatter(this.selfOrder.attributeById, flatAttribute);
+        return attributeFormatter(this.selfOrder.pos_data.attributes_by_ptal_id, flatAttribute);
     }
 
     initAttribute() {

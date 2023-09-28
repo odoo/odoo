@@ -116,6 +116,28 @@ export class BaseProduct extends PosModel {
         // pricelist that have base == 'pricelist'.
         return price;
     }
+    get_display_price({
+        pricelist,
+        quantity = 1,
+        price = this.get_price(pricelist, quantity),
+        fiscalPosition,
+        iface_tax_included,
+    }) {
+        const taxes = this.env.utils.get_taxes_after_fp(this.taxes_id, fiscalPosition);
+        const currentTaxes = this.env.utils.getTaxesByIds(this.taxes_id);
+        const priceAfterFp = this.env.utils.computePriceAfterFp(price, currentTaxes);
+        const allPrices = this.env.utils.compute_all(
+            taxes,
+            priceAfterFp,
+            quantity,
+            this.env.cache.currency.rounding
+        );
+        if (iface_tax_included === "total") {
+            return allPrices.total_included;
+        } else {
+            return allPrices.total_excluded;
+        }
+    }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);
         return (

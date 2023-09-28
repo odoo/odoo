@@ -304,8 +304,6 @@ class PosConfig(models.Model):
             "custom_links": self._get_self_order_custom_links(),
             "currency_id": self.currency_id.id,
             "pos_payment_methods": payment_methods,
-            "pos_category": self._get_available_categories().read(["name", "sequence", "has_image"]),
-            "products": self._get_available_products()._get_self_order_data(self),
             "combos": self._get_combos_data(),
             "config": {
                 "iface_start_categ_id": self.iface_start_categ_id.id,

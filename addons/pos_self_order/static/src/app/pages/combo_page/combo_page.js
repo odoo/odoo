@@ -57,7 +57,7 @@ export class ComboPage extends Component {
 
     getAttributeSelected(values) {
         const flatAttribute = attributeFlatter(values);
-        return attributeFormatter(this.selfOrder.attributeById, flatAttribute);
+        return attributeFormatter(this.selfOrder.pos_data.attributes_by_ptal_id, flatAttribute);
     }
 
     resetState() {

@@ -19,49 +19,6 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.with_context(display_default_code=False).display_name
 
-    def _filter_applicable_attributes(self, attributes_by_ptal_id: Dict) -> List[Dict]:
-        """
-        The attributes_by_ptal_id is a dictionary that contains all the attributes that have
-        [('create_variant', '=', 'no_variant')]
-        This method filters out the attributes that are not applicable to the product in self
-        """
-        self.ensure_one()
-        return [
-            attributes_by_ptal_id[id]
-            for id in self.attribute_line_ids.ids
-            if attributes_by_ptal_id.get(id) is not None
-        ]
-
-    def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
-        self.ensure_one()
-
-        attributes = self._filter_applicable_attributes(
-            self.env["pos.session"]._get_attributes_by_ptal_id()
-        )
-        return self._add_price_info_to_attributes(
-            attributes,
-            pos_config_sudo,
-        )
-
-    def _add_price_info_to_attributes(
-        self, attributes: List[Dict], pos_config_sudo: PosConfig
-    ) -> List[Dict]:
-        """
-        Here we replace the price_extra of each attribute value with a price_extra
-        dictionary that includes the price with taxes included and the price with taxes excluded
-        """
-        self.ensure_one()
-        for attribute in attributes:
-            for value in attribute["values"]:
-                value.update(
-                    {
-                        "price_extra": self._get_price_info(
-                            pos_config_sudo, value.get("price_extra")
-                        )
-                    }
-                )
-        return attributes
-
     # FIXME: this method should be verified about price computation (pricelist taxes....)
     def _get_price_info(
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
@@ -92,7 +49,6 @@ class ProductProduct(models.Model):
         return {
                 "price_info": self._get_price_info(pos_config),
                 "has_image": bool(self.image_1920),
-                "attributes": self._get_attributes(pos_config),
                 "name": self._get_name(),
                 "id": self.id,
                 "description_sale": self.description_sale,

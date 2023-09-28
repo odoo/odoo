@@ -409,7 +409,7 @@ export const contextualUtilsService = {
             }
             correspondingProduct.applicablePricelistItems[pricelist.id].push(pricelistItem);
         }
-        function initializeProducts(products, productClass, params) {
+        function initializeProducts(products, productClass, params = {}) {
             const productMap = {};
             const productTemplateMap = {};
 

@@ -13,7 +13,7 @@
                     onerror="this.remove()" />
                 <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 px-2 mt-3 mb-1">
                     <span t-esc="props.product.name" class="fs-5 fw-bolder lh-sm" />
-                    <span t-esc="selfOrder.formatMonetary(props.product.prices)" class="py-2 text-muted flex-grow-1" />
+                    <span t-esc="selfOrder.formatMonetary(getPrice())" class="py-2 text-muted flex-grow-1" />
                 </div>
             </button>
         </div>

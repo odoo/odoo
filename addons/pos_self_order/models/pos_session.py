@@ -49,6 +49,8 @@ class PosSession(models.Model):
                 'res.company',
                 'res.currency',
                 'product.pricelist',
+                'product.product',
+                'pos.category',
                 'pos.config',
                 'decimal.precision',
                 'stock.picking.type',

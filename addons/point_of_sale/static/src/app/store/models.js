@@ -150,24 +150,14 @@ export class Product extends BaseProduct {
         price = this.get_price(pricelist, quantity),
         iface_tax_included = this.pos.config.iface_tax_included,
     } = {}) {
-        const order = this.pos.get_order();
-        const taxes = this.env.utils.get_taxes_after_fp(
-            this.taxes_id,
-            order && order.fiscal_position
-        );
-        const currentTaxes = this.env.utils.getTaxesByIds(this.taxes_id);
-        const priceAfterFp = this.env.utils.computePriceAfterFp(price, currentTaxes);
-        const allPrices = this.env.utils.compute_all(
-            taxes,
-            priceAfterFp,
-            1,
-            this.pos.currency.rounding
-        );
-        if (iface_tax_included === "total") {
-            return allPrices.total_included;
-        } else {
-            return allPrices.total_excluded;
-        }
+        const fiscalPosition = this.pos.get_order()?.fiscal_position;
+        return super.get_display_price({
+            pricelist,
+            quantity,
+            price,
+            fiscalPosition,
+            iface_tax_included,
+        });
     }
 }
 

@@ -1971,7 +1971,7 @@ class PosSession(models.Model):
         domain = []
         if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
             domain = [('id', 'in', self.config_id.iface_available_categ_ids.ids)]
-        return {'search_params': {'domain': domain, 'fields': ['id', 'name', 'parent_id', 'child_id', 'write_date', 'has_image']}}
+        return {'search_params': {'domain': domain, 'fields': ['id', 'name', 'parent_id', 'child_id', 'write_date', 'has_image', 'sequence']}}
 
     def _get_pos_ui_pos_category(self, params):
         return self.env['pos.category'].search_read(**params['search_params'])

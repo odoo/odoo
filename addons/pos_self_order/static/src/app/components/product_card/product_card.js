@@ -18,7 +18,16 @@ export class ProductCard extends Component {
 
         useForwardRefToParent("currentProductCard");
     }
-
+    getPrice() {
+        return this.props.product.get_display_price({
+            pricelist: this.selfOrder.pos_data.default_pricelist,
+            fiscalPosition: this.selfOrder.pos_data["account.fiscal.position"].find(
+                (fp) =>
+                    fp.id === this.selfOrder.pos_data["pos.config"].default_fiscal_position_id[0]
+            ),
+            iface_tax_included: this.selfOrder.pos_data["pos.config"].iface_tax_included,
+        });
+    }
     flyToCart() {
         const productCardEl = this.selfRef.el;
         if (!productCardEl) {

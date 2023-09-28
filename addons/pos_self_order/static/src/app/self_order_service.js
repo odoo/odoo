@@ -3,7 +3,6 @@ import { Reactive, effect } from "@web/core/utils/reactive";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "@web/views/fields/formatters";
-import { Product } from "@pos_self_order/app/models/product";
 import { Combo } from "@pos_self_order/app/models/combo";
 import { session } from "@web/session";
 import { getColor } from "@web/core/colors/colors";
@@ -13,6 +12,7 @@ import { batched } from "@web/core/utils/timing";
 import { useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { BaseProduct } from "@point_of_sale/app/base_models/base_product";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -20,14 +20,14 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { rpc, notification, router, cookie }) {
+    async setup(env, { rpc, notification, router, cookie, pos_data }) {
         // services
         this.notification = notification;
         this.router = router;
         this.cookie = cookie;
         this.env = env;
         this.rpc = rpc;
-
+        this.pos_data = pos_data;
         // data
         Object.assign(this, {
             ...session.pos_self_order_data,
@@ -39,7 +39,7 @@ export class SelfOrder extends Reactive {
         this.eatingLocation = "in"; // (in, out) in by default because out can be disabled in the config
         this.tablePadNumber = null;
         this.currentProduct = 0;
-        this.attributeById = {};
+        this.pos_data.attributes_by_ptal_id = {};
         this.priceLoading = false;
         this.productByIds = {};
         this.paymentError = false;
@@ -48,8 +48,11 @@ export class SelfOrder extends Reactive {
         this.ordering = false;
         this.orders = [];
         this.color = getColor(this.company_color);
-
         this.initData();
+        this.products = this.env.utils.initializeProducts(
+            this.pos_data["product.product"],
+            BaseProduct
+        );
         if (this.config.self_ordering_mode === "kiosk") {
             this.initKioskData();
         } else {
@@ -81,37 +84,28 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
-        this.products = this.products.map((p) => {
-            const product = new Product(p, this.config.iface_tax_included);
+        this.products = this.env.utils.initializeProducts(
+            this.pos_data["product.product"],
+            BaseProduct
+        );
+
+        this.products.forEach((product) => {
             this.productByIds[product.id] = product;
-
-            if (product.attributes.length > 0) {
-                for (const atr of product.attributes) {
-                    this.attributeById[atr.id] = atr;
-                    for (const val of atr.values) {
-                        val.attribute_id = atr.id;
-                        this.attributeValueById[val.id] = val;
-                    }
-                }
-            }
-
-            return product;
         });
 
         this.productsGroupedByCategory = this.products.reduce((acc, product) => {
-            product.pos_categ_ids.map((pos_categ_ids) => {
-                acc[pos_categ_ids] = acc[pos_categ_ids] || [];
-                acc[pos_categ_ids].push(product);
+            product.pos_categ_ids.map((pos_categ_id) => {
+                const pos_categ = this.pos_data["pos.category"].find((c) => c.id === pos_categ_id);
+                acc[pos_categ.name] = acc[pos_categ.name] || [];
+                acc[pos_categ.name].push(product);
             });
             return acc;
         }, {});
 
-        this.categoryList = new Set(
-            this.pos_category
-                .sort((a, b) => a.sequence - b.sequence)
-                .filter((c) => this.productsGroupedByCategory[c.name])
-                .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id))
-        );
+        this.categoryList = this.pos_data["pos.category"]
+            .sort((a, b) => a.sequence - b.sequence)
+            .filter((c) => this.productsGroupedByCategory[c.name])
+            .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id));
 
         this.combos = this.combos.map((c) => {
             const combo = new Combo(c);
@@ -119,7 +113,7 @@ export class SelfOrder extends Reactive {
             return combo;
         });
 
-        this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
+        this.currentCategory = this.categoryList.length > 0 ? [...this.categoryList][0] : null;
     }
 
     initKioskData() {
@@ -378,15 +372,22 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    formatMonetary(price) {
-        return formatMonetary(price, { currencyId: this.currency_id });
+    formatMonetary(price = 0) {
+        return this.env.utils.formatCurrency(price);
     }
 }
 
 export const selfOrderService = {
-    dependencies: ["rpc", "notification", "router", "cookie", "contextual_utils_service"],
-    async start(env, { rpc, notification, router, cookie }) {
-        return new SelfOrder(env, { rpc, notification, router, cookie }).ready;
+    dependencies: [
+        "rpc",
+        "notification",
+        "router",
+        "cookie",
+        "contextual_utils_service",
+        "pos_data",
+    ],
+    async start(env, { rpc, notification, router, cookie, pos_data }) {
+        return new SelfOrder(env, { rpc, notification, router, cookie, pos_data }).ready;
     },
 };
 

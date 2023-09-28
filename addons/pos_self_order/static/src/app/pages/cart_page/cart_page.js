@@ -177,6 +177,6 @@ export class CartPage extends Component {
     }
 
     getSelectedAttributes(attrs) {
-        return attributeFormatter(this.selfOrder.attributeById, attrs);
+        return attributeFormatter(this.selfOrder.pos_data.attributes_by_ptal_id, attrs);
     }
 }
