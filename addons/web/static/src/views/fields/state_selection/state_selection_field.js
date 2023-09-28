@@ -92,13 +92,12 @@ export const stateSelectionField = {
             label: _t("Hide label"),
             name: "hide_label",
             type: "boolean",
-            viewTypes: ["list"],
         },
     ],
     supportedTypes: ["selection"],
     extractProps({ options, viewType }, dynamicInfo) {
         return {
-            showLabel: viewType === "list" && !options.hide_label,
+            showLabel: 'hide_label' in options ? !options.hide_label : false,
             withCommand: viewType === "form",
             readonly: dynamicInfo.readonly,
             autosave: "autosave" in options ? !!options.autosave : true,
@@ -107,4 +106,3 @@ export const stateSelectionField = {
 };
 
 registry.category("fields").add("state_selection", stateSelectionField);
-registry.category("fields").add("list.state_selection", stateSelectionField);
