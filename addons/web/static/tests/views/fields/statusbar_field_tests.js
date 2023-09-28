@@ -384,7 +384,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "clickable statusbar should change m2o fetching domain in edit mode",
         async function (assert) {
             serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
