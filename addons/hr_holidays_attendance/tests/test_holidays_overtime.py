@@ -251,3 +251,14 @@ class TestHolidaysOvertime(TransactionCase):
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
         self.assertFalse(leave.overtime_id.exists())
+
+    def test_overtime_hour_consider_public_holiday(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'company_id': self.company.id,
+            'date_from': datetime(2022, 9, 29, 0),
+            'date_to': datetime(2022, 9, 30, 0),
+        })
+        attendance = self.new_attendance(check_in=datetime(2022, 9, 29, 8), check_out=datetime(2022, 9, 29, 16))
+        attendance_report = self.env['hr.attendance.report'].search([('employee_id', '=', attendance.employee_id.id)])
+        self.assertEqual(attendance.worked_hours, attendance_report.overtime_hours, 'Working hours on public holiday should be counted as Extra Hours')
