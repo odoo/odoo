@@ -3,12 +3,9 @@
 import { _t } from "@web/core/l10n/translation";
 
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
+import { patch } from "@web/core/utils/patch";
 
-PurchaseAdditionalTourSteps.include({
-
-    init: function() {
-        this._super.apply(this, arguments);
-    },
+patch(PurchaseAdditionalTourSteps.prototype, {
 
     _get_purchase_stock_steps: function () {
         this._super.apply(this, arguments);

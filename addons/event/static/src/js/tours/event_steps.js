@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
-import Class from "@web/legacy/js/core/class";
+class EventAdditionalTourSteps {
 
-var EventAdditionalTourSteps = Class.extend({
-
-    _get_website_event_steps: function () {
+    _get_website_event_steps() {
         return [false];
-    },
+    }
 
-});
+}
 
 export default EventAdditionalTourSteps;
