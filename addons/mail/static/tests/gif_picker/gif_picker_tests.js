@@ -4,53 +4,43 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
+import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+import { click, contains, insertText, scroll } from "@web/../tests/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+
+let gifId = 0;
+const gifFactory = (count = 1, options = {}) => {
+    const gifs = [];
+    for (let i = 0; i < count; i++) {
+        gifs.push({
+            id: gifId,
+            title: "",
+            media_formats: {
+                tinygif: {
+                    url: options.url || "https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif",
+                    duration: 0,
+                    preview: "",
+                    dims: [220, 190],
+                    size: 1007885,
+                },
+            },
+            created: 1654414453.782169,
+            content_description: "Cry GIF",
+            itemurl: "https://tenor.com/view/cry-gif-25866484",
+            url: "https://tenor.com/bUHdw.gif",
+            tags: ["cry"],
+            flags: [],
+            hasaudio: false,
+        });
+        gifId++;
+    }
+    return gifs;
+};
 
 const rpc = {
     search: {
-        results: [
-            {
-                id: "16925131306449801434",
-                title: "",
-                media_formats: {
-                    tinygif: {
-                        url: "https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif",
-                        duration: 0,
-                        preview: "",
-                        dims: [220, 190],
-                        size: 1007885,
-                    },
-                },
-                created: 1654414453.782169,
-                content_description: "Cry GIF",
-                itemurl: "https://tenor.com/view/cry-gif-25866484",
-                url: "https://tenor.com/bUHdw.gif",
-                tags: ["cry"],
-                flags: [],
-                hasaudio: false,
-            },
-            {
-                id: "11429640401266091247",
-                title: "",
-                media_formats: {
-                    tinygif: {
-                        url: "https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif",
-                        duration: 0,
-                        preview: "",
-                        dims: [220, 220],
-                        size: 145353,
-                    },
-                },
-                created: 1612455937.558013,
-                content_description: "Crying Crying Face GIF",
-                itemurl: "https://tenor.com/view/crying-cry-crying-face-gif-20235014",
-                url: "https://tenor.com/bw4dm.gif",
-                tags: ["crying", "cry", "Crying Face"],
-                flags: [],
-                hasaudio: false,
-            },
-        ],
+        results: gifFactory(2),
         next: "CAgQpIGj_8WN_gIaHgoKAD-_xMQ20dMU_xIQ1MVHUnSAQxC98Y6VAAAAADAI",
     },
     categories: {
@@ -226,3 +216,37 @@ QUnit.test("Searching for a GIF with a failling RPC should display an error", as
     await insertText("input[placeholder='Search for a GIF']", "search");
     await contains(".o-discuss-GifPicker-error");
 });
+
+QUnit.test(
+    "Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.",
+    async () => {
+        patchWithCleanup(GifPicker.prototype, {
+            get style() {
+                return "width: 200px;height: 200px;background: #000";
+            },
+        });
+
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "" });
+        const { openDiscuss } = await start({
+            mockRPC(route) {
+                if (route === "/discuss/gif/search") {
+                    const _rpc = rpc.search;
+                    _rpc.results = gifFactory(4);
+                    return _rpc;
+                }
+                if (route === "/discuss/gif/categories") {
+                    return rpc.categories;
+                }
+            },
+        });
+        await openDiscuss(channelId);
+        await click("button[aria-label='GIFs']");
+        await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+        await click("i[aria-label='back']");
+        await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+        await contains(".o-discuss-Gif", { count: 4 });
+        await scroll(".o-discuss-GifPicker-content", "bottom");
+        await contains(".o-discuss-Gif", { count: 8 });
+    }
+);

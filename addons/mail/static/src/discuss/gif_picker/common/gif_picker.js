@@ -126,6 +126,10 @@ export class GifPicker extends Component {
         );
     }
 
+    get style() {
+        return "";
+    }
+
     get searchTerm() {
         return this.props.state ? this.props.state.searchTerm : this.state.searchTerm;
     }
@@ -157,6 +161,7 @@ export class GifPicker extends Component {
     }
 
     openCategories() {
+        this.showFavorite = false;
         this.state.showCategories = true;
         this.searchTerm = "";
         this.clear();
