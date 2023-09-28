@@ -335,7 +335,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                         data-scale-x="1"
                         data-scale-y="1"
                         data-aspect-ratio="0/0"
-                        ${src.startsWith("/web") ? 'data-src="' : 'src="'}${src}"
+                        ${src.startsWith("/web") && isModified ? 'data-src="' : 'src="'}${src}"
                     >
                     <br>
                 </p>
@@ -542,15 +542,12 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // Paste image.
         const img = await pasteImage(editor);
-        // Test environment replaces 'src' by 'data-src'.
-        assert.ok(/^data:image\/png;base64,/.test(img.dataset['src']));
+        assert.ok(/^data:image\/png;base64,/.test(img.getAttribute("src")));
         assert.ok(img.classList.contains('o_b64_image_to_save'));
 
         // Save changes.
-        // Restore 'src' attribute so that SavePendingImages can do its job.
-        img.src = img.dataset['src'];
         await htmlField.commitChanges();
-        assert.equal(img.dataset['src'], '/test_image_url.png?access_token=1234');
+        assert.equal(img.getAttribute("src"), '/test_image_url.png?access_token=1234');
         assert.ok(!img.classList.contains('o_b64_image_to_save'));
     });
 

@@ -269,7 +269,17 @@ function removeUnwantedAttrsFromTemplates(attrs) {
     function replaceAttr(attrName, prefix, element) {
         const attrKey = `${prefix}${attrName}`;
         const attrValue = element.getAttribute(attrKey);
-        element.removeAttribute(attrKey);
+        if (element.nodeName === "img") {
+            if (!element.getAttribute("data-src")) {
+                if (attrKey === "src" || attrKey === "t-attf-src") {
+                    element.setAttribute(attrKey, "/web/image/web.image_placeholder");
+                } else if (attrKey === "t-att-src") {
+                    element.setAttribute(attrKey, "'/web/image/web.image_placeholder'");
+                }
+            }
+        } else {
+            element.removeAttribute(attrKey);
+        }
         element.setAttribute(`${prefix}data-${attrName}`, attrValue);
     }
     const attrPrefixes = ["", "t-att-", "t-attf-"];
@@ -394,10 +404,10 @@ export async function setupTests() {
         });
         for (const node of nodes) {
             const src = node.getAttribute("src");
-            if (src && src !== "about:blank") {
+            if (src && src !== "about:blank" && node.dataset.src) {
                 node.dataset.src = src;
                 if (node.nodeName === "IMG") {
-                    node.removeAttribute("src");
+                    node.setAttribute("src", "/web/image/web.image_placeholder");
                 } else {
                     node.setAttribute("src", "about:blank");
                 }
