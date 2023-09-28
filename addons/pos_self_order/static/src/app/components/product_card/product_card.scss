@@ -2,6 +2,7 @@
     width: 100%;
     display:flex;
     flex-direction: column;
+    position: relative;
 
     .o_self_order_item_card_image {
         width: 100%;
@@ -27,4 +28,23 @@
             aspect-ratio: 1/1;
         }
     }
+}
+
+.product-information-tag {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 40px 40px 0;
+    border-color: transparent #9a9ea180 transparent transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    text-align: center;
+}
+
+.product-information-tag-logo {
+    position: absolute;
+    left: 25px;
+    top: 4px;
 }
