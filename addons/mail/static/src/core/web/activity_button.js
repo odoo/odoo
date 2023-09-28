@@ -44,13 +44,15 @@ export class ActivityButton extends Component {
                 classes.push("text-danger");
                 classes.push(this.props.record.data.activity_exception_icon);
                 break;
-            default:
-                if (this.props.record.data.activity_type_icon) {
-                    classes.push(this.props.record.data.activity_type_icon);
+            default: {
+                const { activity_ids, activity_type_icon } = this.props.record.data;
+                if (activity_ids.records.length) {
+                    classes.push(activity_type_icon || "fa-tasks");
                     break;
                 }
                 classes.push("fa-clock-o btn-link text-dark");
                 break;
+            }
         }
         return classes.join(" ");
     }
@@ -76,7 +78,8 @@ export class ActivityButton extends Component {
             const selectedRecords = this.env?.model?.root?.selection ?? [];
             const selectedIds = selectedRecords.map((r) => r.resId);
             // If the current record is not selected, ignore the selection
-            const resIds = (selectedIds.includes(resId) && (selectedIds.length > 1)) ? selectedIds : undefined;
+            const resIds =
+                selectedIds.includes(resId) && selectedIds.length > 1 ? selectedIds : undefined;
             this.popover.open(this.buttonRef.el, {
                 activityIds: this.props.record.data.activity_ids.currentIds,
                 onActivityChanged: () => {
