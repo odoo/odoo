@@ -21,6 +21,7 @@
 
     <record id="group_project_rating" model="res.groups">
         <field name="name">Use Rating on Project</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 

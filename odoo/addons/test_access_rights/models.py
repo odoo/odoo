@@ -12,7 +12,7 @@ class SomeObj(models.Model):
     parent_id = fields.Many2one('test_access_right.some_obj')
     company_id = fields.Many2one('res.company')
     forbidden = fields.Integer(
-        groups='test_access_rights.test_group,base.group_multi_company,base.group_public',
+        groups='test_access_rights.test_group,base.group_portal',
         default=5
     )
     forbidden2 = fields.Integer(groups='test_access_rights.test_group')

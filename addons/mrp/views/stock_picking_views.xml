@@ -104,9 +104,6 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_create_lots']" position="after">
-                <field name="has_kits" invisible="1"/>
-            </xpath>
             <xpath expr="//field[@name='description_picking']" position="after">
                 <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
             </xpath>

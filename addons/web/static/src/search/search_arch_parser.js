@@ -121,6 +121,9 @@ export class SearchArchParser {
         }
         if (node.hasAttribute("name")) {
             const name = node.getAttribute("name");
+            if (!this.fields[name]) {
+                throw Error(`Unknown field ${name}`);
+            }
             const fieldType = this.fields[name].type;
             preField.fieldName = name;
             preField.fieldType = fieldType;

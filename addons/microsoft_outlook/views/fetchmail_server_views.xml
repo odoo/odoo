@@ -7,12 +7,9 @@
         <field name="inherit_id" ref="mail.view_email_server_form"/>
         <field name="arch" type="xml">
             <field name="user" position="after">
-                <field name="is_microsoft_outlook_configured" invisible="1"/>
-                <field name="microsoft_outlook_refresh_token" invisible="1"/>
-                <field name="microsoft_outlook_access_token" invisible="1"/>
-                <field name="microsoft_outlook_access_token_expiration" invisible="1"/>
                 <div invisible="server_type != 'outlook'"
-                    class="d-flex flex-row align-items-center" colspan="2">
+                    class="d-flex flex-row align-items-center" colspan="2"
+                    groups="base.group_system">
                     <span invisible="server_type != 'outlook' or not microsoft_outlook_refresh_token"
                         class="badge text-bg-success">
                         Outlook Token Valid

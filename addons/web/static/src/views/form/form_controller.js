@@ -77,10 +77,6 @@ export async function loadSubViews(fieldNodes, fields, context, resModel, viewSe
                 refinedContext[key] = context[key];
             }
         }
-        // specify the main model to prevent access rights defined in the context
-        // (e.g. create: 0) to apply to sub views (same logic as the one applied by
-        // the server for inline views)
-        refinedContext.base_model_name = resModel;
 
         const comodel = field.relation;
         const {

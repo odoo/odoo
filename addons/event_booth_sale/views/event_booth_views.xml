@@ -28,10 +28,10 @@
                        invisible="not booth_category_id"/>
             </field>
             <group name="renter" position="after">
-                <group name="sales" groups="base.group_no_one"
+                <group name="sales" groups="sales_team.group_sale_salesman"
                        invisible="not sale_order_line_id">
-                    <field name="sale_order_id"/>
-                    <field name="sale_order_line_id" readonly="state != 'available'"/>
+                    <field name="sale_order_id" groups="base.group_no_one"/>
+                    <field name="sale_order_line_id" groups="base.group_no_one" readonly="state != 'available'"/>
                 </group>
             </group>
             <xpath expr="//sheet" position="inside">
