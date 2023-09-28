@@ -119,15 +119,18 @@ export class ProductPage extends Component {
                 lineToMerge.qty += this.state.qty;
             }
         } else {
-            const mainLine = new Line({
-                id: lineToMerge ? lineToMerge.id : null,
-                uuid: lineToMerge ? lineToMerge.uuid : null,
-                qty: this.state.qty,
-                product_id: this.product.id,
-                full_product_name: this.product.name,
-                customer_note: this.state.customer_note,
-                selected_attributes: attributeFlatter(this.env.selectedValues),
-            });
+            const mainLine = new Line(
+                { env: this.env },
+                {
+                    id: lineToMerge ? lineToMerge.id : null,
+                    uuid: lineToMerge ? lineToMerge.uuid : null,
+                    qty: this.state.qty,
+                    product_id: this.product.id,
+                    full_product_name: this.product.name,
+                    customer_note: this.state.customer_note,
+                    selected_attributes: attributeFlatter(this.env.selectedValues),
+                }
+            );
 
             lines.push(mainLine);
         }

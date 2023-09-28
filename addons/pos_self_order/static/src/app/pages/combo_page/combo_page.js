@@ -125,29 +125,35 @@ export class ComboPage extends Component {
         }
 
         const lines = this.selfOrder.currentOrder.lines;
-        const parent_line = new Line({
-            id: null,
-            uuid: null,
-            qty: this.state.qty,
-            price_unit: this.props.product.price_info.price_without_tax,
-            product_id: this.props.product.id,
-            full_product_name: this.props.product.name,
-            selected_attributes: [],
-            combo_parent_uuid: null,
-            combo_id: null,
-        });
-        lines.push(parent_line);
-        for (const combo of this.state.selectedCombos) {
-            const child_line = new Line({
+        const parent_line = new Line(
+            { env: this.env },
+            {
                 id: null,
                 uuid: null,
                 qty: this.state.qty,
-                product_id: combo.product.id,
-                full_product_name: combo.product.name,
-                selected_attributes: attributeFlatter(combo.product.variants),
-                combo_parent_uuid: parent_line.uuid,
-                combo_id: combo.id,
-            });
+                price_unit: this.props.product.price_info.price_without_tax,
+                product_id: this.props.product.id,
+                full_product_name: this.props.product.name,
+                selected_attributes: [],
+                combo_parent_uuid: null,
+                combo_id: null,
+            }
+        );
+        lines.push(parent_line);
+        for (const combo of this.state.selectedCombos) {
+            const child_line = new Line(
+                { env: this.env },
+                {
+                    id: null,
+                    uuid: null,
+                    qty: this.state.qty,
+                    product_id: combo.product.id,
+                    full_product_name: combo.product.name,
+                    selected_attributes: attributeFlatter(combo.product.variants),
+                    combo_parent_uuid: parent_line.uuid,
+                    combo_id: combo.id,
+                }
+            );
             lines.push(child_line);
             parent_line.child_lines.push(child_line);
         }

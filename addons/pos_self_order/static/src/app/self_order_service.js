@@ -70,9 +70,12 @@ export class SelfOrder extends Reactive {
         const existingOrder = this.orders.find((o) => o.state === "draft");
 
         if (!existingOrder) {
-            const newOrder = new Order({
-                pos_config_id: this.pos_config_id,
-            });
+            const newOrder = new Order(
+                { env: this.env },
+                {
+                    pos_config_id: this.pos_config_id,
+                }
+            );
 
             this.orders.push(newOrder);
             this.editedOrder = newOrder;
@@ -148,7 +151,7 @@ export class SelfOrder extends Reactive {
             this.orders.push(
                 ...orders.map((o) => {
                     o.lines = o.lines.filter((l) => this.productByIds[l.product_id]);
-                    return new Order(o);
+                    return new Order({ env: this.env }, o);
                 })
             );
 

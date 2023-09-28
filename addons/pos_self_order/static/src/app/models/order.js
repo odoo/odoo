@@ -1,44 +1,17 @@
 /** @odoo-module **/
-import { Reactive } from "@web/core/utils/reactive";
 import { Line } from "./line";
+import { BaseOrder } from "@point_of_sale/app/base_models/base_order";
 
-export class Order extends Reactive {
-    constructor({
-        id,
-        access_token,
-        pos_config_id,
-        pos_reference,
-        state,
-        lines,
-        date,
-        amount_total,
-        amount_tax,
-        tracking_number,
-        lastChangesSent,
-        take_away,
-    }) {
-        super();
-        this.setup(...arguments);
-    }
-
-    setup(order) {
+export class Order extends BaseOrder {
+    setup(obj, order) {
         // server only data (recovered after first send to server)
-        this.id = order.id || null;
-        this.pos_config_id = order.pos_config_id;
-        this.access_token = order.access_token || null;
-        this.pos_reference = order.pos_reference || null;
-        this.state = order.state || "draft";
-        this.date = order.date || null;
-        this.amount_total = order.amount_total || 0;
-        this.amount_tax = order.amount_tax || 0;
-        this.lines = order.lines || [];
-        this.tracking_number = order.tracking_number || null;
+        super.setup(obj, order);
         this.take_away = typeof order.take_away === "boolean" ? order.take_away : null;
 
         // data
         this.lastChangesSent = order.lastChangesSent || {};
 
-        this.initLines();
+        // this.initLines();
     }
 
     get isAlreadySent() {
@@ -54,7 +27,7 @@ export class Order extends Reactive {
     }
 
     initLines() {
-        this.lines = this.lines.map((line) => new Line(line));
+        this.lines = this.lines.map((line) => new Line({ env: this.env }, line));
     }
 
     removeLine(lineUuid) {
@@ -117,7 +90,7 @@ export class Order extends Reactive {
             const lineFound = this.lines.find((l) => l.uuid === line.uuid);
 
             if (!lineFound && line.product_id) {
-                this.lines.push(new Line(line));
+                this.lines.push(new Line({ env: this.env }, line));
             }
         }
     }

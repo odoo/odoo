@@ -106,13 +106,16 @@ export class ProductCard extends Component {
                 const lines = this.selfOrder.currentOrder.lines;
 
                 lines.push(
-                    new Line({
-                        id: null,
-                        uuid: null,
-                        qty: 1,
-                        product_id: product.id,
-                        full_product_name: product.name,
-                    })
+                    new Line(
+                        { env: this.env },
+                        {
+                            id: null,
+                            uuid: null,
+                            qty: 1,
+                            product_id: product.id,
+                            full_product_name: product.name,
+                        }
+                    )
                 );
             }
             await this.selfOrder.getPricesFromServer();
