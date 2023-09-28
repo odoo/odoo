@@ -225,10 +225,9 @@ export class Orderline extends PosModel {
     // allowed.
     async editPackLotLines() {
         const isAllowOnlyOneLot = this.product.isAllowOnlyOneLot();
-        const editedPackLotLines = await this.pos.getEditedPackLotLines(
-            isAllowOnlyOneLot,
-            this.getPackLotLinesToEdit(isAllowOnlyOneLot),
-            this.product.display_name
+        const editedPackLotLines = await this.pos.editLots(
+            this.product,
+            this.getPackLotLinesToEdit(isAllowOnlyOneLot)
         );
         if (!editedPackLotLines) {
             return;
@@ -1538,12 +1537,15 @@ export class Order extends PosModel {
             (this.pos.pickingType.use_create_lots || this.pos.pickingType.use_existing_lots)
         ) {
             const confirmed = await ask(this.env.services.dialog, {
-                title: _t("Some Serial/Lot Numbers are missing"),
+                title: _t("Missing Serial/Lot Numbers"),
                 body: _t(
-                    "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
+                    "Some products require serial/lot numbers to be set. \nProceeding anyway will create inconsistency in your inventory, you will need to correct manually. \nProceed anyway?"
                 ),
+                confirmLabel: _t("Discard"),
+                cancelLabel: _t("Accept the risk"),
             });
-            if (confirmed) {
+            // confirm and cancel are inverted to be displayed according to the specification...
+            if (!confirmed) {
                 this.pos.mobile_pane = "right";
                 this.env.services.pos.showScreen("PaymentScreen");
             }
