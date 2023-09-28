@@ -127,7 +127,6 @@ class AccountPaymentRegister(models.TransientModel):
         sign = 1
         if self.partner_type == 'supplier':
             sign = -1
-            self.mapped('withholding_ids.tax_id').ensure_withholding_sequence()
         for line in self.withholding_ids:
             if not line.name or line.name == '/':
                 if line.tax_id.l10n_ar_withholding_sequence_id:
