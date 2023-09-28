@@ -591,6 +591,7 @@ class Website(models.Model):
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
         snippets_cache = {}
+        translated_content = {}
 
         def _compute_placeholder(term):
             return xml_translate.get_text_content(term).strip()
@@ -607,10 +608,25 @@ class Website(models.Model):
             xml_translate(terms.append, render)
             placeholders = [_compute_placeholder(term) for term in terms]
 
+            if text_must_be_translated_for_openai:
+                # Check if terms are translated.
+                translation_dictionary = self.env['website.page']._fields['arch_db'].get_translation_dictionary(
+                    str(IrQweb._render(key, cta_data, lang="en_US")),
+                    {text_generation_target_lang: str(render)},
+                )
+                # Remove all numeric keys.
+                translation_dictionary = {k: v for k, v in translation_dictionary.items() if not _compute_placeholder(k).isnumeric()}
+                for from_lang_term, to_lang_terms in translation_dictionary.items():
+                    translated_content[from_lang_term] = to_lang_terms[text_generation_target_lang]
+
             data = (render, placeholders)
             snippets_cache[key] = data
             return data
 
+        text_generation_target_lang = self.get_current_website().default_lang_id.code
+        # If the target language is not English, we need a good translation
+        # coverage. But if the target lang is en_XX it's ok to have en_US text.
+        text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
         generated_content = {}
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
@@ -618,19 +634,31 @@ class Website(models.Model):
                 render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
                 for placeholder in placeholders:
                     generated_content[placeholder] = ''
-        try:
-            response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
-                'placeholders': list(generated_content.keys()),
-                'lang': website.default_lang_id.name,
-                'industry': industry,
-            })
-            name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
-            for key in generated_content:
-                if response.get(key):
-                    generated_content[key] = (name_replace_parser.sub(website.name, response[key], 0))
-        except AccessError:
-            # If IAP is broken continue normally (without generating text)
-            pass
+        if text_must_be_translated_for_openai:
+            nb_terms_translated = len([k for k, v in translated_content.items() if k != v])
+            nb_terms_total = len(translated_content)
+        else:
+            nb_terms_translated = len(generated_content)
+            nb_terms_total = len(generated_content)
+        translated_ratio = nb_terms_translated / nb_terms_total
+        logger.debug("Ratio of translated content: %s%% (%s/%s)", translated_ratio * 100, nb_terms_translated, nb_terms_total)
+
+        if translated_ratio > 0.8:
+            try:
+                response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
+                    'placeholders': list(generated_content.keys()),
+                    'lang': website.default_lang_id.name,
+                    'industry': industry,
+                })
+                name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
+                for key in generated_content:
+                    if response.get(key):
+                        generated_content[key] = (name_replace_parser.sub(website.name, response[key], 0))
+            except AccessError:
+                # If IAP is broken continue normally (without generating text)
+                pass
+        else:
+            logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
 
         # Configure the pages
         for page_code in requested_pages:
