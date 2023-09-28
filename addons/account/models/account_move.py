@@ -3994,7 +3994,7 @@ class AccountMove(models.Model):
             'target': 'new',
             'context': {
                 'active_ids': self.ids,
-                'default_mail_template_id': template.id,
+                'default_mail_template_id': template and template.id or False,
             },
         }
 
