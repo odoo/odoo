@@ -203,6 +203,15 @@ class StockRule(models.Model):
         if not bypass_delay_description:
             delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
         if bom.type == 'normal':
+            # pre-production rules
+            warehouse = self.location_dest_id.warehouse_id
+            if warehouse.manufacture_steps != 'mrp_one_step':
+                wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=warehouse.pbm_route_id)
+                extra_delays, extra_delay_description = (wh_manufacture_rules - self)._get_lead_days(product, **values)
+                for key, value in extra_delays.items():
+                    delays[key] += value
+                delay_description += extra_delay_description
+            # manufacturing security lead time
             security_delay = self.picking_type_id.company_id.manufacturing_lead
             delays['total_delay'] += security_delay
             delays['security_lead_days'] += security_delay
