@@ -7,7 +7,10 @@
         <t t-set="address">
             <div t-field="doc.partner_id"
                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-            <p t-if="doc.partner_id.vat"><t t-out="doc.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+            <div t-if="doc.partner_id.vat">
+                <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
+                <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
+            </div>
         </t>
         <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
                              and doc.partner_invoice_id != doc.partner_id

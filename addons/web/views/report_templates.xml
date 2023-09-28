@@ -303,7 +303,8 @@
                     <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
                     <li t-else=""><t t-esc="company.company_details"/></li>
                     <li t-if="forced_vat">
-                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                        <t t-if="company.country_id.vat_label" t-out="company.country_id.vat_label"/>
+                        <t t-else="">Tax ID</t>:
                         <span t-esc="forced_vat"/>
                     </li>
                 </ul>
@@ -349,7 +350,8 @@
                             <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
                             <li t-else=""><t t-esc="company.company_details"/></li>
                             <li t-if="forced_vat">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                <t t-if="company.country_id.vat_label" t-out="company.country_id.vat_label"/>
+                                <t t-else="">Tax ID</t>:
                                 <span t-esc="forced_vat"/>
                             </li>
                         </ul>
@@ -392,7 +394,8 @@
                             <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
                             <li t-else=""><t t-esc="company.company_details"/></li>
                             <li t-if="forced_vat">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                <t t-if="company.country_id.vat_label" t-out="company.country_id.vat_label"/>
+                                <t t-else="">Tax ID</t>:
                                 <span t-esc="forced_vat"/>
                             </li>
                         </ul>
@@ -446,7 +449,8 @@
                         <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
                         <li t-else=""><t t-esc="company.company_details"/></li>
                         <li t-if="forced_vat">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                            <t t-if="company.country_id.vat_label" t-out="company.country_id.vat_label"/>
+                            <t t-else="">Tax ID</t>:
                             <span t-esc="forced_vat"/>
                         </li>
                     </ul>

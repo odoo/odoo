@@ -143,7 +143,9 @@
                                 </td>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+                                        <li t-if="company.vat">
+                                            <t t-if="company.account_fiscal_country_id.vat_label" t-out="company.account_fiscal_country_id.vat_label"/>
+                                            <t t-else="">Tax ID</t>:
                                             <span t-if="forced_vat" t-esc="forced_vat"/>
                                             <span t-else="" t-field="company.vat"/>
                                         </li>
