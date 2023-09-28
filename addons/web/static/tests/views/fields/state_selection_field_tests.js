@@ -209,6 +209,21 @@ QUnit.module("Fields", (hooks) => {
         assert.isNotVisible(target.querySelector(".dropdown-menu"));
     });
 
+    QUnit.test("StateSelectionField for form view with hide_label option", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="selection" widget="state_selection" options="{'hide_label': False}"/>
+                </form>
+            `,
+            resId: 1,
+        });
+        assert.containsOnce(target, ".o_status_label");
+    });
+
     QUnit.test("StateSelectionField for list view with hide_label option", async function (assert) {
         Object.assign(serverData.models.partner.fields, {
             graph_type: {
@@ -230,7 +245,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <tree>
                     <field name="graph_type" widget="state_selection" options="{'hide_label': True}"/>
-                    <field name="selection" widget="state_selection"/>
+                    <field name="selection" widget="state_selection" options="{'hide_label': False}"/>
                 </tree>`,
         });
 
