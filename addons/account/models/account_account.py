@@ -3,6 +3,7 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero
+from odoo.tools.sql import SQL
 from bisect import bisect_left
 from collections import defaultdict
 import re
@@ -553,8 +554,8 @@ class AccountAccount(models.Model):
 
         query = self.env['account.move.line']._where_calc(domain)
         if not filter_never_user_accounts:
-            _kind, rhs_table, condition, condition_params = query._joins['account_move_line__account_id']
-            query._joins['account_move_line__account_id'] = ("RIGHT JOIN", rhs_table, condition, condition_params)
+            _kind, rhs_table, condition = query._joins['account_move_line__account_id']
+            query._joins['account_move_line__account_id'] = (SQL("RIGHT JOIN"), rhs_table, condition)
 
         from_clause, where_clause, params = query.get_sql()
         self._cr.execute(f"""
