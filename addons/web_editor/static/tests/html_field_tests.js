@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import * as ajax from "web.ajax";
 import { click, editInput, getFixture, makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormController } from '@web/views/form/form_controller';
@@ -8,9 +9,17 @@ import { parseHTML } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { onRendered } from "@odoo/owl";
 import { wysiwygData } from "web_editor.test_utils";
 import Wysiwyg from 'web_editor.wysiwyg';
+import { useEffect } from "@odoo/owl";
+import testUtils from "web.test_utils";
+import * as legacyTestUtils from "web.test_utils";
+import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { registry } from "@web/core/registry";
 
 // Legacy
 import legacyEnv from 'web.commonEnv';
+
+const serviceRegistry = registry.category("services");
 
 const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
@@ -26,7 +35,8 @@ const COLOR_PICKER_TEMPLATE = `
             <button data-color="black-25"/>
             <button data-color="black-50"/>
             <button data-color="black-75"/>
-            <button data-color="white-25"/>
+            <bu/** @odoo-module **/
+tton data-color="white-25"/>
             <button data-color="white-50"/>
             <button data-color="white-75"/>
         </div>
@@ -96,7 +106,7 @@ const SNIPPETS_TEMPLATE = `
         </div>
     </div>`;
 
-const wait = async (ms=150) => {
+const wait = async (ms = 150) => {
     await new Promise((res) => setTimeout(res, ms))
 }
 
@@ -141,6 +151,24 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                         },
                     },
                     records: [],
+                },
+                'mail.compose.message': {
+                    fields: {
+                        display_name: {
+                            string: "Displayed name",
+                            type: "char"
+                        },
+                        body: {
+                            string: "Message Body inline (to send)",
+                            type: "html"
+                        },
+                        attachment_ids: {
+                            string: "Attachments",
+                            type: "many2many",
+                            relation: "ir.attachment",
+                        }
+                    },
+                    records: [],
                 }
             },
         };
@@ -174,7 +202,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         const field = target.querySelector('.o_field_html[name="body"]');
         const editable = field.querySelector("[contenteditable='true']");
-        console.log(target.cloneNode(true))
         assert.strictEqual(editable.innerHTML,
             '<p>toto toto toto</p><p>tata</p>',
             "should have rendered a div with correct content");
@@ -316,6 +343,259 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(document.querySelector('.note-editable').innerHTML,
             '<p>t<font style="background-color: rgb(247, 198, 206);">oto</font><font style=\"\" class=\"bg-800\"> toto to</font>to</p><p>tata</p>',
             "should have rendered the field correctly");
+    });
+
+    QUnit.module('media dialog')
+
+    QUnit.test('media dialog: image', async function (assert) {
+        assert.expect(1);
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "note.note",
+            serverData,
+            arch: '<form>' +
+                '<field name="body" widget="html" style="height: 100px"/>' +
+                '</form>',
+        });
+
+        const field = document.querySelector('.o_field_html[name="body"]');
+        const pText = field.querySelector('.note-editable p').firstChild;
+        Wysiwyg.setRange(pText, 1, pText, 2);
+
+        await new Promise((resolve) => setTimeout(resolve));
+
+        let wysiwyg = [...Wysiwyg.activeWysiwygs]
+        wysiwyg = wysiwyg[wysiwyg.length - 1]
+
+        // Mock the MediaDialogWrapper
+        const defMediaDialog = testUtils.makeTestPromise();
+        patchWithCleanup(MediaDialogWrapper.prototype, {
+            setup() {
+                useEffect(() => {
+                    this.save();
+                }, () => []);
+            },
+            save() {
+                const imageEl = document.createElement('img');
+                imageEl.src = '/web/image/123/transparent.png';
+                this.props.save(imageEl);
+                defMediaDialog.resolve();
+            },
+        });
+
+        wysiwyg.openMediaDialog();
+        await defMediaDialog;
+
+        var $editable = wysiwyg.$editable;
+        assert.ok($editable.find('img')[0].dataset.src.includes('/web/image/123/transparent.png'),
+            "should have the image in the dom");
+
+    });
+
+    QUnit.test('media dialog: icon', async function (assert) {
+        assert.expect(1);
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "note.note",
+            serverData,
+            arch: '<form>' +
+                '<field name="body" widget="html" style="height: 100px"/>' +
+                '</form>',
+        });
+
+        const field = document.querySelector('.o_field_html[name="body"]');
+
+        const pText = field.querySelector('.note-editable p').firstChild;
+        Wysiwyg.setRange(pText, 1, pText, 2);
+
+        let wysiwyg = [...Wysiwyg.activeWysiwygs];
+        wysiwyg = wysiwyg[wysiwyg.length - 1];
+
+        // Mock the MediaDialogWrapper
+        const defMediaDialog = testUtils.makeTestPromise();
+        patchWithCleanup(MediaDialogWrapper.prototype, {
+            setup() {
+                useEffect(() => {
+                    this.save();
+                }, () => []);
+            },
+            save() {
+                const iconEl = document.createElement('span');
+                iconEl.classList.add('fa', 'fa-glass');
+                this.props.save(iconEl);
+                defMediaDialog.resolve();
+            },
+        });
+
+        wysiwyg.openMediaDialog();
+        await defMediaDialog;
+
+        let $editable = wysiwyg.$editable;
+
+        assert.strictEqual($editable.data('wysiwyg').getValue(),
+            '<p>t<span class="fa fa-glass"></span>to toto toto</p><p>tata</p>',
+            "should have the image in the dom");
+    });
+
+    QUnit.test("editor spellcheck is disabled on blur", async function (assert) {
+        const target = getFixture();
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+
+        await makeView({
+            type: "form",
+            resModel: "note.note",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="body" widget="html" /></form>`,
+        });
+
+        const textarea = target.querySelector(".odoo-editor-editable");
+        textarea.focus();
+        assert.strictEqual(textarea.spellcheck, true, "spellcheck is enabled");
+        textarea.blur();
+        assert.strictEqual(
+            textarea.spellcheck,
+            false,
+            "spellcheck is disabled once the field has lost its focus"
+        );
+        textarea.focus();
+        assert.strictEqual(textarea.spellcheck, true, "spellcheck is re-enabled once the field is focused");
+    });
+
+    QUnit.module('cssReadonly');
+
+    QUnit.test('rendering with iframe for readonly mode', async function (assert) {
+        assert.expect(2);
+
+        legacyTestUtils.mock.patch(ajax, {
+            loadAsset: function (xmlId) {
+                if (xmlId === 'template.assets') {
+                    return Promise.resolve({
+                        cssLibs: [],
+                        cssContents: ['.o_in_iframe {background-color: red;}'],
+                        jsContents: ['window.odoo = {define: function(){}}; // inline asset'],
+                    });
+                }
+                if (xmlId === 'template.assets_all_style') {
+                    return Promise.resolve({
+                        cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
+                            return $(this).attr('href');
+                        }).get(),
+                        cssContents: ['.o_in_iframe {background-color: red;}']
+                    });
+                }
+                if (xmlId === 'web_editor.wysiwyg_iframe_editor_assets') {
+                    return Promise.resolve({});
+                }
+                throw 'Wrong template';
+            },
+        });
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "note.note",
+            serverData,
+            arch: '<form>' +
+                '<field name="body" widget="html" class="oe_read_only" style="height: 100px" options="{\'cssReadonly\': \'template.assets\'}"/>' +
+                '</form>',
+            mode: "readonly"
+        });
+
+        const $field = $('.o_field_html[name="body"]');
+
+        const $iframe = $field.find('iframe.o_readonly');
+        await $iframe.data('loadDef');
+        const doc = $iframe.contents()[0];
+        assert.strictEqual($(doc).find('#iframe_target').html(),
+            '<p>toto toto toto</p><p>tata</p>',
+            "should have rendered a div with correct content in readonly");
+
+        assert.strictEqual(doc.defaultView.getComputedStyle(doc.body).backgroundColor,
+            'rgb(255, 0, 0)',
+            "should load the asset css");
+
+        legacyTestUtils.mock.unpatch(ajax);
+    });
+
+    QUnit.module('translation');
+
+    QUnit.test('field html translatable', async function (assert) {
+        assert.expect(3);
+
+        serverData.models['note.note'].records = [{
+            id: 1,
+            display_name: "first record",
+            header: "<p>  &nbsp;&nbsp;  <br>   </p>",
+            body: "<p>toto toto toto</p><p>tata</p>",
+        }];
+        serverData.models['note.note'].fields.body.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "note.note",
+            serverData,
+            arch: '<form>' +
+                '<field name="body" widget="html" style="height: 100px"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/note.note/get_field_translations") {
+                    assert.deepEqual(args.args, [[1], "body"], "should translate the body field of the record");
+                    return Promise.resolve([
+                        [{ lang: "en_US", source: "first paragraph", value: "first paragraph" },
+                        { lang: "en_US", source: "second paragraph", value: "second paragraph" },
+                        { lang: "fr_BE", source: "first paragraph", value: "premier paragraphe" },
+                        { lang: "fr_BE", source: "second paragraph", value: "deuxième paragraphe" }],
+                        { translation_type: "text", translation_show_source: true },
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
+                }
+            }
+        });
+
+        const fixture = document.querySelector("#qunit-fixture")
+        const buttons = [...fixture.querySelectorAll('.o_field_translate')];
+        const button = buttons[0];
+        assert.strictEqual(buttons.length, 1, "should have a translate button");
+        await click(button, undefined, true);
+        assert.strictEqual([...document.querySelectorAll('.o_translation_dialog')].length, 1, 'should have a modal to translate');
     });
 
     QUnit.module('Sandboxed Preview');
