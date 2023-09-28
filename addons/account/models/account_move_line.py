@@ -2505,9 +2505,15 @@ class AccountMoveLine(models.Model):
         expense_exchange_account = company.expense_currency_exchange_account_id
         income_exchange_account = company.income_currency_exchange_account_id
 
+        temp_exchange_move = self.env['account.move'].new({'journal_id': journal.id})
+        accounting_exchange_date = temp_exchange_move._get_accounting_date(
+            exchange_date or fields.Date.context_today(self),
+            False,
+        )
+
         move_vals = {
             'move_type': 'entry',
-            'date': max(exchange_date or date.min, company._get_user_fiscal_lock_date() + timedelta(days=1)),
+            'date': accounting_exchange_date,
             'journal_id': journal.id,
             'line_ids': [],
             'always_tax_exigible': True,
