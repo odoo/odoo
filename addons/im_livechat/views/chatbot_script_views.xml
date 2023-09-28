@@ -33,7 +33,7 @@
                         <h1><field name="title" default_focus="1" placeholder='e.g. "Meeting Scheduler Bot"'/></h1>
                     </div>
                     <notebook>
-                        <page string="Script">
+                        <page string="Script" name="page_script">
                             <field name="script_step_ids" widget="chatbot_steps_one2many" nolabel="1"
                                 context="{'chatbot_script_answer_display_short_name': 1}"/>
                         </page>

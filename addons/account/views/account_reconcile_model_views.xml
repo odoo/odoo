@@ -87,7 +87,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page id="conditions_tab" string="Bank Transactions Conditions">
+                            <page id="conditions_tab" string="Bank Transactions Conditions" name="page_bank_transactions_conditions">
                                 <group id="conditions_tab_group">
                                     <group id="left_column" class="col-6">
                                         <label for="match_journal_ids"/>
@@ -210,6 +210,7 @@
                             </page>
                             <page id="partner_tab"
                                   string="Partner Mapping"
+                                  name="page_partner_mapping"
                                   invisible="rule_type not in ('invoice_matching', 'writeoff_suggestion')">
                                 <field name="partner_mapping_line_ids"
                                        nolabel="1">
