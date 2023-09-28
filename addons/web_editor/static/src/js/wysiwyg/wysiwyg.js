@@ -2181,7 +2181,7 @@ export class Wysiwyg extends Component {
             fontawesome: iconClass,
             isDisabled: () => isSelectionInSelectors('.o_editor_banner') || !this.odooEditor.isSelectionInBlockRoot(),
             callback: () => {
-                const bannerElement = parseHTML(`
+                const bannerElement = parseHTML(this.odooEditor.document, `
                     <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" data-oe-protected="true">
                         <i class="fs-4 fa ${iconClass} mb-3" aria-label="${_t(title)}"></i>
                         <div class="o_editable o_editable_no_shadow w-100 ms-3" data-oe-protected="false">
@@ -2280,7 +2280,7 @@ export class Wysiwyg extends Component {
                         ['signature'],
                     );
                     if (user && user.signature) {
-                        this.odooEditor.execCommand('insert', parseHTML(user.signature));
+                        this.odooEditor.execCommand('insert', parseHTML(this.odooEditor.document, user.signature));
                     }
                 },
             },
