@@ -11,7 +11,7 @@
         <t t-else="">
             <Dropdown togglerClass="'btn btn-link d-flex p-0'">
                 <t t-set-slot="toggler">
-                    <div class="d-flex align-items-center" t-att-title="props.showLabel ? null : label">
+                    <div class="d-flex align-items-center" t-att-title="props.showLabel ? '' : label">
                         <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
                         <span t-if="props.showLabel" class="o_status_label ms-1" t-esc="label"/>
                     </div>
