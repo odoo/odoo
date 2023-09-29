@@ -54,11 +54,21 @@ class ServerActions(models.Model):
         if other:
             other.sms_method = 'sms'
 
-    def _check_model_coherency(self):
-        super()._check_model_coherency()
+    @api.constrains('state', 'model_id')
+    def _check_sms_model_coherency(self):
         for action in self:
             if action.state == 'sms' and (action.model_id.transient or not action.model_id.is_mail_thread):
                 raise ValidationError(_("Sending SMS can only be done on a mail.thread or a transient model"))
+
+    @api.constrains('model_id', 'template_id')
+    def _check_sms_template_model(self):
+        for action in self.filtered(lambda action: action.state == 'sms'):
+            if action.sms_template_id and action.sms_template_id.model_id != action.model_id:
+                raise ValidationError(
+                    _('SMS template model of %(action_name)s does not match action model.',
+                      action_name=action.name
+                     )
+                )
 
     def _run_action_sms_multi(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
