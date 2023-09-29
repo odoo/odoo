@@ -3659,7 +3659,7 @@ class AccountMove(models.Model):
         """
         return []
 
-    @api.depends('move_type', 'partner_id', 'company_id')
+    @api.depends('move_type', 'partner_id')
     def _compute_narration(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         for move in self:

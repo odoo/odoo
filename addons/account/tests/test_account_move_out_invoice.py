@@ -3600,3 +3600,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertTrue(any(
             message.body == "<p>The move could not be posted for the following reason: You need to add a line before posting.</p>"
             for message in invalid_invoice_2.message_ids))
+
+    def test_narration_onchange_journal(self):
+        """ Check that the narration (terms & conditions) is not recomputed when changing the journal. """
+        # Enable invoicing terms
+        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+        self.env.company.invoice_terms = "Don't look up"
+
+        invoice = self.init_invoice(move_type='out_invoice')
+        journal_copy = invoice.journal_id.copy()
+
+        invoice.narration = "I said don't look up!"
+        invoice.journal_id = journal_copy
+        self.assertEqual(invoice.narration, "<p>I said don't look up!</p>")
