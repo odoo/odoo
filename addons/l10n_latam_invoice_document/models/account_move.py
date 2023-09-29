@@ -193,10 +193,14 @@ class AccountMove(models.Model):
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
-        if self.move_type in ['out_refund', 'in_refund']:
+        invoice_type = self.move_type
+        if invoice_type in ['out_refund', 'in_refund']:
             internal_types = ['credit_note']
-        else:
+        elif invoice_type in ['out_invoice', 'in_invoice']:
             internal_types = ['invoice', 'debit_note']
+        if self.debit_origin_id:
+            internal_types = ['debit_note']
+        internal_types += ['all']
         return [('internal_type', 'in', internal_types), ('country_id', '=', self.company_id.account_fiscal_country_id.id)]
 
     @api.depends('journal_id', 'partner_id', 'company_id', 'move_type')
@@ -209,11 +213,4 @@ class AccountMove(models.Model):
     def _compute_l10n_latam_document_type(self):
         for rec in self.filtered(lambda x: x.state == 'draft'):
             document_types = rec.l10n_latam_available_document_type_ids._origin
-            invoice_type = rec.move_type
-            if invoice_type in ['out_refund', 'in_refund']:
-                document_types = document_types.filtered(lambda x: x.internal_type not in ['debit_note', 'invoice'])
-            elif invoice_type in ['out_invoice', 'in_invoice']:
-                document_types = document_types.filtered(lambda x: x.internal_type not in ['credit_note'])
-            if rec.debit_origin_id:
-                document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id

@@ -23,7 +23,7 @@ class L10nLatamDocumentType(models.Model):
     code = fields.Char(help='Code used by different localizations')
     report_name = fields.Char('Name on Reports', help='Name that will be printed in reports, for example "CREDIT NOTE"', translate=True)
     internal_type = fields.Selection(
-        [('invoice', 'Invoices'), ('debit_note', 'Debit Notes'), ('credit_note', 'Credit Notes')],
+        [('invoice', 'Invoices'), ('debit_note', 'Debit Notes'), ('credit_note', 'Credit Notes'), ('all', 'All Documents')],
         help='Analog to odoo account.move.move_type but with more options allowing to identify the kind of document we are'
         ' working with. (not only related to account.move, could be for documents of other models like stock.picking)')
 
