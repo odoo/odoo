@@ -36,6 +36,15 @@ class ServerActions(models.Model):
             )
         super(ServerActions, self - to_update)._compute_name()
 
+    @api.depends('state')
+    def _compute_available_model_ids(self):
+        mail_thread_based = self.filtered(lambda action: action.state == 'sms')
+        if mail_thread_based:
+            mail_models = self.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
+            for action in mail_thread_based:
+                action.available_model_ids = mail_models.ids
+        super(ServerActions, self - mail_thread_based)._compute_available_model_ids()
+
     @api.depends('model_id', 'state')
     def _compute_sms_template_id(self):
         to_reset = self.filtered(

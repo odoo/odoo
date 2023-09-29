@@ -431,28 +431,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
     ],
 });
 
-registry.category("web_tour.tours").add("test_form_view_debug", {
-    test: true,
-    steps: () => [
-        {
-            trigger:
-                ".o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_view .o_cp_buttons button",
-        },
-        {
-            trigger: ".modal-content .o_form_renderer",
-            run() {
-                const allFields = this.$anchor[0].querySelectorAll(".o_field_widget[name]");
-                assertEqual(
-                    Array.from(allFields)
-                        .map((el) => el.getAttribute("name"))
-                        .includes("model_id"),
-                    true
-                );
-            },
-        },
-    ],
-});
-
 let waitOrmCalls;
 registry.category("web_tour.tours").add("test_form_view_model_id", {
     test: true,
