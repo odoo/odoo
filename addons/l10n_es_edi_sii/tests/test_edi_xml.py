@@ -452,7 +452,7 @@ class TestEdiXmls(TestEsEdiCommon):
                         'DesgloseTipoOperacion': {
                             'PrestacionServicios': {
                                 'NoSujeta': {
-                                    'ImportePorArticulos7_14_Otros': 100.0,
+                                    'ImporteTAIReglasLocalizacion': 100.0,
                                 },
                             },
                             'Entrega': {
