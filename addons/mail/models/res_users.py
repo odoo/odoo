@@ -149,23 +149,41 @@ class Users(models.Model):
         }
         return values
 
+    def _systray_get_activities_select(self):
+        return """
+            SELECT array_agg(res_id) as res_ids, m.id, count(*),
+            CASE
+                WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
+                WHEN %(today)s::date - act.date_deadline::date > 0 Then 'overdue'
+                WHEN %(today)s::date - act.date_deadline::date < 0 Then 'planned'
+            END AS states"""
+
+    def _systray_get_activities_from(self):
+        return """
+            FROM mail_activity AS act
+            JOIN ir_model AS m ON act.res_model_id = m.id"""
+
+    def _systray_get_activities_where(self):
+        return "WHERE user_id = %(user_id)s"
+
+    def _systray_get_activities_group_by(self):
+        return "GROUP BY m.id, states"
+
+    def _systray_get_activities_params(self):
+        return {
+            "today": fields.Date.context_today(self),
+            "user_id": self.env.uid,
+        }
+
     @api.model
     def systray_get_activities(self):
-        query = """SELECT array_agg(res_id) as res_ids, m.id, count(*),
-                    CASE
-                        WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
-                        WHEN %(today)s::date - act.date_deadline::date > 0 Then 'overdue'
-                        WHEN %(today)s::date - act.date_deadline::date < 0 Then 'planned'
-                    END AS states
-                FROM mail_activity AS act
-                JOIN ir_model AS m ON act.res_model_id = m.id
-                WHERE user_id = %(user_id)s
-                GROUP BY m.id, states;
-                """
-        self.env.cr.execute(query, {
-            'today': fields.Date.context_today(self),
-            'user_id': self.env.uid,
-        })
+        query = "%(select)s %(from)s %(where)s %(group_by)s" % {
+            "select": self._systray_get_activities_select(),
+            "from": self._systray_get_activities_from(),
+            "where": self._systray_get_activities_where(),
+            "group_by": self._systray_get_activities_group_by(),
+        }
+        self.env.cr.execute(query, self._systray_get_activities_params())
         activity_data = self.env.cr.dictfetchall()
         records_by_state_by_model = defaultdict(lambda: {"today": set(), "overdue": set(), "planned": set(), "all": set()})
         for data in activity_data:
