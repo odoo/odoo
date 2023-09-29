@@ -79,11 +79,12 @@ class ServerActions(models.Model):
         compute='_compute_activity_info', readonly=False, store=True)
 
 
-    @api.depends('state', 'template_id', 'partner_ids', 'activity_summary')
+    @api.depends('template_id', 'partner_ids', 'activity_summary')
     def _compute_name(self):
-        for action in self:
-            if not action.state or not self.env.context.get('automatic_action_name'):
-                continue
+        to_update = self.filtered(
+            lambda action: action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'}
+        )
+        for action in to_update:
             if action.state == 'mail_post':
                 action.name = _(
                     'Send email: %(template_name)s',
@@ -104,8 +105,7 @@ class ServerActions(models.Model):
                     'Next activity: %(activity_name)s',
                     activity_name=action.activity_summary or action.activit_type_id.name
                 )
-            else:
-                super(ServerActions, action)._compute_name()
+        super(ServerActions, self - to_update)._compute_name()
 
     @api.depends('model_id', 'state')
     def _compute_template_id(self):
