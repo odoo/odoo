@@ -15,8 +15,6 @@ export class AttributeSelection extends Component {
         this.currentAttribute = 0;
 
         this.state = useState({
-            currentAttribute: 0,
-            editMode: false,
             showResume: false,
             showNext: false,
             showCustomInput: false,
@@ -25,21 +23,20 @@ export class AttributeSelection extends Component {
         this.selectedValues = useState(this.env.selectedValues);
 
         if (!this.env.editable) {
-            this.state.showResume = true;
-            this.props.toggleQtyBtn(true);
+            this.toggleResume();
         }
 
         this.initAttribute();
     }
 
-    get attribute() {
-        return this.props.product.attributes[this.state.currentAttribute];
-    }
+    get showNextBtn() {
+        for (const attrSelection of Object.values(this.selectedValues)) {
+            if (!attrSelection) {
+                return false;
+            }
+        }
 
-    get availableAttributeValue() {
-        return this.selfOrder.config.self_ordering_mode === "kiosk"
-            ? this.attribute.values.filter((a) => !a.is_custom)
-            : this.attribute.values;
+        return true;
     }
 
     get attributeSelected() {
@@ -48,102 +45,54 @@ export class AttributeSelection extends Component {
         return attributeFormatter(this.selfOrder.attributeById, flatAttribute, customAttribute);
     }
 
+    availableAttributeValue(attribute) {
+        return this.selfOrder.config.self_ordering_mode === "kiosk"
+            ? attribute.values.filter((a) => !a.is_custom)
+            : attribute.values;
+    }
+
     initAttribute() {
-        const attributeMulti = [];
-        const attributeSingle = [];
+        const initCustomValue = (value) => {
+            let selectedValue = this.selfOrder.editedLine?.custom_attribute_value_ids.find(
+                (v) => v.custom_product_template_attribute_value_id === value.id
+            );
+
+            if (!selectedValue) {
+                selectedValue = new ProductCustomAttribute({
+                    custom_product_template_attribute_value_id: value.id,
+                });
+            }
+
+            return selectedValue;
+        };
+
+        const initValue = (value) => {
+            if (this.selfOrder.editedLine?.attribute_value_ids.includes(value.id)) {
+                return value.id;
+            }
+            return false;
+        };
 
         for (const attr of this.props.product.attributes) {
-            if (attr.display_type !== "multi") {
-                attributeSingle.push(attr);
-            } else {
-                attributeMulti.push(attr);
-            }
-        }
+            this.selectedValues[attr.id] = {};
 
-        for (const attribute of attributeSingle) {
-            for (const value of attribute.values) {
-                if (this.selfOrder.editedLine) {
-                    if (this.selfOrder.editedLine.attribute_value_ids.includes(value.id)) {
-                        this.selectedValues[attribute.id] = value.id;
-                    }
+            for (const value of attr.values) {
+                if (attr.display_type === "multi") {
+                    this.selectedValues[attr.id][value.id] = initValue(value);
+                } else if (typeof this.selectedValues[attr.id] !== "number") {
+                    this.selectedValues[attr.id] = initValue(value);
                 }
 
                 if (value.is_custom) {
-                    this.env.customValues[value.id] = new ProductCustomAttribute({
-                        custom_product_template_attribute_value_id: value.id,
-                    });
-                }
-            }
-        }
-
-        for (const attrMulti of attributeMulti) {
-            this.selectedValues[attrMulti.id] = {};
-
-            for (const value of attrMulti.values) {
-                if (this.selfOrder.editedLine) {
-                    if (this.selfOrder.editedLine.attribute_value_ids.includes(value.id)) {
-                        this.selectedValues[attrMulti.id][value.id] = true;
-                    }
-                } else {
-                    this.selectedValues[attrMulti.id][value.id] = false;
-                }
-
-                if (value.is_custom) {
-                    this.env.customValues[value.id] = new ProductCustomAttribute({
-                        custom_product_template_attribute_value_id: value.id,
-                    });
+                    this.env.customValues[value.id] = initCustomValue(value);
                 }
             }
         }
     }
 
-    next() {
-        this.state.showNext = false;
-        this.state.showCustomInput = false;
-
-        if (this.state.currentAttribute !== this.numberOfAttributes - 1) {
-            this.state.currentAttribute++;
-        } else {
-            this.state.showResume = true;
-            this.props.toggleQtyBtn(true);
-        }
-    }
-
-    prev() {
-        if (this.state.currentAttribute !== 0) {
-            this.state.currentAttribute--;
-        }
-    }
-
-    attributeClicked() {
-        const curAttr = this.attribute;
-        const currValue = this.selfOrder.attributeValueById[this.selectedValues[curAttr.id]];
-
-        // not available in kiosk only in mobile mode
-        if (currValue && currValue.is_custom) {
-            this.state.showNext = true;
-            this.state.showCustomInput = true;
-            return;
-        }
-
-        if (this.state.editMode && curAttr.display_type !== "multi") {
-            this.state.editMode = false;
-            this.state.showResume = true;
-            this.props.toggleQtyBtn(true);
-            return;
-        }
-
-        if (curAttr && curAttr.display_type !== "multi") {
-            this.next();
-        }
-    }
-
-    editAttribute(id) {
-        const index = this.props.product.attributes.findIndex((a) => a.id === id);
-        this.state.showResume = false;
-        this.state.editMode = true;
-        this.state.currentAttribute = index;
-        this.props.toggleQtyBtn(false);
+    toggleResume() {
+        this.state.showResume = !this.state.showResume;
+        this.props.toggleQtyBtn(this.state.showResume);
     }
 
     isChecked(attribute, value) {
