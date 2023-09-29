@@ -1650,7 +1650,7 @@ class BaseModel(metaclass=MetaModel):
         if self._rec_name:
             convert = self._fields[self._rec_name].convert_to_display_name
             for record in self:
-                record.display_name = convert(record[self._rec_name], record) or f"{record._name},{record.id}"
+                record.display_name = convert(record[self._rec_name], record)
         else:
             for record in self:
                 record.display_name = f"{record._name},{record.id}"
