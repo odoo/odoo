@@ -779,11 +779,6 @@ export class Record extends DataPoint {
                 continue;
             }
             const [id, displayName] = value;
-            if (!id && !displayName) {
-                changes[fieldName] = [false, ""];
-                continue;
-            }
-
             const activeField = this.activeFields[fieldName];
 
             if (!activeField) {
@@ -801,7 +796,7 @@ export class Record extends DataPoint {
                             context,
                         })
                         .then((result) => {
-                            changes[fieldName] = result ? result : [false, ""];
+                            changes[fieldName] = result;
                         })
                 );
             } else if (id && displayName === undefined) {
