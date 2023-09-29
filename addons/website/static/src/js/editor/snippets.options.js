@@ -2810,6 +2810,24 @@ options.registry.HeaderBox = options.registry.Box.extend({
         }
         return this._super(...arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const value = await this._super(...arguments);
+        if (methodName === "selectStyle" && params.cssProperty === "border-width") {
+            // One-sided borders return "0px 0px 3px 0px", which prevents the
+            // option from being displayed properly. We only keep the affected
+            // border.
+            return value.replace(/(^|\s)0px/gi, "").trim() || value;
+        }
+        return value;
+    },
 });
 
 options.registry.CookiesBar = options.registry.SnippetPopup.extend({
