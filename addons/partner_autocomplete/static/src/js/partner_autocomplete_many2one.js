@@ -25,6 +25,7 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
                         const suggestions = await this.partner_autocomplete.autocomplete(request);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_many2one";
+                            suggestion.isFromPartnerAutocomplete = true;
                         });
                         return suggestions;
                     }
@@ -39,7 +40,7 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     }
 
     async onSelect(option, params) {
-        if (option.partner_gid) {  // Checks that it is a partner autocomplete option
+        if (option.isFromPartnerAutocomplete) {  // Checks that it is a partner autocomplete option
             const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
             let context = {
                 'default_is_company': true
