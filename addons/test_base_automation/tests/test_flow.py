@@ -49,7 +49,7 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
         self.test_mail_template_automation = self.env['mail.template'].create(
             {
                 'name': 'Template Automation',
-                'model_id': self.lead_model.id,
+                'model_id': self.env['ir.model']._get_id("base.automation.lead.thread.test"),
                 'body_html': """&lt;div&gt;Email automation&lt;/div&gt;""",
             }
         )
@@ -365,7 +365,7 @@ else:
         deadline_field = self.env.ref("test_base_automation.field_base_automation_lead_test__deadline")
         create_automation(
             self,
-            model_id=self.lead_model.id,
+            model_id=self.env['ir.model']._get_id('base.automation.lead.thread.test'),
             trigger='on_create_or_write',
             trigger_field_ids=[Command.link(deadline_field.id)],
             filter_pre_domain="[('deadline', '=', False)]",
@@ -386,7 +386,11 @@ else:
         patcher = patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail)
         self.startPatcher(patcher)
 
-        lead = self.create_lead()
+        lead = self.env['base.automation.lead.thread.test'].create({
+            'name': "Lead Test",
+            'user_id': self.user_root.id,
+        })
+        self.addCleanup(lead.unlink)
         self.assertEqual(lead.priority, False)
         self.assertEqual(lead.deadline, False)
         self.assertEqual(send_mail_count, 0)

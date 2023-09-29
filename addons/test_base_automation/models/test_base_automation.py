@@ -42,6 +42,12 @@ class LeadTest(models.Model):
         return result
 
 
+class LeadThreadTest(models.Model):
+    _name = "base.automation.lead.thread.test"
+    _description = "Automated Rule Test With Thread"
+    _inherit = ['base.automation.lead.test', 'mail.thread']
+
+
 class LineTest(models.Model):
     _name = "base.automation.line.test"
     _description = "Automated Rule Line Test"
