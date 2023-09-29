@@ -332,9 +332,11 @@
                         <group name="action_wrapper">
                             <group name="action_content">
                                 <field name="model_name" invisible="1"/>
-                                <field name="model_id" invisible="1"/>
-                                <field name="model_id" options="{'no_create': True}" groups="base.group_no_one"/>
-                                <field name="model_id" options="{'no_create': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"/>
+                                <field name="available_model_ids" invisible="1"/>
+                                <field name="model_id" options="{'no_create': True}" groups="base.group_no_one"
+                                       domain="[('id', 'in', available_model_ids)]"/>
+                                <field name="model_id" options="{'no_create': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
+                                       domain="[('id', 'in', available_model_ids)]"/>
                                 <field name="groups_id" widget="many2many_tags" groups="base.group_no_one" />
                                 <field name="state" string="Action Type"/>
                                 <field name="update_field_id" invisible="state != 'object_write'"

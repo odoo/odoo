@@ -485,6 +485,7 @@ class IrActionsServer(models.Model):
                                    "based on the sequence. Low number means high priority.")
     model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade', index=True,
                                help="Model on which the server action runs.")
+    available_model_ids = fields.Many2many('ir.model', string='Available Models', compute='_compute_available_model_ids', store=False)
     model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True, store=True)
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
@@ -547,6 +548,13 @@ class IrActionsServer(models.Model):
                 )
             else:
                 action.name = dict(action._fields['state']._description_selection(self.env))[action.state]
+
+    @api.depends('state')
+    def _compute_available_model_ids(self):
+        allowed_models = self.env['ir.model'].search(
+            [('model', 'in', list(self.env['ir.model.access']._get_allowed_models()))]
+        )
+        self.available_model_ids = allowed_models.ids
 
     @api.onchange('model_id')
     def _compute_crud_model_id(self):
