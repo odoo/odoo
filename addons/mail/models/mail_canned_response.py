@@ -4,10 +4,9 @@ from odoo import fields, models, api
 
 
 class MailCannedResponse(models.Model):
+    """ Canned Response: content that will automatically replace the shortcut
+    of your choosing. This content can still be adapted before sending your message.
     """
-    Canned Response: content that will automatically replace the shortcut of your choosing. This content can still be adapted before sending your message.
-    """
-
     _name = "mail.canned.response"
     _description = "Canned Response"
     _order = "id desc"
