@@ -46,3 +46,9 @@ class PurchaseOrder(models.Model):
                 data.append((_("Shipping Address:"), record.dest_address_id))
             elif 'picking_type_id' in record._fields and record.picking_type_id.warehouse_id:
                 data.append((_("Shipping Address:"), record.picking_type_id.warehouse_id.partner_id))
+
+    def check_field_access_rights(self, operation, field_names):
+        field_names = super().check_field_access_rights(operation, field_names)
+        return [field_name for field_name in field_names if field_name not in {
+            'l10n_de_addresses',
+        }]
