@@ -196,20 +196,59 @@ class ProductionLot(models.Model):
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def _search_product_qty(self, operator, value):
+        assert operator in ('<', '>', '=', '!=', '<=', '>='), "Invalid domain operator"
+
         domain = [
             ('lot_id', '!=', False),
             '|', ('location_id.usage', '=', 'internal'),
             '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', '!=', False)
         ]
-        lots_w_qty = {
-            id: qty for id, qty in map(lambda l: (l['lot_id'][0], l['quantity']), self.env['stock.quant'].read_group(domain=domain, fields=['quantity:sum'], groupby=['lot_id']))
-        }
-        all_lots = self.env['stock.production.lot'].search([])
-        ids = []
-        for lot in all_lots:
-            if OPERATORS[operator](lots_w_qty.get(lot.id, 0), value):
-                ids.append(lot.id)
-        return [('id', 'in', ids)]
+        Quant = self.env['stock.quant']
+        Quant.check_access_rights('read')
+        query = Quant._where_calc(domain)
+        Quant._apply_ir_rules(query, 'read')
+
+        quant_from_clause, quant_where_clause, quant_params = query.get_sql()
+
+        Lot = self.env['stock.production.lot']
+        Lot.check_access_rights('read')
+        query = Lot._where_calc([])
+        Lot._apply_ir_rules(query, 'read')
+
+        lot_from_clause, lot_where_clause, lot_params = query.get_sql()
+
+        precision_digits = max(6, self.sudo().env.ref('product.decimal_product_uom').digits * 2)
+        query = '''
+        WITH stock_lot_quant AS (
+            SELECT
+                "stock_quant".lot_id AS id,
+                round(SUM("stock_quant".quantity)::numeric, %s) AS quantity
+            FROM
+                {quant_from_clause}
+            WHERE
+                {quant_where_clause}
+            GROUP BY
+                "stock_quant".lot_id
+        )
+
+        SELECT
+            slq.id AS id
+        FROM stock_lot_quant slq
+        WHERE slq.quantity {operator} %s
+        UNION ALL
+        SELECT
+            "stock_production_lot".id AS id
+        FROM 
+            {lot_from_clause}
+        WHERE 
+            {lot_where_clause}
+            AND 0 {operator} %s AND
+            NOT EXISTS (SELECT slq2.id FROM stock_lot_quant slq2 WHERE slq2.id = "stock_production_lot".id)
+        '''.format(quant_from_clause=quant_from_clause, quant_where_clause=quant_where_clause or 'TRUE',
+                   lot_from_clause=lot_from_clause, lot_where_clause=lot_where_clause or 'TRUE',
+                   operator=operator)
+        params = [precision_digits] + quant_params + [value] + lot_params + [value]
+        return [('id', 'inselect', (query, tuple(params)))]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)
