@@ -26,18 +26,15 @@ class ServerActions(models.Model):
         compute='_compute_sms_method',
         readonly=False, store=True)
 
-    @api.depends('state', 'sms_template_id')
+    @api.depends('sms_template_id')
     def _compute_name(self):
-        for action in self:
-            if not action.state or not self.env.context.get('automatic_action_name'):
-                continue
-            if action.state == 'sms':
-                action.name = _(
-                    'Send SMS: %(template_name)s',
-                    template_name=action.sms_template_id.name
-                )
-            else:
-                super(ServerActions, action)._compute_name()
+        to_update = self.filtered(lambda action: action.state == 'sms')
+        for action in to_update:
+            action.name = _(
+                'Send SMS: %(template_name)s',
+                template_name=action.sms_template_id.name
+            )
+        super(ServerActions, self - to_update)._compute_name()
 
     @api.depends('model_id', 'state')
     def _compute_sms_template_id(self):

@@ -533,16 +533,20 @@ class IrActionsServer(models.Model):
 
     @api.depends('state', 'update_field_id', 'crud_model_id', 'value')
     def _compute_name(self):
-        for action in self:
-            if not action.state or not self.env.context.get('automatic_action_name'):
-                continue
+        for action in self.filtered('state'):
             if action.state == 'object_write':
-                action.name = _("Update %s", action.update_field_id.field_description)
+                action.name = _(
+                    "Update %(field_name)s",
+                    field_name=action.update_field_id.field_description
+                )
             elif action.state == 'object_create':
-                action.name = _("Create %s with name %s", action.crud_model_id.name, action.value)
+                action.name = _(
+                    "Create %(model_name)s with name %(value)s",
+                    model_name=action.crud_model_id.name,
+                    value=action.value
+                )
             else:
-                state_name = dict(action._fields['state']._description_selection(self.env))[action.state]
-                action.name = state_name
+                action.name = dict(action._fields['state']._description_selection(self.env))[action.state]
 
     @api.onchange('model_id')
     def _compute_crud_model_id(self):
