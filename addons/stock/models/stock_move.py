@@ -1839,16 +1839,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
-        move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
-
         # Break move dest link if move dest and move_dest source are not the same,
         # so that when move_dests._action_assign is called, the move lines are not created with
         # the new location, they should not be created at all.
         moves_todo._check_unlink_move_dest()
-        for move_dest in moves_todo.move_dest_ids:
-            move_dests_per_company[move_dest.company_id.id] |= move_dest
-        for company_id, move_dests in move_dests_per_company.items():
-            move_dests.sudo().with_company(company_id)._action_assign()
+
+        # if incoming/internal moves make other confirmed/partially_available moves available, assign them
+        to_assign_moves = moves_todo.filtered(lambda m: m._should_trigger_assign())
+        to_assign_moves._trigger_assign()
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
@@ -1860,6 +1858,15 @@ Please change the quantity done or the rounding precision of your unit of measur
             if any([m.state == 'assigned' for m in backorder.move_ids]):
                 backorder._check_entire_pack()
         return moves_todo
+
+    def _should_trigger_assign(self):
+        self.ensure_one()
+        if not self.picking_type_id \
+                or self.picking_type_id.code in ('incoming', 'internal') \
+                or self.is_inventory \
+                or self.move_dest_ids:
+            return True
+        return False
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
@@ -2113,14 +2120,19 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
             return
 
-        domains = []
-        for move in self:
-            domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
-        static_domain = [('state', 'in', ['confirmed', 'partially_available']),
-                         ('procure_method', '=', 'make_to_stock'),
-                         ('reservation_date', '<=', fields.Date.today())]
+        # First reserve MTO moves
+        move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
+        for move_dest in self.move_dest_ids:
+            move_dests_per_company[move_dest.company_id.id] |= move_dest
+        for company_id, move_dests in move_dests_per_company.items():
+            move_dests.sudo().with_company(company_id)._action_assign()
+
+        # Then MTS moves + MTO moves with desynchronizations
+        domains = [[('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)] for move in self]
+        static_domain = [('state', 'in', ['confirmed', 'partially_available', 'waiting']),
+                         '|', ('reservation_date', '<=', fields.Date.today()), '&', ('reservation_date', '=', False), ('move_orig_ids', '!=', False)]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
-                                                         order='reservation_date, priority desc, date asc, id asc')
+                                                         order='procure_method, reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
     def _rollup_move_dests(self, seen=False):

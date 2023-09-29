@@ -421,6 +421,10 @@ class StockMove(models.Model):
             'bom_line_id': bom_line.id,
         }
 
+    def _should_trigger_assign(self):
+        self.ensure_one()
+        return bool(self.production_id) or super()._should_trigger_assign()
+
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
         vals = []
         if bom_line.product_id.type in ['product', 'consu']:
