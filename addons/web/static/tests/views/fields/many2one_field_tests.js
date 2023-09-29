@@ -4586,4 +4586,53 @@ QUnit.module("Fields", (hooks) => {
             "aaa"
         );
     });
+
+    QUnit.test("many2one field with false as display_name", async function (assert) {
+        serverData.models.partner.records[0].display_name = false;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 2,
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu"/>
+                </form>`,
+        });
+
+        assert.ok(
+            target.querySelector(".o_field_widget[name='trululu'] input").value,
+            "Unnamed",
+            "Should have a fallback for `false` display_name"
+        );
+    });
+
+    QUnit.test("many2one search with false as display_name", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>`,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "name_search") {
+                    return Promise.resolve([
+                        [1, false]
+                    ]);
+                }
+            },
+        });
+
+        const input = target.querySelector(".o_field_many2one input");
+        await click(input);
+        
+        await triggerEvents(input, null, ["input", "change"]);
+        let dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu")
+        assert.strictEqual(
+            dropdown.querySelector("a.dropdown-item").text,
+            "Unnamed"
+        );
+    });
 });

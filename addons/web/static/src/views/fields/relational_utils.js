@@ -238,7 +238,7 @@ export class Many2XAutocomplete extends Component {
     mapRecordToOption(result) {
         return {
             value: result[0],
-            label: result[1].split("\n")[0],
+            label: result[1] ? result[1].split("\n")[0] : this.env._t("Unnamed"),
         };
     }
     async loadOptionsSource(request) {

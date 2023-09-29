@@ -185,7 +185,13 @@ export class Many2OneField extends Component {
         return "";
     }
     get displayName() {
-        return this.value ? this.value[1].split("\n")[0] : "";
+        if (this.value && this.value[1]) {
+            return this.value[1].split("\n")[0];
+        } else if (this.value) {
+            return this.env._t("Unnamed");
+        } else {
+            return ""
+        }
     }
     get extraLines() {
         return this.value
