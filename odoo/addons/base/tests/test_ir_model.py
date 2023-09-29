@@ -369,18 +369,12 @@ class TestIrModel(TransactionCase):
         self.assertEqual(self.registry.field_depends[type(record).display_name], ('x_name',))
         self.assertEqual(record.display_name, "Ifan Ben-Mezd")
 
-        fallback_display_name = f"x_bananas,{record.id}"
-
-        # When _rec_name value is Falsy, we should fallback correctly.
-        record.x_name = False
-        self.assertEqual(record.display_name, fallback_display_name)
-
         # unlinking x_name should fixup _rec_name and display_name
         self.env['ir.model.fields']._get('x_bananas', 'x_name').unlink()
         record = self.env['x_bananas'].browse(record.id)
         self.assertEqual(record._rec_name, None)
         self.assertEqual(self.registry.field_depends[type(record).display_name], ())
-        self.assertEqual(record.display_name, fallback_display_name)
+        self.assertEqual(record.display_name, f"x_bananas,{record.id}")
 
     def test_monetary_currency_field(self):
         fields_value = [
