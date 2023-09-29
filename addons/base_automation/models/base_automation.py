@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, Command, exceptions, fields, models
+from odoo import _, api, exceptions, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
 
@@ -177,6 +177,19 @@ class BaseAutomation(models.Model):
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
     RANGE_FIELDS = ['trg_date_range', 'trg_date_range_type']
 
+    @api.constrains('model_id', 'action_server_ids')
+    def _check_action_server_model(self):
+        for rule in self:
+            failing_actions = rule.action_server_ids.filtered(
+                lambda action: action.model_id != rule.model_id
+            )
+            if failing_actions:
+                raise exceptions.ValidationError(
+                    _('Target model of actions %(action_names)s are different from rule model.',
+                      action_names=', '.join(failing_actions.mapped('name'))
+                     )
+                )
+
     @api.constrains('trigger', 'action_server_ids')
     def _check_trigger_state(self):
         for record in self:
@@ -196,7 +209,14 @@ class BaseAutomation(models.Model):
 
     @api.depends('model_id')
     def _compute_action_server_ids(self):
-        self.action_server_ids = [Command.clear()]
+        """ When changing / setting model, remove actions that are not targeting
+        the same model anymore. """
+        for rule in self.filtered('model_id'):
+            actions_to_remove = rule.action_server_ids.filtered(
+                lambda action: action.model_id != rule.model_id
+            )
+            if actions_to_remove:
+                rule.action_server_ids = [(3, action.id) for action in actions_to_remove]
 
     @api.depends('trigger', 'trigger_field_ids')
     def _compute_trg_date_id(self):
