@@ -56,7 +56,7 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                     return false;
                 }
                 const trimmedCode = code.trim();
-                if (trimmedCode && trimmedCode.startsWith('044')) {
+                if (trimmedCode && /^(044|043)/.test(trimmedCode)) {
                     // check if the code exist in the database
                     // if so, use its balance, otherwise, use the unit price of the gift card product
                     const fetchedGiftCard = await this.rpc({
