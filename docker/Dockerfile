@@ -32,16 +32,18 @@ RUN curl -sL -o /tmp/wkhtmltox.deb https://github.com/wkhtmltopdf/wkhtmltopdf/re
     && rm -rf /tmp/wkhtmltox.deb
 
 # ghostscript
-RUN curl -sL -o /tmp/ghostscript-9.56.1-linux-x86_64.tgz https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs9561/ghostscript-9.56.1-linux-x86_64.tgz \
-    && tar -xzf /tmp/ghostscript-9.56.1-linux-x86_64.tgz -C /tmp \
-    && mv /tmp/ghostscript-9.56.1-linux-x86_64/gs-9561-linux-x86_64 /usr/local/bin/ghostscript \
-    && ln -s /usr/local/bin/ghostscript /usr/local/bin/gs \
-    && chmod 755 /usr/local/bin/ghostscript \
-    && chmod 755 /usr/local/bin/gs \
-    && rm -rf /tmp/ghostscript-9.56.1-linux-x86_64.tgz /tmp/ghostscript-9.56.1-linux-x86_64
+RUN GHOSTSCRIPT_VERSION=10020 && GHOSTSCRIPT_FILE_NAME=ghostscript-10.02.0.tar.gz \
+    && curl -sL -o /tmp/${GHOSTSCRIPT_FILE_NAME} https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${GHOSTSCRIPT_VERSION}/${GHOSTSCRIPT_FILE_NAME} \
+    && tar -xzf /tmp/${GHOSTSCRIPT_FILE_NAME} -C /tmp \
+    && cd /tmp/$(basename ${GHOSTSCRIPT_FILE_NAME} .tar.gz)/ \
+    && ./configure \
+    && make \
+    && make install \
+    && ln -s /usr/local/bin/gs /usr/local/bin/ghostscript \
+    && rm -rf /tmp/${GHOSTSCRIPT_FILE_NAME} /tmp/$(basename ${GHOSTSCRIPT_FILE_NAME} .tar.gz})
 
 # odoo directories
-RUN useradd -s /usr/bin/nologin --create-home --password odoo odoo \
+RUN useradd -s /usr/sbin/nologin --create-home --password odoo odoo \
   && mkdir /home/odoo/.local \
   && chown odoo:odoo /home/odoo/.local \
   && mkdir --parents /opt/odoo/tests \
