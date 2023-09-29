@@ -170,6 +170,24 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.reply_to, formataddr((test_record.name, reply_to_email)),
                          'Reply-To: use recordname as name in format if recordname + company > 78 chars')
 
+        # no record_name: keep company_name in formatting if ok
+        test_record.write({'name': ''})
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        self.assertEqual(msg.reply_to, formataddr((self.env.user.company_id.name, reply_to_email)),
+                         'Reply-To: use company as name in format when no record name and still < 78 chars')
+
+        # no record_name and company_name make it blow up: keep only email
+        self.env.user.company_id.write({'name': 'Super Long Name That People May Enter "Even with an internal quoting of stuff"'})
+        msg = self.env['mail.message'].create({
+            'model': test_record._name,
+            'res_id': test_record.id
+        })
+        self.assertEqual(msg.reply_to, reply_to_email,
+                         'Reply-To: use only email when formataddr > 78 chars')
+
         # whatever the record and company names, email is too long: keep only email
         test_record.write({
             'alias_name': 'Waaaay too long alias name that should make any reply-to blow the 78 characters limit',
