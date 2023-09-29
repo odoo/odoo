@@ -99,7 +99,9 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
         ])
 
         # delivered products invoiced, nothing to invoice left
-        self.sale_order.with_context(default_invoice_date=self.wizard.date)._create_invoices().action_post()
+        invoices = self.sale_order._create_invoices()
+        invoices.invoice_date = self.wizard.date
+        invoices.action_post()
         with self.assertRaises(UserError):
             self.wizard.create_entries()
         self.assertTrue(self.wizard.display_amount)
