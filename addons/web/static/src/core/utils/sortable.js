@@ -102,9 +102,9 @@ export const useSortable = makeDraggableHook({
                 current.group === element.closest(groupSelector)
             ) {
                 const pos = current.placeHolder.compareDocumentPosition(element);
-                if (pos === 2 /* BEFORE */) {
+                if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
                     element.before(current.placeHolder);
-                } else if (pos === 4 /* AFTER */) {
+                } else if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
                     element.after(current.placeHolder);
                 }
             }
