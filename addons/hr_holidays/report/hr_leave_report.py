@@ -15,6 +15,7 @@ class LeaveReport(models.Model):
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
+    number_of_hours = fields.Float('Number of Hours', readonly=True)
     leave_type = fields.Selection([
         ('allocation', 'Allocation'),
         ('request', 'Time Off')
@@ -47,6 +48,7 @@ class LeaveReport(models.Model):
                 leaves.leave_id as leave_id,
                 leaves.employee_id as employee_id, leaves.name as name,
                 leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
+                leaves.number_of_hours as number_of_hours,
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
@@ -56,6 +58,7 @@ class LeaveReport(models.Model):
                     allocation.employee_id as employee_id,
                     allocation.private_name as name,
                     allocation.number_of_days as number_of_days,
+                    allocation.number_of_hours_display as number_of_hours,
                     allocation.category_id as category_id,
                     allocation.department_id as department_id,
                     allocation.holiday_status_id as holiday_status_id,
@@ -73,6 +76,7 @@ class LeaveReport(models.Model):
                     request.employee_id as employee_id,
                     request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
+                    (request.number_of_hours * -1) as number_of_hours,
                     request.category_id as category_id,
                     request.department_id as department_id,
                     request.holiday_status_id as holiday_status_id,
