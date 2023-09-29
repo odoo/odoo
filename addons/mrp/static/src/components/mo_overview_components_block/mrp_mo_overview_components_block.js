@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewOperationsBlock } from "../mo_overview_operations_block/mrp_mo_overview_operations_block";
@@ -10,7 +10,7 @@ export class MoOverviewComponentsBlock extends Component {
 
     setup() {
         this.state = useState({
-            fold: this.getIndexStates(),
+            fold: this.getIndexStates(this.props),
             unfoldAll: this.props.unfoldAll || false,
         });
 
@@ -19,6 +19,11 @@ export class MoOverviewComponentsBlock extends Component {
         }
 
         useBus(this.env.overviewBus, "unfold-all", () => this.unfoldAll());
+
+        onWillUpdateProps(newProps => {
+            // Update the fold indexes so it matches the newly added lines.
+            this.state.fold = { ...this.getIndexStates(newProps), ...this.state.fold };
+        });
     }
 
     //---- Handlers ----
@@ -45,12 +50,12 @@ export class MoOverviewComponentsBlock extends Component {
 
     //---- Helpers ----
 
-    getIndexStates() {
+    getIndexStates(props) {
         const indexStates = {};
-        (this.props?.components ?? []).forEach(component => {
-            indexStates[component?.summary.index] = !this.props.unfoldAll;
+        (props?.components ?? []).forEach(component => {
+            indexStates[component?.summary.index] = !props.unfoldAll;
             (component?.replenishments ?? []).forEach(replenishment => {
-                indexStates[replenishment?.summary.index] = !this.props.unfoldAll;
+                indexStates[replenishment?.summary.index] = !props.unfoldAll;
             });
         });
         return indexStates;
