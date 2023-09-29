@@ -3,6 +3,7 @@
 import base64
 import random
 import re
+from operator import itemgetter
 
 from odoo import api, Command, fields, models, modules, _
 
@@ -139,16 +140,8 @@ class ImLivechatChannel(models.Model):
         if chatbot_script:
             if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
                 return False
-        elif previous_operator_id:
-            # previous_operator_id is the partner_id of the previous operator, need to convert to user
-            if previous_operator_id in self.available_operator_ids.mapped("partner_id").ids:
-                user_operator = next(
-                    available_user
-                    for available_user in self.available_operator_ids
-                    if available_user.partner_id.id == previous_operator_id
-                )
-        if not user_operator and not chatbot_script:
-            user_operator = self._get_random_operator(lang=lang, country_id=country_id)
+        else:
+            user_operator = self._get_operator(previous_operator_id=previous_operator_id, lang=lang, country_id=country_id)
             if not user_operator:
                 # no one available
                 return False
@@ -181,37 +174,52 @@ class ImLivechatChannel(models.Model):
             'name': name,
         }
 
-    def _get_less_active_operator(self, active_channels, operators):
-        """ Get the operator with the less active conversations.
-        :param active_channels: list of active livechats (with at least
-            one message within the last 30 minutes)
+    def _get_less_active_operator(self, operator_statuses, operators):
+        """ Retrieve the most available operator based on the following criteria:
+        - Lowest number of active chats.
+        - Not in  a call.
+        - If an operator is in a call and has two or more active chats, don't
+          give priority over an operator with more conversations who is not in a
+          call.
+
+        :param operator_statuses: list of dictionaries containing the operator's
+            id, the number of active chats and a boolean indicating if the
+            operator is in a call. The list is ordered by the number of active
+            chats (ascending) and whether the operator is in a call
+            (descending).
         :param operators: list of operators to choose from
         """
         if not operators:
             return False
-        active_channels = [active_channel for active_channel in active_channels if active_channel['livechat_operator_id'] in operators.mapped('partner_id').ids]
-        active_operators = [active_channel['livechat_operator_id'] for active_channel in active_channels]
-        inactive_operators = [operator for operator in operators if operator.partner_id.id not in active_operators]
+        active_operator_ids = set(map(lambda s: s['livechat_operator_id'], operator_statuses))
+        inactive_operators = [
+            operator for operator in operators if operator.partner_id.id not in active_operator_ids
+        ]
         if inactive_operators:
             return random.choice(inactive_operators)
-
-        # Get the less active operator using the active_channels first element's count (since they are sorted 'ascending')
-        lowest_number_of_conversations = active_channels[0]['count']
-        less_active_operator = random.choice([
-            active_channel['livechat_operator_id'] for active_channel in active_channels
-            if active_channel['count'] == lowest_number_of_conversations])
-
+        count, in_call = itemgetter('count', 'in_call')(operator_statuses[0])
+        i = 1
+        while i < len(operator_statuses) and operator_statuses[i]['in_call'] == in_call and operator_statuses[i]['count'] == count:
+            i += 1
+        less_active_operator_id = random.choice(operator_statuses[:i])['livechat_operator_id']
         # convert the selected 'partner_id' to its corresponding res.users
-        return next(operator for operator in operators if operator.partner_id.id == less_active_operator)
+        return next(operator for operator in operators if operator.partner_id.id == less_active_operator_id)
 
-    def _get_random_operator(self, lang=None, country_id=None):
-        """ Return a random operator from the available users of the channel that have the lowest number of active livechats.
-        A livechat is considered 'active' if it has at least one message within the 30 minutes.
-        This method will try to match the given lang and country_id.
+    def _get_operator(self, previous_operator_id=None, lang=None, country_id=None):
+        """ Return an operator for a livechat. Try to return the previous
+        operator if available. If not, one of the most available operators be
+        returned.
 
-        (Some annoying conversions have to be made on the fly because this model holds 'res.users' as available operators
-        and the discuss_channel model stores the partner_id of the randomly selected operator)
+        A livechat is considered 'active' if it has at least one message within
+        the 30 minutes. This method will try to match the given lang and
+        country_id.
 
+        (Some annoying conversions have to be made on the fly because this model
+        holds 'res.users' as available operators and the discuss_channel model
+        stores the partner_id of the randomly selected operator)
+
+        :param previous_operator_id: id of the previous operator with whom the
+            visitor was chatting.
         :param lang: code of the preferred lang of the visitor.
         :param country_id: id of the country of the visitor.
         :return : user
@@ -219,30 +227,50 @@ class ImLivechatChannel(models.Model):
         """
         if not self.available_operator_ids:
             return False
-
-        self.env.cr.execute("""SELECT COUNT(DISTINCT c.id), c.livechat_operator_id
+        self.env.cr.execute("""
+            SELECT COUNT(DISTINCT c.id), COUNT(DISTINCT rtc.id) > 0 as in_call, c.livechat_operator_id
             FROM discuss_channel c
             LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
+            LEFT OUTER JOIN discuss_channel_member member ON member.partner_id = c.livechat_operator_id
+            LEFT OUTER JOIN discuss_channel_rtc_session rtc ON rtc.channel_member_id = member.id
             WHERE c.channel_type = 'livechat'
+            AND (
+                c.livechat_active IS TRUE
+                OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
+            )
             AND c.livechat_operator_id in %s
-            AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             GROUP BY c.livechat_operator_id
-            ORDER BY COUNT(DISTINCT c.id) asc""", (tuple(self.available_operator_ids.mapped('partner_id').ids),))
-        active_channels = self.env.cr.dictfetchall()
+            ORDER BY COUNT(DISTINCT c.id) < 2 OR COUNT(DISTINCT rtc.id) = 0 DESC, COUNT(DISTINCT c.id) ASC, COUNT(DISTINCT rtc.id) = 0 DESC""",
+            (tuple(self.available_operator_ids.partner_id.ids),)
+        )
+        operator_statuses = self.env.cr.dictfetchall()
         operator = None
+        # Try to match the previous operator
+        if previous_operator_id in self.available_operator_ids.partner_id.ids:
+            previous_operator_status = next(
+                (status for status in operator_statuses if status['livechat_operator_id'] == previous_operator_id),
+                None
+            )
+            if not previous_operator_status or previous_operator_status['count'] < 2 or not previous_operator_status['in_call']:
+                previous_operator_user = next(
+                    available_user
+                    for available_user in self.available_operator_ids
+                    if available_user.partner_id.id == previous_operator_id
+                )
+                return previous_operator_user
         # Try to match an operator with the same lang as the visitor
         if lang:
             same_lang_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.lang == lang)
             if same_lang_operator_ids:
-                operator = self._get_less_active_operator(active_channels, same_lang_operator_ids)
+                operator = self._get_less_active_operator(operator_statuses, same_lang_operator_ids)
         # Try to match an operator with the same country as the visitor
         if country_id and not operator:
             same_country_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.country_id.id == country_id)
             if same_country_operator_ids:
-                operator = self._get_less_active_operator(active_channels, same_country_operator_ids)
+                operator = self._get_less_active_operator(operator_statuses, same_country_operator_ids)
         # Try to get a random operator, regardless of the lang or the country
         if not operator:
-            operator = self._get_less_active_operator(active_channels, self.available_operator_ids)
+            operator = self._get_less_active_operator(operator_statuses, self.available_operator_ids)
         return operator
 
     def _get_channel_infos(self):
