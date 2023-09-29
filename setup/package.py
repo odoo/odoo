@@ -327,11 +327,9 @@ class DockerDeb(Docker):
         logging.info('Start testing debian package')
         cmds = [
             'service postgresql start',
-            'su postgres -s /bin/bash -c "createdb mycompany"',
             '/usr/bin/apt-get update -y',
-            '/usr/bin/dpkg -i /data/src/odoo_%s.%s_all.deb ; /usr/bin/apt-get install -f -y' % (VERSION, TSTAMP),
-            'su odoo -s /bin/bash -c "odoo -d mycompany -i base --stop-after-init"',
-            'su odoo -s /bin/bash -c "odoo -d mycompany --pidfile=/data/src/odoo.pid"',
+            f'/usr/bin/apt-get install -y /data/src/odoo_{VERSION}.{TSTAMP}_all.deb',
+            'su odoo -s /bin/bash -c "odoo -d mycompany -i base --pidfile=/data/src/odoo.pid"',
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-test-%s' % TSTAMP, user='root', detach=True, exposed_port=8069, timeout=300)
         self.test_odoo()
