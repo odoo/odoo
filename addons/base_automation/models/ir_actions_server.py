@@ -22,3 +22,12 @@ class ServerAction(models.Model):
                       rule_name=action.base_automation_id.name
                      )
                 )
+
+    @api.depends('usage')
+    def _compute_available_model_ids(self):
+        """ Stricter model limit: based on automation rule """
+        super()._compute_available_model_ids()
+        rule_based = self.filtered(lambda action: action.usage == 'base_automation')
+        for action in rule_based:
+            rule_model = action.base_automation_id.model_id
+            action.available_model_ids = rule_model.ids if rule_model in action.available_model_ids else []

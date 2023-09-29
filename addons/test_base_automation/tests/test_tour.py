@@ -265,23 +265,6 @@ class BaseAutomationTestUi(HttpCase):
             ["Set Active To False 2", "Set Active To False 0", "Set Active To False 1"],
         )
 
-    def test_form_view_debug(self):
-        model = self.env.ref("base.model_res_partner")
-        automation = self.env["base.automation"].create(
-            {
-                "name": "Test",
-                "trigger": "on_create_or_write",
-                "model_id": model.id,
-            }
-        )
-        self.start_tour(
-            (
-                f"/web?debug=1#{_urlencode_kwargs(action=self.env.ref('base_automation.base_automation_act').id, id=automation.id, view_type='form')}"
-            ),
-            "test_form_view_debug",
-            login="admin",
-        )
-
     def test_form_view_model_id(self):
         self.start_tour(
             (
