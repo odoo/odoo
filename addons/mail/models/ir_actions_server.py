@@ -85,13 +85,25 @@ class ServerActions(models.Model):
             if not action.state or not self.env.context.get('automatic_action_name'):
                 continue
             if action.state == 'mail_post':
-                action.name = 'Send email: %s' % action.template_id.name
+                action.name = _(
+                    'Send email: %(template_name)s',
+                    template_name=action.template_id.name
+                )
             elif action.state == 'followers':
-                action.name = 'Add followers: %s' % ', '.join(action.partner_ids.mapped('name'))
+                action.name = _(
+                    'Add followers: %(partner_names)s',
+                    partner_names=', '.join(action.partner_ids.mapped('name'))
+                )
             elif action.state == 'remove_followers':
-                action.name = 'Remove followers: %s' % ', '.join(action.partner_ids.mapped('name'))
+                action.name = _(
+                    'Remove followers: %(partner_names)s',
+                    partner_names=', '.join(action.partner_ids.mapped('name'))
+                )
             elif action.state == 'next_activity':
-                action.name = 'Next activity: %s' % action.activity_summary
+                action.name = _(
+                    'Next activity: %(activity_name)s',
+                    activity_name=action.activity_summary or action.activit_type_id.name
+                )
             else:
                 super(ServerActions, action)._compute_name()
 
