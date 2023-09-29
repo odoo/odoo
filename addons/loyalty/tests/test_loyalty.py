@@ -5,7 +5,7 @@ from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import tagged, TransactionCase, Form
 from odoo.tools import mute_logger
 
 from unittest.mock import patch
@@ -112,6 +112,17 @@ class TestLoyalty(TransactionCase):
             ],
         })
         self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
+
+    def test_loyalty_program_preserve_reward_with_always_edit(self):
+        with Form(self.env['loyalty.program']) as program_form:
+            program_form.name = 'Test'
+            program_form.program_type = 'buy_x_get_y'
+            program_form.reward_ids.remove(0)
+            with program_form.reward_ids.new() as new_reward:
+                new_reward.reward_product_qty = 2
+            program = program_form.save()
+            self.assertEqual(program.reward_ids.reward_type, 'product')
+            self.assertEqual(program.reward_ids.reward_product_qty, 2)
 
     def test_archiving_unarchiving(self):
         self.program.write({
