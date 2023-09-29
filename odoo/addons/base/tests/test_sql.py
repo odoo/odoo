@@ -35,6 +35,12 @@ class TestSQL(BaseCase):
         with self.assertRaises(TypeError):
             SQL("SELECT id FROM table WHERE foo=%s AND bar=%s", 1, 2, 3)
 
+        with self.assertRaises(TypeError):
+            SQL("SELECT id FROM table WHERE foo=%s AND bar=%(two)s", 1, two=2)
+
+        with self.assertRaises(KeyError):
+            SQL("SELECT id FROM table WHERE foo=%(one)s AND bar=%(two)s", one=1, to=2)
+
     def test_sql_equality(self):
         sql1 = SQL("SELECT id FROM table WHERE foo=%s", 42)
         sql2 = SQL("SELECT id FROM table WHERE foo=%s", 42)
@@ -114,6 +120,22 @@ class TestSQL(BaseCase):
         self.assertEqual(sql.code, "SELECT id FROM table WHERE foo=%s AND bar=%s")
         self.assertEqual(sql.params, [1, 2])
         self.assertEqual(sql, SQL("SELECT id FROM table WHERE foo=%s AND bar=%s", 1, 2))
+
+    def test_sql_with_named_parameters(self):
+        sql = SQL("SELECT id FROM table WHERE %(one)s AND bar=%(two)s", one=SQL("foo=%s", 1), two=2)
+        self.assertEqual(sql.code, "SELECT id FROM table WHERE foo=%s AND bar=%s")
+        self.assertEqual(sql.params, [1, 2])
+        self.assertEqual(sql, SQL("SELECT id FROM table WHERE foo=%s AND bar=%s", 1, 2))
+
+        # the parameters are bound locally
+        sql = SQL(
+            "%s AND %s",
+            SQL("foo=%(value)s", value=1),
+            SQL("bar=%(value)s", value=2),
+        )
+        self.assertEqual(sql.code, "foo=%s AND bar=%s")
+        self.assertEqual(sql.params, [1, 2])
+        self.assertEqual(sql, SQL("foo=%s AND bar=%s", 1, 2))
 
     def test_complex_sql(self):
         sql = SQL(

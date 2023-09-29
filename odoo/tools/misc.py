@@ -1824,3 +1824,27 @@ def get_flag(country_code: str) -> str:
 def format_frame(frame):
     code = frame.f_code
     return f'{code.co_name} {code.co_filename}:{frame.f_lineno}'
+
+
+def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:
+    """ Convert a named printf-style format string with its arguments to an
+    equivalent positional format string with its arguments. This implementation
+    does not support escaped ``%`` characters (``"%%"``).
+    """
+    if '%%' in string:
+        raise ValueError(f"Unsupported escaped '%' in format string {string!r}")
+    args = _PrintfArgs(args)
+    return string % args, tuple(args.values)
+
+
+class _PrintfArgs:
+    """ Helper object to turn a named printf-style format string into a positional one. """
+    __slots__ = ('mapping', 'values')
+
+    def __init__(self, mapping):
+        self.mapping = mapping
+        self.values = []
+
+    def __getitem__(self, key):
+        self.values.append(self.mapping[key])
+        return "%s"
