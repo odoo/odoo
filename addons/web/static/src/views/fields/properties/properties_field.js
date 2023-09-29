@@ -14,7 +14,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { reposition } from "@web/core/position_hook";
 import { archParseBoolean } from "@web/views/utils";
 import { pick } from "@web/core/utils/objects";
-import { useSortable } from "@web/core/utils/sortable";
+import { useSortable } from "@web/core/utils/sortable_owl";
 
 import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 

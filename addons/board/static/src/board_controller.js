@@ -7,7 +7,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
-import { useSortable } from "@web/core/utils/sortable";
+import { useSortable } from "@web/core/utils/sortable_owl";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
 import { blockDom, Component, useState, useRef } from "@odoo/owl";
