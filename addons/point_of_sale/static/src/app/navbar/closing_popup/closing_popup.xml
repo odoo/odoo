@@ -33,7 +33,8 @@
                                             <i class="fa fa-money fa-2x" role="img" title="Open the money details popup"/>
                                         </div>
                                     </td>
-                                    <td t-esc="env.utils.formatCurrency(getDifference(props.default_cash_details.id))"
+                                    <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                                    <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
                                         t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
                                 </tr>
                             </tbody>
