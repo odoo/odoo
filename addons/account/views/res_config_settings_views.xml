@@ -528,58 +528,60 @@
                                 </div>
                             </div>
                         </t>
-                        <h2>Analytics</h2>
-                        <div class="row mt16 o_settings_container" id="analytic">
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="track_costs_revenues"
-                                title="Allows you to use the analytic accounting."
-                                groups="account.group_account_user">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_analytic_accounting"/>
+                        <t groups="account.group_account_user">
+                            <h2>Analytics</h2>
+                            <div class="row mt16 o_settings_container" id="analytic">
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                    id="track_costs_revenues"
+                                    title="Allows you to use the analytic accounting.">
+                                    <div class="o_setting_left_pane">
+                                        <field name="group_analytic_accounting"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="group_analytic_accounting"/>
+                                        <div class="text-muted">
+                                            Track costs &amp; revenues by project, department, etc
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_analytic_accounting"/>
-                                    <div class="text-muted">
-                                        Track costs &amp; revenues by project, department, etc
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                    id="tag_analytic_entries">
+                                    <div class="o_setting_left_pane">
+                                        <field name="group_analytic_tags"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="group_analytic_tags"/>
+                                        <div class="text-muted">
+                                            Allows to tag analytic entries and to manage analytic distributions
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                    id="account_budget"
+                                    title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_account_budget" widget="upgrade_boolean"/>
+                                    </div>
+                                    <div class="o_setting_right_pane" id="budget_management">
+                                        <label for="module_account_budget"/>
+                                        <div class="text-muted">
+                                            Use budgets to compare actual with expected revenues and costs
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box" id="monitor_product_margins">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_product_margin"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="module_product_margin" string="Margin Analysis"/>
+                                        <div class="text-muted">
+                                            Monitor your product margins from invoices
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="tag_analytic_entries"
-                                groups="account.group_account_user">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_analytic_tags"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_analytic_tags"/>
-                                    <div class="text-muted">
-                                        Allows to tag analytic entries and to manage analytic distributions
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_budget" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane" id="budget_management">
-                                    <label for="module_account_budget"/>
-                                    <div class="text-muted">
-                                        Use budgets to compare actual with expected revenues and costs
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="monitor_product_margins">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_product_margin"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_product_margin" string="Margin Analysis"/>
-                                    <div class="text-muted">
-                                        Monitor your product margins from invoices
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </t>
                     </div>
                 </xpath>
             </field>
