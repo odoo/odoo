@@ -30,6 +30,43 @@ export const BUILTINS = {
         return true;
     },
 
+    any(iterable) {
+        if (!(iterable instanceof Array)) {
+            throw new ParserError("value error");
+        }
+        for (const value of iterable) {
+            if (value) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    all(iterable) {
+        if (!(iterable instanceof Array)) {
+            throw new ParserError("value error");
+        }
+        for (const value of iterable) {
+            if (!value) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    set(iterable) {
+        if (iterable === null || iterable === undefined || !arguments[1]) {
+            return new Set();
+        }
+        if (typeof iterable !== "object" || Object.keys(arguments[1]).length) {
+            throw new ParserError("value error");
+        }
+        if (iterable instanceof Array) {
+            return new Set(iterable);
+        }
+        return new Set(Object.keys(iterable));
+    },
+
     time: {
         strftime(format) {
             return PyDateTime.now().strftime(format);

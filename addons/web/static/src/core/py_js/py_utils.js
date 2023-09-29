@@ -111,6 +111,17 @@ export function formatAST(ast, lbp = 0) {
             const argStr = args.concat(kwargs).join(", ");
             return `${formatAST(ast.fn)}(${argStr})`;
         }
+        case 16 /* List/Dict/Set comprehension */: {
+            const value = formatAST(ast.value);
+            const keys = ast.keys.join();
+            const iterator = formatAST(ast.iterator);
+            if (ast.condition) {
+                const condition = formatAST(ast.condition);
+                return `${value} for ${keys} in ${iterator} if ${condition}`;
+            } else {
+                return `${value} for ${keys} in ${iterator}`;
+            }
+        }
     }
     throw new Error("invalid expression: " + ast);
 }

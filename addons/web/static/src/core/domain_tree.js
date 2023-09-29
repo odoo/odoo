@@ -2,6 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
+import { parseExpr } from "@web/core/py_js/py";
 
 const TERM_OPERATORS_NEGATION = {
     "<": ">=",
@@ -30,6 +31,11 @@ export class Expression {
 
     toString() {
         return this._expr;
+    }
+
+    isPath() {
+        const envValueReqExp = /\b(True|False|None|self|uid|context|context_today|active_id|active_ids|allowed_company_ids|current_company_id|active_model|current_date)\b/;
+        return !envValueReqExp.test(this._expr);
     }
 }
 
@@ -95,6 +101,12 @@ export function toAST(value) {
  * @property {Value} operator
  * @property {Value} value
  * @property {boolean} negate
+ */
+
+/**
+ * @typedef {Object} Expression
+ * @property {"expression"} type
+ * @property {Value} value
  */
 
 /**
@@ -205,6 +217,18 @@ function getASTs(tree) {
         });
         return ASTs;
     }
+    if (tree.type === "expression") {
+        let expression = tree.value;
+        if (tree.negate) {
+            expression = `not (${expression})`;
+        } else {
+            expression = `bool(${expression})`;
+        }
+        return [{
+            type: 10,
+            value: [new parseExpr(expression), toAST("="), toAST(1)],
+        }];
+    }
 
     const length = tree.children.length;
     if (length && tree.negate) {
@@ -225,7 +249,7 @@ function getASTs(tree) {
  * @returns {Tree}
  */
 function createBetweenOperators(tree, isRoot = true) {
-    if (tree.type === "condition") {
+    if (tree.type === "condition" || tree.type === "expression") {
         return tree;
     }
     const processedChildren = tree.children.map((c) => createBetweenOperators(c, false));
@@ -267,6 +291,9 @@ function createBetweenOperators(tree, isRoot = true) {
  * @returns {Tree}
  */
 function removeBetweenOperators(tree) {
+    if (tree.type === "expression") {
+        return tree;
+    }
     if (tree.type === "condition") {
         if (tree.operator !== "between") {
             return tree;
@@ -333,5 +360,233 @@ export function toTree(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options);
+    return createBetweenOperators(tree);
+}
+
+
+/**
+ * @param {Tree} tree
+ * @returns {string} a string representation of an python expression
+ */
+export function toExpression(tree) {
+    const simplifiedTree = removeBetweenOperators(tree);
+    const ast = getASTs(simplifiedTree);
+
+    const parts = [];
+    while (ast.length) {
+        const astLeaf = ast.pop();
+        if (astLeaf.type === 10) {
+            const path = astLeaf.value[0].value;
+            const value = formatAST(astLeaf.value[2]);
+            let operator = astLeaf.value[1].value;
+            if (operator === '=') {
+                operator = '==';
+            }
+
+            parts.unshift(`${path} ${operator} ${value}`);
+        } else if (astLeaf.value === '&') {
+            if (parts.length < 2) {
+                throw new Error();
+            }
+            const items = parts.splice(0, Infinity);
+            parts.push(`${items.shift()} and ${items.shift()}`);
+            parts.push(...items);
+        } else if (astLeaf.value === '|') {
+            if (parts.length < 2) {
+                throw new Error();
+            }
+            const items = parts.splice(0, Infinity);
+            parts.push(`(${items.shift()}) or (${items.shift()})`);
+            parts.push(...items);
+        } else if (astLeaf.value === '!') {
+            if (parts.length < 1) {
+                throw new Error();
+            }
+            const items = parts.splice(0, Infinity);
+            parts.push(`not (${items.shift()})`);
+            parts.push(...items);
+        }
+    }
+    return parts.join(' and ') || 'True';
+}
+
+/**
+ * @param {PythonExpression} expression
+ * @param {Object} [options={}] see construcTree API
+ * @returns {Tree} a tree representation of a domain
+ */
+export function expressionToTree(expression, options = {}) {
+    const ast = new parseExpr(expression);
+
+    function _construcTree(ast, forceTree=false) {
+        switch(ast.type) {
+            case 0 /* Number */:
+            case 1 /* String */:
+            case 2 /* Boolean */:
+            case 3 /* None */:
+            case 10 /* Tuple */:
+            case 11 /* Dictionary */: {
+                const expr = new Expression(ast);
+                if (!forceTree) {
+                    return expr;
+                }
+                return {
+                    type: "expression",
+                    value: expr.toString(),
+                };
+            }
+            case 5 /* Name */:
+            case 12 /* Lookup */:
+            case 15 /* ObjLookup */: {
+                const expr = new Expression(ast);
+                if (!forceTree) {
+                    return expr;
+                }
+                if (expr.isPath()) {
+                    return {
+                        type: "condition",
+                        path: expr.toString(),
+                        operator: "!=",
+                        value: false,
+                    };
+                } else {
+                    return {
+                        type: "expression",
+                        value: expr.toString(),
+                    };
+                }
+            }
+            case 4 /* List */: {
+                const tree = ast.value.length === 1 && _construcTree(ast.value[0], true);
+                if (tree?.type !== "expression") {
+                    return tree;
+                }
+                const expr = new Expression(ast);
+                if (!forceTree) {
+                    return expr;
+                }
+                return {
+                    type: "expression",
+                    value: expr.toString(),
+                };
+            }
+            case 8 /* FunctionCall */: {
+                if (ast.fn.value === "any") {
+                    const tree = _construcTree(ast.args[0]);
+                    if (tree.type !== "expression") {
+                        return tree;
+                    }
+                }
+                const expr = new Expression(ast);
+                if (!forceTree) {
+                    return expr;
+                }
+                return {
+                    type: "expression",
+                    value: expr.toString(),
+                };
+            }
+            case 6 /* UnaryOperator */: {
+                const tree = _construcTree(ast.right, true);
+                if (!tree.negate && typeof tree.operator === "string" && TERM_OPERATORS_NEGATION[tree.operator]) {
+                    tree.operator = TERM_OPERATORS_NEGATION[tree.operator];
+                } else {
+                    tree.negate = !tree.negate;
+                }
+                return tree;
+            }
+            case 7 /* BinaryOperator */: {
+                const left = _construcTree(ast.left);
+                const right = _construcTree(ast.right);
+                if (!left?.isPath() && !right?.isPath()) {
+                    return new Expression(ast);
+                }
+                switch (ast.op) {
+                    case "<":
+                    case "<=":
+                    case ">":
+                    case ">=":
+                    case "in":
+                    case "not in":
+                    case "!=":
+                    case "is":
+                    case "is not":
+                    case "==": {
+                        let operator = ast.op;
+                        if (operator === "==" || operator === "is") {
+                            operator = "=";
+                        }
+                        if (operator === "is not") {
+                            operator = "!=";
+                        }
+                        return {
+                            type: "condition",
+                            path: left.toString(),
+                            operator: operator,
+                            value: right,
+                        };
+                    }
+                    default:
+                        return new Expression(ast);
+                }
+            }
+            case 13 /* BinaryOperator */: {
+                const ifTrue = _construcTree(ast.ifTrue, true);
+                const ifFalse = _construcTree(ast.ifFalse, true);
+                const condition = _construcTree(ast.condition, true);
+                const notCondition = {...condition, negate: !condition.negate};
+
+                return {
+                    type: "connector",
+                    value: "|",
+                    children: [
+                        {
+                            type: "connector",
+                            value: "&",
+                            children: [
+                                condition,
+                                ifTrue,
+                            ],
+                        },
+                        {
+                            type: "connector",
+                            value: "&",
+                            children: [
+                                notCondition,
+                                ifFalse,
+                            ],
+                        }
+                    ],
+                }
+            }
+            case 14 /* BooleanOperator */:
+                return {
+                    type: "connector",
+                    value: ast.op === "and" ? "&" : "|",
+                    children: [
+                        _construcTree(ast.left, true),
+                        _construcTree(ast.right, true),
+                    ],
+                }
+            case 16 /* List/Dict/Set comprehension */: {
+                const iterator = new Expression(ast.iterator);
+                if (!iterator.isPath() || ast.condition?.left.type !== 5) {
+                    return {
+                        type: "expression",
+                        value: formatAST(ast),
+                    };
+                }
+                const condition = new Expression(ast.condition.right);
+                return {
+                    type: "condition",
+                    path: iterator.toString(),
+                    operator: "in",
+                    value: condition,
+                };
+            }
+        }
+    }
+
+    const tree = _construcTree(ast, true);
     return createBetweenOperators(tree);
 }

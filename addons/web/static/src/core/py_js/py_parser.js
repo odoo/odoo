@@ -27,8 +27,10 @@ import { binaryOperators, comparators } from "./py_tokenizer";
  * @typedef {{type: 13, condition: AST, ifTrue: AST, ifFalse: AST}} ASTIf
  * @typedef {{type: 14, op: string, left: AST, right: AST}} ASTBooleanOperator
  * @typedef {{type: 15, obj: AST, key: string}} ASTObjLookup
+ * @typedef {{type: 16, value: AST, keys: string[], iterator: AST, condition: AST}} ASTComprehension
  *
- * @typedef { ASTNumber | ASTString | ASTBoolean | ASTNone | ASTList | ASTName | ASTUnaryOperator | ASTBinaryOperator | ASTFunctionCall | ASTAssignment | ASTTuple | ASTDictionary |ASTLookup | ASTIf | ASTBooleanOperator | ASTObjLookup} AST
+ *
+ * @typedef { ASTNumber | ASTString | ASTBoolean | ASTNone | ASTList | ASTName | ASTUnaryOperator | ASTBinaryOperator | ASTFunctionCall | ASTAssignment | ASTTuple | ASTDictionary |ASTLookup | ASTIf | ASTBooleanOperator | ASTObjLookup | ASTComprehension} AST
  */
 
 export class ParserError extends Error {}
@@ -119,6 +121,93 @@ function isSymbol(token, value) {
 }
 
 /**
+ * Check if a tokens is a generator
+ *
+ * @param {Token} token
+ * @param {string} value
+ * @returns {boolean}
+ */
+function _parseGenerator(current, tokens) {
+    const symbol = current.value;
+    const closeSymbol = ({"[": "]", "{": "}", "(": ")"})[symbol];
+    let index = 0;
+    let level = 0;
+    let forSymbol = false;
+    let inSymbol = false;
+    let ifSymbol = false;
+    for (const token of tokens) {
+        index++;
+        if (isSymbol(token, symbol)) {
+            level++;
+        } else if (isSymbol(token, closeSymbol)) {
+            if (!level) {
+                break;
+            }
+            level--;
+        } else if (!level && token.value === "for") {
+            forSymbol = token;
+        } else if (!level && !inSymbol && token.value === "in") {
+            inSymbol = token;
+        } else if (!level && !ifSymbol && token.value === "if") {
+            ifSymbol = token;
+        }
+    }
+
+    if (!forSymbol) {
+        return;
+    }
+
+    const generatorTokens = tokens.splice(0, index - 1);
+    const valueTokens = generatorTokens.splice(0, generatorTokens.indexOf(forSymbol));
+    if (valueTokens.length < 1) {
+        throw new ParserError("parsing error");
+    }
+    generatorTokens.shift();
+    const keysTokens = generatorTokens.splice(0, generatorTokens.indexOf(inSymbol));
+    if (keysTokens.length < 1) {
+        throw new ParserError("parsing error");
+    }
+    generatorTokens.shift();
+    const iteratorTokens = generatorTokens.splice(0, ifSymbol ? generatorTokens.indexOf(ifSymbol) : Infinity);
+    if (iteratorTokens.length < 1) {
+        throw new ParserError("parsing error");
+    }
+    if (ifSymbol) {
+        generatorTokens.shift();
+    }
+
+    if (!valueTokens.length) {
+        throw new ParserError("parsing error");
+    }
+    let value;
+    if (symbol === "{") {
+        // dict
+        const index = valueTokens.findIndex(token => isSymbol(token, ':'));
+        const keyToken = valueTokens.slice(0, index);
+        const valueToken = valueTokens.slice(index + 1);
+        if (!keyToken.length || !valueToken.length || valueToken.find(token => isSymbol(token, ':'))) {
+            throw new ParserError("parsing error");
+        }
+        value = [_parse(keyToken, 0), _parse(valueToken, 0)];
+    } else {
+        // list generator
+        if (valueTokens.find(token => isSymbol(token, ':'))) {
+            throw new ParserError("parsing error");
+        }
+        value = _parse(valueTokens, 0);
+    }
+
+    return {
+        type: 16,
+        subtype: symbol === "{" ? "dict" : "list",
+        value: value,
+        keys: keysTokens.map(key => key.value),
+        iterator: _parse(iteratorTokens, 0),
+        condition: ifSymbol && _parse(generatorTokens, 0),
+    };
+}
+
+/**
  * @param {Token} current
  * @param {Token[]} tokens
  * @returns {AST}
@@ -177,6 +266,10 @@ function parsePrefix(current, tokens) {
                     return isTuple ? { type: 10 /* Tuple */, value: content } : content[0];
                 }
                 case "[": {
+                    const generator = _parseGenerator(current, tokens, 0);
+                    if (generator) {
+                        return generator;
+                    }
                     const value = [];
                     while (tokens[0] && !isSymbol(tokens[0], "]")) {
                         value.push(_parse(tokens, 0));
@@ -195,6 +288,10 @@ function parsePrefix(current, tokens) {
                     return { type: 4 /* List */, value };
                 }
                 case "{": {
+                    const generator = _parseGenerator(current, tokens, 0);
+                    if (generator) {
+                        return generator;
+                    }
                     const dict = {};
                     while (tokens[0] && !isSymbol(tokens[0], "}")) {
                         const key = _parse(tokens, 0);
@@ -286,7 +383,7 @@ function parseInfix(left, current, tokens) {
                     const args = [];
                     const kwargs = {};
                     while (tokens[0] && !isSymbol(tokens[0], ")")) {
-                        const arg = _parse(tokens, 0);
+                        const arg = _parseGenerator(current, tokens, 0) || _parse(tokens, 0);
                         if (arg.type === 9 /* Assignment */) {
                             kwargs[arg.name.value] = arg.value;
                         } else {

@@ -195,7 +195,7 @@ export const unaryOperators = ["-"];
 
 const symbols = new Set([
     ...["(", ")", "[", "]", "{", "}", ":", ","],
-    ...["if", "else", "lambda", "="],
+    ...["if", "else", "lambda", "for", "="],
     ...comparators,
     ...binaryOperators,
     ...unaryOperators,

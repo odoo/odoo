@@ -25,7 +25,7 @@ import {
 } from "@web/core/domain_selector/domain_selector_fields";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
-import { formatValue } from "@web/core/domain_tree";
+import { formatValue, pythonToTree } from "@web/core/domain_tree";
 
 function collectDifferences(tree, otherTree) {
     // some differences shadow the other differences "below":
@@ -99,6 +99,7 @@ export class DomainSelector extends Component {
         className: { type: String, optional: true },
         defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
         defaultLeafValue: { type: Array, optional: true },
+        isExpression: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
@@ -128,6 +129,8 @@ export class DomainSelector extends Component {
     }
 
     async onPropsUpdated(p) {
+        // TODO: override for expression
+
         let defaultLeafDomain;
         if (p.defaultLeafValue) {
             try {

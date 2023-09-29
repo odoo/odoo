@@ -273,6 +273,43 @@ const STRING = {
     },
 };
 
+const SET = {
+    intersection(set) {
+        return (iterable) => {
+            if (iterable === null || iterable === undefined) {
+                return new Set();
+            }
+            if (!(iterable instanceof Array) && !(iterable instanceof Set)) {
+                iterable = Object.keys(iterable);
+            }
+            return new Set([...iterable].filter(x => set.has(x)));
+        }
+    },
+    difference(set) {
+        return (iterable) => {
+            if (iterable === null || iterable === undefined) {
+                return new Set(set);
+            }
+            if (!(iterable instanceof Array) && !(iterable instanceof Set)) {
+                iterable = Object.keys(iterable);
+            }
+            iterable = new Set(iterable);
+            return new Set([...set].filter(x => !iterable.has(x)));
+        }
+    },
+    union(set) {
+        return (iterable) => {
+            if (iterable === null || iterable === undefined) {
+                return new Set(set);
+            }
+            if (!(iterable instanceof Array) && !(iterable instanceof Set)) {
+                iterable = Object.keys(iterable);
+            }
+            return new Set([...set, ...iterable]);
+        }
+    },
+};
+
 // -----------------------------------------------------------------------------
 // Evaluate function
 // -----------------------------------------------------------------------------
@@ -379,12 +416,33 @@ export function evaluate(ast, context = {}) {
                 if (typeof left === "string") {
                     return STRING[ast.key](left);
                 }
+                if (left instanceof Set) {
+                    return SET[ast.key](left);
+                }
                 if (ast.key == "get" && typeof left === "object") {
                     return DICT[ast.key](toPyDict(left));
                 }
                 const result = left[ast.key];
                 if (typeof result === "function" && !isConstructor(result)) {
                     return result.bind(left);
+                }
+                return result;
+            }
+            case 16 /* List/Dict comprehension */: {
+                const result = ast.subtype === "dict" ? {} : [];
+                const iterator = _evaluate(ast.iterator);
+                for (const index in iterator) {
+                    const copyContext = {...evalContext}
+                    for (const keyIndex in ast.keys) {
+                        copyContext[ast.keys[keyIndex]] = ast.keys.length > 1 ? iterator[index][keyIndex] : iterator[index];
+                    }
+                    if (!ast.condition || evaluate(ast.condition, copyContext)) {
+                        if (ast.subtype === "dict") {
+                            result[evaluate(ast.value[0], copyContext)] = evaluate(ast.value[1], copyContext);
+                        } else {
+                            result.push(evaluate(ast.value, copyContext));
+                        }
+                    }
                 }
                 return result;
             }
