@@ -928,7 +928,7 @@ class StockQuant(models.Model):
         """ Returns a list of fields user can edit when he want to edit a quant in `inventory_mode`.
         """
         fields = ['inventory_quantity', 'inventory_quantity_auto_apply', 'inventory_diff_quantity',
-                  'inventory_date', 'user_id', 'inventory_quantity_set', 'is_outdated', 'lot_id']
+                  'inventory_date', 'user_id', 'inventory_quantity_set', 'is_outdated', 'lot_id', 'sn_duplicated']
         return fields
 
     def _get_inventory_move_values(self, qty, location_id, location_dest_id, out=False):
