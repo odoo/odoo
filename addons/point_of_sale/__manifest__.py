@@ -127,6 +127,7 @@
             ('remove', 'point_of_sale/static/src/app/main.js'),
             # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
             'web/static/lib/jquery/jquery.js',
+            'web/static/src/legacy/js/libs/jquery.js',
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
 
