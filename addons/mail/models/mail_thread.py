@@ -3030,10 +3030,10 @@ class MailThread(models.AbstractModel):
          * performs the notification process by calling the various notification
            methods implemented;
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         Kwargs allow to pass various parameters that are given to sub notification
         methods. See those methods for more details about supported parameters.
@@ -3075,12 +3075,12 @@ class MailThread(models.AbstractModel):
         return recipients_data
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
-        """ Notificaty recipients inbox of a message. It does two main things :
+        """ Notify recipients inbox of a message. It is done in two main steps
 
           * create inbox notifications for users;
           * send bus notifications;
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [
@@ -3096,7 +3096,7 @@ class MailThread(models.AbstractModel):
             'ushare': are users shared (if users, all users are shared);
           }, {...}]. See ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         """
         bus_notifications = []
         inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
@@ -3129,7 +3129,7 @@ class MailThread(models.AbstractModel):
                                  **kwargs):
         """ Method to send emails notifications linked to a message.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [
@@ -3145,7 +3145,7 @@ class MailThread(models.AbstractModel):
             'ushare': are users shared (if users, all users are shared);
           }, {...}]. See ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         :param bool mail_auto_delete: delete notification emails once sent;
 
@@ -3163,8 +3163,8 @@ class MailThread(models.AbstractModel):
         :param bool send_after_commit: if force_send, tells to send emails after
           the transaction has been committed using a post-commit hook;
         """
-        partners_data = [r for r in recipients_data if r['notif'] == 'email']
-        if not partners_data:
+        email_recipients_data = [r for r in recipients_data if r['notif'] == 'email']
+        if not email_recipients_data:
             return True
 
         base_mail_values = self._notify_by_email_get_base_mail_values(
@@ -3187,7 +3187,7 @@ class MailThread(models.AbstractModel):
         recipients_max = 50
         for _lang, render_values, recipients_group in self._notify_get_classified_recipients_iterator(
             message,
-            partners_data,
+            email_recipients_data,
             msg_vals=msg_vals,
             model_description=model_description,
             force_email_company=force_email_company,
@@ -3271,23 +3271,24 @@ class MailThread(models.AbstractModel):
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
             subtitles=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
-        of recipients informations. Purpose of this method is to group them by
+        of recipients information. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
         @_notify_get_recipients_classify) and lang. Each group is linked to
         an evaluation context to render the notification layout.
 
-        :param message: ``mail.message`` record to notify;
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
         :param list recipients_data: see ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
 
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
-        :param record force_email_company: <res.company> record used when rendering
+        :param <res.company> force_email_company: record used when rendering
           notification layout. Otherwise computed based on current record;
-        :param str force_email_lang: when no specific lang is found this is the
-          default lang to use notably to compute model name or translate access
-          buttons;
+        :param str force_email_lang: whe no no specific lang is found this is the
+          default lang used when rendering content, used notably to compute model
+          name or translate access buttons;
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
@@ -3352,9 +3353,9 @@ class MailThread(models.AbstractModel):
                                                    force_email_lang=False):
         """ Prepare rendering context for notification email.
 
-        Signature: if asked a default signature is computed based on author. Either
-        it has an user and we use the user's signature. Either we do not find any
-        user and we compute a default one based on the author's name.
+        Signature: if asked a default signature is computed based on author. If
+        it has an user we use the user's signature. Otherwise we compute a default
+        one based on the author's name.
 
         Company: either there is one defined on the record (company_id field set
         with a value), either we use env.company. A new parameter allows to force
@@ -3367,13 +3368,13 @@ class MailThread(models.AbstractModel):
         notification layout in the same language as the email content. A new
         parameter allows to force its value.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
-        :param record force_email_company: <res.company> record used when rendering
+        :param <res.company> force_email_company: record used when rendering
           notification layout. Otherwise computed based on current record;
         :param str force_email_lang: lang used when rendering content, used
           notably to compute model name or translate access buttons;
@@ -3464,12 +3465,12 @@ class MailThread(models.AbstractModel):
         """ Renders the email layout for a given recipients group which
         encapsulate the message body.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict recipients_group: a dict containing data for the recipients,
           see @ _notify_get_recipients_groups;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param dict render_values: values to render the notification layout;
 
         At this point expected values are
@@ -3504,7 +3505,7 @@ class MailThread(models.AbstractModel):
         creating notification emails. It serves as a common basis for all
         notification emails based on a given message.
 
-        :param record message: <mail.message> record being notified;
+        :param <mail.message> message: message record being notified;
         :param dict additional_values: optional additional values to add (ease
           custom calls and inheritance);
 
@@ -3570,23 +3571,24 @@ class MailThread(models.AbstractModel):
         and every direct message. We have to take into account the risk of
         duplicated notifications in case of a mention in a channel of `chat` type.
 
-        :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
+            'groups': res.group IDs if linked to a user;
+            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]. See ``MailThread._notify_get_recipients()``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
         """
-
         msg_vals = dict(msg_vals or {})
         partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
         if not partner_ids:
@@ -3644,9 +3646,14 @@ class MailThread(models.AbstractModel):
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
-        """ Returns dictionary containing message information for a browser device.
-        This info will be delivered to a browser device via its recorded endpoint.
-        REM: It is having a limit of 4000 bytes (4kb)
+        """ Return dictionary containing message information. It will be delivered
+        to a browser device via its recorded endpoint. Not that it is having a
+        limit of 4000 bytes (4kb).
+
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
         """
         if msg_vals:
             author_id = [msg_vals.get('author_id')]
@@ -3690,7 +3697,7 @@ class MailThread(models.AbstractModel):
         """ Compute recipients to notify based on subtype and followers. This
         method returns data structured as expected for ``_notify_recipients``.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries;
@@ -3733,7 +3740,10 @@ class MailThread(models.AbstractModel):
         # is it possible to have record but no subtype_id ?
         recipients_data = []
 
-        res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)[self.id if self else 0]
+        res = self.env['mail.followers']._get_recipient_data(
+            self, message_type, subtype_id,
+            pids=pids
+        )[self.id if self else 0]
         if not res:
             return recipients_data
 
@@ -3809,7 +3819,7 @@ class MailThread(models.AbstractModel):
         through override. Adding groups is a common override, to add specific
         buttons or actions for users belonging to some user groups.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
@@ -3893,7 +3903,7 @@ class MailThread(models.AbstractModel):
         Module-specific grouping should be done by overriding ``_notify_get_recipients_groups``
         method defined here-under.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [

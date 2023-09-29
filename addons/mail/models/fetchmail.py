@@ -29,7 +29,6 @@ IMAP4._create_socket = lambda self, timeout=MAIL_TIMEOUT: socket.create_connecti
 
 class FetchmailServer(models.Model):
     """Incoming POP/IMAP mail server account"""
-
     _name = 'fetchmail.server'
     _description = 'Incoming Mail Server'
     _order = 'priority'

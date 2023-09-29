@@ -10,9 +10,9 @@ class MailShortcode(models.Model):
         Emoji allowing replacing text with image for visual effect. Should be applied when the message is displayed (only for final rendering).
         These shortcodes are global and are available for every user.
     """
-
     _name = 'mail.shortcode'
     _description = 'Canned Response / Shortcode'
+
     source = fields.Char('Shortcut', required=True, index='trigram',
         help="Shortcut that will automatically be substituted with longer content in your messages."
              " Type ':' followed by the name of your shortcut (e.g. :hello) to use in your messages.")
