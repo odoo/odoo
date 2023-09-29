@@ -71,7 +71,7 @@ const FormEditor = options.Class.extend({
                 display_name: el[1],
             }));
         } else if (field.relation && field.relation !== 'ir.attachment') {
-            field.records = await this.orm.searchRead(field.relation, field.domain, ["display_name"]);
+            field.records = await this.orm.searchRead(field.relation, field.domain || [], ["display_name"]);
         }
         return field.records;
     },
