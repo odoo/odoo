@@ -7,7 +7,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { useSortable } from "@web/core/utils/sortable";
+import { useSortable } from "@web/core/utils/sortable_owl";
 import { useDebounced } from "@web/core/utils/timing";
 
 import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { makeDraggableHook as nativeMakeDraggableHook } from "@web/core/utils/draggable_hook_builder";
 import { pick } from "@web/core/utils/objects";
 
 /** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
@@ -63,8 +63,8 @@ import { pick } from "@web/core/utils/objects";
  * @property {boolean} dragging
  */
 
-/** @type {(params: SortableParams) => SortableState} */
-export const useSortable = makeDraggableHook({
+/** @type SortableParams */
+const hookParams = {
     name: "useSortable",
     acceptedParams: {
         groups: [String, Function],
@@ -205,4 +205,11 @@ export const useSortable = makeDraggableHook({
 
         return pick(current, "element", "group");
     },
-});
+};
+
+/** @type {(params: SortableParams) => SortableState} */
+export const useSortable = (sortableParams) => {
+    const { setupHooks } = sortableParams;
+    delete sortableParams.setupHooks;
+    return nativeMakeDraggableHook({ ...hookParams, setupHooks })(sortableParams);
+};

@@ -8,7 +8,7 @@ import {
     mount,
     nextTick,
 } from "@web/../tests/helpers/utils";
-import { useSortable } from "@web/core/utils/sortable";
+import { useSortable } from "@web/core/utils/sortable_owl";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 
@@ -330,7 +330,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.strictEqual(renderer.scrollWidth, 900);
         assert.containsNone(target, ".item.o_dragged");
 
-        let dragHelpers = await drag(".item11");
+        const dragHelpers = await drag(".item11");
 
         // Drag first record of first group to the right
         await dragHelpers.moveTo(".list3 .item");

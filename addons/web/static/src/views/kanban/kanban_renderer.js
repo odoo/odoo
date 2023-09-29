@@ -6,7 +6,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { useSortable } from "@web/core/utils/sortable";
+import { useSortable } from "@web/core/utils/sortable_owl";
 import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { useBounceButton } from "@web/views/view_hook";
@@ -229,7 +229,7 @@ export class KanbanRenderer extends Component {
             fieldNodes.length &&
             fieldNodes.some((fieldNode) => "readonly" in fieldNode)
         ) {
-            isReadonly = fieldNodes.every((fieldNode) => fieldNode.readonly === 'True');
+            isReadonly = fieldNodes.every((fieldNode) => fieldNode.readonly === "True");
         }
         return !isReadonly && this.isMovableField(groupByField);
     }
