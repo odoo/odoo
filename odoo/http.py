@@ -1269,6 +1269,10 @@ class FutureResponse:
     def __init__(self):
         self.headers = werkzeug.datastructures.Headers()
 
+    @property
+    def _charset(self):
+        return self.charset
+
     @functools.wraps(werkzeug.Response.set_cookie)
     def set_cookie(self, key, value='', max_age=None, expires=-1, path='/', domain=None, secure=False, httponly=False, samesite=None, cookie_type='required'):
         if expires == -1:  # not forced value -> default value -> 1 year
