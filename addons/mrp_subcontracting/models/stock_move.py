@@ -16,11 +16,6 @@ class StockMove(models.Model):
         compute='_compute_show_subcontracting_details_visible'
     )
 
-    @api.depends('is_subcontract', 'move_orig_ids.production_id')
-    def _compute_is_quantity_done_editable(self):
-        super()._compute_is_quantity_done_editable()
-        self.filtered(lambda m: m.is_subcontract).is_quantity_done_editable = False
-
     def _compute_display_assign_serial(self):
         super(StockMove, self)._compute_display_assign_serial()
         for move in self:
