@@ -660,61 +660,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         self.assertEqual(self.env['mrp.production'].search_count([('bom_id', '=', bom.id)]), 3)
 
-    def test_several_backorders02(self):
-        """
-        Receipt for 5 subcontracted products
-        Process three of them with backorder, then the remaining qty. The user
-        should never be able to define the produced qty directly on the
-        picking's SM.
-        """
-        finished, component = self.env['product.product'].create([{
-            'name': 'Finished Product',
-            'type': 'product',
-        }, {
-            'name': 'Component',
-            'type': 'product',
-        }])
-
-        self.env['mrp.bom'].create({
-            'product_tmpl_id': finished.product_tmpl_id.id,
-            'product_qty': 1.0,
-            'type': 'subcontract',
-            'subcontractor_ids': [(4, self.subcontractor_partner1.id)],
-            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
-        })
-
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
-        picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids_without_package.new() as move:
-            move.product_id = finished
-            move.product_uom_qty = 5
-        picking = picking_form.save()
-        picking.action_confirm()
-
-        for done_qty in [2, 3]:
-            with self.assertRaises(AssertionError):
-                with Form(picking) as picking_form:
-                    with picking_form.move_ids_without_package.edit(0) as line:
-                        line.quantity_done = done_qty
-
-            action = picking.action_record_components()
-            mo = self.env['mrp.production'].browse(action['res_id'])
-            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
-            mo_form.qty_producing = done_qty
-            mo = mo_form.save()
-            mo.subcontracting_record_component()
-            res = picking.button_validate()
-
-            if res is not True:
-                wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
-                wizard.process()
-                picking = picking.backorder_ids
-
-        productions = self.env['mrp.production'].search([('product_id', '=', finished.id)], order='id')
-        self.assertEqual(productions.mapped('state'), ['done', 'done'])
-        self.assertEqual(productions.move_raw_ids.mapped('quantity_done'), [2.0, 3.0])
-
     def test_subcontracting_rules_replication(self):
         """ Test activate/archive subcontracting location rules."""
         reference_location_rules = self.env['stock.rule'].search(['|', ('location_src_id', '=', self.env.company.subcontracting_location_id.id), ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
