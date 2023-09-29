@@ -965,6 +965,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="accountman")
+
     def test_lot_refund(self):
 
         self.product1 = self.env['product.product'].create({
@@ -977,3 +978,50 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotRefundTour', login="accountman")
+
+    def test_limited_product_pricelist_loading(self):
+        self.main_pos_config.write({
+            'limited_products_loading': True,
+            'limited_products_amount': 1
+        })
+
+        product_1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'list_price': 100,
+            'barcode': '0100100',
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        product_2 = self.env['product.product'].create({
+            'name': 'Test Product 2',
+            'list_price': 200,
+            'barcode': '0100200',
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Test Product 3',
+            'list_price': 300,
+            'barcode': '0100300',
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        pricelist_item = self.env['product.pricelist.item'].create([{
+            'applied_on': '3_global',
+            'fixed_price': 50,
+        }, {
+            'applied_on': '1_product',
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'fixed_price': 100,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 80,
+        }])
+        self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?debug=1&config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="accountman")

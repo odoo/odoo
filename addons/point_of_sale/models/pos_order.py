@@ -890,13 +890,51 @@ class PosOrder(models.Model):
         """
         order_ids = []
         for order in orders:
-            existing_order = False
-            if 'server_id' in order['data']:
-                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
-            if (existing_order and existing_order.state == 'draft') or not existing_order:
-                order_ids.append(self._process_order(order, draft, existing_order))
+            existing_draft_order = None
+
+            if 'server_id' in order['data'] and order['data']['server_id']:
+                # if the server id exists, it must only search based on the id
+                existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
+
+                # if there is no draft order, skip processing this order
+                if not existing_draft_order:
+                    continue
+
+            if not existing_draft_order:
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
+
+            if existing_draft_order:
+                order_ids.append(self._process_order(order, draft, existing_draft_order))
+            else:
+                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
+                if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                    order_ids.append(self._process_order(order, draft, False))
 
         return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+
+    def _is_the_same_order(self, data, existing_order):
+        creation_date = fields.Datetime.from_string(data['creation_date'].replace('T', ' ')[:19])
+        existing_date = existing_order.date_order
+
+        if creation_date != existing_date:
+            return False
+
+        received_payments = [(fields.Datetime.from_string(p[2]['name']), p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
+        existing_payments = [(p.payment_date, p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
+
+        if not all(received_payment in existing_payments for received_payment in received_payments):
+            return False
+
+        if len(data['lines']) != len(existing_order.lines):
+            return False
+
+        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+
+        if received_lines != existing_lines:
+            return False
+
+        return True
 
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)

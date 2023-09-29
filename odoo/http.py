@@ -1118,6 +1118,10 @@ class FutureResponse:
     def __init__(self):
         self.headers = werkzeug.datastructures.Headers()
 
+    @property
+    def _charset(self):
+        return self.charset
+
     @functools.wraps(werkzeug.Response.set_cookie)
     def set_cookie(self, key, value='', max_age=None, expires=None, path='/', domain=None, secure=False, httponly=False, samesite=None, cookie_type='required'):
         if request.db and not request.env['ir.http']._is_allowed_cookie(cookie_type):
