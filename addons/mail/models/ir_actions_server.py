@@ -78,7 +78,6 @@ class ServerActions(models.Model):
         'User Field',
         compute='_compute_activity_info', readonly=False, store=True)
 
-
     @api.depends('template_id', 'partner_ids', 'activity_summary')
     def _compute_name(self):
         to_update = self.filtered(
@@ -176,13 +175,23 @@ class ServerActions(models.Model):
         if any(action.activity_date_deadline_range < 0 for action in self):
             raise ValidationError(_("The 'Due Date In' value can't be negative."))
 
+    @api.constrains('model_id', 'template_id')
+    def _check_mail_template_model(self):
+        for action in self.filtered(lambda action: action.state == 'mail_post'):
+            if action.template_id and action.template_id.model_id != action.model_id:
+                raise ValidationError(
+                    _('Mail template model of %(action_name)s does not match action model.',
+                      action_name=action.name
+                     )
+                )
+
     @api.constrains('state', 'model_id')
-    def _check_model_coherency(self):
+    def _check_mail_model_coherency(self):
         for action in self:
-            if action.state in ('followers', 'next_activity') and action.model_id.transient:
+            if action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and action.model_id.transient:
                 raise ValidationError(_("This action cannot be done on transient models."))
-            if action.state == 'followers' and not action.model_id.is_mail_thread:
-                raise ValidationError(_("Add Followers can only be done on a mail thread models"))
+            if action.state in {'mail_post', 'followers', 'remove_followers'} and not action.model_id.is_mail_thread:
+                raise ValidationError(_("This action can only be done on a mail thread models"))
             if action.state == 'next_activity' and not action.model_id.is_mail_activity:
                 raise ValidationError(_("A next activity can only be planned on models that use activities."))
 
