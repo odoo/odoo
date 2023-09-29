@@ -1929,8 +1929,6 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
-        self._button_mark_done_sanity_checks()
-
         res = self.pre_button_mark_done()
         if res is not True:
             return res
@@ -2012,6 +2010,7 @@ class MrpProduction(models.Model):
         return action
 
     def pre_button_mark_done(self):
+        self._button_mark_done_sanity_checks()
         for production in self:
             if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 production._set_quantities()
