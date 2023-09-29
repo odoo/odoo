@@ -175,13 +175,13 @@
                     <div class="row mt16 o_settings_container" name="quotation_order_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" id="sale_config_online_confirmation_sign">
                             <div class="o_setting_left_pane">
-                                <field name="portal_confirmation_sign"/>
+                                <field name="portal_confirmation_sign" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="portal_confirmation_sign"/>
-                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                                <label for="portal_confirmation_sign" invisible="1"/>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/get_signature_to_validate.html" title="Documentation" class="mr-2 o_doc_link" target="_blank" invisible="1"></a>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
-                                <div class="text-muted">
+                                <div class="text-muted" invisible="1">
                                     Request an online signature to confirm orders
                                 </div>
                             </div>
@@ -226,14 +226,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="quotation_validity_days">
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="1" id="quotation_validity_days">
                             <div class="o_setting_left_pane">
-                                <field name="use_quotation_validity_days"/>
+                                <field name="use_quotation_validity_days" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="use_quotation_validity_days"/>
+                                <label for="use_quotation_validity_days" invisible="1"/>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                <div class="text-muted">
+                                <div class="text-muted" invisible="1">
                                     Set a default validity on your quotations
                                 </div>
                                 <div class="content-group"  attrs="{'invisible': [('use_quotation_validity_days','=',False)]}">
@@ -243,34 +243,34 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="order_warnings">
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="1" id="order_warnings">
                             <div class="o_setting_left_pane">
-                                <field name="group_warning_sale"/>
+                                <field name="group_warning_sale" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="group_warning_sale" string="Sale Warnings"/>
-                                <div class="text-muted">
+                                <label for="group_warning_sale" invisible="1" string="Sale Warnings"/>
+                                <div class="text-muted" invisible="1">
                                     Get warnings in orders for products or customers
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="no_edit_order">
                             <div class="o_setting_left_pane">
-                                <field name="group_auto_done_setting"/>
+                                <field name="group_auto_done_setting" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="group_auto_done_setting"/>
-                                <div class="text-muted">
+                                <label for="group_auto_done_setting" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     No longer edit orders once confirmed
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="proforma_configuration">
+                        <div class="col-12 col-lg-6 o_setting_box" invisible="1" id="proforma_configuration">
                             <div class="o_setting_left_pane">
-                                <field name="group_proforma_sales"/>
+                                <field name="group_proforma_sales" invisible="1"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="group_proforma_sales"/>
+                                <label for="group_proforma_sales" invisible="1"/>
                                 <div class="text-muted">
                                     Allows you to send Pro-Forma Invoice to your customers
                                 </div>
@@ -284,7 +284,7 @@
                                 <field name="module_delivery"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_delivery"/>
+                                <label for="module_delivery" />
                                 <div class="text-muted" id="delivery_carrier">
                                     Compute shipping costs on orders
                                 </div>
@@ -292,11 +292,11 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="ups">
                             <div class="o_setting_left_pane">
-                                <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                                <field name="module_delivery_ups" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_delivery_ups"/>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_delivery_ups" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Compute shipping costs and ship with UPS
                                 </div>
                                 <div class="content-group">
@@ -306,11 +306,11 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_dhl">
                             <div class="o_setting_left_pane">
-                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                <field name="module_delivery_dhl" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_delivery_dhl"/>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_delivery_dhl" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Compute shipping costs and ship with DHL
                                 </div>
                                 <div class="content-group">
@@ -320,11 +320,11 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_fedex">
                             <div class="o_setting_left_pane">
-                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                <field name="module_delivery_fedex" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_delivery_fedex"/>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_delivery_fedex" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Compute shipping costs and ship with FedEx
                                 </div>
                                 <div class="content-group">
@@ -334,11 +334,11 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_usps">
                             <div class="o_setting_left_pane">
-                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                <field name="module_delivery_usps" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_delivery_usps"/>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_delivery_usps" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Compute shipping costs and ship with USPS
                                 </div>
                                 <div class="content-group">
@@ -348,11 +348,11 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_bpost">
                             <div class="o_setting_left_pane">
-                                <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                                <field name="module_delivery_bpost" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_delivery_bpost"/>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_delivery_bpost" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Compute shipping costs and ship with bpost
                                 </div>
                                 <div class="content-group">
@@ -362,11 +362,11 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_easypost">
                             <div class="o_setting_left_pane">
-                                <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                                <field name="module_delivery_easypost" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_delivery_easypost"/>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_delivery_easypost" invisible="1"/>
+                                <div class="text-muted" invisible="1">
                                     Compute shipping costs and ship with Easypost
                                 </div>
                                 <div class="content-group">
@@ -411,29 +411,29 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="down_payments">
-                            <div class="o_setting_left_pane"/>
-                            <div class="o_setting_right_pane">
-                                <span class="o_form_label">Down Payments</span>
-                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
+                            <div class="o_setting_left_pane" invisible="1"/>
+                            <div class="o_setting_right_pane" invisible="1">
+                                <span class="o_form_label" invisible="1">Down Payments</span>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/invoicing/down_payment.html" title="Documentation" class="o_doc_link" target="_blank" invisible="1"></a>
+                                <div class="text-muted" invisible="1">
                                     Product used for down payments
                                 </div>
-                                <div class="text-muted">
-                                    <field name="deposit_default_product_id" context="{'default_type': 'service'}"/>
+                                <div class="text-muted" invisible="1">
+                                    <field name="deposit_default_product_id" invisible="1" context="{'default_type': 'service'}"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h2 class="mt32">Connectors</h2>
+                    <h2 class="mt32" invisible="1">Connectors</h2>
                     <div class="row mt16 o_settings_container" id="connectors_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" id="amazon_connector">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_amazon" widget="upgrade_boolean"/>
+                                <field name="module_sale_amazon" invisible="1" widget="upgrade_boolean"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_sale_amazon"/>
-                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
+                            <div class="o_setting_right_pane" invisible="1">
+                                <label for="module_sale_amazon" invisible="1"/>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/amazon_connector/setup.html" title="Documentation" class="o_doc_link" target="_blank" invisible="1"></a>
+                                <div class="text-muted" invisible="1">
                                     Import Amazon orders and sync deliveries
                                 </div>
                                 <div class="content-group"

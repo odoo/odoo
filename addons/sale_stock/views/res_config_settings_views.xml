@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='ups']" position="after">
                 <div class="col-12 col-lg-6 o_setting_box" id="display_incoterms_setting">
-                    <div class="o_setting_left_pane">
-                        <field name="group_display_incoterm"/>
+                    <div class="o_setting_left_pane" invisible="1">
+                        <field name="group_display_incoterm" invisible="1"/>
                     </div>
                     <div class="o_setting_right_pane">
-                        <label for="group_display_incoterm"/>
-                        <div class="text-muted">
+                        <label for="group_display_incoterm" invisible="1"/>
+                        <div class="text-muted" invisible="1">
                             Display incoterms on orders &amp; invoices
                         </div>
                         <div class="content-group" attrs="{'invisible': [('group_display_incoterm','=',False)]}">

@@ -9,13 +9,13 @@
             <xpath expr="//div[@id='confirmation_email_setting']" position="after">
                 <div class="col-12 col-lg-6 o_setting_box" id="standardized_offers_setting">
                     <div class="o_setting_left_pane">
-                        <field name="group_sale_order_template"/>
+                        <field name="group_sale_order_template" invisible="1"/>
                         <field name="module_sale_quotation_builder" invisible="1"/>
                     </div>
                     <div class="o_setting_right_pane">
-                        <label for="group_sale_order_template"/>
-                        <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/quote_template.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                        <div class="text-muted">
+                        <label for="group_sale_order_template" invisible="1"/>
+                        <a href="https://www.odoo.com/documentation/14.0/applications/sales/sales/send_quotations/quote_template.html" title="Documentation" class="o_doc_link" target="_blank" invisible="1"></a>
+                        <div class="text-muted" invisible="1">
                             Create standardized offers with default products
                         </div>
                         <div class="content-group" attrs="{'invisible': [('group_sale_order_template', '=', False)]}">
