@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import _, models, fields
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -20,6 +20,8 @@ class StockMove(models.Model):
             return super()._get_price_unit()
         line = self.purchase_line_id
         kit_price_unit = line._get_gross_price_unit()
+        if line.currency_id != self.company_id.currency_id:
+            kit_price_unit = line.currency_id._convert(kit_price_unit, self.company_id.currency_id, self.company_id, fields.Date.context_today(self), round=False)
         cost_share = self.bom_line_id._get_cost_share()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         return float_round(kit_price_unit * cost_share * line.product_qty / self.product_qty, precision_digits=price_unit_prec)
