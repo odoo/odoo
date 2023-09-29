@@ -32,7 +32,10 @@ class ServerActions(models.Model):
             if not action.state or not self.env.context.get('automatic_action_name'):
                 continue
             if action.state == 'sms':
-                action.name = 'Send SMS: %s' % action.sms_template_id.name
+                action.name = _(
+                    'Send SMS: %(template_name)s',
+                    template_name=action.sms_template_id.name
+                )
             else:
                 super(ServerActions, action)._compute_name()
 
