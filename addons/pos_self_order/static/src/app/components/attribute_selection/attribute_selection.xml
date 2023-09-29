@@ -3,51 +3,49 @@
     <t t-name="pos_self_order.AttributeSelection">
         <div class="self_order_attribute_selection">
             <div class="attribute_name py-1 mt-3 mb-4 fw-bold">
-                <t t-if="!state.showResume">
-                    <h1>Choose your <span t-esc="attribute.name" /></h1>
-                </t>
-                <t t-else="">
+                <t t-if="state.showResume">
                     <h1>Your resume</h1>
                 </t>
             </div>
             <div t-if="!state.showResume" class="attribute-selection-content align-items-center justify-content-start">
-                <div class="row row-cols-3 g-3">
-                    <t t-foreach="availableAttributeValue" t-as="value" t-key="value.id">
-                        <div class="col">
-                            <label t-attf-for="{{ attribute.id }}_{{ value.id }}" t-attf-class="{{ this.isChecked(attribute, value) ? 'border-2 border-primary' : '' }} d-flex btn btn-light flex-column align-items-center justify-content-center p-0 rounded border overflow-hidden">
-                                <div class="name position-relative d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 py-2 text-center">
-                                    <h2 class="m-0" t-esc="value.name" />
-                                    <span t-if="value.price_extra.list_price">
-                                        + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
-                                    </span>
-                                    <span t-if="this.isChecked(attribute, value)" class="selected-badge position-absolute top-0 start-50 translate-middle-x px-3 rounded-bottom text-bg-primary">
-                                        Selected
-                                    </span>
-                                </div>
-                            </label>
-                        </div>
-                        <input
-                            type="radio"
-                            class="d-none"
-                            t-if="attribute.display_type !== 'multi'"
-                            t-att-value="value.id"
-                            t-on-click="attributeClicked"
-                            t-attf-id="{{ attribute.id }}_{{ value.id }}"
-                            t-model="this.selectedValues[attribute.id]" />
-                        <input
-                            type="checkbox"
-                            class="d-none"
-                            t-else=""
-                            t-att-checked="this.isChecked(attribute, value)"
-                            t-att-value="value.id"
-                            t-model="this.selectedValues[attribute.id][value.id]"
-                            t-on-click="() => this.attributeClicked(value.id)"
-                            t-attf-id="{{ attribute.id }}_{{ value.id }}" />
-                        <input t-if="this.isChecked(attribute, value) and value.is_custom" type="text" t-model="this.env.customValues[value.id].custom_value" class="form-control" placeholder="Enter your custom value" />
-                    </t>
-                </div>
-                <div t-if="attribute.display_type === 'multi' || this.state.showNext" class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm z-index-1">
-                    <button class="btn btn-secondary w-100 h-100 p-0 m-0 fs-2 flex-grow-1 text-uppercase" t-on-click="this.next">Next</button>
+                <div class="d-flex flex-column">
+                    <div t-foreach="this.props.product.attributes" t-as="attribute" t-key="attribute.id" class="row row-cols-3 g-3 mb-5">
+                        <h2 t-esc="attribute.name" class="w-100" />
+                        <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
+                            <div class="col">
+                                <label t-attf-for="{{ attribute.id }}_{{ value.id }}" t-attf-class="{{ this.isChecked(attribute, value) ? 'border-2 border-primary' : '' }} d-flex btn btn-light flex-column align-items-center justify-content-center p-0 rounded border overflow-hidden">
+                                    <div class="name position-relative d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 py-2 text-center">
+                                        <h2 class="m-0" t-esc="value.name" />
+                                        <span t-if="value.price_extra.list_price">
+                                            + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                        </span>
+                                        <span t-if="this.isChecked(attribute, value)" class="selected-badge position-absolute top-0 start-50 translate-middle-x px-3 rounded-bottom text-bg-primary">
+                                            Selected
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                            <input
+                                type="radio"
+                                class="d-none"
+                                t-if="attribute.display_type !== 'multi'"
+                                t-att-value="value.id"
+                                t-attf-id="{{ attribute.id }}_{{ value.id }}"
+                                t-model="this.selectedValues[attribute.id]" />
+                            <input
+                                type="checkbox"
+                                class="d-none"
+                                t-else=""
+                                t-att-checked="this.isChecked(attribute, value)"
+                                t-att-value="value.id"
+                                t-model="this.selectedValues[attribute.id][value.id]"
+                                t-attf-id="{{ attribute.id }}_{{ value.id }}" />
+                            <input t-if="this.isChecked(attribute, value) and selfOrder.attributeValueById[value.id].is_custom" type="text" t-model="this.env.customValues[value.id].custom_value" class="form-control" placeholder="Enter your custom value" />
+                        </t>
+                    </div>
+                     <div t-if="this.showNextBtn" class="page-buttons position-absolute bottom-0 end-0 w-100 py-3 px-2 d-flex flex-row w-100 gap-3 shadow-sm z-index-1">
+                        <button class="btn btn-secondary w-100 h-100 p-0 m-0 fs-2 flex-grow-1 text-uppercase" t-on-click="this.toggleResume">Next</button>
+                    </div>
                 </div>
             </div>
             <div t-else="" class="attribute-selection-content d-flex flex-column gap-3">
@@ -58,7 +56,7 @@
                                 <h2 class="m-0" t-esc="value.name" />
                                 <span class="px-1" t-esc="value.value" />
                             </div>
-                            <button t-attf-class="{{ !this.env.editable ? 'disabled' : '' }} btn btn-secondary btn-lg px-5 py-2" t-on-click="() => this.editAttribute(value.id)">
+                            <button t-attf-class="{{ !this.env.editable ? 'disabled' : '' }} btn btn-secondary btn-lg px-5 py-2" t-on-click="this.toggleResume">
                                 EDIT
                             </button>
                         </div>
