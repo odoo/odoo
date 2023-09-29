@@ -243,6 +243,52 @@ class TestPurchaseMrpFlow(TransactionCase):
 
         self.assertEqual(sum([k.standard_price * k.qty_available for k in components]), 120 * 1260)
 
+    def test_kit_component_cost_multi_currency(self):
+        # Set kit and component product to automated FIFO
+        kit = self._create_product('Kit', self.uom_unit)
+        cmp = self._create_product('CMP', self.uom_unit)
+
+        bom_kit = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'
+        })
+        self.env['mrp.bom.line'].create({
+            'product_id': cmp.id,
+            'product_qty': 3.0,
+            'bom_id': bom_kit.id})
+
+        kit.categ_id.property_cost_method = 'fifo'
+        kit.categ_id.property_valuation = 'real_time'
+
+        mock_currency = self.env['res.currency'].create({
+            'name': 'MOCK',
+            'symbol': 'MC',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'company_rate': 100.0,
+            'currency_id': mock_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.env['res.partner'].create({'name': 'Testy'})
+        po.currency_id = mock_currency
+
+        with po.order_line.new() as line:
+            line.product_id = kit
+            line.product_qty = 1
+            line.price_unit = 300.00
+
+        po = po.save()
+        po.button_confirm()
+        po.picking_ids.action_set_quantities_to_reservation()
+        po.picking_ids.button_validate()
+
+        layer = po.picking_ids.move_ids.stock_valuation_layer_ids
+        self.assertEqual(layer.unit_cost, 1)
+
     def test_01_sale_mrp_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when
         a kit with subkits is ordered with multiple backorders and returns
