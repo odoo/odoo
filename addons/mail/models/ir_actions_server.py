@@ -103,7 +103,7 @@ class ServerActions(models.Model):
             elif action.state == 'next_activity':
                 action.name = _(
                     'Next activity: %(activity_name)s',
-                    activity_name=action.activity_summary or action.activit_type_id.name
+                    activity_name=action.activity_summary or action.activity_type_id.name
                 )
         super(ServerActions, self - to_update)._compute_name()
 
@@ -149,7 +149,7 @@ class ServerActions(models.Model):
         if to_reset:
             to_reset.activity_type_id = False
 
-    @api.depends('state')
+    @api.depends('state', 'activity_type_id')
     def _compute_activity_info(self):
         to_reset = self.filtered(lambda act: act.state != 'next_activity')
         if to_reset:
@@ -161,13 +161,15 @@ class ServerActions(models.Model):
             to_reset.activity_user_id = False
             to_reset.activity_user_field_name = False
         to_default = self.filtered(lambda act: act.state == 'next_activity')
-        for activity in to_default:
-            if not activity.activity_date_deadline_range_type:
-                activity.activity_date_deadline_range_type = 'days'
-            if not activity.activity_user_type:
-                activity.activity_user_type = 'specific'
-            if not activity.activity_user_field_name:
-                activity.activity_user_field_name = 'user_id'
+        for action in to_default:
+            if not action.activity_summary:
+                action.activity_summary = action.activity_type_id.summary
+            if not action.activity_date_deadline_range_type:
+                action.activity_date_deadline_range_type = 'days'
+            if not action.activity_user_type:
+                action.activity_user_type = 'specific'
+            if not action.activity_user_field_name:
+                action.activity_user_field_name = 'user_id'
 
     @api.constrains('activity_date_deadline_range')
     def _check_activity_date_deadline_range(self):
