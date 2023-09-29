@@ -13,6 +13,8 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
     events: {
         'click .o_cw_popover_edit': '_onClickPopoverEdit',
         'click .o_cw_popover_delete': '_onClickPopoverDelete',
+        'click .o_cw_popover_view': '_onClickPopoverView',
+        'click .o_cw_popover_duplicate': '_onClickPopoverDuplicate',
     },
     /**
      * @constructor
@@ -77,7 +79,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
      * @return {boolean}
      */
     isEventDeletable() {
-        return this._canDelete;;
+        return this._canDelete;
     },
     /**
      * @return {boolean}
@@ -257,6 +259,28 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
      * @private
      * @param {jQueryEvent} ev
      */
+    _onClickPopoverDuplicate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('duplicate_record', {
+            id: this.event.id,
+            title: this.event.extendedProps.record.display_name,
+        });
+    },
+    /**
+     * @private
+     * @param {jQueryEvent} ev
+     */
+    _onClickPopoverView: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('view_record', {
+            id: this.event.id,
+            title: this.event.extendedProps.record.display_name,
+        });
+    },
+    /**
+     * @private
+     * @param {jQueryEvent} ev
+     */
     _onClickPopoverDelete: function (ev) {
         ev.preventDefault();
         this.trigger_up('delete_event', {id: this.event.id});
@@ -266,3 +290,4 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
 return CalendarPopover;
 
 });
+    
