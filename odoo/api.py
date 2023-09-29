@@ -22,8 +22,11 @@ from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
-from decorator import decorate
 from werkzeug.local import Local, release_local
+try:
+    from decorator import decoratorx as decorator
+except ImportError:
+    from decorator import decorator
 
 from .exceptions import CacheMiss
 from .tools import frozendict, classproperty, lazy_property, StackMap
@@ -320,6 +323,7 @@ def model(method):
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
+@decorator
 def _model_create_single(create, self, arg):
     # 'create' expects a dict and returns a record
     if isinstance(arg, Mapping):
@@ -336,11 +340,12 @@ def model_create_single(method):
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = decorate(method, _model_create_single)
+    wrapper = _model_create_single(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
 
+@decorator
 def _model_create_multi(create, self, arg):
     # 'create' expects a list of dicts and returns a recordset
     if isinstance(arg, Mapping):
@@ -356,7 +361,7 @@ def model_create_multi(method):
             record = model.create(vals)
             records = model.create([vals, ...])
     """
-    wrapper = decorate(method, _model_create_multi)
+    wrapper = _model_create_multi(method) # pylint: disable=no-value-for-parameter
     wrapper._api = 'model_create'
     return wrapper
 
