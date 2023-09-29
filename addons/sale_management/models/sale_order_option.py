@@ -17,7 +17,7 @@ class SaleOrderOption(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         required=True,
-        domain=[('sale_ok', '=', True)])
+        domain=lambda self: self._product_id_domain())
     line_id = fields.Many2one(
         comodel_name='sale.order.line', ondelete='set null', copy=False)
     sequence = fields.Integer(
@@ -128,6 +128,11 @@ class SaleOrderOption(models.Model):
         if (operator, value) in [('=', True), ('!=', False)]:
             return [('line_id', '=', False)]
         return [('line_id', '!=', False)]
+
+    @api.model
+    def _product_id_domain(self):
+        """ Returns the domain of the products that can be added as a sale order option. """
+        return [('sale_ok', '=', True)]
 
     #=== ACTION METHODS ===#
 
