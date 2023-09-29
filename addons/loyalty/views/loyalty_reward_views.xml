@@ -14,7 +14,7 @@
                 <sheet>
                     <group>
                         <group string="Reward" name="reward_type_group">
-                            <field name="reward_type" widget="selection" readonly="program_type == 'buy_x_get_y'"/>
+                            <field name="reward_type" widget="selection" force_save="1" readonly="program_type == 'buy_x_get_y'"/>
                             <label for="discount" invisible="reward_type != 'discount'"/>
                             <div class="d-flex flex-row" invisible="reward_type != 'discount'">
                                 <field name="discount" class="oe_inline me-1"/>
