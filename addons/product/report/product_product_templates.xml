@@ -21,12 +21,8 @@
                             <div class="o_label_extra_data">
                                 <t t-out="extra_html"/>
                             </div>
-                            <t t-if="product.is_product_variant">
-                                <strong class="o_label_price" t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                            </t>
-                            <t t-else="">
-                                <strong class="o_label_price" t-field="product.list_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                            </t>
+                            <strong class="o_label_price" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                                    t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                         </div>
                         <div class="o_label_clear"></div>
                     </div>
@@ -43,12 +39,8 @@
                         <strong t-field="product.display_name"/>
                     </div>
                     <div class="text-end" style="padding-top:0;padding-bottom:0">
-                        <t t-if="product.is_product_variant">
-                            <strong class="o_label_price_medium" t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                        </t>
-                        <t t-else="">
-                            <strong class="o_label_price_medium" t-field="product.list_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                        </t>
+                        <strong class="o_label_price_medium" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                                t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                     </div>
                     <div class= "text-center o_label_small_barcode">
                         <span class="text-nowrap" t-field="product.default_code"/>
@@ -74,12 +66,8 @@
                             <span class="text-nowrap" t-field="product.default_code"/>
                         </div>
                         <div class="o_label_price_medium text-end">
-                            <t t-if="product.is_product_variant">
-                                <strong t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                            </t>
-                            <t t-else="">
-                                <strong t-field="product.list_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                            </t>
+                            <strong t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                                t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                         </div>
                     </t>
                     <t t-else="">
@@ -117,12 +105,8 @@
                         <small class="text-nowrap" t-field="product.default_code"/>
                     </div>
                     <div class="text-end" style="padding: 0 4px;">
-                        <t t-if="product.is_product_variant">
-                            <strong class="o_label_price_small" t-field="product.lst_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                        </t>
-                        <t t-else="">
-                            <strong class="o_label_price_small" t-field="product.list_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
-                        </t>
+                        <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
+                                t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
                         <div class="o_label_extra_data">
                             <t t-out="extra_html"/>
                         </div>

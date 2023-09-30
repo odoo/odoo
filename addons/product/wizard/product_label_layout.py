@@ -22,6 +22,7 @@ class ProductLabelLayout(models.TransientModel):
     extra_html = fields.Html('Extra Content', default='')
     rows = fields.Integer(compute='_compute_dimensions')
     columns = fields.Integer(compute='_compute_dimensions')
+    pricelist_id = fields.Many2one('product.pricelist', string="Pricelist")
 
     @api.depends('print_format')
     def _compute_dimensions(self):
