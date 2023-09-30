@@ -43,6 +43,7 @@ def _prepare_data(env, data):
         'page_numbers': (total - 1) // (layout_wizard.rows * layout_wizard.columns) + 1,
         'price_included': data.get('price_included'),
         'extra_html': layout_wizard.extra_html,
+        'pricelist': layout_wizard.pricelist_id,
     }
 
 class ReportProductTemplateLabel(models.AbstractModel):
