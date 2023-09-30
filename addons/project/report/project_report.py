@@ -86,10 +86,10 @@ class ReportProjectTaskUser(models.Model):
                 t.description,
                 NULLIF(t.rating_last_value, 0) as rating_last_value,
                 AVG(rt.rating) as rating_avg,
-                t.working_days_close,
-                t.working_days_open,
-                t.working_hours_open,
-                t.working_hours_close,
+                NULLIF(t.working_days_close, 0) as Working_days_close,
+                NULLIF(t.working_days_open, 0) as working_days_open,
+                NULLIF(t.working_hours_open, 0) as working_hours_open,
+                NULLIF(t.working_hours_close, 0) as working_hours_close,
                 (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24) as delay_endings_days,
                 COUNT(td.task_id) as dependent_ids_count
         """

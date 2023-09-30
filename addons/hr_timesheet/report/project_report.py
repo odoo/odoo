@@ -13,18 +13,18 @@ class ReportProjectTaskUser(models.Model):
     remaining_hours_percentage = fields.Float('Remaining Hours Percentage', readonly=True)
     progress = fields.Float('Progress', group_operator='avg', readonly=True)
     overtime = fields.Float(readonly=True)
-    total_hours_spent = fields.Float("Total Hours", help="Time spent on this task, including its sub-tasks.")
+    total_hours_spent = fields.Float("Total Hours Spent", help="Time spent on this task, including its sub-tasks.")
     subtask_effective_hours = fields.Float("Hours Spent on Sub-Tasks", help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
 
     def _select(self):
         return super()._select() +  """,
-                CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN 0.0 ELSE LEAST((t.effective_hours * 100) / t.allocated_hours, 100) END as progress,
-                t.effective_hours,
+                CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN NULL ELSE LEAST((t.effective_hours * 100) / t.allocated_hours, 100) END as progress,
+                NULLIF(t.effective_hours, 0) as effective_hours,
                 t.allocated_hours - t.effective_hours - t.subtask_effective_hours as remaining_hours,
                 CASE WHEN t.allocated_hours > 0 THEN t.remaining_hours / t.allocated_hours ELSE 0 END as remaining_hours_percentage,
                 t.allocated_hours,
-                t.overtime,
-                t.total_hours_spent,
+                NULLIF(t.overtime, 0) as overtime,
+                NULLIF(t.total_hours_spent, 0) as total_hours_spent,
                 t.subtask_effective_hours
         """
 
