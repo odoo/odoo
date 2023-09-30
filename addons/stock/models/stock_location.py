@@ -190,6 +190,8 @@ class Location(models.Model):
     @api.constrains('scrap_location')
     def _check_scrap_location(self):
         for record in self:
+            if record.scrap_location and record.id == record.warehouse_id.lot_stock_id.id:
+                raise ValidationError(_("You cannot set a Warehouse Location Stock as a scrap location."))
             if record.scrap_location and self.env['stock.picking.type'].search([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)]):
                 raise ValidationError(_("You cannot set a location as a scrap location when it assigned as a destination location for a manufacturing type operation."))
 
