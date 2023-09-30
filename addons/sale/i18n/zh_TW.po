@@ -33,22 +33,22 @@ msgstr " / 月"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr " 獲取的資料"
+msgstr "已讀取數據"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# 銷售訂單"
+msgstr "銷售訂單數目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr "# 明細"
+msgstr "資料行數目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# 銷售訂單"
+msgstr "銷售訂單數目"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4634,8 +4634,7 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (參照 {{ object.name or 'n/a' "
-"}})"
+"== 'pending') and '待處理訂單' or '訂單' }} （參考： {{ object.name or '不適用' }}）"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4645,5 +4644,5 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (參照 {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and '形式訂單' or '報價單') or '訂單' }} （參考： {{ object.name or "
+"'不適用' }}）"
