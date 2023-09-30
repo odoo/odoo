@@ -602,6 +602,43 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                您好！<br><br>\n"
+"                首先感谢您对加入\n"
+"                <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b>团队感兴趣。\n"
+"                我们想让您知道，虽然您的简历具有竞争力，但我们的招聘团队审阅了您的申请后，决定<b>不挑选作进一步考虑</b>。\n"
+"                <br><br>\n"
+"                请留意，招聘过程繁琐复杂，我们可能会有疏漏。\n"
+"                如果您认为我们操作失误，或希望了解更多关于此次决定的信息，请随时回复本邮件。\n"
+"                <br><br>\n"
+"                我们会妥善保管您的简历，\n"
+"                当未来有工作机会与您的技能和经历相匹配时，我们会及时与您联络。\n"
+"                <br><br>\n"
+"                祝您求职顺利，\n"
+"                希望将来有机会共事。\n"
+"                <br><br>\n"
+"                谢谢！\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        -- <br>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
+"                        电邮：<t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br>\n"
+"                        电话：<t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br>\n"
+"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
+"                        人力资源团队\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -1772,7 +1809,7 @@ msgstr "语言"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_4
 msgid "Language issues"
-msgstr ""
+msgstr "语言问题"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2424,17 +2461,17 @@ msgstr "已拒绝"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
 msgid "Refused by Applicant: better offer"
-msgstr ""
+msgstr "申请人拒绝：有更好的工作机会"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by Applicant: don't like job"
-msgstr ""
+msgstr "申请人拒绝：不喜欢这份工作"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by Applicant: salary"
-msgstr ""
+msgstr "申请人拒绝：工资"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -2998,7 +3035,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can search into attachment's content, like resumes, with the searchbar."
-msgstr ""
+msgstr "您可以使用搜索栏搜索附件内容，如简历。"
 
 #. module: hr_recruitment
 #. odoo-python
