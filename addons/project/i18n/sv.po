@@ -26,6 +26,7 @@
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
 # Björn Hayer, 2023
 # Lasse L, 2023
+# Levi Siuzdak (sile), 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Levi Siuzdak (sile), 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -473,7 +474,7 @@ msgstr ""
 "                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Denna kundundersökning har skickats eftersom din uppgift har flyttats till fasen <b t-out=\"object.stage_id.name or ''\">Pågående</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=”margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;”>Denna kundundersökning skickas <b t-out=”object.project_id.rating_status_period or ’’”>Veckovis</b> så länge uppgiften är i <b t-out=”object.stage_id.name or ’’”>Pågående</b> fasen.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Denna kundundersökning skickas <b t-out=\"object.project_id.rating_status_period or ''\">Veckovis</b> så länge uppgiften är i <b t-out=\"object.stage_id.name or ''\">Pågående</b> fasen.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -499,10 +500,10 @@ msgstr ""
 "    Det är mitt nöje att meddela dig att vi har framgångsrikt slutfört projektet \"<strong t-out=\"object.name or ''\">Renoveringar</strong>\".\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
-"        <t t-out=”user.signature or ’’”>—<br>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\">—<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=”margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;” groups=”project.group_project_stages”>Du får detta e-postmeddelande eftersom ditt projekt har flyttats till fasen <b t-out=”object.stage_id.name or ’’”>Klar</b></span> "
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Du får detta e-postmeddelande eftersom ditt projekt har flyttats till fasen <b t-out=\"object.stage_id.name or ''\">Klar</b></span> "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -521,14 +522,14 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    Hej <t t-out=”object.partner_id.name or ’kund’”>Brandon Freeman</t>!<br>\n"
+"    Hej <t t-out=\"object.partner_id.name or 'kund'\">Brandon Freeman</t>!<br>\n"
 "    Tack för din förfrågan.<br>\n"
 "    Om du har några frågor, vänligen meddela oss.\n"
 "    <br><br>\n"
 "    Tack,\n"
-"    <t t-if=”user.signature”>\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br>\n"
-"        <t t-out=”user.signature or ’’”>—<br>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\">—<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div> "
 
@@ -564,8 +565,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=”Pil icon\" title=”Pil”/>\n"
-"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=”Pil icon\" title=”Pil” attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Pil icon\" title=\"Pil\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Pil icon\" title=\"Pil\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -605,7 +606,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr "<span class=\"fa fa-clock-o me-2\" title=”Dat”um/>"
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Datum\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3589,6 +3590,11 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
 msgstr ""
 
@@ -5663,7 +5669,7 @@ msgid ""
 "\"Call\" or \"Send email\")."
 msgstr ""
 "Dessa representerar de olika kategorierna av saker du måste göra (t.ex. "
-"”Ringa” eller ”Skicka e-post”)."
+"\"Ringa\" eller \"Skicka e-post\")."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -6288,7 +6294,7 @@ msgid ""
 "      moved to the \"Refused\" column."
 msgstr ""
 "och vars återkoppling är\n"
-"      flyttad till kolumnen ”Avvisad”."
+"      flyttad till kolumnen \"Avvisad\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban

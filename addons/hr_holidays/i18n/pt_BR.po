@@ -8,10 +8,10 @@
 # Éder Brito <britoederr@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Martin Trigaux, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
-# Layna Nascimento, 2023
 # Kevilyn Rosa, 2023
 # douglas custodio <douglascstd@yahoo.com>, 2023
+# Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: douglas custodio <douglascstd@yahoo.com>, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(employee_name)s - From %(date_from)s To %(date_to)s - %(state)s"
-msgstr ""
+msgstr "%(employee_name)s - De %(date_from)s Para %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -124,14 +124,14 @@ msgstr "%s (cópia)"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%s (from %s to %s)"
-msgstr ""
+msgstr "%s (de %s para %s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%s (from %s to No Limit)"
-msgstr ""
+msgstr "%s (de %s para sem Limite)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -657,7 +657,7 @@ msgstr "<span class=\"o_stat_text\">Folga</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"text-muted\">From</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">De</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -949,7 +949,7 @@ msgstr "Alocado (dias/horas)"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Allocated:"
-msgstr ""
+msgstr "Alocado:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_allocation_id
@@ -1189,7 +1189,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Approved:"
-msgstr ""
+msgstr "Aprovado:"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__apr
@@ -1522,6 +1522,8 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
+"Contagem de alocações para esse tipo de folga (aprovadas ou aguardando "
+"aprovação) com validade a partir deste ano."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2000,7 +2002,7 @@ msgstr "De"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "From %(date_from)s To %(date_to)s - %(state)s"
-msgstr ""
+msgstr "De %(date_from)s Para %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
@@ -3041,7 +3043,7 @@ msgstr "Planejado"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "Planned:"
-msgstr ""
+msgstr "Planejado:"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_present
@@ -3075,7 +3077,7 @@ msgstr "Público"
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
 msgid "Public Holidays"
-msgstr ""
+msgstr "Feriados Públicos"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3678,6 +3680,9 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, cancel and create a new one."
 msgstr ""
+"Esta alocação já foi executada uma vez, qualquer modificação não terá efeito"
+" nos dias alocados ao funcionário. Caso precise alterar a configuração da "
+"alocação, cancele e crie uma nova."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -3811,7 +3816,7 @@ msgstr "Calendário de Folgas"
 #: code:addons/hr_holidays/models/hr_employee.py:0
 #, python-format
 msgid "Time Off Dashboard"
-msgstr ""
+msgstr "Painel de Folgas"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
@@ -3932,7 +3937,7 @@ msgstr "Análise de Folga"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr ""
+msgstr "Análise de Folgas por Funcionário e Tipo de Folga"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -4025,7 +4030,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "To Approve or Need Second Approval or Approved Time Off"
-msgstr ""
+msgstr "Para aprovar ou precisar de segunda aprovação ou folga aprovada"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4086,7 +4091,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
 msgid "Training Time Off"
-msgstr ""
+msgstr "Folga de Treinamento"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
@@ -4115,6 +4120,7 @@ msgstr ""
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
 msgstr ""
+"Dois feriados não podem sobrepor-se durante o mesmo horário de trabalho."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4206,7 +4212,7 @@ msgstr "Tipo de Validação"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Validity Period"
-msgstr ""
+msgstr "Período de Validade"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -4316,6 +4322,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
+"Sim: as solicitações de folga precisam ter uma alocação válida.\n"
+"\n"
+"Sem limite: solicitações de folga podem ser atendidas sem qualquer alocação prévia."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4340,6 +4349,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Não é possível definir duas folgas que se sobreponham no mesmo dia para o mesmo funcionário.\n"
+"Tempo de folga existente:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4350,6 +4362,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Não é possível definir duas folgas que se sobreponham no mesmo dia para os mesmos funcionários.\n"
+"Tempo de folga existente:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4360,6 +4375,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Você não pode definir duas folgas que se sobreponham no mesmo dia.\n"
+"Tempo de folga existente:\n"
+"%s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4380,7 +4398,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can't manually archive/unarchive a time off."
-msgstr ""
+msgstr "Você não pode arquivar/desarquivar manualmente uma folga."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4395,7 +4413,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
-msgstr ""
+msgstr "Você não pode excluir uma folga atribuída a vários funcionários"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4409,7 +4427,7 @@ msgstr "Você não pode deletar uma folga que está na situação %s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in the past"
-msgstr ""
+msgstr "Você não pode excluir uma folga que já passou"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4508,14 +4526,14 @@ msgstr "Sua %(leave_type)s planejada em %(date)s foi recusada"
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "Your time off has been canceled."
-msgstr ""
+msgstr "Sua folga foi cancelada."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/resource.py:0
 #, python-format
 msgid "a new public holiday completely overrides this leave."
-msgstr ""
+msgstr "um novo feriado substitui completamente esta licença."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4590,6 +4608,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
+"ex. Tipo de folga (Do início da validade ao fim da validade/sem limite)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4692,7 +4711,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
-msgstr ""
+msgstr "validar"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
