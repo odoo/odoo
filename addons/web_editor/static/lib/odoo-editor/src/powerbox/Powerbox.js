@@ -151,7 +151,10 @@ export class Powerbox {
             'input',
             ev => {
                 const selection = this.options.document.getSelection();
-                if (!selection.isCollapsed || !selection.rangeCount) return;
+                if (!selection.isCollapsed || !selection.rangeCount || this._lastKeydownSelectionWasNotCollapsed) {
+                    this._lastKeydownSelectionWasNotCollapsed = false;
+                    return;
+                }
                 if (
                     ev.data === triggerKey &&
                     !this._active &&
