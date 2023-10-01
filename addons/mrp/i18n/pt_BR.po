@@ -547,7 +547,7 @@ msgstr "Decoração de atividade excepcional"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_state
 msgid "Activity State"
-msgstr "Situação da atividade"
+msgstr "Status da atividade"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_type_icon
@@ -1371,7 +1371,7 @@ msgstr "Consumir automaticamente lotes/números de série reservados"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_raw
 msgid "Consumed"
-msgstr "Consumido"
+msgstr "A quantidade consumida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
@@ -2026,7 +2026,7 @@ msgstr "Números de série existentes (%s)"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Exp %s"
-msgstr "Exp %s"
+msgstr "Prev %s"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
@@ -3903,7 +3903,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_finished
 msgid "Produced"
-msgstr "Produzido"
+msgstr "A quantidade produzida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__produced_qty
@@ -5844,9 +5844,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
-"Usar um relatório MPS para programar suas operações de reordenamento e "
-"produção é útil se você tiver um longo tempo de entrega e se produzir com "
-"base em previsões de vendas."
+"Pode ser útil usar um relatório de PMP para programar suas operações de "
+"reposição e produção se você tiver um lead time longo e se produzir com base"
+" em previsões de vendas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details
@@ -6444,7 +6444,7 @@ msgstr "Não é possível ter %s como produto acabado e nos subprodutos"
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
 msgstr ""
-"Você não pode vincular esta ordem de serviço a outra ordem de produção."
+"Não é possível vincular esta ordem de trabalho a outra ordem de produção."
 
 #. module: mrp
 #. odoo-python
@@ -6452,21 +6452,21 @@ msgstr ""
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr ""
-"Você não pode mover uma ordem de produção depois de cancelada ou concluída."
+"Não é possível mover uma ordem de produção depois de cancelada ou concluída."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot produce the same serial number twice."
-msgstr "Você não pode produzir o mesmo número de série duas vezes."
+msgstr "Não é possível produzir o mesmo número de série duas vezes."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Você não pode desconstruir uma ordem de fabricação desfeita."
+msgstr "Não é possível desmontar uma ordem de produção anulada."
 
 #. module: mrp
 #. odoo-python
@@ -6510,8 +6510,7 @@ msgid ""
 "You have already processed %(quantity)s. Please input a quantity higher than"
 " %(minimum)s "
 msgstr ""
-"Você já processou %(quantity)s. Por favor insira uma quantidade maior que "
-"%(minimum)s "
+"Você já processou %(quantity)s. Insira uma quantidade maior que %(minimum)s "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -6540,9 +6539,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Você precisa definir pelo menos uma perda de produtividade na categoria "
-"'Desempenho'. Crie um a partir do aplicativo de fabricação, menu: "
-"Configuração / Perdas de Produtividade."
+"É necessário definir pelo menos uma perda de produtividade na categoria "
+"'Desempenho'. Crie uma a partir do aplicativo de Fabricação, no menu "
+"Configuração > Perdas de produtividade."
 
 #. module: mrp
 #. odoo-python
@@ -6554,8 +6553,8 @@ msgid ""
 " Productivity Losses."
 msgstr ""
 "Você precisa definir pelo menos uma perda de produtividade na categoria "
-"'Produtividade'. Crie um a partir do aplicativo de fabricação, menu: "
-"Configuração / Perdas de Produtividade."
+"'Produtividade'. Crie uma a partir do aplicativo de Fabricação, no menu "
+"Configuração > Perdas de produtividade."
 
 #. module: mrp
 #. odoo-python
@@ -6567,22 +6566,22 @@ msgid ""
 "Productivity Losses."
 msgstr ""
 "Você precisa definir pelo menos uma perda de produtividade não ativa na "
-"categoria 'Desempenho'. Crie um a partir do aplicativo de fabricação, menu: "
-"Configuração / Perdas de Produtividade."
+"categoria 'Desempenho'. Crie uma a partir do aplicativo de Fabricação, no "
+"menu Configuração/Perdas de produtividade."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr "Você precisa fornecer lote para o produto acabado."
+msgstr "É necessário fornecer o lote para o produto acabado."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
-msgstr "Você precisa fornecer o Número de Série/Lote para os produtos:"
+msgstr "É necessário fornecer o número de série/lote para os produtos:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -6594,12 +6593,12 @@ msgstr "Você produziu menos que a demanda inicial"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
-msgstr "Você deve fornecer um número de lote para o produto final."
+msgstr "É necessário fornecer um número de lote para o produto final."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "cancelled"
-msgstr "cancelado"
+msgstr "cancelados"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -6649,7 +6648,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "last"
-msgstr "último"
+msgstr "últimas"
 
 #. module: mrp
 #. odoo-python
@@ -6688,7 +6687,7 @@ msgstr "em"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "ordered instead of"
-msgstr "ordenado em vez de"
+msgstr "pedidos em vez de"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -6698,7 +6697,7 @@ msgstr "por centro de trabalho"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
-msgstr "a quantidade foi atualizada."
+msgstr "foi atualizada."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -6715,4 +6714,4 @@ msgstr "divididas"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "ordens de serviço"
+msgstr "ordens de trabalho"

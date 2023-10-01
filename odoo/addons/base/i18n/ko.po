@@ -1748,7 +1748,7 @@ msgid ""
 msgstr ""
 "\n"
 "        이 모듈을 사용하면 그리드 항목을 통해 \n"
-"        세부선택 품목의 수량을 선택하여 구매 주문을 빠르게 채울 수 있습니다.\n"
+"        품목의 선택 사양 수량을 선택하여 구매발주서를 쉽게 작성할 수 있습니다.\n"
 "    "
 
 #. module: base
@@ -1761,7 +1761,7 @@ msgid ""
 msgstr ""
 "\n"
 "        이 모듈을 사용하면 그리드 항목을 통해 \n"
-"        세부선택 품목의 수량을 선택하여 판매 주문을 빠르게 채울 수 있습니다.\n"
+"        품목의 선택 사양 수량을 선택하여 판매주문서를 쉽게 작성할 수 있습니다.\n"
 "    "
 
 #. module: base
@@ -2043,8 +2043,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"       주문 그리드 항목을 통해 구매 주문에 세부선택 품목을 추가하십시오.\n"
-"    "
+"       발주서에 주문 그리드 입력을 이용하여 품목 사양을 추가하세요."
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -12114,7 +12113,7 @@ msgstr "%y - 2자리수 연도 [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "&amp; Close"
-msgstr "후 닫기"
+msgstr "&amp; 닫기"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -13956,7 +13955,7 @@ msgstr "바코드 화면에 이송 일괄 작업 지원 추가"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
 msgid "Add variants to Sales Order through a grid entry."
-msgstr "그리드 항목을 통해 판매 발주 시 세부선택 품목을 추가하십시오."
+msgstr "판매주문서에 그리드 입력을 이용하여 사양을 추가하세요."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
@@ -14456,7 +14455,7 @@ msgstr "또한 여기서 모든 관련 문서를 찾아 개별 문서를 클릭�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
-msgstr "아마존 연결기"
+msgstr "아마존 배송업체"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
@@ -20616,7 +20615,7 @@ msgstr "요식업/환대산업"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "모든 보고서 하단에 표시되는 꼬리말 문구."
+msgstr "모든 보고서의 하단에 표시되는 꼬리말 문구입니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -28821,7 +28820,7 @@ msgstr "뛰어난 애플리케이션"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "상위 분류"
+msgstr "상위 카테고리"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -34467,14 +34466,14 @@ msgstr "이 모듈은 HR로 수정된 사용자 양식에 OdooBot 상태 및 알
 msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the FEDEX connector."
-msgstr "Fedex 연결기의 픽업 지점으로 배송되도록 이커머스 사용자가 선택할 수 있는 모듈입니다."
+msgstr "Fedex 배송의 픽업 지점으로 배송되도록 이커머스 사용자가 선택할 수 있는 모듈입니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_delivery_sendcloud
 msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the Sendcloud connector."
-msgstr "Sendcloud 연결기의 픽업 지점으로 배송되도록 이커머스 사용자가 선택할 수 있는 모듈입니다."
+msgstr "Sendcloud 배송의 픽업 지점으로 배송되도록 이커머스 사용자가 선택할 수 있는 모듈입니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -35804,7 +35803,7 @@ msgstr "사용자 양식에서 메뉴 및 홈 액션을 필터링하는 데 사�
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__login
 msgid "Used to log into the system"
-msgstr "시스템 로그인에 사용합니다."
+msgstr "시스템에 로그인할 때 사용합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__sequence
@@ -36601,9 +36600,9 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
-"문서를 인쇄하고 데이터를 내보내거나 가져올 때, 이 시간대를 기준으로 시간값이 계산됩니다.\n"
-"시간대를 설정하지 않은 경우, UTC (협정세계시)를 적용합니다.\n"
-"다른 상황에서는 웹 클라이언트의 시간 오프셋에 따라 시간값을 계산합니다."
+"문서를 인쇄하고 데이터를 내보내거나 가져올 때 기준이 되는 시간값을 설정합니다.\n"
+"시간대를 따로 설정하지 않은 경우 UTC (협정세계시)가 기본으로 적용됩니다..\n"
+"기타 상황에서는 웹 클라이언트의 시간 오프셋에 따라 시간을 계산합니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense_margin
@@ -37420,7 +37419,7 @@ msgstr "예 : https://www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr "이베이 연결기"
+msgstr "eBay 배송"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale

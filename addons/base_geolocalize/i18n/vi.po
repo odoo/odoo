@@ -33,8 +33,8 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
-"API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+"Yêu cầu có mã API cho GeoCoding (địa điểm).\n"
+"Truy cập trang https://developers.google.com/maps/documentation/geocoding/get-api-key để biết thêm chi tiết."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -81,12 +81,12 @@ msgstr "Tên hiển thị"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr "Error with geolocation server:"
+msgstr "Lỗi máy chủ xác định vị trí địa lý:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr "Geo Coder"
+msgstr "Mã định vị"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -96,7 +96,7 @@ msgstr "Vị trí địa lý"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr "Geo Provider"
+msgstr "Nhà cung cấp dịch vụ định vị"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -107,12 +107,12 @@ msgstr "Vị trí Địa lý"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
-msgstr "Ngày xác định Vị trí"
+msgstr "Ngày xác định vị trí"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr "Google Map API Key"
+msgstr "Khóa API Google Map"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
@@ -122,7 +122,7 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr "Key:"
+msgstr "Mã khóa:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
@@ -137,12 +137,12 @@ msgstr "Cập nhật lần cuối vào"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Lat :"
-msgstr ""
+msgstr "Vĩ độ:"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr ""
+msgstr "Kinh độ:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -154,24 +154,24 @@ msgstr "Tên"
 #: code:addons/base_geolocalize/models/res_partner.py:0
 #, python-format
 msgid "No match found for %(partner_names)s address(es)."
-msgstr ""
+msgstr "Không tìm thấy vị trí khớp với (các) địa chỉ của %(partner_names)s. "
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
-msgstr "Partner Assignment"
+msgstr "Chỉ định đối tác"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr "Provider %s is not implemented for geolocation service."
+msgstr "Nhà cung cấp %s không được triển khai cho dịch vụ vị trí địa lý."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh"
-msgstr "Refresh"
+msgstr "Làm mới"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -197,18 +197,18 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
-"Unable to geolocate, received the error:\n"
+"Không thể xác định vị trí, nhận được lỗi sau:\n"
 "%s\n"
 "\n"
-"Google made this a paid feature.\n"
-"You should first enable billing on your Google account.\n"
-"Then, go to Developer Console, and enable the APIs:\n"
+"Đây là tính năng thu phí của Google.\n"
+"Đầu tiên bạn nên bật chế độ thanh toán trong tài khoản Google.\n"
+"Sau đó đi tới Developer Console, và bật các API:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
-msgstr ""
+msgstr "Cập nhật vào:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -216,8 +216,9 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
-" for more information."
+"Truy cập trang "
+"https://developers.google.com/maps/documentation/geocoding/get-api-key để "
+"biết thêm chi tiết."
 
 #. module: base_geolocalize
 #. odoo-python

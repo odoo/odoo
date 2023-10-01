@@ -6,8 +6,8 @@
 # Wil Odoo, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,9 +293,9 @@ msgid ""
 "groups=\"base.group_user\"/>"
 msgstr ""
 "<i class=\"fa fa-ban text-danger\" role=\"img\" title=\"Esta dirección de "
-"correo está en la lista negra de envíos masivos\" aria-label=\"En la lista "
-"negra\" attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
-"groups=\"base.group_user\"/>"
+"correo está en la lista de denegación de envíos masivos\" aria-label=\"En "
+"lista de denegación \" attrs=\"{'invisible': [('is_blacklisted', '=', "
+"False)]}\" groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -440,7 +440,7 @@ msgstr "<span class=\"o_stat_text\">Destinatario abierto</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "<span class=\"text-muted\">Blacklist</span>"
-msgstr "<span class=\"text-muted\">Lista negra</span>"
+msgstr "<span class=\"text-muted\">Lista de denegación</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -918,7 +918,7 @@ msgstr "Permitir pruebas A/B"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr "Permitir que los destinatarios se incluyan en la lista negra"
+msgstr "Permitir que los destinatarios se incluyan en la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -927,7 +927,7 @@ msgid ""
 "the unsubscription page."
 msgstr ""
 "Permita que los destinatarios gestionen por sí mismos su estado en la lista "
-"negra a través de la página de cancelar suscripción."
+"de denegación a través de la página de cancelar suscripción."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -938,11 +938,11 @@ msgid ""
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
 "Permita que los destinatarios gestionen ellos mismos su estado en las listas"
-" negras a través de la página de cancelar suscripción. Si la opción está "
-"activa, el botón de \"Ponerme en la lista negra\" estará escondido en la "
-"página de cancelar suscripción. De cualquier forma, el botón \"Regresar\" "
-"siempre estará visible para permitir que los leads y partners se vuelvan a "
-"suscribir.  "
+" de dengación a través de la página de cancelar suscripción. Si la opción "
+"está activa, el botón de \"Ponerme en la lista de denegación\" estará "
+"escondido en la página de cancelar suscripción. De cualquier forma, el botón"
+" \"Regresar\" siempre estará visible para permitir que los leads y partners "
+"se vuelvan a suscribir.  "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1131,38 +1131,38 @@ msgstr "Cajas grandes"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
 msgid "Blacklist"
-msgstr "Lista de exclusión"
+msgstr "Lista de denegación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Blacklist (%s)"
-msgstr "Lista de exclusión (%s)"
+msgstr "Lista de denegación (%s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Blacklist Me"
-msgstr "Agregarme a la lista de exclusión"
+msgstr "Agregarme a la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr "Opción de lista de exclusión al darse de baja"
+msgstr "Opción de lista de denegación al darse de baja"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Blacklisted"
-msgstr "En la lista negra"
+msgstr "En la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_bl
 msgid "Blacklisted Address"
-msgstr "Direcciones incluidas en la lista negra"
+msgstr "Direcciones incluidas en la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklisted Email Addresses"
-msgstr "Direcciones de correo electrónico incluidas en la lista negra"
+msgstr "Direcciones de correo electrónico incluidas en la lista de denegación"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1984,7 +1984,7 @@ msgstr "Correo electrónico"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Email Blacklisted"
-msgstr "En la lista negra de correos electrónicos"
+msgstr "En la lista de denegación de correos electrónicos"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2062,7 +2062,7 @@ msgstr "Excepción"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Blacklisted Emails"
-msgstr "Excluir correos electrónicos en la lista negra"
+msgstr "Excluir correos electrónicos en la lista de denegación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -2443,8 +2443,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de correo electrónico está en la lista negra, el contacto ya"
-" no recibirá correos masivos de ninguna lista."
+"Si la dirección de correo electrónico está en la lista de denegación, el "
+"contacto ya no recibirá correos masivos de ninguna lista. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width

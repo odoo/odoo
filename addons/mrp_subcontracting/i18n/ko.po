@@ -180,7 +180,7 @@ msgstr "재고 공간"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr "외주"
+msgstr "외주 생산"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__is_subcontracting_location
@@ -192,7 +192,7 @@ msgstr "외주 생산 위치"
 msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
-msgstr "외주 포털 보기에서 품목 목록을 필터링 하는데 사용되는 자재명세서의 품목 목록"
+msgstr "외주 포털 보기에서 필터링 하는데 사용되는 자재명세서의 품목 목록입니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -265,7 +265,7 @@ msgstr "작업"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr "꾸러미 상품이 없는 작업"
+msgstr "패키지 없는 작업"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -284,12 +284,12 @@ msgstr "포털 사용자는 '완료' 상태로 재고 이동을 생성하거나 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "품목 이동 (재고 이동 상세)"
+msgstr "품목 이동 (재고 이동 내역)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_replenish
 msgid "Product Replenish"
-msgstr "품목 보충"
+msgstr "품목 재보충"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -362,7 +362,7 @@ msgstr "예약됨"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr "하청업체 재 공급"
+msgstr "하청업체 재공급"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -371,12 +371,12 @@ msgstr "하청업체 재 공급"
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr "주문시 하청업체 재 공급"
+msgstr "주문시 하청업체 재공급"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "하청업체 재 공급"
+msgstr "하청업체 재공급"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -496,7 +496,7 @@ msgstr "외주 운영 유형"
 #. module: mrp_subcontracting
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
-msgstr "외주 포터"
+msgstr "외주 포털"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -523,7 +523,7 @@ msgstr "외주 생산: %s"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
 msgid "Subcontractor"
-msgstr "외부업체"
+msgstr "하청업체"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -545,7 +545,7 @@ msgstr "공급업체 가격표"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr "이동은 하도급 영수증입니다."
+msgstr "외주 입고에 대한 이동입니다."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -602,7 +602,7 @@ msgstr "창고"
 msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
-msgstr "경고/최소 모드에서 소비되고 자재명세서와 관련된 더 많은 부품이 제조 주문서에 사용된 경우 마법사"
+msgstr "경고/최소 모드에서 소비시 자재명세서와 비교하여 더 많은 부품이 제조주문에 들어간 경우 사용되는 마법사"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -648,9 +648,9 @@ msgstr "각 줄에 %s의 일련번호를 입력해야 합니다"
 msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
-msgstr "구성 요소 중 하나 이상에 대해 0이 아닌 값을 지정해야 합니다."
+msgstr "부품 중 이상에 대해 0이 아닌 소비량을 지정해야 합니다."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "e.g. PO0032"
-msgstr "예. PO0032"
+msgstr "예: PO0032"

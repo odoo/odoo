@@ -8,10 +8,9 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Lucia Pacheco, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
-# Alfonso González, 2023
 # Fernanda Alvarez, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3399,22 +3398,22 @@ msgstr "Importar CAMT"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr "TRANSPORTE Y SEGURO PAGADO A"
+msgstr "TRANSPORTE Y SEGUROS PAGADOS HASTA"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr "TRANSPORTE PAGADO A"
+msgstr "TRANSPORTE PAGADO HASTA"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr "COSTO Y FLETE"
+msgstr "COSTE Y FLETE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr "COSTO, SEGURO Y FLETE"
+msgstr "COSTE, SEGURO, FLETE"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3517,8 +3516,8 @@ msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
 msgstr ""
-"No se puede generar un código de diario sin usar. Por favor cambiar el "
-"nombre del diario %s."
+"No se puede generar un código de diario sin usar. Cambie el nombre del "
+"diario %s."
 
 #. module: account
 #. odoo-python
@@ -4280,7 +4279,7 @@ msgstr "Reglas de contrapartida"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr "Países en los que la empresa tiene un RFC / NIF"
+msgstr "Países en los que la empresa tiene un RFC/NIF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4370,7 +4369,7 @@ msgstr "Crear asientos contables"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Create Manually"
-msgstr "Crear manualmente"
+msgstr "Crear de forma manual"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -4629,7 +4628,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
-msgstr "Crédito"
+msgstr "Haber"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_amount_currency
@@ -4801,7 +4800,8 @@ msgstr "Divisa del apunte contable de débito."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__currency_rate
 msgid "Currency rate from company currency to document currency."
-msgstr "Tasa de cambio de la divisa de la empresa a la divisa del documento."
+msgstr ""
+"Tasa de cambio entre la divisa de la empresa y la divisa del documento."
 
 #. module: account
 #: model:account.account,name:account.1_current_assets
@@ -4843,7 +4843,7 @@ msgstr "Pagos del cliente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__custom_audit_action_id
 msgid "Custom Audit Action"
-msgstr "Acción personalizada de auditar"
+msgstr "Acción personalizada de auditoría"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__custom
@@ -5001,7 +5001,7 @@ msgstr "Cierre"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "ENTREGADO EN EL LUGAR"
+msgstr "ENTREGA EN LUGAR"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -5148,7 +5148,7 @@ msgstr "Días después de la fecha de factura"
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
-msgstr "Débito"
+msgstr "Debe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
@@ -5233,7 +5233,7 @@ msgstr "Apertura predeterminada"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
 msgid "Default PoS Receivable Account"
-msgstr "Cuenta por cobrar predeterminada del PdV"
+msgstr "Cuenta por cobrar predeterminada del punto de venta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -5310,8 +5310,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Defina la moneda más pequeña de la divisa que se utiliza para pagar en "
-"efectivo"
+"Defina la denominación más pequeña de la divisa que se utiliza para pagar en"
+" efectivo"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -5323,7 +5323,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Defina como se registrarán los estados de cuenta bancarios"
+msgstr "Defina cómo se registrarán los estados de cuenta bancarios"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__display_account_prefix
@@ -5338,8 +5338,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
-"Defina la moneda más pequeña de la divisa que se puede usar para pagar en "
-"efectivo"
+"Defina la denominación más pequeña de la divisa que se puede usar para pagar"
+" en efectivo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -5395,7 +5395,7 @@ msgstr "Cuenta de existencias de demostración"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
-msgstr "Obsoleta"
+msgstr "Obsoleto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -5564,7 +5564,7 @@ msgstr "Mostrar advertencia de divisa inactiva"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__display_mail_composer
 msgid "Display Mail Composer"
-msgstr "Mostrar redactor de correo"
+msgstr "Mostrar quién redactó el correo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -5917,7 +5917,7 @@ msgstr "Venta a distancia intracomunitaria de la UE"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr "EN FÁBRICA"
+msgstr "ENTREGA EN FÁBRICA"
 
 #. module: account
 #. odoo-python
@@ -6067,7 +6067,7 @@ msgstr "Número de asientos"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Entries are hashed from %s (%s)"
-msgstr "Los asientos son hash de %s (%s)"
+msgstr "Los asientos están cifrados desde %s (%s)"
 
 #. module: account
 #. odoo-python
@@ -6096,9 +6096,9 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"Los asientos en el futuro están configurados para que se publiquen en "
-"automático de forma predeterminada. Seleccione esta casilla para publicarlos"
-" ahora."
+"De forma predeterminada, los asientos en el futuro están configurados para "
+"que se publiquen en automático. Seleccione esta casilla para publicarlos "
+"ahora."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6276,17 +6276,17 @@ msgstr "Valor externo"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "LIBRE AL COSTADO DEL BUQUE"
+msgstr "FRANCO AL COSTADO DEL BUQUE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "FRANCO PORTEADOR"
+msgstr "FRANCO TRANSPORTISTA"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "LIBRE A BORDO"
+msgstr "FRANCO A BORDO"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -6342,7 +6342,7 @@ msgstr "Complete los detalles de la línea."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
 msgid "Filter Multivat"
-msgstr "Filtro de múltiples RFC"
+msgstr "Filtrar múltiples RFC"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -6655,7 +6655,7 @@ msgstr "Países con RFC extranjero"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
-msgstr "Modo de encabezado de NIF extranjero"
+msgstr "Modo de encabezado de RFC extranjero"
 
 #. module: account
 #. odoo-python
@@ -7174,8 +7174,8 @@ msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
 msgstr ""
-"Si se establece, los impuestos con una secuencia mayor que esta serán "
-"afectados por ello, en caso de que lo acepten."
+"Si se establece, se afectarán  los impuestos con una secuencia mayor que "
+"esta, en caso de que lo acepten."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
@@ -8907,10 +8907,12 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Manual: obtenga su pago con cualquier método fuera de Odoo.\n"
-"Proveedores de pago: cada proveedor de pago tiene su propio método de pago. Solicite una transacción en/a una tarjeta gracias al token que el contacto guarda al comprar o suscribirse en línea.\n"
-"Depósito en lotes: cobre varios cheques de clientes a la vez al generar y enviar un depósito en lotes a su banco. Se requiere del módulo account_batch_payment.\n"
-"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Se requiere del módulo account_sepa.\n"
+"Manual: pague o cobre con cualquier método fuera de Odoo.\n"
+"Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
+"Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
+"Depósito por lote: recolecte varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
+"Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Es necesario el módulo account_sepa.\n"
+"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Es necesario el módulo account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -8935,7 +8937,7 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Manual: pague o cobre con cualquier método fuera de Odoo.\n"
-"Métodos de pago: cada sistema tiene su propio método de pago. Solicite una transacción en/a una tarjeta gracias al token de pago que el cliente guarda al hacer una compra o suscribirse en línea.\n"
+"Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
 "Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
 "Depósito por lote: recolecte varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
 "Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Es necesario el módulo account_sepa.\n"
@@ -14683,7 +14685,9 @@ msgstr "Este diario no está en modo estricto."
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
-msgstr "Esta línea y sus hijas se ocultarán cuando todas sus columnas sean 0."
+msgstr ""
+"Esta línea y las líneas subordinadas se ocultarán cuando todas sus columnas "
+"sean 0."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -16307,8 +16311,8 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
-"No puede eliminar este asiento ya que ya consumió un número de secuencia y "
-"no es el último de la cadena. Debe revertirlo en su lugar."
+"No puede eliminar este asiento pues ya consumió un número de secuencia y no "
+"es el último de la cadena. Debe revertirlo en su lugar."
 
 #. module: account
 #. odoo-python
@@ -17084,7 +17088,7 @@ msgstr "el diario destino"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "la empresa matriz"
+msgstr "la empresa principal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form

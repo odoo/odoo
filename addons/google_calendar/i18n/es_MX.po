@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Lucia Pacheco, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Lucia Pacheco, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,9 +85,9 @@ msgid ""
 " synchronisation."
 msgstr ""
 "Ocurrió un error al generar el token. Puede que su código de autorización no"
-" sea válido o que ya haya expirado [%s]. Debe comprobar su ID de cliente y "
-"su secreto en la plataforma de las API de Google o intentar detener y "
-"reiniciar la sincronización del calendario."
+" sea válido o haya vencido [%s]. Verifique su ID de cliente y su secreto en "
+"la plataforma de las API de Google o intente detener y reiniciar la "
+"sincronización del calendario."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -172,7 +173,7 @@ msgstr "Eliminar de ambos"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr "Eliminar de la cuenta actual de Calendario de Google"
+msgstr "Eliminar de la cuenta actual del calendario de Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -248,7 +249,7 @@ msgstr "La sincronización de Google se detuvo"
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr "Google dio la siguiente explicación: %s"
+msgstr "Google proporcionó la siguiente explicación: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -360,7 +361,7 @@ msgstr "Sincronice todos los eventos existentes"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr "Sincronice únicamente los eventos nuevos"
+msgstr "Sincronice solo los eventos nuevos"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -404,7 +405,7 @@ msgstr "El usuario ya tiene una cuenta de Google"
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Esto solo afectará eventos para los que el usuario es el propietario"
+msgstr "Esto solo afectará los eventos que le pertenecen al usuario"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity

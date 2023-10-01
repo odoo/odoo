@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,41 +28,43 @@ msgid ""
 "An error occurred during the processing of your payment (success code %s; "
 "primary response code %s). Please try again."
 msgstr ""
+"Đã xảy ra lỗi trong quá trình xử lý khoản thanh toán của bạn (mã thành công "
+"%s; mã phản hồi chính %s). Vui lòng thử lại. "
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
 msgid "AsiaPay"
-msgstr ""
+msgstr "AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "AsiaPay Merchant ID"
-msgstr ""
+msgstr "ID người bán AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "AsiaPay Secure Hash Function"
-msgstr ""
+msgstr "Tính năng hash bảo mật AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
 msgid "AsiaPay Secure Hash Secret"
-msgstr ""
+msgstr "Bí mật hash bảo mật AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "Asiapay Brand"
-msgstr ""
+msgstr "Thương hiệu Asiapay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__bimopay
 msgid "BimoPay"
-msgstr ""
+msgstr "BimoPay"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Brand"
-msgstr "Nhãn hiệu"
+msgstr "Thương hiệu"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__code
@@ -78,19 +81,19 @@ msgstr "ID người bán"
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by AsiaPay account."
-msgstr ""
+msgstr "Tài khoản AsiaPay chỉ có thể chọn một loại tiền tệ."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
 msgid "PayDollar"
-msgstr ""
+msgstr "PayDollar"
 
 #. module: payment_asiapay
 #: model:ir.model,name:payment_asiapay.model_payment_provider
@@ -105,75 +108,75 @@ msgstr "Giao dịch thanh toán"
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__pesopay
 msgid "PesoPay"
-msgstr ""
+msgstr "PesoPay"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(ref)s."
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu mã %(ref)s."
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing success code."
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu mã thành công."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
 msgid "SHA1"
-msgstr ""
+msgstr "SHA1"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha256
 msgid "SHA256"
-msgstr ""
+msgstr "SHA256"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha512
 msgid "SHA512"
-msgstr ""
+msgstr "SHA512"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Function"
-msgstr ""
+msgstr "Tính năng hash bảo mật"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Secret"
-msgstr ""
+msgstr "Bí mật hash bảo mật"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
 msgid "SiamPay"
-msgstr ""
+msgstr "SiamPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "The Merchant ID solely used to identify your AsiaPay account."
-msgstr ""
+msgstr "ID người bán chỉ được sử dụng để xác định tài khoản AsiaPay của bạn."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "The brand associated to your AsiaPay account."
-msgstr ""
+msgstr "Thương hiệu được liên kết với tài khoản AsiaPay của bạn."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "The secure hash function associated to your AsiaPay account."
-msgstr ""
+msgstr "Tính năng hash bảo mật được liên kết với tài khoản AsiaPay của bạn."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown success code: %s"
-msgstr ""
+msgstr "Mã thành công không xác định: %s"

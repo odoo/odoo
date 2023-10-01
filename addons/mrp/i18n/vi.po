@@ -207,7 +207,7 @@ msgstr "<span class=\"fw-bold\">Cần sản xuất</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"ms-2\">Generate BOM</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">Tạo ĐMNL</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -371,7 +371,7 @@ msgstr "<strong>Thời lượng thực tế (phút)</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Mã vạch</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -824,7 +824,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Awaiting Components"
-msgstr ""
+msgstr "Đang chờ nguyên liệu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -1758,7 +1758,7 @@ msgstr "Ngày cảnh báo chậm trễ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delays"
-msgstr ""
+msgstr "Chậm trễ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2242,7 +2242,7 @@ msgstr "Tạo số sê-ri"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr ""
+msgstr "Tạo một ĐMNL mới từ Lệnh sản xuất này"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -2589,7 +2589,7 @@ msgstr "Dữ liệu JSON cho tiện ích chú thích"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__key
 msgid "Key"
-msgstr "Khoá"
+msgstr "Mã khoá"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__description_bom_line
@@ -3169,7 +3169,7 @@ msgstr "Sản xuất Dòng cảnh báo lượng sử dụng"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_mrp_display
 msgid "Mrp Display"
-msgstr ""
+msgstr "Hiển thị SX"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3330,7 +3330,7 @@ msgstr "Không có hàng"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr ""
+msgstr "Lưu ý rằng hiện có phiên bản khác của ĐMNL này."
 
 #. module: mrp
 #. odoo-python
@@ -3578,7 +3578,7 @@ msgstr "Số lượng sản xuất ban đầu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
 msgid "Outdated BoM"
-msgstr ""
+msgstr "ĐMNL quá cũ"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -3825,7 +3825,7 @@ msgstr "Lỗi quy trình"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr ""
+msgstr "Xử lý lệnh sản xuất từ ứng dụng mã vạch"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4083,7 +4083,7 @@ msgstr "Sản xuất được bắt đầu muộn"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
 msgid "Productions To Split"
-msgstr "Sản xuất cần tách"
+msgstr "Sản lượng cần tách"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__productive
@@ -4238,7 +4238,7 @@ msgstr "Sẵn sàng sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Ready to Start"
-msgstr ""
+msgstr "Sẵn sàng để bắt đầu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
@@ -5068,7 +5068,7 @@ msgstr "Văn bản"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr ""
+msgstr "ĐMNL đã được cập nhật kể từ khi tạo LSX"
 
 #. module: mrp
 #. odoo-python
@@ -5121,6 +5121,8 @@ msgid ""
 "The current configuration is incorrect because it would create a cycle "
 "between these products: %s."
 msgstr ""
+"Cấu hình hiện tại không chính xác vì nó sẽ tạo ra một chu kỳ giữa các sản "
+"phẩm này: %s."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
@@ -5820,12 +5822,16 @@ msgstr "Xác nhận"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__mark_as_done
 msgid "Valide all the productions after the split"
-msgstr ""
+msgstr "Xác thực toàn bộ sản lượng sau khi tách"
 
 #. module: mrp
+#. odoo-python
+#. module: mrp
 #. odoo-javascript
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#, python-format
+#, python-format, python-format
 msgid "Variant:"
 msgstr "Biến thể:"
 
@@ -6521,13 +6527,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Bạn cần cung cấp số lô cho thành phẩm. "
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "Bạn cần cung cấp số lô/sê-ri"
 
 #. module: mrp
 #. odoo-python

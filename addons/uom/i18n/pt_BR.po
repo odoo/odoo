@@ -5,7 +5,6 @@
 # Translators:
 # Wil Odoo, 2023
 # Layna Nascimento, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +27,9 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    ex.: 1 * (unidade de referência) = proporção * (esta unidade)\n"
+"                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -36,6 +38,9 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    ex.: 1 * (esta unidade) = proporção * (unidade de referência)\n"
+"                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -60,12 +65,12 @@ msgstr "Arquivado"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr "Maior Proporção"
+msgstr "Maior proporção"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Maior do que a unidade de medida da referência"
+msgstr "Maior do que a unidade de medida de referência"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -81,7 +86,7 @@ msgstr "Cor"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr ""
+msgstr "Proporção combinada"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -89,8 +94,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversão entre unidades de medida só pode ocorrer se eles pertencem à mesma"
-" categoria. A conversão será feita com base nas proporções."
+"A conversão entre unidades de medida só pode ocorrer se elas pertencerem à "
+"mesma categoria. A conversão será feita com base nas proporções."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -137,7 +142,7 @@ msgid ""
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 "Quantas vezes esta unidade de medida é maior do que a unidade de medida de "
-"referência nesta categoria: 1 * (esta unidade) = razão * (unidade de "
+"referência nesta categoria: 1 * (esta unidade) = proporção * (unidade de "
 "referência)"
 
 #. module: uom
@@ -146,9 +151,9 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
-"Quanto maior ou menor esta unidade é comparada à Unidade de Medida de "
-"referência para esta categoria: 1 * (unidade de referência) = razão * (esta "
-"unidade)"
+"O quão maior ou menor esta unidade é comparada à unidade de medida de "
+"referência para esta categoria: 1 * (unidade de referência) = proporção * "
+"(esta unidade)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -171,22 +176,22 @@ msgstr "Última atualização em"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
-msgstr "Comprimento / Distância"
+msgstr "Comprimento/distância"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Gerenciar Múltiplas Unidades de Medida"
+msgstr "Gerenciar várias unidades de medida"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Unidade de Medida do Produto"
+msgstr "Unidade de medida do produto"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Categorias de UdM do Produto"
+msgstr "Categorias de UDM de produto"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -197,17 +202,17 @@ msgstr "Proporção"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr "Unidade de Medida Referência para esta categoria"
+msgstr "Unidade de medida de referência para esta categoria"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr ""
+msgstr "UDM de referência"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
-msgstr "Precisão do arredondamento"
+msgstr "Precisão de arredondamento"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -217,12 +222,12 @@ msgstr "Buscar UDM"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr ""
+msgstr "Buscar categoria de UDM"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Menor do que a unidade de medida da referencia."
+msgstr "Menor do que a unidade de medida de referência"
 
 #. module: uom
 #. odoo-python
@@ -241,14 +246,14 @@ msgstr ""
 "Observe que os dados existentes NÃO serão atualizados por essa alteração.\n"
 "\n"
 "Como as unidades de medida afetam todo o sistema, isso pode causar problemas críticos.\n"
-"Por exemplo. modificar o arredondamento pode atrapalhar o saldo do seu estoque.\n"
+"Por exemplo, modificar o arredondamento pode afetar o saldo do seu inventário.\n"
 "\n"
-"Portanto, alterar as unidades de medida principais em um banco de dados em execução não é recomendado."
+"Portanto, alterar as unidades de medida principais em uma base de dados em execução não é recomendado."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "Superfície"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -256,13 +261,13 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"A quantidade calculada será um múltiplo desse valor. Utilizar 1,0 para uma "
+"A quantidade calculada será um múltiplo desse valor. Utilize 1,0 para uma "
 "unidade de medida que não pode ser dividida ainda mais, como uma peça."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "A taxa de conversão para uma unid. de medida não pode ser 0!"
+msgstr "A taxa de conversão para uma unidade de medida não pode ser 0."
 
 #. module: uom
 #. odoo-python
@@ -272,6 +277,8 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+"As seguintes unidades de medida são usadas pelo sistema e não podem ser excluídas: %s\n"
+"Em vez disso, você pode arquivá-las."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -281,7 +288,7 @@ msgstr "A unidade de referência deve ter um fator de conversão igual a 1."
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
 msgid "The rounding precision must be strictly positive."
-msgstr "A precisão do arredondamento deve ser estritamente positiva."
+msgstr "A precisão de arredondamento deve ser estritamente positiva."
 
 #. module: uom
 #. odoo-python
@@ -303,7 +310,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
-msgstr ""
+msgstr "O valor da proporção não pode ser zero"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -315,7 +322,8 @@ msgstr "Tipo"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Desmarque o campo ativo para desativar uma unidade de medida sem excluí-la."
+"Desmarque o campo 'ativo' para desativar uma unidade de medida sem excluí-"
+"la."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -325,12 +333,12 @@ msgstr "Unidade"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit of Measure"
-msgstr "Unidade de Medida"
+msgstr "Unidade de medida"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr "Categoria de Unidade de Medida"
+msgstr "Categoria de unidade de medida"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -343,18 +351,18 @@ msgstr "Unidades"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "Unidades de Medida"
+msgstr "Unidades de medida"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Categorias de Unidade de Medida"
+msgstr "Categorias de unidade de medida"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "Categorias de Unidades de Medida"
+msgstr "Categorias de unidades de medida"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -367,7 +375,7 @@ msgstr ""
 "As unidades de medida pertencentes à mesma categoria podem ser\n"
 "            convertidas entre si. Por exemplo, na categoria\n"
 "            <i>'Tempo'</i>, você terá as seguintes unidades de medida:\n"
-"            Horas, Dias."
+"            horas, dias."
 
 #. module: uom
 #. odoo-python
@@ -375,13 +383,15 @@ msgstr ""
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
+"A categoria de UDM %s deve ter pelo menos uma unidade de medida de "
+"referência."
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr ""
+msgstr "A categoria de UDM %s deve ter uma unidade de medida de referência."
 
 #. module: uom
 #. odoo-python
@@ -389,7 +399,7 @@ msgstr ""
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
-"A catégoria UdM %s deve ter apenas uma unidade de medida de referência."
+"A categoria de UDM %s deve ter apenas uma unidade de medida de referência."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
@@ -416,7 +426,7 @@ msgstr "Peso"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
-msgstr "Tempo de Trabalho"
+msgstr "Tempo de trabalho"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -424,8 +434,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Você deve definir uma taxa de conversão entre várias unidades de\n"
-"            Medida dentro de uma mesma categoria."
+"É necessário definir uma taxa de conversão entre várias unidades de\n"
+"            medida dentro de uma mesma categoria."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -445,7 +455,7 @@ msgstr "ft"
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
@@ -460,12 +470,12 @@ msgstr "gal (US)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "em"
+msgstr "pol"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr "in³"
+msgstr "pol³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -490,12 +500,12 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
 msgid "m²"
-msgstr ""
+msgstr "m²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
@@ -515,4 +525,4 @@ msgstr "qt (US)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "yd"

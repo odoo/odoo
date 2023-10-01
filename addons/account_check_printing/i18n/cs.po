@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
 msgid ": Check Number Sequence"
-msgstr ""
+msgstr ": Zkontrolujte sekvenci číslování"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -55,7 +55,7 @@ msgstr "Zrušit"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr "Zkontrolujte rozložení"
+msgstr "Vzhled šeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -166,7 +166,7 @@ msgstr "Zobrazovací název"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Přejít na panel konfigurace"
+msgstr "Přejít na konfigurační panel"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -245,7 +245,7 @@ msgstr "Další číslo šeku"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "Číslo další kontroly by mělo obsahovat pouze čísla."
+msgstr "Další číslo šeku by mělo obsahovat pouze čísla."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -278,7 +278,7 @@ msgid ""
 "and not have already been reconciled"
 msgstr ""
 "U plateb, které se mají tisknout jako šeky, musí být jako způsob platby "
-"vybrána možnost „Šek“ a již nebyly odsouhlaseny"
+"vybrána možnost „Šek“ a nesmí být již spárovány"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -304,9 +304,9 @@ msgid ""
 "cases: create bank files for batch wires, check runs."
 msgstr ""
 "Preferovaná platební metoda pro platbu tomuto prodejci. Slouží k filtrování "
-"přijatých faktur podle preferovaného způsobu platby k hromadné registraci "
-"plateb. Případy použití: vytvořte bankovní soubory pro hromadné platby, "
-"kontrolujte jejich zpracování."
+"přijatých faktur podle preferovaného způsobu platby k hromadnému vytyvoření "
+"plateb. Případy použití: Tvorba bankovních souborů pro hromadné platby, "
+"kontrola zpracování."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -366,7 +366,7 @@ msgstr "Odesláno"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Pořadové číslo dalšího vytištěného šeku."
+msgstr "Číslo sekvence dalšího vytištěného šeku."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
@@ -381,8 +381,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"Při kontrole rozložení se něco pokazilo, vyberte prosím jiné rozložení v "
-"nastavení fakturace / účtování a zkuste to znovu."
+"Něco se pokazilo s vzhledem šeku, vyberte jiný vzhled v nastavení aplikace "
+"Fakturace/Účetnictví a zkuste to znovu."
 
 #. module: account_check_printing
 #. odoo-python
@@ -403,8 +403,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"Číslo posledního šeku bylo %s.Abyste zabránili odmítnutí šeku bankou, můžete"
-" použít pouze vyšší číslo."
+"Číslo posledního šeku bylo %s. Abyste zabránili odmítnutí šeku bankou, měli "
+"byste použít vyšší číslo."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -424,8 +424,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
-"Tato volba umožňuje tisknout podrobnosti o kontrole (stub) na více "
-"stránkách, pokud se nevejdou na jednu stránku."
+"Tato možnost umožňuje tisknout detaily šeku (útržek) na více stránkách, "
+"pokud se nevejdou na jednu stránku."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -434,24 +434,24 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Tato možnost umožňuje vytisknout štítek s datem na šeku podle CPA.\n"
+"Tato možnost umožňuje vytisknout štítek s datem na šeku dle CPA.\n"
 "Toto deaktivujte, pokud předtištěný šek obsahuje štítek s datem."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr "To umožní ušetřit na platbách číslo příslušného šeku."
+msgstr "Toto umožní uložit na platbách číslo příslušeného šeku."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Zrušeno označení"
+msgstr "Odznačit jako odeslané"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr "Kontrola neplatnosti"
+msgstr "Zneplatnit šek"
 
 #. module: account_check_printing
 #. odoo-python
@@ -461,6 +461,5 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
-"Musíte zvolit rozložení kontroly. Chcete-li to provést, přejděte do "
-"Nastavení fakturace / účetnictví, vyhledejte 'Rozvrh kontroly' a nastavte "
-"jej."
+"Musíte vybrat vzhled šeku. Za tímto účelem jděte do nastavení aplikace "
+"Fakturace/Účetnictví a vyhledejte 'Vzhled šeků' zvolte nějakou možnost."

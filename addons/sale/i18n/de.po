@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -532,13 +532,13 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <span style=\"font-weight:bold;\">Zahlungsmethode:</span>\n"
-"                    <t t-if=\"transaction.token_id\">\n"
-"                        <t t-out=\"transaction.token_id.display_name or ''\"></t>\n"
+"                    <t t-if=\"tx_sudo.token_id\">\n"
+"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"></t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"transaction.provider_id.sudo().name or ''\"></t>\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"></t>\n"
 "                    </t>\n"
-"                    (<t t-out=\"format_amount(transaction.amount, object.currency_id) or ''\">10,00 €</t>)\n"
+"                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">10,00 €</t>)\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -4895,7 +4895,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "This will update all unit prices based on the currently set pricelist."
 msgstr ""
-"Dadurch werden alle Stückpreis basierend auf der aktuell eingestellten "
+"Dadurch werden alle Einzelpreise basierend auf der aktuell eingestellten "
 "Preisliste aktualisiert."
 
 #. module: sale
@@ -5029,12 +5029,12 @@ msgstr "UTM-Kampagne"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr "Stückpreis"
+msgstr "Einzelpreis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr "Stückpreis:"
+msgstr "Einzelpreis:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom

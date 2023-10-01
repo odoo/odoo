@@ -3,8 +3,8 @@
 # 	* payment_adyen
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,18 +26,20 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Cảnh báo:</strong> Để thu hồi số tiền theo cách thủ công, bạn cũng cần đặt\n"
+"                    Độ trễ thu hồi thành thủ công trên cài đặt tài khoản Adyen của mình."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
-msgstr ""
+msgstr "Một yêu cầu đã được gửi để hủy giao dịch có tham chiếu %s (%s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
 msgid "API Key"
-msgstr "Khóa API"
+msgstr "Mã khóa API"
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
@@ -51,23 +53,25 @@ msgstr "Adyen"
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
 msgstr ""
+"Đã xảy ra lỗi trong quá trình xử lý khoản thanh toán của bạn. Vui lòng thử "
+"lại."
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "An error occurred when displayed this payment form."
-msgstr ""
+msgstr "Đã xảy ra lỗi khi hiển thị biểu mẫu thanh toán này."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_checkout_api_url
 msgid "Checkout API URL"
-msgstr ""
+msgstr "URL API thanh toán"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "Mã khóa khách hàng"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
@@ -84,19 +88,19 @@ msgstr "Không thể thiết lập kết nối với API."
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "Mã khoá HMAC"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Có Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Incorrect Payment Details"
-msgstr ""
+msgstr "Thông thanh toán không chính xác"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
@@ -106,19 +110,19 @@ msgstr "Tìm hiểu thêm"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "Merchant Account"
-msgstr "Merchant Account"
+msgstr "Tài khoản người bán"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Công cụ thu hồi thanh toán"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
@@ -128,7 +132,7 @@ msgstr "Nhà cung cấp dịch vụ thanh toán"
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_token
 msgid "Payment Token"
-msgstr "Mã thanh toán"
+msgstr "Token thanh toán"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
@@ -140,47 +144,47 @@ msgstr "Giao dịch thanh toán"
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Please verify your payment details."
-msgstr ""
+msgstr "Vui lòng xác minh thông tin thanh toán của bạn."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
-msgstr ""
+msgstr "Dữ liệu đã nhận cho giao dịch con bị thiếu giá trị giao dịch"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Dữ liệu đã nhận với trạng thái thanh toán không hợp lệ: %s"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu mã người bán"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu trạng thái thanh toán."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Dữ liệu yêu cầu thanh toán giả mạo đã nhận."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_recurring_api_url
 msgid "Recurring API URL"
-msgstr ""
+msgstr "URL API định kỳ"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -195,17 +199,17 @@ msgstr "Lỗi máy chủ"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Mã người mua"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "Mã khóa API của người dùng dịch vụ web"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "Mã khoá HMAC của webhook"
 
 #. module: payment_adyen
 #. odoo-python
@@ -215,16 +219,18 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Số tiền được Adyen xử lý cho giao dịch %s khác với số tiền được yêu cầu. Một"
+" giao dịch khác được tạo với số tiền chính xác."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
 msgid "The base URL for the Checkout API endpoints"
-msgstr ""
+msgstr "URL cơ sở cho endpoint API thanh toán"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_recurring_api_url
 msgid "The base URL for the Recurring API endpoints"
-msgstr ""
+msgstr "URL cơ sở cho endpoint API định kỳ"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -232,6 +238,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Việc thu hồi hoặc vô hiệu giao dịch có thể mất vài phút để được\n"
+"                    xử lý qua Adyen và phản ánh trong Odoo."
 
 #. module: payment_adyen
 #. odoo-python
@@ -241,40 +249,42 @@ msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
 msgstr ""
+"Yêu cầu thu hồi %(amount)s cho giao dịch với mã %(ref)s đã được gửi đi "
+"(%(provider_name)s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "Mã khóa khách hàng của người dùng dịch vụ web"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Mã tài khoản người bán để sử dụng với nhà cung cấp này"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "Giao tiếp với API không thành công. Thông tin: %s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Giao dịch không được liên kết với token."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "Mã duy nhất của đối tác sở hữu token này"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -283,11 +293,11 @@ msgstr ""
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "Chúng tôi không thể xử lý thanh toán của bạn."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "Khoản thanh toán của bạn đã bị từ chối. Vui lòng thử lại."

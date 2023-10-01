@@ -6,6 +6,7 @@
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-19 08:03+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +129,7 @@ msgstr "결제 취소"
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr ""
+msgstr "POS 온라인 결제는 계정 결제 없이는 생성할 수 없습니다."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -137,14 +138,14 @@ msgstr ""
 msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
-msgstr ""
+msgstr "POS 온라인 결제는 온라인 결제 방법 및 온라인 계정 결제 없이는 생성할 수 없습니다."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot edit a POS online payment essential data."
-msgstr ""
+msgstr "POS 온라인 결제와 관련된 필수 데이터는 수정할 수 없습니다."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -152,7 +153,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Could not create an online payment method (company_id=%d, pos_config_id=%d)"
-msgstr ""
+msgstr "온라인 결제 방법을 생성할 수 없습니다 (company_id=%d, pos_config_id=%d)."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider

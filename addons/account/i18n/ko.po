@@ -38,7 +38,7 @@ msgstr ""
 "\n"
 "작업 (%s)에 따른 차대 잔액이 맞지 않습니다.\n"
 "대변 총액은 %s이며 차변 총액은 %s입니다.\n"
-"전표에서 기본값을 '%s' 계정으로 설정하면, 자동으로 잔액이 맞추어집니다."
+"'%s' 전표에서 기본 계정을 지정해 두면, 자동으로 잔액이 조정됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -250,7 +250,7 @@ msgstr ").<br/>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
-msgstr "- 고객 청구서나 공급업체 청구서 날짜의 기본값이 제안됩니다."
+msgstr "- 고객 청구서나 공급업체 청구서 날짜 기본값이 제안됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -308,7 +308,7 @@ msgstr "1.05"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "10 Days after End of Next Month"
-msgstr "다음 달 말일부터 10일 "
+msgstr "익월 말일부터 10일 "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -392,7 +392,7 @@ msgstr "익월 말 30% 선불"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "즉시 30%, 60일 후 잔금 지급"
+msgstr "30% 선금, 60일 내 잔금 지급"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3635,7 +3635,7 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
-"일부 국가에서는 해당 지역 법률에 따라 청구서 금액에 대해 원천징수를 적용합니다. 원천징수금액은 고객이 세무 당국에 납부합니다. 어떠한 "
+"일부 국가에서는 해당 지역 법률에 따라 청구서 금액에 대해 원천징수를 적용합니다. 원천세는 고객이 세무 당국에 납부합니다. 어떠한 "
 "상황에서도"
 
 #. module: account
@@ -3754,7 +3754,7 @@ msgstr "여기를 선택하시면 세금신고서 계산 시 해당 태그와 �
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr "품목 및 청구서 가격을 세금 포함가로 표시하려면 선택하세요."
+msgstr "품목 및 청구서 금액을 세금 포함가로 표시하려면 선택하세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -4191,7 +4191,7 @@ msgstr "국가 코드"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_group_id
 msgid "Country Group"
-msgstr "국가 그룹"
+msgstr "국가별 그룹"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__country
@@ -4270,7 +4270,7 @@ msgstr "은행 계좌 생성"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "대변전표 생성"
+msgstr "대변전표가 생성되었습니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4345,12 +4345,12 @@ msgstr "새로운 세금 그룹을 생성합니다."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
-msgstr "공급업체 청구서 생성"
+msgstr "거래처 청구서 생성"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "공급업체 대변전표 만들기"
+msgstr "거래처 대변전표 만들기"
 
 #. module: account
 #. odoo-python
@@ -4555,7 +4555,7 @@ msgstr "영업 문서만 전송할 수 있습니다."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "대변전표 생성"
+msgstr "대변전표가 생성되었습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
@@ -5532,7 +5532,7 @@ msgstr "환불 청구서 항목 구분"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Refunds"
-msgstr "환불용 항목 구분"
+msgstr "환불 항목 구분"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -5895,7 +5895,7 @@ msgstr "종료일"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_end_following_month
 msgid "End of Following Month"
-msgstr "다음 월 말"
+msgstr "익월 말일"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
@@ -6336,8 +6336,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr ""
-"재정 상태는 특정 고객이나 판매주문서/청구서에 대한 세금 및 계정을 조정하는 데 사용됩니다. 고객이 입력한 내용을 기본값으로 합니다."
+msgstr "재정 상태는 세금 및 계정을 특정 고객이나 판매주문서/청구서용으로 조정할 때 사용합니다. 기본값은 고객 정보에서 가져옵니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -6988,7 +6987,7 @@ msgstr "선택하면, 일부 메시지에 전달 오류가 발생할 수 있습�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "비워두면, 역분개할 전표를 사용합니다."
+msgstr "비워두면 역분개 대상 항목이 있는 전표를 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -7045,8 +7044,7 @@ msgid ""
 "If this checkbox is ticked, it means that the user was not sure of all the "
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
-msgstr ""
-"선택란에 표시가 되어 있으면, 최초 작업 당시에 관련 내용 전체를 확인하지 못했다는 뜻입니다. 이후에 작업을 할 때 재확인해야 합니다."
+msgstr "여기 표시가 있을 경우, 최초 작업 당시 확인되지 않은 내용이 있다는 뜻입니다. 작업 시 재확인하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -7238,7 +7236,7 @@ msgstr "분석 비용에 포함"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
 msgid "Included in Price"
-msgstr "가격에 포함"
+msgstr "포함 가격"
 
 #. module: account
 #. odoo-javascript
@@ -7630,7 +7628,7 @@ msgstr "청구서 및 대변전표 분배는 각각의 기준에 대해 정확�
 #, python-format
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "청구서 및 대변전표 분배는 항목 수가 동일해야 합니다."
+msgstr "청구서 및 대변전표에서 분배 항목 수는 동일해야 합니다."
 
 #. module: account
 #. odoo-python
@@ -7639,7 +7637,7 @@ msgstr "청구서 및 대변전표 분배는 항목 수가 동일해야 합니�
 msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
-msgstr "청구서 및 대변전표 분배는 일치해야 합니다 (동일한 비율 및 동일한 순서)."
+msgstr "청구서 및 대변전표에서 동일하게 항목을 분배해야 합니다 (비율 및 순서 동일)."
 
 #. module: account
 #. odoo-python
@@ -7665,7 +7663,7 @@ msgstr "청구서 결제 완료"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "청구서 승인 완료"
+msgstr "청구서 승인이 완료되었습니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_date
@@ -8411,7 +8409,7 @@ msgstr "최근 청구서 및 결제 확인 일자"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr "비워두면 청구서를 담당하는 영업사원이 배정됩니다."
+msgstr "청구서의 영업 담당자를 지정하려면 비워 두세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9945,7 +9943,7 @@ msgstr "PDF 파일"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PROFORMA"
-msgstr "견적송장"
+msgstr "견적 송장"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10355,7 +10353,7 @@ msgstr "지급 조건: 익월 말에 30% 선불"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "지급 조건: 즉시 30%, 60일 내 잔금 지급"
+msgstr "지급 조건: 30% 선금, 60일 내 잔금 지급"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
@@ -11314,28 +11312,28 @@ msgstr "역분개 작업"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
-msgstr "환입일"
+msgstr "역분개 기준일"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal date must be posterior to date."
-msgstr "환입 날짜는 해당일 이후여야 합니다."
+msgstr "역분개 날짜는 해당일 이후의 날짜여야 합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversed_entry_id
 msgid "Reversal of"
-msgstr "환입"
+msgstr "역분개 대상"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr "환입 내용: %(move_name)s, %(reason)s"
+msgstr "역분개 내용: %(move_name)s, %(reason)s"
 
 #. module: account
 #. odoo-python
@@ -11345,7 +11343,7 @@ msgstr "환입 내용: %(move_name)s, %(reason)s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal of: %s"
-msgstr "환입 : %s"
+msgstr "역분개 대상: %s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
@@ -11569,7 +11567,7 @@ msgstr "판매세"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Salesperson"
-msgstr "영업사원"
+msgstr "영업 담당자"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -12228,7 +12226,7 @@ msgstr "현재 전표 입력 항목 중, 허용되지 않은 계정이 있습니
 msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
-msgstr "해당 계정에 일부 전표가 있으나, 허용된 전표가 아닌 다른 전표를 사용하고 있습니다."
+msgstr "해당 계정에 일부 전표가 있으나, 허용되지 않은 전표를 사용하고 있습니다."
 
 #. module: account
 #. odoo-python
@@ -12244,7 +12242,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Sometimes called BIC or Swift."
-msgstr "BIC 또는 Swift라고도 합니다."
+msgstr "BIC 또는 Swift라는 명칭으로도 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__sortable
@@ -12297,7 +12295,7 @@ msgstr "올림 정확도에 맞게 청구서 금액을 올림하는 데 사용�
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr "회사 데이터 확인을 시작합니다."
+msgstr "회사 정보를 확인하는 것으로 시작합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -12405,12 +12403,12 @@ msgstr ""
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_setup_bill
 msgid "Step Completed!"
-msgstr "단계 설정 완료!"
+msgstr "설정 완료!"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Step completed!"
-msgstr "단계 설정 완료!"
+msgstr "설정 완료!"
 
 #. module: account
 #: model:account.account,name:account.1_stock_out
@@ -13068,7 +13066,7 @@ msgstr "'%s' 품목에 대해 선택한 측정 단위(UoM) '%s' 항목이 해당
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
-msgstr "%s (%s) 계정은 더 이상 사용되지 않습니다."
+msgstr "%s (%s) 계정은 사용하지 않는 계정입니다."
 
 #. module: account
 #. odoo-python
@@ -13183,7 +13181,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "The code of the account must be unique per company!"
-msgstr "계정 코드는 회사마다 고유해야 합니다!"
+msgstr "회사별로 고유한 계정 코드를 사용해야 합니다!"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -13375,7 +13373,7 @@ msgstr "다음은 파트너 매핑을 생성하는데 유효하지 않은 정규
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr "해당 외환 통화는 전표상의 통화와 동일하지 않아야 합니다: %s"
+msgstr "외환 통화는 반드시 전표와는 다른 통화여야만 합니다: %s"
 
 #. module: account
 #. odoo-python
@@ -13437,8 +13435,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
-"전표 %s 항목이 관련 명세서 내역과 관련하여 유효하지 않습니다.\n"
-"동일하게 일치시키기 위해서는, 전표 입력 시 은행/현금 계좌와 관련된 전표 항목은 반드시 하나만 있어야 합니다."
+"%s 전표가 해당 명세서 내역 대비 유효하지 않습니다.\n"
+"동일하게 하려면, 전표 입력 시 은행/현금 계좌 항목은 반드시 하나만 있어야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14134,7 +14132,7 @@ msgstr "이 항목은 %s 처리되었습니다."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been duplicated from %s"
-msgstr "이 항목은 %s에서 복사되었습니다."
+msgstr "%s에서 항목 복사"
 
 #. module: account
 #. odoo-python
@@ -14234,7 +14232,7 @@ msgstr "이 결제 항목은 다음에서 생성되었습니다"
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr "기본값 대신 이 지급 조건을 발주서 및 업체 청구서에 사용합니다."
+msgstr "발주서 및 공급업체 청구서에 기본값 대신 사용될 지급 조건을 설정합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -14242,7 +14240,7 @@ msgstr "기본값 대신 이 지급 조건을 발주서 및 업체 청구서에 
 msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
-msgstr "기본값 대신 이 지급 조건을 판매주문서 및 고객용 청구서에서 사용합니다."
+msgstr "판매주문서 및 고객용 청구서에 기본값 대신 사용될 지급 조건을 설정합니다."
 
 #. module: account
 #. odoo-python
@@ -14324,7 +14322,7 @@ msgstr "확인하기"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr "발행할 청구서"
+msgstr "청구서 발행 대기 중"
 
 #. module: account
 #. odoo-python
@@ -15057,7 +15055,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
 msgid "Variants"
-msgstr "세부선택"
+msgstr "선택 사양"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -15322,7 +15320,7 @@ msgstr "Odoo에서는 공급업체 청구서 작업을 수기로 할 필요가 �
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr "협력사 매칭으로"
+msgstr "협력사 매칭"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -15690,7 +15688,7 @@ msgstr "세금신고서에 영향을 미칠 수 있으므로 세금 내역은 �
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr "발행이 완료된 항목과 연결된 항목은 삭제할 수 없습니다."
+msgstr "발행이 완료된 경우에는 연결된 항목을 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python

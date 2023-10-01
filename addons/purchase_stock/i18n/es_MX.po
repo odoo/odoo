@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2023
 # Lucia Pacheco, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Lucia Pacheco, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgstr "<strong>Incoterm:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Dirección de envío</strong>"
+msgstr "<strong>Dirección de envío:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -83,7 +83,7 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"De acuerdo con la configuración del proyecto, la cantidad recibida se puede calcular automáticamente con el mecanismo:\n"
+"De acuerdo con la configuración del proyecto, la cantidad recibida se puede calcular en automático con el mecanismo:\n"
 "- Manual: la cantidad se establece de manera manual en la línea\n"
 "- Movimientos del inventario: la cantidad se establece según los productos que ha recibido\n"
 
@@ -239,7 +239,7 @@ msgstr "Fecha efectiva del último año"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Excepciones ocurridas en las órdenes de compra."
+msgstr "Excepciones ocurridas en las órdenes de compra:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -279,21 +279,21 @@ msgstr "Recibido totalmente"
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
-msgstr "Generar la factura de proveedor."
+msgstr "Genere el borrador de la factura de proveedor."
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr "Regrese a la orden de compra para generar la factura del proveedor"
+msgstr "Regrese a la orden de compra para generar la factura del proveedor."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Go on the product form and add the list of vendors"
-msgstr "Vaya al formulario de producto y añada la lista de proveedores"
+msgstr "Vaya al formulario de producto y agregue la lista de proveedores."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -313,7 +313,7 @@ msgstr "Envíos a recibir"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Ubicación del Incoterm"
+msgstr "Ubicación del incoterm"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -323,7 +323,7 @@ msgstr "Se envió"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr "Es el módulo de venta instalado"
+msgstr "¿El módulo Ventas está instalado?"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
@@ -348,7 +348,7 @@ msgstr "Logística"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Número de lote/serie"
+msgstr "Lote/serie"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -446,7 +446,7 @@ msgid ""
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Durante los últimos x días; el número de productos recibidos a tiempo divido"
-" entre el número de productos ordenados. x es el parámetro "
+" entre el número de products.x ordenados es el parámetro "
 "purchase_stock.on_time_delivery_days del sistema o 365."
 
 #. module: purchase_stock
@@ -658,7 +658,7 @@ msgstr "Mostrar la columna del proveedor"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de inventario"
+msgstr "Movimiento de existencias"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
@@ -721,8 +721,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"Las cantidades en su orden de compra son menos que las facturadas. Debería "
-"pedir un reembolso. "
+"Las cantidades en su orden de compra son menos que las facturadas. Solicite "
+"un reembolso. "
 
 #. module: purchase_stock
 #. odoo-python
@@ -734,9 +734,9 @@ msgid ""
 " Go on the product form and complete the list of vendors."
 msgstr ""
 "No existe un precio de proveedor coincidente para generar la orden de compra"
-" del producto %s (no se ha definido el proveedor, no se alcanzó la cantidad "
-"mínima, las fechas no son válidas, ...). Vaya al formulario del producto y "
-"complete la lista de proveedores."
+" del producto %s (no definió un proveedor, no se alcanzó la cantidad mínima,"
+" las fechas no son válidas, ...). Vaya al formulario del producto y complete"
+" la lista de proveedores."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -900,7 +900,7 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
-"No puede disminuir la cantidad pedida por debajo de la cantidad recibida.\n"
+"No puede disminuir la cantidad ordenada por debajo de la cantidad recibida.\n"
 "Cree una devolución primero."
 
 #. module: purchase_stock

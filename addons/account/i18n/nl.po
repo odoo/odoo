@@ -499,7 +499,7 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        ten belope van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
@@ -4336,7 +4336,7 @@ msgstr "Boeking aanmaken"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_create_invoice
 msgid "Create Invoice"
-msgstr "Maak factuur"
+msgstr "Factuur maken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4908,7 +4908,7 @@ msgstr "Klantbetalingen"
 #: model:ir.model.fields,help:account.field_account_move__access_url
 #: model:ir.model.fields,help:account.field_account_payment__access_url
 msgid "Customer Portal URL"
-msgstr "Klant portaal URL"
+msgstr "Klantenportaal URL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_customer_rank

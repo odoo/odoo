@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Online payment method"
-msgstr ""
+msgstr "วิธีการชำระเงินออนไลน์"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -43,14 +44,14 @@ msgstr "คำสั่ง"
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay"
-msgstr "จ่าย"
+msgstr "ชำระ"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "ชำระเงินที่แคชเชียร์"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -70,7 +71,7 @@ msgstr "คำสั่งขายหน้าร้าน"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Select a payment method"
-msgstr ""
+msgstr "เลือกวิธีการจ่ายเงิน"
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -80,20 +81,22 @@ msgid ""
 "The POS self-order mode with payment after each order requires an online "
 "payment method to be configured."
 msgstr ""
+"โหมดการสั่งซื้อด้วยตนเองของ POS ที่มีการชำระเงินหลังจากการสั่งซื้อแต่ละครั้ง"
+" จำเป็นต้องมีการกำหนดค่าวิธีการชำระเงินออนไลน์"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "ไม่สามารถชำระเงินคำสั่งซื้อปัจจุบันได้ (หรืออาจชำระเงินไปแล้ว)"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order is invalid."
-msgstr ""
+msgstr "คำสั่งซื้อปัจจุบันไม่ถูกต้อง"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -101,6 +104,7 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"วิธีการชำระเงินออนไลน์ที่ใช้เมื่อลูกค้าชำระค่าสั่งซื้อด้วยตนเองทางออนไลน์"
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -111,15 +115,18 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"วิธีการชำระเงินออนไลน์ที่ใช้สำหรับการสั่งซื้อด้วยตนเองในการกำหนดค่า POS "
+"ต้องมีผู้ให้บริการการชำระเงินที่เผยแพร่อย่างน้อยหนึ่งรายที่รองรับสกุลเงินของการกำหนดค่า"
+" POS นั้น"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The order could not be saved, therefore its payment is unavailable."
-msgstr ""
+msgstr "ไม่สามารถบันทึกคำสั่งซื้อได้ ดังนั้นจึงไม่สามารถชำระเงินได้"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "ใช้การชำระเงินออนไลน์สั่งซื้อด้วยตนเอง"

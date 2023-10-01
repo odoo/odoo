@@ -1436,7 +1436,7 @@ msgstr "Reversão de Movimento Contabilístico"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Envio de Movimento de Conta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -3307,6 +3307,15 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Não é possível gerar um código de conta não utilizada."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -5494,12 +5503,12 @@ msgstr "Transferir"
 #: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
 #, python-format
 msgid "Download XSD files (XML validation)"
-msgstr ""
+msgstr "Transferir ficheiros XSD (validação XML)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_download
 msgid "Download by default"
-msgstr ""
+msgstr "Transferir por predefinição"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__advance_tax_payment_account_id
@@ -5764,7 +5773,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_download
 msgid "Enable Download"
-msgstr ""
+msgstr "Ativar Transferência"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_send_mail
@@ -7348,7 +7357,7 @@ msgstr "Interestadual"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Invalid"
-msgstr ""
+msgstr "Inválido"
 
 #. module: account
 #. odoo-python
@@ -11029,6 +11038,13 @@ msgid "Reload"
 msgstr "Recarregar"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
+" This action is irreversible."
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr ""
@@ -14480,7 +14496,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo de atividade de exceção registada."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -16021,7 +16037,7 @@ msgstr "p.ex.: Taxas Bancárias"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "e.g. Cash"
-msgstr ""
+msgstr "ex.: Dinheiro"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form

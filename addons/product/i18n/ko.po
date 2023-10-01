@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,10 +163,10 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
-"                                        할증 가격\n"
+"                                        추가 금액\n"
 "                                    </span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
-"                                        할증 가격\n"
+"                                        추가 금액\n"
 "                                    </span>"
 
 #. module: product
@@ -374,7 +374,7 @@ msgid ""
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
 "고객 카테고리별 규칙에 따라 다양한 가격을 관리 할 수 있습니다.\n"
-"                 예 : 소매 업체의 경우 10 %, 이 품목의 경우 5EUR 프로모션 등."
+"                 예: 소매 업체의 경우 10 %, 이 품목의 경우 5EUR 프로모션 등."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -538,7 +538,7 @@ msgstr "검정색"
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr "문이 있는 캐비닛"
+msgstr "문이 달려있는 캐비넷"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
@@ -942,12 +942,12 @@ msgstr "할인"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr "할인 정책"
+msgstr "할인 표시"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
 msgid "Discount included in the price"
-msgstr "가격내 할인 포함"
+msgstr "할인 포함 가격"
 
 #. module: product
 #: model:res.groups,name:product.group_discount_per_so_line
@@ -1011,7 +1011,7 @@ msgstr "두 가지 라우팅 가능성이 있는 서랍."
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
 msgid "Duration"
-msgstr "소요시간"
+msgstr "기간"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
@@ -1123,7 +1123,7 @@ msgstr "팔로워 (협력사)"
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "멋진 아이콘 폰트 예 : fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -1642,7 +1642,7 @@ msgstr "인쇄할 품목이 없습니다. 품목이 보관 처리된 경우, 라
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr "공급업체 가격표를 찾을 수 없습니다!"
+msgstr "공급업체 가격표를 찾을 수 없습니다."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
@@ -1753,7 +1753,7 @@ msgstr "포장중"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr "상위 분류"
+msgstr "상위 카테고리"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
@@ -2165,7 +2165,7 @@ msgstr "품목 세부선택 값"
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
-msgstr "품목 세부내용"
+msgstr "품목 세부사항"
 
 #. module: product
 #. odoo-python
@@ -2415,7 +2415,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
 msgid "Show public price & discount to the customer"
-msgstr "고객에게 공개 가격 및 할인 표시"
+msgstr "고객에게 정가 및 할인 금액 표시"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -2934,7 +2934,7 @@ msgstr "세부선택항목 판매자"
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
-msgstr "세부선택항목 값"
+msgstr "세부사항항목 값"
 
 #. module: product
 #. odoo-python
@@ -3327,12 +3327,12 @@ msgstr "예: 전등"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr "예 : Odoo 유료버전 구독"
+msgstr "예: Odoo 유료버전 구독"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr "예 : USD 소매점"
+msgstr "예: 미화 기준 소매점용"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view

@@ -23,7 +23,7 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">Analytic Account</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">บัญชีวิเคราะห์</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
@@ -33,7 +33,7 @@ msgstr "<span class=\"o_stat_text\">การประเมินมูลค�
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span style=\"margin-right: 15px;\">Total</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">ทั้งหมด</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -58,7 +58,7 @@ msgstr "<span>จำนวน</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span>Ref.</span>"
-msgstr ""
+msgstr "<span>อ้างอิง</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -96,12 +96,12 @@ msgstr "การค้นหาการกระจายการวิเค
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_distribution_text
 msgid "Analytic Distribution Text"
-msgstr ""
+msgstr "ข้อความการกระจายการวิเคราะห์"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "ไลน์การวิเคราะห์"
+msgstr "รายการการวิเคราะห์"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_applicability
@@ -136,7 +136,7 @@ msgstr "จำนวน BoM"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 msgid "Bom"
-msgstr ""
+msgstr "Bom"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -160,13 +160,13 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"คำนวณราคาของสินค้าโดยใช้ผลิตภัณฑ์และการปฏิบัติของบิลวัสดุที่เกี่ยวข้อง "
-"สำหรับผลิตภัณฑ์ที่ผลิตเท่านั้น"
+"คำนวณราคาของสินค้าโดยใช้สินค้าและการปฏิบัติของบิลวัสดุที่เกี่ยวข้อง "
+"สำหรับสินค้าที่ผลิตเท่านั้น"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
 msgid "Costs Hour Account"
-msgstr ""
+msgstr "บัญชีต้นทุนชั่วโมง"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
@@ -176,7 +176,7 @@ msgstr "โดเมน"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
-msgstr ""
+msgstr "ต้นทุนต่อหน่วยพิเศษ"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
@@ -205,7 +205,7 @@ msgstr "จำนวนใบสั่งผลิต"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
 msgid "Mo Analytic Account Line"
-msgstr "ไลน์บัญชีวิเคราะห์ Mo"
+msgstr "รายการบัญชีวิเคราะห์ Mo"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -230,7 +230,7 @@ msgstr "การผลิต"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid "Production Account"
-msgstr ""
+msgstr "บัญชีการผลิต"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -245,12 +245,12 @@ msgstr "แสดงการประเมินมูลค่า"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "ย้ายสต๊อก"
+msgstr "ย้ายสต็อก"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_rule
 msgid "Stock Rule"
-msgstr "กฎสต๊อก"
+msgstr "กฎสต็อก"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -258,21 +258,23 @@ msgid ""
 "This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
 "                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
 msgstr ""
+"บัญชีนี้จะถูกใช้คู่กันในการประเมินมูลค่าสำหรับทั้งส่วนประกอบและสินค้าขั้นสุดท้ายสำหรับใบสั่งผลิต\n"
+"             หากมีค่าใช้จ่ายศูนย์งาน/พนักงาน ค่านี้จะยังคงอยู่ในบัญชีเมื่อการผลิตเสร็จสมบูรณ์"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "WIP Report for"
-msgstr ""
+msgstr "รายงาน WIP สำหรับ"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
 msgid "WIP report"
-msgstr ""
+msgstr "รายงาน WIP"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
 msgid "Wc Analytic Account Line"
-msgstr "ไลน์บัญชีวิเคราห์ Wc"
+msgstr "รายการบัญชีวิเคราห์ Wc"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

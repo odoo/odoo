@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -34,7 +35,7 @@ msgid ""
 msgstr ""
 " * Concept: de productieorder is nog niet bevestigd.\n"
 "* Bevestigd: de productieorder is bevestigd, de voorraadregels en de bestelling van de onderdelen worden getriggerd.\n"
-"* In uitvoering: De productie is gestart (op de productieorder of op de werkorder).\n"
+"* In behandeling: De productie is gestart (op de productieorder of op de werkorder).\n"
 "* Te sluiten: de productie is klaar, de productieorder moet worden gesloten.\n"
 "* Klaar: de productieorder is gesloten, de voorraadbewegingen zijn geboekt.\n"
 "* Geannuleerd: de productieorder is geannuleerd, kan niet meer worden bevestigd."
@@ -1965,12 +1966,12 @@ msgstr "Bewerken"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_type
 msgid "Effectiveness"
-msgstr "Doeltreffendheid"
+msgstr "Effectiviteit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_type
 msgid "Effectiveness Category"
-msgstr "Doeltreffendheidscategorie"
+msgstr "Effectiviteitscategorie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_finished
@@ -2131,7 +2132,7 @@ msgstr "Locatie eindproducten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 msgid "Flexible Consumption"
-msgstr "Soepele consumptie"
+msgstr "Flexibel verbruik"
 
 #. module: mrp
 #. odoo-javascript
@@ -3329,7 +3330,7 @@ msgstr "Geen werkorders te doen!"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
-"Er zijn geen werkorders in uitvoering. Klik om de werkplek om ze als "
+"Er zijn geen werkorders in behandeling. Klik om de werkplek om ze als "
 "geblokkeerd te markeren."
 
 #. module: mrp
@@ -5805,7 +5806,7 @@ msgstr "Upload je PDF bestand."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
 msgid "Urgent"
-msgstr "Urgent"
+msgstr "Dringend"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__url
@@ -6242,7 +6243,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr "Werkorders in uitvoering. Klik om een werkplek te blokkeren."
+msgstr "Werkorders in behandeling. Klik om een werkplek te blokkeren."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workcenter_id

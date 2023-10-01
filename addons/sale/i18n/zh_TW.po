@@ -24,22 +24,22 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "獲取的資料"
+msgstr "已讀取數據"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# 銷售訂單"
+msgstr "銷售訂單數目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr "# 明細"
+msgstr "資料行數目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# 銷售訂單"
+msgstr "銷售訂單數目"
 
 #. module: sale
 #. odoo-python
@@ -84,7 +84,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023 年 12 月 31 日"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -165,6 +165,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        你好！\n"
+"        <br><br>\n"
+"        一筆付款（參考：\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+"        ，金額為\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        ，你的相關訂單為\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>）\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
+"            正等待處理。\n"
+"            <br>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 1 and object.state in ('draft', 'sent')\">\n"
+"                付款確認後，你的訂單會即時確認。\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                確認後，仍有\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                款項待繳。\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            已獲確認。\n"
+"            <br>\n"
+"            訂單仍有 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
+"            款項待繳。\n"
+"        </t>\n"
+"        <br><br>\n"
+"        感謝你的信任！\n"
+"        <br>\n"
+"        如有任何疑問，歡迎聯絡我們。\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -571,6 +612,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        你好！\n"
+"        <br><br>\n"
+"        你\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            為 <t t-out=\"doc_name or ''\">報價單</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span> 所開立的形式發票\n"
+"            <t t-if=\"object.origin\">\n"
+"                （參考： <t t-out=\"object.origin or ''\"></t> ，\n"
+"            </t>\n"
+"            金額為 <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>）現可供查閱。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            的<t t-out=\"doc_name or ''\">報價單</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                （參考： <t t-out=\"object.origin or ''\">S00052</t>，\n"
+"            </t>\n"
+"            金額為 <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>）現已準備好，可供審閱。\n"
+"        </t>\n"
+"        <br><br>\n"
+"        如有任何疑問，歡迎隨時聯絡我們。\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -594,6 +665,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        親愛的 <t t-out=\"object.partner_id.name or ''\">用戶</t>：\n"
+"        <br><br>\n"
+"        請注意，你的\n"
+"        <t t-out=\"doc_name or ''\">報價單</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            （參考： <t t-out=\"object.origin or ''\">S00052</t>）\n"
+"        </t>\n"
+"        已被取消。因此，你應該不會再就此訂單被進一步收費。\n"
+"        若需要任何退款，我們將在最方便的情況下執行。\n"
+"        <br><br>\n"
+"        如有任何疑問，歡迎隨時聯絡我們。\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -643,7 +732,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> 逾期"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"報價單\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -663,6 +752,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    已鎖定"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -686,6 +777,12 @@ msgid ""
 "                whether it's a storable product, a consumable or a service.\n"
 "            </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                建立一項新產品\n"
+"            </p><p>\n"
+"                你必須為銷售或購買的所有東西定義「產品」，\n"
+"                無論它是可儲存產品、消耗品，或服務。\n"
+"            </p>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -705,6 +802,10 @@ msgid ""
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', 'percentage')]}\" class=\"oe_inline\">% </span>\n"
+"                        <span attrs=\"{'invisible': [('display_invoice_amount_warning', '=', False)]}\" class=\"oe_inline text-danger\" title=\"首期付款金額大於剩餘待開立發票金額。\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -713,7 +814,7 @@ msgid ""
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
 "<span class=\"d-none d-md-inline\">銷售訂單 #</span>\n"
-"                       <span class=\"d-block d-md-none\">參照</span>"
+"                       <span class=\"d-block d-md-none\">參考</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -795,7 +896,7 @@ msgstr "<span>稅</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.payment_link_wizard_view_form
 msgid "<span>This payment will confirm the quotation.</span>"
-msgstr ""
+msgstr "<span>此付款將確認報價。</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -837,7 +938,7 @@ msgstr "<strong>到期日期:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong><br/>"
-msgstr ""
+msgstr "<strong>過期：</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -866,7 +967,7 @@ msgstr "<strong>報價日期:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr ""
+msgstr "<strong>銷售人員：</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -881,12 +982,12 @@ msgstr "<strong>簽名</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr ""
+msgstr "<strong>未連稅： </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax incl.: </strong>"
-msgstr ""
+msgstr "<strong>連稅： </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -906,7 +1007,7 @@ msgstr "<strong>報價已取消.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>你的參考：</strong><br/>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1084,13 +1185,13 @@ msgstr "允許您發送形式發票應收憑單."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "已付款"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "已開立發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -1176,12 +1277,12 @@ msgstr "對銷售訂單明細應用手動折扣或顯示從價格表計算的折
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the"
-msgstr ""
+msgstr "確定要取消"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected quotation?"
-msgstr ""
+msgstr "確定要取消所選報價？"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1315,13 +1416,13 @@ msgstr "取消 %s"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "取消多張報價單"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "取消報價單"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1337,7 +1438,7 @@ msgstr "獲取交易"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "目錄"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1352,7 +1453,7 @@ msgid ""
 "Changing the company of an existing quotation might need some manual "
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
-msgstr ""
+msgstr "要更改現有報價單的公司，可能需要對資料行詳情做一些手動調整。你可以考慮更新價格。"
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -1508,18 +1609,18 @@ msgstr "建立日期"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft Invoice"
-msgstr ""
+msgstr "建立草稿發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Create Invoice"
-msgstr "建立應收憑單"
+msgstr "建立發票"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
-msgstr ""
+msgstr "建立發票"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1544,7 +1645,7 @@ msgstr "建立一個報價是新銷售的第一步!"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoices"
-msgstr "建立應收憑單"
+msgstr "建立發票"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1614,7 +1715,7 @@ msgstr "自訂"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr "客製數值"
+msgstr "自訂值"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
@@ -1711,12 +1812,12 @@ msgstr "日期:"
 msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
-msgstr ""
+msgstr "報價由建議日期至到期日之間的天數。0 天表示停用自動到期"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "減去預付訂金"
+msgstr "減去首期付款"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
@@ -1728,19 +1829,19 @@ msgstr "預設報價有效期"
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for down payments"
-msgstr ""
+msgstr "用於首期付款的預設產品"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default values"
-msgstr ""
+msgstr "預設值"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Default values used when creating new quotations. Those can still be changed"
 " on each quotation."
-msgstr ""
+msgstr "建立新報價時使用的預設值。這些值在每張報價單上仍可修改。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1850,12 +1951,12 @@ msgstr "優惠券,禮品卡和忠誠度"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "顯示草稿發票警告"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
 msgid "Display Invoice Amount Warning"
-msgstr ""
+msgstr "顯示發票金額警告"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -1878,7 +1979,7 @@ msgstr "顯示類型"
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines?"
-msgstr ""
+msgstr "要將此值套用至所有資料行嗎？"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1895,29 +1996,29 @@ msgstr "篩選範圍"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
-msgstr "預付訂金"
+msgstr "首期付款"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "預付訂金總額"
+msgstr "首期付款金額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr "預付款金額 (固定)"
+msgstr "首期付款金額（固定）"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "預付訂金產品"
+msgstr "首期付款產品"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "首期付款：%(date)s（草稿）"
 
 #. module: sale
 #. odoo-python
@@ -1926,38 +2027,38 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #, python-format
 msgid "Down Payments"
-msgstr "預付訂金"
+msgstr "首期付款"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr "預付訂金"
+msgstr "首期付款"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "預付訂金(固定金額)"
+msgstr "首期付款（固定金額）"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr "預付訂金(百分比)"
+msgstr "首期付款（百分比）"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "%s%%預付訂金"
+msgstr "%s%% 首期付款"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
-msgstr "從銷售訂單建立應收憑單時，將進行預付訂金. 複製銷售訂單時不會複製它們."
+msgstr "從銷售訂單建立發票時，會進行首期付款。複製銷售訂單不會複製它們。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2002,7 +2103,7 @@ msgstr "電郵"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "信件撰寫引導"
+msgstr "撰寫電郵精靈"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
@@ -2161,12 +2262,12 @@ msgstr "分組依據"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "有生效價目表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "有已確認訂單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2252,12 +2353,12 @@ msgstr "匯入Amazon訂單並同步交貨"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "匯入模板-產品"
+msgstr "產品匯入範本"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
 msgid "In the Order"
-msgstr ""
+msgstr "在訂單內"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2298,17 +2399,17 @@ msgstr "發票地址"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr "應收憑單警示"
+msgstr "發票警示"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr "應收憑單已確認"
+msgstr "發票已確認"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr "憑單數"
+msgstr "發票數目"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -2318,7 +2419,7 @@ msgstr "建立發票"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr "憑單信件範本"
+msgstr "發票電郵範本"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2328,7 +2429,7 @@ msgstr "發票資料行"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "銷售訂單開立應收憑單"
+msgstr "為銷售訂單開立發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
@@ -2358,29 +2459,29 @@ msgstr "依已出貨數量"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "依銷售訂單開立應收憑單"
+msgstr "為已訂購項目開立發票"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
-msgstr "已開立應收憑單"
+msgstr "已開立發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 msgid "Invoiced Quantity"
-msgstr "已開立應收憑單數"
+msgstr "已開立發票數目"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr "已開立應收憑單數: %s"
+msgstr "已開立發票數目: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
 msgid "Invoiced This Month"
-msgstr "本月已開應收憑單"
+msgstr "本月已開立發票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -2388,24 +2489,24 @@ msgstr "本月已開應收憑單"
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "應收憑單分析"
+msgstr "發票分析"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "應收憑單統計"
+msgstr "發票統計"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "會計"
+msgstr "發票"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2418,12 +2519,12 @@ msgstr "開立發票地址:"
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "開立應收憑單策略"
+msgstr "發票政策"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr "應收憑單目標"
+msgstr "發票目標"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2434,7 +2535,7 @@ msgstr "開立發票和送貨地址："
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "是預付款"
+msgstr "是首期付款"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2561,7 +2662,7 @@ msgstr "已鎖定"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "已鎖定訂單不可修改。"
 
 #. module: sale
 #. odoo-javascript
@@ -2573,7 +2674,7 @@ msgstr "看來不錯, 讓我們繼續."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__template_id
 msgid "Mail Template"
-msgstr "信件範本"
+msgstr "郵件範本"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2610,7 +2711,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
 msgid "Margins"
-msgstr "邊界"
+msgstr "毛利"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
@@ -2652,7 +2753,7 @@ msgstr "銷售訂單訊息"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr "銷售訂單明細訊息"
+msgstr "銷售訂單資料行訊息"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
@@ -2677,7 +2778,7 @@ msgstr "銷售訂單項目缺少必要欄位."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2748,7 +2849,7 @@ msgstr "沒消息"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "對此付款沒有進一步要求"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2835,12 +2936,12 @@ msgstr "新手簡介"
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Onboarding Order Confirmation"
-msgstr ""
+msgstr "新手簡介訂單確認"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sample_quotation
 msgid "Onboarding Sample Quotation"
-msgstr ""
+msgstr "新手簡介報價範例"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding_step
@@ -2870,24 +2971,24 @@ msgstr "一旦報價確認，報價單即變為銷售訂單.<br>您可以建立�
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online Payment"
-msgstr "線上支付"
+msgstr "網上付款"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr "線上簽名"
+msgstr "網上簽名"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Online confirmation"
-msgstr "線上確認"
+msgstr "網上確認"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "只考慮已確認的首期付款。"
 
 #. module: sale
 #. odoo-python
@@ -3047,7 +3148,7 @@ msgstr "訂單應收憑單"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "超售訂單"
+msgstr "追加銷售訂單"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3067,7 +3168,7 @@ msgstr "PDT 標識 Token"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "形式發票應收憑單"
+msgstr "形式發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3201,7 +3302,7 @@ msgstr "形式發票應收憑單"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr "形式發票應收憑單 #"
+msgstr "形式發票 #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -3239,7 +3340,7 @@ msgstr "產品目錄"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "產品目錄產品在銷售訂單中"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
@@ -3257,7 +3358,7 @@ msgstr "產品包裝"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
 msgid "Product Template"
-msgstr "產品模板"
+msgstr "產品範本"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
@@ -3293,7 +3394,7 @@ msgstr "產品價格已根據價格表 %s 重新計算."
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "產品價格已重新計算。"
 
 #. module: sale
 #. odoo-python
@@ -3333,7 +3434,7 @@ msgstr "已送貨數量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "已開立應收憑單數量"
+msgstr "已開立發票數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
@@ -3348,12 +3449,12 @@ msgstr "要交付的數量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "待開立應收憑單數量"
+msgstr "待開立發票數量"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "從銷售訂單到應收憑單的數量"
+msgstr "需從銷售訂單開立發票的數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
@@ -3426,7 +3527,7 @@ msgstr "報價單送出"
 #: code:addons/sale/wizard/res_config_settings.py:0
 #, python-format
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
+msgstr "報價有效性為必填，並須大於或等於 0。"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3467,7 +3568,7 @@ msgstr "報價單"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "報價單及訂單"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3482,24 +3583,24 @@ msgstr "報價單及銷售"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "重新開立應收憑單費用"
+msgstr "為開支重新開立發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr "重新開立應收憑單策略可見"
+msgstr "顯示重新開立發票政策"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
 msgid "Recipients"
-msgstr "接收者"
+msgstr "收件者"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3614,7 +3715,7 @@ msgstr "簡訊發送錯誤"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3630,7 +3731,7 @@ msgstr "銷售訂單"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "銷售訂單個數"
+msgstr "銷售訂單數目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3645,17 +3746,17 @@ msgstr "銷售訂單"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "銷售訂單數目"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr "銷售支付提供商獲取引導"
+msgstr "銷售付款服務商新手簡介精靈"
 
 #. module: sale
 #: model:onboarding.onboarding,name:sale.onboarding_onboarding_sale_quotation
 msgid "Sale Quotation Onboarding"
-msgstr ""
+msgstr "銷售報價新手簡介"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3670,7 +3771,7 @@ msgstr "請選擇付款方式"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "要取消的銷售訂單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3844,7 +3945,7 @@ msgstr "銷售: 訂單確認"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "銷售：付款完成"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -3856,7 +3957,7 @@ msgstr "銷售: 發送報價單"
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "銷售：不含稅總價"
+msgstr "銷售：不連稅總價"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -3866,26 +3967,26 @@ msgstr "銷售：不含稅總價"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "銷售員"
+msgstr "銷售人員"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Sample Order Line"
-msgstr "樣品訂單明細"
+msgstr "訂單資料行範例"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Sample Product"
-msgstr "樣品"
+msgstr "產品範例"
 
 #. module: sale
 #: model:onboarding.onboarding.step,title:sale.onboarding_onboarding_step_sample_quotation
 msgid "Sample Quotation"
-msgstr "樣品報價單"
+msgstr "報價單範例"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3896,17 +3997,17 @@ msgstr "搜尋銷售訂單"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
 msgid "Section"
-msgstr "章節"
+msgstr "分節"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "小節名稱(如:產品，服務)"
+msgstr "分節名稱(如:產品，服務)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
 msgid "Security Token"
-msgstr "安全金鑰"
+msgstr "保安密鑰"
 
 #. module: sale
 #. odoo-javascript
@@ -3983,6 +4084,7 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"如果你需要分享有關產品的特定資訊或內容（使用說明、規則、連結、多媒體等），以電郵發送會很有用。你可從產品詳細資料表單（在「會計」分頁內）建立並設定電子郵件範本。"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -3999,7 +4101,7 @@ msgstr "訂單確認後發送給客戶"
 msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
-msgstr ""
+msgstr "收到付款但訂單未獲立即確認時，發送給客戶"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4046,7 +4148,7 @@ msgstr "送貨"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__show_confirmation_message
 msgid "Show Confirmation Message"
-msgstr ""
+msgstr "顯示確認訊息"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4116,6 +4218,8 @@ msgid ""
 "Some confirmed sale orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"已選取一些已確認的銷售訂單。它們的相關文件可能會\n"
+"                        受此取消操作影響。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4332,7 +4436,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
-msgstr ""
+msgstr "連結至分析帳戶 %(account)s 的銷售訂單 %(order)s 已被取消。不可在已取消的銷售訂單登記費用開支。"
 
 #. module: sale
 #. odoo-python
@@ -4343,6 +4447,8 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"連結至分析帳戶 %(account)s 的銷售訂單 %(order)s "
+"目前已被鎖定。不可在鎖定的銷售訂單登記費用開支。請建立一份新的、連結至此分析帳戶的銷售訂單。"
 
 #. module: sale
 #. odoo-python
@@ -4351,7 +4457,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
-msgstr ""
+msgstr "登記費用開支之前，必須先驗證連結至分析帳戶 %(account)s 的銷售訂單 %(order)s。"
 
 #. module: sale
 #. odoo-python
@@ -4363,7 +4469,7 @@ msgstr "存取代碼(token)無效。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
-msgstr ""
+msgstr "需開立發票金額 = 銷售訂單總額 減 已確認的首期付款。"
 
 #. module: sale
 #. odoo-python
@@ -4377,14 +4483,14 @@ msgstr "交貨日期早於預期日期。 您可能無法兌現交貨日期."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "提前開立發票的固定金額。"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "The following orders are not in a state requiring confirmation: %s"
-msgstr ""
+msgstr "以下訂單並非處於需要確認的狀態：%s"
 
 #. module: sale
 #. odoo-python
@@ -4420,12 +4526,12 @@ msgstr "利潤率計算為產品銷售價格減去其詳細表格中的成本集
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
-msgstr ""
+msgstr "新發票將扣除連結至此銷售訂單的草稿發票。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "訂單並非處於需要客戶付款的狀態。"
 
 #. module: sale
 #. odoo-python
@@ -4449,12 +4555,12 @@ msgstr "此銷售訂單的付款溝通."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "付款也應該用愛傳遞"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "提前開立發票金額的百分比。"
 
 #. module: sale
 #. odoo-python
@@ -4504,7 +4610,7 @@ msgstr "目前，您的帳戶沒有報價."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "有現有的"
 
 #. module: sale
 #. odoo-python
@@ -4721,12 +4827,12 @@ msgstr "記錄的異常活動的類型。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "開始輸入以搜尋客戶⋯"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "開始輸入以搜尋產品⋯"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -4767,7 +4873,7 @@ msgstr "量度單位"
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "單價："
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4862,7 +4968,7 @@ msgstr "驗證訂單"
 msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
-msgstr ""
+msgstr "經過驗證的費用開支及供應商賬單，可按成本或銷售價格重新向客戶開立發票。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4921,7 +5027,7 @@ msgstr "%s 的警告"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "報價單公司變更警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -4998,14 +5104,14 @@ msgstr "您可以在此處設定將在銷售訂單上顯示的通信類型.當�
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "不可在目錄中編輯此產品。"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "已鎖定訂單不可取消。請先解鎖它。"
 
 #. module: sale
 #. odoo-python
@@ -5031,7 +5137,7 @@ msgstr "您不能更改銷售訂單明細的類型. 相反，您應該刪除目�
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
-msgstr ""
+msgstr "預設報價有效性不可設為負數。留空（或填寫 0）以停用報價自動過期。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5045,7 +5151,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "您的回饋..."
+msgstr "你的回應⋯"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5102,7 +5208,7 @@ msgstr "天"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "對此銷售訂單"
 
 #. module: sale
 #. odoo-python
@@ -5117,6 +5223,8 @@ msgid ""
 "selected\n"
 "                    quotations?"
 msgstr ""
+"已選取\n"
+"                    報價單？"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5132,8 +5240,7 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (參照 {{ object.name or 'n/a' "
-"}})"
+"== 'pending') and '待處理訂單' or '訂單' }} （參考： {{ object.name or '不適用' }}）"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5143,8 +5250,8 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (參照 {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and '形式訂單' or '報價單') or '訂單' }} （參考： {{ object.name or "
+"'不適用' }}）"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5152,5 +5259,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} 已取消 (參照 {{ object.name "
-"or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.type_name }} 已取消 （參考： {{ object.name "
+"or 'n/a' }}）"

@@ -25,14 +25,14 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s ở nhiều dòng"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%s tập dữ liệu đã được nhập thành công"
 
 #. module: base_import
 #. odoo-javascript
@@ -42,6 +42,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"Chỉ có một cột được tìm thấy trong tệp. Điều này thường đồng nghĩa với việc "
+"dấu phân tách tệp không chính xác."
 
 #. module: base_import
 #. odoo-javascript
@@ -127,7 +129,7 @@ msgstr "Hủy"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
-msgstr ""
+msgstr "Bấm vào 'Tiếp tục' để tiếp tục nhập, tiếp tục tại dòng %s."
 
 #. module: base_import
 #. odoo-python
@@ -223,7 +225,7 @@ msgstr "Định dạng Ngày giờ"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Dấu thập phân"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -266,7 +268,20 @@ msgstr "Lỗi xử lý Ngày [%s:L%d]: %s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
+msgstr "Lỗi tại dòng %s: \"%s\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
 msgstr ""
+"Lỗi khi nhập tập dữ liệu: tất cả các dòng phải có cùng kích thước, nhưng "
+"dòng tiêu đề có mục %d trong khi dòng đầu tiên có %d. Bạn có thể cần phải "
+"thay đổi ký tự phân cách."
 
 #. module: base_import
 #. odoo-javascript
@@ -452,7 +467,7 @@ msgstr "Tệp nhập không có nội dung hoặc bị hỏng"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Xem trước nội dung nhập không thành công do: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -559,7 +574,7 @@ msgstr "No Separator"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Không tìm thấy tập dữ liệu trùng khớp cho tên sau"
 
 #. module: base_import
 #. odoo-javascript
@@ -587,7 +602,7 @@ msgstr "Xem trước"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Reimport"
-msgstr ""
+msgstr "Nhập lại"
 
 #. module: base_import
 #. odoo-javascript
@@ -648,7 +663,7 @@ msgstr "Phân cách:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Đặt là: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -783,7 +798,7 @@ msgstr "Phân cách phần nghìn:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "Để nhập nhiều giá trị, hãy phân cách chúng bằng dấu phẩy"
 
 #. module: base_import
 #. odoo-javascript
@@ -848,6 +863,9 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Sử dụng HH cho giờ trong hệ thống 24h, sử dụng II kết hợp với 'p' cho hệ "
+"thống 12h. Ngoài các đề xuất được cung cấp, bạn có thể sử dụng định dạng tùy"
+" chỉnh. Để trống để Odoo đoán định dạng (được khuyến nghị)"
 
 #. module: base_import
 #. odoo-javascript
@@ -859,6 +877,10 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Sử dụng YYYY để biểu thị năm, MM cho tháng và DD cho ngày. Bao gồm các dấu "
+"phân cách như dấu chấm, dấu gạch chéo hoặc dấu gạch ngang. Ngoài các đề xuất"
+" được cung cấp, bạn có thể sử dụng định dạng tùy chỉnh. Để trống để Odoo "
+"đoán định dạng (được khuyến nghị)"
 
 #. module: base_import
 #. odoo-javascript

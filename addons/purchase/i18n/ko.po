@@ -188,12 +188,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        안녕하세요, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님\n"
+"        안녕하세요, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님.\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        다음의 발주서 첨부 파일을 확인 부탁드립니다: <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>.\n"
+"        발주서 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>를 첨부해 드립니다.\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            참조 번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -203,7 +203,7 @@ msgstr ""
 "        <t t-if=\"object.date_planned\">\n"
 "            예상 입고 일자는 다음과 같습니다 <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
-"            해당 주문에 대한 입고 확인을 해 주실 수 있을까요?\n"
+"            해당 주문에 대한 입고 확인을 부탁드리겠습니다.\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
@@ -398,7 +398,7 @@ msgstr "<span>확인 요청</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<span>Tax excl.</span>"
-msgstr "<span>세금 포함</span>"
+msgstr "<span>세금 별도</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -626,7 +626,7 @@ msgstr "메모 추가"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add a product"
-msgstr "품목 추가하기"
+msgstr "품목 추가"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -781,12 +781,12 @@ msgstr "이전 발주서를 이용해서 자동 완성."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr "확정 주문 내용에 대한 변경을 막기 위해 자동으로 잠금 처리합니다"
+msgstr "확정된 주문을 자동으로 잠금 처리하여 내용이 변경되지 않도록 방지합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically remind the receipt date to your vendors"
-msgstr "공급업체에 자동으로 알림메일을 보냅니다"
+msgstr "거래처에 입고일 미리 알림을 자동으로 전송합니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
@@ -796,12 +796,12 @@ msgstr "공급업체에 자동으로 알림메일을 보냅니다"
 msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
-msgstr "정확한 날짜를 확정하도록 예상 입고일 X일 전에 공급업체에 자동으로 이메일을 보냅니다."
+msgstr "정확한 날짜를 확정하도록 예상 입고일 X일 전 공급업체에 자동으로 이메일을 보냅니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
-msgstr "평균법"
+msgstr "평균비용"
 
 #. module: purchase
 #. odoo-javascript
@@ -883,7 +883,7 @@ msgstr "일정표 화면"
 msgid ""
 "Calls for tenders are when you want to generate requests for quotations with"
 " several vendors for a given set of products to compare offers."
-msgstr "입찰 요청은 해당 품목별 견적 비교를 위해 여러 공급업체들로부터 견적 요청하려는 경우 생성합니다."
+msgstr "입찰 요청은 해당 품목별 견적 비교를 위해 여러 거래처로부터 견적 요청하려는 경우 생성합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1130,7 +1130,7 @@ msgstr "입고 날짜"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr "이용 약관 정의 ..."
+msgstr "이용약관 정의하기 ..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_planned
@@ -1152,7 +1152,7 @@ msgstr "업체에서 약속한 납기일입니다. 관련 품목의 입고 예�
 msgid ""
 "Depicts the date within which the Quotation should be confirmed and "
 "converted into a purchase order."
-msgstr "견적서를 확정하여 발주서로 변환해야 하는 날짜를 나타냅니다."
+msgstr "견적서를 확정하여 발주서로 변환해야 하는 날짜입니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -1249,7 +1249,7 @@ msgstr "팔로워 (협력사)"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "멋진 아이콘 폰트 예 : fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
@@ -1289,7 +1289,7 @@ msgstr "발주서 승인을 위해 2단계의 결재를 거칩니다"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr "제품 또는 공급업체에 대한 주문 경고"
+msgstr "제품 또는 거래처 주문에 대한 경고를 받습니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1399,7 +1399,7 @@ msgstr "주문하시려는 품목 수량을 기재하십시오."
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Incoterm(국제 상업 약관)은 국제 거래에서 사용되는 미리 정의된 상업 용어입니다."
+msgstr "Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 용어입니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1498,7 +1498,7 @@ msgstr "잠금"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "확정된 주문 잠그기"
+msgstr "확정 주문 잠금"
 
 #. module: purchase
 #. odoo-python
@@ -1512,12 +1512,12 @@ msgstr "잠김"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
-msgstr "청구서 결제 시 주문한 상품이 배송되었는지 확인하십시오"
+msgstr "주문한 상품이 배송되었는지 확인한 후 청구서를 결제해 주세요."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "구매 계약 관리 (입찰 요청, 일괄 주문 요청)"
+msgstr "입찰 요청, 일괄 주문 요청 등과 같은 구매 계약을 관리합니다."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1603,7 +1603,7 @@ msgstr "내 활동 마감일"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
-msgstr "미결 견적요청서"
+msgstr "내 미결 견적요청서"
 
 #. module: purchase
 #. odoo-javascript
@@ -1627,14 +1627,14 @@ msgstr "나의 구매"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
-msgstr "견적요청서"
+msgstr "내 견적요청서"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
-msgstr "대기 중인 견적요청서"
+msgstr "대기 중인 내 견적요청서"
 
 #. module: purchase
 #. odoo-python
@@ -1646,7 +1646,7 @@ msgstr "이름"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "업체명, 사업자등록번호, 이메일, 또는 참조 사항"
+msgstr "업체명, 사업자 등록번호, 이메일 또는 참조 사항"
 
 #. module: purchase
 #. odoo-python
@@ -1704,7 +1704,7 @@ msgstr "이 품목에 대해 입력된 구매 분석 내용이 없습니다!"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr "견적요청서를 찾을 수 없습니다. 새로 생성하세요!"
+msgstr "견적요청서를 찾을 수 없습니다. 새로 작성해 주세요!"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -1888,7 +1888,7 @@ msgstr "포털 접근 URL"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr "본인 이메일로 알림 이메일을 전송하여 미리 확인합니다."
+msgstr "미리 알림 이메일을 본인에게 전송하여 미리 확인합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -1961,7 +1961,7 @@ msgstr "품목 세부선택"
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
-msgstr "품목 세부내용"
+msgstr "품목 세부사항"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -2004,7 +2004,7 @@ msgstr "구매 분석"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase Description"
-msgstr "구매 설명"
+msgstr "매입 설명"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
@@ -2176,7 +2176,7 @@ msgstr "구매 알림"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr "품목별 종류 (사이즈나 색상 등)를 선택하여 품목 속성별로 매입합니다"
+msgstr "사이즈, 색상 등을 추가하여 제품의 세부사항을 선택할 수 있습니다."
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -2204,7 +2204,7 @@ msgstr "구매함"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days"
-msgstr "지난 7일 동안의 매입 금액"
+msgstr "지난 7일 동안의 매입금액"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2253,7 +2253,7 @@ msgstr "청구할 수량"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr "공급업체가 청구한 수량"
+msgstr "거래처가 청구서 발행 시 적용하는 수량을 설정합니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2291,7 +2291,7 @@ msgstr "견적 요청 완료"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
 #: model:mail.message.subtype,name:purchase.mt_rfq_sent
 msgid "RFQ Sent"
-msgstr "견적 요청 완료"
+msgstr "견적 요청서 전송"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2402,7 +2402,7 @@ msgstr "기준 단위"
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
-msgstr "발주 요청할 때 참조된 문서입니다 (예: 판매주문서)."
+msgstr "발주 요청 시 참조된 문서입니다. (예: 판매주문서)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -2411,8 +2411,8 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
-"공급업체가 보낸 판매 주문 또는 입찰에 대한 참조입니다. 이 참조는 대개 공급업체가 보낸 배송 주문서에 적혀 있으므로 제품을 받을 때 "
-"일치 여부를 확인하는 데 사용됩니다."
+"공급업체가 보낸 판매 주문 또는 입찰에 대한 참조입니다. 일반적으로 공급업체가 보낸 배송주문서에 참조가 적혀 있으므로 제품 수령 시 일치"
+" 여부를 확인하는 데 사용할 수 있습니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2442,12 +2442,12 @@ msgstr "견적 요청 #"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr "관리자에게 최소 금액 이상으로 주문 승인 요청"
+msgstr "최소 금액 이상의 주문을 승인하도록 관리자에게 요청합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Requests For Quotation"
-msgstr "견적 요청"
+msgstr "견적 요청서"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
@@ -2457,7 +2457,7 @@ msgstr "견적 요청"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
-msgstr "견적 요청"
+msgstr "견적 요청서"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -2466,7 +2466,7 @@ msgid ""
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
 "견적요청서는 매입하려는 다양한 품목의 가격 정보를 요청하기 위해 공급업체로 발송되는 문서입니다.\n"
-"업체와 계약하게 되면 확정 후에는 구매발주서로 변환됩니다."
+"업체와의 계약이 확인된 후에는 구매발주서로 변환됩니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2527,7 +2527,7 @@ msgstr "보안 토큰"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr "품목을 선택하거나 즉시 신규 품목을 만듭니다."
+msgstr "품목을 선택하거나 지금 바로 새 품목을 생성해 보세요."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -2555,7 +2555,7 @@ msgstr "품목의 판매 단위와 구매 단위를 다르게 설정합니다."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr "구매발주서 이메일 발송"
+msgstr "구매발주서 이메일 전송"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2839,7 +2839,7 @@ msgstr "거래 협력사로부터 매입할 경우 이 통화를 기본 통화 �
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr "이 기본값은 신규 생성된 모든 새 품목에 적용됩니다. 품목 세부 사항 양식에서 변경할 수 있습니다."
+msgstr "신규 생성된 모든 품목에 기본 값으로 적용됩니다. 품목 세부사항 양식에서 다시 변경할 수 있습니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3211,14 +3211,14 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
-"발주서를 이메일로 보낼때, Odoo는 공급업체에 주문의 수신여부를 요청합니다. 공급업체가 이메일을 인지하여 버튼을 클릭하면, 정보는 "
-"발주서에 추가됩니다. 필터를 사용하여 공급업체가 인지하고 있는지를 확인할수 있습니다."
+"발주서를 이메일로 보낼때 Odoo는 공급업체에 주문 수신여부를 요청합니다. 공급업체가 이메일의 버튼을 클릭하여 주문을 승인하면 발주서에 "
+"관련 정보가 추가됩니다. 필터 기능을 사용하면 공급업체가 승인하지 않은 주문을 손쉽게 추적할 수 있습니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "업체명, 사업자등록번호, 이메일 또는 내부 참조 사항으로 공급업체를 검색할 수 있습니다."
+msgstr "업체명, 사업자 등록번호, 이메일 또는 내부 참조 사항으로 공급업체를 검색할 수 있습니다."
 
 #. module: purchase
 #. odoo-python
