@@ -8,7 +8,8 @@
 # Irina Fedulova <istartlin@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
-# 
+# Oleg Zubak <c4point@gmail.com>, 2023
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
@@ -60,19 +61,19 @@ msgstr "Сотрудник"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Сотрудник: %s - Настройка(и) Точки Продаж: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Сотрудник с доступом"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
-msgstr ""
+msgstr "Если оставить пустым, то все сотрудники смогут войти в сессию Точки Продаж"
 
 #. module: pos_hr
 #. openerp-web
@@ -86,7 +87,7 @@ msgstr "Неверный пароль"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "Войти в"
 
 #. module: pos_hr
 #. openerp-web
@@ -107,7 +108,7 @@ msgstr ""
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Конфигурация точки продаж"
+msgstr "Конфигурация Точки Продаж"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
@@ -136,7 +137,7 @@ msgstr "Сканировать свой бейдж"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
+msgstr "Выберите Кассира"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -145,6 +146,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Вы не можете удалить сотрудника который может использоваться в активной сессии Точки Продаж,"
+"сначала закройте сессию(и): \n"
 
 #. module: pos_hr
 #. openerp-web
