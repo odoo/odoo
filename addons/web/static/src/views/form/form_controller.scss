@@ -566,8 +566,12 @@
                             @include o-form-sheet-inner-right-padding;
                         }
 
-                        .note-editable.panel-body {
-                            padding: 0;
+                        .note-editable {
+                            min-height: 50vh;
+
+                            .panel-body {
+                                padding: 0;
+                            }
                         }
 
                         // If immediatly followed by an .clearfix element, the note-editor it's the 'only'

@@ -60,8 +60,8 @@
         tbody > tr > td:not(.o_list_record_selector) {
             &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove) {
                 @include o-text-overflow(table-cell);
-                &.o_list_text {
-                    white-space: pre-wrap;
+                &.o_list_text br {
+                    display: none;
                 }
             }
 
