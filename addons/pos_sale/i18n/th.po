@@ -6,6 +6,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2023
 # Wichanon Jamwutthipreecha, 2023
 # Martin Trigaux, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "(left:"
-msgstr ""
+msgstr "(ซ้าย:"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -45,21 +46,21 @@ msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "A new order has been created."
-msgstr ""
+msgstr "มีการสร้างคำสั่งซื้อใหม่แล้ว"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "ใช้เงินดาวน์ (จำนวนเงินคงที่)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "วางเงินดาวน์ (เปอร์เซ็นต์)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -105,7 +106,7 @@ msgstr "ลูกค้า"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Customer loading error"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการโหลดลูกค้า"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -157,7 +158,7 @@ msgstr "เงินดาวน์สินค้า"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Due balance: %s"
-msgstr ""
+msgstr "ยอดเงินคงเหลือ: %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -187,6 +188,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
+"ดูเหมือนว่าคุณไม่ได้กำหนดค่าสินค้าการชำระเงินดาวน์ในการขายหน้าร้านของคุณ\n"
+"                        คุณสามารถไปที่การกำหนดค่าการขายหน้าร้านของคุณเพื่อเลือกรายการใดรายการหนึ่ง"
 
 #. module: pos_sale
 #. odoo-python
@@ -240,7 +243,7 @@ msgstr "ไม่"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr ""
+msgstr "สินค้าไม่มีเงินดาวน์"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -397,7 +400,7 @@ msgstr "ทีมขาย"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "ทีมขาย (PoS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -446,7 +449,7 @@ msgstr "ตั้งค่าคำสั่งขาย"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Settle the order"
-msgstr ""
+msgstr "ชำระคำสั่งซื้อ"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -478,7 +481,7 @@ msgstr "สถานะ"
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "The amount due from the sale order."
-msgstr ""
+msgstr "จำนวนเงินที่ครบกำหนดชำระจากใบสั่งขาย"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
@@ -492,7 +495,7 @@ msgstr "อัตราของสกุลเงินต่ออีกสก
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "There was a problem in loading the %s customer."
-msgstr ""
+msgstr "เกิดปัญหาในการโหลดลูกค้า %s"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -541,7 +544,7 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Unpaid Amount"
-msgstr ""
+msgstr "จำนวนเงินที่ยังไม่ได้ชำระ"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -566,3 +569,5 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
+"คุณได้พยายามเรียกเก็บเงินดาวน์ %s แต่ยังคงต้องชำระเพียง %s เท่านั้น %s "
+"จะถูกนำไปใช้กับรายการใบสั่งซื้อ"

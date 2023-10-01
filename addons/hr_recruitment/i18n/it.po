@@ -117,6 +117,13 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    Tutte le candidature perderanno la data e lo stato di assunzione.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -948,7 +955,7 @@ msgstr "Bloccato"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Il contenuto del corpo è lo stesso del modello"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
@@ -1114,7 +1121,7 @@ msgstr "Crea posizione lavorativa"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Create new applications by sending an email to"
-msgstr ""
+msgstr "Crea nuove candidature inviando un'e-mail a"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1192,6 +1199,9 @@ msgid ""
 "                    qualification call, first interview, second interview, refused,\n"
 "                    hired."
 msgstr ""
+"Definisci qui le fasi del processo di selezione, ad esempio:\n"
+"            chiamata di qualifica, primo colloquio, secondo colloquio, respinta,\n"
+"                   assunto."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1322,6 +1332,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"Non dimenticare di indicare il dipartimento se il processo di selezione\n"
+"            cambia in base alla posizione lavorativa."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
@@ -2627,6 +2639,8 @@ msgstr "Manda SMS"
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
 msgstr ""
+"Invia al candidato un sondaggio per il colloquio durante il processo di "
+"reclutamento"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
@@ -3075,6 +3089,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                            of the default labels."
 msgstr ""
+"Qui è possibile indicare i tag da visualizzare per lo stato kanban\n"
+"                            al posto di quelli predefiniti."
 
 #. module: hr_recruitment
 #. odoo-python

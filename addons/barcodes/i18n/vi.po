@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' không phải là Mẫu mã vạch Regex hợp lệ. Có phải ý bạn là '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -215,6 +215,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Các mẫu cũng có thể xác định cách thức các giá trị số, chẳng hạn như cân nặng hay giá cả, có thể được\n"
+"                                mã hoá thành mã vạch. Chúng được biểu thị bằng <code>{NNN}</code> trong đó\n"
+"                                các chữ N xác định nơi mà các chữ số của số được mã hoá. Các số thập phân cũng\n"
+"                                được hỗ trợ với phần thập phân được biểu thị bằng các chữ D, ví dụ như <code>{NNNDD}</code>. Trong những trường hợp này,\n"
+"                                trường mã vạch trên các tập dữ liệu liên kết <i>phải</i> hiển thị những chữ số này\n"
+"                                là các số 0."
 
 #. module: barcodes
 #. odoo-javascript
