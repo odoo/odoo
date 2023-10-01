@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { combineModifiers } from "@web/model/relational_model/utils";
+import { getExpressionFieldNames } from "@web/core/py_js/py";
 
 export const X2M_TYPES = ["one2many", "many2many"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
@@ -47,6 +48,50 @@ export const BUTTON_CLICK_PARAMS = [
  */
 export function archParseBoolean(str, trueIfEmpty = false) {
     return str ? !/^false|0$/i.test(str) : trueIfEmpty;
+}
+
+export function addArchMissingFields(xmlDoc) {
+    const visit = (el) => {
+        const availableFields = new Set();
+        const mandatoryFiels = new Set();
+        for (const attr of el.attributes) {
+            if (["column_invisible", "invisible", "required", "readonly", "context", "domain"].includes(attr.name) || attr.name.startsWith("decoration-")) {
+                const names = getExpressionFieldNames(attr.value);
+                names.forEach(name => mandatoryFiels.add(name));
+            }
+        }
+        if (el.tagName === "field") {
+            availableFields.add(el.getAttribute("name"));
+            for (const child of el.children) {
+                const result = visit(child);
+                result.mandatoryFiels.forEach(name => {
+                    if (name.startsWith('parent.')) {
+                        mandatoryFiels.add(name.slice(7));
+                    }
+                });
+            }
+        } else {
+            for (const child of el.children) {
+                const result = visit(child);
+                result.availableFields.forEach(name => availableFields.add(name));
+                result.mandatoryFiels.forEach(name => mandatoryFiels.add(name));
+            }
+        }
+        return { availableFields, mandatoryFiels };
+    }
+
+    const {availableFields, mandatoryFiels} = visit(xmlDoc);
+    const missingFields = Array.from(mandatoryFiels).filter(name => !name.startsWith('parent.') && !availableFields.has(name));
+
+    for (const name of missingFields) {
+        const node = document.createElement('field');
+        node.setAttribute('name', name);
+        node.setAttribute('invisible', 'True');
+        node.setAttribute('column_invisible', 'True');
+        node.setAttribute('readonly', 'True');
+        node.setAttribute('__is_missing_field__', 'True');
+        xmlDoc.prepend(node);
+    }
 }
 
 /**

@@ -959,11 +959,11 @@ actual arch.
         }
 
     #------------------------------------------------------
-    # Postprocessing: translation, groups and modifiers
+    # Postprocessing: translation, groups
     #------------------------------------------------------
     # TODO: remove group processing from ir_qweb
     #------------------------------------------------------
-    def postprocess_and_fields(self, node, model=None, **options):
+    def _postprocess_and_fields(self, node, model=None, **options):
         """ Return an architecture and a description of all the fields.
 
         The field description combines the result of fields_get() and
@@ -985,8 +985,17 @@ actual arch.
         models = {}
         name_managers = [name_manager]
         for name_manager in name_managers:
-            models.setdefault(name_manager.model._name, set()).update(name_manager.available_fields)
+            model_name = name_manager.model._name
+            fields = list(self.env[model_name]._fields.keys())
+            # The form view of `res.users` has fake fields, not existing in the model,
+            # so use `_fields.get(...)` instead of `_fields[...]`
+            # e.g. `in_group_12`
+            for name in name_manager.available_fields:
+                if name not in fields:
+                    fields.append(name)
+            models[model_name] = sorted(fields)
             name_managers.extend(name_manager.children)
+
         return arch, models
 
     def _postprocess_access_rights(self, tree):
@@ -1097,7 +1106,6 @@ actual arch.
             for child in reversed(node_info.get('children', node)):
                 stack.append((child, node_info['editable']))
 
-        name_manager.update_available_fields()
         root.set('model_access_rights', model._name)
 
         return name_manager
@@ -1448,9 +1456,6 @@ actual arch.
                 sub_manager = self._validate_view(
                     child, field.comodel_name, view_type=child.tag, editable=node_info['editable'], full=validate,
                 )
-                for fname, groups_uses in sub_manager.mandatory_parent_fields.items():
-                    for groups, use in groups_uses.items():
-                        name_manager.must_have_field(node, fname, use, groups=groups)
 
         elif validate and name not in name_manager.field_info:
             msg = _(
@@ -1541,9 +1546,6 @@ actual arch.
                 groupby_node, field.comodel_name, view_type="groupby", editable=False, full=node_info['validate'],
             )
             name_manager.has_field(node, name)
-            for fname, groups_uses in sub_manager.mandatory_parent_fields.items():
-                for groups, use in groups_uses.items():
-                    name_manager.must_have_field(node, fname, use, groups=groups)
 
         elif node_info['validate']:
             msg = _(
@@ -1631,21 +1633,13 @@ actual arch.
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """
 
-        # python expression used in for readonly, invisible, ...
-        # and thus are only executed client side
-        for attr in VIEW_MODIFIERS:
-            py_expression = node.attrib.get(attr)
-            if py_expression:
-                self._validate_expression(node, name_manager, py_expression, f"modifier {attr!r}")
-
         for attr, expr in node.items():
-            if attr in ('class', 't-att-class', 't-attf-class'):
-                self._validate_classes(node, expr)
+            # python expression used in for readonly, invisible, ...
+            # and thus are only executed client side
+            if attr in VIEW_MODIFIERS or attr.startswith('decoration-') or attr == 'context':
+                self._validate_expression(node, name_manager, expr, f'attribute {attr!r}', name_manager.model._name)
 
-            elif attr == 'context':
-                vnames = get_expression_field_names(expr) - {'id'}
-                if vnames:
-                    name_manager.must_have_fields(node, vnames, f"context ({expr})")
+            if attr == 'context':
                 for key, val_ast in get_dict_asts(expr).items():
                     if key == 'group_by':  # only in context
                         if not isinstance(val_ast, ast.Str):
@@ -1663,6 +1657,9 @@ actual arch.
                             )
                             self._raise_view_error(msg, node)
 
+            elif attr in ('class', 't-att-class', 't-attf-class'):
+                self._validate_classes(node, expr)
+
             elif attr == 'groups':
                 for group in expr.replace('!', '').split(','):
                     name_manager.must_exist_group(group.strip(), node)
@@ -1676,11 +1673,6 @@ actual arch.
                           attribute=attr, value=expr),
                         node,
                     )
-
-            elif attr.startswith('decoration-'):
-                vnames = get_expression_field_names(expr) - {'id'}
-                if vnames:
-                    name_manager.must_have_fields(node, vnames, f"{attr}={expr!r}")
 
             elif attr == 'data-bs-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
@@ -1849,7 +1841,7 @@ actual arch.
         if (not next(filter(lambda regex: re.match(regex, directive), allowed_directives), None)):
             self._raise_view_error(_("Forbidden owl directive used in arch (%s).", directive), node)
 
-    def _validate_expression(self, node, name_manager, py_expression, use):
+    def _validate_expression(self, node, name_manager, py_expression, use, model):
         try:
             if py_expression.lower() in ("0", "false", "1", "true"):
                 # most (~95%) elements are 1/True/0/False
@@ -1858,22 +1850,29 @@ actual arch.
         except (SyntaxError, ValueError, AttributeError) as e:
             msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=py_expression, error=e)
             self._raise_view_error(msg, node, from_exception=e)
-        name_manager.must_have_fields(node, fnames, f"{use} ({py_expression})")
+        if model == 'res.users':
+            # res.users use special field in view to the access group
+            fnames = set(fname
+                for fname in fnames
+                if not fname.startswith('sel_groups_') and not fname.startswith('in_group_'))
+
+        self._check_field_paths(node, fnames, model, f"{use} ({py_expression})")
 
     def _validate_domain_identifiers(self, node, name_manager, domain, use, target_model):
         try:
-            fnames, vnames = get_domain_value_names(domain)
+            fnames = get_domain_value_names(domain)[0]
         except (SyntaxError, ValueError, AttributeError) as e:
             msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=domain, error=e)
             self._raise_view_error(msg, node, from_exception=e)
 
         self._check_field_paths(node, fnames, target_model, f"{use} ({domain})")
-        name_manager.must_have_fields(node, vnames, f"{use} ({domain})")
+        self._check_field_searchable(node, fnames, target_model, f"{use} ({domain})")
 
     def _check_field_paths(self, node, field_paths, model_name, use):
         """ Check whether the given field paths (dot-separated field names)
         correspond to actual sequences of fields on the given model.
         """
+        fields = []
         for field_path in field_paths:
             names = field_path.split('.')
             Model = self.pool[model_name]
@@ -1882,7 +1881,7 @@ actual arch.
             for index, name in enumerate(names):
                 if Model is None:
                     msg = _(
-                        'Non-relational field %(field)r in path %(field_path)r in %(use)s)',
+                        'Non-relational field %(field)r in path %(field_path)r in %(use)s',
                         field=names[index - 1], field_path=field_path, use=use,
                     )
                     self._raise_view_error(msg, node)
@@ -1890,10 +1889,49 @@ actual arch.
                     field = Model._fields[name]
                 except KeyError:
                     msg = _(
-                        'Unknown field "%(model)s.%(field)s" in %(use)s)',
+                        'Unknown field "%(model)s.%(field)s" in %(use)s',
                         model=Model._name, field=name, use=use,
                     )
                     self._raise_view_error(msg, node)
+                fields.append(field)
+                Model = self.pool.get(field.comodel_name)
+
+        return fields
+
+    def _check_groups_paths(self, node, field_paths, model_name, use):
+        # groups needed
+        field_groups = [tuple(sorted(field.groups.split(',')))
+            for field in self._check_field_paths(node, field_paths, model_name, use)
+            if field.groups]
+        if not field_groups:
+            return
+
+        # groups used
+        groups = [tuple(sorted(n.get('groups').split(','))) for n in chain([node], node.iterancestors()) if n.get('groups')]
+        names = [n.get('name') for n in chain([node], node.iterancestors()) if n.tag == 'field']
+        Model = self.pool[model_name]
+        for name in reversed(names):
+            field = Model._fields[name]
+            groups.append(tuple(sorted(field.groups.split(','))))
+            Model = self.pool.get(field.comodel_name)
+
+        # check if the necessary groups are used
+        for field in field_groups:
+            if any(g not in groups for g in field_groups):
+                msg = _(
+                    'The mandatory field "%(model)s.%(field)s" in %(use)s has a different restricted group %(groups)r',
+                    model=Model._name, field=field.name, use=use, groups=field.groups,
+                )
+                self._raise_view_error(msg, node)
+
+    def _check_field_searchable(self, node, field_paths, model_name, use):
+        """ Check whether the given field paths (dot-separated field names)
+        is searchable.
+        """
+        for field_path in field_paths:
+            Model = self.pool[model_name]
+            for name in field_path.split('.'):
+                field = Model._fields[name]
                 if not field._description_searchable:
                     msg = _(
                         'Unsearchable field %(field)r in path %(field_path)r in %(use)s)',
@@ -2571,11 +2609,11 @@ class Model(models.AbstractModel):
         :rtype: dict
         """
         # Get the view arch and all other attributes describing the composition of the view
-        arch, view = self._get_view(view_id, view_type, **options)
+        node, view = self._get_view(view_id, view_type, **options)
 
         # Apply post processing, groups and modifiers etc...
-        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
-        models = self._get_view_fields(view_type or view.type, models)
+        arch, models = view._postprocess_and_fields(node, model=self._name, **options)
+
         result = {
             'arch': arch,
             # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
@@ -2622,31 +2660,6 @@ class Model(models.AbstractModel):
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
-
-    @api.model
-    def _get_view_fields(self, view_type, models):
-        """ Returns the field names required by the web client to load the views according to the view type.
-
-        The method is meant to be overridden by modules extending web client features and requiring additional
-        fields.
-
-        :param string view_type: type of the view
-        :param dict models: dict holding the models and fields used in the view architecture.
-        :return: dict holding the models and field required by the web client given the view type.
-        :rtype: list
-        """
-        if view_type in ('kanban', 'tree', 'form'):
-            for model, model_fields in models.items():
-                model_fields.add('id')
-                if 'write_date' in self.env[model]._fields:
-                    model_fields.add('write_date')
-        elif view_type == 'search':
-            models[self._name] = list(self._fields.keys())
-        elif view_type == 'graph':
-            models[self._name].union(fname for fname, field in self._fields.items() if field.type in ('integer', 'float'))
-        elif view_type == 'pivot':
-            models[self._name].union(fname for fname, field in self._fields.items() if field.groupable)
-        return models
 
     @api.model
     def _get_view_field_attributes(self):
@@ -2756,11 +2769,9 @@ class NameManager:
 
     def __init__(self, model, parent=None):
         self.model = model
-        self.available_fields = collections.defaultdict(dict)  # {field_name: {'groups': groups, 'info': field_info}}
         self.available_actions = set()
+        self.available_fields = set()
         self.available_names = set()
-        self.mandatory_fields = collections.defaultdict(dict)  # {field_name: {'groups': 'use}}
-        self.mandatory_parent_fields = collections.defaultdict(dict)  # {field_name: {'groups': use}}
         self.mandatory_names = dict()           # {name: use}
         self.must_exist_actions = {}
         self.must_exist_groups = {}
@@ -2779,28 +2790,11 @@ class NameManager:
         return field_info
 
     def has_field(self, node, name, info=frozendict()):
-        groups = self._get_node_groups(node)
-        self.available_fields[name].setdefault('info', {}).update(info)
-        self.available_fields[name].setdefault('groups', []).append(groups)
         self.available_names.add(info.get('id') or name)
+        self.available_fields.add(name)
 
     def has_action(self, name):
         self.available_actions.add(name)
-
-    def must_have_field(self, node, name, use, groups=None):
-        node_groups = self._get_node_groups(node)
-        if groups:
-            groups = groups + node_groups
-        else:
-            groups = node_groups
-        if name.startswith('parent.'):
-            self.mandatory_parent_fields[name[7:]][groups] = use
-        else:
-            self.mandatory_fields[name][groups] = use
-
-    def must_have_fields(self, node, names, use, groups=None):
-        for name in names:
-            self.must_have_field(node, name, use, groups=groups)
 
     def must_have_name(self, name, use):
         self.mandatory_names[name] = use
@@ -2810,9 +2804,6 @@ class NameManager:
 
     def must_exist_group(self, name, node):
         self.must_exist_groups[name] = node
-
-    def _get_node_groups(self, node):
-        return tuple(tuple(n.get('groups').split(',')) for n in chain([node], node.iterancestors()) if n.get('groups'))
 
     def check(self, view):
         # context for translations below
@@ -2859,137 +2850,3 @@ class NameManager:
             if not view.env['ir.model.data']._xmlid_to_res_id(name, raise_if_not_found=False):
                 msg = _("The group %(name)r defined in view does not exist!", name=name)
                 view._log_view_warning(msg, node)
-
-        for name, groups_uses in self.mandatory_fields.items():
-            use = next(iter(groups_uses.values()))
-            if name == 'id':  # always available
-                continue
-            if "." in name:
-                msg = _(
-                    "Invalid composed field %(definition)s in %(use)s",
-                    definition=name, use=use,
-                )
-                view._raise_view_error(msg)
-            info = self.available_fields[name].get('info')
-            if info is None:
-                msg = _(
-                    "Field %(name)r used in %(use)s must be present in view but is missing.",
-                    name=name, use=use,
-                )
-                view._raise_view_error(msg)
-            if info.get('select') == 'multi':  # mainly for searchpanel, but can be a generic behaviour.
-                msg = _(
-                    "Field %(name)r used in %(use)s is present in view but is in select multi.",
-                    name=name, use=use,
-                )
-                view._raise_view_error(msg)
-
-            def combinate(groups):
-                # [['A'], ['B', 'C'], ['D', 'E']]
-                # returns
-                # [['A', 'B', 'D'], ['A', 'C', 'D'], ['A', 'B', 'E'], ['A', 'C', 'E']]
-
-                # [['!A', '!B'], ['C', 'D']]
-                # returns
-                # [['!A', '!B', 'C'], ['!A', '!B', 'D']]
-
-                # [['A', 'B'], ['!C', '!D']]
-                # returns
-                # [['A', '!C', '!D'], ['B', '!C', '!D']]
-
-                # [['!A', '!B', 'C', 'D'], ['E', 'F']]
-                # returns
-                # [['!A', '!B', 'C', 'E'], ['!A', '!B', 'D', 'E'], ['!A', '!B', 'C', 'F'], ['!A', '!B', 'D', 'F']]
-                if not groups:
-                    return []
-                positive = [(group,) for group in groups[0] if not group or not group.startswith('!')]
-                negative = tuple(group for group in groups[0] if group and group.startswith('!'))
-                combinations = [negative + p for p in positive] if positive else [negative]
-                if len(groups) > 1:
-                    combinations = [group + tuple(c) for c in combinate(groups[1:]) for group in combinations]
-                return [set(combination) for combination in set(tuple(combination) for combination in combinations)]
-
-            for mandatory_for_groups, use in groups_uses.items():
-                mandatory_combinations = combinate(mandatory_for_groups or [(None,)])
-                available_combinations = [
-                    combination
-                    for available_for_groups in self.available_fields[name]['groups']
-                    for combination in combinate(available_for_groups or [(None,)])
-                ]
-                if (
-                    # If (None,) is in available_combinations,
-                    # it means the field is in the view without any group restriction,
-                    # and is therefore available for anyone / any group
-                    {None} not in available_combinations
-                    # If there are two mutually exclusive combinations,
-                    # it means the field is available for anyone / any group
-                    and not any(
-                        {group[1:] if group.startswith('!') else '!' + group for group in combination}
-                        in available_combinations
-                        for combination in available_combinations
-                    )
-                    and ((
-                    # For all mandatory combinations, find an available combination
-                    # which is included in the mandatory combination
-                    # e.g.
-                    # mandatory combination: A B C
-                    # available combination: A B
-                    # The above is valid, the field will be available for users having both A and B groups
-                    # and the field is mandatory only for users having A B and C groups.
-                    not all(
-                        any(
-                            available_combination.issubset(mandatory_combination)
-                            for available_combination in available_combinations
-                        ) for mandatory_combination in mandatory_combinations
-                    )
-                    # Same than above but take into account implied groups (e.g. group_system includes group_erp_manager and group_user)
-                    # for positive groups
-                    and not all(
-                        any(
-                            available_combination.issubset(combination)
-                            for available_combination in available_combinations
-                            for combination in
-                            (
-                                mandatory_combination - {group} | {trans_group}
-                                for group in mandatory_combination if group and not group.startswith('!')
-                                for trans_group in view.env.ref(group).trans_implied_ids.get_external_id().values()
-                            )
-                        )
-                        for mandatory_combination in mandatory_combinations
-                    )
-                    # Same than above but take into account implied groups (e.g. group_system includes group_erp_manager and group_user)
-                    # for negative groups
-                    and not all(
-                        any(
-                            combination.issubset(mandatory_combination)
-                            for available_combination in available_combinations
-                            for combination in
-                            (
-                                available_combination - {group} | {'!' + trans_group}
-                                for group in available_combination if group and group.startswith('!')
-                                for trans_group in view.env.ref(group[1:]).trans_implied_ids.get_external_id().values()
-                            )
-                        ) for mandatory_combination in mandatory_combinations
-                    )
-                    )
-                    # if 'base.group_no_one' is in available_combinations the group
-                    # must be in mandatory_combinations because depending of session
-                    or (
-                        {'base.group_no_one'} in available_combinations and
-                        not all('base.group_no_one' in combination for combination in mandatory_combinations)
-                    ))
-                ):
-                    msg = _(
-                        "Field %(name)r used in %(use)s is restricted to the group(s) %(groups)s.",
-                        name=name, use=use, groups=','.join(
-                            group
-                            for availability in self.available_fields[name]['groups']
-                            for combination in availability
-                            for group in combination
-                        )
-                    )
-                    view._raise_view_error(msg)
-
-    def update_available_fields(self):
-        for name, info in self.available_fields.items():
-            info.update(self.field_info.get(name, ()))

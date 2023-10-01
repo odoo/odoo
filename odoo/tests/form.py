@@ -10,6 +10,7 @@ import logging
 import time
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+from odoo.tools.view_validation import get_expression_field_names
 
 from lxml import etree
 
@@ -149,6 +150,8 @@ class Form:
         * pre-processed modifiers
         * pre-processed onchanges list
         """
+        mandatory_fields = set()
+        available_fields = set()
         fields = {'id': {'type': 'id'}}
         fields_spec = {}
         modifiers = {'id': {'required': 'False', 'readonly': 'True'}}
@@ -163,6 +166,8 @@ class Form:
             field_info = self._models_info.get(model._name, {}).get(field_name) or {'type': None}
             fields[field_name] = field_info
             fields_spec[field_name] = field_spec = {}
+
+            available_fields.add(field_name)
 
             # determine modifiers
             field_modifiers = {}
@@ -180,7 +185,7 @@ class Form:
                 expr = ancestor.get(modifier)
                 if expr == 'True' or field_modifiers[modifier] == 'True':
                     field_modifiers[modifier] = 'True'
-                if expr == 'False':
+                elif expr == 'False':
                     field_modifiers[modifier] = field_modifiers[modifier]
                 elif field_modifiers[modifier] == 'False':
                     field_modifiers[modifier] = expr
@@ -195,7 +200,7 @@ class Form:
                 for modifier, expr in modifiers[field_name].items():
                     if expr == 'False' or field_modifiers[modifier] == 'False':
                         field_modifiers[modifier] = 'False'
-                    if expr == 'True':
+                    elif expr == 'True':
                         field_modifiers[modifier] = field_modifiers[modifier]
                     elif field_modifiers[modifier] == 'True':
                         field_modifiers[modifier] = expr
@@ -209,6 +214,7 @@ class Form:
             if ctx:
                 contexts[field_name] = ctx
                 field_spec['context'] = get_static_context(ctx)
+                mandatory_fields.update(get_expression_field_names(ctx))
 
             # FIXME: better widgets support
             # NOTE: selection breaks because of m2o widget=selection
@@ -226,6 +232,7 @@ class Form:
                     edition_view = self._get_one2many_edition_view(field_info, node, level)
                     field_info['edition_view'] = edition_view
                     field_spec['fields'] = edition_view['fields_spec']
+                    mandatory_fields.update(name[7:] for name in edition_view['missing_fields'] if name.startswith("parent."))
                 else:
                     # this trick enables the following invariant: every one2many
                     # field has some 'edition_view' in its info dict
@@ -234,10 +241,43 @@ class Form:
         for related_field, start_field in daterange_field_names.items():
             modifiers[related_field]['invisible'] = modifiers[start_field].get('invisible', False)
 
+        # get mandatory fields
+        for node in tree.xpath(f'.//*[count(ancestor::field) = {flevel}]'):
+            for attr, epxr in node.attrib.items():
+                if attr in ('required', 'readonly', 'invisible', 'column_invisible', 'context', 'domain') or attr.startswith('decoration-'):
+                    mandatory_fields.update(get_expression_field_names(epxr))
+
+        missing_fields = mandatory_fields - set(fields.keys())
+        for name in list(missing_fields):
+            if name.startswith("parent."):
+                continue
+            field_info = self._models_info.get(model._name, {}).get(name) or {'type': None}
+            field_info['invisible'] = 'True'
+            field_info['readonly'] = 'True'
+            fields[name] = field_info
+            modifiers[name] = {
+                'column_invisible': 'True',
+                'invisible': 'True',
+                'readonly': 'True',
+                'required': 'False',
+            }
+            missing_fields.remove(name)
+
+            if field_info['type'] == 'one2many':
+                if level:
+                    edition_view = self._get_one2many_edition_view(field_info, node, level)
+                    field_info['edition_view'] = edition_view
+                    field_spec['fields'] = edition_view['fields_spec']
+                else:
+                    # this trick enables the following invariant: every one2many
+                    # field has some 'edition_view' in its info dict
+                    field_info['type'] = 'many2many'
+
         return {
             'tree': tree,
             'fields': fields,
             'fields_spec': fields_spec,
+            'missing_fields': missing_fields,
             'modifiers': modifiers,
             'contexts': contexts,
             'onchange': model._onchange_spec({'arch': etree.tostring(tree)}),
@@ -474,12 +514,12 @@ class Form:
                 continue
 
             if mode == 'save' and self._get_modifier(field_name, 'readonly', view=view, vals=modifiers_values):
-                field_node = next(
-                    node
-                    for node in view['tree'].iter('field')
-                    if node.get('name') == field_name
-                )
-                if not field_node.get('force_save'):
+                field_node = None
+                for node in view['tree'].iter('field'):
+                    if node.get('name') == field_name:
+                        field_node = node
+                        break
+                if field_node is None or not field_node.get('force_save'):
                     continue
 
             if field_info['type'] == 'one2many':

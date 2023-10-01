@@ -274,7 +274,7 @@
         <field name="arch" type="xml">
             <tree editable="bottom">
                 <field name="a"/>
-                <field name="b" readonly="parent.value == 42"/>
+                <field name="b" readonly="parent.value == 42 and not parent.x and not z"/>
                 <field name="c" column_invisible="context.get('hide_c')"/>
             </tree>
         </field>

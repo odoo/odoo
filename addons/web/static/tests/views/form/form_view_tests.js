@@ -617,6 +617,76 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test('mandatory fields is automatically loaded', async function (assert) {
+        assert.expect(2);
+        serverData.models.partner.records.push({
+            id: 6,
+            bar: false,
+            int_field: 9,
+            product_ids: [37],
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 6,
+            serverData: serverData,
+            arch: '<form>' +
+                    '<field name="product_ids">' +
+                        '<tree>' +
+                            '<field name="display_name" column_invisible="parent.bar"/>' +
+                            '<field name="partner_type_id" column_invisible="parent.int_field"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.containsN(target, "th", 2);
+        assert.strictEqual(target.querySelector("thead").innerText.trim(), "Product Name");
+    });
+
+    QUnit.test('mandatory fields is automatically loaded (2)', async function (assert) {
+        assert.expect(2);
+        serverData.models.partner.records.push({
+            id: 6,
+            bar: false,
+            int_field: 9,
+            p: [7],
+        });
+        serverData.models.partner.records.push({
+            id: 7,
+            display_name: 'toto',
+            bar: true,
+            int_field: 0,
+            product_ids: [37],
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 6,
+            serverData: serverData,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="bar"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="product_ids">' +
+                                '<tree>' +
+                                    '<field name="display_name" column_invisible="parent.parent.bar"/>' +
+                                    '<field name="partner_type_id" column_invisible="parent.parent.int_field"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+
+        assert.containsN(target, ".modal th", 2);
+        assert.strictEqual(target.querySelector(".modal thead").innerText.trim(), "Product Name");
+    });
+
     QUnit.test("attributes are transferred on async widgets", async function (assert) {
         const def = makeDeferred();
         class AsyncField extends CharField {
