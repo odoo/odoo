@@ -30,7 +30,8 @@ msgstr ""
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
-"«*» non è un percorso Regex Codice a barre valido. Si intendeva «.*» ?"
+"«*» non è uno modello di espressione regolare valido per un codice a barre. "
+"Si intendeva «.*» ?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -52,7 +53,7 @@ msgid ""
 " barcodes"
 msgstr ""
 "Una nomenclatura codice a barre definisce come il punto vendita identifica e"
-" interpreta i codici a barre"
+" interpreta i codici"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -79,7 +80,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr "Un identificativo interno della nomenclatura di codici a barre"
+msgstr "Un identificativo interno della nomenclatura codice a barre"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -103,7 +104,7 @@ msgstr "Nomenclatura codice a barre"
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclature codici a barre"
+msgstr "Nomenclature codice a barre"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -243,12 +244,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
-"I partner possono anche definire come i valori numerici, come peso o prezzo, possono essere\n"
-"                                codificati nel codice a barre. I valori sono indicati da <code>{NNN}</code> dove i caratteri «N»\n"
-"                                definiscono dove le cifre del numero sono codificate. Anche i numeri reali sono supportati con i \n"
-"                                decimali indicati con i caratteri «D», come <code>{NNNDD}</code>. In questi casi, \n"
-"                                il campo codice a barre nei record associati  <i>deve</i> mostrare questi numeri come \n"
-"                                0."
+"I modelli possono anche definire il modo in cui i valori numerici, come peso o prezzo, possono essere\n"
+"                                codificati nel codice a barre. I valori sono indicati da <code>{NNN}</code>, dove i caratteri N\n"
+"                                definiscono dove sono codificate le cifre del numero. Sono supportati anche i numeri a virgola mobile, con i \n"
+"                                decimali indicati dai caratteri D, come <code>{NNNDD}</code>. In questi casi, \n"
+"                                il campo codice a barre nei record associati <i>deve</i> mostrare queste cifre come \n"
+"                                zeri."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -313,8 +314,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
-"C'è un errore di sintassi nello schema del codice a barre %(pattern)s:  una "
-"regola può contenere solo una coppia di parentesi."
+"È presente un errore di sintassi nel modello del codice a barre %(pattern)s:"
+" una regola può contenere una sola coppia di parentesi graffe."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -323,8 +324,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
-"C'è un errore di sintassi nello schema del codice a barre %(pattern)s: le "
-"parentesi possono contenere solo N seguite da D."
+"È presente un errore di sintassi nel modello del codice a barre %(pattern)s:"
+" le parentesi graffe possono contenere solo N seguite da D."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -332,8 +333,8 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
-"C'è un errore di sintassi nello schema del codice a barre %(pattern)s: "
-"parentesi vuote."
+"È presente un errore di sintassi nel modello del codice a barre %(pattern)s:"
+" le parentesi graffe sono vuote."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -341,8 +342,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"Questa regola viene applicata solo se il codice a barre rispetta la codifica"
-" specificata"
+"Questa regola viene applicata solo se il codice rispetta la codifica "
+"specificata"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -358,7 +359,8 @@ msgid ""
 msgstr ""
 "I codici UPC possono essere convertiti a EAN anteponendo uno zero. Questa "
 "impostazione determina se un codice a barre UPC/EAN debba essere convertito "
-"automaticamente quando viene applicata una delle due codifiche."
+"automaticamente in uno o nell'altro modo quando si cerca di abbinare una "
+"regola con l'altra codifica."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca

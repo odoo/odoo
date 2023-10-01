@@ -26,34 +26,34 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr "# 本月分配的線索/商機"
+msgstr "本月已指派的潛在客戶/銷售機會數目"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr "#會議"
+msgstr "會議數目"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
 msgid "# Months"
-msgstr "# 月"
+msgstr "月數"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
 msgid "# Opportunities"
-msgstr "# 商機"
+msgstr "銷售機會數目"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_count
 msgid "# Overdue Opportunities"
-msgstr "# 逾期的商機"
+msgstr "逾期銷售機會數目"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr "# 未分配的線索"
+msgstr "未指派潛在客戶數目"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -116,27 +116,21 @@ msgstr "<b>寫幾封信</b>來尋找一家公司，或創建一家新公司。"
 msgid ""
 "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Meetings\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
-"title=\"Meetings\"/>"
+msgstr "<i class=\"fa fa-fw fa-calendar\" aria-label=\"會議\" role=\"img\" title=\"會議\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
 msgid ""
 "<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
 "title=\"Favorites\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorites\" role=\"img\" "
-"title=\"Favorites\"/>"
+msgstr "<i class=\"fa fa-fw fa-star\" aria-label=\"最愛\" role=\"img\" title=\"最愛\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
 "probability\" aria-label=\"Switch to automatic probability\"/>"
-msgstr ""
-"<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
-"probability\" aria-label=\"Switch to automatic probability\"/>"
+msgstr "<i class=\"fa fa-gear\" role=\"img\" title=\"切換至自動成功率\" aria-label=\"切換至自動成功率\"/>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -1152,12 +1146,12 @@ msgstr "郵箱別名"
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_email_state
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr "email內容確認"
+msgstr "電郵內容確認"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
 msgid "Email cc"
-msgstr "副本寄送"
+msgstr "電郵副本抄送至"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
@@ -1811,7 +1805,7 @@ msgstr "串連的合作夥伴（可選）。通常在轉換線索時創建。您
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
 msgid "List of cc from incoming emails."
-msgstr "來自傳入電子郵件的 cc 清單。"
+msgstr "收到電子郵件的副本抄送清單。"
 
 #. module: crm
 #. openerp-web
@@ -2107,7 +2101,7 @@ msgstr "沒有銷售員"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr "email正規化"
+msgstr "已正規化電郵"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -2501,7 +2495,7 @@ msgstr "提案"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr ""
+msgstr "按比例每月經常收入"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
