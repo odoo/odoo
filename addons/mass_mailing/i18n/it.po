@@ -378,6 +378,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
 "False)]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
+"False)]}\">Contatto di posta</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -924,6 +926,11 @@ msgid ""
 "is hidden on the unsubscription page. The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Consenti al destinatario di gestire in autonomia il proprio stato nella "
+"lista nera, tramite la pagina di annullamento dell'iscrizione. Se l'opzione "
+"è attiva, il pulsante \"Aggiungimi alla lista nera\" è nascosto nella stessa"
+" pagina. Il pulsante \"Indietro\" è sempre visibile per permettere ai "
+"contatti e ai partner di iscriversi nuovamente."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1086,7 +1093,7 @@ msgstr "Colore sfondo"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_on_mailing_list
 msgid "Based on Mailing Lists"
-msgstr ""
+msgstr "In base alle liste di distribuzione"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -1150,7 +1157,7 @@ msgstr "Indirizzi e-mail in lista nera"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist removal request from portal"
-msgstr ""
+msgstr "Richiesta di rimozione lista di blocco dal portale"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1160,13 +1167,15 @@ msgid ""
 "Blocklist removal request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"Richiesta di rimozione dalla lista di blocco dal portale della posta "
+"%(mailing_link)s (documento %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist request from portal"
-msgstr ""
+msgstr "Richiesta lista di blocco dal portale"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1176,6 +1185,8 @@ msgid ""
 "Blocklist request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"Richiesta lista di bloco dal portale della posta %(mailing_link)s (documento"
+" %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1185,6 +1196,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
+"Richiesta lista di blocco dal link di annullamento iscrizione della posta "
+"%(mailing_link)s (documento %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -4484,6 +4497,8 @@ msgid ""
 "This email has been automatically added in blocklist because of too much "
 "bounced."
 msgstr ""
+"Questa e-mail è stata aggiunta automaticamente alla lista di blocco a causa "
+"dell'eccessivo rimbalzo."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -4891,6 +4906,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"Mentre progetti l'e-mail è possibile indicare le regole per filtrare i destinatari.\n"
+"                Per salvare lo stesso criterio per usi futuri è possibile aggiungerlo all'elenco dei preferiti\n"
+"                facendo clic sull' <i class=\"fa fa-floppy-o text-warning\"></i> icona accanto a \"Destinatari\"."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options

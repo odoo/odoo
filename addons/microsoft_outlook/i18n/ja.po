@@ -76,7 +76,7 @@ msgstr "認証対象"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "認証URI"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -91,6 +91,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"OAuth認証プロセスでOutlookアカウントを接続します。 \n"
+"デフォルトでは、一致するメールアドレスを持つユーザのみがこのサーバを使用できます。使用範囲を広げるには、\"mail.default.from \"システムパラメータを設定する必要があります。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -100,6 +102,8 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"OAuthを使用して個人Outlookアカウントに接続します。 \n"
+"Outlookのログインページにリダイレクトされ、許可を受け入れて下さい。"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
@@ -114,7 +118,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "OutlookアプリのID"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -128,14 +132,14 @@ msgstr "受信メールサーバ"
 msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
-msgstr ""
+msgstr "メールサーバ%rの不正な接続セキュリティ。\"TLS (STARTTLS)\"にセットして下さい。"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Outlookのクレデンシャルが設定されているか"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -152,37 +156,37 @@ msgstr "Microsoft Outlook Mixin"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "Outlookメールサーバにリンクできるのは管理者のみです。"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Outlookアクセストークン"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Outlookアクセストークン期限切れタイムスタンプ"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "OutlookクライアントID"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlookクライアントシークレット"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Outlook OAuth認証"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
@@ -196,14 +200,14 @@ msgstr "Outlookリフレッシュトークン"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "Outlookの認証情報を設定して下さい。"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "使用前にOutlookアカウントと接続して下さい。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -214,6 +218,8 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"\"ユーザ名\"の欄には、Outlookのユーザ名(メールアドレス)を入力して下さい。これはOutlook "
+"OAuthenticationトークンに使用したものと同じアカウントでなければなりません。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -222,7 +228,7 @@ msgstr ""
 msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
-msgstr ""
+msgstr "Outlookメールサーバ%rのパスワードフィールドは空欄にして下さい。OAuth処理はそれを必要としません。"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -234,7 +240,7 @@ msgstr "続きを読む"
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
-msgstr ""
+msgstr "サーバ%r用にSSLが必要です。"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -244,7 +250,7 @@ msgstr "シークレット"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Outlookアプリのシークレット"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -257,14 +263,14 @@ msgstr "サーバタイプ"
 msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
-msgstr ""
+msgstr "一般設定でOutlook API認証情報を設定し、Outlookアカウントをリンクします。"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "Outlookの許可コードを生成するためのURL"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -273,7 +279,7 @@ msgstr ""
 msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
-msgstr ""
+msgstr "サーバ %rは個人メールアドレスのみに使用可能です。\"from_filter\" フィールドに%rを入力して下さい。"
 
 #. module: microsoft_outlook
 #. odoo-python

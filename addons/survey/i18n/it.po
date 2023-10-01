@@ -904,6 +904,8 @@ msgid ""
 "All conditional display questions need a triggering question.\n"
 "Please disable \"Conditional Display\" or specify a triggering question."
 msgstr ""
+"Tutte le domande con visualizzazione condizionale necessitano di una domanda attivatrice.\n"
+"Disabilita la \"Visualizzazione condizionale\" o seleziona una domanda attivatrice."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -916,6 +918,8 @@ msgid ""
 "All questions triggered by another need a triggering answer.\n"
 "Please disable \"Conditional Display\" or specify a triggering answer."
 msgstr ""
+"Tutte le domande attivate da un'altra hanno bisogno di una risposta attivatrice.\n"
+"Disabilita la \"Visualizzazione condizionale\" o seleziona una risposta attivatrice."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -925,7 +929,7 @@ msgstr "Tutti i sondaggi"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "Domande attivatrici consentite"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -1169,7 +1173,7 @@ msgstr "Penna blu"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Il contenuto del corpo è lo stesso del modello"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug4
@@ -1450,6 +1454,8 @@ msgstr "Visualizzazione condizionata"
 msgid ""
 "Conditional display is not available when questions are randomly picked."
 msgstr ""
+"La visualizzazione condizionale non è disponibile quando le domande vengono "
+"scelte a caso."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1516,7 +1522,7 @@ msgstr "Biscotti"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Copied!"
-msgstr ""
+msgstr "Copiato!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
@@ -1774,12 +1780,12 @@ msgstr "Visualizza progresso come"
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s: %s\""
-msgstr ""
+msgstr "Visualizzato se \"%s: %s\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "Visualizzato quando la risposta inserita non è valida."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1824,7 +1830,7 @@ msgstr "Cassettiera"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "Duplica domanda"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -2479,7 +2485,7 @@ msgstr "È in una sessione"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_placed_before_trigger
 msgid "Is misplaced?"
-msgstr ""
+msgstr "Fuori posto?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2500,7 +2506,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before its trigger question?"
-msgstr ""
+msgstr "La domanda è posizionata prima del trigger?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2855,7 +2861,7 @@ msgstr "Messaggi"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Min/Max Limits"
-msgstr ""
+msgstr "Limiti min/max"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -3404,7 +3410,7 @@ msgstr "Partecipanti"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Participate to %(survey_name)s"
-msgstr ""
+msgstr "Partecipa al sondaggio %(survey_name)s"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
@@ -3488,7 +3494,7 @@ msgstr "Scegli un modello..."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Pick a previous multiple-choice question"
-msgstr ""
+msgstr "Seleziona una domanda a scelta multipla precedente"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -4288,7 +4294,7 @@ msgstr "Etichetta sondaggio"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr ""
+msgstr "Link sondaggio"
 
 #. module: survey
 #. odoo-python
@@ -4707,7 +4713,7 @@ msgstr ""
 #, python-format
 msgid ""
 "This question is positioned before its trigger (\"%s\") and will be skipped."
-msgstr ""
+msgstr "Questa domanda è posizionata prima del trigger (\"%s\") e verrà saltata."
 
 #. module: survey
 #. odoo-python
@@ -5474,6 +5480,7 @@ msgstr "dropdown-item d-flex align-items-center justify-content-between"
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
+"ad es.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5607,4 +5614,4 @@ msgstr "per"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
-msgstr ""
+msgstr "⚠️ Questa domanda è posizionata prima del trigger e verrà saltata."

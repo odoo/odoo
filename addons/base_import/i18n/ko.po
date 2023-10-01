@@ -266,6 +266,18 @@ msgid "Error at row %s: \"%s\""
 msgstr "%s 행 오류: \"%s\""
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"레코드를 가져오는 동안 오류가 발생했습니다. 모든 행은 크기가 같아야 합니다. 제목 행에 %d개 및 첫 번째 행에 %d개가 입력되어 "
+"있습니다. 구문 문자를 변경해야 하는지 확인하세요."
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
