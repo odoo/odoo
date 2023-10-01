@@ -56,7 +56,8 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     if (
         isZWS ||
         isSpace &&
-        getState(parentNode, firstSplitOffset, DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
+        getState(parentNode, firstSplitOffset, DIRECTIONS.LEFT).cType !== CTYPES.CONTENT ||
+        parentNode.tagName === 'A' && !isVisible(parentNode) && !parentNode.classList.contains('btn')
     ) {
         parentNode.oDeleteBackward(firstSplitOffset, alreadyMoved);
         if (isZWS) {
@@ -143,7 +144,9 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
                     return;
                 }
             }
-            parentEl.oDeleteBackward(parentOffset, alreadyMoved);
+            if(!(this.tagName === 'A' && !this.classList.contains('btn') && !isVisible(this))) {
+                parentEl.oDeleteBackward(parentOffset, alreadyMoved);
+            }
             return;
         }
 

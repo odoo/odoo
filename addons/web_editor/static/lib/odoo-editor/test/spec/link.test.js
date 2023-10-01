@@ -555,36 +555,15 @@ describe('Link', () => {
                 }
             });
         });
-        it('should keep isolated link after a delete', async () => {
+        it('should remove isolated link after a keyboard delete', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
                     const a = await clickOnLink(editor);
                     console.log(a.closest('.odoo-editor-editable').outerHTML);
                     await deleteBackward(editor);
-                    console.log(a.closest('.odoo-editor-editable').outerHTML);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
-                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" oe-zws-empty-inline="">[]\u200B</a>c</p>',
                 contentAfter: '<p>a[]c</p>',
-            });
-        });
-        it('should keep isolated link after a delete and typing', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
-                stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await deleteBackward(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await insertText(editor, '1');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await insertText(editor, '2');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                    await insertText(editor, '3');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
-                },
-                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
             });
         });
     });

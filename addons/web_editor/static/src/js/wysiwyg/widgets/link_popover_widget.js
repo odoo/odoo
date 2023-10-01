@@ -140,6 +140,19 @@ const LinkPopoverWidget = Widget.extend({
         if (document !== this.options.wysiwyg.odooEditor.document) {
             $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
         }
+        const onKeyDownDocument = (e) => {
+            if(popoverShown && !e.target.isConnected){
+                this.popover.hide();
+                this.options.wysiwyg.odooEditor._activateContenteditable();
+                const sel = this.options.wysiwyg.odooEditor.document.getSelection();
+                const range  = new Range();
+                range.setStart(sel.anchorNode,sel.anchorOffset);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+        $(document).on('keydown.link_popover', onKeyDownDocument);
 
         return this._super(...arguments);
     },
