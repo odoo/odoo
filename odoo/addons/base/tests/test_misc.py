@@ -228,13 +228,13 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_date(self.env, False), '')
         self.assertEqual(misc.format_date(self.env, None), '')
 
-        self.assertEqual(misc.format_datetime(self.env, date_datetime), 'Jan 31, 2017, 1:00:00 PM')
-        self.assertEqual(misc.format_datetime(self.env, datetime_str), 'Jan 31, 2017, 1:00:00 PM')
+        self.assertEqual(misc.format_datetime(self.env, date_datetime), 'Jan 31, 2017, 1:00:00\u202fPM')
+        self.assertEqual(misc.format_datetime(self.env, datetime_str), 'Jan 31, 2017, 1:00:00\u202fPM')
         self.assertEqual(misc.format_datetime(self.env, ''), '')
         self.assertEqual(misc.format_datetime(self.env, False), '')
         self.assertEqual(misc.format_datetime(self.env, None), '')
 
-        self.assertEqual(misc.format_time(self.env, time_part), '4:30:22 PM')
+        self.assertEqual(misc.format_time(self.env, time_part), '4:30:22\u202fPM')
         self.assertEqual(misc.format_time(self.env, ''), '')
         self.assertEqual(misc.format_time(self.env, False), '')
         self.assertEqual(misc.format_time(self.env, None), '')
@@ -273,8 +273,8 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_datetime(lang.with_context(lang='en_US').env, datetime_str, tz='Europe/Brussels', dt_format='MMM d, y'), 'Jan 31, 2017')
 
         # Check given `lang_code` overwites context lang
-        self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
-        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')
+        self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='fr_FR'), '31 janvier 2017, 11:33:00 +0100')
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format='long', lang_code='en_US'), 'January 31, 2017, 11:33:00\u202fAM +0100')
 
         # -- test `time`
         time_part = datetime.time(16, 30, 22)

@@ -12,22 +12,22 @@ class TestQwebFieldTime(common.TransactionCase):
 
         self.assertEqual(
             self.value_to_html(0),
-            "12:00 AM"
+            "12:00\u202fAM"
         )
 
         self.assertEqual(
             self.value_to_html(11.75),
-            "11:45 AM"
+            "11:45\u202fAM"
         )
 
         self.assertEqual(
             self.value_to_html(12),
-            "12:00 PM"
+            "12:00\u202fPM"
         )
 
         self.assertEqual(
             self.value_to_html(14.25),
-            "2:15 PM"
+            "2:15\u202fPM"
         )
 
         self.assertEqual(

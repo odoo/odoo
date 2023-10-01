@@ -1152,6 +1152,7 @@ class TranslationModuleReader:
             options['encoding'] = 'UTF-8'
             translations = code_translations.get_python_translations(module, self._lang)
         else:
+            options['parse_template_string'] = True
             translations = code_translations.get_web_translations(module, self._lang)
             translations = {tran['id']: tran['string'] for tran in translations['messages']}
         try:
@@ -1172,7 +1173,7 @@ class TranslationModuleReader:
 
         This will include:
         - the python strings marked with _() or _lt()
-        - the javascript strings marked with _t() or _lt() inside static/src/js/
+        - the javascript strings marked with _t() or _lt() inside static/src/
         - the strings inside Qweb files inside static/src/xml/
         - the spreadsheet data files
         """
