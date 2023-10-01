@@ -108,7 +108,9 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button string="Document" icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not res_model or not res_id"/>
+                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not res_id">
+                            <field name="linked_model_name"/> <field name="linked_record_name"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="res_model" invisible="1" />
@@ -377,6 +379,9 @@
                 <field name="privacy" invisible="1"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag'}"/>
+                <field name="linked_model_name" options="{'icon': 'fa fa-check'}" class="pb-0" invisible="not res_id"/>
+                <field name="linked_reference" widget="reference" options="{'icon': 'fa fa-check'}" class="pt-0" invisible="not res_id"/>
+                <field name="res_id" invisible="True"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>

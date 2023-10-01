@@ -176,6 +176,9 @@ class Meeting(models.Model):
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
     res_model = fields.Char(
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
+    linked_model_name = fields.Char(compute='_compute_linked_model_name', readonly=True, store=True)
+    linked_record_name = fields.Char(compute='_compute_linked_record_name', readonly=True, store=True)
+    linked_reference = fields.Char(compute='_compute_linked_reference', readonly=True, store=True)
     # messaging
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
     # attendees
@@ -245,6 +248,30 @@ class Meeting(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+
+    @api.depends('res_id', 'res_model_id')
+    def _compute_linked_model_name(self):
+        for event in self:
+            if event.res_id:
+                event.linked_model_name = event.res_model_id.name + ':'
+            else:
+                event.linked_model_name = None
+
+    @api.depends('res_id', 'res_model')
+    def _compute_linked_record_name(self):
+        for event in self:
+            if event.res_id:
+                event.linked_record_name = self.env[event.res_model].browse(event.res_id).name
+            else:
+                event.linked_record_name = None
+
+    @api.depends('res_id', 'res_model')
+    def _compute_linked_reference(self):
+        for event in self:
+            if event.res_id:
+                event.linked_reference = f"{event.res_model},{event.res_id}"
+            else:
+                event.linked_reference = None
 
     @api.depends('attendee_ids', 'attendee_ids.state', 'partner_ids')
     def _compute_attendees_count(self):
