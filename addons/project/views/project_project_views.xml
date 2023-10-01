@@ -16,7 +16,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" class="o_form_project_project" js_class="project_form">
+                <form string="Project" class="o_form_project_project">
                     <field name="company_id" invisible="1"/>
                     <field name="analytic_account_id" invisible="1"/>
                     <header>
@@ -78,7 +78,7 @@
                     </group>
                     <notebook>
                         <page name="description" string="Description">
-                            <field name="description" options="{'resizable': false}" placeholder="Project description..."/>
+                            <field name="description" options="{'resizable': false, 'full_height': true}" placeholder="Project description..."/>
                         </page>
                         <page name="settings" string="Settings">
                             <group>

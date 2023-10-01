@@ -7,6 +7,7 @@ import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { MoveNodePlugin } from '@web_editor/js/wysiwyg/MoveNodePlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { useDynamicPlaceholder } from "@web/views/fields/dynamic_placeholder_hook";
+import { archParseBoolean } from "@web/views/utils";
 import {
     useBus,
     useService,
@@ -52,6 +53,7 @@ export class HtmlField extends Component {
         wrapper: { type: String, optional: true },
         wysiwygOptions: { type: Object },
         hasReadonlyModifiers: { type: Boolean, optional: true },
+        fullHeight: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -136,6 +138,18 @@ export class HtmlField extends Component {
                     const codeViewEl = this._getCodeViewEl();
                     if (codeViewEl) {
                         codeViewEl.value = this.props.record.data[this.props.name];
+                    }
+                }
+                if (this.props.fullHeight) {
+                    const $editable = this.wysiwyg.getEditable();
+                    const $form_sheet = $editable.closest('.o_form_sheet');
+                    if ($form_sheet.length) {
+                        const { bottom, top } = $editable[0].getBoundingClientRect();
+                        // We removed the height of editor from form_sheet and add padding of the form_sheet.
+                        const nonEditable = ($form_sheet[0].getBoundingClientRect().bottom - bottom) + parseInt(getComputedStyle($form_sheet[0]).padding)
+                        // We take height apart from non-editable and editor top.
+                        const height = (document.documentElement.clientHeight - top) - nonEditable;
+                        $editable.height(height);
                     }
                 }
             })();
@@ -719,6 +733,7 @@ export const htmlField = {
 
             wysiwygOptions,
             hasReadonlyModifiers: dynamicInfo.readonly,
+            fullHeight: archParseBoolean(options.full_height),
         };
     },
 };
