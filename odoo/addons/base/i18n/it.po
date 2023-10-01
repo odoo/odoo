@@ -3945,6 +3945,25 @@ msgid ""
 "      payslip interface, but not in the payslip report\n"
 "    "
 msgstr ""
+"\n"
+"Regole di retribuzione per la Francia.\n"
+"=====================\n"
+"\n"
+"    - Configurazione di hr_payroll per la localizzazione francese\n"
+"    - Tutte le principali norme di configurazione per la busta paga francese, 'cadre' e 'non-cadre'\n"
+"    - Nuovo rendiconto busta paga\n"
+"\n"
+"DA FARE:\n"
+"-----\n"
+"    - Integrazione con il modulo vacanze per la deduzione e l'indennità\n"
+"    - Integrazione con hr_payroll_account per la creazione di account_move_line automatiche\n"
+"      dalla busta paga\n"
+"    - Continuare ad integrare la contribuzione. Attualmente, solo le contribuzioni principali vengono\n"
+"      implementate\n"
+"    - Riformulare il rendiconto sotto webkit\n"
+"    - La payslip.line con appears_in_payslip = Falso dovrebbe apparire nella\n"
+"      interfaccia relativa alla busta paga ma non nel rendiconto relativo\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -4717,13 +4736,13 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Supporto con chat dal vivo\n"
+"Supporto chat dal vivo\n"
 "==========================\n"
 "\n"
-"Consente di lasciare widget di messaggistica istantanea su una pagina web che comunicherà\n"
-"con il server corrente e distribuirà le richieste dei visitatori tra\n"
-"più operatori.\n"
-"Aiuta i tuoi clienti con questa chat e analizza i loro commenti.\n"
+"Consente di rilasciare widget di messaggistica istantanea su qualsiasi pagina web, che comunicano\n"
+"con il server corrente e distribuiscono le richieste dei visitatori tra\n"
+"più operatori di chat dal vivo.\n"
+"Chat di aiuto ai clienti con analisi dei loro commenti.\n"
 "\n"
 "        "
 
@@ -5057,6 +5076,21 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+"Gestisci le richieste di ferie e le assegnazioni\n"
+"=====================================\n"
+"\n"
+"Questa applicazione controlla la pianificazione delle ferie della tua azienda. Permette ai dipendenti di richiedere ferie.  In seguito, i manager possono revisionare le richieste e approvarle o rifiutarle. In questo modo puoi controllare l'intera pianificazione delle ferie per l'azienda intera o filtrando per dipartimento.\n"
+"\n"
+"È possibile configurare diversi tipi di ferie (malattia,  giorni retribuiti, ...) e assegnarle rapidamente ad un dipendente o dipartimento. Un dipendente può anche fare una richiesta per più giorni creando una nuova assegnazione. Aumenterà il totale dei giorni disponibili per quel tipo di assenza (se la richiesta viene accettata).\n"
+"\n"
+"È possibile tenere traccia delle ferie in vari modi grazie ai seguenti resoconti:\n"
+"\n"
+"* Riassunto ferie\n"
+"* Ferie per dipartimento\n"
+"* Analisi ferie\n"
+"\n"
+"È possibile effettuare la sincronizzazione con un'agenda interna (meeting del modulo CRM) per creare automaticamente unmeeting quando la richiesta di ferie viene accettata, configurando un tipo specifico di meeting per il tipo di ferie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_slides
@@ -5103,10 +5137,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"E-mail di massa ai relatori delle sessioni eventi\n"
-"============================================\n"
+"E-mail di massa ai relatori delle tracce di un evento\n"
+"===============================================\n"
 "\n"
-"Modulo ponte che aggiunge requisiti dell'esperienza utente (UX) per semplificare l'invio di e-mail di massa ai relatori delle sessioni eventi.\n"
+"Modulo ponte che aggiunge requisiti dell'esperienza utente (UX) per facilitare l'invio di e-mail di massa ai relatori delle tracce per gli eventi.\n"
 "        "
 
 #. module: base
@@ -5631,11 +5665,11 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Widget organigramma per risorse umane\n"
-"=======================\n"
+"Widget organigramma per RU\n"
+"============================\n"
 "\n"
-"Questo modulo estende il modulo dipendente con un organigramma.\n"
-"(N+1, N+2, subordinazioni dirette)\n"
+"Questo modulo estende la scheda dipendente con un organigramma.\n"
+"(N+1, N+2, subordinati diretti)\n"
 "        "
 
 #. module: base
@@ -6048,10 +6082,11 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Marketing via SMS per i partecipanti di un evento\n"
-"=====================================\n"
+"Marketing via SMS per i relatori delle tracce di un evento\n"
+"====================================================\n"
 "\n"
-"Modulo ponte che aggiunge i requisiti UX per facilitare il marketing via SMS per i partecipanti di un evento.\n"
+"Modulo ponte che aggiunge requisiti dell'esperienza utente (UX) per facilitare il marketing via SMS per i relatori delle\n"
+"tracce di un evento.\n"
 "        "
 
 #. module: base
@@ -7867,6 +7902,17 @@ msgid ""
 "creates next activities for the related approvers.\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo gestisce il flusso delle approvazioni\n"
+"======================================\n"
+"\n"
+"Questo modulo gestisce le richieste di approvazione inerenti viaggi aziendali,\n"
+"non in ufficio, straordinari, oggetti presi in prestito, approvazioni generali,\n"
+"approviggionamenti, approvazioni contratti, ecc.\n"
+"\n"
+"In base alla configurazione del tipo di approvazione, una richiesta\n"
+"crea le prossime attività per i rispettivi approvatori.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -8466,6 +8512,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Integrazione chat dal vivo nel sito web per il modulo di assistenza clienti\n"
+"=====================================================================\n"
+"\n"
+"Funzionalità:\n"
+"\n"
+"    - Canale di chat dal vivo legato al team per rispondere alle domande dei clienti.\n"
+"    - Creazione di nuovi ticket in modo facile utilizzando comandi nel canale.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_slides
@@ -8479,10 +8535,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Integrazione di diapositive nel sito web per il modulo Assistenza\n"
-"==================================================\n"
+"Integrazione diapositive nel sito web per il modulo di assistenza clienti\n"
+"===================================================================\n"
 "\n"
-"    Aggiungi diapositive per il tuo team in modo che i clienti in cerca di aiuto li consultino prima di inviare nuovi biglietti.\n"
+"    Aggiunge presentazioni di diapositive al team in modo che i clienti in cerca di aiuto possano visionarle prima di inviare nuovi ticket.\n"
 "\n"
 "    "
 
@@ -8509,6 +8565,12 @@ msgid ""
 "Other SIPS providers may be compatible, though this is\n"
 "not guaranteed."
 msgstr ""
+"\n"
+"Sistema di pagamento SIPS Wordline per pagamenti in rete\n"
+"\n"
+"Implementa le API di SIPS Wordline per i sistemi di pagamento.\n"
+"Altri fornitori SIPS possono essere compatibili, anche se\n"
+"non è garantito."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -10311,9 +10373,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
-"Addison Olson lavora nel settore <b>IT da 10 anni</b>. È noto\n"
-" in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
-" il budget IT di quasi la metà negli ultimi 2 anni."
+"Addison Olson lavora nel settore informatico <b>da 10 anni</b>. È nota in particolare per la\n"
+"    vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"    previsionale per l'informatica di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10433,6 +10495,71 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
+"Aggiunge supporto per l'autenticazione dal server LDAP.\n"
+"===============================================\n"
+"Questo modulo permette agli utenti di effettuare l'accesso con il nome utente e la password LDAP e creare automaticamente utenti Odoo al volo.\n"
+"\n"
+"**Nota:** Questo modulo funziona esclusivamente su server che hanno il modulo Python ``python-ldap`` installato.\n"
+"\n"
+"Configurazione:\n"
+"--------------\n"
+"dopo aver installato il modulo è necessario configurare i parametri LDAP nel\n"
+"menu delle Impostazioni generali. Aziende diverse possono avere server\n"
+"LDAP diversi, purché abbiano nomi utente unici (gli username devono essere unici\n"
+"in Odoo, anche tra più aziende).\n"
+"\n"
+"È supportato anche il binding anonimo LDAP (per i server LDAP che lo permettono),\n"
+"lasciando i campi relativi a nome utente e password LDAP vuoti nella configurazione.\n"
+"Questo non permette l'autenticazione anonima per gli utenti, è solo per l'account\n"
+"LDAP master utilizzato per verificare se un utente esiste prima di tentare\n"
+"di autenticarlo.\n"
+"\n"
+"È possibile rendere la connessione più sicura attraverso l'utilizzo di STARTTLS, disponibile per i server LDAP che la supportano,\n"
+"abilitando l'opzione TLS nella configurazione LDAP.\n"
+"\n"
+"Per avere più opzioni relative alla configurazione LDAP, fai riferimento alla pagina ldap.conf\n"
+": manpage:`ldap.conf(5)`.\n"
+"\n"
+"Considerazioni sulla sicurezza:\n"
+"------------------------\n"
+"le password LDAP degli utenti non sono mai archiviate nel database Odoo, il server LDAP\n"
+"viene interrogato ogni volta che è necessario autenticare un utente. Le password non\n"
+"vengono duplicate e sono gestite in un unico luogo.\n"
+"\n"
+"Odoo non gestisce le modifiche della password LDAP, quindi ogni modifica\n"
+"deve essere effettuata con altri mezzi direttamente nella directory LDAP (per utenti LDAP).\n"
+"\n"
+"È anche possibile avere utenti locali Odoo insieme con\n"
+"utenti autenticati via LDAP (l'account amministratore è un esempio).\n"
+"\n"
+"Ecco come funziona:\n"
+"---------------------\n"
+"    * Il sistema cerca come prima cosa di autenticare gli utenti nel database locale\n"
+"      di Odoo;\n"
+"    * Se l'autenticazione fallisce (ad esempio perché l'utente non ha una password\n"
+"      locale), il sistema cerca di autenticarlo tramite LDAP;\n"
+"\n"
+"Dato che gli utenti LDAP dispongono di password vuote predefinite nel database Odoo locale\n"
+"(che significa nessun accesso), il primo step fallisce sempre e al server LDAP è\n"
+"richiesto di effettuare l'autenticazione.\n"
+"\n"
+"L'abilitazione di STARTTLS assicura che la richiesta di autenticazione al server LDAP venga\n"
+"crittografata.\n"
+"\n"
+"Modello utente:\n"
+"--------------\n"
+"nella configurazione LDAP presente nelle Impostazioni generali, è possibile selezionare un *Modello\n"
+"utente*. Se selezionato, l'utente verrà utilizzato come modello per creare gli utenti locali\n"
+"quando qualcuno effettuerà l'autenticazione per la prima volta tramite LDAP. Questo\n"
+"permette di configurare in anticipo i gruppi predefiniti e i menu dei nuovi utenti.\n"
+"\n"
+"**Attenzione:** se configuri una password per il modello utente, la stessa verrà\n"
+"         assegnata come password locale ad ogni nuovo utente LDAP, impostando di fatto\n"
+"         una *password master* per questi utenti (finché non viene modificata manualmente). Di\n"
+"         solito non si vuole questo. Un modo facile per configurare un modello utente è di\n"
+"         effettuare l'accesso una volta con un utente LDAP valido, permettere a Odoo di creare un utente locale\n"
+"         vuoto con le stesse credenziali (e una password vuota), in seguito rinomina\n"
+"         l'utente utilizzando un nome utente che non esiste in LDAP e configura i gruppi.\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -10469,7 +10596,7 @@ msgstr "Formattazione indirizzi avanzata"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_gantt
 msgid "Advanced Event Track Management"
-msgstr "Gestione avanzata delle sessioni per gli eventi"
+msgstr "Gestione avanzata delle tracce per gli eventi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -11163,7 +11290,7 @@ msgstr "Attira i visitatori per l'iscrizione alle mailing list"
 #, python-format
 msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
 msgstr ""
-"Atteso un booleano nella valutazione dell'attributo %(attribute)s, ottenuto "
+"Atteso un booleano nella valutazione dell'attributo %(attribute)s, trovato "
 "%(value)s"
 
 #. module: base
@@ -11857,9 +11984,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
-"Brandon lavora nel settore IT <b>da 10 anni</b>. È conosciuto\n"
-"in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
-"il budget IT di quasi la metà negli ultimi 2 anni."
+"Brandon lavora nel settore informatico <b>da 10 anni</b>. È noto in particolare per la\n"
+"                vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"                previsionale per l'informatica di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -11939,7 +12066,7 @@ msgstr "Modulo ponte per inviare notifiche push ai partecipanti di un evento"
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
 msgstr ""
-"Modulo ponte per supportare funzionalità quiz durante sessioni \"dal vivo\"."
+"Modulo ponte per supportare funzionalità quiz durante tracce \"dal vivo\"."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -12292,8 +12419,7 @@ msgstr "Modifica password"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Change the way addresses are displayed in reports"
-msgstr ""
-"Modifica del modo in cui gli indirizzi vengono visualizzati nei report"
+msgstr "Cambia il modo in cui gli indirizzi vengono visualizzati nei report"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -12581,9 +12707,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
-"Colleen Diaz lavora nel settore informatico <b>da 10 anni</b>. In particolare,\n"
-"                è conosciuto per la vendita di trappole per topi. Grazie a questo trucco ha ridotto\n"
-"                il budget informatico di almeno la metà negli utimi due anni."
+"Colleen Diaz lavora nel settore informatico <b>da 10 anni</b>. È nota in particolare per la\n"
+"                vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"                previsionale per l'informatica di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -12930,7 +13056,7 @@ msgstr "Procedure di configurazione"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
 msgid "Configure a Twitter Wall on your Event"
-msgstr "Configura un Twitter Wall per il tuo evento"
+msgstr "Configura una bacheca Twitter per un evento"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
@@ -14790,9 +14916,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
-"Douglas Fletcher lavora nel settore dell'informatica <b>da 10 anni</b>. È famoso\n"
-"    in particolare per la vendita di trappole per topi. Grazie a questo trucco ha ridotto\n"
-"    il budget informatico di almeno la metà negli ultimi 2 anni."
+"Douglas Fletcher lavora nel settore informatico <b>da 10 anni</b>. È noto in particolare per la\n"
+"    vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"    previsionale per l'informatica di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -15143,7 +15269,7 @@ msgstr "Inserire una descrizione e lo scopo della chiave."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
 msgid "Enterprise Event Track"
-msgstr "Sessione evento per Enterprise"
+msgstr "Traccia evento per Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise_partner_assign
@@ -16217,9 +16343,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
-"Floyd Steward lavora nel settore IT <b>da 10 anni</b>. È conosciuto\n"
-"in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
-"il budget IT di quasi la metà negli ultimi 2 anni."
+"Floyd Steward lavora nel settore informatico <b>da 10 anni</b>. È noto in particolare per la\n"
+"    vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"    previsionale per l'informatica di quasi la metà negli ultimi 2 anni."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -16776,10 +16902,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
-"Gordon Owens lavora nel settore dell'informatica <b>da 10 anni</b>. È conosciuto\n"
-"                in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato\n"
-"                il budget IT di quasi la metà negli ultimi due anni.\n"
-"                Famoso consulente senior."
+"Gordon Owens lavora nel settore informatico <b>da 10 anni</b>. È noto in particolare per la\n"
+"                vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"                previsionale per l'informatica di quasi la metà negli ultimi 2 anni.\n"
+"                Noto consulente senior."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -19425,7 +19551,7 @@ msgstr "Tasso di cambio valuta dal vivo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
 msgid "Live Event Tracks"
-msgstr "Sessioni evento dal vivo"
+msgstr "Tracce evento dal vivo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
@@ -20105,7 +20231,7 @@ msgstr "Invio e-mail di massa per ordini di vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track
 msgid "Mass mailing on track speakers"
-msgstr "Invio email di massa ai relatori delle sessioni"
+msgstr "Invio email di massa ai relatori delle tracce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -21045,11 +21171,11 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
-"Nicole lavora nel settore IT <b>da 20 anni</b>.\n"
-"Sviluppa software per aiutare a sviluppare siti web. Ha venduto la sua\n"
-"prima azienda a 30 anni ed è riuscita a far crescere Azure Interior\n"
-"da 1 a 55 dipendenti, soprattutto rivendendo servizi su\n"
-"Odoo."
+"Nicole lavora nel settore informatico <b>da 20 anni</b>. Sviluppa\n"
+"                software per aiutare la creazione di siti web. Ha venduto la sua\n"
+"                prima azienda a 30 anni ed è riuscita a far crescere Azure Interior\n"
+"                da 1 a 55 dipendenti rivendendo soprattutto servizi su\n"
+"                Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -23683,7 +23809,7 @@ msgstr "Parametri utilizzati da tutte le risorse."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__params_store
 msgid "Params storage"
-msgstr "Parametri archivio"
+msgstr "Archivio parametri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__parent_id
@@ -24620,7 +24746,7 @@ msgstr "Ordini di acquisto, offerte e contratti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_social
 msgid "Push notification to track listeners"
-msgstr "Invio notifiche push a chi ascolta le sessioni"
+msgstr "Invio notifiche push a chi ascolta le tracce"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
@@ -24722,17 +24848,17 @@ msgstr "Quiz e incontri con la comunità"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
 msgid "Quiz on Live Event Tracks"
-msgstr "Quiz per sessioni evento dal vivo"
+msgstr "Quiz per tracce evento dal vivo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
 msgid "Quizzes on Tracks"
-msgstr "Quiz per le sessioni"
+msgstr "Quiz per le tracce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
 msgid "Quizzes on tracks"
-msgstr "Quiz per le sessioni"
+msgstr "Quiz per le tracce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
@@ -26086,7 +26212,7 @@ msgid ""
 "tracks."
 msgstr ""
 "Invia ai partecipanti all'evento notifiche push di promemoria, basate sulle "
-"sessioni nella lista dei desideri."
+"tracce nella lista dei desideri."
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar_sms
@@ -26547,8 +26673,7 @@ msgstr "Chiamato anche BIC o Swift."
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, the syntax 'name:agg(field)' is not available for attachments"
-msgstr ""
-"Spiacenti, la sintassi 'name:agg(field)' non è disponibile per gli allegati"
+msgstr "La sintassi \"name:agg(field)\" non è disponibile per gli allegati"
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:0
@@ -26567,7 +26692,7 @@ msgstr "Nessuna autorizzazione per accedere al documento."
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you must provide fields to read on attachments"
-msgstr "È necessario fornire campi per leggere gli allegati"
+msgstr "È necessario fornire i campi per leggere gli allegati"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__sort
@@ -26657,7 +26782,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr "Sponsor, percorsi, programma, notizie sull'evento"
+msgstr "Sponsor, tracce, programma, notizie sull'evento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_spreadsheet_account
@@ -26987,7 +27112,7 @@ msgstr "Argomenti aggiuntivi"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
-msgstr "Supporta le tracce dal vivo: streaming, partecipazione, youtube"
+msgstr "Supporta le tracce dal vivo: streaming, partecipazione, YouTube"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
@@ -27446,10 +27571,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
-"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
-"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
-"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500. Le ',' "
-"rappresentano i separatori per le centinaia in ogni caso."
+"Il formato separatore deve essere del tipo [,n] dove 0 < n :partendo dalla "
+"cifra unitaria. -1 termina la separazione. Es. [3,2,-1] rappresenta 106500 "
+"come 1,06,500; [1,2,-1] corrisponde a 106,50,0; [3] corrisponde a 106,500. A"
+" condizione che per ciascun caso il separatore delle migliaia sia \",\"."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -27460,9 +27585,10 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
-"Il formato separatore dovrebbe essere [,n] dove 0 < n :partendo dalla cifra "
-"unitaria. -1 terminerà la separazione. Ad es. [3,2,-1] farà che 106500 sia "
-"1,06,500; [1,2,-1] rappresenterà 106,50,0;[3] codificherà 106,500."
+"Il formato separatore deve essere del tipo [,n] dove 0 < n :partendo dalla "
+"cifra unitaria. -1 termina la separazione. Es. [3,2,-1] rappresenta 106500 "
+"come 1,06,500; [1,2,-1] corrisponde a 106,50,0; [3] corrisponde a 106,500. A"
+" condizione che per ciascun caso il separatore delle migliaia sia \",\"."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -28074,10 +28200,11 @@ msgid ""
 " and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
-"Questo campo funzione calcola la lista ordinata delle viste che devono "
-"essere abilitate durante la visualizzazione di una azione, modalità vista "
-"centralizzata, viste e viste correlate. Il risultato è una lista ordinata di"
-" coppie (view_id,view_mode)."
+"Questo campo funzione calcola l'elenco ordinato delle viste che devono "
+"essere abilitate quando viene visualizzato il risultato di un'azione, "
+"federando la modalità delle viste, le viste e la vista di riferimento. Il "
+"risultato viene restituito come un elenco ordinato di coppie (view_id, "
+"view_mode)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
@@ -28289,6 +28416,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
+"Questo modulo aiuta ad analizzare e organizzare le tracce di un evento.\n"
+"Per questo scopo aggiunge una vista Gantt alle tracce."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -28524,10 +28653,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
-"Toni Rhodes lavora nel settore IT <b>da 10 anni</b>. È conosciuto\n"
-"in particolare per la vendita di trappole per topi. Con questo trucco ha tagliato il\n"
-"budget IT di quasi la metà negli ultimi 2 anni.\n"
-"Famoso Managing Partner."
+"Toni Rhodes lavora nel settore informatico <b>da 10 anni</b>. È nota in particolare per la\n"
+"                vendita di trappole per \"mouse\". Con questo trucco ha tagliato il bilancio\n"
+"                previsionale per l'informatica di quasi la metà negli ultimi 2 anni.\n"
+"                Noto socio amministratore."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -28560,7 +28689,7 @@ msgstr "Tour"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr "Marketing SMS per oratori conferenze"
+msgstr "Marketing via SMS ai relatori delle tracce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -28730,8 +28859,8 @@ msgstr "Albero"
 #, python-format
 msgid "Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)"
 msgstr ""
-"Un elemento figlio di un albero può avere unicamente uno dei %(tags)s tag (e"
-" non %(wrong_tag)s)"
+"Un elemento figlio di una vista ad albero può avere solo uno dei tag "
+"%(tags)s (non %(wrong_tag)s)"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -28894,7 +29023,7 @@ msgstr "Spedizione UPS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS: Bill My Account"
-msgstr "UPS: fatturare il mio conto"
+msgstr "UPS: Bill My Account"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
@@ -29289,7 +29418,7 @@ msgstr "Utilizza un codice a barre per identificare il contatto."
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Use barcode scanners to process logistics operations"
 msgstr ""
-"Utilizzo di lettori di codice a barre per elaborare operazioni di logistica"
+"Utilizzo di lettori di codici a barre per elaborare operazioni di logistica"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -29877,8 +30006,8 @@ msgid ""
 msgstr ""
 "Siamo una società di consulenza tecnologica e strategica che crea soluzioni "
 "che aumentano il valore attraverso l'uso di software avanzati per i nostri "
-"clienti, in tutto il mondo. Noi di Lumber Inc offriamo l'esperienza "
-"operativa unita a..."
+"clienti, in tutto il mondo. In Lumber Inc. offriamo l'esperienza operativa "
+"unita a..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -29889,7 +30018,7 @@ msgid ""
 msgstr ""
 "Siamo una società di consulenza tecnologica e strategica che crea soluzioni che aumentano il valore attraverso l'uso di software avanzati per i nostri clienti, in tutto il mondo.\n"
 "<br> <br>\n"
-"In Lumber Inc portiamo l'esperienza operativa unita all'acume tecnologico. Siamo consapevoli che qualsiasi software a supporto delle operazioni aziendali deve essere progettato in modo tale da facilitare l'esecuzione dei processi operativi critici e servire da strumento per gli utenti piuttosto che da ostacolo. Il nostro approccio si concentra innanzitutto sul processo, assicurandoci che contribuisca agli obiettivi dell'azienda, quindi lo ottimizziamo e progettiamo le soluzioni software per supportarlo al meglio."
+"In Lumber Inc. portiamo l'esperienza operativa unita all'acume tecnologico. Siamo consapevoli che qualsiasi software a supporto delle operazioni aziendali deve essere progettato in modo tale da facilitare l'esecuzione dei processi operativi critici, e deve servire da strumento per gli utenti piuttosto che da ostacolo. Il nostro approccio si concentra innanzitutto sul processo, assicurandoci che contribuisca agli obiettivi dell'azienda, quindi lo ottimizziamo e progettiamo le soluzioni software per supportarlo al meglio."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -29997,7 +30126,7 @@ msgstr "Assistenza clienti da sito web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr "Servizio assistenza con chat dal vivo sul sito web"
+msgstr "Assistenza clienti con chat dal vivo nel sito web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
@@ -30014,7 +30143,7 @@ msgstr "Link sito web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
 msgid "Website Live Chat"
-msgstr "Chat dal vivo dal sito web"
+msgstr "Chat dal vivo nel sito web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail
@@ -30059,7 +30188,7 @@ msgstr "Bacheca vendite sito web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr "Assistenza clienti con presentazioni nel sito web"
+msgstr "Assistenza clienti con diapositive nel sito web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
@@ -30261,7 +30390,7 @@ msgstr "Ordini di lavoro, pianificazione, resoconti giacenze."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS"
-msgstr "Worldline SIPS"
+msgstr "SIPS Wordline"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write

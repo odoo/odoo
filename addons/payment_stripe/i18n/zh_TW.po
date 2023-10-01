@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +35,13 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
-"指向您的品牌或產品的正方形圖片的相對或絕對網址。在條紋配置文件中定義。請參閱：https://stripe.com/docs/checkout"
+"指向代表你品牌或產品的一幅正方形圖片的網址，可以是相對或絕對網址。正如你的 Stripe 個人檔案中所定義。請參閱： "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr "檢出圖像URL"
+msgstr "結賬圖片網址"
 
 #. module: payment_stripe
 #. openerp-web
@@ -68,7 +70,7 @@ msgstr "錯誤"
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別碼"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -77,6 +79,8 @@ msgid ""
 "signature of events sent by Stripe to Odoo. Failing to set this field in "
 "Odoo will disable the webhook system for this acquirer entirely."
 msgstr ""
+"如果你啟用網絡鈎子（webhook），此秘密金鑰將用於驗證 Stripe 傳送至 Odoo 各事件的電子簽章。若未有在 Odoo "
+"中設定此欄位，此收款服務商的網絡鈎子系統將完全停用。"
 
 #. module: payment_stripe
 #. openerp-web
@@ -100,7 +104,7 @@ msgstr "付款收單方"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Payment Method ID"
-msgstr ""
+msgstr "付款方法識別碼"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -140,12 +144,12 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr ""
+msgstr "Stripe 付款意向識別碼"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
 msgid "Stripe Payment Intent Secret"
-msgstr ""
+msgstr "Stripe 付款意圖秘密"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -160,7 +164,7 @@ msgstr "Stripe 密鑰"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Stripe Webhook Secret"
-msgstr ""
+msgstr "Stripe 網絡鈎子秘密"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -173,7 +177,7 @@ msgstr "Stripe 為我們提供了以下關於 '%s' 問題的訊息："
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: %(count)s orders found for reference %(reference)s"
-msgstr ""
+msgstr "Stripe：找到 %(count)s 張訂單符合參考 %(reference)s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -187,7 +191,7 @@ msgstr "Stripe：未找到參考 %s 的訂單"
 msgid ""
 "Unable to convert Stripe customer for SCA compatibility. Is there at least "
 "one card for this customer in the Stripe backend?"
-msgstr "無法轉換條帶客戶以實現 SCA 相容性。Stripe後端中是否至少有一張此客戶的卡？"
+msgstr "無法將 Stripe 客戶轉換至符合 SCA 相容性。請問是否至少有一張該客戶的卡片在 Stripe 後端？"
 
 #. module: payment_stripe
 #. openerp-web
