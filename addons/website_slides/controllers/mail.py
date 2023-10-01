@@ -3,9 +3,10 @@
 
 import werkzeug
 
-from werkzeug.exceptions import NotFound, Forbidden
+from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo.exceptions import AccessError
+from odoo import http, _
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
@@ -61,7 +62,7 @@ class SlidesPortalChatter(PortalChatter):
         ]  # restrict to the given message_id
         message = request.env['mail.message'].search(domain, limit=1)
         if not message:
-            raise NotFound()
+            raise AccessError(_("In staff mode, you can't change comments. Please change mode to modify comments."))
         message.sudo().write({
             'body': message_body,
             'attachment_ids': [(4, aid) for aid in attachment_ids],
