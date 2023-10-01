@@ -71,7 +71,7 @@ class ProductProduct(models.Model):
                 '|',
                     ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
                     '&',
-                        ('move_dest_ids', '=', False),
+                        ('move_dest_bool', '=', False),
                         ('orderpoint_id.location_id', 'in', location_ids)
             ]])
         if warehouse_ids:
@@ -79,7 +79,7 @@ class ProductProduct(models.Model):
                 '|',
                     ('order_id.picking_type_id.warehouse_id', 'in', warehouse_ids),
                     '&',
-                        ('move_dest_ids', '=', False),
+                        ('move_dest_bool', '=', False),
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
             ]])
             domain = expression.OR([domain, wh_domain])
