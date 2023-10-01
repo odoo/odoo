@@ -130,13 +130,13 @@ Options:
             <h6 class="text-uppercase pb-2 mb-4 border-bottom font-weight-bold">Follow Us</h6>
             <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a t-if="website.social_twitter" t-att-href="website.social_twitter" t-att-class="classes"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
-                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" t-att-class="classes"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-                <a t-if="website.social_youtube" t-att-href="website.social_youtube" t-att-class="classes"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
-                <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
-                <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
-                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
+                <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook" role="img" aria-label="Facebook" title="Facebook"/></a>
+                <a t-if="website.social_twitter" t-att-href="website.social_twitter" t-att-class="classes"><i class="fa fa-twitter text-twitter" role="img" aria-label="Twitter" title="Twitter"/></a>
+                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" t-att-class="classes"><i class="fa fa-linkedin text-linkedin" role="img" aria-label="LinkedIn" title="LinkedIn"/></a>
+                <a t-if="website.social_youtube" t-att-href="website.social_youtube" t-att-class="classes"><i class="fa fa-youtube-play text-youtube" role="img" aria-label="Youtube" title="Youtube"/></a>
+                <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fa fa-github text-github" role="img" aria-label="Github" title="Github"/></a>
+                <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fa fa-instagram text-instagram" role="img" aria-label="Instagram" title="Instagram"/></a>
+                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" t-att-class="classes"><i class="fa fa-rss-square" role="img" aria-label="RSS" title="RSS"/></a>
             </div>
             <t t-call="website_mail.follow" t-if="blog">
                 <t t-set="email" t-value="user_id.email"/>
