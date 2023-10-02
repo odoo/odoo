@@ -13,4 +13,9 @@
             <input t-else="" type="hidden" class="d-none js_quantity form-control quantity" name="add_qty" t-att-value="add_qty or 1"/>
         </xpath>
     </template>
+    <template id="optional_product_items_website" inherit_id="sale_product_configurator.optional_product_items">
+        <xpath expr="//tr[hasclass('js_product')]" position="attributes">
+            <attribute name="t-if">not combination_info.get('prevent_zero_price_sale', False)</attribute>
+        </xpath>
+    </template>
 </odoo>
