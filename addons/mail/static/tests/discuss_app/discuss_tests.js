@@ -11,6 +11,8 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { editInput, makeDeferred, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, createFile, focus, insertText, scroll } from "@web/../tests/utils";
 
+import { contains } from "@web/../tests/utils";
+
 QUnit.module("discuss");
 
 QUnit.test("sanity check", async (assert) => {
@@ -223,6 +225,7 @@ QUnit.test("sidebar: chat im_status rendering", async () => {
         },
     ]);
     const { openDiscuss } = await start({ hasTimeControl: true });
+<<<<<<< HEAD
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel-threadIcon", { count: 3 });
     await contains(".o-mail-DiscussSidebarChannel", {
@@ -237,6 +240,34 @@ QUnit.test("sidebar: chat im_status rendering", async () => {
         text: "Partner3",
         contains: [".o-mail-ThreadIcon div[title='Away']"],
     });
+||||||| parent of 9153ced5f6b (temp)
+    await openDiscuss();
+    assert.containsN($, ".o-mail-DiscussCategoryItem-threadIcon", 3);
+    const chat1 = $(".o-mail-DiscussCategoryItem")[0];
+    const chat2 = $(".o-mail-DiscussCategoryItem")[1];
+    const chat3 = $(".o-mail-DiscussCategoryItem")[2];
+    assert.strictEqual(chat1.textContent, "Partner1");
+    assert.strictEqual(chat2.textContent, "Partner2");
+    assert.strictEqual(chat3.textContent, "Partner3");
+    assert.containsOnce(chat1, ".o-mail-ThreadIcon div[title='Offline']");
+    assert.containsOnce(chat2, ".fa-circle.text-success");
+    assert.containsOnce(chat3, ".o-mail-ThreadIcon div[title='Away']");
+=======
+    await openDiscuss();
+    await contains(".o-mail-DiscussCategoryItem-threadIcon", { count: 3 });
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Partner1",
+        contains: [".o-mail-ThreadIcon div[title='Offline']"],
+    });
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Partner2",
+        contains: [".fa-circle.text-success"],
+    });
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Partner3",
+        contains: [".o-mail-ThreadIcon div[title='Away']"],
+    });
+>>>>>>> 9153ced5f6b (temp)
 });
 
 QUnit.test("No load more when fetch below fetch limit of 30", async (assert) => {
