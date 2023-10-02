@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="nav_AEA_invoice_xml">
+        <szamla>
+            <fejlec>
+                <szlasorszam t-esc="format_text(invoice.name)"/>
+                <szlatipus t-if="invoice.move_type=='out_invoice'" t-translation="off">1</szlatipus>
+                <szlatipus t-else="else" t-translation="off">3</szlatipus>
+                <szladatum t-esc="format_date(invoice.invoice_date)"/>
+                <teljdatum t-esc="format_date(invoice.l10n_hu_delivery_date)"/>
+            </fejlec>
+            <szamlakibocsato>
+                <adoszam t-esc="format_text(company_partner.vat)"/>
+                <kozadoszam t-if="False" t-esc="format_text('HU%s' % company_partner.vat[:8])"/>
+                <kisadozo t-esc="format_bool(company_partner.l10n_hu_company_tax_arrangments=='sb')"/>
+                <nev t-esc="format_text(company_partner.name)"/>
+                <cim>
+                    <iranyitoszam t-esc="format_text(company_partner.zip)"/>
+                    <telepules t-esc="format_text(company_partner.city)"/>
+                    <kozterulet_neve t-esc="format_text(company_partner.street)"/>
+                </cim>
+                <egyeni_vallalkozo t-esc="format_bool(False)"/>
+            </szamlakibocsato>
+            <vevo>
+                <adoszam t-esc="format_text(invoice_partner.vat)"/>
+                <nev t-esc="format_text(invoice_partner.name)"/>
+                <cim>
+                    <iranyitoszam t-esc="format_text(invoice_partner.zip)"/>
+                    <telepules t-esc="format_text(invoice_partner.city)"/>
+                    <kozterulet_neve t-esc="format_text(invoice_partner.street)"/>
+                </cim>
+            </vevo>
+            <t t-foreach="line_data" t-as="line">
+                <termek_szolgaltatas_tetelek t-if="line['line_object'].display_type=='product'">
+                    <termeknev t-esc="format_text(line['description'])"/>
+                    <menny t-esc="line['quantity']"/>
+                    <mertekegys t-if="line['line_object'].product_uom_id" t-esc="format_text(line['line_object'].product_uom_id.name)"/>
+                    <mertekegys t-else="else" t-esc="format_text('darab')"/>
+                    <nettoar t-esc="format_num(line['sum_net'])"/>
+                    <nettoegysar t-esc="format_num(line['price_unit'])"/>
+                    <adokulcs t-if="line.get('vat_percent') not in (None, False, 0)" t-esc="format_num(line['vat_percent']*100)"/>
+                    <adokulcs t-else="else" t-translation="off">0</adokulcs>
+                    <adoertek t-esc="format_num(line['sum_vat'])"/>
+                    <bruttoar t-esc="format_num(line['sum_gross'])"/>
+                </termek_szolgaltatas_tetelek>
+                <termek_szolgaltatas_tetelek t-if="line['line_object'].display_type=='rounding'">
+                    <termeknev t-esc="format_text('Kerekítés')"/>
+                    <menny t-translation="off">1</menny>
+                    <mertekegys t-esc="format_text('-')"/>
+                    <nettoar t-esc="format_num(line['price_unit'])"/>
+                    <nettoegysar t-esc="format_num(line['price_unit'])"/>
+                    <adokulcs t-translation="off">0</adokulcs>
+                    <adoertek t-translation="off">0</adoertek>
+                    <bruttoar t-esc="format_num(line['price_unit'])"/>
+                </termek_szolgaltatas_tetelek>
+            </t>
+            <modosito_szla t-if="invoice.move_type == 'out_refund' and invoice.reversed_entry_id">
+                <eredeti_sorszam t-esc="format_text(invoice.reversed_entry_id.name)"/>
+            </modosito_szla>
+            <zaradekok>
+                <penzforgelsz t-esc="format_bool(company_partner.l10n_hu_company_tax_arrangments=='ca')"/>
+                <ford_ado t-esc="format_bool(False)"/>
+                <adoment_hiv t-esc="format_bool(company_partner.l10n_hu_company_tax_arrangments=='ie')"/>
+            </zaradekok>
+            <nem_kotelezo>
+                <fiz_hatarido t-if="invoice.invoice_date_due" t-esc="format_date(invoice.invoice_date_due)"/>
+                <fiz_mod t-if="invoice.l10n_hu_payment_mode == 'TRANSFER'" t-esc="format_text('átutalás')"/>
+                <fiz_mod t-if="invoice.l10n_hu_payment_mode == 'CASH'" t-esc="format_text('készpénz')"/>
+                <fiz_mod t-if="invoice.l10n_hu_payment_mode == 'CARD'" t-esc="format_text('bankkártya')"/>
+                <fiz_mod t-if="invoice.l10n_hu_payment_mode == 'VOUCHER'" t-esc="format_text('utalvány')"/>
+                <penznem t-esc="format_text(invoice.currency_id.name)"/>
+                <szla_forma t-esc="format_text('papír alapon továbbított számla')"/>
+                <kibocsato_bankszla t-if="company_partner_bank_account" t-esc="format_text(company_partner_bank_account.acc_number)"/>
+            </nem_kotelezo>
+            <osszesites>
+                <afarovat t-foreach="tax_summary_data['tax_summary']" t-as="tax">
+                    <nettoar t-esc="format_num(tax['net'])"/>
+                    <adokulcs t-if="tax.get('vat_percent') not in (None, False, 0)" t-esc="format_num(tax['vat_percent']*100)"/>
+                    <adokulcs t-else="else" t-translation="off">0</adokulcs>
+                    <adoertek t-esc="format_num(tax['amount'])"/>
+                    <bruttoar t-esc="format_num(tax['net'] + tax['amount'])"/>
+                </afarovat>
+                <vegosszeg>
+                    <nettoarossz t-esc="format_num(tax_summary_data['net'])"/>
+                    <afaertekossz t-esc="format_num(tax_summary_data['vat'])"/>
+                    <bruttoarossz t-esc="format_num(tax_summary_data['gross'])"/>
+                </vegosszeg>
+            </osszesites>
+        </szamla>
+    </template>
+
+    <template id="nav_AEA_xml">
+        <szamlak xmlns='http://schemas.nav.gov.hu/2013/szamla' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://schemas.nav.gov.hu/2013/szamla 23_2014_szamlasema.xsd'>
+            <export_datuma t-esc="format_date(export_date)"/>
+            <export_szla_db t-esc="len(invoices)"/>
+            <kezdo_ido t-esc="format_date(min([i.invoice_date for i in invoices]))"/>
+            <zaro_ido t-esc="format_date(max([i.invoice_date for i in invoices]))"/>
+            <kezdo_szla_szam t-esc="format_text(min(invoices.mapped('name')))"/>
+            <zaro_szla_szam t-esc="format_text(max(invoices.mapped('name')))"/>
+            <t t-foreach="invoice_xmls" t-as="szamla_xml">
+                <t t-esc="szamla_xml"/>
+            </t>
+        </szamlak>
+    </template>
+
+</odoo>

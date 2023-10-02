@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_form_inherit_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.hu.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="after">
+                <h2 attrs="{'invisible': [('country_code', '!=', 'HU')]}">Hungarian Electronic Invoicing (HU)</h2>
+                <div class="row mt16 o_settings_container" id="l10n_hu_edi_settings" attrs="{'invisible': [('country_code', '!=', 'HU')]}">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="l10n_hu_production_cred"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_hu_production_cred"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." role="img"/>
+                            <div class="text-muted">
+                                This indicates whether your system is ready for billing according to the Hungarian rules.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_hu_nav_credential_ids"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." role="img"/>
+                            <div class="text-muted">
+                                This login and password and keys are given by the
+                                <b>Hungarian Authority</b>
+                                <br/>
+                                How do you get it?:
+                                <a href="https://onlineszamla.nav.gov.hu/az_online_szamla_rendszer_hasznalata" target="_NEW">Open OnlineSzámla Portal</a>
+                                <br/>
+                            </div>
+                            <div class="content-group">
+                                <field name="l10n_hu_nav_credential_ids" style="width: 100%"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="l10n_hu_force_demo_mode">
+                        <div class="o_setting_left_pane">
+                            <field name="l10n_hu_use_demo_mode"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_hu_use_demo_mode" string="Force DEMO mode"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." role="img"/>
+                            <div class="text-muted">
+                                Check this box to force the system to operate in DEMO mode. In this case, the invoices will still be uploaded to the NAV servers, but not to the live servers, but to the test servers. You can check
+                                the correctness of the data content of the uploaded invoices by logging into the test online invoice portal.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_hu_special_arrangements">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Special tax arrangements</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." role="img"/>
+                            <div class="text-muted">
+                                Your company's specific tax arrangements, if any of these apply to your company.
+                            </div>
+                            <div class="text-muted">
+                                <field name="l10n_hu_company_tax_arrangments"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="nav_online_invoice_xml_3_0_address" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+        <base:simpleAddress>
+            <base:countryCode t-esc="partner.country_code"/>
+            <base:region t-if="partner.state_id" t-esc="partner.state_id.name"/>
+            <base:postalCode t-esc="partner.zip"/>
+            <base:city t-esc="partner.city"/>
+            <base:additionalAddressDetail t-esc="partner.street"/>
+        </base:simpleAddress>
+    </template>
+
+    <template id="nav_online_invoice_xml_3_0_vatnumber" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+        <t t-if="'-' in vatnumber">
+            <base:taxpayerId t-esc="vatnumber[:8]"/>
+            <base:vatCode t-esc="vatnumber[9:10]"/>
+            <base:countyCode t-esc="vatnumber[11:13]"/>
+        </t>
+        <t t-else="else">
+            <base:taxpayerId t-esc="vatnumber[:8]"/>
+            <base:vatCode t-esc="vatnumber[8:9]"/>
+            <base:countyCode t-esc="vatnumber[9:11]"/>
+        </t>
+    </template>
+
+    <template id="nav_online_invoice_xml_3_0_line">
+        <lineNumber t-esc="line_data['line_number']"/>
+        <lineModificationReference t-if="invoice.move_type=='out_refund' and invoice.reversed_entry_id">
+            <lineNumberReference t-esc="line_data['line_number_chain']"/>
+            <lineOperation t-translation="off">CREATE</lineOperation>
+        </lineModificationReference>
+        <advanceData t-if="line_data.get('is_advance')">
+            <advanceIndicator t-esc="format_bool(True)"/>
+            <advancePaymentData t-if="line_data.get('advanced_invoice')">
+                <advanceOriginalInvoice t-esc="line_data['advanced_invoice'].name"/>
+                <advancePaymentDate t-esc="format_date(line_data['advanced_invoice'].l10n_hu_delivery_date)"/>
+                <advanceExchangeRate t-esc="format_float(line_data['advanced_invoice'].l10n_hu_currency_rate, 2)"/>
+            </advancePaymentData>
+        </advanceData>
+        <productCodes t-if="line_data['product_object'] and line_data['product_object'].l10n_hu_product_code_type and line_data['product_object'].l10n_hu_product_code">
+            <productCode>
+                <productCodeCategory t-esc="line_data['product_object'].l10n_hu_product_code_type" t-translation="off"/>
+                <productCodeValue t-esc="line_data['product_object'].l10n_hu_product_code" t-translation="off"/>
+            </productCode>
+        </productCodes>
+        <lineExpressionIndicator t-esc="line_data['product_object'] and format_bool(line_data['product_object'].type!='service') or format_bool(False)"/>
+        <lineNatureIndicator t-esc="line_data['nature_indicator']"/>
+        <lineDescription t-esc="format_text(line_data['description'], 512)"/>
+        <quantity t-if="line_data['quantity']!=None" t-esc="format_float(line_data['quantity'], 6)"/>
+        <unitOfMeasure t-if="'uom' in line_data" t-esc="line_data['uom']"/>
+        <unitOfMeasureOwn t-if="line_data.get('uom')=='OWN'" t-esc="line_data['uom_name']"/>
+        <unitPrice t-esc="format_monetary(sign*line_data['price_unit'], invoice.currency_id)"/>
+        <unitPriceHUF t-esc="format_monetary(sign*line_data['price_unit']*invoice.l10n_hu_currency_rate, currency_huf)"/>
+        <lineDiscountData t-if="'discount' in line_data">
+            <discountDescription t-esc="line_data['discount']"/>
+            <discountValue t-if="'discount_value' in line_data" t-esc="format_monetary(sign*line_data['discount_value'] * line_data['quantity'], invoice.currency_id)"/>
+            <discountRate t-if="'discount_rate' in line_data" t-esc="format_float(line_data['discount_rate'] / 100.0, 4)"/>
+        </lineDiscountData>
+        <lineAmountsNormal>
+            <lineNetAmountData>
+                <lineNetAmount t-esc="format_monetary(sign*line_data['sum_net'], invoice.currency_id)"/>
+                <lineNetAmountHUF t-esc="format_monetary(sign*line_data['sum_net_huf'], currency_huf)"/>
+            </lineNetAmountData>
+            <lineVatRate>
+                <vatPercentage t-if="line_data['vat_type']=='VAT'" t-esc="format_float(line_data['vat_percent'], 4)"/>
+                <vatExemption t-if="line_data['vat_type'] in ['AAM','TAM','KBAET','KBAUK','EAM','NAM']">
+                    <case t-esc="line_data['vat_type']"/>
+                    <reason t-esc="line_data['vat_reason']"/>
+                </vatExemption>
+                <vatOutOfScope t-if="line_data['vat_type'] in ['ATK','EUFAD37','EUFADE','EUE','HO']">
+                    <case t-esc="line_data['vat_type']"/>
+                    <reason t-esc="line_data['vat_reason']"/>
+                </vatOutOfScope>
+                <noVatCharge t-if="line_data['vat_type']=='NO-VAT'" t-esc="format_bool(True)"/>
+            </lineVatRate>
+            <lineVatData t-if="line_data['sum_vat']!=0">
+                <lineVatAmount t-esc="format_monetary(sign*line_data['sum_vat'], invoice.currency_id)"/>
+                <lineVatAmountHUF t-esc="format_monetary(sign*line_data['sum_vat_huf'], currency_huf)"/>
+            </lineVatData>
+            <lineGrossAmountData>
+                <lineGrossAmountNormal t-esc="format_monetary(sign*line_data['sum_gross'], invoice.currency_id)"/>
+                <lineGrossAmountNormalHUF t-esc="format_monetary(sign*line_data['sum_gross_huf'], currency_huf)"/>
+            </lineGrossAmountData>
+        </lineAmountsNormal>
+    </template>
+
+    <template id="nav_online_invoice_xml_3_0">
+        <InvoiceData xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd"
+            xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+            <invoiceNumber t-esc="invoice.name"/>
+            <invoiceIssueDate t-esc="invoice.invoice_date"/>
+            <completenessIndicator t-esc="format_bool(False)"/>
+            <invoiceMain>
+                <invoice>
+                    <invoiceReference t-if="invoice.move_type=='out_refund' and invoice.reversed_entry_id">
+                        <originalInvoiceNumber t-esc="invoice.reversed_entry_id.name"/>
+                        <modifyWithoutMaster t-esc="format_bool(False)"/>
+                        <modificationIndex t-esc="invoice.l10n_hu_invoice_chain"/>
+                    </invoiceReference>
+                    <invoiceHead>
+                        <supplierInfo>
+                            <supplierTaxNumber>
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                    <t t-if="invoice.fiscal_position_id.foreign_vat" t-set="vatnumber" t-value="invoice.fiscal_position_id.foreign_vat"/>
+                                    <t t-else="else" t-set="vatnumber" t-value="company_partner.vat"/>
+                                </t>
+                            </supplierTaxNumber>
+                            <groupMemberTaxNumber t-if="company_partner.l10n_hu_is_vat_group_member">
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                    <t t-set="vatnumber" t-value="company_partner.l10n_hu_vat_group_member"/>
+                                </t>
+                            </groupMemberTaxNumber>
+                            <supplierName t-esc="company_partner.name"/>
+                            <supplierAddress>
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_address">
+                                    <t t-set="partner" t-value="company_partner"/>
+                                </t>
+                            </supplierAddress>
+                            <supplierBankAccountNumber t-if="company_partner_bank_account" t-esc="company_partner_bank_account.acc_number"/>
+                        </supplierInfo>
+                        <customerInfo t-if="not invoice_partner.is_company">
+                            <customerVatStatus t-translation="off">PRIVATE_PERSON</customerVatStatus>
+                        </customerInfo>
+                        <customerInfo t-else="else">
+                            <customerVatStatus t-if="invoice_partner.country_code=='HU'" t-translation="off">DOMESTIC</customerVatStatus>
+                            <customerVatStatus t-else="else" t-translation="off">OTHER</customerVatStatus>
+                            <customerVatData>
+                                <customerTaxNumber t-if="invoice_partner.country_code=='HU'">
+                                    <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_vatnumber">
+                                        <t t-set="vatnumber" t-value="invoice_partner.vat"/>
+                                    </t>
+                                </customerTaxNumber>
+                                <communityVatNumber t-if="invoice_partner.country_code!='HU' and invoice_partner.country_code in eu_country_codes" t-esc="invoice_partner.vat"/>
+                                <thirdStateTaxId t-if="invoice_partner.country_code not in eu_country_codes" t-esc="invoice_partner.vat or 'Ismeretlen'" t-translation="off"/>
+                            </customerVatData>
+                            <customerName t-esc="invoice_partner.display_name"/>
+                            <customerAddress>
+                                <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_address">
+                                    <t t-set="partner" t-value="invoice_partner"/>
+                                </t>
+                            </customerAddress>
+                            <customerBankAccountNumber t-if="invoice_partner_bank_account" t-esc="invoice_partner_bank_account.acc_number"/>
+                        </customerInfo>
+                        <invoiceDetail>
+                            <invoiceCategory t-translation="off">NORMAL</invoiceCategory>
+                            <invoiceDeliveryDate t-esc="format_date(invoice.l10n_hu_delivery_date)"/>
+                            <t t-if="invoice.currency_id.name=='HUF'">
+                                <currencyCode t-translation="off">HUF</currencyCode>
+                                <exchangeRate t-translation="off">1.00</exchangeRate>
+                            </t>
+                            <t t-else="else">
+                                <currencyCode t-esc="invoice.currency_id.name" t-translation="off"/>
+                                <exchangeRate t-esc="format_float(invoice.l10n_hu_currency_rate, 2)"/>
+                            </t>
+                            <paymentMethod t-if="invoice.l10n_hu_payment_mode" t-esc="invoice.l10n_hu_payment_mode"/>
+                            <paymentDate t-if="invoice.invoice_date_due" t-esc="format_date(invoice.invoice_date_due)"/>
+                            <invoiceAppearance t-translation="off">PAPER</invoiceAppearance>
+                        </invoiceDetail>
+                    </invoiceHead>
+                    <invoiceLines>
+                        <mergedItemIndicator t-esc="format_bool(False)"/>
+                        <line t-foreach="line_data" t-as="line_data">
+                            <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_line"/>
+                        </line>
+                    </invoiceLines>
+                    <invoiceSummary>
+                        <summaryNormal>
+                            <summaryByVatRate t-foreach="tax_summary_data['tax_summary']" t-as="tax">
+                                <vatRate>
+                                    <vatPercentage t-if="tax['vat_type']=='VAT'" t-esc="format_float(tax['vat_percent'], 4)"/>
+                                    <vatExemption t-if="tax['vat_type'] in ['AAM','TAM','KBAET','KBAUK','EAM','NAM']">
+                                        <case t-esc="tax['vat_type']"/>
+                                        <reason t-esc="tax['vat_reason']"/>
+                                    </vatExemption>
+                                    <vatOutOfScope t-if="tax['vat_type'] in ['ATK','EUFAD37','EUFADE','EUE','HO']">
+                                        <case t-esc="tax['vat_type']"/>
+                                        <reason t-esc="tax['vat_reason']"/>
+                                    </vatOutOfScope>
+                                    <noVatCharge t-if="tax['vat_type']=='NO-VAT'" t-esc="format_bool(True)"/>
+                                </vatRate>
+                                <vatRateNetData>
+                                    <vatRateNetAmount t-esc="format_monetary(sign*tax['net'], invoice.currency_id)"/>
+                                    <vatRateNetAmountHUF t-esc="format_monetary(sign*tax['net_huf'], currency_huf)"/>
+                                </vatRateNetData>
+                                <vatRateVatData>
+                                    <vatRateVatAmount t-esc="format_monetary(sign*tax['amount'], invoice.currency_id)"/>
+                                    <vatRateVatAmountHUF t-esc="format_monetary(sign*tax['amount_huf'], currency_huf)"/>
+                                </vatRateVatData>
+                            </summaryByVatRate>
+                            <invoiceNetAmount t-esc="format_monetary(sign*tax_summary_data['net'], invoice.currency_id)"/>
+                            <invoiceNetAmountHUF t-esc="format_monetary(sign*tax_summary_data['net_huf'], currency_huf)"/>
+                            <invoiceVatAmount t-esc="format_monetary(sign*tax_summary_data['vat'], invoice.currency_id)"/>
+                            <invoiceVatAmountHUF t-esc="format_monetary(sign*tax_summary_data['vat_huf'], currency_huf)"/>
+                        </summaryNormal>
+                        <summaryGrossData>
+                            <invoiceGrossAmount t-esc="format_monetary(sign*tax_summary_data['gross'], invoice.currency_id)"/>
+                            <invoiceGrossAmountHUF t-esc="format_monetary(sign*tax_summary_data['gross_huf'], currency_huf)"/>
+                        </summaryGrossData>
+                    </invoiceSummary>
+                </invoice>
+            </invoiceMain>
+        </InvoiceData>
+    </template>
+
+</odoo>

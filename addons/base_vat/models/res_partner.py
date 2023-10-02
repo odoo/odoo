@@ -365,6 +365,57 @@ class ResPartner(models.Model):
         checksum = extra + sum((8-i) * int(x) for i, x in enumerate(vat[:7]))
         return 'WABCDEFGHIJKLMNOPQRSTUV'[checksum % 23]
 
+    __check_vat_hu_companies_eu_re = re.compile(r"^HU(\d{7})(\d)$")
+    __check_vat_hu_companies_re = re.compile(
+        r"^(\d{7})(\d)(?P<optional_1>-)?([1-5])(?P<optional_2>-)?(0[2-9]|[13][0-9]|2[02-9]|4[0-4]|51)$"
+    )
+    __check_vat_hu_individual_re = re.compile(r"^8\d{9}$")
+
+    def check_vat_hu(self, vat):
+        # Hungarian tax number verification - offline method
+        # The tax number consists of 11 digits. The eighth digit is the control number.
+        # The control number is generated as follows:
+        # The first seven digits are multiplied by the digits 9, 7, 3, 1, 9, 7, 3 in descending order of their local
+        # value, the multiplications are added together and the number at the local value of 1 in the result is
+        # subtracted from 10. The difference is the control number.
+
+        # 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit
+
+        # Magyar adószám ellenőrzése - offline módszer
+        # Az adószám 11 számjegyből áll. A nyolcadik számjegye az ellenőrző szám.
+        # Az ellenőrző szám képzése az alábbiak szerint történik:
+        # Az első hét számjegyet helyiértékük csökkenő sorrendjében szorozzuk a 9, 7, 3, 1, 9, 7, 3 számjegyekkel,
+        # a szorzatokat összeadjuk, és az eredmény 1-es helyiértékén lévő számot kivonjuk 10-ből. A különbség
+        # az ellenőrző szám.
+
+        # Another: https://prog.hu/tudastar/180161/javascript-adoszam-regex
+
+        if vat and vat.startswith("HU"):
+            # HU12345678
+            vat_regex = self.__check_vat_hu_companies_eu_re
+
+        # positive individual match
+        elif self.__check_vat_hu_individual_re.match(vat):
+            return True
+
+        else:
+            # 12345678-1-12
+            # 12345678112
+            vat_regex = self.__check_vat_hu_companies_re
+
+        matches = re.fullmatch(vat_regex, vat)
+        if not matches:
+            return False
+
+        identifier_number, check_digit, *_ = matches.groups()
+
+        multipliers = [9, 7, 3, 1, 9, 7, 3]
+        checksum_digit = sum(map(lambda n, m: int(n) * m, identifier_number, multipliers)) % 10
+        if checksum_digit > 0:
+            checksum_digit = 10 - checksum_digit
+
+        return int(check_digit) == checksum_digit
+
     def check_vat_ie(self, vat):
         """ Temporary Ireland VAT validation to support the new format
         introduced in January 2013 in Ireland, until upstream is fixed.
