@@ -122,7 +122,7 @@
 
     <record id="hr_contract_niv" model="hr.contract">
         <field name="name">Sharlene Rhodes Contract</field>
-        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-1'"/>
         <field name="date_end" eval="time.strftime('%Y')+'-12-1'"/>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="job_id" model="hr.job"
@@ -137,7 +137,7 @@
 
     <record id="hr_contract_jth" model="hr.contract">
         <field name="name">Toni Jimenez</field>
-        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-1'"/>
         <field name="date_end" eval="time.strftime('%Y')+'-12-1'"/>
         <field name="employee_id" ref="hr.employee_jth"/>
         <field name="job_id" model="hr.job"
@@ -152,7 +152,7 @@
 
     <record id="hr_contract_chs" model="hr.contract">
         <field name="name">Jennie Fletcher Contract</field>
-        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-1'"/>
         <field name="employee_id" ref="hr.employee_chs"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_chs').job_id.id"/>
@@ -166,7 +166,7 @@
 
     <record id="hr_contract_jve" model="hr.contract">
         <field name="name">Paul Williams Contract</field>
-        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m')+'-1'"/>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_jve').job_id.id"/>
