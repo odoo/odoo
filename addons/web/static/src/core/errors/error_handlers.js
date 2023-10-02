@@ -146,7 +146,7 @@ const defaultDialogs = new Map([
  * @param {UncaughError} error
  * @returns {boolean}
  */
-function defaultHandler(env, error) {
+export function defaultHandler(env, error) {
     const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
     env.services.dialog.add(DialogComponent, {
         traceback: error.traceback,

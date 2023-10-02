@@ -3128,7 +3128,7 @@
   	},
 
 
-  	finish: function finish() {
+  	finish: async function finish() {
   		config.current = this;
 
   		// Release the test callback to ensure that anything referenced has been
@@ -3148,7 +3148,13 @@
   			this.pushFailure("Expected at least one assertion, but none were run - call " + "expect(0) to accept zero assertions.", this.stack);
   		}
 
-        emit("OdooAfterTestHook", this); // Odoo customization
+  		// Odoo customization
+  		// wait for the task queue to be fully consummed, s.t. if there has been rejected promises
+  		// during the test, the unhandledrejection handlers have been called before the cleanups
+  		// have been executed, for the errors to be properly preventDefaulted if necessary (see
+  		// qunit.js, Error management section).
+  		await new Promise((r) => setTimeout(r, 0));
+  		emit("OdooAfterTestHook", this);
 
   		var i,
   		    module = this.module,

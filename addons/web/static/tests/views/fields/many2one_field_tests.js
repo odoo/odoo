@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import {
@@ -2949,14 +2948,6 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(5);
 
             registry.category("services").add("error", errorService);
-
-            // remove the override in qunit.js that swallows unhandledrejection errors
-            // s.t. we let the error service handle them
-            const originalOnUnhandledRejection = window.onunhandledrejection;
-            window.onunhandledrejection = () => {};
-            registerCleanup(() => {
-                window.onunhandledrejection = originalOnUnhandledRejection;
-            });
 
             serverData.views = {
                 "product,false,form": '<form><field name="name" /></form>',

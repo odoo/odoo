@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
-import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
     click,
@@ -741,17 +740,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("initial action crashes", async (assert) => {
         assert.expect(8);
-
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
+        assert.expectErrors();
 
         browser.location.hash = "#action=__test__client__action__&menu_id=1";
         const ClientAction = registry.category("actions").get("__test__client__action__");
@@ -769,6 +758,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["clientAction setup"]);
         await nextTick();
+        assert.expectErrors(["my error"]);
         assert.containsOnce(target, ".o_error_dialog");
         await click(target, ".modal-header .btn-close");
         assert.containsNone(target, ".o_error_dialog");

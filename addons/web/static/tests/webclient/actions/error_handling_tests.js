@@ -2,8 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
-import { registerCleanup } from "../../helpers/cleanup";
-import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { click, getFixture, nextTick } from "../../helpers/utils";
 import { errorService } from "@web/core/errors/error_service";
 
 import { Component, xml } from "@odoo/owl";
@@ -56,22 +55,16 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("error in a client action (after the first rendering)", async function (assert) {
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
-
+        assert.expectErrors();
         registry.category("services").add("error", errorService);
 
         class Boom extends Component {
             setup() {
                 this.boom = false;
+            }
+            get a() {
+                // a bit artificial, but makes the test firefox compliant
+                throw new Error("Cannot read properties of undefined (reading 'b')");
             }
             onClick() {
                 this.boom = true;
@@ -93,5 +86,6 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".my_button");
         assert.containsOnce(target, ".o_error_dialog");
+        assert.verifyErrors(["Cannot read properties of undefined (reading 'b')"]);
     });
 });

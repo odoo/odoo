@@ -20,7 +20,6 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getPickerApplyButton, getPickerCell } from "../core/datetime/datetime_test_helpers";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
     click,
@@ -65,6 +64,7 @@ import {
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
+import { makeServerError } from "../helpers/mock_server";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -18361,10 +18361,6 @@ QUnit.module("Views", (hooks) => {
         "edit a record then select another record with a throw error when saving",
         async function (assert) {
             serviceRegistry.add("error", errorService);
-            // need to preventDefault to remove error from console (so python test pass)
-            const handler = (ev) => ev.preventDefault();
-            window.addEventListener("unhandledrejection", handler);
-            registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
 
             await makeView({
                 type: "list",
@@ -18376,7 +18372,7 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
                 mockRPC(route, args) {
                     if (args.method === "web_save") {
-                        throw new Error("Can't write");
+                        throw makeServerError({ message: "Can't write" });
                     }
                 },
             });
