@@ -248,7 +248,11 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         vals.update({
             'main_template': 'account_edi_ubl_cii.ubl_20_Invoice',
             'InvoiceType_template': 'l10n_sa_edi.ubl_21_InvoiceType_zatca',
+            'CreditNoteType_template': 'l10n_sa_edi.ubl_21_CreditNoteType_zatca',
+            'DebitNoteType_template': 'l10n_sa_edi.ubl_21_DebitNoteType_zatca',
             'InvoiceLineType_template': 'l10n_sa_edi.ubl_21_InvoiceLineType_zatca',
+            'CreditNoteLineType_template': 'l10n_sa_edi.ubl_21_CreditNoteLineType_zatca',
+            'DebitNoteLineType_template': 'l10n_sa_edi.ubl_21_DebitNoteLineType_zatca',
             'AddressType_template': 'l10n_sa_edi.ubl_21_AddressType_zatca',
             'PartyType_template': 'l10n_sa_edi.ubl_21_PartyType_zatca',
             'TaxTotalType_template': 'l10n_sa_edi.ubl_21_TaxTotalType_zatca',
@@ -257,8 +261,8 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
         vals['vals'].update({
             'profile_id': 'reporting:1.0',
-            'invoice_type_code_attrs': {'name': self._l10n_sa_get_invoice_transaction_code(invoice)},
-            'invoice_type_code': self._l10n_sa_get_invoice_type(invoice),
+            'document_type_code_attrs': {'name': self._l10n_sa_get_invoice_transaction_code(invoice)},
+            'document_type_code': self._l10n_sa_get_invoice_type(invoice),
             'tax_currency_code': invoice.company_currency_id.name,
             'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
                                                             invoice.l10n_sa_confirmation_datetime),
@@ -269,7 +273,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'due_date': None,
         })
 
-        vals['vals']['legal_monetary_total_vals'].update(self._l10n_sa_get_monetary_vals(invoice, vals))
+        vals['vals']['monetary_total_vals'].update(self._l10n_sa_get_monetary_vals(invoice, vals))
 
         return vals
 
@@ -348,7 +352,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             line_vals['tax_total_vals'][0]['tax_amount'] = 0
             line_vals['prepayment_vals'] = self._l10n_sa_get_line_prepayment_vals(line, taxes_vals)
         line_vals['tax_total_vals'][0]['total_amount_sa'] = total_amount_sa
-        line_vals['invoiced_quantity'] = abs(line_vals['invoiced_quantity'])
+        line_vals['line_quantity'] = abs(line_vals['line_quantity'])
         line_vals['line_extension_amount'] = extension_amount
 
         return line_vals
