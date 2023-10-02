@@ -203,8 +203,13 @@ class TestSaleStockMargin(TestStockValuationCommon):
         other_currency = self.env.ref('base.EUR') if company_currency == self.env.ref('base.USD') else self.env.ref('base.USD')
 
         date = fields.Date.today()
-        ResCurrencyRate.create({'currency_id': company_currency.id, 'rate': 1, 'name': date})
-        other_currency_rate = ResCurrencyRate.search([('name', '=', date), ('currency_id', '=', other_currency.id)])
+        currency_rates = ResCurrencyRate.search([('name', '=', date)])
+        currency_rate = currency_rates.filtered(lambda r: r.currency_id.id == company_currency.id)
+        if currency_rate:
+            currency_rate.rate = 1
+        else:
+            ResCurrencyRate.create({'currency_id': company_currency.id, 'rate': 1, 'name': date})
+        other_currency_rate = currency_rates.filtered(lambda r: r.currency_id.id == other_currency.id)
         if other_currency_rate:
             other_currency_rate.rate = 2
         else:
