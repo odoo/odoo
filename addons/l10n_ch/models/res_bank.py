@@ -357,9 +357,6 @@ class ResPartnerBank(models.Model):
                 error_messages.append(_("The currency isn't EUR nor CHF."))
             return '\r\n'.join(error_messages) if len(error_messages) > 1 else None
 
-        if qr_method == 'sct_qr' and not _get_error_for_ch_qr():
-            return _("When both parties are located in Switzerland, "
-                     "you should use the Swiss QR code process.")
         if qr_method == 'ch_qr':
             return _get_error_for_ch_qr()
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
