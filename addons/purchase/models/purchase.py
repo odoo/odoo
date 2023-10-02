@@ -134,7 +134,6 @@ class PurchaseOrder(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
@@ -254,9 +253,6 @@ class PurchaseOrder(models.Model):
                 raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
 
     def copy(self, default=None):
-        ctx = dict(self.env.context)
-        ctx.pop('default_product_id', None)
-        self = self.with_context(ctx)
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
             if line.product_id:
