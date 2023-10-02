@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { registerCleanup } from "../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
 import {
@@ -197,7 +196,8 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
 });
 
 QUnit.test("dialog component crashes", async (assert) => {
-    assert.expect(4);
+    assert.expect(3);
+    assert.expectErrors();
 
     class FailingDialog extends Component {
         setup() {
@@ -217,18 +217,6 @@ QUnit.test("dialog component crashes", async (assert) => {
         },
     });
 
-    const handler = (ev) => {
-        assert.step("error");
-        // need to preventDefault to remove error from console (so python test pass)
-        ev.preventDefault();
-    };
-
-    window.addEventListener("unhandledrejection", handler);
-    registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-    patchWithCleanup(QUnit, {
-        onUnhandledRejection: () => {},
-    });
-
     const rpc = makeFakeRPCService();
     serviceRegistry.add("rpc", rpc, { force: true });
     serviceRegistry.add("notification", notificationService);
@@ -239,7 +227,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     env.services.dialog.add(FailingDialog);
     await prom;
 
-    assert.verifySteps(["error"]);
     assert.containsOnce(target, ".modal");
     assert.containsOnce(target, ".modal .o_error_dialog");
+    assert.verifyErrors(["Some Error"]);
 });

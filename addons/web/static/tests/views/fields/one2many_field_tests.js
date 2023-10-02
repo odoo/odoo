@@ -8931,29 +8931,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("display correct value after validation error", async function (assert) {
         assert.expect(5);
 
-        /*
-         * By-pass QUnit's and test's error handling because the error service needs to be active
-         */
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
-
-        const originOnunhandledrejection = window.onunhandledrejection;
-        window.onunhandledrejection = () => {};
-        registerCleanup(() => {
-            window.onunhandledrejection = originOnunhandledrejection;
-        });
-        /*
-         * End By pass error handling
-         */
-
         serviceRegistry.add("error", errorService);
         function validationHandler(env, error, originalError) {
             if (originalError.data.name === "odoo.exceptions.ValidationError") {

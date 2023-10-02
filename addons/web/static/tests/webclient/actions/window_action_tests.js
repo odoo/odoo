@@ -13,7 +13,6 @@ import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { errorService } from "../../../src/core/errors/error_service";
-import { registerCleanup } from "../../helpers/cleanup";
 import {
     click,
     clickSave,
@@ -520,29 +519,6 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("A new form view can be reloaded after a failed one", async function (assert) {
         assert.expect(5);
-
-        /*
-         * By-pass QUnit's and test's error handling because the error service needs to be active
-         */
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
-
-        const originOnunhandledrejection = window.onunhandledrejection;
-        window.onunhandledrejection = () => {};
-        registerCleanup(() => {
-            window.onunhandledrejection = originOnunhandledrejection;
-        });
-        /*
-         * End By pass error handling
-         */
 
         const webClient = await createWebClient({ serverData });
         serviceRegistry.add("error", errorService);
@@ -2127,29 +2103,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("window action in target new fails (onchange)", async (assert) => {
-        /*
-         * By-pass QUnit's and test's error handling because the error service needs to be active
-         */
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
-
-        const originOnunhandledrejection = window.onunhandledrejection;
-        window.onunhandledrejection = () => {};
-        registerCleanup(() => {
-            window.onunhandledrejection = originOnunhandledrejection;
-        });
-        /*
-         * End By pass error handling
-         */
-
         const warningOpened = makeDeferred();
         class WarningDialogWait extends WarningDialog {
             setup() {
@@ -2362,26 +2315,6 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("click on breadcrumb of a deleted record", async function (assert) {
         serviceRegistry.add("error", errorService);
-        // In tests we catch unhandledrejection of promises rejected with something that isn't an
-        // error (see tests/qunit.js). In this scenario, with the legacy basic_model, the promise
-        // is rejected with undefined, so without the following lines, we can't reproduce the issue,
-        // which was that the error handlers were executed in a wrong order, and one of them crashed.
-        const windowUnhandledReject = window.onunhandledrejection;
-        window.onunhandledrejection = null;
-        registerCleanup(() => {
-            window.onunhandledrejection = windowUnhandledReject;
-        });
-
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
-
         serverData.views["partner,false,form"] = `
             <form>
                 <button type="action" name="3" string="Open Action 3" class="my_btn"/>
@@ -2440,29 +2373,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("Uncaught error in target new is catch only once", async (assert) => {
-        /*
-         * By-pass QUnit's and test's error handling because the error service needs to be active
-         */
-        const handler = (ev) => {
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
-
-        const originOnunhandledrejection = window.onunhandledrejection;
-        window.onunhandledrejection = () => {};
-        registerCleanup(() => {
-            window.onunhandledrejection = originOnunhandledrejection;
-        });
-        /*
-         * End By pass error handling
-         */
-
         const warningOpened = makeDeferred();
         class WarningDialogWait extends WarningDialog {
             setup() {

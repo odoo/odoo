@@ -2,7 +2,6 @@
 
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { click, editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
@@ -173,11 +172,6 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
 
     QUnit.test("A validation error from saving parent form notifies and prevents dialog from closing", async (assert) => {
         registry.category("services").add("error", errorService);
-
-        // need to preventDefault to remove error from console (so python test pass)
-        const handler = (ev) => ev.preventDefault();
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
 
         await makeView({
             type: "form",

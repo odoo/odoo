@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import { registerCleanup } from "../../helpers/cleanup";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { listView } from "../../../src/views/list/list_view";
 
@@ -180,19 +178,8 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("web client is not deadlocked when a view crashes", async function (assert) {
-        assert.expect(6);
-        const handler = (ev) => {
-            assert.step("error");
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
-        registry.category("services").add("error", { start: () => {} });
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
+        assert.expect(4);
+        assert.expectErrors();
 
         const readOnFirstRecordDef = testUtils.makeTestPromise();
         const mockRPC = (route, { method, args, kwargs }) => {
@@ -205,10 +192,10 @@ QUnit.module("ActionManager", (hooks) => {
         // open first record in form view. this will crash and will not
         // display a form view
         await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
-        assert.verifySteps([]);
         readOnFirstRecordDef.reject(new Error("not working as intended"));
         await nextTick();
-        assert.verifySteps(["error"]);
+        assert.verifyErrors(["not working as intended"]);
+
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
         // open another record, the read will not crash
         await testUtils.dom.click(

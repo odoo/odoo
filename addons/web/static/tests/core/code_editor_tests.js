@@ -13,8 +13,6 @@ import {
 import { Component, markup, useState, xml } from "@odoo/owl";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { registry } from "@web/core/registry";
-import { errorService } from "@web/core/errors/error_service";
 
 QUnit.module("Web Components", (hooks) => {
     QUnit.module("Code Editor");
@@ -84,6 +82,8 @@ QUnit.module("Web Components", (hooks) => {
     });
 
     QUnit.test("CodeEditor shouldn't accepts markup values", async (assert) => {
+        assert.expectErrors();
+
         const _console = window.console;
         window.console = Object.assign(Object.create(_console), {
             warn(msg) {
@@ -93,18 +93,7 @@ QUnit.module("Web Components", (hooks) => {
         registerCleanup(() => {
             window.console = _console;
         });
-        registry.category("services").add("error", errorService);
-        const handler = (ev) => {
-            assert.step(ev.reason.message);
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
-        };
-        window.addEventListener("unhandledrejection", handler);
-        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
 
-        patchWithCleanup(QUnit, {
-            onUnhandledRejection: () => {},
-        });
         class Parent extends Component {
             static components = { CodeEditor };
             static template = xml`<CodeEditor value="props.value"/>`;
@@ -121,10 +110,8 @@ QUnit.module("Web Components", (hooks) => {
         const textMarkup = markup`<div>Some Text</div>`;
         codeEditor.state.value = textMarkup;
         await nextTick(); // wait for the errorService to be called
-        assert.verifySteps([
-            "[Owl] Unhandled error. Destroying the root component",
-            "Invalid props for component 'CodeEditor': 'value' is not valid",
-        ]);
+        assert.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+        assert.verifyErrors(["Invalid props for component 'CodeEditor': 'value' is not valid"]);
     });
 
     QUnit.test("onChange props called when code is edited", async (assert) => {

@@ -506,8 +506,10 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("Binary filename doesn't exceed 255 bytes", async function (assert) {
         const LARGE_BINARY_FILE = BINARY_FILE.repeat(5);
-        assert.ok((LARGE_BINARY_FILE.length / 4 * 3) > MAX_FILENAME_SIZE_BYTES,
-            "The initial binary file should be larger than max bytes that can represent the filename");
+        assert.ok(
+            (LARGE_BINARY_FILE.length / 4) * 3 > MAX_FILENAME_SIZE_BYTES,
+            "The initial binary file should be larger than max bytes that can represent the filename"
+        );
         serverData.models.partner.fields.document.default = LARGE_BINARY_FILE;
         await makeView({
             serverData,

@@ -2,10 +2,10 @@
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { patch } from "@web/core/utils/patch";
 import { getFixture, mount, nextTick } from "../helpers/utils";
 
 import { Component, useState, xml } from "@odoo/owl";
+import { registerCleanup } from "../helpers/cleanup";
 const mainComponentsRegistry = registry.category("main_components");
 
 let target;
@@ -38,6 +38,7 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("unmounts erroring main component", async function (assert) {
+        assert.expectErrors();
         const env = await makeTestEnv();
 
         let compA;
@@ -67,24 +68,18 @@ QUnit.module("Components", (hooks) => {
         const handler = (ev) => {
             assert.step(ev.reason.message);
             assert.step(ev.reason.cause.message);
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
         };
         window.addEventListener("unhandledrejection", handler);
-        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
-        registry.category("services").add("error", { start: () => {} });
-        const unpatch = patch(QUnit, {
-            onUnhandledRejection: () => {},
+        registerCleanup(() => {
+            window.removeEventListener("unhandledrejection", handler);
         });
         compA.state.shouldThrow = true;
         await nextTick();
-        window.removeEventListener("unhandledrejection", handler);
-        // unpatch QUnit asap so any other errors can be caught by it
-        unpatch();
         assert.verifySteps([
             'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
             "BOOM",
         ]);
+        assert.verifyErrors(["BOOM"]);
 
         assert.equal(
             target.querySelector(".o-main-components-container").innerHTML,
@@ -93,6 +88,8 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("unmounts erroring main component: variation", async function (assert) {
+        assert.expectErrors();
+
         const env = await makeTestEnv();
 
         class MainComponentA extends Component {}
@@ -122,24 +119,18 @@ QUnit.module("Components", (hooks) => {
         const handler = (ev) => {
             assert.step(ev.reason.message);
             assert.step(ev.reason.cause.message);
-            // need to preventDefault to remove error from console (so python test pass)
-            ev.preventDefault();
         };
         window.addEventListener("unhandledrejection", handler);
-        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
-        registry.category("services").add("error", { start: () => {} });
-        const unpatch = patch(QUnit, {
-            onUnhandledRejection: () => {},
+        registerCleanup(() => {
+            window.removeEventListener("unhandledrejection", handler);
         });
         compB.state.shouldThrow = true;
         await nextTick();
-        window.removeEventListener("unhandledrejection", handler);
-        // unpatch QUnit asap so any other errors can be caught by it
-        unpatch();
         assert.verifySteps([
             'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
             "BOOM",
         ]);
+        assert.verifyErrors(["BOOM"]);
         assert.equal(
             target.querySelector(".o-main-components-container").innerHTML,
             "<span>MainComponentA</span>"

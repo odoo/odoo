@@ -48,21 +48,17 @@ export const errorService = {
             while (originalError instanceof Error && "cause" in originalError) {
                 originalError = originalError.cause;
             }
-            const services = env.services;
-            if (!services.dialog || !services.notification || !services.rpc) {
-                // here, the environment is not ready to provide feedback to the user.
-                // We simply wait 1 sec and try again, just in case the application can
-                // recover.
-                if (retry) {
-                    browser.setTimeout(() => {
-                        handleError(uncaughtError, false);
-                    }, 1000);
-                }
-                return;
-            }
-            for (const handler of registry.category("error_handlers").getAll()) {
-                if (handler(env, uncaughtError, originalError)) {
-                    break;
+            for (const [name, handler] of registry.category("error_handlers").getEntries()) {
+                try {
+                    if (handler(env, uncaughtError, originalError)) {
+                        break;
+                    }
+                } catch (e) {
+                    console.error(
+                        `A crash occured in error handler ${name} while handling ${uncaughtError}:`,
+                        e
+                    );
+                    return;
                 }
             }
             if (uncaughtError.event && !uncaughtError.event.defaultPrevented) {
