@@ -24,7 +24,7 @@ import {
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
-import { contains } from "@web/../tests/utils";
+import { contains, focus, scroll } from "@web/../tests/utils";
 
 QUnit.module("discuss");
 
@@ -1670,7 +1670,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
+QUnit.test("new messages separator [REQUIRE FOCUS]", async () => {
     // this test requires several messages so that the last message is not
     // visible. This is necessary in order to display 'new messages' and not
     // remove from DOM right away from seeing last message.
@@ -1680,7 +1680,13 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
         name: "Foreigner user",
         partner_id: partnerId,
     });
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: partnerId }),
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+        ],
+    });
     let lastMessageId;
     for (let i = 1; i <= 25; i++) {
         lastMessageId = pyEnv["mail.message"].create({
@@ -1696,29 +1702,25 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsN($, ".o-mail-Message", 25);
-    assert.containsNone($, "hr + span:contains(New messages)");
-
-    $(".o-mail-Discuss-content .o-mail-Thread")[0].scrollTop = 0;
+    await contains(".o-mail-Message", { count: 25 });
+    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    await contains(".o-mail-Discuss-content .o-mail-Thread", { scroll: "bottom" });
+    await scroll(".o-mail-Discuss-content .o-mail-Thread", 0);
     // composer is focused by default, we remove that focus
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
-    await afterNextRender(async () =>
-        env.services.rpc("/mail/message/post", {
-            context: { mockedUserId: userId },
-            post_data: { body: "hu", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
-    );
-    assert.containsN($, ".o-mail-Message", 26);
-    assert.containsOnce($, "hr + span:contains(New messages)");
-    const messageList = $(".o-mail-Discuss-content .o-mail-Thread")[0];
-    messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
-    assert.containsOnce($, "hr + span:contains(New messages)");
-
-    await afterNextRender(() => $(".o-mail-Composer-input")[0].focus());
-    assert.containsNone($, "hr + span:contains(New messages)");
+    env.services.rpc("/mail/message/post", {
+        context: { mockedUserId: userId },
+        post_data: { body: "hu", message_type: "comment" },
+        thread_id: channelId,
+        thread_model: "discuss.channel",
+    });
+    await contains(".o-mail-Message", { count: 26 });
+    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
+    await scroll(".o-mail-Discuss-content .o-mail-Thread", "bottom");
+    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
+    await focus(".o-mail-Composer-input");
+    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
 });
 
 QUnit.test("failure on loading messages should display error", async (assert) => {
