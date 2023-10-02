@@ -133,7 +133,7 @@
                 <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty)"/>
                 <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
-                <tr class="js_product">
+                <tr class="js_product" t-if="not combination_info.get('prevent_zero_price_sale', False)">
                     <td class="td-img">
                         <input type="hidden" class="product_template_id" t-att-value="product.id"/>
                         <input type="hidden" class="product_id" t-attf-name="optional-product-#{product.id}" t-att-value="product_variant.id"/>
