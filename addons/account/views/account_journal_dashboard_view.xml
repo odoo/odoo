@@ -335,7 +335,7 @@
                                         <span t-if="journal_type == 'sale'" title="Unpaid Invoices"><t t-out="dashboard.number_waiting"/> Unpaid</span>
                                     </a>
                                     <a type="object" name="action_open_payment_items"
-                                    context="{'search_default_purchases': '1',}" id="account_dashboard_purchase_pay_link">
+                                    context="{'search_default_purchases': '1'}" id="account_dashboard_purchase_pay_link">
                                         <span t-if="journal_type == 'purchase'" title="Unpaid Bills"><t t-out="dashboard.number_waiting"/> To Pay</span>
                                     </a>
                                 </div>
