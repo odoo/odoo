@@ -223,7 +223,8 @@ class ProductTemplate(models.Model):
             template_price_vals = {
                 'price_reduce': price_reduce,
             }
-            if base_price:
+            if base_price and price_reduce:
+                # base_price will only be shown (strikethrough) if both prices are non zeros
                 template_price_vals['base_price'] = base_price
 
             res[template.id] = template_price_vals
