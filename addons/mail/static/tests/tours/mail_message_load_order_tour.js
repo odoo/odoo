@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("mail.load_message_order", {
+registry.category("web_tour.tours").add("mail_message_load_order_tour", {
     test: true,
     steps: () => [
         {

@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { createFile, inputFiles } from "@web/../tests/utils";
 
-registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_tour.js", {
+registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     test: true,
     steps: () => [
         {

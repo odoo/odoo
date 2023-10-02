@@ -155,7 +155,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/tests/helpers/cleanup.js',
             'web/static/tests/helpers/utils.js',
             'web/static/tests/utils.js',
-            'mail/static/tests/tours/discuss_public_tour.js',
+            'mail/static/tests/tours/discuss_channel_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
         ],
         'web.assets_tests': [
