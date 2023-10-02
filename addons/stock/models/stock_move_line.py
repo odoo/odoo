@@ -139,18 +139,18 @@ class StockMoveLine(models.Model):
         for record in self:
             if not record.qty_done:
                 if (record.move_id.product_qty - record.move_id.quantity_done):
-                    record.qty_done = min(record.quant_id.available_quantity, max(record.move_id.product_qty - record.move_id.quantity_done, 0))
+                    record.qty_done = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity_done))
                 else:
-                    record.qty_done = record.quant_id.available_quantity
+                    record.qty_done = max(0, record.quant_id.available_quantity)
 
     @api.depends('quant_id')
     def _compute_qty_reserved(self):
         for record in self:
             if not record.reserved_uom_qty:
                 if (record.move_id.product_qty - record.move_id.quantity_done):
-                    record.reserved_uom_qty = min(record.quant_id.available_quantity, max(record.move_id.product_qty - record.move_id.quantity_done, 0))
+                    record.reserved_uom_qty = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity_done))
                 else:
-                    record.reserved_uom_qty = record.quant_id.available_quantity
+                    record.reserved_uom_qty = max(0, record.quant_id.available_quantity)
 
 
     @api.constrains('lot_id', 'product_id')
