@@ -185,6 +185,7 @@ class WebsiteEventController(http.Controller):
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
+            'registration_error_code': post.get('registration_error_code'),
         }
 
     def _process_tickets_form(self, event, form_details):
@@ -240,7 +241,7 @@ class WebsiteEventController(http.Controller):
             visitor = request.env['website.visitor']._get_visitor_from_request()
             if visitor.email:
                 default_first_attendee = {
-                    "name": visitor.name,
+                    "name": visitor.display_name,
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
@@ -352,8 +353,16 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
-        registrations = self._process_attendees_form(event, post)
-        attendees_sudo = self._create_attendees_from_registration_post(event, registrations)
+        """ Check before creating and finalize the creation of the registrations
+            that we have enough seats for all selected tickets.
+            If we don't, the user is instead redirected to page to register with a
+            formatted error message. """
+        registrations_data = self._process_attendees_form(event, post)
+        event_ticket_ids = {registration['event_ticket_id'] for registration in registrations_data}
+        event_tickets = request.env['event.event.ticket'].browse(event_ticket_ids)
+        if any(event_ticket.seats_limited and event_ticket.seats_available < len(registrations_data) for event_ticket in event_tickets):
+            return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
+        attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
 
         return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
 
