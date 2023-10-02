@@ -742,7 +742,7 @@ QUnit.module("Fields", (hooks) => {
             const input = target.querySelector(".o_field_widget[name=user_id] input");
             await editInput(input, null, "yy");
             await clickOpenedDropdownItem(target, "user_id", 'Create "yy"');
-
+            assert.containsOnce(target, ".o_external_button");
             assert.verifySteps(["name_create"]);
         }
     );
@@ -4496,4 +4496,32 @@ QUnit.module("Fields", (hooks) => {
             "aaa"
         );
     });
+
+    QUnit.test(
+        "external button must be displayed after the update caused by an onchange",
+        async function (assert) {
+            serverData.models.partner.onchanges = {
+                display_name: function (obj) {
+                    if (obj.display_name) {
+                        obj.trululu = 1;
+                    }
+                },
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+            <form>
+                <field name="display_name"/>
+                <field name="trululu"/>
+            </form>`,
+            });
+
+            assert.containsNone(target, ".o_external_button");
+
+            await editInput(target, "[name=display_name] input", "new value");
+            assert.containsOnce(target, ".o_external_button");
+        }
+    );
 });

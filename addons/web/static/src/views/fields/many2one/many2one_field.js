@@ -104,7 +104,7 @@ export class Many2OneField extends Component {
         };
 
         this.state = useState({
-            isFloating: !this.value,
+            isFloating: false,
         });
         this.computeActiveActions(this.props);
 
@@ -137,6 +137,7 @@ export class Many2OneField extends Component {
                 if (params.triggeredOnBlur) {
                     return this.openConfirmationDialog(name);
                 }
+                this.state.isFloating = false;
                 return this.updateRecord([false, name]);
             };
         }
@@ -146,8 +147,6 @@ export class Many2OneField extends Component {
         };
 
         onWillUpdateProps(async (nextProps) => {
-            this.state.isFloating =
-                "value" in nextProps ? !nextProps.value : !nextProps.record.data[nextProps.name];
             this.computeActiveActions(nextProps);
         });
     }
