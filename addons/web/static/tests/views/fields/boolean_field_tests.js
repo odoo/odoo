@@ -273,4 +273,34 @@ QUnit.module("Fields", (hooks) => {
             "checkbox should still be disabled"
         );
     });
+
+    QUnit.test("onchange return value before toggle checkbox", async function (assert) {
+        serverData.models.partner.onchanges = {
+            bar(obj) {
+                obj.bar = true;
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="bar"/></form>`,
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should still be checked"
+        );
+
+        await click(target, ".o_field_boolean .o-checkbox");
+        await nextTick();
+        assert.containsOnce(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should still be checked"
+        );
+    });
 });

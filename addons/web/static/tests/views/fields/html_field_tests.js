@@ -353,4 +353,41 @@ QUnit.module("Fields", ({ beforeEach }) => {
             await clickSave(target);
         }
     );
+
+    QUnit.test(
+        "html field: correct value is used to evaluate the modifiers",
+        async function (assert) {
+            serverData.models.partner.fields.foo = { string: "foo", type: "char" };
+            serverData.models.partner.onchanges = {
+                foo: (obj) => {
+                    if (obj.foo === "a") {
+                        obj.txt = false;
+                    } else if (obj.foo === "b") {
+                        obj.txt = "";
+                    }
+                },
+            };
+            serverData.models.partner.records[0].foo = false;
+            serverData.models.partner.records[0].txt = false;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="txt" invisible="'' == txt"/>
+                </form>`,
+            });
+            assert.containsOnce(target, "[name='txt'] textarea");
+
+            await editInput(target, "[name='foo'] input", "a");
+            assert.containsOnce(target, "[name='txt'] textarea");
+
+            await editInput(target, "[name='foo'] input", "b");
+            assert.containsNone(target, "[name='txt'] textarea");
+        }
+    );
 });

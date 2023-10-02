@@ -12,6 +12,7 @@ export class BooleanToggleField extends BooleanField {
     };
 
     async onChange(newValue) {
+        this.state.value = newValue;
         const changes = { [this.props.name]: newValue };
         await this.props.record.update(changes, { save: this.props.autosave });
     }
