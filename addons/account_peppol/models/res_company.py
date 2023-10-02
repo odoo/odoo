@@ -6,15 +6,13 @@ from stdnum import get_cc_module, ean
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account.models.company import PEPPOL_LIST
 
 try:
     import phonenumbers
 except ImportError:
     phonenumbers = None
 
-# at the moment, only phone numbers in European countries are accepted
-PHONE_ALLOWED_COUNTRIES = set(EAS_MAPPING.keys()) - {'AU', 'SG', 'NZ'}
 
 PEPPOL_ENDPOINT_RULES = {
     '0007': ['se', 'orgnr'],
@@ -95,7 +93,7 @@ class ResCompany(models.Model):
             raise ValidationError(error_message)
 
         country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
-        if country_code not in PHONE_ALLOWED_COUNTRIES or not phonenumbers.is_valid_number(phone_nbr):
+        if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
     def _check_peppol_endpoint_number(self, warning=False):
