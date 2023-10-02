@@ -509,7 +509,8 @@ export class Composer extends Component {
             const postData = {
                 attachments: this.props.composer.attachments,
                 isNote: this.props.type === "note",
-                rawMentions: this.props.composer.rawMentions,
+                mentionedChannels: this.props.composer.mentionedChannels,
+                mentionedPartners: this.props.composer.mentionedPartners,
                 cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
@@ -522,7 +523,8 @@ export class Composer extends Component {
      * @property {import('@mail/attachments/attachment_model').Attachment[]} attachments
      * @property {boolean} isNote
      * @property {number} parentId
-     * @property {import("@mail/core/common").RawMentions} rawMentions
+     * @property {integer[]} mentionedChannelIds
+     * @property {integer[]} mentionedPartnerIds
      */
 
     /**
@@ -550,7 +552,10 @@ export class Composer extends Component {
                     this.props.composer.message,
                     value,
                     this.props.composer.attachments,
-                    this.props.composer.rawMentions
+                    {
+                        mentionedChannels: this.props.composer.mentionedChannels,
+                        mentionedPartners: this.props.composer.mentionedPartners,
+                    }
                 )
             );
         } else {

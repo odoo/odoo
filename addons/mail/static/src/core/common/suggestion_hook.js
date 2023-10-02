@@ -12,8 +12,8 @@ export function useSuggestion() {
     const store = useState(useService("mail.store"));
     const self = {
         clearRawMentions() {
-            comp.props.composer.rawMentions.partnerIds.length = 0;
-            comp.props.composer.rawMentions.threadIds.length = 0;
+            comp.props.composer.mentionedChannels.length = 0;
+            comp.props.composer.mentionedPartners.length = 0;
         },
         clearCannedReponses() {
             comp.props.composer.cannedResponses = [];
@@ -98,10 +98,16 @@ export function useSuggestion() {
             }
             const recordReplacement = option.label;
             if (option.partner) {
-                comp.props.composer.rawMentions.partnerIds.add(option.partner.id);
+                comp.props.composer.mentionedPartners.add({
+                    id: option.partner.id,
+                    type: "partner",
+                });
             }
             if (option.thread) {
-                comp.props.composer.rawMentions.threadIds.add(option.thread.id);
+                comp.props.composer.mentionedChannels.add({
+                    model: "discuss.channel",
+                    id: option.thread.id,
+                });
             }
             if (option.cannedResponse) {
                 comp.props.composer.cannedResponses.push(
