@@ -1115,8 +1115,16 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
                     tag.remove();
                     formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
                 }
-            } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
-                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+            } else {
+                let stylableEl;
+                if (inlineAncestors.length === 0
+                        && parentNode.textContent === selectedTextNode.textContent) {
+                    stylableEl = parentNode;
+                    removeFormat(stylableEl, formatSpec);
+                } else {
+                    stylableEl = getOrCreateSpan(selectedTextNode, inlineAncestors);
+                }
+                formatSpec.addStyle(stylableEl, formatProps);
             }
         }
     }
