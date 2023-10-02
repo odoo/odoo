@@ -428,7 +428,7 @@
                                 <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
-                                        <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
+                                        <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == int(state_id) if state_id else state.id == partner.state_id.id">
                                             <t t-esc="state.name" />
                                         </option>
                                     </t>
