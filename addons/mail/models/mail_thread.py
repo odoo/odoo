@@ -4340,7 +4340,7 @@ class MailThread(models.AbstractModel):
             if not model and body:
                 model, res_id = self._extract_model_and_id(msg_vals)
         else:
-            author_id = [message.author_id.ids]
+            author_id = message.author_id.ids
             author_name = self.env['res.partner'].browse(author_id).name
             model = message.model
             title = message.record_name or message.subject
