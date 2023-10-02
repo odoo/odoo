@@ -19,6 +19,7 @@ trigger an automatic reminder email.
     'data': [
         'security/ir.model.access.csv',
         'data/base_automation_data.xml',
+        'views/ir_actions_server_views.xml',
         'views/base_automation_views.xml',
     ],
     'assets': {

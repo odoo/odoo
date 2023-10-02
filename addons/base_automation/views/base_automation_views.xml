@@ -88,7 +88,7 @@
                                     name="action_server_ids"
                                     widget="one2many"
                                     class="o_base_automation_actions_field"
-                                    context="{'default_model_id': model_id, 'default_state': False, 'automatic_action_name': True, 'form_view_ref': 'base_automation.view_server_action_form'}"
+                                    context="{'default_model_id': model_id, 'default_state': False, 'form_view_ref': 'base_automation.ir_actions_server_view_form_automation'}"
                                 >
                                     <kanban>
                                         <control>
@@ -129,28 +129,6 @@
                         </notebook>
                     </sheet>
                 </form>
-            </field>
-        </record>
-
-        <!-- Automation: Server Action Form View -->
-        <record id="view_server_action_form" model="ir.ui.view">
-            <field name="name">base.automation.server.action.form</field>
-            <field name="model">ir.actions.server</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="base.view_server_action_form"/>
-            <field name="arch" type="xml">
-                <xpath expr='//field[@name="name"]' position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr='//field[@name="state"]' position="attributes">
-                    <attribute name="string">Type</attribute>
-                </xpath>
-                <xpath expr="//header" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//field[@name='model_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
             </field>
         </record>
 
