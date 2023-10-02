@@ -5780,9 +5780,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         };
         widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
         widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
-        const imgMimetype = this._getImageMimetype(img);
-        widths[maxWidth] = [_t("%spx (Original)", maxWidth), imgMimetype];
-        if (imgMimetype !== 'image/webp') {
+        const mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
+        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
+        if (mimetypeBeforeConversion !== "image/webp") {
             // Avoid a key collision by subtracting 0.1 - putting the webp
             // above the original format one of the same size.
             widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
