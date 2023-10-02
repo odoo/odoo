@@ -333,7 +333,7 @@ class WebsiteEventController(http.Controller):
         a partner (if visitor linked to a user for example). Purpose is to gather
         as much informations as possible, notably to ease future communications.
         Also try to update visitor informations based on registration info. """
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create='read-only')
 
         registrations_to_create = []
         for registration_values in registration_data:

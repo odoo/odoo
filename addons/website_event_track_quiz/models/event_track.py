@@ -33,7 +33,7 @@ class EventTrack(models.Model):
         (self - tracks_quiz).is_quiz_completed = False
         (self - tracks_quiz).quiz_points = 0
         if tracks_quiz:
-            current_visitor = self.env['website.visitor']._get_visitor_from_request(force_create=False)
+            current_visitor = self.env['website.visitor']._get_visitor_from_request()
             if self.env.user._is_public() and not current_visitor:
                 for track in tracks_quiz:
                     track.is_quiz_completed = False

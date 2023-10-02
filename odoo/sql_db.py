@@ -497,6 +497,12 @@ class Cursor(BaseCursor):
     def closed(self):
         return self._closed or self._cnx.closed
 
+    @property
+    def readonly(self):
+        # TODO: This will be introduced with readonly cursor PR from JUC:
+        #   `return bool(self._cnx.readonly)`
+        return True
+
     def now(self):
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
         if self._now is None:

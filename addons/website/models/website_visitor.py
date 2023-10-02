@@ -255,15 +255,21 @@ class WebsiteVisitor(models.Model):
         self.env.cr.execute(query, create_values)
         return self.env.cr.fetchone()
 
-    def _get_visitor_from_request(self, force_create=False, force_track_values=None):
+    def _get_visitor_from_request(self, force_create=None, force_track_values=None):
         """ Return the visitor as sudo from the request.
 
-        :param bool force_create: force a visitor creation if no visitor exists
+        :param force_create: force a visitor creation if no visitor exists,
+            value can be ``None``, ``read-only`` or ``read/write``.
+            ``read-only`` will force the creation even if the cursor is in
+            readonly mode. Use this value only if your business code can't work
+            without a visitor.
         :param force_track_values: an optional dict to create a track at the
             same time.
         :return: the website visitor if exists or forced, empty recordset
-                 otherwise.
+            otherwise.
         """
+
+        assert force_create in (None, 'read/write', 'read-only')
 
         # This function can be called in json with mobile app.
         # In case of mobile app, no uid is set on the jsonRequest env.
@@ -275,7 +281,12 @@ class WebsiteVisitor(models.Model):
         visitor = Visitor
         access_token = self._get_access_token()
 
-        if force_create:
+        if (
+            # We don't create visitor or track navigation when DB has enabled
+            # read-only cursor, unless explicitly requested to.
+            force_create == 'read-only'
+            or (force_create == 'read/write' and not self.env.cr.readonly)
+        ):
             visitor_id, _ = self._upsert_visitor(access_token, force_track_values)
             visitor = Visitor.browse(visitor_id)
         else:
@@ -299,7 +310,7 @@ class WebsiteVisitor(models.Model):
         website_track_values = {'url': url}
         if website_page:
             website_track_values['page_id'] = website_page.id
-        self._get_visitor_from_request(force_create=True, force_track_values=website_track_values)
+        self._get_visitor_from_request(force_create='read/write', force_track_values=website_track_values)
 
     def _add_tracking(self, domain, website_track_values):
         """ Add the track and update the visitor"""

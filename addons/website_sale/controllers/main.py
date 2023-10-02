@@ -1815,7 +1815,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @http.route('/shop/products/recently_viewed_update', type='json', auth='public', website=True)
     def products_recently_viewed_update(self, product_id, **kwargs):
         res = {}
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
+        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create='read-only')
         visitor_sudo._add_viewed_product(product_id)
         return res
 

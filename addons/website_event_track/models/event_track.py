@@ -286,7 +286,7 @@ class Track(models.Model):
                  'event_track_visitor_ids.is_blacklisted')
     @api.depends_context('uid')
     def _compute_is_reminder_on(self):
-        current_visitor = self.env['website.visitor']._get_visitor_from_request(force_create=False)
+        current_visitor = self.env['website.visitor']._get_visitor_from_request()
         if self.env.user._is_public() and not current_visitor:
             for track in self:
                 track.is_reminder_on = track.wishlisted_by_default
@@ -531,7 +531,7 @@ class Track(models.Model):
     def _get_event_track_visitors(self, force_create=False):
         self.ensure_one()
 
-        force_visitor_create = self.env.user._is_public()
+        force_visitor_create = self.env.user._is_public() and 'read-write'
         visitor_sudo = self.env['website.visitor']._get_visitor_from_request(force_create=force_visitor_create)
         if visitor_sudo:
             visitor_sudo._update_visitor_last_visit()
