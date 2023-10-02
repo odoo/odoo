@@ -44,8 +44,9 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         if not partner.vat and partner.company_registry:
             return [{
                 'company_id': partner.company_registry,
-                'TaxScheme_vals': {},
-                'tax_scheme_id': 'VAT',
+                'tax_scheme_vals': {
+                    'id': 'VAT',
+                },
             }]
 
         return vals_list

@@ -52,8 +52,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'registration_name': partner.name,
             'company_id': partner.vat,
             'registration_address_vals': self._get_partner_address_vals(partner),
-            'TaxScheme_vals': {},
-            'tax_scheme_id': 'VAT',
+            'tax_scheme_vals': {'id': 'VAT'},
         }]
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
@@ -164,7 +163,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         payment_term = invoice.invoice_payment_term_id
         if payment_term:
             # The payment term's note is automatically embedded in a <p> tag in Odoo
-            return [{'note_vals': [html2plaintext(payment_term.note)]}]
+            return [{'note_vals': [{'note': html2plaintext(payment_term.note)}]}]
         else:
             return []
 
@@ -253,7 +252,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'tax_category_vals': [{
                         'id': 'S',
                         'percent': tax_amount,
-                        'tax_scheme_id': 'VAT',
+                        'tax_scheme_vals': {'id': 'VAT'},
                     }],
                 })
             # One global Charge (VAT exempted)
@@ -267,13 +266,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'tax_category_vals': [{
                     'id': 'E',
                     'percent': 0.0,
-                    'tax_scheme_id': 'VAT',
+                    'tax_scheme_vals': {'id': 'VAT'},
                 }],
             })
         return vals_list
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
-        """ Method used to fill the cac:InvoiceLine>cac:AllowanceCharge node.
+        """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line>cac:AllowanceCharge node.
 
         Allowances are distinguished from charges using the ChargeIndicator node with 'false' as value.
 
@@ -298,9 +297,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if not line.discount:
             return fixed_tax_charge_vals_list
 
-        # Price subtotal without discount:
+        # Price subtotal with discount subtracted:
         net_price_subtotal = line.price_subtotal
-        # Price subtotal with discount:
+        # Price subtotal without discount subtracted:
         if line.discount == 100.0:
             gross_price_subtotal = 0.0
         else:
@@ -357,11 +356,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'base_quantity_attrs': {'unitCode': uom},
         }
 
-    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
-        """ Method used to fill the cac:InvoiceLine node.
-        It provides information about the invoice line.
+    def _get_invoice_line_tax_totals_vals_list(self, line, taxes_vals):
+        """ Method used to fill the cac:TaxTotal node on a line level.
+        Uses the same method as the invoice TaxTotal, but can be overridden in other formats.
+        """
+        return self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
 
-        :param line:    An invoice line.
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line node.
+        It provides information about the document line.
+
+        :param line:    A document line.
         :return:        A python dictionary.
         """
         allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line, tax_values_list=taxes_vals)
@@ -376,17 +381,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
             'id': line_id + 1,
-            'invoiced_quantity': line.quantity,
-            'invoiced_quantity_attrs': {'unitCode': uom},
+            'line_quantity': line.quantity,
+            'line_quantity_attrs': {'unitCode': uom},
             'line_extension_amount': line.price_subtotal + total_fixed_tax_amount,
             'allowance_charge_vals': allowance_charge_vals_list,
-            'tax_total_vals': self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals),
+            'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
         }
 
-    def _get_invoice_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
-        """ Method used to fill the cac:LegalMonetaryTotal node"""
+    def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
+        """ Method used to fill the cac:{Legal,Requested}MonetaryTotal node"""
         return {
             'currency': invoice.currency_id,
             'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
@@ -506,18 +511,27 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'ContactType_template': 'account_edi_ubl_cii.ubl_20_ContactType',
             'PartyType_template': 'account_edi_ubl_cii.ubl_20_PartyType',
             'PaymentMeansType_template': 'account_edi_ubl_cii.ubl_20_PaymentMeansType',
+            'PaymentTermsType_template': 'account_edi_ubl_cii.ubl_20_PaymentTermsType',
             'TaxCategoryType_template': 'account_edi_ubl_cii.ubl_20_TaxCategoryType',
             'TaxTotalType_template': 'account_edi_ubl_cii.ubl_20_TaxTotalType',
             'AllowanceChargeType_template': 'account_edi_ubl_cii.ubl_20_AllowanceChargeType',
+            'SignatureType_template': 'account_edi_ubl_cii.ubl_20_SignatureType',
+            'ResponseType_template': 'account_edi_ubl_cii.ubl_20_ResponseType',
+            'DeliveryType_template': 'account_edi_ubl_cii.ubl_20_DeliveryType',
+            'MonetaryTotalType_template': 'account_edi_ubl_cii.ubl_20_MonetaryTotalType',
             'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_20_InvoiceLineType',
+            'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_20_CreditNoteLineType',
+            'DebitNoteLineType_template': 'account_edi_ubl_cii.ubl_20_DebitNoteLineType',
             'InvoiceType_template': 'account_edi_ubl_cii.ubl_20_InvoiceType',
+            'CreditNoteType_template': 'account_edi_ubl_cii.ubl_20_CreditNoteType',
+            'DebitNoteType_template': 'account_edi_ubl_cii.ubl_20_DebitNoteType',
 
             'vals': {
                 'ubl_version_id': 2.0,
                 'id': invoice.name,
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
-                'note_vals': [html2plaintext(invoice.narration)] if invoice.narration else [],
+                'note_vals': [{'note': html2plaintext(invoice.narration)}] if invoice.narration else [],
                 'order_reference': order_reference,
                 'sales_order_id': sales_order_id,
                 'accounting_supplier_party_vals': {
@@ -530,27 +544,34 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'delivery_vals_list': self._get_delivery_vals_list(invoice),
                 'payment_means_vals_list': self._get_invoice_payment_means_vals_list(invoice),
                 'payment_terms_vals': self._get_invoice_payment_terms_vals_list(invoice),
-                # allowances at the document level, the allowances on invoices (eg. discount) are on invoice_line_vals
+                # allowances at the document level, the allowances on invoices (eg. discount) are on line_vals
                 'allowance_charge_vals': document_allowance_charge_vals_list,
                 'tax_total_vals': self._get_invoice_tax_totals_vals_list(invoice, taxes_vals),
-                'legal_monetary_total_vals': self._get_invoice_legal_monetary_total_vals(
+                'monetary_total_vals': self._get_invoice_monetary_total_vals(
                     invoice,
                     taxes_vals,
                     line_extension_amount,
                     allowance_total_amount,
                     charge_total_amount,
                 ),
-                'invoice_line_vals': invoice_line_vals_list,
+                'line_vals': invoice_line_vals_list,
                 'currency_dp': self._get_currency_decimal_places(invoice.currency_id),  # currency decimal places
             },
         }
 
-        if invoice.move_type == 'out_invoice':
-            vals['main_template'] = 'account_edi_ubl_cii.ubl_20_Invoice'
-            vals['vals']['invoice_type_code'] = 380
-        else:
+        # Document type specific settings
+        if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
+            vals['document_type'] = 'debit_note'
+            vals['main_template'] = 'account_edi_ubl_cii.ubl_20_DebitNote'
+            vals['vals']['document_type_code'] = 383
+        elif invoice.move_type == 'out_refund':
+            vals['document_type'] = 'credit_note'
             vals['main_template'] = 'account_edi_ubl_cii.ubl_20_CreditNote'
-            vals['vals']['credit_note_type_code'] = 381
+            vals['vals']['document_type_code'] = 381
+        else: # invoice.move_type == 'out_invoice'
+            vals['document_type'] = 'invoice'
+            vals['main_template'] = 'account_edi_ubl_cii.ubl_20_Invoice'
+            vals['vals']['document_type_code'] = 380
 
         return vals
 

@@ -217,7 +217,7 @@ class AccountEdiCommon(models.AbstractModel):
                 'id': tax_unece_codes.get('tax_category_code'),
                 'percent': tax.amount if tax.amount_type == 'percent' else False,
                 'name': tax_unece_codes.get('tax_exemption_reason'),
-                'tax_scheme_id': 'VAT',
+                'tax_scheme_vals': {'id': 'VAT'},
                 **tax_unece_codes,
             })
         return res
