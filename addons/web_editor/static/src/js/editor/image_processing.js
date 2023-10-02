@@ -443,7 +443,9 @@ export async function activateCropper(image, aspectRatio, dataset) {
 export async function loadImageInfo(img, rpc, attachmentSrc = '') {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
-    if (img.dataset.originalSrc || !src) {
+    // If the image does not have the "mimetypeBeforeConversion" attribute, it
+    // has to be added.
+    if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
         return;
     }
 
@@ -465,9 +467,14 @@ export async function loadImageInfo(img, rpc, attachmentSrc = '') {
     // The "redirect" check is for when it is a redirect image attachment due to
     // an external URL upload.
     if (original && original.image_src && !/\/web\/image\/\d+-redirect\//.test(original.image_src)) {
+        if (!img.dataset.mimetype) {
+            // The mimetype has to be added only if it is not already present as
+            // we want to avoid to reset a mimetype set by the user.
+            img.dataset.mimetype = original.mimetype;
+        }
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
-        img.dataset.mimetype = original.mimetype;
+        img.dataset.mimetypeBeforeConversion = original.mimetype;
     }
 }
 
