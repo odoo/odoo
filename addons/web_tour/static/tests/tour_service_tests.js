@@ -112,21 +112,21 @@ QUnit.module("Tour service", (hooks) => {
         });
         const env = await makeTestEnv({});
 
-        const { Component: TourPointerContainer, props: tourPointerProps } = registry
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
             .category("main_components")
-            .get("TourPointerContainer");
+            .get("OverlayContainer");
 
         class Root extends Component {
-            static components = { TourPointerContainer, Counter };
+            static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
                     <Counter />
-                    <TourPointerContainer t-props="props.tourPointerProps" />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
                 </t>
             `;
         }
 
-        await mount(Root, target, { env, props: { tourPointerProps } });
+        await mount(Root, target, { env, props: { overlayContainerProps } });
         env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(800);
         assert.containsOnce(document.body, ".o_tour_pointer");
@@ -149,21 +149,21 @@ QUnit.module("Tour service", (hooks) => {
         });
         const env = await makeTestEnv({});
 
-        const { Component: TourPointerContainer, props: tourPointerProps } = registry
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
             .category("main_components")
-            .get("TourPointerContainer");
+            .get("OverlayContainer");
 
         class Root extends Component {
-            static components = { TourPointerContainer, Counter };
+            static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
                     <Counter />
-                    <TourPointerContainer t-props="props.tourPointerProps" />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
                 </t>
             `;
         }
 
-        await mount(Root, target, { env, props: { tourPointerProps } });
+        await mount(Root, target, { env, props: { overlayContainerProps } });
         env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(document.body, ".o_tour_pointer");
@@ -182,21 +182,21 @@ QUnit.module("Tour service", (hooks) => {
         });
         const env = await makeTestEnv({});
 
-        const { Component: TourPointerContainer, props: tourPointerProps } = registry
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
             .category("main_components")
-            .get("TourPointerContainer");
+            .get("OverlayContainer");
 
         class Root extends Component {
-            static components = { TourPointerContainer, Counter };
+            static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
                     <Counter />
-                    <TourPointerContainer t-props="props.tourPointerProps" />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
                 </t>
             `;
         }
 
-        await mount(Root, target, { env, props: { tourPointerProps } });
+        await mount(Root, target, { env, props: { overlayContainerProps } });
         env.services.tour_service.startTour("tour1", { mode: "manual" });
         env.services.tour_service.bus.addEventListener("STEP-CONSUMMED", ({ detail }) => {
             assert.step(`Tour ${detail.tour.name}, step ${detail.step.trigger}`);
@@ -226,21 +226,21 @@ QUnit.module("Tour service", (hooks) => {
         });
         const env = await makeTestEnv({});
 
-        const { Component: TourPointerContainer, props: tourPointerProps } = registry
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
             .category("main_components")
-            .get("TourPointerContainer");
+            .get("OverlayContainer");
 
         class Root extends Component {
-            static components = { TourPointerContainer, Counter };
+            static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
                     <Counter />
-                    <TourPointerContainer t-props="props.tourPointerProps" />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
                 </t>
             `;
         }
 
-        await mount(Root, target, { env, props: { tourPointerProps } });
+        await mount(Root, target, { env, props: { overlayContainerProps } });
         env.services.tour_service.startTour("tour1", { mode: "manual" });
         env.services.tour_service.startTour("tour2", { mode: "manual" });
         await mock.advanceTime(750);
@@ -263,21 +263,21 @@ QUnit.module("Tour service", (hooks) => {
         });
         const env = await makeTestEnv({});
 
-        const { Component: TourPointerContainer, props: tourPointerProps } = registry
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
             .category("main_components")
-            .get("TourPointerContainer");
+            .get("OverlayContainer");
 
         class Root extends Component {
-            static components = { TourPointerContainer, Counter };
+            static components = { OverlayContainer, Counter };
             static template = xml/*html*/ `
                 <t>
                     <Counter />
-                    <TourPointerContainer t-props="props.tourPointerProps" />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
                 </t>
             `;
         }
 
-        await mount(Root, target, { env, props: { tourPointerProps } });
+        await mount(Root, target, { env, props: { overlayContainerProps } });
         env.services.tour_service.startTour("tour1", { mode: "manual" });
         await mock.advanceTime(750);
         assert.containsOnce(target, ".o_tour_pointer");
