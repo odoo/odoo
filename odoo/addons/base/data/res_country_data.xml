@@ -1386,6 +1386,7 @@
             <field name="code">th</field>
             <field name="currency_id" ref="THB" />
             <field eval="66" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
         </record>
         <record id="tj" model="res.country">
             <field name="name">Tajikistan</field>
