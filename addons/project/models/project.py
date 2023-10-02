@@ -1061,10 +1061,10 @@ class Task(models.Model):
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
-                                     domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+                                     domain="[('allow_task_dependencies', '=', True), ('id', '!=', id), ('project_id', '=', project_id)]")
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
-                                     domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+                                     domain="[('allow_task_dependencies', '=', True), ('id', '!=', id), ('project_id', '=', project_id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
     # recurrence fields
