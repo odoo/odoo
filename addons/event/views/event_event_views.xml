@@ -212,24 +212,15 @@
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
                                         </div>
-                                        <div t-if="record.address_id.value" class="d-flex">
-                                            <i class="fa fa-map-marker mt-1 me-1" title="Location"/>
-                                            <span t-esc="record.address_id.value"/>
+                                        <div t-if="record.address_id.value" class="d-flex ps-1">
+                                            <i class="fa fa-map-marker mt-1 me-2 text-center ps-1" title="Location"/>
+                                            <span t-esc="record.address_id.value" class="ms-1"/>
+                                        </div>
+                                        <div class="d-flex ps-1">
+                                            <i class="fa fa-group mt-1 me-2 text-center" title="Attendees"/>
+                                            <span t-out="record.seats_taken.raw_value" class="me-1"/> Attendees
                                         </div>
                                     </div>
-                                    <h5 class="p-0">
-                                        <a name="%(event_registration_action_stats_from_event)d"
-                                           type="action"
-                                           context="{'search_default_expected': True}">
-                                            <t t-esc="record.seats_taken.raw_value"/> Attendees
-                                        </a>
-                                        <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
-                                        <div  class="pt-2 pt-md-0" t-if="total_seats > 0"><br/>
-                                            <a class="ps-2" name="%(event_registration_action_stats_from_event)d" type="action" context="{'search_default_confirmed': True}">
-                                                <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="ps-2"><t t-esc="total_seats"/> Confirmed</span>
-                                            </a>
-                                        </div>
-                                    </h5>
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="activity_ids" widget="kanban_activity"/>

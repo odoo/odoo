@@ -61,7 +61,7 @@
                                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'LLL'}" class="o_wevent_event_month" />
                                             <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit" />
                                         </div>
-                                        <small class="o_wevent_participating text-bg-success">
+                                        <small t-if="event.is_participating" class="o_wevent_participating text-bg-success">
                                             <i class="fa fa-check me-2" />
                                             Registered
                                         </small>
