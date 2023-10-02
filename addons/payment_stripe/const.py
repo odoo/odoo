@@ -8,10 +8,13 @@ PROXY_URL = 'https://stripe.api.odoo.com/api/stripe/'
 # Mapping of payment method codes to Stripe codes.
 PAYMENT_METHODS_MAPPING = {
     'ach_direct_debit': 'us_bank_account',
+    'apple_pay': 'card',
     'bacs_direct_debit': 'bacs_debit',
     'becs_direct_debit': 'au_becs_debit',
     'afterpay': 'afterpay_clearpay',
     'clearpay': 'afterpay_clearpay',
+    'google_pay': 'card',
+    'link': 'card',
 }
 
 # Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Refund) statuses.

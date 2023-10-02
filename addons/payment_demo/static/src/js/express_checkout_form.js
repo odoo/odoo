@@ -23,6 +23,36 @@ paymentExpressCheckoutForm.include({
         this._initiateExpressPayment = debounce(this._initiateExpressPayment, 500, true);
     },
 
+    /**
+     * Prepare the express checkout form of Stripe for direct payment.
+     *
+     * @override method from payment.express_form
+     * @private
+     * @param {Object} providerData - The provider-specific data.
+     * @return {void}
+     */
+    async _prepareExpressCheckoutForm(providerData) {
+        /*
+         * When applying a coupon, the amount can be totally covered, with nothing left to pay. In
+         * that case, the check is whether the variable is defined because the server doesn't send
+         * the value when it equals '0'.
+         */
+        if (providerData.providerCode !== 'demo' || !this.paymentContext['amount']) {
+            this._super(...arguments);
+            return;
+        }
+
+        this.paymentContext.paymentMethodId = providerData.paymentMethodsAvailable.find(
+            pm => pm.code === 'demo'
+        )?.id;
+
+        if (this.paymentContext.paymentMethodId) {
+            document.querySelector(
+                `#o_demo_express_checkout_container_${providerData.providerId}`
+            ).classList.remove('d-none');
+        }
+    },
+
     // #=== EVENT HANDLERS ===#
 
     /**

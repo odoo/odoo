@@ -44,9 +44,11 @@
 
     <template id="express_checkout_form">
         <div name="o_express_checkout_container"
+             class="d-none"
              t-attf-id="o_demo_express_checkout_container_{{provider_sudo.id}}"
              t-att-data-provider-id="provider_sudo.id"
              t-att-data-provider-code="provider_sudo.code"
+             t-att-data-payment-methods-available="json.dumps(list(map(lambda pm_sudo: {'id': pm_sudo.id, 'code': pm_sudo.code}, payment_methods_available_sudo)))"
         >
             <button type="button"
                     class="btn btn-primary mt-2 w-100"

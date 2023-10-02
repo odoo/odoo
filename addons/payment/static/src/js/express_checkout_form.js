@@ -16,7 +16,10 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         this.paymentContext.shippingInfoRequired = !!this.paymentContext['shippingInfoRequired'];
         const expressCheckoutForms = this._getExpressCheckoutForms();
         for (const expressCheckoutForm of expressCheckoutForms) {
-            await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);
+            let providerData = {};
+            Object.assign(providerData, expressCheckoutForm.dataset);
+            providerData.paymentMethodsAvailable = JSON.parse(providerData.paymentMethodsAvailable);
+            await this._prepareExpressCheckoutForm(providerData);
         }
         // Monitor updates of the amount on eCommerce's cart pages.
         Component.env.bus.addEventListener('cart_amount_changed', (ev) => this._updateAmount(...ev.detail));
@@ -59,7 +62,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     _prepareTransactionRouteParams(providerId) {
         return {
             'provider_id': parseInt(providerId),
-            'payment_method_id': 1, // TODO VCR
+            'payment_method_id': this.paymentContext.paymentMethodId,
             'token_id': null,
             'flow': 'direct',
             'tokenization_requested': false,
@@ -83,7 +86,6 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         this.paymentContext.amount = parseFloat(newAmount);
         this.paymentContext.minorAmount = parseInt(newMinorAmount);
     },
-
 });
 
 export const paymentExpressCheckoutForm = publicWidget.registry.PaymentExpressCheckoutForm;

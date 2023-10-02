@@ -4,11 +4,13 @@
 import { _t } from '@web/core/l10n/translation';
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
+import { Mutex } from "@web/core/utils/concurrency";
 
 paymentExpressCheckoutForm.include({
     init() {
         this._super(...arguments);
         this.rpc = this.bindService("rpc");
+        this.mutex = new Mutex();
     },
 
     /**
@@ -20,12 +22,12 @@ paymentExpressCheckoutForm.include({
      */
     _getOrderDetails(deliveryAmount) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        const amount = deliveryAmount ? this.paymentContext['minorAmount'] + deliveryAmount
-            : this.paymentContext['minorAmount'];
+        const amount = deliveryAmount ? parseInt(this.paymentContext['minorAmount'] + deliveryAmount)
+            : parseInt(this.paymentContext['minorAmount']);
         const displayItems = [
             {
                 label: _t("Your order"),
-                amount: this.paymentContext['minorAmount'],
+                amount: parseInt(this.paymentContext['minorAmount']),
             },
         ];
         if (this.paymentContext['shippingInfoRequired'] && deliveryAmount !== undefined) {
@@ -68,6 +70,12 @@ paymentExpressCheckoutForm.include({
             providerData.stripePublishableKey,
             new StripeOptions()._prepareStripeOptions(providerData),
         );
+        providerData.paymentMethodsAvailable = providerData.paymentMethodsAvailable.map(
+            pm => {
+                pm.code = this._getPaymentMethodMapping(pm.code);
+                return pm;
+            }
+        );
         const paymentRequest = stripeJS.paymentRequest({
             country: providerData.countryCode,
             currency: this.paymentContext['currencyName'],
@@ -75,6 +83,9 @@ paymentExpressCheckoutForm.include({
             requestPayerEmail: true,
             requestPayerPhone: true,
             requestShipping: this.paymentContext['shippingInfoRequired'],
+            disableWallets: ['applePay', 'googlePay', 'link', 'browserCard'].filter(
+                pm => !providerData.paymentMethodsAvailable.map(pm => pm.code).includes(pm)
+            ),
             ...this._getOrderDetails(),
         });
         if (this.stripePaymentRequests === undefined) {
@@ -86,19 +97,32 @@ paymentExpressCheckoutForm.include({
             style: {paymentRequestButton: {type: 'buy'}},
         });
 
-        // Check the availability of the Payment Request API first.
-        const canMakePayment = await paymentRequest.canMakePayment();
-        if (canMakePayment) {
-            paymentRequestButton.mount(
-                `#o_stripe_express_checkout_container_${providerData.providerId}`
-            );
-        } else {
-            document.querySelector(
-                `#o_stripe_express_checkout_container_${providerData.providerId}`
-            ).style.display = 'none';
-        }
+        /**
+         * Check the availability of the Payment Request API first
+         *
+         * When multiple Stripe providers are displayed, it is possible that the outcome of
+         * `canMakePayment` differs for each of them. The mutex ensures that each call to
+         * `canMakePayment` will affect the right provider to prevent showing or hiding the wrong
+         * one.
+         *
+         */
+        await this.mutex.exec(async (providerId = providerData.providerId) => {
+            const canMakePayment = await paymentRequest.canMakePayment();
+            if (canMakePayment) {
+                paymentRequestButton.mount(
+                    `#o_stripe_express_checkout_container_${providerId}`
+                );
+            } else {
+                document.querySelector(
+                    `#o_stripe_express_checkout_container_${providerId}`
+                ).style.display = 'none';
+            }
+        });
 
         paymentRequest.on('paymentmethod', async (ev) => {
+            this.paymentContext.paymentMethodId = providerData.paymentMethodsAvailable.find(
+                pm => pm.code === ev.walletName
+            ).id;
             const addresses = {
                 'billing_address': {
                     name: ev.payerName,
@@ -214,4 +238,17 @@ paymentExpressCheckoutForm.include({
             paymentRequest => paymentRequest.update(this._getOrderDetails())
         );
     },
+
+    _getPaymentMethodMapping(code) {
+        switch (code) {
+            case 'apple_pay':
+                return 'applePay';
+            case 'card':
+                return 'browserCard'
+            case 'google_pay':
+                return 'googlePay';
+            default:
+                return code;
+        }
+    }
 });

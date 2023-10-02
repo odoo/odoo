@@ -21,6 +21,7 @@
              t-att-data-provider-code="provider_sudo.code"
              t-att-data-stripe-publishable-key="provider_sudo._stripe_get_publishable_key()"
              t-att-data-country-code="provider_sudo.company_id.country_id.code"
+             t-att-data-payment-methods-available="json.dumps(list(map(lambda pm_sudo: {'id': pm_sudo.id, 'code': pm_sudo.code}, payment_methods_available_sudo)))"
              class="w-100 mt-2"
         />
     </template>

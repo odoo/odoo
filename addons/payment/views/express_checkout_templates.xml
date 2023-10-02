@@ -42,7 +42,8 @@
                 />
                 <t t-if="express_checkout_form_xml_id">
                     <t t-call="{{express_checkout_form_xml_id}}">
-                        <t t-set="provider_sudo" t-value="provider_sudo"/>
+                        <t t-set="payment_methods_available_sudo"
+                           t-value="provider_sudo.payment_method_ids.filtered(lambda pm: pm in payment_methods_sudo)"/>
                     </t>
                 </t>
             </t>
