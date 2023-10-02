@@ -550,6 +550,16 @@ class IrModelFields(models.Model):
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
     currency_field = fields.Char(string="Currency field", help="Name of the Many2one field holding the res.currency")
+    # HTML sanitization reflection, useless for other kinds of fields
+    sanitize = fields.Boolean(string='Sanitize HTML', default=True)
+    sanitize_overridable = fields.Boolean(string='Sanitize HTML overridable', default=False)
+    sanitize_tags = fields.Boolean(string='Sanitize HTML Tags', default=True)
+    sanitize_attributes = fields.Boolean(string='Sanitize HTML Attributes', default=True)
+    sanitize_style = fields.Boolean(string='Sanitize HTML Style', default=False)
+    sanitize_form = fields.Boolean(string='Sanitize HTML Form', default=True)
+    strip_style = fields.Boolean(string='Strip Style Attribute', default=False)
+    strip_classes = fields.Boolean(string='Strip Class Attribute', default=False)
+
 
     @api.depends('relation', 'relation_field')
     def _compute_relation_field_id(self):
@@ -1091,6 +1101,15 @@ class IrModelFields(models.Model):
             'column1': field.column1 if field.type == 'many2many' else None,
             'column2': field.column2 if field.type == 'many2many' else None,
             'currency_field': field.currency_field if field.type == 'monetary' else None,
+            # html sanitization attributes (useless for other fields)
+            'sanitize': field.sanitize if field.type == 'html' else None,
+            'sanitize_overridable': field.sanitize_overridable if field.type == 'html' else None,
+            'sanitize_tags': field.sanitize_tags if field.type == 'html' else None,
+            'sanitize_attributes': field.sanitize_attributes if field.type == 'html' else None,
+            'sanitize_style': field.sanitize_style if field.type == 'html' else None,
+            'sanitize_form': field.sanitize_form if field.type == 'html' else None,
+            'strip_style': field.strip_style if field.type == 'html' else None,
+            'strip_classes': field.strip_classes if field.type == 'html' else None,
         }
 
     def _reflect_fields(self, model_names):
@@ -1192,6 +1211,15 @@ class IrModelFields(models.Model):
             attrs['translate'] = bool(field_data['translate'])
             if field_data['ttype'] == 'char':
                 attrs['size'] = field_data['size'] or None
+            elif field_data['ttype'] == 'html':
+                attrs['sanitize'] = field_data['sanitize']
+                attrs['sanitize_overridable'] = field_data['sanitize_overridable']
+                attrs['sanitize_tags'] = field_data['sanitize_tags']
+                attrs['sanitize_attributes'] = field_data['sanitize_attributes']
+                attrs['sanitize_style'] = field_data['sanitize_style']
+                attrs['sanitize_form'] = field_data['sanitize_form']
+                attrs['strip_style'] = field_data['strip_style']
+                attrs['strip_classes'] = field_data['strip_classes']
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
             if field_data['ttype'] == 'selection':

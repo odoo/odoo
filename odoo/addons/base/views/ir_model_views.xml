@@ -309,6 +309,36 @@
                                             required="ttype == 'monetary'"/>
                                     </group>
                                 </group>
+                                <group string="HTML/Sanitization Properties">
+                                    <group>
+                                        <field name="sanitize"
+                                            invisible="ttype != 'html'"
+                                            readonly="ttype != 'html'" />
+                                        <field name="sanitize_overridable"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                        <field name="sanitize_tags"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                        <field name="sanitize_attributes"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                    </group>
+                                    <group>
+                                        <field name="sanitize_style"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                        <field name="sanitize_form"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                        <field name="strip_style"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                        <field name="strip_classes"
+                                            invisible="ttype != 'html' or sanitize == False"
+                                            readonly="ttype != 'html' or sanitize == False" />
+                                    </group>
+                                </group>
                                 <group invisible="ttype not in ['selection', 'reference']" readonly="ttype not in ['selection', 'reference']">
                                     <field name="selection_ids">
                                         <tree editable="bottom">
