@@ -1761,7 +1761,7 @@ class MailThread(models.AbstractModel):
         if partner and partner.email:  # complete profile: id, name <email>
             result[self.ids[0]].append((partner.id, partner.email_formatted, lang, reason, {}))
         elif partner:  # incomplete profile: id, name
-            result[self.ids[0]].append((partner.id, partner.name, lang, reason, {}))
+            result[self.ids[0]].append((partner.id, partner.name or '', lang, reason, {}))
         else:  # unknown partner, we are probably managing an email address
             _, parsed_email = self.env['res.partner']._parse_partner_name(email)
             partner_create_values = self._get_customer_information().get(parsed_email, {})
