@@ -44,3 +44,14 @@
 .o-dashboard-action > h3 > span > i {
     font-size: 12px;
 }
+
+.o_add_to_board {
+    svg {
+        width: var(--oi-font-size, 1em);
+        aspect-ratio: 1;
+    }
+
+    &:not(:hover) {
+        --oi-color: currentColor;
+    }
+}
