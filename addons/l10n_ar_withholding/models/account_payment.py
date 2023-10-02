@@ -24,4 +24,3 @@ class AccountPayment(models.Model):
             pay.line_ids.filtered('tax_ids').tax_ids.unlink()
         res = super()._synchronize_to_moves(changed_fields)
         return res
-

@@ -222,7 +222,7 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
         self.assertEqual(-6.05, line_2.amount_currency)
         self.assertEqual(60.5, payment.currency_id.round(sum(payment.withholding_ids.mapped('amount_currency')) * -1  + payment.amount))
 
-        # company currency payment for no company currency inv and two wht
+        # company currency payment in company currency inv and two wht
         inv_2 = self.in_invoice_3_wht('2-6')
         wizard = self.new_payment_register(inv_2.ids)
         wizard.payment_date = '2023-05-01'
@@ -239,4 +239,3 @@ class TestL10nArWithholdingArRi(AccountTestInvoicingCommon):
 
 
         self.assertEqual(inv_1.amount_residual, inv_2.amount_residual)
-

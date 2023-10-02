@@ -18,10 +18,10 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ar_ri', 'account.tax')
     def _get_ar_ri_withholding_account_tax(self):
-        additionnal = self._parse_csv('ar_ri', 'account.tax', module='l10n_ar_withholding')
-        self._deref_account_tags('ar_ri', additionnal)
-        self._deref_account_tags('ar_ex', additionnal)
-        return additionnal
+        additional = self._parse_csv('ar_ri', 'account.tax', module='l10n_ar_withholding')
+        self._deref_account_tags('ar_ri', additional)
+        self._deref_account_tags('ar_ex', additional)
+        return additional
 
     # ex chart
     @template('ar_ex', 'account.tax.group')
@@ -30,8 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ar_ex', 'account.tax')
     def _get_ar_ex_withholding_account_tax(self):
-        additionnal = self._parse_csv('ar_ex', 'account.tax', module='l10n_ar_withholding')
-        self._deref_account_tags('ar_ex', additionnal)
+        additional = self._parse_csv('ar_ex', 'account.tax', module='l10n_ar_withholding')
+        self._deref_account_tags('ar_ex', additional)
 
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)

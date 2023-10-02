@@ -11,9 +11,9 @@
                     invisible="country_code != 'AR'">
                     <field name="withholding_ids" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
                         <tree editable="bottom">
-                            <field name="l10n_ar_withholding_sequence_id" column_invisible="True"/>
-                            <field name="tax_id" domain="[('l10n_ar_withholding', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="name" readonly="l10n_ar_withholding_sequence_id"/>
+                            <field name="withholding_sequence_id" column_invisible="True"/>
+                            <field name="tax_id" domain="[('l10n_ar_withholding_payment_type', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="name" readonly="withholding_sequence_id"/>
                             <field name="base_amount"/>
                             <field name="amount"/>
                             <field name="currency_id" invisible="True"/>

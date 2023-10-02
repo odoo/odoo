@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="supplier_taxes_id" position="after">
-                <field name="l10n_ar_supplier_withholding_taxes_ids" widget="many2many_tags"  invisible="'AR'.lower() not in (fiscal_country_codes or '').lower()" options="{'no_create': True}"/>
+                <field name="l10n_ar_supplier_withholding_taxes_ids" widget="many2many_tags"  invisible="'AR' not in fiscal_country_codes" options="{'no_create': True}"/>
             </field>
         </field>
     </record>
