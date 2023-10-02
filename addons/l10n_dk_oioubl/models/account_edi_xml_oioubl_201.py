@@ -73,7 +73,7 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
                 'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
             }
         })
-        vals['vals'].setdefault('invoice_type_code_attrs', {}).update({
+        vals['vals'].setdefault('document_type_code_attrs', {}).update({
             'listID': 'urn:oioubl:codelist:invoicetypecode-1.2',
             'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
         })
@@ -103,9 +103,11 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
             # the doc says it could be empty but the schematron says otherwise
             # https://www.oioubl.info/Classes/en/TaxScheme.html
             party_tax_scheme.update({
-                'tax_scheme_id': 'VAT',
-                'tax_scheme_id_attrs': {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'},
-                'tax_name': 'VAT',
+                'tax_scheme_vals': {
+                    'id': 'VAT',
+                    'id_attrs': {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'},
+                    'name': 'VAT',
+                },
             })
         return vals
 
@@ -188,8 +190,8 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
                 if subtotal_vals['tax_category_vals']['id'] not in TAX_POSSIBLE_VALUES:
                     subtotal_vals['tax_category_vals']['id'] = UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(subtotal_vals['tax_category_vals']['id'])
 
-                subtotal_vals['tax_category_vals']['tax_scheme_name'] = 'VAT'
-                subtotal_vals['tax_category_vals']['tax_scheme_id_attrs'] = {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'}
+                subtotal_vals['tax_category_vals']['tax_scheme_vals']['name'] = 'VAT'
+                subtotal_vals['tax_category_vals']['tax_scheme_vals']['id_attrs'] = {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'}
 
                 # /Invoice[1]/cac:TaxTotal[1]/cac:TaxSubtotal[1]/cac:TaxCategory[1]
                 # [W-LIB230] Name should only be used within NES profiles
@@ -199,9 +201,9 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
 
         return vals_list
 
-    def _get_invoice_legal_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
+    def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
         # EXTENDS account.edi.xml.ubl_20
-        vals = super()._get_invoice_legal_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
+        vals = super()._get_invoice_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
         # In OIOUBL context, tax_exclusive_amount means "tax only"
         vals['tax_exclusive_amount'] = taxes_vals['tax_amount_currency']
         if invoice.currency_id.is_zero(vals['prepaid_amount']):
@@ -223,8 +225,8 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
                 'schemeID': 'urn:oioubl:id:taxcategoryid-1.3',
                 'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
             }
-            vals['tax_scheme_id_attrs'] = {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'}
-            vals['tax_scheme_name'] = 'VAT'
+            vals['tax_scheme_vals']['id_attrs'] = {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'}
+            vals['tax_scheme_vals']['name'] = 'VAT'
             # OIOUBL can't contain name for category
             # /Invoice[1]/cac:InvoiceLine[1]/cac:Item[1]/cac:ClassifiedTaxCategory[1]
             # [W-LIB230] Name should only be used within NES profiles

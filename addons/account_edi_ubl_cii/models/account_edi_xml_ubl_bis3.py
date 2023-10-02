@@ -70,7 +70,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         if partner.country_id.code == "NO" and role == 'supplier':
             vals_list.append({
                 'company_id': "Foretaksregisteret",
-                'tax_scheme_id': "TAX",
+                'tax_scheme_vals': {'id': 'TAX'},
             })
 
         return vals_list
@@ -236,7 +236,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'currency_dp': 2,
             'ubl_version_id': None,
         })
-        vals['vals']['legal_monetary_total_vals']['currency_dp'] = 2
+        vals['vals']['monetary_total_vals']['currency_dp'] = 2
 
         # [NL-R-001] For suppliers in the Netherlands, if the document is a creditnote, the document MUST
         # contain an invoice reference (cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID)
