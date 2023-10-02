@@ -303,7 +303,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
     def setUpClass(cls):
         def check_remaining_patchers():
             for patcher in _patch._active_patches:
-                _logger.warning("A patcher was remaining active at the end of %s, disabling it...", cls.__name__)
+                _logger.warning("A patcher (targeting %s.%s) was remaining active at the end of %s, disabling it...", patcher.target, patcher.attribute, cls.__name__)
                 patcher.stop()
         cls.addClassCleanup(check_remaining_patchers)
         super().setUpClass()
