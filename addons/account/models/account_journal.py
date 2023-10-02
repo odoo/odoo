@@ -194,7 +194,7 @@ class AccountJournal(models.Model):
         string="Journal Groups")
 
     secure_sequence_id = fields.Many2one('ir.sequence',
-        help='Sequence to use to ensure the securisation of data',
+        help='Sequence to use to ensure the securization of data',
         check_company=True,
         readonly=True, copy=False)
 
@@ -816,7 +816,7 @@ class AccountJournal(models.Model):
             for seq_field in sequence_fields:
                 if not journal[seq_field]:
                     vals = {
-                        'name': _('Securisation of %s - %s') % (seq_field, journal.name),
+                        'name': _('Securization of %s - %s') % (seq_field, journal.name),
                         'code': 'SECUR%s-%s' % (journal.id, seq_field),
                         'implementation': 'no_gap',
                         'prefix': '',
