@@ -659,7 +659,14 @@ export class ThreadService {
     async post(
         thread,
         body,
-        { attachments = [], isNote = false, parentId, rawMentions = {}, cannedResponseIds } = {}
+        {
+            attachments = [],
+            isNote = false,
+            parentId,
+            mentionedChannels = [],
+            mentionedPartners = [],
+            cannedResponseIds,
+        } = {}
     ) {
         let tmpMsg;
         const params = await this.getMessagePostParams({
@@ -667,7 +674,8 @@ export class ThreadService {
             body,
             cannedResponseIds,
             isNote,
-            rawMentions,
+            mentionedChannels,
+            mentionedPartners,
             thread,
         });
         const tmpId = this.messageService.getNextTemporaryId();
@@ -747,12 +755,16 @@ export class ThreadService {
         body,
         cannedResponseIds,
         isNote,
-        rawMentions,
+        mentionedChannels,
+        mentionedPartners,
         thread,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
-            ? this.messageService.getMentionsFromText(rawMentions, body)
+            ? this.messageService.getMentionsFromText(body, {
+                  mentionedChannels,
+                  mentionedPartners,
+              })
             : undefined;
         const partner_ids = validMentions?.partners.map((partner) => partner.id);
         let recipientEmails = [];

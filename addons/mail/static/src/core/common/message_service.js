@@ -23,11 +23,19 @@ export class MessageService {
         this.userService = services.user;
     }
 
-    async edit(message, body, attachments = [], rawMentions) {
+    async edit(
+        message,
+        body,
+        attachments = [],
+        { mentionedChannels = [], mentionedPartners = [] } = {}
+    ) {
         if (convertBrToLineBreak(message.body) === body && attachments.length === 0) {
             return;
         }
-        const validMentions = this.getMentionsFromText(rawMentions, body);
+        const validMentions = this.getMentionsFromText(body, {
+            mentionedChannels,
+            mentionedPartners,
+        });
         const messageData = await this.rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .concat(message.attachments)
@@ -84,7 +92,7 @@ export class MessageService {
         return this.getLastMessageId() + 0.01;
     }
 
-    getMentionsFromText(rawMentions, body) {
+    getMentionsFromText(body, { mentionedChannels = [], mentionedPartners = [] } = {}) {
         if (!this.store.user) {
             // mentions are not supported for guests
             return {};
@@ -92,18 +100,14 @@ export class MessageService {
         const validMentions = {};
         const partners = [];
         const threads = [];
-        const rawMentionedPartnerIds = rawMentions.partnerIds || [];
-        const rawMentionedThreadIds = rawMentions.threadIds || [];
-        for (const partnerId of rawMentionedPartnerIds) {
-            const partner = this.store.Persona.get({ type: "partner", id: partnerId });
+        for (const partner of mentionedPartners) {
             const index = body.indexOf(`@${partner.name}`);
             if (index === -1) {
                 continue;
             }
             partners.push(partner);
         }
-        for (const threadId of rawMentionedThreadIds) {
-            const thread = this.store.Thread.get({ model: "discuss.channel", id: threadId });
+        for (const thread of mentionedChannels) {
             const index = body.indexOf(`#${thread.displayName}`);
             if (index === -1) {
                 continue;

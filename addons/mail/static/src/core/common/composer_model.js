@@ -2,10 +2,6 @@
 
 import { OR, Record } from "@mail/core/common/record";
 
-/**
- * @typedef {{partnerIds: Set<number>, threadIds: Set<number>}} RawMentions
- */
-
 export class Composer extends Record {
     static id = OR("thread", "message");
     /** @returns {import("models").Composer} */
@@ -21,6 +17,7 @@ export class Composer extends Record {
         if (Boolean(message) === Boolean(thread)) {
             throw new Error("Composer shall have a thread xor a message.");
         }
+        /** @type {import("models").Composer} */
         let composer = (thread ?? message)?.composer;
         if (!composer) {
             /** @type {import("models").Composer} */
@@ -45,7 +42,7 @@ export class Composer extends Record {
         if ("mentions" in data) {
             for (const mention of data.mentions) {
                 if (mention.type === "partner") {
-                    composer.rawMentions.partnerIds.add(mention.id);
+                    composer.mentionedPartners.add(mention);
                 }
             }
         }
@@ -54,11 +51,8 @@ export class Composer extends Record {
 
     attachments = Record.many("Attachment");
     message = Record.one("Message");
-    /** @type {RawMentions} */
-    rawMentions = {
-        partnerIds: new Set(),
-        threadIds: new Set(),
-    };
+    mentionedPartners = Record.many("Persona");
+    mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("CannedResponse");
     /** @type {string} */
     textInputContent;
