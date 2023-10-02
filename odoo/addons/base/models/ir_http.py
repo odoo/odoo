@@ -236,12 +236,13 @@ class IrHttp(models.AbstractModel):
                 "time_format": langs.time_format,
                 "grouping": langs.grouping,
                 "decimal_point": langs.decimal_point,
-                # A0 is the unicode codepoint for a non-breaking space
-                "thousands_sep": langs.thousands_sep.replace(' ', '\xa0'),
+                "thousands_sep": langs.thousands_sep,
                 "week_start": langs.week_start,
             }
             lang_params['week_start'] = int(lang_params['week_start'])
             lang_params['code'] = lang
+            if lang_params["thousands_sep"]:
+                lang_params["thousands_sep"] = lang_params["thousands_sep"].replace(' ', '\N{NO-BREAK SPACE}')
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.

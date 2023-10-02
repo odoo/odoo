@@ -18,8 +18,7 @@ import threading
 from socket import gaierror, timeout
 from OpenSSL import crypto as SSLCrypto
 from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
-from OpenSSL.SSL import Error as SSLError
-from urllib3.contrib.pyopenssl import PyOpenSSLContext
+from OpenSSL.SSL import Context as SSLContext, Error as SSLError
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -335,15 +334,15 @@ class IrMailServer(models.Model):
                and mail_server.smtp_ssl_certificate
                and mail_server.smtp_ssl_private_key):
                 try:
-                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context = SSLContext(ssl.PROTOCOL_TLS)
                     smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
                     certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
                     smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
                     private_key = SSLCrypto.load_privatekey(FILETYPE_PEM, smtp_ssl_private_key)
-                    ssl_context._ctx.use_certificate(certificate)
-                    ssl_context._ctx.use_privatekey(private_key)
+                    ssl_context.use_certificate(certificate)
+                    ssl_context.use_privatekey(private_key)
                     # Check that the private key match the certificate
-                    ssl_context._ctx.check_privatekey()
+                    ssl_context.check_privatekey()
                 except SSLCryptoError as e:
                     raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
@@ -365,10 +364,11 @@ class IrMailServer(models.Model):
 
             if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
                 try:
-                    ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
-                    ssl_context.load_cert_chain(smtp_ssl_certificate_filename, keyfile=smtp_ssl_private_key_filename)
+                    ssl_context = SSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context.use_certificate_chain_file(smtp_ssl_certificate_filename)
+                    ssl_context.use_privatekey_file(smtp_ssl_private_key_filename)
                     # Check that the private key match the certificate
-                    ssl_context._ctx.check_privatekey()
+                    ssl_context.check_privatekey()
                 except SSLCryptoError as e:
                     raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
