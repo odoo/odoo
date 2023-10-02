@@ -57,3 +57,21 @@ class TestStockPickingTour(HttpCase):
             ('product_id', '=', product_serial.id),
         ])
         self.assertEqual(len(serial), 5)
+
+    def test_inventory_adjustment_apply_all(self):
+        """
+        Checks if the "Apply All" button works for all new entries, even if
+        it was pressed immediately after entering the last entry's quantity
+        (without clicking on anything else)
+        """
+        self.env['product.product'].create([
+            {'name': 'Product 1', 'type': 'product'},
+            {'name': 'Product 2', 'type': 'product'},
+        ])
+
+        menu = self.env.ref('stock.menu_action_inventory_tree')
+        url = '/web#menu_id=%s&model=stock.quant&view_type=list' % (menu['id'])
+
+        # We need a bigger window, so the "Apply All" button is immediately visible
+        self.browser_size = '1920,1080'
+        self.start_tour(url, 'test_inventory_adjustment_apply_all', login='admin', timeout=60)
