@@ -63,3 +63,12 @@ class TestSessionInfo(common.HttpCase):
         response = self.url_open("/web/session/modules", data=self.payload, headers=self.headers)
         data = response.json()
         self.assertTrue(isinstance(data['result'], list))
+
+    def test_load_polish_lang(self):
+        # Regression test, making sure languages without thousand separators
+        # work correctly
+        lang_pl = self.env['res.lang']._activate_lang('pl_PL')
+        self.user.lang = lang_pl.code
+        self.authenticate(self.user.login, self.user_password)
+        res = self.url_open('/web')
+        res.raise_for_status()
