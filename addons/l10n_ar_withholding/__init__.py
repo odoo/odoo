@@ -21,11 +21,13 @@ def _l10n_ar_withholding_post_init(env):
                 'account.tax',
             ]
         }
-        env['account.chart.template']._deref_account_tags(template_code, data['account.tax'])
         for company in env['res.company'].search([('chart_template', '=', template_code)]):
             _logger.info("Company %s already has the Argentinean localization installed, updating...", company.name)
-            env['account.chart.template'].with_company(company)._load_data(data)
-            env['account.chart.template'].with_company(company)._post_load_data(template_code, company, data)
+            company_chart_template = env['account.chart.template'].with_company(company)
+            company_data = dict(data)
+            company_chart_template._deref_account_tags(template_code, company_data['account.tax'])
+            company_chart_template._load_data(company_data)
+            company_chart_template._post_load_data(template_code, company, company_data)
 
-        if template_code in ['ar_ri'] and env.ref('base.module_l10n_ar_withholding').demo:
-            env['account.chart.template']._post_load_demo_data(company)
+            if template_code in ['ar_ri'] and env.ref('base.module_l10n_ar_withholding').demo:
+                env['account.chart.template']._post_load_demo_data(company)

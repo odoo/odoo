@@ -15,7 +15,7 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
     name = fields.Char(string='Number', required=False, default='/')
     tax_id = fields.Many2one('account.tax', required=True)
-    l10n_ar_withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
+    withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
 
@@ -23,24 +23,26 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
     def _compute_base_amount(self):
         base_lines = self.payment_register_id.line_ids.move_id.invoice_line_ids
         supplier_recs = self.filtered(lambda x: x.payment_register_id.partner_type == 'supplier')
+        factor_dict = self.mapped('payment_register_id')._l10n_ar_get_payment_factor_dict()
         for rec in supplier_recs:
-            old_base_amount = rec.base_amount
-            amount_total = sum(rec.payment_register_id.mapped('line_ids.move_id.amount_total'))
-            conversion_rate = rec.payment_register_id._get_conversion_rate()
-            real_amount = min(rec.payment_register_id.amount, rec.payment_register_id.source_amount / conversion_rate)
-            factor = min((real_amount * conversion_rate) / amount_total, 1)
             if not rec.tax_id:
-                base_amount = 0.0
-            tax_base_lines = base_lines.filtered(lambda x: rec.tax_id in x.product_id.l10n_ar_supplier_withholding_taxes_ids)
-            if rec.tax_id.l10n_ar_withholding_amount_type == 'untaxed_amount':
-                base_amount = factor * sum(tax_base_lines.mapped('price_subtotal'))
-            else:
-                base_amount = factor * sum(tax_base_lines.mapped('price_total'))
-            base_amount = self.payment_register_id.currency_id.round(base_amount/conversion_rate)
-            rec.base_amount = old_base_amount if not base_amount and old_base_amount else base_amount
+                rec.base_amount = 0.0
+                continue
+            factor = factor_dict.get(rec.payment_register_id.id)
+            base_amount = rec._get_base_amount(base_lines, factor)
+            if base_amount:
+                rec.base_amount = base_amount
         # Only supplier compute base tax
         (self - supplier_recs).base_amount = 0.0
 
+    def _get_base_amount(self, base_lines, factor):
+        conversion_rate = self.payment_register_id._get_conversion_rate()
+        tax_base_lines = base_lines.filtered(lambda x: self.tax_id in x.product_id.l10n_ar_supplier_withholding_taxes_ids)
+        if self.tax_id.l10n_ar_withholding_amount_type == 'untaxed_amount':
+            base_amount = factor * sum(tax_base_lines.mapped('price_subtotal'))
+        else:
+            base_amount = factor * sum(tax_base_lines.mapped('price_total'))
+        return self.payment_register_id.currency_id.round(base_amount / conversion_rate)
 
 
     def _tax_compute_all_helper(self):
@@ -82,7 +84,7 @@ class AccountPaymentRegister(models.TransientModel):
         supplier_recs = self.filtered(lambda x: x.partner_type == 'supplier' and (not x.can_group_payments or (x.can_group_payments and x.group_payment)))
         for rec in supplier_recs:
             taxes = rec._get_withholding_tax()
-            rec.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id}) for x in taxes]
+            rec.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0}) for x in taxes]
         (self - supplier_recs).withholding_ids = False
 
     @api.depends('withholding_ids.amount', 'amount', 'l10n_latam_check_id')
@@ -179,3 +181,19 @@ class AccountPaymentRegister(models.TransientModel):
                 self.payment_date,
             )
         return  1.0
+
+    def _l10n_ar_get_payment_factor_dict(self):
+        # The factor represents the portion of the invoiced amount that I am paying and is used to calculate
+        # the base amount. When pay more than billed, the factor is 1, because I should only pay tax on the invoiced amount.
+        # billed | payment | factor
+        #    100 |      50 |    0.5
+        #    100 |     100 |      1
+        #    100 |     200 |      1
+
+        dict = {}
+        for rec in self:
+            amount_total = sum(rec.mapped('line_ids.move_id.amount_total'))
+            conversion_rate = rec._get_conversion_rate()
+            real_amount = min(rec.amount, rec.source_amount / conversion_rate)
+            dict[rec.id] = min((real_amount * conversion_rate) / amount_total, 1)
+        return dict

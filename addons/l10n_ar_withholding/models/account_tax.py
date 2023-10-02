@@ -6,7 +6,7 @@ class AccountTax(models.Model):
 
     _inherit = 'account.tax'
 
-    l10n_ar_withholding = fields.Selection(
+    l10n_ar_withholding_payment_type = fields.Selection(
         [('supplier', 'Supplier'), ('customer', 'Customer')], 'Argentinean Withholding type')
     l10n_ar_withholding_amount_type = fields.Selection([
         ('untaxed_amount', 'Untaxed Amount'),
@@ -20,7 +20,7 @@ class AccountTax(models.Model):
     def _get_tax_vals(self, company, tax_template_to_tax):
         vals = super()._get_tax_vals(company, tax_template_to_tax)
         vals.update({
-            'l10n_ar_withholding': self.l10n_ar_withholding,
+            'l10n_ar_withholding_payment_type': self.l10n_ar_withholding_payment_type,
             'l10n_ar_withholding_amount_type': self.l10n_ar_withholding_amount_type,
             'l10n_ar_withholding_sequence_id': self.l10n_ar_withholding_sequence_id,
         })
