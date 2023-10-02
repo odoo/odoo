@@ -747,7 +747,7 @@ class SupplierInfo(models.Model):
     name = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
-        help="Vendor of this product", check_company=True)
+        help="Vendor of this product", check_company=True, index=True)
     product_name = fields.Char(
         'Vendor Product Name',
         help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one.")
@@ -776,7 +776,7 @@ class SupplierInfo(models.Model):
     date_start = fields.Date('Start Date', help="Start date for this vendor price")
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
-        'product.product', 'Product Variant', check_company=True,
+        'product.product', 'Product Variant', check_company=True, index=True,
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', check_company=True,
