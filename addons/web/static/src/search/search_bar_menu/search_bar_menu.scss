@@ -1,7 +1,20 @@
 // SearchBar Menu
 // ============================================================================
 .o_search_bar_menu {
+    $-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2 });
+
+    max-width: $-menu-max-width;
     .o_dropdown_container {
         border-color: $dropdown-divider-bg !important;
+    }
+
+    @include media-breakpoint-up(lg) {
+        .o_favorite_menu {
+            max-width: calc(#{$-menu-max-width} / 3);
+        }
+
+        .o_comparison_menu + .o_favorite_menu {
+            max-width: calc(#{$-menu-max-width} / 4);
+        }
     }
 }
