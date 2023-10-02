@@ -248,26 +248,6 @@
     }
 }
 
-.s_gallery_lightbox {
-    .modal-dialog {
-        height: 100%;
-        background-color: rgba(0,0,0,0.7);
-    }
-    @include media-breakpoint-up(sm) {
-        .modal-dialog {
-            max-width: 100%;
-            padding: 0;
-        }
-    }
-    ul.carousel-indicators {
-        display: none;
-    }
-
-    .modal-body.o_slideshow {
-        @extend %image-gallery-slideshow-styles;
-    }
-}
-
 %image-gallery-slideshow-styles {
     &:not(.s_image_gallery_cover) .carousel-item {
         > a {
@@ -304,4 +284,8 @@
             }
         }
     }
+}
+
+.s_lightbox .modal-body.o_slideshow {
+    @extend %image-gallery-slideshow-styles;
 }

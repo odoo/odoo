@@ -1,0 +1,71 @@
+.s_image_comparison {
+    display: grid;
+    place-items: center;
+    overflow: clip;
+
+    > div, figure, img {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .o_media_left {
+        clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+        @include o-position-absolute(0, 0, 0, 0);
+    }
+    @mixin input-thumb {
+        appearance: none;
+        width: 30px;
+        height: 30px;
+        background: url('/web/image/website.s_image_comparison_slider'), rgba(o-color('white'), 0.3);
+        border: 1px solid o-color('white');
+        border-radius: 50%;
+        background-size: contain;
+        cursor: pointer;
+        pointer-events: auto;
+    }
+    input[type='range'] {
+        @include o-position-absolute(0, 0, 0, 0);
+        appearance: none;
+        width: calc(100% + 30px);
+        height: 100%;
+        margin-left: -15px;
+        background-color: transparent;
+        outline: none;
+        pointer-events: none;
+
+        // Google Chrome
+        &::-webkit-slider-thumb {
+            @include input-thumb;
+        }
+        // Firefox
+        &::-moz-range-thumb {
+            @include input-thumb;
+        }
+        // Internet Explorer
+        &::-ms-thumb {
+            @include input-thumb;
+        }
+    }
+    .o_description {
+        padding: 0 1em;
+        background-color: rgba(o-color('black'), 0.4);
+        color: o-color('white');
+    }
+    .o_left_description {
+        @include o-position-absolute(0, auto, auto, 0);
+    }
+    .o_right_description {
+        @include o-position-absolute(0, 0, auto, auto);
+    }
+    .o_enlarge_button {
+        @include o-position-absolute(auto, 0, 0, auto);
+
+        i {
+            padding: 3px;
+            border-radius: 5px;
+            background-color: rgba(o-color('white'), 0.3);
+            color: o-color('white') !important;
+            border: 1px solid o-color('white');
+        }
+    }
+}

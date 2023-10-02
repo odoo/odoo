@@ -494,6 +494,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         $extraEditableZones = $extraEditableZones.add($editableSavableZones
             .find('.s_social_media .s_social_media_title'));
 
+        // Same fix as above (COMPANY_TEAM_CONTENTEDITABLE) but for the images
+        // in image comparison snippet.
+        // grep: IMAGE_COMPARISON_CONTENTEDITABLE
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_image_comparison .o_media_right, .s_image_comparison .o_media_left, .s_image_comparison .o_description > span'));
+
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested
         // oe_structure editable. This avoids having a selection range span

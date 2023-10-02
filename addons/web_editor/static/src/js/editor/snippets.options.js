@@ -6528,13 +6528,17 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
+        const imgEl = this._getImg();
+        if (imgEl.matches('.s_image_comparison [class*=o_media_]') &&
+                params.cssProperty === 'width') {
+            return false;
+        }
         if (widgetName.startsWith('img-shape-color')) {
-            const img = this._getImg();
-            const shapeName = img.dataset.shape;
+            const shapeName = imgEl.dataset.shape;
             if (!shapeName) {
                 return false;
             }
-            const colors = img.dataset.shapeColors.split(';');
+            const colors = imgEl.dataset.shapeColors.split(';');
             return colors[parseInt(params.colorId)];
         }
         if (params.optionsPossibleValues.resetTransform) {
@@ -6544,8 +6548,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             return this._isCropped();
         }
         if (params.optionsPossibleValues.crop) {
-            const img = this._getImg();
-            return isImageSupportedForStyle(img) || this._isImageSupportedForProcessing(img);
+            return isImageSupportedForStyle(imgEl) || this._isImageSupportedForProcessing(imgEl);
         }
         if (["img_shape_transform_flip_x_opt", "img_shape_transform_flip_y_opt",
             "img_shape_transform_rotate_x_opt", "img_shape_transform_rotate_y_opt"].includes(params.name)) {

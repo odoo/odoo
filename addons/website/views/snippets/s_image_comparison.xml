@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+TODO review in master: this snippet's elements use contenteditable="true" to be
+editable, their parent being o_not_editable/contenteditable="false" to prevent
+adding text by mistake. After the first save, contenteditable="true" are lost,
+so this is a bad practice / requires a better system to do this in the future.
+Meanwhile, this is fixed in JS (see IMAGE_COMPARISON_CONTENTEDITABLE).
+-->
+<template id="s_image_comparison" name="Image Comparison">
+    <section class="s_image_comparison pt24 pb24 o_not_editable">
+        <div class="o_container_small">
+            <figure class="figure">
+                <img class="o_media_right" src="/web/image/website.s_image_comparison_1"/>
+                <img class="o_media_left" src="/web/image/website.s_image_comparison_2"/>
+                <input type="range" min="0" max="100" value="50" autocomplete="off"/>
+                <div class="o_description o_right_description o_not_editable">
+                    <span>AFTER</span>
+                </div>
+                <div class="o_description o_left_description o_not_editable">
+                    <span>BEFORE</span>
+                </div>
+                <button class="btn o_enlarge_button me-1 mb-1 o_not_customizable" title="Enlarge Images">
+                    <i class="fa fa-expand"/>
+                </button>
+            </figure>
+        </div>
+    </section>
+</template>
+
+<template id="s_image_comparison_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="ImageComparison" data-selector=".s_image_comparison">
+            <we-checkbox string="Captions" data-no-preview="true" data-show-captions="true"/>
+            <we-checkbox string="Zoom Button" data-no-preview="true" data-show-zoom-button="true"/>
+        </div>
+        <div data-js="ImageComparisonImage" data-selector=".s_image_comparison img"/>
+    </xpath>
+</template>
+
+<record id="website.s_image_comparison_000_scss" model="ir.asset">
+    <field name="name">Image Comparison 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_image_comparison/000.scss</field>
+</record>
+
+<record id="website.s_image_comparison_000_js" model="ir.asset">
+    <field name="name">Image Comparison 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_image_comparison/000.js</field>
+</record>
+</odoo>

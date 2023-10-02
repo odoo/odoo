@@ -749,21 +749,25 @@
         </we-button-group>
     </div>
 
-    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]" class="o_we_image_options">
+    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath], .s_image_comparison img" class="o_we_image_options">
         <we-select string="Alignment" data-state-to-first-class="true">
             <we-button data-select-class="" title="Unalign">None</we-button>
             <we-button data-select-class="me-auto float-start" title="Align Left">Left</we-button>
             <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
             <we-button data-select-class="ms-auto float-end" title="Align Right">Right</we-button>
         </we-select>
+    </div>
 
+    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]">
         <we-row string="Style">
             <we-button class="fa fa-fw fa-square" data-select-class="rounded" title="Shape: Rounded"/>
             <we-button class="fa fa-fw fa-circle-o" data-select-class="rounded-circle" title="Shape: Circle"/>
             <we-button class="fa fa-fw fa-sun-o" data-select-class="shadow" title="Shadow"/>
             <we-button class="fa fa-fw fa-picture-o" data-select-class="img-thumbnail" title="Shape: Thumbnail"/>
         </we-row>
+    </div>
 
+    <div data-selector="span.fa, i.fa, img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath], .s_image_comparison img">
         <we-input string="Padding" data-select-style="" data-unit="px" data-css-property="padding"/>
     </div>
 

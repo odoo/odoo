@@ -780,6 +780,21 @@ table.table_desc tr td {
     }
 }
 
+.s_lightbox {
+    .modal-dialog {
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+    }
+    @include media-breakpoint-up(sm) {
+        .modal-dialog {
+            max-width: 100%;
+            padding: 0;
+        }
+    }
+    ul.carousel-indicators {
+        display: none;
+    }
+}
 
 .carousel .container {
     .carousel-img img {
