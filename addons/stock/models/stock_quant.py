@@ -524,6 +524,19 @@ class StockQuant(models.Model):
         self.user_id = self.env.user.id
         self.inventory_quantity_set = True
 
+    def action_apply_all(self):
+        quant_ids = self.env['stock.quant'].search(self.env.context['active_domain']).ids
+        ctx = dict(self.env.context or {}, default_quant_ids=quant_ids)
+        view = self.env.ref('stock.stock_inventory_adjustment_name_form_view', False)
+        return {
+            'name': _('Inventory Adjustment Reference / Reason'),
+            'type': 'ir.actions.act_window',
+            'views': [(view.id, 'form')],
+            'res_model': 'stock.inventory.adjustment.name',
+            'target': 'new',
+            'context': ctx,
+        }
+
     def action_reset(self):
         ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
         view = self.env.ref('stock.inventory_warning_reset_view', False)

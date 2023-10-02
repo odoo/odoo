@@ -104,3 +104,39 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
         isCheck: true,
     },
 ]});
+
+registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', { test: true, steps: () => [
+    { trigger: '.o_list_button_add' },
+    {
+        trigger: 'div[name=product_id] input',
+        run: 'text Product 1',
+    },
+    { trigger: '.ui-menu-item > a:contains("Product 1")' },
+    {
+        trigger: 'div[name=inventory_quantity] input',
+        run: 'text 123',
+    },
+    // Unfocus to show the "New" button again
+    { trigger: '.o_searchview_input_container' },
+    { trigger: '.o_list_button_add' },
+    {
+        trigger: 'div[name=product_id] input',
+        run: 'text Product 2',
+    },
+    { trigger: '.ui-menu-item > a:contains("Product 2")' },
+    {
+        trigger: 'div[name=inventory_quantity] input',
+        run: 'text 456',
+    },
+    { trigger: 'button[name=action_apply_all]' },
+    { trigger: '.modal-content button[name=action_apply]' },
+    {
+        trigger: '.o_searchview_input_container',
+        run: () => {
+            const applyButtons = document.querySelectorAll('button[name=action_apply_inventory]');
+            if (applyButtons.length > 0){
+                throw new TourError('Not all quants were applied!');
+            }
+        },
+    },
+]});
