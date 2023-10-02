@@ -25,6 +25,8 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 
+import { contains } from "@web/../tests/utils";
+
 QUnit.module("discuss");
 
 QUnit.test("sanity check", async (assert) => {
@@ -214,7 +216,7 @@ QUnit.test("Can use channel command /who", async (assert) => {
     assert.strictEqual($(".o_mail_notification").text(), "You are alone in this channel.");
 });
 
-QUnit.test("sidebar: chat im_status rendering", async (assert) => {
+QUnit.test("sidebar: chat im_status rendering", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { im_status: "offline", name: "Partner1" },
@@ -246,16 +248,19 @@ QUnit.test("sidebar: chat im_status rendering", async (assert) => {
     ]);
     const { openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
-    assert.containsN($, ".o-mail-DiscussCategoryItem-threadIcon", 3);
-    const chat1 = $(".o-mail-DiscussCategoryItem")[0];
-    const chat2 = $(".o-mail-DiscussCategoryItem")[1];
-    const chat3 = $(".o-mail-DiscussCategoryItem")[2];
-    assert.strictEqual(chat1.textContent, "Partner1");
-    assert.strictEqual(chat2.textContent, "Partner2");
-    assert.strictEqual(chat3.textContent, "Partner3");
-    assert.containsOnce(chat1, ".o-mail-ThreadIcon div[title='Offline']");
-    assert.containsOnce(chat2, ".fa-circle.text-success");
-    assert.containsOnce(chat3, ".o-mail-ThreadIcon div[title='Away']");
+    await contains(".o-mail-DiscussCategoryItem-threadIcon", { count: 3 });
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Partner1",
+        contains: [".o-mail-ThreadIcon div[title='Offline']"],
+    });
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Partner2",
+        contains: [".fa-circle.text-success"],
+    });
+    await contains(".o-mail-DiscussCategoryItem", {
+        text: "Partner3",
+        contains: [".o-mail-ThreadIcon div[title='Away']"],
+    });
 });
 
 QUnit.test("No load more when fetch below fetch limit of 30", async (assert) => {
