@@ -5,10 +5,6 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
-
-# at the moment, only European countries are accepted
-ALLOWED_COUNTRIES = set(EAS_MAPPING.keys()) - {'AU', 'SG', 'NZ'}
 
 
 class ResConfigSettings(models.TransientModel):
@@ -32,14 +28,13 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     account_peppol_verification_code = fields.Char(related='account_peppol_edi_user.peppol_verification_code', readonly=False)
-    is_account_peppol_eligible = fields.Boolean(
-        string='PEPPOL eligible',
-        compute='_compute_is_account_peppol_eligible',
-    ) # technical field used for showing the Peppol settings conditionally
     is_account_peppol_participant = fields.Boolean(
         string='Use PEPPOL',
         related='company_id.is_account_peppol_participant', readonly=False,
         help='Register as a PEPPOL user',
+    )
+    has_peppol_participant = fields.Boolean(
+        compute='_compute_has_peppol_participant'
     )
 
     # -------------------------------------------------------------------------
@@ -67,18 +62,6 @@ class ResConfigSettings(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends("company_id.country_id")
-    def _compute_is_account_peppol_eligible(self):
-        # we want to show Peppol settings only to customers that are eligible for Peppol,
-        # except countries that are not in Europe
-        # but keeping an option to see them for testing purposes using a config param
-        for config in self:
-            peppol_param = config.env['ir.config_parameter'].sudo().get_param(
-                'account_peppol.edi.mode', False
-            )
-            config.is_account_peppol_eligible = config.company_id.country_id.code in ALLOWED_COUNTRIES \
-                or peppol_param == 'test'
-
     @api.depends("company_id.account_edi_proxy_client_ids")
     def _compute_account_peppol_edi_user(self):
         for config in self:
@@ -96,6 +79,14 @@ class ResConfigSettings(models.TransientModel):
             else:
                 config.account_peppol_endpoint_warning = _("The endpoint number might not be correct. "
                                                            "Please check if you entered the right identification number.")
+
+    @api.depends('company_id.is_account_peppol_participant')
+    def _compute_has_peppol_participant(self):
+        number_of_peppol_participants = len(self.env['res.company'].sudo().search([
+            ('is_account_peppol_participant', '=', True)
+        ]))
+        for config in self:
+            config.has_peppol_participant = number_of_peppol_participants > 0
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
