@@ -148,6 +148,11 @@
         itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div id="o_wevent_tickets" class="o_wevent_theme_bg_base shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
+            <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger" role="alert">
+                <p class="mb-0">
+                    Registration failed! These tickets are not available anymore.
+                </p>
+            </div>
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
             <t t-if="len(event.event_ticket_ids) &gt; 1">
