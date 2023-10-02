@@ -6352,9 +6352,9 @@ QUnit.module("Views", (hooks) => {
             document.body.querySelector(".modal-body").textContent,
             "Some business message"
         );
-        assert.hasClass(
-            target.querySelector('.o_field_widget[name="int_field"]'),
-            "o_field_invalid"
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="int_field"] input').value,
+            "9"
         );
 
         await click(target.querySelector(".modal .btn-close"));

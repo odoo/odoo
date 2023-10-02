@@ -795,6 +795,30 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("onchange return value before editing input", async function (assert) {
+        serverData.models.partner.onchanges = {
+            foo(obj) {
+                obj.foo = "yop";
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" />
+                </form>`,
+        });
+
+        assert.strictEqual(target.querySelector("[name='foo'] input").value, "yop");
+
+        await editInput(target, "[name='foo'] input", "tralala");
+        assert.strictEqual(target.querySelector("[name='foo'] input").value, "yop");
+    });
+
     QUnit.test(
         "input field: change value before pending onchange renaming",
         async function (assert) {
@@ -1050,4 +1074,40 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test(
+        "char field: correct value is used to evaluate the modifiers",
+        async function (assert) {
+            serverData.models.partner.onchanges = {
+                foo: (obj) => {
+                    if (obj.foo === "a") {
+                        obj.display_name = false;
+                    } else if (obj.foo === "b") {
+                        obj.display_name = "";
+                    }
+                },
+            };
+            serverData.models.partner.records[0].foo = false;
+            serverData.models.partner.records[0].display_name = false;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="display_name" invisible="'' == display_name"/>
+                </form>`,
+            });
+            assert.containsOnce(target, "[name='display_name'] input");
+
+            await editInput(target, "[name='foo'] input", "a");
+            assert.containsOnce(target, "[name='display_name'] input");
+
+            await editInput(target, "[name='foo'] input", "b");
+            assert.containsNone(target, "[name='display_name'] input");
+        }
+    );
 });

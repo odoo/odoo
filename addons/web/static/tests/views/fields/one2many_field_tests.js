@@ -8929,7 +8929,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("display correct value after validation error", async function (assert) {
-        assert.expect(5);
+        assert.expect(4);
 
         serviceRegistry.add("error", errorService);
         function validationHandler(env, error, originalError) {
@@ -8985,8 +8985,10 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=turtle_foo] input", "pinky");
         await click(target, ".o_form_view");
         assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").textContent, "foo");
-        assert.hasClass(target.querySelector(".o_field_widget[name=turtles]"), "o_field_invalid");
-        assert.ok(target.querySelector(".o_form_button_save").disabled);
+
+        // we make sure here that when we save, the values are the current
+        // values displayed in the field.
+        await clickSave(target);
     });
 
     QUnit.test("propagate context to sub views without default_* keys", async function (assert) {
