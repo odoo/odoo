@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { TourPointerContainer } from "./tour_pointer_container";
 import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
@@ -56,8 +55,8 @@ import { callWithUnloadCheck } from "./tour_utils";
 
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
-    dependencies: ["orm", "effect", "ui", "localization"],
-    start: async (_env, { orm, effect, ui }) => {
+    dependencies: ["orm", "effect", "ui", "overlay", "localization"],
+    start: async (_env, { orm, effect, ui, overlay }) => {
         await whenReady();
 
         /** @type {{ [k: string]: Tour }} */
@@ -108,13 +107,9 @@ export const tourService = {
 
         const pointers = reactive({});
 
-        registry.category("main_components").add("TourPointerContainer", {
-            Component: TourPointerContainer,
-            props: { pointers },
-        });
-
         function createPointer(tourName, config) {
             const { state: pointerState, methods } = createPointerState();
+            let remove;
             return {
                 start() {
                     pointers[tourName] = {
@@ -122,8 +117,10 @@ export const tourService = {
                         component: TourPointer,
                         props: { pointerState, ...config },
                     };
+                    remove = overlay.add(pointers[tourName].component, pointers[tourName].props);
                 },
                 stop() {
+                    remove?.();
                     delete pointers[tourName];
                     methods.destroy();
                 },
