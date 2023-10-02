@@ -2,7 +2,7 @@
 
 import { Component, xml } from "@odoo/owl";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { click, getFixture, mount } from "../helpers/utils";
+import { click, dragAndDrop, getFixture, mount } from "../helpers/utils";
 import { makeDialogTestEnv } from "../helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { notificationService } from "@web/core/notifications/notification_service";
@@ -157,5 +157,25 @@ QUnit.module("Components", (hooks) => {
         const confirmButton = fixture.querySelector(".o_dialog footer button");
         await click(confirmButton);
         assert.verifySteps([]);
+    });
+
+    QUnit.test("model_field_selector should close on dialog drag", async (assert) => {
+        await makeDomainSelectorDialog({
+            domain: "[('foo', '=', unknown)]",
+        });
+
+        assert.containsNone(fixture, ".o_model_field_selector_popover");
+        await click(fixture, ".o_model_field_selector_value");
+        assert.containsOnce(fixture, ".o_model_field_selector_popover");
+
+        const header = fixture.querySelector(".modal-header");
+        const headerRect = header.getBoundingClientRect();
+        await dragAndDrop(header, document.body, {
+            // the util function sets the source coordinates at (x; y) + (w/2; h/2)
+            // so we need to move the dialog based on these coordinates.
+            x: headerRect.x + headerRect.width / 2 + 20,
+            y: headerRect.y + headerRect.height / 2 + 50,
+        });
+        assert.containsNone(fixture, ".o_model_field_selector_popover");
     });
 });
