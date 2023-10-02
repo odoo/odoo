@@ -7,7 +7,6 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
@@ -173,7 +172,7 @@ export class Record extends DataPoint {
             } else {
                 this.model._updateConfig(this.config, { resId: false }, { reload: false });
                 this.dirty = false;
-                this._changes = this._parseServerValues(this._getDefaultValues());
+                this._changes = markRaw(this._parseServerValues(this._getDefaultValues()));
                 this._values = markRaw({});
                 this._textValues = markRaw({});
                 this.data = { ...this._changes };
@@ -256,7 +255,12 @@ export class Record extends DataPoint {
         if (this.model._urgentSave) {
             return this._update(changes, { save: false }); // save is already scheduled
         }
-        return this.model.mutex.exec(() => this._update(changes, { save }));
+        return this.model.mutex.exec(async () => {
+            await this._update(changes, { withoutOnchange: save });
+            if (save) {
+                return this._save();
+            }
+        });
     }
 
     urgentSave() {
@@ -283,14 +287,49 @@ export class Record extends DataPoint {
         }
     }
 
-    _applyChanges(changes) {
+    _applyChanges(changes, serverChanges = {}) {
+        // We need to generate the undo function before applying the changes
+        const fieldNameChanges = [...Object.keys({ ...changes, ...serverChanges })];
+        const initialTextValues = { ...this._textValues };
+        const initialChanges = { ...this._changes };
+        const initialData = { ...toRaw(this.data) };
+        const invalidFields = toRaw(this._invalidFields);
+        const invalidFieldNames = fieldNameChanges.filter((fieldName) =>
+            invalidFields.has(fieldName)
+        );
+        const undoChanges = () => {
+            for (const fieldName of invalidFieldNames) {
+                this.setInvalidField(fieldName);
+            }
+            Object.assign(this.data, initialData);
+            this._changes = markRaw(initialChanges);
+            Object.assign(this._textValues, initialTextValues);
+            this._setEvalContext();
+        };
+
+        // Apply changes
         for (const fieldName in changes) {
-            this._changes[fieldName] = changes[fieldName];
-            this.data[fieldName] = changes[fieldName];
+            const change = changes[fieldName];
+            this._changes[fieldName] = change;
+            this.data[fieldName] = change;
+            if (this.fields[fieldName].type === "html") {
+                this._textValues[fieldName] = change === false ? false : change.toString();
+            } else if (["char", "text"].includes(this.fields[fieldName].type)) {
+                this._textValues[fieldName] = change;
+            }
         }
-        Object.assign(this._textValues, this._getTextValues(changes));
+
+        // Apply server changes
+        const parsedChanges = this._parseServerValues(serverChanges, this.data);
+        for (const fieldName in parsedChanges) {
+            this._changes[fieldName] = parsedChanges[fieldName];
+            this.data[fieldName] = parsedChanges[fieldName];
+        }
+        Object.assign(this._textValues, this._getTextValues(serverChanges));
+
         this._setEvalContext();
-        this._removeInvalidFields(Object.keys(changes));
+        this._removeInvalidFields(fieldNameChanges);
+        return undoChanges;
     }
 
     _applyDefaultValues() {
@@ -299,7 +338,7 @@ export class Record extends DataPoint {
         });
         const defaultValues = this._getDefaultValues(fieldNames);
         if (this.isNew) {
-            this._applyChanges(this._parseServerValues(defaultValues));
+            this._applyChanges({}, defaultValues);
         } else {
             this._applyValues(defaultValues);
         }
@@ -674,14 +713,6 @@ export class Record extends DataPoint {
         return parsedValues;
     }
 
-    async _preprocessChanges(changes) {
-        await Promise.all([
-            this._preprocessMany2oneChanges(changes),
-            this._preprocessReferenceChanges(changes),
-            this._preprocessX2manyChanges(changes),
-        ]);
-    }
-
     async _preprocessReferenceChanges(changes) {
         const proms = [];
         for (const [fieldName, value] of Object.entries(changes)) {
@@ -812,6 +843,38 @@ export class Record extends DataPoint {
         }
     }
 
+    _preprocessPropertiesChanges(changes) {
+        for (const [fieldName, value] of Object.entries(changes)) {
+            const field = this.fields[fieldName];
+            if (field && field.relatedPropertyField) {
+                const [propertyFieldName, propertyName] = field.name.split(".");
+                const propertiesData = this.data[propertyFieldName] || [];
+                if (!propertiesData.find((property) => property.name === propertyName)) {
+                    // try to change the value of a properties that has a different parent
+                    this.model.notification.add(
+                        _t(
+                            "This record belongs to a different parent so you can not change this property."
+                        ),
+                        { type: "warning" }
+                    );
+                    return;
+                }
+                changes[propertyFieldName] = propertiesData.map((property) =>
+                    property.name === propertyName ? { ...property, value } : property
+                );
+                delete changes[field.name];
+            }
+        }
+    }
+
+    _preprocessHtmlChanges(changes) {
+        for (const [fieldName, value] of Object.entries(changes)) {
+            if (this.fields[fieldName].type === "html") {
+                changes[fieldName] = value === false ? false : markup(value);
+            }
+        }
+    }
+
     _removeInvalidFields(fieldNames) {
         for (const fieldName of fieldNames) {
             this._invalidFields.delete(fieldName);
@@ -911,11 +974,11 @@ export class Record extends DataPoint {
             }
             this._setData(records[0]);
         } else {
-            this._values = { ...this._values, ...this._changes };
+            this._values = markRaw({ ...this._values, ...this._changes });
             if ("id" in this.activeFields) {
                 this._values.id = records[0].id;
             }
-            this._changes = {};
+            this._changes = markRaw({});
             this.data = { ...this._values };
             this.dirty = false;
         }
@@ -979,63 +1042,57 @@ export class Record extends DataPoint {
         }
     }
 
-    async _update(changes, { withoutOnchange, withoutParentUpdate, save } = {}) {
+    async _getOnchangeValues(changes) {
+        const onChangeFields = Object.keys(changes).filter(
+            (fieldName) => this.activeFields[fieldName] && this.activeFields[fieldName].onChange
+        );
+        if (!onChangeFields.length) {
+            return {};
+        }
+
+        const localChanges = this._getChanges(
+            { ...this._changes, ...changes },
+            { withReadonly: true }
+        );
+        if (this.config.relationField) {
+            localChanges[this.config.relationField] = this._parentRecord._getChanges();
+            if (!this._parentRecord.isNew) {
+                localChanges[this.config.relationField].id = this._parentRecord.resId;
+            }
+        }
+        return this.model._onchange(this.config, {
+            changes: localChanges,
+            fieldNames: onChangeFields,
+            evalContext: toRaw(this.evalContext),
+            onError: (e) => {
+                // We apply changes and revert them after to force a render of the Field components
+                const undoChanges = this._applyChanges(changes);
+                undoChanges();
+                throw e;
+            },
+        });
+    }
+
+    async _update(changes, { withoutOnchange, withoutParentUpdate } = {}) {
         this.dirty = true;
-        const prom = this._preprocessChanges(changes);
-        if (prom && !this.model._urgentSave) {
+        const prom = Promise.all([
+            this._preprocessMany2oneChanges(changes),
+            this._preprocessReferenceChanges(changes),
+            this._preprocessX2manyChanges(changes),
+            this._preprocessPropertiesChanges(changes),
+            this._preprocessHtmlChanges(changes),
+        ]);
+        if (!this.model._urgentSave) {
             await prom;
         }
         if (this.selected && this.model.multiEdit) {
             this._applyChanges(changes);
             return this.model.root._multiSave(this);
         }
-        for (const [fieldName, value] of Object.entries(changes)) {
-            const field = this.fields[fieldName];
-            if (field && field.relatedPropertyField) {
-                const [propertyFieldName, propertyName] = field.name.split(".");
-                const propertiesData = this.data[propertyFieldName] || [];
-                if (!propertiesData.find((property) => property.name === propertyName)) {
-                    // try to change the value of a properties that has a different parent
-                    this.model.notification.add(
-                        _t(
-                            "This record belongs to a different parent so you can not change this property."
-                        ),
-                        { type: "warning" }
-                    );
-                    return;
-                }
-                changes[propertyFieldName] = propertiesData.map((property) =>
-                    property.name === propertyName ? { ...property, value } : property
-                );
-                delete changes[field.name];
-            }
-        }
-        const onChangeFields = Object.keys(changes).filter(
-            (fieldName) => this.activeFields[fieldName] && this.activeFields[fieldName].onChange
-        );
-        if (onChangeFields.length && !this.model._urgentSave && !withoutOnchange && !save) {
-            const localChanges = this._getChanges(
-                { ...this._changes, ...changes },
-                { withReadonly: true }
-            );
-            if (this.config.relationField) {
-                localChanges[this.config.relationField] = this._parentRecord._getChanges();
-                if (!this._parentRecord.isNew) {
-                    localChanges[this.config.relationField].id = this._parentRecord.resId;
-                }
-            }
-            const otherChanges = await this.model._onchange(this.config, {
-                changes: localChanges,
-                fieldNames: onChangeFields,
-                evalContext: this.evalContext,
-                onError: (e) => {
-                    for (const fieldName in localChanges) {
-                        this._setInvalidField(fieldName);
-                    }
-                    throw e;
-                },
-            });
-            Object.assign(changes, this._parseServerValues(otherChanges, this.data));
+
+        let onchangeServerValues = {};
+        if (!this.model._urgentSave && !withoutOnchange) {
+            onchangeServerValues = await this._getOnchangeValues(changes);
         }
         // changes inside the record set as value for a many2one field must trigger the onchange,
         // but can't be considered as changes on the parent record, so here we detect if many2one
@@ -1049,19 +1106,15 @@ export class Record extends DataPoint {
                 }
             }
         }
-        if (Object.keys(changes).length > 0) {
-            const initialChanges = pick(this.data, ...Object.keys(changes));
-            this._applyChanges(changes);
+        const undoChanges = this._applyChanges(changes, onchangeServerValues);
+        if (Object.keys(changes).length > 0 || Object.keys(onchangeServerValues).length > 0) {
             try {
                 await this._onUpdate({ withoutParentUpdate });
             } catch (e) {
-                this._applyChanges(initialChanges);
+                undoChanges();
                 throw e;
             }
             await this.model.hooks.onRecordChanged(this, this._getChanges());
-        }
-        if (save) {
-            return this._save();
         }
     }
 
