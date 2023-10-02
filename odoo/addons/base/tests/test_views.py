@@ -1533,6 +1533,62 @@ class TestViews(ViewCase):
                 ),
                 string="Replacement title"))
 
+    def test_view_inheritance_footer_replace(self):
+        view1 = self.View.create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="Base title">
+                    <separator name="separator" string="Separator" colspan="4"/>
+                    <footer>
+                        <button name="action_archive" type="object" string="Next button" class="btn-primary"/>
+                        <button string="Skip" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+            """
+        })
+        view2 = self.View.create({
+            'name': "edmund",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <form position="attributes">
+                        <attribute name="string">Replacement title</attribute>
+                    </form>
+                    <footer position="replace"/>
+                    <separator name="separator" position="replace">
+                        <p>Replacement data</p>
+                    </separator>
+                </data>
+            """
+        })
+        view3 = self.View.create({
+            'name': 'jake',
+            'model': 'ir.ui.view',
+            'inherit_id': view2.id,
+            'arch': """
+                <footer position="attributes">
+                    <attribute name="thing">bob tata lolo</attribute>
+                    <attribute name="thing" add="bibi and co" remove="tata" separator=" " />
+                    <attribute name="otherthing">bob, tata,lolo</attribute>
+                    <attribute name="otherthing" remove="tata, bob"/>
+                </footer>
+            """
+        })
+
+        view = self.View.with_context(check_view_ids=[view2.id, view3.id]) \
+                        .fields_view_get(view2.id, view_type='form')
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            etree.fromstring(
+                view['arch'],
+                parser=etree.XMLParser(remove_blank_text=True)
+            ),
+            E.form(
+                E.p("Replacement data"),
+                string="Replacement title"))
+
     def test_view_inheritance_text_inside(self):
         """ Test view inheritance when adding elements and text. """
         view1 = self.View.create({
