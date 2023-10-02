@@ -26,6 +26,12 @@ MONTH_SELECTION = [
     ('12', 'December'),
 ]
 
+PEPPOL_LIST = [
+    'AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'ME',
+    'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TR', 'VA',
+]
+
 class ResCompany(models.Model):
     _name = "res.company"
     _inherit = ["res.company", "mail.thread"]

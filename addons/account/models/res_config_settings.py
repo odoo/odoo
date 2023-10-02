@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+
+from odoo.addons.account.models.company import PEPPOL_LIST
 
 
 class ResConfigSettings(models.TransientModel):
@@ -117,6 +119,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_avatax = fields.Boolean(string="Account Avatax")
     module_account_invoice_extract = fields.Boolean(string="Document Digitization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
+    module_account_peppol = fields.Boolean(string='PEPPOL Invoicing')
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one(
         'account.journal',
@@ -207,6 +210,19 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.account_discount_expense_allocation_id',
         domain="[('account_type', 'in', ('income', 'expense'))]",
     )
+
+    # PEPPOL
+    is_account_peppol_eligible = fields.Boolean(
+        string='PEPPOL eligible',
+        compute='_compute_is_account_peppol_eligible',
+    ) # technical field used for showing the Peppol settings conditionally
+
+    @api.depends('country_code')
+    def _compute_is_account_peppol_eligible(self):
+        # we want to show Peppol settings only to customers that are eligible for Peppol,
+        # except countries that are not in Europe
+        for config in self:
+            config.is_account_peppol_eligible = config.country_code in PEPPOL_LIST
 
     def set_values(self):
         super().set_values()
