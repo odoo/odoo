@@ -8,7 +8,7 @@ from odoo import Command
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_mail_tour(self):
-        self.start_tour("/web", 'mail_tour', login="admin")
+        self.start_tour("/web", 'discuss_channel_tour', login="admin")
 
     def test_02_mail_create_channel_no_mail_tour(self):
         self.env['res.users'].create({
@@ -18,4 +18,4 @@ class TestUi(odoo.tests.HttpCase):
             'login': 'testuser',
             'password': 'testuser',
         })
-        self.start_tour("/web", 'mail_tour', login='testuser')
+        self.start_tour("/web", 'discuss_channel_tour', login='testuser')

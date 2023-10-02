@@ -7,3 +7,4 @@ from . import test_message_controller
 from . import test_toggle_upload
 from . import test_load_messages
 from . import test_rtc
+from . import test_ui
