@@ -4422,18 +4422,30 @@ class AccountMove(models.Model):
         if not attachments or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
             return res
 
+        # Divide the message coming from alias into as many pieces as there is attachments and create an invoice for each attachment.
+        if len(attachments) > 1 and self._context.get('from_alias'):
+            new_message.attachment_ids = attachments[0].ids
+            self.attachment_ids = attachments[0].ids
+            self._extend_with_attachments(attachments[0], new=False)
+            for attachment in attachments[1:]:
+                msg = new_message.copy({'attachment_ids': attachment.ids})
+                inv = self.copy({'attachment_ids': attachment.ids, 'message_ids': msg.ids, 'line_ids': []})
+                inv._extend_with_attachments(attachment, new=False)
+            return res
+
+        # Perform as before
         odoobot = self.env.ref('base.partner_root')
         if attachments and self.state != 'draft':
             self.message_post(body=_('The invoice is not a draft, it was not updated from the attachment.'),
-                              message_type='comment',
-                              subtype_xmlid='mail.mt_note',
-                              author_id=odoobot.id)
+                            message_type='comment',
+                            subtype_xmlid='mail.mt_note',
+                            author_id=odoobot.id)
             return res
         if attachments and self.invoice_line_ids:
             self.message_post(body=_('The invoice already contains lines, it was not updated from the attachment.'),
-                              message_type='comment',
-                              subtype_xmlid='mail.mt_note',
-                              author_id=odoobot.id)
+                            message_type='comment',
+                            subtype_xmlid='mail.mt_note',
+                            author_id=odoobot.id)
             return res
 
         # As we are coming from the mail, we assume that ONE of the attachments
