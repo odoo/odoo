@@ -676,7 +676,7 @@ class ResPartner(models.Model):
             raise UserError(_('Partners that are used in hashed entries cannot be merged.'))
         return super()._merge_method(destination, source)
 
-    def _run_vat_test(self, vat_number, default_country, partner_is_company):
+    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
         """ Checks a VAT number syntactically to ensure its validity upon saving.
         A first check is made by using the first two characters of the VAT as
         the country code. If it fails, a second one is made using default_country instead.
