@@ -485,6 +485,7 @@ class IrActionsServer(models.Model):
                                    "based on the sequence. Low number means high priority.")
     model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade', index=True,
                                help="Model on which the server action runs.")
+    available_model_ids = fields.Many2many('ir.model', string='Available Models', compute='_compute_available_model_ids', store=False)
     model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True, store=True)
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
@@ -533,16 +534,27 @@ class IrActionsServer(models.Model):
 
     @api.depends('state', 'update_field_id', 'crud_model_id', 'value')
     def _compute_name(self):
-        for action in self:
-            if not action.state or not self.env.context.get('automatic_action_name'):
-                continue
+        for action in self.filtered('state'):
             if action.state == 'object_write':
-                action.name = _("Update %s", action.update_field_id.field_description)
+                action.name = _(
+                    "Update %(field_name)s",
+                    field_name=action.update_field_id.field_description
+                )
             elif action.state == 'object_create':
-                action.name = _("Create %s with name %s", action.crud_model_id.name, action.value)
+                action.name = _(
+                    "Create %(model_name)s with name %(value)s",
+                    model_name=action.crud_model_id.name,
+                    value=action.value
+                )
             else:
-                state_name = dict(action._fields['state']._description_selection(self.env))[action.state]
-                action.name = state_name
+                action.name = dict(action._fields['state']._description_selection(self.env))[action.state]
+
+    @api.depends('state')
+    def _compute_available_model_ids(self):
+        allowed_models = self.env['ir.model'].search(
+            [('model', 'in', list(self.env['ir.model.access']._get_allowed_models()))]
+        )
+        self.available_model_ids = allowed_models.ids
 
     @api.onchange('model_id')
     def _compute_crud_model_id(self):

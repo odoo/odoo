@@ -26,15 +26,24 @@ class ServerActions(models.Model):
         compute='_compute_sms_method',
         readonly=False, store=True)
 
-    @api.depends('state', 'sms_template_id')
+    @api.depends('sms_template_id')
     def _compute_name(self):
-        for action in self:
-            if not action.state or not self.env.context.get('automatic_action_name'):
-                continue
-            if action.state == 'sms':
-                action.name = 'Send SMS: %s' % action.sms_template_id.name
-            else:
-                super(ServerActions, action)._compute_name()
+        to_update = self.filtered(lambda action: action.state == 'sms')
+        for action in to_update:
+            action.name = _(
+                'Send SMS: %(template_name)s',
+                template_name=action.sms_template_id.name
+            )
+        super(ServerActions, self - to_update)._compute_name()
+
+    @api.depends('state')
+    def _compute_available_model_ids(self):
+        mail_thread_based = self.filtered(lambda action: action.state == 'sms')
+        if mail_thread_based:
+            mail_models = self.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
+            for action in mail_thread_based:
+                action.available_model_ids = mail_models.ids
+        super(ServerActions, self - mail_thread_based)._compute_available_model_ids()
 
     @api.depends('model_id', 'state')
     def _compute_sms_template_id(self):
@@ -54,11 +63,21 @@ class ServerActions(models.Model):
         if other:
             other.sms_method = 'sms'
 
-    def _check_model_coherency(self):
-        super()._check_model_coherency()
+    @api.constrains('state', 'model_id')
+    def _check_sms_model_coherency(self):
         for action in self:
             if action.state == 'sms' and (action.model_id.transient or not action.model_id.is_mail_thread):
                 raise ValidationError(_("Sending SMS can only be done on a mail.thread or a transient model"))
+
+    @api.constrains('model_id', 'template_id')
+    def _check_sms_template_model(self):
+        for action in self.filtered(lambda action: action.state == 'sms'):
+            if action.sms_template_id and action.sms_template_id.model_id != action.model_id:
+                raise ValidationError(
+                    _('SMS template model of %(action_name)s does not match action model.',
+                      action_name=action.name
+                     )
+                )
 
     def _run_action_sms_multi(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action

@@ -78,22 +78,44 @@ class ServerActions(models.Model):
         'User Field',
         compute='_compute_activity_info', readonly=False, store=True)
 
-
-    @api.depends('state', 'template_id', 'partner_ids', 'activity_summary')
+    @api.depends('template_id', 'partner_ids', 'activity_summary')
     def _compute_name(self):
-        for action in self:
-            if not action.state or not self.env.context.get('automatic_action_name'):
-                continue
+        to_update = self.filtered(
+            lambda action: action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'}
+        )
+        for action in to_update:
             if action.state == 'mail_post':
-                action.name = 'Send email: %s' % action.template_id.name
+                action.name = _(
+                    'Send email: %(template_name)s',
+                    template_name=action.template_id.name
+                )
             elif action.state == 'followers':
-                action.name = 'Add followers: %s' % ', '.join(action.partner_ids.mapped('name'))
+                action.name = _(
+                    'Add followers: %(partner_names)s',
+                    partner_names=', '.join(action.partner_ids.mapped('name'))
+                )
             elif action.state == 'remove_followers':
-                action.name = 'Remove followers: %s' % ', '.join(action.partner_ids.mapped('name'))
+                action.name = _(
+                    'Remove followers: %(partner_names)s',
+                    partner_names=', '.join(action.partner_ids.mapped('name'))
+                )
             elif action.state == 'next_activity':
-                action.name = 'Next activity: %s' % action.activity_summary
-            else:
-                super(ServerActions, action)._compute_name()
+                action.name = _(
+                    'Next activity: %(activity_name)s',
+                    activity_name=action.activity_summary or action.activity_type_id.name
+                )
+        super(ServerActions, self - to_update)._compute_name()
+
+    @api.depends('state')
+    def _compute_available_model_ids(self):
+        mail_thread_based = self.filtered(
+            lambda action: action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'}
+        )
+        if mail_thread_based:
+            mail_models = self.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
+            for action in mail_thread_based:
+                action.available_model_ids = mail_models.ids
+        super(ServerActions, self - mail_thread_based)._compute_available_model_ids()
 
     @api.depends('model_id', 'state')
     def _compute_template_id(self):
@@ -137,7 +159,7 @@ class ServerActions(models.Model):
         if to_reset:
             to_reset.activity_type_id = False
 
-    @api.depends('state')
+    @api.depends('state', 'activity_type_id')
     def _compute_activity_info(self):
         to_reset = self.filtered(lambda act: act.state != 'next_activity')
         if to_reset:
@@ -149,26 +171,38 @@ class ServerActions(models.Model):
             to_reset.activity_user_id = False
             to_reset.activity_user_field_name = False
         to_default = self.filtered(lambda act: act.state == 'next_activity')
-        for activity in to_default:
-            if not activity.activity_date_deadline_range_type:
-                activity.activity_date_deadline_range_type = 'days'
-            if not activity.activity_user_type:
-                activity.activity_user_type = 'specific'
-            if not activity.activity_user_field_name:
-                activity.activity_user_field_name = 'user_id'
+        for action in to_default:
+            if not action.activity_summary:
+                action.activity_summary = action.activity_type_id.summary
+            if not action.activity_date_deadline_range_type:
+                action.activity_date_deadline_range_type = 'days'
+            if not action.activity_user_type:
+                action.activity_user_type = 'specific'
+            if not action.activity_user_field_name:
+                action.activity_user_field_name = 'user_id'
 
     @api.constrains('activity_date_deadline_range')
     def _check_activity_date_deadline_range(self):
         if any(action.activity_date_deadline_range < 0 for action in self):
             raise ValidationError(_("The 'Due Date In' value can't be negative."))
 
+    @api.constrains('model_id', 'template_id')
+    def _check_mail_template_model(self):
+        for action in self.filtered(lambda action: action.state == 'mail_post'):
+            if action.template_id and action.template_id.model_id != action.model_id:
+                raise ValidationError(
+                    _('Mail template model of %(action_name)s does not match action model.',
+                      action_name=action.name
+                     )
+                )
+
     @api.constrains('state', 'model_id')
-    def _check_model_coherency(self):
+    def _check_mail_model_coherency(self):
         for action in self:
-            if action.state in ('followers', 'next_activity') and action.model_id.transient:
+            if action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and action.model_id.transient:
                 raise ValidationError(_("This action cannot be done on transient models."))
-            if action.state == 'followers' and not action.model_id.is_mail_thread:
-                raise ValidationError(_("Add Followers can only be done on a mail thread models"))
+            if action.state in {'mail_post', 'followers', 'remove_followers'} and not action.model_id.is_mail_thread:
+                raise ValidationError(_("This action can only be done on a mail thread models"))
             if action.state == 'next_activity' and not action.model_id.is_mail_activity:
                 raise ValidationError(_("A next activity can only be planned on models that use activities."))
 
