@@ -16,7 +16,9 @@ class WebsiteSaleProductConfiguratorController(Controller):
         product_template = product.product_tmpl_id
         combination = request.env['product.template.attribute.value'].browse(variant_values)
         has_optional_products = product.optional_product_ids.filtered(
-            lambda p: p._is_add_to_cart_possible(combination))
+            lambda p: p._is_add_to_cart_possible(combination)
+                      and (not request.website.prevent_zero_price_sale or p._get_contextual_price())
+        )
 
         already_configured = bool(combination)
         if not force_dialog and not has_optional_products and (
