@@ -507,6 +507,8 @@ class TestRepair(common.TransactionCase):
         Test that the purchase price is correctly set on the SO line,
         when creating a SO from a repair order.
         """
+        if not self.env['ir.module.module'].search([('name', '=', 'sale_margin'), ('state', '=', 'installed')]):
+            self.skipTest("sale_margin is not installed, so there is no purchase price to test")
         self.product_product_11.standard_price = 10
         repair = self.env['repair.order'].create({
             'partner_id': self.res_partner_1.id,
