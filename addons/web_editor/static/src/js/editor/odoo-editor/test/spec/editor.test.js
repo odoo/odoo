@@ -4769,9 +4769,9 @@ X[]
                                         '</tr></tbody></table>',
                             stepFunction: async editor => editor.execCommand('addRow', 'before'),
                             contentAfter: '<table><tbody><tr style="height: 20px;">' +
-                                            '<td style="width: 20px;"><br></td>' +
-                                            '<td style="width: 25px;"><br></td>' +
-                                            '<td style="width: 30px;"><br></td>' +
+                                            '<td style="width: 20px;"><p><br></p></td>' +
+                                            '<td style="width: 25px;"><p><br></p></td>' +
+                                            '<td style="width: 30px;"><p><br></p></td>' +
                                         '</tr>' +
                                         '<tr style="height: 20px;">' +
                                             '<td style="">ab</td>' +
@@ -4799,9 +4799,9 @@ X[]
                                             '<td style="width: 30px;">ef</td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
-                                            '<td><br></td>' +
-                                            '<td><br></td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
+                                            '<td><p><br></p></td>' +
+                                            '<td><p><br></p></td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
                                             '<td>ab</td>' +
@@ -4826,9 +4826,9 @@ X[]
                                             '<td style="width: 30px;">ef[]</td>' +
                                         '</tr>' +
                                         '<tr style="height: 20px;">' +
-                                            '<td><br></td>' +
-                                            '<td><br></td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
+                                            '<td><p><br></p></td>' +
+                                            '<td><p><br></p></td>' +
                                         '</tr></tbody></table>',
                         });
                     });
@@ -4851,9 +4851,9 @@ X[]
                                             '<td style="width: 30px;">ef[]</td>' +
                                         '</tr>' +
                                         '<tr style="height: 20px;">' +
-                                            '<td><br></td>' +
-                                            '<td><br></td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
+                                            '<td><p><br></p></td>' +
+                                            '<td><p><br></p></td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
                                             '<td>ab</td>' +
@@ -4880,13 +4880,13 @@ X[]
                                         '</tr></tbody></table>',
                             stepFunction: async editor => editor.execCommand('addColumn', 'before'),
                             contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                                            '<td style="width: 32px;"><br></td>' +
+                                            '<td style="width: 32px;"><p><br></p></td>' +
                                             '<td style="width: 32px;">ab[]</td>' +
                                             '<td style="width: 40px;">cd</td>' +
                                             '<td style="width: 45px;">ef</td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
                                             '<td>ab</td>' +
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
@@ -4913,19 +4913,19 @@ X[]
                             stepFunction: async editor => editor.execCommand('addColumn', 'before'),
                             contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 38px;">ab</td>' +
-                                            '<td style="width: 50px;"><br></td>' +
+                                            '<td style="width: 50px;"><p><br></p></td>' +
                                             '<td style="width: 50px;">cd</td>' +
                                             '<td style="width: 61px;">ef</td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
                                             '<td>ab</td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
                                             '<td>cd[]</td>' +
                                             '<td>ef</td>' +
                                         '</tr>' +
                                         '<tr style="height: 40px;">' +
                                             '<td>ab</td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
@@ -4953,13 +4953,13 @@ X[]
                                             // size was slightly adjusted to
                                             // preserve table width in view on
                                             // fractional division results
-                                            '<td style="width: 43px;"><br></td>' +
+                                            '<td style="width: 43px;"><p><br></p></td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
                                             '<td>ab</td>' +
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
                                         '</tr></tbody></table>',
                         });
                     });
@@ -4984,19 +4984,19 @@ X[]
                             contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 38px;">ab</td>' +
                                             '<td style="width: 50px;">cd</td>' +
-                                            '<td style="width: 50px;"><br></td>' +
+                                            '<td style="width: 50px;"><p><br></p></td>' +
                                             '<td style="width: 61px;">ef</td>' +
                                         '</tr>' +
                                         '<tr style="height: 30px;">' +
                                             '<td>ab</td>' +
                                             '<td>cd[]</td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
                                             '<td>ef</td>' +
                                         '</tr>' +
                                         '<tr style="height: 40px;">' +
                                             '<td>ab</td>' +
                                             '<td>cd</td>' +
-                                            '<td><br></td>' +
+                                            '<td><p><br></p></td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
                         });
@@ -5009,7 +5009,7 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
                     stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
-                    contentAfter: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef</td></tr><tr style="height: 20px;"><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
+                    contentAfter: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef</td></tr><tr style="height: 20px;"><td>[<p><br></p>]</td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
                 });
             });
         });
