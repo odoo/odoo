@@ -25,21 +25,7 @@ patch(Thread.prototype, {
             }
         }
         if (rtcContinue && "rtcSessions" in data) {
-            for (const command of data.rtcSessions) {
-                const sessionsData = command[1];
-                switch (command[0]) {
-                    case "DELETE":
-                        for (const rtcSessionData of sessionsData) {
-                            this.Model.env.services["discuss.rtc"].deleteSession(rtcSessionData.id);
-                        }
-                        break;
-                    case "ADD":
-                        for (const rtcSessionData of sessionsData) {
-                            this.rtcSessions.add(rtcSessionData);
-                        }
-                        break;
-                }
-            }
+            this.rtcSessions = data.rtcSessions;
         }
     },
 });

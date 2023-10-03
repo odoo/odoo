@@ -131,16 +131,12 @@ export class Thread extends Record {
                 this.customName = serverData.channel.custom_channel_name;
             }
             if (serverData.channel?.channelMembers) {
-                for (const [command, membersData] of serverData.channel.channelMembers) {
-                    const members = Array.isArray(membersData) ? membersData : [membersData];
-                    for (const memberData of members) {
-                        const member = this._store.ChannelMember.insert([command, memberData]);
-                        if (this.type !== "chat") {
-                            continue;
-                        }
+                this.channelMembers = serverData.channel.channelMembers;
+                if (this.type === "chat") {
+                    for (const member of this.channelMembers) {
                         if (
                             member.persona.notEq(this._store.user) ||
-                            (serverData.channel.channelMembers[0][1].length === 1 &&
+                            (this.channelMembers.length === 1 &&
                                 member.persona?.eq(this._store.user))
                         ) {
                             this.chatPartner = member.persona;
@@ -149,26 +145,7 @@ export class Thread extends Record {
                 }
             }
             if ("invitedMembers" in serverData) {
-                if (!serverData.invitedMembers) {
-                    this.invitedMembers = [];
-                    return;
-                }
-                const command = serverData.invitedMembers[0][0];
-                const members = serverData.invitedMembers[0][1];
-                switch (command) {
-                    case "ADD":
-                        if (members) {
-                            for (const member of members) {
-                                this.invitedMembers.add(member);
-                            }
-                        }
-                        break;
-                    case "DELETE":
-                        for (const member of members) {
-                            this.invitedMembers.delete(member);
-                        }
-                        break;
-                }
+                this.invitedMembers = serverData.invitedMembers;
             }
             if ("seen_partners_info" in serverData) {
                 this.seenInfos = serverData.seen_partners_info.map(
@@ -206,8 +183,13 @@ export class Thread extends Record {
     activeRtcSession = Record.one("RtcSession");
     /** @type {object|undefined} */
     channel;
-    channelMembers = Record.many("ChannelMember");
-    rtcSessions = Record.many("RtcSession");
+    channelMembers = Record.many("ChannelMember", { onDelete: (r) => r.delete() });
+    rtcSessions = Record.many("RtcSession", {
+        /** @this {import("models").Thread} */
+        onDelete(r) {
+            this._store.env.services["discuss.rtc"].deleteSession(r.id);
+        },
+    });
     rtcInvitingSession = Record.one("RtcSession");
     invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");

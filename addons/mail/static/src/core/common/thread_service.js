@@ -72,7 +72,7 @@ export class ThreadService {
         thread.memberCount = results["memberCount"];
         for (const channelMember of channelMembers) {
             if (channelMember.persona || channelMember.partner) {
-                this.store.ChannelMember.insert({ ...channelMember, thread });
+                thread.channelMembers.add({ ...channelMember, thread });
             }
         }
     }
