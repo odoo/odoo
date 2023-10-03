@@ -3,6 +3,7 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
+import { Domain } from "@web/core/domain";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
@@ -21,6 +22,8 @@ class AutoCompleteWithSources extends Component {
         multiSelect: Boolean,
         getIds: Function,
         value: String,
+        domain: { type: Array, optional: true },
+        context: { type: Object, optional: true },
         className: { type: String, optional: true },
         fieldString: { type: String, optional: true },
     };
@@ -101,11 +104,20 @@ class AutoCompleteWithSources extends Component {
             resModel,
             noCreate: true,
             multiSelect,
+            context: this.props.context || {},
             onSelected: (resId) => {
                 const resIds = Array.isArray(resId) ? resId : [resId];
                 this.props.update([...resIds]);
             },
         });
+    }
+
+    getDomain() {
+        const domainIds = Domain.not([["id", "in", this.getIds()]]);
+        if (this.props.domain) {
+            return Domain.and([this.props.domain, domainIds]).toList();
+        }
+        return domainIds.toList();
     }
 
     onSelect({ value: resId, action }, params) {
@@ -116,12 +128,12 @@ class AutoCompleteWithSources extends Component {
     }
 
     search(name, limit) {
-        const ids = this.getIds();
-        const domain = [["id", "not in", ids]];
+        const domain = this.getDomain();
         return this.orm.call(this.props.resModel, "name_search", [], {
             name,
             args: domain,
             limit,
+            context: this.props.context || {},
         });
     }
 
@@ -156,6 +168,8 @@ export class DomainSelectorAutocomplete extends Component {
         resModel: String,
         update: Function,
         value: true,
+        domain: { type: Array, optional: true },
+        context: { type: Object, optional: true },
         fieldString: { type: String, optional: true },
     };
     static components = { AutoCompleteWithSources, TagsList };
@@ -206,6 +220,8 @@ export class DomainSelectorSingleAutocomplete extends Component {
     static props = {
         resModel: String,
         update: Function,
+        domain: { type: Array, optional: true },
+        context: { type: Object, optional: true },
         value: true,
         fieldString: { type: String, optional: true },
     };
