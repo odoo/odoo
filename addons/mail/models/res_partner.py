@@ -238,6 +238,7 @@ class Partner(models.Model):
                 } if main_user else False
             if not self.env.user._is_internal():
                 data.pop('email', None)
+            data['type'] = "partner"
             partners_format[partner] = data
         return partners_format
 

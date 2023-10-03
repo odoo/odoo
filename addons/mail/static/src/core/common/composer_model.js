@@ -18,33 +18,15 @@ export class Composer extends Record {
             throw new Error("Composer shall have a thread xor a message.");
         }
         /** @type {import("models").Composer} */
-        let composer = (thread ?? message)?.composer;
-        if (!composer) {
-            /** @type {import("models").Composer} */
-            composer = this.preinsert(data);
-            const { message, thread } = data;
-            if (thread) {
-                composer.thread = thread;
-                Object.assign(composer, { thread });
-                Object.assign(thread, { composer });
-            } else if (message) {
-                Object.assign(composer, { message });
-                Object.assign(message, { composer });
-            }
-            Object.assign(composer, { textInputContent: "" });
-        }
+        const composer = this.preinsert(data);
         if ("textInputContent" in data) {
             composer.textInputContent = data.textInputContent;
         }
         if ("selection" in data) {
-            Object.assign(composer.selection, data.selection);
+            composer.selection = data.selection;
         }
-        if ("mentions" in data) {
-            for (const mention of data.mentions) {
-                if (mention.type === "partner") {
-                    composer.mentionedPartners.add(mention);
-                }
-            }
+        if ("mentionedPartners" in data) {
+            composer.mentionedPartners = data.mentionedPartners;
         }
         return composer;
     }
@@ -54,8 +36,7 @@ export class Composer extends Record {
     mentionedPartners = Record.many("Persona");
     mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("CannedResponse");
-    /** @type {string} */
-    textInputContent;
+    textInputContent = "";
     thread = Record.one("Thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {

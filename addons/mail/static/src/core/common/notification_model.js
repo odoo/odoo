@@ -19,7 +19,6 @@ export class Notification extends Record {
     static insert(data) {
         /** @type {import("models").Notification} */
         const notification = this.preinsert(data);
-        Object.assign(notification, { id: data.id });
         notification.update(data);
         return notification;
     }

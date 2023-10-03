@@ -44,6 +44,7 @@ class DiscussChannel(models.Model):
                     'website_name': visitor.website_id.name,
                     'lang_name': visitor.lang_id.name,
                     'partner_id': visitor.partner_id.id,
+                    'type': "visitor",
                 }
             except AccessError:
                 pass

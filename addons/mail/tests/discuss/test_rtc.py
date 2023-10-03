@@ -51,11 +51,10 @@ class TestChannelInternals(MailCommon):
                                 "id": channel_member.id,
                                 "channel": {"id": channel_member.channel_id.id},
                                 "persona": {
-                                    "partner": {
-                                        "id": channel_member.partner_id.id,
-                                        "name": channel_member.partner_id.name,
-                                        "im_status": channel_member.partner_id.im_status,
-                                    },
+                                    "id": channel_member.partner_id.id,
+                                    "name": channel_member.partner_id.name,
+                                    "im_status": channel_member.partner_id.im_status,
+                                    "type": "partner",
                                 },
                             },
                             'isCameraOn': False,
@@ -77,11 +76,10 @@ class TestChannelInternals(MailCommon):
                         "id": channel_member.id,
                         "channel": {"id": channel_member.channel_id.id},
                         "persona": {
-                            "partner": {
-                                "id": channel_member.partner_id.id,
-                                "name": channel_member.partner_id.name,
-                                "im_status": channel_member.partner_id.im_status,
-                            },
+                            "id": channel_member.partner_id.id,
+                            "name": channel_member.partner_id.name,
+                            "im_status": channel_member.partner_id.im_status,
+                            "type": "partner",
                         },
                     },
                     'isCameraOn': False,
@@ -126,11 +124,10 @@ class TestChannelInternals(MailCommon):
                                 "id": channel_member.id,
                                 "channel": {"id": channel_member.channel_id.id},
                                 "persona": {
-                                    "partner": {
-                                        "id": channel_member.partner_id.id,
-                                        "name": channel_member.partner_id.name,
-                                        "im_status": channel_member.partner_id.im_status,
-                                    },
+                                    "id": channel_member.partner_id.id,
+                                    "name": channel_member.partner_id.name,
+                                    "im_status": channel_member.partner_id.im_status,
+                                    "type": "partner",
                                 },
                             },
                             'isCameraOn': False,
@@ -150,11 +147,10 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member_test_user.id,
                                 'channel': {'id': channel_member_test_user.channel_id.id},
                                 'persona': {
-                                    'partner': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
-                                    },
+                                    'id': channel_member_test_user.partner_id.id,
+                                    'name': channel_member_test_user.partner_id.name,
+                                    'im_status': channel_member_test_user.partner_id.im_status,
+                                    'type': "partner",
                                 },
                             }])],
                         }
@@ -168,11 +164,10 @@ class TestChannelInternals(MailCommon):
             'id': channel_member_test_user.id,
             'channel': {'id': channel_member_test_user.channel_id.id},
             'persona': {
-                'partner': {
-                    'id': channel_member_test_user.partner_id.id,
-                    'name': channel_member_test_user.partner_id.name,
-                    'im_status': channel_member_test_user.partner_id.im_status,
-                },
+                'id': channel_member_test_user.partner_id.id,
+                'name': channel_member_test_user.partner_id.name,
+                'im_status': channel_member_test_user.partner_id.im_status,
+                'type': "partner",
             },
         }])])
 
@@ -212,11 +207,10 @@ class TestChannelInternals(MailCommon):
                                 "id": channel_member.id,
                                 "channel": {"id": channel_member.channel_id.id},
                                 "persona": {
-                                    "partner": {
-                                        "id": channel_member.partner_id.id,
-                                        "name": channel_member.partner_id.name,
-                                        "im_status": channel_member.partner_id.im_status,
-                                    },
+                                    "id": channel_member.partner_id.id,
+                                    "name": channel_member.partner_id.name,
+                                    "im_status": channel_member.partner_id.im_status,
+                                    "type": "partner",
                                 },
                             },
                             'isCameraOn': False,
@@ -236,11 +230,10 @@ class TestChannelInternals(MailCommon):
                                 "id": channel_member.id,
                                 "channel": {"id": channel_member.channel_id.id},
                                 "persona": {
-                                    "partner": {
-                                        "id": channel_member.partner_id.id,
-                                        "name": channel_member.partner_id.name,
-                                        "im_status": channel_member.partner_id.im_status,
-                                    },
+                                    "id": channel_member.partner_id.id,
+                                    "name": channel_member.partner_id.name,
+                                    "im_status": channel_member.partner_id.im_status,
+                                    "type": "partner",
                                 },
                             },
                             'isCameraOn': False,
@@ -261,22 +254,20 @@ class TestChannelInternals(MailCommon):
                                     'id': channel_member_test_user.id,
                                     'channel': {'id': channel_member_test_user.channel_id.id},
                                     'persona': {
-                                        'partner': {
-                                            'id': channel_member_test_user.partner_id.id,
-                                            'name': channel_member_test_user.partner_id.name,
-                                            'im_status': channel_member_test_user.partner_id.im_status,
-                                        },
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                        'type': "partner",
                                     },
                                 },
                                 {
                                     'id': channel_member_test_guest.id,
                                     'channel': {'id': channel_member_test_guest.channel_id.id},
                                     'persona': {
-                                        'guest': {
-                                            'id': channel_member_test_guest.guest_id.id,
-                                            'name': channel_member_test_guest.guest_id.name,
-                                            'im_status': channel_member_test_guest.guest_id.im_status,
-                                        },
+                                        'id': channel_member_test_guest.guest_id.id,
+                                        'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                        'type': "guest",
                                     },
                                 },
                             ])],
@@ -292,22 +283,20 @@ class TestChannelInternals(MailCommon):
                 'id': channel_member_test_user.id,
                 'channel': {'id': channel_member_test_user.channel_id.id},
                 'persona': {
-                    'partner': {
-                        'id': channel_member_test_user.partner_id.id,
-                        'name': channel_member_test_user.partner_id.name,
-                        'im_status': channel_member_test_user.partner_id.im_status,
-                    },
+                    'id': channel_member_test_user.partner_id.id,
+                    'name': channel_member_test_user.partner_id.name,
+                    'im_status': channel_member_test_user.partner_id.im_status,
+                    'type': "partner",
                 },
             },
             {
                 'id': channel_member_test_guest.id,
                 'channel': {'id': channel_member_test_guest.channel_id.id},
                 'persona': {
-                    'guest': {
-                        'id': channel_member_test_guest.guest_id.id,
-                        'name': channel_member_test_guest.guest_id.name,
-                        'im_status': channel_member_test_guest.guest_id.im_status,
-                    },
+                    'id': channel_member_test_guest.guest_id.id,
+                    'name': channel_member_test_guest.guest_id.name,
+                    'im_status': channel_member_test_guest.guest_id.im_status,
+                    'type': "guest",
                 },
             },
         ])])
@@ -351,11 +340,10 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member_test_user.id,
                                 'channel': {'id': channel_member_test_user.channel_id.id},
                                 'persona': {
-                                    'partner': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
-                                    },
+                                    'id': channel_member_test_user.partner_id.id,
+                                    'name': channel_member_test_user.partner_id.name,
+                                    'im_status': channel_member_test_user.partner_id.im_status,
+                                    'type': "partner",
                                 },
                             }])],
                         }
@@ -372,11 +360,10 @@ class TestChannelInternals(MailCommon):
                                     "id": channel_member_test_user.id,
                                     "channel": {"id": channel_member_test_user.channel_id.id},
                                     "persona": {
-                                        "partner": {
-                                            "id": channel_member_test_user.partner_id.id,
-                                            "name": channel_member_test_user.partner_id.name,
-                                            "im_status": channel_member_test_user.partner_id.im_status,
-                                        },
+                                        "id": channel_member_test_user.partner_id.id,
+                                        "name": channel_member_test_user.partner_id.name,
+                                        "im_status": channel_member_test_user.partner_id.im_status,
+                                        "type": "partner",
                                     },
                                 },
                                 'isCameraOn': False,
@@ -420,11 +407,10 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member_test_guest.id,
                                 'channel': {'id': channel_member_test_guest.channel_id.id},
                                 'persona': {
-                                    'guest': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
-                                    },
+                                    'id': channel_member_test_guest.guest_id.id,
+                                    'name': channel_member_test_guest.guest_id.name,
+                                    'im_status': channel_member_test_guest.guest_id.im_status,
+                                    'type': "guest",
                                 },
                             }])],
                         }
@@ -441,11 +427,10 @@ class TestChannelInternals(MailCommon):
                                     "id": channel_member_test_guest.id,
                                     "channel": {"id": channel_member_test_guest.channel_id.id},
                                     "persona": {
-                                        "guest": {
-                                            "id": channel_member_test_guest.guest_id.id,
-                                            "name": channel_member_test_guest.guest_id.name,
-                                            'im_status': channel_member_test_guest.guest_id.im_status,
-                                        },
+                                        "id": channel_member_test_guest.guest_id.id,
+                                        "name": channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                        "type": "guest",
                                     },
                                 },
                                 'isCameraOn': False,
@@ -498,11 +483,10 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member_test_user.id,
                                 'channel': {'id': channel_member_test_user.channel_id.id},
                                 'persona': {
-                                    'partner': {
-                                        'id': channel_member_test_user.partner_id.id,
-                                        'name': channel_member_test_user.partner_id.name,
-                                        'im_status': channel_member_test_user.partner_id.im_status,
-                                    },
+                                    'id': channel_member_test_user.partner_id.id,
+                                    'name': channel_member_test_user.partner_id.name,
+                                    'im_status': channel_member_test_user.partner_id.im_status,
+                                    'type': "partner",
                                 },
                             }])],
                         }
@@ -540,11 +524,10 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member_test_guest.id,
                                 'channel': {'id': channel_member_test_guest.channel_id.id},
                                 'persona': {
-                                    'guest': {
-                                        'id': channel_member_test_guest.guest_id.id,
-                                        'name': channel_member_test_guest.guest_id.name,
-                                        'im_status': channel_member_test_guest.guest_id.im_status,
-                                    },
+                                    'id': channel_member_test_guest.guest_id.id,
+                                    'name': channel_member_test_guest.guest_id.name,
+                                    'im_status': channel_member_test_guest.guest_id.im_status,
+                                    'type': "guest",
                                 },
                             }])],
                         }
@@ -613,22 +596,20 @@ class TestChannelInternals(MailCommon):
                                     'id': channel_member_test_user.id,
                                     'channel': {'id': channel_member_test_user.channel_id.id},
                                     'persona': {
-                                        'partner': {
-                                            'id': channel_member_test_user.partner_id.id,
-                                            'name': channel_member_test_user.partner_id.name,
-                                            'im_status': channel_member_test_user.partner_id.im_status,
-                                        },
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                        'type': "partner",
                                     },
                                 },
                                 {
                                     'id': channel_member_test_guest.id,
                                     'channel': {'id': channel_member_test_guest.channel_id.id},
                                     'persona': {
-                                        'guest': {
-                                            'id': channel_member_test_guest.guest_id.id,
-                                            'name': channel_member_test_guest.guest_id.name,
-                                            'im_status': channel_member_test_guest.guest_id.im_status,
-                                        },
+                                        'id': channel_member_test_guest.guest_id.id,
+                                        'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                        'type': "guest",
                                     },
                                 },
                             ])],
@@ -689,11 +670,10 @@ class TestChannelInternals(MailCommon):
                                     "id": channel_member.id,
                                     "channel": {"id": channel_member.channel_id.id},
                                     "persona": {
-                                        "partner": {
-                                            "id": channel_member.partner_id.id,
-                                            "name": channel_member.partner_id.name,
-                                            "im_status": channel_member.partner_id.im_status,
-                                        },
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                        "type": "partner",
                                     },
                                 },
                                 'isCameraOn': False,
@@ -716,11 +696,10 @@ class TestChannelInternals(MailCommon):
                                     "id": channel_member.id,
                                     "channel": {"id": channel_member.channel_id.id},
                                     "persona": {
-                                        "partner": {
-                                            "id": channel_member.partner_id.id,
-                                            "name": channel_member.partner_id.name,
-                                            "im_status": channel_member.partner_id.im_status,
-                                        },
+                                        "id": channel_member.partner_id.id,
+                                        "name": channel_member.partner_id.name,
+                                        "im_status": channel_member.partner_id.im_status,
+                                        "type": "partner",
                                     },
                                 },
                                 'isCameraOn': False,
@@ -742,22 +721,20 @@ class TestChannelInternals(MailCommon):
                                     'id': channel_member_test_user.id,
                                     'channel': {'id': channel_member_test_user.channel_id.id},
                                     'persona': {
-                                        'partner': {
-                                            'id': channel_member_test_user.partner_id.id,
-                                            'name': channel_member_test_user.partner_id.name,
-                                            'im_status': channel_member_test_user.partner_id.im_status,
-                                        },
+                                        'id': channel_member_test_user.partner_id.id,
+                                        'name': channel_member_test_user.partner_id.name,
+                                        'im_status': channel_member_test_user.partner_id.im_status,
+                                        'type': "partner",
                                     },
                                 },
                                 {
                                     'id': channel_member_test_guest.id,
                                     'channel': {'id': channel_member_test_guest.channel_id.id},
                                     'persona': {
-                                        'guest': {
-                                            'id': channel_member_test_guest.guest_id.id,
-                                            'name': channel_member_test_guest.guest_id.name,
-                                            'im_status': channel_member_test_guest.guest_id.im_status,
-                                        },
+                                        'id': channel_member_test_guest.guest_id.id,
+                                        'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
+                                        'type': "guest",
                                     },
                                 },
                             ])],

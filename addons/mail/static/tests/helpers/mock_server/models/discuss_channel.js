@@ -994,11 +994,10 @@ patch(MockServer.prototype, {
                     { fields: ["id", "name", "im_status"], context: { active_test: false } }
                 );
                 persona = {
-                    partner: {
-                        id: partner.id,
-                        name: partner.name,
-                        im_status: partner.im_status,
-                    },
+                    id: partner.id,
+                    name: partner.name,
+                    im_status: partner.im_status,
+                    type: "partner",
                 };
             }
             if (member.guest_id) {
@@ -1007,10 +1006,9 @@ patch(MockServer.prototype, {
                     { fields: ["id", "name"] }
                 );
                 persona = {
-                    guest: {
-                        id: guest.id,
-                        name: guest.name,
-                    },
+                    id: guest.id,
+                    name: guest.name,
+                    type: "guest",
                 };
             }
             membersData.push({

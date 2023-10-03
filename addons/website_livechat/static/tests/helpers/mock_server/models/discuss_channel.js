@@ -34,6 +34,7 @@ patch(MockServer.prototype, {
                     is_connected: visitor.is_connected,
                     lang_name: visitor.lang_name,
                     partner_id: visitor.partner_id,
+                    type: "visitor",
                     website_name: visitor.website_name,
                 };
             }

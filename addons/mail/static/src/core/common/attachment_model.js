@@ -24,7 +24,6 @@ export class Attachment extends Record {
         }
         /** @type {import("models").Attachment} */
         const attachment = this.preinsert(data);
-        Object.assign(attachment, { id: data.id });
         attachment.update(data);
         return attachment;
     }

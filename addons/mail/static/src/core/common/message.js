@@ -433,8 +433,8 @@ export class Message extends Component {
 
     enterEditMode() {
         const messageContent = convertBrToLineBreak(this.props.message.body);
-        this.store.Composer.insert({
-            mentions: this.props.message.recipients,
+        this.props.message.composer = {
+            mentionedPartners: this.props.message.recipients,
             message: this.props.message,
             textInputContent: messageContent,
             selection: {
@@ -442,13 +442,13 @@ export class Message extends Component {
                 end: messageContent.length,
                 direction: "none",
             },
-        });
+        };
         this.state.isEditing = true;
     }
 
     exitEditMode() {
         this.props.messageEdition?.exitEditMode();
-        this.message.composer = null;
+        this.message.composer = undefined;
         this.state.isEditing = false;
     }
 
