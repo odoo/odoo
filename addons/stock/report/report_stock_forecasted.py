@@ -252,6 +252,23 @@ class ReplenishmentReport(models.AbstractModel):
     def get_warehouses(self):
         return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
 
+    @api.model
+    def action_reserve_linked_picks(self, move_id):
+        move_id = self.env['stock.move'].browse(move_id)
+        move_ids = move_id.browse(move_id._rollup_move_origs()).filtered(lambda m: m.state not in ['draft', 'cancel', 'assigned', 'done'])
+        if move_ids:
+            move_ids._action_assign()
+        return move_ids
+
+    @api.model
+    def action_unreserve_linked_picks(self, move_id):
+        move_id = self.env['stock.move'].browse(move_id)
+        move_ids = move_id.browse(move_id._rollup_move_origs()).filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
+        if move_ids:
+            move_ids._do_unreserve()
+            move_ids.picking_id.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
+        return move_ids
+
 
 class ReplenishmentTemplateReport(models.AbstractModel):
     _name = 'report.stock.report_product_template_replenishment'

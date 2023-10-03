@@ -234,7 +234,7 @@ const ReplenishReport = clientAction.extend({
 
     /**
      * Bind additional action handlers (<button>, <a>)
-     * 
+     *
      * @returns {Promise}
      */
     _bindAdditionalActionHandlers: function () {
@@ -332,11 +332,11 @@ const ReplenishReport = clientAction.extend({
      */
     _onClickUnreserve: function(ev) {
         const model = ev.target.getAttribute('model');
-        const modelId = parseInt(ev.target.getAttribute('model-id'));
+        const move_id = parseInt(ev.target.getAttribute('move_id'));
         return this._rpc( {
             model,
-            args: [[modelId]],
-            method: 'do_unreserve'
+            args: [[move_id]],
+            method: 'action_unreserve_linked_picks'
         }).then(() => this._reloadReport());
     },
 
@@ -347,11 +347,11 @@ const ReplenishReport = clientAction.extend({
      */
     _onClickReserve: function(ev) {
         const model = ev.target.getAttribute('model');
-        const modelId = parseInt(ev.target.getAttribute('model-id'));
+        const move_id = parseInt(ev.target.getAttribute('move_id'));
         return this._rpc( {
             model,
-            args: [[modelId]],
-            method: 'action_assign'
+            args: [[move_id]],
+            method: 'action_reserve_linked_picks'
         }).then(() => this._reloadReport());
     }
 
