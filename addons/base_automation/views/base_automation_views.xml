@@ -131,9 +131,14 @@
                                         <templates>
                                             <t t-name="kanban-box">
                                                 <div class="oe_kanban_global_click row g-0 align-items-center">
-                                                    <div class="d-flex align-items-center">
-                                                        <field name="sequence" widget="handle" class="px-3" />
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <field name="sequence" widget="handle" class="px-1" />
                                                         <field name="state" invisible="1" />
+                                                        <field name="evaluation_type" invisible="1" />
+                                                        <field name="value" invisible="1" />
+                                                        <field name="selection_value" invisible="1" />
+                                                        <field name="value_field_to_show" invisible="1"/>
+
                                                         <!-- Icon section -->
                                                         <i
                                                             data-name="server_action_icon"
@@ -151,8 +156,19 @@
                                                                 'sms': 'fa-comments-o',
                                                             }[record.state.raw_value]"
                                                         />
-                                                        <field name="name" class="ps-2 text-truncate w-0 flex-grow-1" />
-                                                        <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3" title="Delete Action" />
+                                                        <field name="name" class="text-truncate" />
+                                                        <t invisible="state != 'object_write'">
+                                                            <code invisible="evaluation_type != 'equation'" t-esc="record.value.raw_value"/>
+                                                            <span invisible="evaluation_type == 'equation'" >
+                                                                <field name="selection_value" invisible="value_field_to_show != 'selection_value'" class="d-inline"/>
+                                                                <span invisible="value_field_to_show == 'selection_value'">
+                                                                    <span invisible="value == False or evaluation_type == False">"</span>
+                                                                    <field name="value" class="d-inline"/>
+                                                                    <span invisible="value == False or evaluation_type == False">"</span>
+                                                                </span>
+                                                            </span>
+                                                        </t>
+                                                        <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3 ms-auto" title="Delete Action" />
                                                     </div>
                                                 </div>
                                             </t>
