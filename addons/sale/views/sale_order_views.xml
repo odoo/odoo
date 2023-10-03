@@ -635,6 +635,14 @@
                                                                 <strong class="float-end text-end" t-out="line_price" />
                                                             </div>
                                                         </div>
+                                                        <t t-if="record.discount?.raw_value">
+                                                            <div class="row">
+                                                                <div class="col-12 text-muted">
+                                                                    Discount:
+                                                                    <t t-out="record.discount.value"/>%
+                                                                </div>
+                                                            </div>
+                                                        </t>
                                                     </div>
                                                 </div>
                                             </t>
