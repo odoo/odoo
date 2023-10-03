@@ -47,7 +47,12 @@ export class Widget extends Component {
                 widgetInfo.attrs.readonly,
                 record.evalContextWithVirtualIds
             );
-            propsFromNode = this.widget.extractProps ? this.widget.extractProps(widgetInfo) : {};
+            const dynamicInfo = {
+                readonly: readonlyFromModifiers,
+            };
+            propsFromNode = this.widget.extractProps
+                ? this.widget.extractProps(widgetInfo, dynamicInfo)
+                : {};
         }
 
         return {
