@@ -209,6 +209,26 @@ export const storeService = {
                                     const r1 = receiver;
                                     /** @type {RecordList<Record>} */
                                     const l1 = r1.__rels__.get(name);
+                                    if (Record.isCommand(val)) {
+                                        for (const [cmd, cmdData] of val) {
+                                            if (Array.isArray(cmdData)) {
+                                                for (const item of cmdData) {
+                                                    if (cmd === "ADD") {
+                                                        l1.add(item);
+                                                    } else {
+                                                        l1.delete(item);
+                                                    }
+                                                }
+                                            } else {
+                                                if (cmd === "ADD") {
+                                                    l1.add(cmdData);
+                                                } else {
+                                                    l1.delete(cmdData);
+                                                }
+                                            }
+                                        }
+                                        return true;
+                                    }
                                     /** @type {Record[]|Set<Record>|RecordList<Record>} */
                                     const collection = val;
                                     const oldRecords = l1.slice();
@@ -232,6 +252,10 @@ export const storeService = {
                                     const r2 = res.store.get(l1);
                                     if (r2) {
                                         r2.__invs__.delete(r1.localId, name);
+                                    }
+                                    if (Record.isCommand(val)) {
+                                        const [cmd, cmdData] = val.at(-1);
+                                        val = cmd === "ADD" ? cmdData : null;
                                     }
                                     if ([null, false, undefined].includes(val)) {
                                         delete receiver[name];
@@ -260,7 +284,7 @@ export const storeService = {
                 if (![Record.one()[0], Record.many()[0]].includes(val?.[0])) {
                     continue;
                 }
-                Model.__rels__.set(name, { targetModel: val[1] });
+                Model.__rels__.set(name, val[1]);
             }
         }
         // Make true store (as a model)

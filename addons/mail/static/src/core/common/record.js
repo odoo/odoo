@@ -130,6 +130,8 @@ export class RecordList extends Array {
                         if (r2 && r2.notEq(r3)) {
                             receiver.__deleteInverse__(r2);
                         }
+                        const { onDelete } = receiver.owner.Model.__rels__.get(receiver.name);
+                        onDelete?.call(receiver.owner, r2);
                         receiver.__list__[index] = r3?.localId;
                         if (r3) {
                             receiver.__addInverse__(r3);
@@ -178,6 +180,8 @@ export class RecordList extends Array {
         if (r2) {
             this.__deleteInverse__(r2);
         }
+        const { onDelete } = this.owner.Model.__rels__.get(this.name);
+        onDelete?.call(this.owner, r2);
         return r2;
     }
     /** @returns {R} */
@@ -186,6 +190,8 @@ export class RecordList extends Array {
         if (r2) {
             this.__deleteInverse__(r2);
         }
+        const { onDelete } = this.owner.Model.__rels__.get(this.name);
+        onDelete?.call(this.owner, r2);
         return r2;
     }
     /** @param {R[]} records */
@@ -265,6 +271,8 @@ export class RecordList extends Array {
         this.__list__.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
         for (const r of oldRecords) {
             this.__deleteInverse__(r);
+            const { onDelete } = this.owner.Model.__rels__.get(this.name);
+            onDelete?.call(this.owner, r);
         }
         for (const r of newRecords) {
             this.__addInverse__(r);
@@ -419,19 +427,21 @@ export class Record {
     }
     /**
      * @template {keyof import("model ").Models} M
-     * @param {M} modelName
+     * @param {M} targetModel
      * @returns {import("models").Models[M]}
      */
-    static one(modelName) {
-        return [ONE_SYM, modelName];
+    static one(targetModel) {
+        return [ONE_SYM, { targetModel }];
     }
     /**
      * @template {keyof import("model").Models} M
-     * @param {M} modelName
+     * @param {M} targetModel
+     * @param {(r) => void} [onDelete] function that is called when a record is removed
+     *   from the relation.
      * @returns {import("models").Models[M][]}
      */
-    static many(modelName) {
-        return [MANY_SYM, modelName];
+    static many(targetModel, { onDelete } = {}) {
+        return [MANY_SYM, { targetModel, onDelete }];
     }
     /**
      * @param {Object} data
@@ -448,6 +458,9 @@ export class Record {
      */
     static preinsert(data) {
         return this.get(data) ?? this.new(data);
+    }
+    static isCommand(data) {
+        return ["ADD", "DELETE"].includes(data?.[0]?.[0]);
     }
 
     /**

@@ -103,31 +103,8 @@ export class Message extends Record {
                 partner: this._store.self,
             };
         }
-        if (data.messageReactionGroups) {
-            const reactionContentToUnlink = new Set();
-            const reactionsToInsert = [];
-            for (const rawReaction of data.messageReactionGroups) {
-                const [command, reactionData] = Array.isArray(rawReaction)
-                    ? rawReaction
-                    : ["ADD", rawReaction];
-                const reaction = this._store.MessageReactions.insert(reactionData);
-                if (command === "ADD") {
-                    reactionsToInsert.push(reaction);
-                } else {
-                    reactionContentToUnlink.add(reaction.content);
-                }
-            }
-            this.reactions = this.reactions.filter(
-                ({ content }) => !reactionContentToUnlink.has(content)
-            );
-            reactionsToInsert.forEach((reaction) => {
-                const idx = this.reactions.findIndex(({ content }) => reaction.content === content);
-                if (idx !== -1) {
-                    this.reactions[idx] = reaction;
-                } else {
-                    this.reactions.push(reaction);
-                }
-            });
+        if ("messageReactionGroups" in data) {
+            this.reactions = data.messageReactionGroups;
         }
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();

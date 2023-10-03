@@ -22,42 +22,30 @@ export class ChannelMember extends Record {
      * @returns {import("models").ChannelMember}
      */
     static insert(data) {
-        const memberData = Array.isArray(data) ? data[1] : data;
         /** @type {import("models").ChannelMember} */
-        const member = this.preinsert(memberData);
+        const member = this.preinsert(data);
         member.update(data);
         return member;
     }
 
     update(data) {
-        const [command, memberData] = Array.isArray(data) ? data : ["ADD", data];
-        this.id = memberData.id;
-        if ("persona" in memberData) {
+        this.id = data.id;
+        if ("persona" in data) {
             this.persona = {
-                ...(memberData.persona.partner ?? memberData.persona.guest),
-                type: memberData.persona.guest ? "guest" : "partner",
-                country: memberData.persona.partner?.country,
-                channelId: memberData.persona.guest ? memberData.channel.id : null,
+                ...(data.persona.partner ?? data.persona.guest),
+                type: data.persona.guest ? "guest" : "partner",
+                country: data.persona.partner?.country,
+                channelId: data.persona.guest ? data.channel.id : null,
             };
         }
-        let thread = memberData.thread ?? this.thread;
-        if (!thread && memberData.channel?.id) {
+        let thread = data.thread ?? this.thread;
+        if (!thread && data.channel?.id) {
             thread = {
-                id: memberData.channel.id,
+                id: data.channel.id,
                 model: "discuss.channel",
             };
         }
-        if (thread && !this.thread) {
-            this.thread = thread;
-        }
-        switch (command) {
-            case "ADD":
-                this.thread?.channelMembers.add(this);
-                break;
-            case "DELETE":
-                this.delete();
-                break;
-        }
+        this.thread ??= thread;
     }
 
     /** @type {number} */

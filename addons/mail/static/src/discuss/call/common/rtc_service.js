@@ -1522,24 +1522,13 @@ export class Rtc {
         }
     }
 
-    updateRtcSessions(channelId, sessionsData, command) {
+    updateRtcSessions(channelId, sessionsData) {
         const channel = this.store.Thread.get({ model: "discuss.channel", id: channelId });
         if (!channel) {
             return;
         }
         const oldCount = Object.keys(channel.rtcSessions).length;
-        switch (command) {
-            case "DELETE":
-                for (const sessionData of sessionsData) {
-                    this.deleteSession(sessionData.id);
-                }
-                break;
-            case "ADD":
-                for (const sessionData of sessionsData) {
-                    channel.rtcSessions.add(sessionData);
-                }
-                break;
-        }
+        channel.rtcSessions = sessionsData;
         if (channel.rtcSessions.length > oldCount) {
             this.soundEffectsService.play("channel-join");
         } else if (channel.rtcSessions.length < oldCount) {
@@ -1582,16 +1571,11 @@ export const rtcService = {
         services["bus_service"].subscribe(
             "discuss.channel/rtc_sessions_update",
             ({ id, rtcSessions }) => {
-                const sessionsData = rtcSessions[0][1];
-                const command = rtcSessions[0][0];
-                rtc.updateRtcSessions(id, sessionsData, command);
+                rtc.updateRtcSessions(id, rtcSessions);
             }
         );
         services["bus_service"].subscribe("discuss.channel/joined", ({ channel }) => {
-            const rtcSessions = channel.rtcSessions;
-            const sessionsData = rtcSessions[0][1];
-            const command = rtcSessions[0][0];
-            rtc.updateRtcSessions(channel.id, sessionsData, command);
+            rtc.updateRtcSessions(channel.id, channel.rtcSessions);
         });
         services["bus_service"].subscribe("mail.record/insert", (payload) => {
             if (payload.RtcSession) {
