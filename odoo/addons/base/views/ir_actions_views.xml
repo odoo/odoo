@@ -329,6 +329,10 @@
                         <h1 class="oe_title">
                             <field name="name" placeholder="e.g. Mass archive contacts"/>
                         </h1>
+                        <div class="d-flex flex-column">
+                            <label for="state"/>
+                            <field name="state" widget="selection_badge"/>
+                        </div>
                         <group name="action_wrapper">
                             <group name="action_content">
                                 <field name="model_name" invisible="1"/>
@@ -338,9 +342,8 @@
                                 <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
                                        domain="[('id', 'in', available_model_ids)]"/>
                                 <field name="groups_id" widget="many2many_tags" groups="base.group_no_one" />
-                                <field name="state" string="Action Type"/>
                                 <field name="update_field_id" invisible="state != 'object_write'"
-                                    options="{'no_create': True, 'no_open': True}"
+                                    options="{'no_create': True, 'no_open': True}" context="{'hide_model': True}"/>
                                     domain="['|', ('model_id', '=', crud_model_id), ('model_id', '=', model_id)]"/>
                                 <field name="evaluation_type" invisible="state != 'object_write'" widget="radio" options="{'horizontal': True}"/>
                                 <field name="value_field_to_show" invisible="1"/>
@@ -384,11 +387,11 @@
 
                             <page string="Actions" name="actions"
                                     invisible="state != 'multi'">
-                                <p class="oe_grey">
-                                    If several child actions return an action, only the last one will be executed.
-                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action.
-                                </p>
-                                <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
+                                    <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
+                                    <p class="oe_grey">
+                                        If several child actions return an action, only the last one will be executed.
+                                        This may happen when having server actions executing code that returns an action, or server actions returning a client action.
+                                    </p>
                             </page>
 
                             <page string="Help" name="help_info"
