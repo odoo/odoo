@@ -67,7 +67,7 @@ export function addFieldDependencies(activeFields, fields, dependencies = {}) {
  * @returns {boolean}
  */
 export function archParseBoolean(str, trueIfEmpty = false) {
-    return str ? !/^false|0$/i.test(str) : trueIfEmpty;
+    return str ? !/^(false|0)$/i.test(str) : trueIfEmpty;
 }
 
 /**
