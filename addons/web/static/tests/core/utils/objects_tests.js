@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
+import { patchDate } from "@web/../tests/helpers/utils";
 
 QUnit.module("utils", () => {
     QUnit.module("Objects");
@@ -59,6 +60,8 @@ QUnit.module("utils", () => {
     });
 
     QUnit.test("shallowEqual: custom comparison function", function (assert) {
+        patchDate(2019, 2, 11, 12, 30, 0);
+
         assert.notOk(shallowEqual({ a: 1, date: new Date() }, { a: 1, date: new Date() }));
         assert.ok(
             shallowEqual({ a: 1, date: new Date() }, { a: 1, date: new Date() }, (a, b) =>
