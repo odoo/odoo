@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
+import json
 from psycopg2 import IntegrityError, ProgrammingError
+import requests
+from unittest.mock import patch
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
@@ -404,6 +407,43 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self_demo.with_context(self.context).run()
         self.assertEqual(self.test_partner.date, date.today())
 
+    def test_90_webhook(self):
+        self.action.write({
+            'state': 'webhook',
+            'webhook_field_ids': [
+                Command.link(self.res_partner_name_field.id),
+                Command.link(self.res_partner_city_field.id),
+                Command.link(self.res_partner_country_field.id),
+                ],
+            'webhook_url': 'http://example.com/webhook',
+        })
+        # write a mock for the requests.post method that checks the data
+        # and returns a 200 response
+        num_requests = 0
+        def _patched_post(*args, **kwargs):
+            nonlocal num_requests
+            response = requests.Response()
+            response.status_code = 200 if num_requests == 0 else 400
+            self.assertEqual(args[0], 'http://example.com/webhook')
+            self.assertEqual(kwargs['data'], json.dumps({
+                '_action': "%s(#%s)" % (self.action.name, self.action.id),
+                '_id': self.test_partner.id,
+                '_model': self.test_partner._name,
+                'city': self.test_partner.city,
+                'country_id': self.test_partner.country_id.id,
+                'id': self.test_partner.id,
+                'name': self.test_partner.name,
+            }))
+            num_requests += 1
+            return response
+
+        with patch.object(requests, 'post', _patched_post), mute_logger('odoo.addons.base.models.ir_actions'):
+            # first run: 200
+            self.action.with_context(self.context).run()
+            # second run: 400, should *not* raise but
+            # should warn in logs (hence mute_logger)
+            self.action.with_context(self.context).run()
+        self.assertEqual(num_requests, 2)
 
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
