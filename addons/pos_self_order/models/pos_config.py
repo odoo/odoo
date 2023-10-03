@@ -158,11 +158,11 @@ class PosConfig(models.Model):
                 record.self_ordering_mode = 'nothing'
 
     def _compute_selection_pay_after(self):
-        selection = [("meal", "Meal"), ("each", "Each Order")]
+        selection_each_label = _("Each Order")
         version_info = service.common.exp_version()['server_version_info']
         if version_info[-1] == '':
-            selection[0] = (selection[0][0], selection[0][1] + ' (require Odoo Enterprise)')
-        return selection
+            selection_each_label = f"{selection_each_label} {_('(require Odoo Enterprise)')}"
+        return [("meal", _("Meal")), ("each", selection_each_label)]
 
     @api.constrains('self_ordering_default_user_id')
     def _check_default_user(self):
