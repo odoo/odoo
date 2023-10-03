@@ -256,6 +256,7 @@ class MrpUnbuild(models.Model):
             'warehouse_id': location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
             'company_id': move.company_id.id,
+            'origin_returned_move_id': move.id,
         })
 
     def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, byproduct_id=False):
