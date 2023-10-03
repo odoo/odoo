@@ -31,6 +31,9 @@ partnerCompareRegistry.add(
     (p1, p2, { thread }) => {
         if (thread) {
             const followerList = [...thread.followers];
+            if (thread.selfFollower) {
+                followerList.push(thread.selfFollower);
+            }
             const isFollower1 = followerList.some((follower) => follower.partner.eq(p1));
             const isFollower2 = followerList.some((follower) => follower.partner.eq(p2));
             if (isFollower1 && !isFollower2) {
