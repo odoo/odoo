@@ -34,38 +34,28 @@ export function serializeXML(xml) {
     return serializer.serializeToString(xml);
 }
 
-export class XMLParser {
-    /**
-     * @param {Element | string} xml
-     * @param {(el: Element, visitChildren: () => any) => any} callback
-     */
-    visitXML(xml, callback) {
-        const visit = (el) => {
-            if (el) {
-                let didVisitChildren = false;
-                const visitChildren = () => {
-                    for (const child of el.children) {
-                        visit(child);
-                    }
-                    didVisitChildren = true;
-                };
-                const shouldVisitChildren = callback(el, visitChildren);
-                if (shouldVisitChildren !== false && !didVisitChildren) {
-                    visitChildren();
+/**
+ * @param {Element | string} xml
+ * @param {(el: Element, visitChildren: () => any) => any} callback
+ */
+export function visitXML(xml, callback) {
+    const visit = (el) => {
+        if (el) {
+            let didVisitChildren = false;
+            const visitChildren = () => {
+                for (const child of el.children) {
+                    visit(child);
                 }
+                didVisitChildren = true;
+            };
+            const shouldVisitChildren = callback(el, visitChildren);
+            if (shouldVisitChildren !== false && !didVisitChildren) {
+                visitChildren();
             }
-        };
-        const xmlDoc = typeof xml === "string" ? this.parseXML(xml) : xml;
-        visit(xmlDoc);
-    }
-
-    /**
-     * @param {string} str
-     * @returns {Element}
-     */
-    parseXML(str) {
-        return parseXML(str);
-    }
+        }
+    };
+    const xmlDoc = typeof xml === "string" ? parseXML(xml) : xml;
+    visit(xmlDoc);
 }
 
 /**

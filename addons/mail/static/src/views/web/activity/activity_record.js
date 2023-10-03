@@ -33,8 +33,9 @@ export class ActivityRecord extends Component {
             editable: false,
             isHtmlEmpty,
         };
-        const { arch, templateDocs } = this.props.archInfo;
-        this.recordTemplate = useViewCompiler(ActivityCompiler, arch, templateDocs)["activity-box"];
+        const { templateDocs } = this.props.archInfo;
+        const templates = useViewCompiler(ActivityCompiler, templateDocs);
+        this.recordTemplate = templates["activity-box"];
     }
 
     getRenderingContext() {

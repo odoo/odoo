@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { intersection } from "@web/core/utils/arrays";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { formView } from "@web/views/form/form_view";
 import { SettingsFormController } from "./settings_form_controller";
 import { SettingsFormRenderer } from "./settings_form_renderer";
 import { SettingsFormCompiler } from "./settings_form_compiler";
-import { SettingsArchParser } from "./settings_form_arch_parser";
 
 class SettingRecord extends formView.Model.Record {
     _update(changes) {
@@ -32,7 +32,6 @@ class SettingModel extends formView.Model {
         nextConfig.resId = false;
         return nextConfig;
     }
-
 }
 SettingModel.Record = SettingRecord;
 
@@ -40,12 +39,19 @@ export const settingsFormView = {
     ...formView,
     display: {},
     buttonTemplate: "web.SettingsFormView.Buttons",
-    ArchParser: SettingsArchParser,
     Model: SettingModel,
     ControlPanel: ControlPanel,
     Controller: SettingsFormController,
     Compiler: SettingsFormCompiler,
     Renderer: SettingsFormRenderer,
+    props: (genericProps, view) => {
+        [...genericProps.arch.querySelectorAll("setting[type='header'] field")].forEach((el) => {
+            const options = evaluateExpr(el.getAttribute("options") || "{}");
+            options.isHeaderField = true;
+            el.setAttribute("options", JSON.stringify(options));
+        });
+        return formView.props(genericProps, view);
+    },
 };
 
 registry.category("views").add("base_settings", settingsFormView);

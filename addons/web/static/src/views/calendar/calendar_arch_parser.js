@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { evaluateExpr } from "@web/core/py_js/py";
-import { XMLParser } from "@web/core/utils/xml";
+import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 import { archParseBoolean } from "@web/views/utils";
 
@@ -18,7 +18,7 @@ const SCALES = ["day", "week", "month", "year"];
 
 export class CalendarParseArchError extends Error {}
 
-export class CalendarArchParser extends XMLParser {
+export class CalendarArchParser {
     parse(arch, models, modelName) {
         const fields = models[modelName];
         const fieldNames = new Set(fields.display_name ? ["display_name"] : []);
@@ -38,7 +38,7 @@ export class CalendarArchParser extends XMLParser {
         const popoverFieldNodes = {};
         const filtersInfo = {};
 
-        this.visitXML(arch, (node) => {
+        visitXML(arch, (node) => {
             switch (node.tagName) {
                 case "calendar": {
                     if (!node.hasAttribute("date_start")) {

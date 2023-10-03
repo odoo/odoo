@@ -326,9 +326,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         for (const child of node.children) {
             const viewType = child.tagName === "tree" ? "list" : child.tagName;
             const { ArchParser } = viewRegistry.get(viewType);
-            const xmlSerializer = new XMLSerializer();
-            const subArch = xmlSerializer.serializeToString(child);
-            const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
+            const archInfo = new ArchParser().parse(child, models, fields[name].relation);
             views[viewType] = {
                 ...archInfo,
                 limit: archInfo.limit || 40,

@@ -186,11 +186,10 @@ export class KanbanRecord extends Component {
         this.notification = useService("notification");
         this.user = useService("user");
 
-        const { archInfo, Compiler, templates } = this.props;
-        const { arch } = archInfo;
+        const { Compiler, templates } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;
 
-        this.templates = useViewCompiler(ViewCompiler, arch, templates);
+        this.templates = useViewCompiler(ViewCompiler, templates);
 
         if (this.constructor.KANBAN_MENU_ATTRIBUTE in templates) {
             this.showMenu = true;

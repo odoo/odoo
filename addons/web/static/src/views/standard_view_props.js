@@ -17,7 +17,7 @@ export const standardViewProps = {
         type: Object,
     },
     resModel: String,
-    arch: { type: String },
+    arch: { type: Element },
     bannerRoute: { type: String, optional: true },
     className: { type: String, optional: true },
     comparison: { type: [Object, { value: null }], optional: true },

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
@@ -251,7 +252,7 @@ export class KanbanRecordQuickCreate extends Component {
             [props.group.resModel]: quickCreateFields,
         };
         const archInfo = new formView.ArchParser().parse(
-            quickCreateForm.arch,
+            parseXML(quickCreateForm.arch),
             models,
             props.group.resModel
         );
