@@ -29,7 +29,7 @@ class MassMailingContact(models.Model):
                     (0, 0, {'list_id': list_id}) for list_id in list_ids]
         return res
 
-    name = fields.Char()
+    name = fields.Char(required=True)
     company_name = fields.Char(string='Company Name')
     title_id = fields.Many2one('res.partner.title', string='Title')
     email = fields.Char('Email')
