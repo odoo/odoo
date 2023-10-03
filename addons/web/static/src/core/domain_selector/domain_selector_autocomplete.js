@@ -1,150 +1,14 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { MultiRecordSelector } from "../record_selectors/multi_record_selector";
 import { _t } from "@web/core/l10n/translation";
-import { Domain } from "@web/core/domain";
 import { formatAST, toPyValue } from "@web/core/py_js/py_utils";
-import { registry } from "@web/core/registry";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Expression } from "@web/core/domain_tree";
+import { RecordSelector } from "../record_selectors/record_selector";
 
-const SEARCH_LIMIT = 7;
-const SEARCH_MORE_LIMIT = 320;
+export const isId = (val) => Number.isInteger(val) && val >= 1;
 
-const isId = (val) => Number.isInteger(val) && val >= 1;
-
-class AutoCompleteWithSources extends Component {
-    static props = {
-        resModel: String,
-        update: Function,
-        multiSelect: Boolean,
-        getIds: Function,
-        value: String,
-        domain: { type: Array, optional: true },
-        context: { type: Object, optional: true },
-        className: { type: String, optional: true },
-        fieldString: { type: String, optional: true },
-    };
-    static components = { AutoComplete };
-    static template = "web.DomainSelector.AutoCompleteWithSources";
-
-    setup() {
-        this.orm = useService("orm");
-        this.nameService = useService("name");
-        this.addDialog = useOwnedDialogs();
-        this.sources = [
-            {
-                placeholder: _t("Loading..."),
-                options: this.loadOptionsSource.bind(this),
-            },
-        ];
-    }
-
-    addNames(nameGets) {
-        const displayNames = {};
-        for (const [id, label] of nameGets) {
-            displayNames[id] = label.split("\n")[0];
-        }
-        this.nameService.addDisplayNames(this.props.resModel, displayNames);
-    }
-
-    getIds() {
-        return this.props.getIds();
-    }
-
-    async loadOptionsSource(name) {
-        if (this.lastProm) {
-            this.lastProm.abort(false);
-        }
-        this.lastProm = this.search(name, SEARCH_LIMIT + 1);
-        const nameGets = await this.lastProm;
-        this.addNames(nameGets);
-        const options = nameGets.map(([value, label]) => ({ value, label: label.split("\n")[0] }));
-        if (SEARCH_LIMIT < nameGets.length) {
-            options.push({
-                label: _t("Search More..."),
-                action: this.onSearchMore.bind(this, name),
-                classList: "o_m2o_dropdown_option",
-            });
-        }
-        if (options.length === 0) {
-            options.push({ label: _t("(no result)"), unselectable: true });
-        }
-        return options;
-    }
-
-    async onSearchMore(name) {
-        const { fieldString, multiSelect, resModel } = this.props;
-        let operator;
-        const ids = [];
-        if (name) {
-            const nameGets = await this.search(name, SEARCH_MORE_LIMIT);
-            this.addNames(nameGets);
-            operator = "in";
-            ids.push(...nameGets.map((nameGet) => nameGet[0]));
-        } else {
-            operator = "not in";
-            ids.push(...this.getIds());
-        }
-        const dynamicFilters = ids.length
-            ? [
-                  {
-                      description: _t("Quick search: %s", name),
-                      domain: [["id", operator, ids]],
-                  },
-              ]
-            : undefined;
-        // fine for now but we don't like this kind of dependence of core to views
-        const SelectCreateDialog = registry.category("dialogs").get("select_create");
-        this.addDialog(SelectCreateDialog, {
-            title: _t("Search: %s", fieldString),
-            dynamicFilters,
-            resModel,
-            noCreate: true,
-            multiSelect,
-            context: this.props.context || {},
-            onSelected: (resId) => {
-                const resIds = Array.isArray(resId) ? resId : [resId];
-                this.props.update([...resIds]);
-            },
-        });
-    }
-
-    getDomain() {
-        const domainIds = Domain.not([["id", "in", this.getIds()]]);
-        if (this.props.domain) {
-            return Domain.and([this.props.domain, domainIds]).toList();
-        }
-        return domainIds.toList();
-    }
-
-    onSelect({ value: resId, action }, params) {
-        if (action) {
-            return action(params);
-        }
-        this.props.update([resId]);
-    }
-
-    search(name, limit) {
-        const domain = this.getDomain();
-        return this.orm.call(this.props.resModel, "name_search", [], {
-            name,
-            args: domain,
-            limit,
-            context: this.props.context || {},
-        });
-    }
-
-    onChange({ inputValue }) {
-        if (!inputValue.length) {
-            this.props.update([]);
-        }
-    }
-}
-
-const getFormat = (val, displayNames) => {
+export const getFormat = (val, displayNames) => {
     let text;
     let colorIndex;
     if (isId(val)) {
@@ -163,105 +27,52 @@ const getFormat = (val, displayNames) => {
     return { text, colorIndex };
 };
 
-export class DomainSelectorAutocomplete extends Component {
+export class DomainSelectorAutocomplete extends MultiRecordSelector {
     static props = {
-        resModel: String,
-        update: Function,
-        value: true,
-        domain: { type: Array, optional: true },
-        context: { type: Object, optional: true },
-        fieldString: { type: String, optional: true },
+        ...MultiRecordSelector.props,
+        resIds: true, //resIds could be an array of ids or an array of expressions
     };
-    static components = { AutoCompleteWithSources, TagsList };
-    static template = "web.DomainSelector.DomainSelectorAutocomplete";
-
-    setup() {
-        this.nameService = useService("name");
-        onWillStart(() => this.computeDerivedParams());
-        onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
-    }
-
-    async computeDerivedParams(props = this.props) {
-        const displayNames = await this.getDisplayNames(props);
-        this.tags = this.getTags(props, displayNames);
-    }
-
-    async getDisplayNames(props) {
-        const ids = this.getIds(props);
-        return this.nameService.loadDisplayNames(props.resModel, ids);
-    }
 
     getIds(props = this.props) {
-        return props.value.filter((val) => isId(val));
+        return props.resIds.filter((val) => isId(val));
     }
 
     getTags(props, displayNames) {
-        return props.value.map((val, index) => {
+        return props.resIds.map((val, index) => {
             const { text, colorIndex } = getFormat(val, displayNames);
             return {
                 text,
                 colorIndex,
                 onDelete: () => {
                     this.props.update([
-                        ...this.props.value.slice(0, index),
-                        ...this.props.value.slice(index + 1),
+                        ...this.props.resIds.slice(0, index),
+                        ...this.props.resIds.slice(index + 1),
                     ]);
                 },
             };
         });
     }
-
-    update(resIds) {
-        this.props.update([...this.props.value, ...resIds]);
-    }
 }
 
-export class DomainSelectorSingleAutocomplete extends Component {
+export class DomainSelectorSingleAutocomplete extends RecordSelector {
     static props = {
-        resModel: String,
-        update: Function,
-        domain: { type: Array, optional: true },
-        context: { type: Object, optional: true },
-        value: true,
-        fieldString: { type: String, optional: true },
+        ...RecordSelector.props,
+        resId: true,
     };
-    static components = { AutoCompleteWithSources };
-    static template = "web.DomainSelector.DomainSelectorSingleAutocomplete";
-
-    setup() {
-        this.nameService = useService("name");
-        onWillStart(() => this.computeDerivedParams());
-        onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
-    }
-
-    async computeDerivedParams(props = this.props) {
-        const displayNames = await this.getDisplayNames(props);
-        this.displayName = this.getDisplayName(props, displayNames);
-    }
-
-    async getDisplayNames(props) {
-        const ids = this.getIds(props);
-        return this.nameService.loadDisplayNames(props.resModel, ids);
-    }
 
     getDisplayName(props = this.props, displayNames) {
-        const { value } = props;
-        if (value === false) {
+        const { resId } = props;
+        if (resId === false) {
             return "";
         }
-        const { text } = getFormat(value, displayNames);
+        const { text } = getFormat(resId, displayNames);
         return text;
     }
 
     getIds(props = this.props) {
-        if (isId(props.value)) {
-            return [props.value];
+        if (isId(props.resId)) {
+            return [props.resId];
         }
         return [];
-    }
-
-    update(resIds) {
-        this.props.update(resIds[0] || false);
-        this.render(true);
     }
 }

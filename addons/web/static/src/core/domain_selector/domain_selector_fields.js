@@ -319,7 +319,7 @@ const RELATIONAL_EDITOR_EQUALITY = makeEditor(DomainSelectorSingleAutocomplete, 
             resModel: fieldDef.relation,
             fieldString: fieldDef.string,
             update,
-            value,
+            resId: value,
         };
     },
     isSupported: () => true,
@@ -331,8 +331,8 @@ const RELATIONAL_EDITOR_IN = makeEditor(DomainSelectorAutocomplete, {
         return {
             resModel: fieldDef.relation,
             fieldString: fieldDef.string,
-            update: (value) => update([...new Set(value)]),
-            value: Array.isArray(value) ? [...new Set(value)] : value,
+            update: (resIds) => update([...new Set(resIds)]),
+            resIds: Array.isArray(value) ? [...new Set(value)] : value,
         };
     },
     isSupported: (value) => Array.isArray(value),
