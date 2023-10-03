@@ -46,19 +46,9 @@ export class NotificationGroup extends Record {
             type: data.type ?? this.type,
             status: data.status ?? this.status,
         });
-        const notifications = data.notifications ?? [];
-        const alreadyKnownNotifications = new Set(this.notifications.map(({ id }) => id));
-        const notificationIdsToRemove = new Set();
-        for (const [commandName, notification] of notifications) {
-            if (commandName === "ADD" && !alreadyKnownNotifications.has(notification.id)) {
-                this.notifications.push(notification);
-            } else if (commandName === "DELETE") {
-                notificationIdsToRemove.add(notification.id);
-            }
+        if ("notifications" in data) {
+            this.notifications = data.notifications;
         }
-        this.notifications = this.notifications.filter(
-            ({ id }) => !notificationIdsToRemove.has(id)
-        );
         this.lastMessage = this.notifications[0]?.message;
         for (const notification of this.notifications) {
             if (this.lastMessage?.id < notification.message?.id) {
