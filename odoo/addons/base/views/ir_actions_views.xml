@@ -342,10 +342,8 @@
                         <separator string="Action Details" groups="base.group_no_one" />
                         <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                             <field name="evaluation_type" class="oe_inline"/>
-                            <field name="update_field_id"
-                                placeholder="Select a field..."
-                                options="{'no_create': True, 'no_open': True}" context="{'hide_model': True}"
-                                domain="[('store', '=', True), '|', ('model_id', '=', crud_model_id), ('model_id', '=', model_id)]"/>
+                            <field name="update_path" widget="DynamicModelFieldSelectorChar" class="oe_inline" options="{'model': 'model_name'}"/>
+                            <field name="update_field_id" invisible="1"/>
                             <field name="value_field_to_show" invisible="1"/>
                             <field name="update_related_model_id" invisible="1"/>
                             <span invisible="evaluation_type != 'value'">to</span>
