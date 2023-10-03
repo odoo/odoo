@@ -86,9 +86,6 @@
                                     <field name="pos_amount_authorized_diff"/>
                                 </div>
                             </setting>
-                            <setting invisible="not pos_cash_control" string="Coins/Bills" help="Set of coins/bills that will be used in opening and closing control">
-                                <field name="pos_default_bill_ids" colspan="4" widget="many2many_tags" options="{'no_create_edit': True}" context="{'default_pos_config_ids':[(6, False, [pos_config_id])]}"/>
-                            </setting>
                             <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip">
                                 <field name="pos_iface_tipproduct" readonly="pos_has_active_session"/>
                                 <div class="content-group" invisible="not pos_iface_tipproduct">

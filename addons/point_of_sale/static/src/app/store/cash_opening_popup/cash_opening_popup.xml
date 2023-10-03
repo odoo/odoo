@@ -24,13 +24,11 @@
                 </div>
             </main>
             <footer class="footer modal-footer">
-                <button class="button btn btn-lg btn-primary" 
+                <button class="button btn btn-lg btn-primary"
                     t-on-click="confirm"
                     t-att-disabled="!env.utils.isValidFloat(state.openingCash)"
                     >
-                    Open session 
-                    <span t-if="env.utils.isValidFloat(state.openingCash)"
-                        t-esc="env.utils.formatStrCurrency(state.openingCash)"/>
+                    Open session
                 </button>
             </footer>
         </div>

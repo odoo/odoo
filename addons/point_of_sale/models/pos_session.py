@@ -1845,7 +1845,7 @@ class PosSession(models.Model):
         return config
 
     def _loader_params_pos_bill(self):
-        return {'search_params': {'domain': [('id', 'in', self.config_id.default_bill_ids.ids)], 'fields': ['name', 'value']}}
+        return {'search_params': {'domain': ['|', ('id', 'in', self.config_id.default_bill_ids.ids), ('pos_config_ids', '=', False)], 'fields': ['name', 'value']}}
 
     def _get_pos_ui_pos_bill(self, params):
         return self.env['pos.bill'].search_read(**params['search_params'])
