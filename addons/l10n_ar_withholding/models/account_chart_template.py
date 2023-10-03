@@ -33,7 +33,11 @@ class AccountChartTemplate(models.AbstractModel):
         additional = self._parse_csv('ar_ex', 'account.tax', module='l10n_ar_withholding')
         self._deref_account_tags('ar_ex', additional)
 
-    def _post_load_data(self, template_code, company, template_data):
-        super()._post_load_data(template_code, company, template_data)
+    def _load(self, template_code, company, install_demo):
+        res = super()._load(template_code, company, install_demo)
+
+        # If Responsable Monotributista remove the default purchase tax
         if template_code in ['ar_base', 'ar_ri', 'ar_ex']:
             company.l10n_ar_tax_base_account_id = self.ref('base_tax_account')
+
+        return res
