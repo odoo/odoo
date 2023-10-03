@@ -356,8 +356,13 @@ const { DateTime } = luxon;
                 form_values.csrf_token = odoo.csrf_token;
             }
 
+            const formData = new FormData();
+            for (const [key, value] of Object.entries(form_values)) {
+                formData.append(key, value);
+            }
+
             // Post form and handle result
-            post(this.$el.attr('action') + (this.$el.data('force_action') || this.$el.data('model_name')), form_values)
+            post(this.$el.attr('action') + (this.$el.data('force_action') || this.$el.data('model_name')), formData)
             .then(async function (result_data) {
                 // Restore send button behavior
                 self.$el.find('.s_website_form_send, .o_website_form_send')
