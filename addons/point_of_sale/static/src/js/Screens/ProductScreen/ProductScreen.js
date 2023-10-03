@@ -289,6 +289,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 });
             }
             await this.currentOrder.add_product(product,  options);
+            return true;
         }
         _barcodeClientAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
@@ -306,12 +307,16 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             var last_orderline = this.currentOrder.get_last_orderline();
             if (last_orderline) {
                 last_orderline.set_discount(code.value);
+                return true;
             }
         }
         // IMPROVEMENT: The following two methods should be in PosScreenComponent?
         // Why? Because once we start declaring barcode actions in different
         // screens, these methods will also be declared over and over.
         _barcodeErrorAction(code) {
+            if (this.env.pos.show_barcode_error_modal === false) {
+                return ;
+            }
             this.showPopup('ErrorBarcodePopup', { code: this._codeRepr(code) });
         }
         _codeRepr(code) {

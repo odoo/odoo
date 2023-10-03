@@ -196,6 +196,7 @@ var BarcodeParser = Class.extend({
      *      - base_code: the barcode with all the encoding parts set to zero; the one put on the product in the backend
      */
     parse_barcode: function(barcode){
+        var results = [];
         var parsed_result = {
             encoding: '',
             type:'error',
@@ -230,27 +231,29 @@ var BarcodeParser = Class.extend({
 
             var match = this.match_pattern(cur_barcode, rules[i].pattern, rule.encoding);
             if (match.match) {
+                var parsed_result_tmp = {...parsed_result};
                 if(rules[i].type === 'alias') {
                     barcode = rules[i].alias;
                     parsed_result.code = barcode;
                     parsed_result.type = 'alias';
                 }
                 else {
-                    parsed_result.encoding  = rules[i].encoding;
-                    parsed_result.type      = rules[i].type;
-                    parsed_result.value     = match.value;
-                    parsed_result.code      = cur_barcode;
+                    parsed_result_tmp.encoding  = rules[i].encoding;
+                    parsed_result_tmp.type      = rules[i].type;
+                    parsed_result_tmp.value     = match.value;
+                    parsed_result_tmp.code      = cur_barcode;
                     if (rules[i].encoding === "ean13"){
-                        parsed_result.base_code = this.sanitize_ean(match.base_code);
+                        parsed_result_tmp.base_code = this.sanitize_ean(match.base_code);
                     }
                     else{
-                        parsed_result.base_code = match.base_code;
+                        parsed_result_tmp.base_code = match.base_code;
                     }
-                    return parsed_result;
+                    parsed_result_tmp.rule = rules[i];
+                    results.push(parsed_result_tmp);
                 }
             }
         }
-        return parsed_result;
+        return results || parsed_result;
     },
 
     //--------------------------------------------------------------------------
