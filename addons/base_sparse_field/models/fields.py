@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date, datetime
 import json
 
 from odoo import fields
@@ -61,6 +62,8 @@ def _inverse_sparse(self, records):
         values = record[self.sparse]
         value = self.convert_to_read(record[self.name], record, use_display_name=False)
         if value:
+            if isinstance(value, date) or isinstance(value, datetime):
+                value = value.strftime('%Y-%m-%d %H:%M:%S')
             if values.get(self.name) != value:
                 values[self.name] = value
                 record[self.sparse] = values
