@@ -54,6 +54,8 @@ WRITE_TRIGGERS = [
     'on_user_set',
 ]
 
+MAIL_TRIGGERS = ("on_message_received", "on_message_sent")
+
 CREATE_WRITE_SET = set(CREATE_TRIGGERS + WRITE_TRIGGERS)
 
 TIME_TRIGGERS = [
@@ -71,7 +73,8 @@ class BaseAutomation(models.Model):
     model_id = fields.Many2one(
         "ir.model", string="Model", required=True, ondelete="cascade", help="Model on which the automation rule runs."
     )
-    model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True)
+    model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
+    model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
     action_server_ids = fields.One2many("ir.actions.server", "base_automation_id",
         context={'default_usage': 'base_automation'},
         string="Actions",
@@ -80,6 +83,13 @@ class BaseAutomation(models.Model):
         readonly=False,
     )
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
+
+    @api.constrains("trigger", "model_id")
+    def _check_trigger(self):
+        for automation in self:
+            if automation.trigger in MAIL_TRIGGERS and not automation.model_id.is_mail_thread:
+                raise exceptions.ValidationError(_("Mail event can not be configured on model %s. Only models with discussion feature can be used.", automation.model_id.name))
+
     trigger = fields.Selection(
         [
             ('on_stage_set', "Stage is set to"),
@@ -99,6 +109,9 @@ class BaseAutomation(models.Model):
             ('on_time', "Based on date field"),
             ('on_time_created', "After creation"),
             ('on_time_updated', "After last update"),
+
+            ("on_message_received", "A message was received from an external user"),
+            ("on_message_sent", "A message was sent to an external user"),
         ], string='Trigger',
         compute='_compute_trigger_and_trigger_field_ids', readonly=False, store=True, required=True)
     trg_selection_field_id = fields.Many2one(
@@ -338,6 +351,8 @@ class BaseAutomation(models.Model):
             else:
                 automation.trigger_field_ids = False
                 continue
+            if automation.model_id.is_mail_thread and automation.trigger in MAIL_TRIGGERS:
+                continue
 
             automation.trigger_field_ids = self.env['ir.model.fields'].search(domain, limit=1)
             automation.trigger = False if not automation.trigger_field_ids else automation.trigger
@@ -490,7 +505,7 @@ class BaseAutomation(models.Model):
     def _process(self, records, domain_post=None):
         """ Process automation ``self`` on the ``records`` that have not been done yet. """
         # filter out the records on which self has already been done
-        automation_done = self._context['__action_done']
+        automation_done = self._context.get('__action_done', {})
         records_done = automation_done.get(self, records.browse())
         records -= records_done
         if not records:
@@ -722,9 +737,32 @@ class BaseAutomation(models.Model):
                 for field in automation_rule.on_change_field_ids:
                     Model._onchange_methods[field.name].append(method)
 
+            if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
+                def _message_post(self, *args, **kwargs):
+                    message = _message_post.origin(self, *args, **kwargs)
+                    # Don't execute automations for a message emitted during
+                    # the run of automations for a real message
+                    # Don't execute if we know already that a message is only internal
+                    message_sudo = message.sudo().with_context(active_test=False)
+                    if "__action_done"  in self.env.context or message_sudo.is_internal or message_sudo.subtype_id.internal:
+                        return message
+                    if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification'):
+                        return message
+
+                    # always execute actions when the author is a customer
+                    mail_trigger = "on_message_received" if message_sudo.author_id.partner_share else "on_message_sent"
+                    automations = self.env['base.automation']._get_actions(self, [mail_trigger])
+                    for automation in automations.with_context(old_values=None):
+                        records = automation._filter_pre(self)
+                        automation._process(records)
+
+                    return message
+
+                patch(Model, "message_post", _message_post)
+
     def _unregister_hook(self):
         """ Remove the patches installed by _register_hook() """
-        NAMES = ['create', 'write', '_compute_field_value', 'unlink', '_onchange_methods']
+        NAMES = ['create', 'write', '_compute_field_value', 'unlink', '_onchange_methods', "message_post"]
         for Model in self.env.registry.values():
             for name in NAMES:
                 try:

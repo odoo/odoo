@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useState } from "@odoo/owl";
-import { _lt } from "@web/core/l10n/translation";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
@@ -31,25 +31,34 @@ const OPT_GROUPS = [
         triggers: ["on_unlink", "on_change"],
     },
     {
-        group: { sequence: 50, key: "deprecated", name: _lt("Deprecated (do not use)") },
+        group: { sequence: 20, key: "mail", name: _t("Email Events") },
+        triggers: ["on_message_sent", "on_message_received"],
+    },
+    {
+        group: { sequence: 60, key: "deprecated", name: _lt("Deprecated (do not use)") },
         triggers: ["on_create", "on_write"],
     },
 ];
 
-function computeDerivedOptions(options, fields, recordValue) {
+function computeDerivedOptions(options, fields, currentSelection, { excludeGroups = [] } = {}) {
     // filter options to display, derived from the current value and the model fields
     const derivedOptions = [];
     for (const [value, label] of options) {
         const { group, triggers } = OPT_GROUPS.find((g) => g.triggers.includes(value));
-        if (group.key === "deprecated" && !triggers.includes(recordValue)) {
+        if (
+            (group.key === "deprecated" && !triggers.includes(currentSelection)) ||
+            excludeGroups.includes(group.key)
+        ) {
             // skip deprecated triggers if the current value is not deprecated
             continue;
         }
         const filterFn = TRIGGER_FILTERS[value];
-        const triggerFields = fields.filter(filterFn);
-        if (triggerFields.length === 0) {
-            // skip triggers that don't have any corresponding field
-            continue;
+        if (filterFn) {
+            const triggerFields = fields.filter(filterFn);
+            if (triggerFields.length === 0) {
+                // skip triggers that don't have any corresponding field
+                continue;
+            }
         }
         const option = { group, value, label };
         derivedOptions.push(option);
@@ -82,7 +91,8 @@ export class TriggerSelectionField extends SelectionField {
             const derivedOptions = computeDerivedOptions(
                 fields[this.props.name].selection,
                 relatedModelFields,
-                data[this.props.name]
+                data[this.props.name],
+                { excludeGroups: data.model_is_mail_thread ? [] : ["mail"] }
             );
 
             // then group and sort them
@@ -105,5 +115,6 @@ export class TriggerSelectionField extends SelectionField {
 export const triggerSelectionField = {
     ...selectionField,
     component: TriggerSelectionField,
+    fieldDependencies: [{ name: "model_is_mail_thread", type: "boolean" }],
 };
 registry.category("fields").add("base_automation_trigger_selection", triggerSelectionField);

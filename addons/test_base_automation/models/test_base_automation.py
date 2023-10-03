@@ -109,3 +109,8 @@ class Stage(models.Model):
 class Tag(models.Model):
     _name = _description = 'test_base_automation.tag'
     name = fields.Char()
+
+class LeadThread(models.Model):
+    _inherit = ["base.automation.lead.test", "mail.thread"]
+    _name = "base.automation.lead.thread.test"
+    _description = "Threaded Lead Test"
