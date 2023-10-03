@@ -11,9 +11,10 @@
     <template id="portal_my_home_timesheet" name="Show Timesheets" customize_show="True"  inherit_id="portal.portal_my_home" priority="45">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/hr_timesheet/static/img/timesheet.svg'"/>
                 <t t-set="title">Timesheets</t>
                 <t t-set="url" t-value="'/my/timesheets'"/>
-                <t t-set="placeholder_count" t-value="'timesheet_count'"/>
+                <t t-set="text">Review all timesheets related to your projects</t>
             </t>
         </xpath>
     </template>
@@ -26,7 +27,7 @@
                 <t t-set="title">Timesheets</t>
             </t>
             <t t-if="not grouped_timesheets">
-                <div class="alert alert-warning mt8" role="alert">
+                <div class="alert alert-warning" role="alert">
                     There are no timesheets.
                 </div>
             </t>
