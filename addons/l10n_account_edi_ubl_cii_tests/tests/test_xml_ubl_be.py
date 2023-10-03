@@ -628,7 +628,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         wizard._compute_send_mail_extra_fields()
         self.assertRecordValues(wizard, [{
             'mode': 'invoice_single',
-            'checkbox_ubl_cii_label': "Peppol BIS Billing 3.0",
+            'checkbox_ubl_cii_label': "BIS Billing 3.0",
             'enable_ubl_cii_xml': True,
             'checkbox_ubl_cii_xml': True,
         }])
@@ -662,7 +662,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice)
         self.assertRecordValues(wizard, [{
             'mode': 'invoice_single',
-            'checkbox_ubl_cii_label': 'Peppol BIS Billing 3.0',
+            'checkbox_ubl_cii_label': 'BIS Billing 3.0',
             'enable_ubl_cii_xml': False,
             'checkbox_ubl_cii_xml': False,
         }])
