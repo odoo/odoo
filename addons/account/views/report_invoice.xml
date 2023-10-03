@@ -235,7 +235,10 @@
                                 </div>
                                 <t t-set="payment_term_details" t-value="o.payment_term_details"/>
                                 <div class="mb-3">
-                                    <span id="payment_terms_note_id" t-field="o.invoice_payment_term_id.note" name="payment_term">Payment within 30 calendar days</span><br/>
+                                    <span id="payment_terms_note_id"
+                                          t-if="o.invoice_payment_term_id.note"
+                                          t-field="o.invoice_payment_term_id.note"
+                                          name="payment_term">Payment within 30 calendar day</span><br/>
                                     <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
                                         <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
                                             <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-10 col-md-9'}">
