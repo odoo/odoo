@@ -46,7 +46,7 @@
                     <setting string="Options" help="All options for your Self devices" invisible="pos_self_ordering_mode in ['nothing', 'consultation']">
                         <div class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
                             <label for="pos_self_ordering_service_mode" class="col-lg-4" string="Service at" />
-                            <field name="pos_self_ordering_service_mode" />
+                            <field name="pos_self_ordering_service_mode" readonly="pos_self_ordering_pay_after == 'meal' and pos_self_ordering_mode == 'mobile'" />
                         </div>
                         <div class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
                             <label for="pos_self_ordering_default_user_id" class="col-lg-4" string="Default User"/>
