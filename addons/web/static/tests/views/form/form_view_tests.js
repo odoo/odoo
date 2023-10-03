@@ -10654,6 +10654,37 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_widget.my_classname");
     });
 
+    QUnit.test("widget with readonly attribute", async function (assert) {
+        class MyComponent extends owl.Component {
+            static template = owl.xml`<span t-esc="value"/>`;
+            get value() {
+                return this.props.readonly ? "readonly" : "not readonly";
+            }
+        }
+        const myComponent = {
+            component: MyComponent,
+            extractProps(widgetInfo, dynamicInfo) {
+                return { readonly: dynamicInfo.readonly };
+            },
+        };
+        widgetRegistry.add("test_widget", myComponent);
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <widget name="test_widget" readonly="bar"/>
+                </form>`,
+        });
+
+        assert.strictEqual(target.querySelector(".o_widget").textContent, "not readonly");
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.strictEqual(target.querySelector(".o_widget").textContent, "readonly");
+    });
+
     QUnit.test("support header button as widgets on form statusbar", async function (assert) {
         serviceRegistry.add("http", {
             start: () => ({}),
