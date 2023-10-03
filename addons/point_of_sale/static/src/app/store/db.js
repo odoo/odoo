@@ -102,7 +102,7 @@ export class PosDB {
     /* returns a list of all ancestors (parent, grand-parent, etc) categories ids
      * starting from the root category to the direct parent */
     get_category_ancestors_ids(categ_id) {
-        return this.category_ancestors[categ_id] || [];
+        return this.category_ancestors[categ_id] || [this.root_category_id];
     }
     /* returns the parent category's id of a category, or the root_category_id if no parent.
      * the root category is parent of itself. */
