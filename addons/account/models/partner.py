@@ -427,19 +427,19 @@ class ResPartner(models.Model):
     @api.depends('credit')
     def _compute_days_sales_outstanding(self):
         commercial_partners = {
-            commercial_partner['commercial_partner_id'][0]: (commercial_partner['invoice_date'], commercial_partner['amount_total_signed'])
-            for commercial_partner in self.env['account.move'].read_group(
+            commercial_partner: (invoice_date_min, amount_total_signed_sum)
+            for commercial_partner, invoice_date_min, amount_total_signed_sum in self.env['account.move']._read_group(
                 domain=[
                     ('state', 'not in', ['draft', 'cancel']),
                     ('move_type', 'in', self.env["account.move"].get_sale_types(include_receipts=True)),
                     ('company_id', '=', self.env.company.id)
                 ],
-                fields=['invoice_date:min', 'amount_total_signed:sum'],
                 groupby=['commercial_partner_id'],
+                aggregates=['invoice_date:min', 'amount_total_signed:sum'],
             )
         }
         for partner in self:
-            oldest_invoice_date, total_invoiced_tax_included = commercial_partners.get(partner.id, (fields.Date.context_today(self), 0))
+            oldest_invoice_date, total_invoiced_tax_included = commercial_partners.get(partner, (fields.Date.context_today(self), 0))
             days_since_oldest_invoice = (fields.Date.context_today(self) - oldest_invoice_date).days
             partner.days_sales_outstanding = ((partner.credit / total_invoiced_tax_included) * days_since_oldest_invoice) if total_invoiced_tax_included else 0
 
