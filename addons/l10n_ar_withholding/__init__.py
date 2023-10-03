@@ -27,7 +27,7 @@ def _l10n_ar_withholding_post_init(env):
             company_data = dict(data)
             company_chart_template._deref_account_tags(template_code, company_data['account.tax'])
             company_chart_template._load_data(company_data)
-            company_chart_template._post_load_data(template_code, company, company_data)
+            company.l10n_ar_tax_base_account_id = env.ref('account.%i_base_tax_account' % company.id)
 
-            if template_code in ['ar_ri'] and env.ref('base.module_l10n_ar_withholding').demo:
+            if env.ref('base.module_l10n_ar_withholding').demo:
                 env['account.chart.template']._post_load_demo_data(company)

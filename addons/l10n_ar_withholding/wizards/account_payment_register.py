@@ -7,97 +7,44 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 
-class AccountPaymentRegisterWithholding(models.TransientModel):
-    _name = 'account.payment.register.withholding'
-    _description = 'Payment register withholding lines'
-
-    payment_register_id = fields.Many2one('account.payment.register', required=True, ondelete='cascade')
-    currency_id = fields.Many2one(related='payment_register_id.currency_id')
-    name = fields.Char(string='Number', required=False, default='/')
-    tax_id = fields.Many2one('account.tax', required=True)
-    withholding_sequence_id = fields.Many2one(related='tax_id.l10n_ar_withholding_sequence_id')
-    base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
-    amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
-
-    @api.depends('tax_id', 'payment_register_id.line_ids', 'payment_register_id.amount', 'payment_register_id.currency_id')
-    def _compute_base_amount(self):
-        base_lines = self.payment_register_id.line_ids.move_id.invoice_line_ids
-        supplier_recs = self.filtered(lambda x: x.payment_register_id.partner_type == 'supplier')
-        factor_dict = self.mapped('payment_register_id')._l10n_ar_get_payment_factor_dict()
-        for rec in supplier_recs:
-            if not rec.tax_id:
-                rec.base_amount = 0.0
-                continue
-            factor = factor_dict.get(rec.payment_register_id.id)
-            base_amount = rec._get_base_amount(base_lines, factor)
-            if base_amount:
-                rec.base_amount = base_amount
-        # Only supplier compute base tax
-        (self - supplier_recs).base_amount = 0.0
-
-    def _get_base_amount(self, base_lines, factor):
-        conversion_rate = self.payment_register_id._get_conversion_rate()
-        tax_base_lines = base_lines.filtered(lambda x: self.tax_id in x.product_id.l10n_ar_supplier_withholding_taxes_ids)
-        if self.tax_id.l10n_ar_withholding_amount_type == 'untaxed_amount':
-            base_amount = factor * sum(tax_base_lines.mapped('price_subtotal'))
-        else:
-            base_amount = factor * sum(tax_base_lines.mapped('price_total'))
-        return self.payment_register_id.currency_id.round(base_amount / conversion_rate)
-
-
-    def _tax_compute_all_helper(self):
-        self.ensure_one()
-        # Computes the withholding tax amount provided a base and a tax
-        # It is equivalent to: amount = self.base * self.tax_id.amount / 100
-        taxes_res = self.tax_id.compute_all(
-            self.base_amount,
-            currency=self.payment_register_id.currency_id,
-            quantity=1.0,
-            product=False,
-            partner=False,
-            is_refund=False,
-        )
-        tax_amount = taxes_res['taxes'][0]['amount']
-        tax_account_id = taxes_res['taxes'][0]['account_id']
-        tax_repartition_line_id = taxes_res['taxes'][0]['tax_repartition_line_id']
-        return tax_amount, tax_account_id, tax_repartition_line_id
-
-    @api.depends('tax_id', 'base_amount')
-    def _compute_amount(self):
-        for line in self:
-            if not line.tax_id:
-                line.amount = 0.0
-            else:
-                line.amount, dummy, dummy = line._tax_compute_all_helper()
-
-
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    withholding_ids = fields.One2many(
-        'account.payment.register.withholding', 'payment_register_id', string="Withholdings",
+    l10n_ar_withholding_ids = fields.One2many(
+        'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
         compute='_compute_withholdings', readonly=False, store=True)
-    net_amount = fields.Monetary(compute='_compute_net_amount', readonly=True,  help="Net amount after withholdings")
+    l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True,  help="Net amount after withholdings")
 
     @api.depends('line_ids', 'can_group_payments', 'group_payment')
     def _compute_withholdings(self):
         supplier_recs = self.filtered(lambda x: x.partner_type == 'supplier' and (not x.can_group_payments or (x.can_group_payments and x.group_payment)))
         for rec in supplier_recs:
             taxes = rec._get_withholding_tax()
-            rec.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0}) for x in taxes]
-        (self - supplier_recs).withholding_ids = False
+            rec.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0}) for x in taxes]
+        (self - supplier_recs).l10n_ar_withholding_ids = False
 
-    @api.depends('withholding_ids.amount', 'amount', 'l10n_latam_check_id')
-    def _compute_net_amount(self):
+    # @api.depends('l10n_latam_check_id', 'l10n_ar_withholding_ids.amount')
+    # def _compute_amount(self):
+    #     super()._compute_amount()
+    #     for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
+    #         wizard.currency_id = wizard.l10n_latam_check_id.currency_id
+    #         wizard.l10n_ar_net_amount = wizard.l10n_latam_check_id.amount
+    #         factor, net_amount = wizard._get_amount_net_info()
+    #         withholding_net_amount = min(wizard.l10n_latam_check_id.amount , net_amount)
+    #         wizard.amount = withholding_net_amount * factor + (wizard.l10n_latam_check_id.amount - withholding_net_amount)
+
+    @api.depends('l10n_ar_withholding_ids.amount', 'amount', 'l10n_latam_check_id')
+    def _compute_l10n_ar_net_amount(self):
         for rec in self:
             if rec.l10n_latam_check_id:
                 rec.currency_id = rec.l10n_latam_check_id.currency_id
-                rec.net_amount = rec.l10n_latam_check_id.amount
-                net_info = rec._get_amount_net_info()
-                witholding_net_amount = min(rec.l10n_latam_check_id.amount , net_info[1])
-                rec.amount = witholding_net_amount * net_info[0] + (rec.l10n_latam_check_id.amount - witholding_net_amount)
+                rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
+                factor, net_amount = rec._get_amount_net_info()
+                withholding_net_amount = min(rec.l10n_latam_check_id.amount , net_amount)
+                rec.amount = withholding_net_amount * factor + (rec.l10n_latam_check_id.amount - withholding_net_amount)
             else:
-                rec.net_amount = rec.amount - sum(rec.withholding_ids.mapped('amount'))
+                rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
+
 
     def _get_withholding_tax(self):
         self.ensure_one()
@@ -113,8 +60,8 @@ class AccountPaymentRegister(models.TransientModel):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move.line', active_ids=self.line_ids.ids).new()
         wizard.currency_id = self.l10n_latam_check_id.currency_id
         wizard.payment_date = self.payment_date
-        wizard.withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id, 'base_amount': x.base_amount , 'amount': x.amount}) for x in self.withholding_ids]
-        return (wizard.amount / wizard.net_amount, wizard.net_amount)
+        wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id, 'base_amount': x.base_amount , 'amount': x.amount}) for x in self.l10n_ar_withholding_ids]
+        return (wizard.amount / wizard.l10n_ar_net_amount, wizard.l10n_ar_net_amount)
 
     def _get_withholding_move_line_default_values(self):
         return {
@@ -124,13 +71,13 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
-        payment_vals['amount'] = self.net_amount
+        payment_vals['amount'] = self.l10n_ar_net_amount
         conversion_rate = self._get_conversion_rate()
         sign = 1
         if self.partner_type == 'supplier':
             sign = -1
-        for line in self.withholding_ids:
-            if not line.name or line.name == '/':
+        for line in self.l10n_ar_withholding_ids:
+            if not line.name:
                 if line.tax_id.l10n_ar_withholding_sequence_id:
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
@@ -147,8 +94,8 @@ class AccountPaymentRegister(models.TransientModel):
                     'tax_repartition_line_id': tax_repartition_line_id,
             })
 
-        for base_amount in list(set(self.withholding_ids.mapped('base_amount'))):
-            withholding_lines = self.withholding_ids.filtered(lambda x: x.base_amount == base_amount)
+        for base_amount in list(set(self.l10n_ar_withholding_ids.mapped('base_amount'))):
+            withholding_lines = self.l10n_ar_withholding_ids.filtered(lambda x: x.base_amount == base_amount)
             nice_base_label = ','.join(withholding_lines.mapped('name'))
             account_id = self.company_id.l10n_ar_tax_base_account_id.id
             base_amount = sign * base_amount
@@ -182,7 +129,7 @@ class AccountPaymentRegister(models.TransientModel):
             )
         return  1.0
 
-    def _l10n_ar_get_payment_factor_dict(self):
+    def _l10n_ar_get_payment_factor(self):
         # The factor represents the portion of the invoiced amount that I am paying and is used to calculate
         # the base amount. When pay more than billed, the factor is 1, because I should only pay tax on the invoiced amount.
         # billed | payment | factor
@@ -190,10 +137,8 @@ class AccountPaymentRegister(models.TransientModel):
         #    100 |     100 |      1
         #    100 |     200 |      1
 
-        dict = {}
-        for rec in self:
-            amount_total = sum(rec.mapped('line_ids.move_id.amount_total'))
-            conversion_rate = rec._get_conversion_rate()
-            real_amount = min(rec.amount, rec.source_amount / conversion_rate)
-            dict[rec.id] = min((real_amount * conversion_rate) / amount_total, 1)
-        return dict
+        self.ensure_one()
+        amount_total = sum([m.amount_total for m in self.mapped('line_ids.move_id')])
+        conversion_rate = self._get_conversion_rate()
+        real_amount = min(self.amount, self.source_amount / conversion_rate)
+        return min((real_amount * conversion_rate) / amount_total, 1)
