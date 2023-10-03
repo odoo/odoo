@@ -10,7 +10,9 @@ export class BillScreen extends ReceiptScreen {
         this.pos.closeTempScreen();
     }
     whenClosing() {
-        this.confirm();
+        if (!this.env.isMobile) {
+            this.confirm();
+        }
     }
     /**
      * @override
