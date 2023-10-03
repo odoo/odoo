@@ -389,7 +389,13 @@
                                     options="{'no_create': True, 'no_open': True}"
                                     invisible="state != 'object_create'"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
-                            </group>
+                                    <field name="webhook_url" string="URL" invisible="state != 'webhook'" placeholder="e.g. https://maker.ifttt.com/use/..."/>
+                                    <field name="webhook_field_ids" string="Fields" invisible="state != 'webhook'" widget="many2many_tags" context="{'hide_model': 1}" domain="[('model_id', '=', model_id)]" placeholder="Select fields to include in the request..."/>
+                                </group>
+                                <group invisible="state != 'webhook'">
+                                    <label for="webhook_sample_payload" />
+                                    <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'js'}" />
+                                </group>
                         </group>
                         <field name="child_ids" domain="[('model_id', '=', model_id)]" invisible="state != 'multi'"/>
                         <p class="oe_grey" invisible="state != 'multi'">
