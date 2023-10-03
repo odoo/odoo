@@ -52,7 +52,7 @@
             
             <div t-attf-class="card-footer border-top #{ !widget.isEventEditable() &amp;&amp;!widget.isEventDeletable() ? 'o_footer_shrink' : '' }">
                 <a t-if="widget.isEventEditable()" href="#" class="btn btn-primary o_cw_popover_edit ml-2">Edit</a>
-                <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_duplicate ml-2"><i class="fa fa-copy"></i></a>
+                <a href="#" class="btn btn-secondary o_cw_popover_duplicate ml-2"><i class="fa fa-copy"></i></a>
                 <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
             </div>
         </div>
