@@ -49,6 +49,11 @@ class ResConfigSettings(models.TransientModel):
             self.is_kiosk_mode = False
 
     @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
+    def _onchange_service_and_ordering(self):
+        if self.pos_self_ordering_pay_after == "meal" and self.pos_self_ordering_mode == 'mobile':
+            self.pos_self_ordering_service_mode = 'table'
+
+    @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
     def _onchange_pos_self_order_pay_after(self):
         if self.pos_self_ordering_pay_after == "meal" and self.pos_self_ordering_mode == 'kiosk':
             raise UserError(_("Only pay after each is available with kiosk mode."))
@@ -58,7 +63,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("pos_self_ordering_service_mode")
     def _onchange_pos_self_ordering_service_mode(self):
-        table_ids = self.pos_config_id.floor_ids.table_ids
+        table_ids = self.pos_floor_ids.table_ids
         if self.pos_self_ordering_service_mode == 'table' and self.pos_self_ordering_mode == 'mobile' and not table_ids:
             raise UserError(_("In Self-Order mode, you must have at least one table to use the table service mode"))
 

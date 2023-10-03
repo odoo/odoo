@@ -7,16 +7,14 @@
                     Cancel Order
                 </button>
                 <div class="col-6 p-2 m-0">
-                    <span>To Order</span>
+                    <span t-if="!this.selfOrder.currentOrder.isSavedOnServer">To Order</span>
+                    <span t-else="">To Pay</span>
                     <div class="m-2">
                         <span class="p-2 bg-300 rounded" t-esc="lineNotSend.count" />
                         <span class="mx-2" t-if="selfOrder.currentOrder.lines.length" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
                     </div>
                 </div>
-                <button t-attf-class="col-3 cart btn btn-primary col-3 p-0 m-0 text-uppercase {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action">
-                    <span t-esc="buttonToShow.label"/>
-                    <span class="px-2" t-if="lineNotSend.count === 0" t-esc="selfOrder.formatMonetary(this.selfOrder.currentOrder.amount_total)"/>
-                </button>
+                <button t-attf-class="col-3 cart btn btn-primary col-3 p-0 m-0 text-uppercase {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label" />
             </div>
         </div>
     </t>

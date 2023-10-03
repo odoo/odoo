@@ -18,13 +18,6 @@
             </div>
         </div>
         <div class="position-absolute bottom-0 end-0 w-100 py-3 px-3">
-            <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
-                <a type="button"
-                    t-on-click="(event) => this.router.customLink(link)"
-                    t-attf-class="btn btn-{{link.style}} h-100 w-100 p-0 m-0 fs-1 text-uppercase mb-2">
-                    <t t-esc="link.name"/>
-                </a>
-            </t>
             <t t-if="showMyOrderBtn()">
                 <hr class="bg-500"/>
                 <a
@@ -34,7 +27,13 @@
                     My Orders
                 </a>
             </t>
-            <button class="btn btn-primary h-100 w-100 p-0 m-0 fs-1 text-uppercase" t-on-click="start">TOUCH TO START</button>
+            <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
+                <a type="button"
+                    t-on-click="() => this.clickCustomLink(link)"
+                    t-attf-class="btn btn-{{link.style}} h-100 w-100 p-0 m-0 fs-1 text-uppercase mb-2">
+                    <t t-esc="link.name"/>
+                </a>
+            </t>
         </div>
     </t>
 </templates>
