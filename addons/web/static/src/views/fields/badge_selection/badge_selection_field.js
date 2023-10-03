@@ -11,6 +11,7 @@ export class BadgeSelectionField extends Component {
     static props = {
         ...standardFieldProps,
         domain: { type: Array, optional: true },
+        size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg"].includes(s), default: "md"},
     };
 
     setup() {
@@ -82,9 +83,22 @@ export const badgeSelectionField = {
     component: BadgeSelectionField,
     displayName: _t("Badges"),
     supportedTypes: ["many2one", "selection"],
+    supportedOptions: [
+        {
+            label: "Size",
+            name: "size",
+            type: "selection",
+            choices: [
+                { label: "Small", value: "sm" },
+                { label: "Medium", value: "md" },
+                { label: "Large", value: "lg" },],
+            default: "md",
+        }
+    ],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: (fieldInfo, dynamicInfo) => ({
         domain: dynamicInfo.domain(),
+        size: fieldInfo.options.size,
     }),
 };
 
