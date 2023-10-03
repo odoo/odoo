@@ -8,8 +8,8 @@ services:
       - ./database:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
-    networks:
-      - odoo-network
+#    networks:
+#      - odoo-network
 #  odoo-backend:
 #    build: .
 #    volumes:
@@ -21,6 +21,6 @@ services:
 #      - odoo-db
 #    networks:
 #      - odoo-network
-networks:
-  odoo-network:
-    external: false
+#networks:
+#  odoo-network:
+#    external: false
