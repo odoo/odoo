@@ -15,7 +15,6 @@ import { getScrollParent } from "./tour_utils";
  * @typedef TourPointerState
  * @property {HTMLElement} [anchor]
  * @property {string} [content]
- * @property {boolean} fixed
  * @property {boolean} [isOpen]
  * @property {() => {}} [onClick]
  * @property {() => {}} [onMouseEnter]
