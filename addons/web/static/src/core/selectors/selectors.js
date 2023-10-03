@@ -28,7 +28,7 @@ class AutoCompleteWithSources extends Component {
         fieldString: { type: String, optional: true },
     };
     static components = { AutoComplete };
-    static template = "web.DomainSelector.AutoCompleteWithSources";
+    static template = "web.AutoCompleteWithSources";
 
     setup() {
         this.orm = useService("orm");
@@ -165,7 +165,7 @@ const getFormat = (val, displayNames) => {
     return { text, colorIndex };
 };
 
-export class DomainSelectorAutocomplete extends Component {
+export class TagsSelector extends Component {
     static props = {
         resModel: String,
         update: Function,
@@ -175,7 +175,7 @@ export class DomainSelectorAutocomplete extends Component {
         fieldString: { type: String, optional: true },
     };
     static components = { AutoCompleteWithSources, TagsList };
-    static template = "web.DomainSelector.DomainSelectorAutocomplete";
+    static template = "web.TagsSelector";
 
     setup() {
         this.nameService = useService("name");
@@ -218,7 +218,7 @@ export class DomainSelectorAutocomplete extends Component {
     }
 }
 
-export class DomainSelectorSingleAutocomplete extends Component {
+export class ValueSelector extends Component {
     static props = {
         resModel: String,
         update: Function,
@@ -228,7 +228,7 @@ export class DomainSelectorSingleAutocomplete extends Component {
         fieldString: { type: String, optional: true },
     };
     static components = { AutoCompleteWithSources };
-    static template = "web.DomainSelector.DomainSelectorSingleAutocomplete";
+    static template = "web.ValueSelector";
 
     setup() {
         this.nameService = useService("name");
