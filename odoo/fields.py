@@ -24,7 +24,6 @@ import psycopg2
 import pytz
 from markupsafe import Markup
 from psycopg2.extras import Json as PsycopgJson
-from psycopg2.sql import SQL, Identifier
 from difflib import get_close_matches, unified_diff
 from hashlib import sha256
 
@@ -32,7 +31,7 @@ from .models import check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
-    pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
+    pg_varchar, ustr, OrderedSet, pycompat, sql, SQL, date_utils, unique,
     image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
     html_normalize, html_sanitize,
 )
@@ -1079,17 +1078,16 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Compute a stored related field directly in SQL. """
         comodel = model.env[self.related_field.model_name]
         join_field, comodel_field = self.related.split('.')
-        model.env.cr.execute("""
-            UPDATE "{model_table}" AS x
-            SET "{model_field}" = y."{comodel_field}"
-            FROM "{comodel_table}" AS y
-            WHERE x."{join_field}" = y.id
-        """.format(
-            model_table=model._table,
-            model_field=self.name,
-            comodel_table=comodel._table,
-            comodel_field=comodel_field,
-            join_field=join_field,
+        model.env.cr.execute(SQL(
+            """ UPDATE %(model_table)s AS x
+                SET %(model_field)s = y.%(comodel_field)s
+                FROM %(comodel_table)s AS y
+                WHERE x.%(join_field)s = y.id """,
+            model_table=SQL.identifier(model._table),
+            model_field=SQL.identifier(self.name),
+            comodel_table=SQL.identifier(comodel._table),
+            comodel_field=SQL.identifier(comodel_field),
+            join_field=SQL.identifier(join_field),
         ))
 
     ############################################################################
@@ -1765,7 +1763,12 @@ class _String(Field):
         # assert (self.translate and self.store and record)
         record.flush_recordset([self.name])
         cr = record.env.cr
-        cr.execute(f'SELECT "{self.name}" FROM "{record._table}" WHERE id = %s', (record.id,))
+        cr.execute(SQL(
+            "SELECT %s FROM %s WHERE id = %s",
+            SQL.identifier(self.name),
+            SQL.identifier(record._table),
+            record.id,
+        ))
         res = cr.fetchone()
         return res[0] if res else None
 
@@ -4718,14 +4721,17 @@ class Many2many(_RelationalMulti):
                                  model, self.relation, self._module)
         comodel = model.env[self.comodel_name]
         if not sql.table_exists(cr, self.relation):
-            query = psycopg2.sql.SQL("""
-                CREATE TABLE "{rel}" ("{id1}" INTEGER NOT NULL,
-                                      "{id2}" INTEGER NOT NULL,
-                                      PRIMARY KEY("{id1}","{id2}"));
-                COMMENT ON TABLE "{rel}" IS %s;
-                CREATE INDEX ON "{rel}" ("{id2}","{id1}");
-            """).format(rel=psycopg2.sql.SQL(self.relation), id1=psycopg2.sql.SQL(self.column1), id2=psycopg2.sql.SQL(self.column2))
-            cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
+            cr.execute(SQL(
+                """ CREATE TABLE %(rel)s (%(id1)s INTEGER NOT NULL,
+                                          %(id2)s INTEGER NOT NULL,
+                                          PRIMARY KEY(%(id1)s, %(id2)s));
+                    COMMENT ON TABLE %(rel)s IS %(comment)s;
+                    CREATE INDEX ON %(rel)s (%(id2)s, %(id1)s); """,
+                rel=SQL.identifier(self.relation),
+                id1=SQL.identifier(self.column1),
+                id2=SQL.identifier(self.column2),
+                comment=f"RELATION BETWEEN {model._table} AND {comodel._table}",
+            ))
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
             model.pool.post_init(self.update_db_foreign_keys, model)
             return True
@@ -4754,24 +4760,26 @@ class Many2many(_RelationalMulti):
         context = {'active_test': False}
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
+
+        # make the query for the lines
         domain = self.get_domain_list(records)
         comodel._flush_search(domain, order=comodel._order)
-        wquery = comodel._where_calc(domain)
-        comodel._apply_ir_rules(wquery, 'read')
-        order_by = comodel._generate_order_by(None, wquery)
-        from_c, where_c, where_params = wquery.get_sql()
-        query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
-                    WHERE {where_c} AND {rel}.{id1} IN %s AND {rel}.{id2} = {tbl}.id
-                    {order_by}
-                """.format(rel=self.relation, id1=self.column1, id2=self.column2,
-                           tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1',
-                           order_by=order_by)
-        where_params.append(tuple(records.ids))
+        query = comodel._where_calc(domain)
+        comodel._apply_ir_rules(query, 'read')
+        query.order = comodel._generate_order_by(comodel._order, query).replace(' ORDER BY ', '')
 
-        # retrieve lines and group them by record
+        # join with many2many relation table
+        sql_id1 = SQL.identifier(self.relation, self.column1)
+        sql_id2 = SQL.identifier(self.relation, self.column2)
+        query.add_join('JOIN', self.relation, None, SQL(
+            "%s = %s", sql_id2, SQL.identifier(comodel._table, 'id'),
+        ))
+        query.add_where(SQL("%s IN %s", sql_id1, tuple(records.ids)))
+
+        # retrieve pairs (record, line) and group by record
         group = defaultdict(list)
-        records._cr.execute(query, where_params)
-        for row in records._cr.fetchall():
+        records.env.cr.execute(query.select(sql_id1, sql_id2))
+        for row in records.env.cr.fetchall():
             group[row[0]].append(row[1])
 
         # store result in cache
@@ -4869,12 +4877,13 @@ class Many2many(_RelationalMulti):
         pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
         if pairs:
             if self.store:
-                query = SQL("INSERT INTO {} ({}, {}) VALUES %s ON CONFLICT DO NOTHING").format(
-                    Identifier(self.relation),
-                    Identifier(self.column1),
-                    Identifier(self.column2),
-                )
-                cr.execute_values(query, pairs)
+                cr.execute(SQL(
+                    "INSERT INTO %s (%s, %s) VALUES %s ON CONFLICT DO NOTHING",
+                    SQL.identifier(self.relation),
+                    SQL.identifier(self.column1),
+                    SQL.identifier(self.column2),
+                    SQL(", ").join(pairs),
+                ))
 
             # update the cache of inverse fields
             y_to_xs = defaultdict(set)
@@ -4912,16 +4921,16 @@ class Many2many(_RelationalMulti):
                 for y, xs in y_to_xs.items():
                     xs_to_ys[frozenset(xs)].add(y)
                 # delete the rows where (id1 IN xs AND id2 IN ys) OR ...
-                COND = SQL("{} IN %s AND {} IN %s").format(
-                    Identifier(self.column1),
-                    Identifier(self.column2),
-                )
-                query = SQL("DELETE FROM {} WHERE {}").format(
-                    Identifier(self.relation),
-                    SQL(" OR ").join([COND] * len(xs_to_ys)),
-                )
-                params = [arg for xs, ys in xs_to_ys.items() for arg in [tuple(xs), tuple(ys)]]
-                cr.execute(query, params)
+                cr.execute(SQL(
+                    "DELETE FROM %s WHERE %s",
+                    SQL.identifier(self.relation),
+                    SQL(" OR ").join(
+                        SQL("%s IN %s AND %s IN %s",
+                            SQL.identifier(self.column1), tuple(xs),
+                            SQL.identifier(self.column2), tuple(ys))
+                        for xs, ys in xs_to_ys.items()
+                    ),
+                ))
 
             # update the cache of inverse fields
             for invf in records.pool.field_inverses[self]:
