@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { XMLParser } from "@web/core/utils/xml";
+import { visitXML } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { archParseBoolean } from "@web/views/utils";
 
 const MODES = ["bar", "line", "pie"];
 const ORDERS = ["ASC", "DESC", "asc", "desc", null];
 
-export class GraphArchParser extends XMLParser {
+export class GraphArchParser {
     parse(arch, fields = {}) {
         const archInfo = { fields, fieldAttrs: {}, groupBy: [] };
-        this.visitXML(arch, (node) => {
+        visitXML(arch, (node) => {
             switch (node.tagName) {
                 case "graph": {
                     if (node.hasAttribute("disable_linking")) {
@@ -55,7 +55,10 @@ export class GraphArchParser extends XMLParser {
                         }
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
-                    if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
+                    if (
+                        node.getAttribute("invisible") === "True" ||
+                        node.getAttribute("invisible") === "1"
+                    ) {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }

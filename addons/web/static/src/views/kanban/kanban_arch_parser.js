@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { extractAttributes, XMLParser } from "@web/core/utils/xml";
+import { extractAttributes, visitXML } from "@web/core/utils/xml";
 import { stringToOrderBy } from "@web/search/utils/order_by";
 import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
@@ -24,10 +24,9 @@ export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
 export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
 
-export class KanbanArchParser extends XMLParser {
-    parse(arch, models, modelName) {
+export class KanbanArchParser {
+    parse(xmlDoc, models, modelName) {
         const fields = models[modelName];
-        const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
@@ -60,7 +59,7 @@ export class KanbanArchParser extends XMLParser {
         const creates = [];
         let button_id = 0;
         // Root level of the template
-        this.visitXML(xmlDoc, (node) => {
+        visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
                 templateDocs[node.getAttribute("t-name")] = node;
                 return;
@@ -164,7 +163,6 @@ export class KanbanArchParser extends XMLParser {
         }
 
         return {
-            arch,
             activeActions,
             className,
             creates,
@@ -188,7 +186,6 @@ export class KanbanArchParser extends XMLParser {
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
             xmlDoc,
-            __rawArch: arch,
         };
     }
 
