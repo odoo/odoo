@@ -333,26 +333,26 @@
                             <group name="action_content">
                                 <field name="model_name" invisible="1"/>
                                 <field name="available_model_ids" invisible="1"/>
-                                <field name="model_id" options="{'no_create': True}" groups="base.group_no_one"
+                                <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="base.group_no_one"
                                        domain="[('id', 'in', available_model_ids)]"/>
-                                <field name="model_id" options="{'no_create': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
+                                <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
                                        domain="[('id', 'in', available_model_ids)]"/>
                                 <field name="groups_id" widget="many2many_tags" groups="base.group_no_one" />
                                 <field name="state" string="Action Type"/>
                                 <field name="update_field_id" invisible="state != 'object_write'"
-                                    options="{'no_create': True}"
+                                    options="{'no_create': True, 'no_open': True}"
                                     domain="['|', ('model_id', '=', crud_model_id), ('model_id', '=', model_id)]"/>
-                                <field name="evaluation_type" invisible="state != 'object_write'"/>
+                                <field name="evaluation_type" invisible="state != 'object_write'" widget="radio" options="{'horizontal': True}"/>
                                 <field name="value_field_to_show" invisible="1"/>
                                 <field name="update_related_model_id" invisible="1"/>
-                                <field name="value" invisible="state != 'object_write' or value_field_to_show != 'value' or evaluation_type != 'value'"/>
-                                <field name="value" widget="code" options="{'mode': 'python'}" invisible="state != 'object_write' or evaluation_type != 'equation'"/>
-                                <field name="resource_ref" string="Value" options="{'model_field': 'update_related_model_id', 'no_create': True}" invisible="state != 'object_write' or value_field_to_show != 'resource_ref' or evaluation_type == 'equation'"/>
-                                <field name="selection_value" options="{'no_create': True}" invisible="state != 'object_write' or value_field_to_show != 'selection_value' or evaluation_type == 'equation'"/>
+                                <field name="value" invisible="state != 'object_write' or value_field_to_show != 'value' or evaluation_type != 'value'" string="Custom Value"/>
+                                <field name="value" widget="code" options="{'mode': 'python'}" invisible="state != 'object_write' or evaluation_type != 'equation'" string="Expression"/>
+                                <field name="resource_ref" string="Custom Value" options="{'model_field': 'update_related_model_id', 'no_create': True, 'no_open': True}" invisible="state != 'object_write' or value_field_to_show != 'resource_ref' or evaluation_type == 'equation'"/>
+                                <field name="selection_value" options="{'no_create': True, 'no_open': True}" invisible="state != 'object_write' or value_field_to_show != 'selection_value' or evaluation_type == 'equation'"/>
 
                                 <field name="type" invisible="1"/>
                                 <field name="crud_model_id"
-                                    options="{'no_create': True}"
+                                    options="{'no_create': True, 'no_open': True}"
                                     invisible="state != 'object_create'"
                                     required="state == 'object_create'"/>
                                 <field name="crud_model_name" invisible="1"/>
@@ -360,7 +360,7 @@
                                 <field name="link_field_id"
                                     domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                     ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
-                                    options="{'no_create': True}"
+                                    options="{'no_create': True, 'no_open': True}"
                                     invisible="state != 'object_create'"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                             </group>

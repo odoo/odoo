@@ -79,7 +79,6 @@ class BaseAutomationTestUi(HttpCase):
         self.assertEqual(base_auto.trg_field_ref_model_name, "test_base_automation.tag")
         self.assertEqual(base_auto.trg_field_ref, tag.id)
 
-
     def test_kanban_automation_view_stage_trigger(self):
         self._neutralize_preexisting_automations()
 

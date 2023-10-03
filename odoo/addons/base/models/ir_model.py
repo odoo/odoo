@@ -1059,8 +1059,10 @@ class IrModelFields(models.Model):
 
     @api.depends('field_description', 'model')
     def _compute_display_name(self):
+        IrModel = self.env["ir.model"]
         for field in self:
-            field.display_name = f'{field.field_description} ({field.model})'
+            model_string = IrModel._get(field.model).name
+            field.display_name = f'{field.field_description} ({model_string})'
 
     def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
