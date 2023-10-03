@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RecordAutocomplete" >
+        <AutoComplete
+            value="props.value"
+            autoSelect="true"
+            resetOnSelect="props.multiSelect"
+            class="props.className"
+            sources="sources"
+            onSelect.bind="onSelect"
+            onChange.bind="onChange"
+        />
+    </t>
+
+</templates>
