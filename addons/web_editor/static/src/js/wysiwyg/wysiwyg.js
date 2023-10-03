@@ -859,10 +859,7 @@ const Wysiwyg = Widget.extend({
      */
     savePendingImages($editable = this.$editable) {
         const defs = _.map($editable, async editableEl => {
-            let { oeModel: resModel, oeId: resId } = editableEl.dataset;
-            if (!resModel) {
-                ({ res_model: resModel, res_id: resId } = this.options.recordInfo);
-            }
+            const { resModel, resId } = this._getRecordInfo(editableEl);
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
                 const dirtyEditable = el.closest(".o_dirty");
                 if (dirtyEditable && dirtyEditable !== editableEl) {
@@ -1318,16 +1315,13 @@ const Wysiwyg = Widget.extend({
         // selection when the modal is closed.
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
-        const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable') || this.odooEditor.editable);
-        const model = $editable.data('oe-model');
-        const field = $editable.data('oe-field');
-        const type = $editable.data('oe-type');
+        const editable = OdooEditorLib.closestElement(range.startContainer, '.o_editable') || this.odooEditor.editable;
+        const { resModel, resId, field, type } = this._getRecordInfo(editable);
 
         this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
-            resModel: model,
-            resId: $editable.data('oe-id'),
-            domain: $editable.data('oe-media-domain'),
-            useMediaLibrary: !!(field && (model === 'ir.ui.view' && field === 'arch' || type === 'html')),
+            resModel,
+            resId,
+            useMediaLibrary: !!(field && (resModel === 'ir.ui.view' && field === 'arch' || type === 'html')),
             media: params.node,
             save: this._onMediaDialogSave.bind(this, {
                 node: params.node,
@@ -1421,6 +1415,10 @@ const Wysiwyg = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    _getRecordInfo() {
+        const { res_model: resModel, res_id: resId } = this.options.recordInfo;
+        return { resModel, resId };
+    },
     /**
      * Returns an instance of the snippets menu.
      *
