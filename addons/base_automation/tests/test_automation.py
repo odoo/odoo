@@ -22,7 +22,7 @@ class TestAutomation(TransactionCase):
             "name": "Set Active To False",
             "base_automation_id": automation.id,
             "state": "object_write",
-            "update_field_id": self.env.ref("base.field_res_partner__active").id,
+            "update_path": "active",
             "value": False,
             "model_id": model.id,
         })
@@ -51,9 +51,10 @@ class TestAutomation(TransactionCase):
             "base_automation_id": automation.id,
             "model_id": model.id,
             "state": "object_write",
-            "update_field_id": self.env.ref("base.field_ir_filters__active").id,
+            "update_path": "active",
             "value": False
         })
+        action.flush_recordset()
         automation.write({"action_server_ids": [Command.link(action.id)]})
         # action cached was cached with admin, force CacheMiss
         automation.env.clear()

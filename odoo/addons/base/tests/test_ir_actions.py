@@ -189,7 +189,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         # Do: update partner name
         self.action.write({
             'state': 'object_write',
-            'update_field_id': self.res_partner_name_field.id,
+            'update_path': 'name',
             'value': 'TestNew',
         })
         run_res = self.action.with_context(self.context).run()
@@ -209,7 +209,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'model_id': self.res_country_model.id,
             'model_name': 'res.country',
             'state': 'object_write',
-            'update_field_id': self.res_country_name_position_field.id,
+            'update_path': 'name_position',
             'selection_value': selection_value.id,
         })
         action._set_selection_value()  # manual onchange
@@ -222,6 +222,47 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
         # Test: country updated
         self.assertEqual(self.test_country.name_position, 'after')
+
+    def test_37_field_path_traversal(self):
+        """ Test the update_path field traversal - allowing records to be updated along relational links """
+        # update the country's name via the partner
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'country_id.name',
+            'value': 'TestUpdatedCountry',
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertEqual(self.test_partner.country_id.name, 'TestUpdatedCountry', 'ir_actions_server: country name should have been updated through relation')
+
+        # input an invalid path
+        with self.assertRaises(ValidationError):
+            self.action.write({
+                'state': 'object_write',
+                'update_path': 'country_id.name.foo',
+                'value': 'DoesNotMatter',
+            })
+            self.action.flush_recordset(['update_path', 'update_field_id'])
+
+        # update a readonly field
+            self.action.write({
+                'state': 'object_write',
+                'update_path': 'country_id.id',
+                'value': 0,
+            })
+            self.action.flush_recordset(['update_path', 'update_field_id'])
+
+    def test_38_field_traversal_name_compute(self):
+        """ Test the automated computed name of an 'update record' action """
+        # update the country's name via the partner
+        action_with_name = self.action.with_context(automatic_action_name=True)
+        action_with_name.write({
+            'state': 'object_write',
+            'update_path': 'country_id.name',
+            'value': 'TestUpdatedCountry',
+        })
+        self.assertEqual(action_with_name.name, 'Update Country > Country Name', 'ir_actions_server: name should have been updated automatically')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
@@ -245,9 +286,8 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'name': 'Subaction2',
             'sequence': 3,
             'model_id': self.res_partner_model.id,
-            'crud_model_id': self.res_partner_model.id,
             'state': 'object_write',
-            'update_field_id': self.res_partner_city_field.id,
+            'update_path': 'city',
             'value': 'RaoulettePoiluchette',
         })
         action4 = self.action.create({
