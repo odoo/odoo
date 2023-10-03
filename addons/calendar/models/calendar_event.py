@@ -562,17 +562,17 @@ class Meeting(models.Model):
                 # Update this event
                 detached_events |= self._break_recurrence(future=recurrence_update_setting == 'future_events')
             else:
-                future_update_start = self.start if recurrence_update_setting == 'future_events' else None
+                future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
                 time_values = {field: values.pop(field) for field in time_fields if field in values}
                 if 'access_token' in values:
                     values.pop('access_token')  # prevents copying access_token to other events in recurrency
-                if recurrence_update_setting == 'all_events':
+                if recurrence_update_setting == 'all_events' or future_edge_case:
                     # Update all events: we create a new reccurrence and dismiss the existing events
                     self._rewrite_recurrence(values, time_values, recurrence_values)
                 else:
-                    # Update future events
-                    detached_events |= self._split_recurrence(time_values)
-                    self.recurrence_id._write_events(values, dtstart=future_update_start)
+                    # Update future events: trim recurrence, delete remaining events except base event and recreate it
+                    # All the recurrent events processing is done within the following method
+                    self._update_future_events(values, time_values, recurrence_values)
         else:
             super().write(values)
             self._sync_activities(fields=values.keys())
@@ -818,10 +818,10 @@ class Meeting(models.Model):
         """
         self.ensure_one()
         if recurrence_update_setting == 'all_events':
-            self.recurrence_id.calendar_event_ids.write({'active': False})
-        elif recurrence_update_setting == 'future_events' and self.recurrence_id:
+            self.recurrence_id.calendar_event_ids.write(self._get_archive_values())
+        elif recurrence_update_setting == 'future_events':
             detached_events = self.recurrence_id._stop_at(self)
-            detached_events.write({'active': False})
+            detached_events.write(self._get_archive_values())
         elif recurrence_update_setting == 'self_only':
             self.write({
                 'active': False,
@@ -935,6 +935,17 @@ class Meeting(models.Model):
             'day': event_date.day,
         }
 
+    @api.model
+    def _get_recurrence_params_by_date(self, event_date):
+        """ Return the recurrence parameters from a date object. """
+        weekday_field_name = weekday_to_field(event_date.weekday())
+        return {
+            weekday_field_name: True,
+            'weekday': weekday_field_name.upper(),
+            'byday': str(get_weekday_occurence(event_date)),
+            'day': event_date.day,
+        }
+
     def _split_recurrence(self, time_values):
         """Apply time changes to events and update the recurrence accordingly.
 
@@ -974,16 +985,11 @@ class Meeting(models.Model):
         recurrences_to_unlink.with_context(archive_on_error=True).unlink()
         return detached_events - self
 
-    def _rewrite_recurrence(self, values, time_values, recurrence_values):
-        """ Recreate the whole recurrence when all recurrent events must be moved
-        time_values corresponds to date times for one specific event. We need to update the base_event of the recurrence
-        and reapply the recurrence later. All exceptions are lost.
-        """
-        self.ensure_one()
-        base_event = self.recurrence_id.base_event_id
+    def _get_time_update_dict(self, base_event, time_values):
+        """ Return the update dictionary for shifting the base_event's time to the new date. """
         if not base_event:
             raise UserError(_("You can't update a recurrence without base event."))
-        [base_time_values] = self.recurrence_id.base_event_id.read(['start', 'stop', 'allday'])
+        [base_time_values] = base_event.read(['start', 'stop', 'allday'])
         update_dict = {}
         start_update = fields.Datetime.to_datetime(time_values.get('start'))
         stop_update = fields.Datetime.to_datetime(time_values.get('stop'))
@@ -1004,32 +1010,103 @@ class Meeting(models.Model):
                 stop = base_time_values['stop'] + (stop_update - self.stop)
                 stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())
                 update_dict.update({'stop': stop, 'stop_date': stop_date})
+        return update_dict
 
+    @api.model
+    def _get_archive_values(self):
+        """ Return parameters for archiving events in calendar module. """
+        return {'active': False}
+
+    @api.model
+    def _check_values_to_sync(self, values):
+        """ Method to be overriden: return candidate values to be synced within rewrite_recurrence function scope. """
+        return False
+
+    @api.model
+    def _get_update_future_events_values(self):
+        """ Return parameters for updating future events within _update_future_events function scope. """
+        return {}
+
+    @api.model
+    def _get_remove_sync_id_values(self):
+        """ Return parameters for removing event synchronization id within _update_future_events function scope. """
+        return {}
+
+    def _get_updated_recurrence_values(self, new_start_date):
+        """ Copy values from current recurrence and update the start date weekday. """
+        [previous_recurrence_values] = self.recurrence_id.copy_data()
+        if self.start.weekday() != new_start_date.weekday():
+            previous_recurrence_values.pop(weekday_to_field(self.start.weekday()), None)
+        return previous_recurrence_values
+
+    def _update_future_events(self, values, time_values, recurrence_values):
+        """
+            Trim the current recurrence detaching the occurrences after current event,
+            deactivate the detached events except for the updated event and apply recurrence values.
+        """
+        self.ensure_one()
+        update_dict = self._get_time_update_dict(self, time_values)
         time_values.update(update_dict)
-        if time_values or recurrence_values:
-            rec_fields = list(self._get_recurrent_fields())
-            [rec_vals] = base_event.read(rec_fields)
-            old_recurrence_values = {field: rec_vals.pop(field) for field in rec_fields if
-                                     field in rec_vals}
-            base_event.write({**values, **time_values})
-            # Delete all events except the base event and the currently modified
-            expandable_events = self.recurrence_id.calendar_event_ids - (self.recurrence_id.base_event_id + self)
-            self.recurrence_id.with_context(archive_on_error=True).unlink()
-            expandable_events.with_context(archive_on_error=True).unlink()
-            # Make sure to recreate a new recurrence. Needed to prevent sync issues
-            base_event.recurrence_id = False
-            # Recreate all events and the recurrence: override updated values
+        # Get base values from the previous recurrence and update the start date weekday field.
+        start_date = time_values['start'].date() if 'start' in time_values else self.start.date()
+        previous_recurrence_values = self._get_updated_recurrence_values(start_date)
+
+        # Trim previous recurrence at current event, deleting following events except for the updated event.
+        detached_events_split = self.recurrence_id._stop_at(self)
+        (detached_events_split - self).write({'active': False, **self._get_remove_sync_id_values()})
+
+        # Update the current event with the new recurrence information.
+        if values or time_values:
+            self.write({
+                **time_values, **values,
+                **self._get_remove_sync_id_values(),
+                **self._get_update_future_events_values()
+            })
+
+        # Combine parameters from previous recurrence with the new recurrence parameters.
+        new_values = {
+            **previous_recurrence_values,
+            **self._get_recurrence_params_by_date(start_date),
+            **recurrence_values,
+            'count': recurrence_values.get('count', 0) or len(detached_events_split)
+        }
+        new_values.pop('rrule', None)
+
+        # Generate the new recurrence by patching the updated event and return an empty list.
+        self._apply_recurrence_values(new_values)
+
+    def _rewrite_recurrence(self, values, time_values, recurrence_values):
+        """ Delete the current recurrence, reactivate base event and apply updated recurrence values. """
+        self.ensure_one()
+        base_event = self.recurrence_id.base_event_id
+        update_dict = self._get_time_update_dict(base_event, time_values)
+        time_values.update(update_dict)
+
+        if self._check_values_to_sync(values) or time_values or recurrence_values:
+            # Get base values from the previous recurrence and update the start date weekday field.
+            start_date = time_values['start'].date() if 'start' in time_values else self.start.date()
+            old_recurrence_values = self._get_updated_recurrence_values(start_date)
+
+            # Archive all events and delete recurrence, reactivate base event and apply updated values.
+            base_event.action_mass_archive("all_events")
+            base_event.recurrence_id.unlink()
+            base_event.write({
+                'active': True,
+                'recurrence_id': False,
+                **values, **time_values
+            })
+
+            # Combine parameters from previous recurrence with the new recurrence parameters.
             new_values = {
                 **old_recurrence_values,
                 **base_event._get_recurrence_params(),
                 **recurrence_values,
             }
-            new_values.pop('rrule')
+            new_values.pop('rrule', None)
+
+            # Patch base event with updated recurrence parameters: this will recreate the recurrence.
             detached_events = base_event._apply_recurrence_values(new_values)
             detached_events.write({'active': False})
-            # archive the current event if all the events were recreated
-            if self != self.recurrence_id.base_event_id and time_values:
-                self.active = False
         else:
             # Write on all events. Carefull, it could trigger a lot of noise to Google/Microsoft...
             self.recurrence_id._write_events(values)
