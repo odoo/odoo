@@ -753,7 +753,6 @@ class TestExpression(SavepointCaseWithUserDemo):
             # what should not be called
             w().assert_not_called()
 
-
     def test_pure_function(self):
         orig_false = expression.FALSE_DOMAIN.copy()
         orig_true = expression.TRUE_DOMAIN.copy()
@@ -799,6 +798,37 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertTrue(len(countries) == 1, "Must match India only")
         countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
+
+    def test_like_cast(self):
+        Model = self.env['res.partner.category']
+        record = Model.create({'name': 'XY', 'color': 42})
+
+        self.assertIn(record, Model.search([('name', 'like', 'X')]))
+        self.assertIn(record, Model.search([('name', 'ilike', 'X')]))
+        self.assertIn(record, Model.search([('name', 'not like', 'Z')]))
+        self.assertIn(record, Model.search([('name', 'not ilike', 'Z')]))
+
+        self.assertNotIn(record, Model.search([('name', 'like', 'Z')]))
+        self.assertNotIn(record, Model.search([('name', 'ilike', 'Z')]))
+        self.assertNotIn(record, Model.search([('name', 'not like', 'X')]))
+        self.assertNotIn(record, Model.search([('name', 'not ilike', 'X')]))
+
+        # like, ilike, not like, not ilike convert their lhs to str
+        self.assertIn(record, Model.search([('color', 'like', '4')]))
+        self.assertIn(record, Model.search([('color', 'ilike', '4')]))
+        self.assertIn(record, Model.search([('color', 'not like', '3')]))
+        self.assertIn(record, Model.search([('color', 'not ilike', '3')]))
+
+        self.assertNotIn(record, Model.search([('color', 'like', '3')]))
+        self.assertNotIn(record, Model.search([('color', 'ilike', '3')]))
+        self.assertNotIn(record, Model.search([('color', 'not like', '4')]))
+        self.assertNotIn(record, Model.search([('color', 'not ilike', '4')]))
+
+        # =like and =ilike don't work on non-character fields
+        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.Error):
+            Model.search([('name', '=', 'X'), ('color', '=like', 4)])
+        with self.assertRaises(ValueError):
+            Model.search([('name', '=', 'X'), ('color', '=like', '4%')])
 
     def test_translate_search(self):
         Country = self.env['res.country']
@@ -1250,7 +1280,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner_title"."id"
             FROM "res_partner_title"
-            WHERE (COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US') like %s)
+            WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>'en_US') like %s)
             ORDER BY COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US')
         ''']):
             Model.search([('name', 'like', 'foo')])
@@ -1473,6 +1503,20 @@ class TestMany2one(TransactionCase):
             company_ids = companies._as_query(ordered=False)
             self.Partner.search([('company_id', 'in', company_ids)])
 
+        # special case, when the query has been transformed to SQL
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN (
+                SELECT "res_company"."id"
+                FROM "res_company"
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+            ))
+            ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
+        ''']):
+            company_ids = self.company._search([('name', 'like', self.company.name)], order='id')
+            self.Partner.search([('company_id', 'in', company_ids.subselect())])
+
     def test_autojoin(self):
         # auto_join on the first many2one
         self.patch(self.Partner._fields['company_id'], 'auto_join', True)
@@ -1615,7 +1659,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE ("res_partner"."id" IN (
-                SELECT "partner_id" FROM "res_partner_bank" WHERE "id" IN %s
+                SELECT "res_partner_bank"."partner_id"
+                FROM "res_partner_bank"
+                WHERE "res_partner_bank"."id" IN %s
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1660,7 +1706,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE ("res_partner"."id" IN (
-                SELECT "partner_id" FROM "res_partner_bank" WHERE "id" IN %s
+                SELECT "res_partner_bank"."partner_id"
+                FROM "res_partner_bank"
+                WHERE "res_partner_bank"."id" IN %s
             ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -1703,7 +1751,7 @@ class TestOne2many(TransactionCase):
             WHERE ("res_partner"."id" IN
                      (SELECT "res_partner"."parent_id"
                       FROM "res_partner"
-                      WHERE (("res_partner"."active" = %s) AND ("res_partner"."id" IN
+                      WHERE (("res_partner"."active" = TRUE) AND ("res_partner"."id" IN
                                 (SELECT "res_partner_bank"."partner_id"
                                  FROM "res_partner_bank"
                                  WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)))
@@ -1759,7 +1807,7 @@ class TestOne2many(TransactionCase):
                 LEFT JOIN "res_country" AS "res_partner__state_id__country_id"
                     ON ("res_partner__state_id"."country_id" = "res_partner__state_id__country_id"."id")
                 WHERE ((
-                    "res_partner"."active" = %s
+                    "res_partner"."active" = TRUE
                 ) AND (
                     "res_partner__state_id__country_id"."code"::text LIKE %s
                 ))
@@ -1791,7 +1839,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE ("res_partner"."id" IN (
-                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
+                SELECT "res_partner_bank"."partner_id"
+                FROM "res_partner_bank"
+                WHERE "res_partner_bank"."partner_id" IS NOT NULL
             ))
             ORDER BY "res_partner"."id"
         ''']):
@@ -1801,7 +1851,9 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE ("res_partner"."id" NOT IN (
-                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
+                SELECT "res_partner_bank"."partner_id"
+                FROM "res_partner_bank"
+                WHERE "res_partner_bank"."partner_id" IS NOT NULL
             ))
             ORDER BY "res_partner"."id"
         ''']):

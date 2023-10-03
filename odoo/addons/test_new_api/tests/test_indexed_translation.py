@@ -41,6 +41,30 @@ class TestIndexedTranslation(odoo.tests.TransactionCase):
             record_fr,
         )
 
+        # check what the queries look like
+        with self.assertQueries(["""
+            SELECT "test_new_api_indexed_translation"."id"
+            FROM "test_new_api_indexed_translation"
+            WHERE (jsonb_path_query_array("test_new_api_indexed_translation"."name", '$.*')::text ILIKE %s
+            AND "test_new_api_indexed_translation"."name"->>'en_US' ILIKE %s)
+            ORDER BY "test_new_api_indexed_translation"."id"
+        """, """
+            SELECT "test_new_api_indexed_translation"."id"
+            FROM "test_new_api_indexed_translation"
+            WHERE (jsonb_path_query_array("test_new_api_indexed_translation"."name", '$.*')::text ILIKE %s
+            AND COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>'en_US') ILIKE %s)
+            ORDER BY "test_new_api_indexed_translation"."id"
+        """, """
+            SELECT "test_new_api_indexed_translation"."id"
+            FROM "test_new_api_indexed_translation"
+            WHERE ("test_new_api_indexed_translation"."name" IS NULL
+            OR COALESCE("test_new_api_indexed_translation"."name"->>%s, "test_new_api_indexed_translation"."name"->>'en_US') ILIKE %s)
+            ORDER BY "test_new_api_indexed_translation"."id"
+        """]):
+            record_en.search([('name', 'ilike', 'foo')])
+            record_fr.search([('name', 'ilike', 'foo')])
+            record_fr.search([('name', 'ilike', '')])
+
     def test_search_special_characters(self):
         name_en = f'{SPECIAL_CHARACTERS}_en'
         name_fr = f'{SPECIAL_CHARACTERS}_fr'
