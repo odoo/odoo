@@ -20,6 +20,7 @@ import {
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeHTTPService,
+    makeFakeBarcodeService,
     makeFakeUserService,
 } from "../helpers/mock_services";
 import { getFixture, mount, nextTick } from "../helpers/utils";
@@ -58,6 +59,7 @@ export function setupWebClientRegistries() {
     }
     const services = {
         action: () => actionService,
+        barcode: () => makeFakeBarcodeService(),
         command: () => commandService,
         dialog: () => dialogService,
         effect: () => effectService,

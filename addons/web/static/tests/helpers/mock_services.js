@@ -275,6 +275,19 @@ export const fakeCompanyService = {
     },
 };
 
+export function makeFakeBarcodeService() {
+    return {
+        start() {
+            return {
+                bus: {
+                    async addEventListener() {},
+                    async removeEventListener() {},
+                }
+            };
+        },
+    };
+}
+
 export function makeFakeHTTPService(getResponse, postResponse) {
     getResponse =
         getResponse ||
