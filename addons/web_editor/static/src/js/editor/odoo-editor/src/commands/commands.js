@@ -681,7 +681,9 @@ export const editorCommands = {
         }
         referenceColumn.forEach((cell, rowIndex) => {
             const newCell = document.createElement('td');
-            newCell.append(document.createElement('br'));
+            const p = document.createElement('p');
+            p.append(document.createElement('br'));
+            newCell.append(p);
             cell[beforeOrAfter](newCell);
             if (rowIndex === 0) {
                 newCell.style.width = cell.style.width;
@@ -707,7 +709,9 @@ export const editorCommands = {
         const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
         newRow.append(...Array.from(Array(cells.length)).map(() => {
             const td = document.createElement('td');
-            td.append(document.createElement('br'));
+            const p = document.createElement('p');
+            p.append(document.createElement('br'));
+            td.append(p);
             return td;
         }));
         referenceRow[beforeOrAfter](newRow);
