@@ -161,16 +161,26 @@ html[data-edit_translations="1"] {
         > we-title {
             display: none
         }
-        .o_we_so_color_palette.o_we_user_value_widget {
-            + .o_we_so_color_palette {
-                &:nth-child(4) {
-                    margin-left: $o-we-item-spacing * 3;
-                }
+        .o_we_theme_colors_selector_group {
+            flex: 1 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            padding-top: 2em;
+
+            > we-title {
+                font-style: italic;
+                white-space: nowrap;
+                position: absolute;
+                margin-top: -2em;
             }
-            .o_we_color_preview {
-                width: $o-we-sidebar-content-field-colorpicker-size-large;
-                height: $o-we-sidebar-content-field-colorpicker-size-large;
+
+            > .o_we_user_value_widget {
+                margin-right: $o-we-sidebar-content-field-multi-spacing;
             }
+        }
+        .o_we_so_color_palette.o_we_user_value_widget .o_we_color_preview {
+            width: $o-we-sidebar-content-field-colorpicker-size-large;
+            height: $o-we-sidebar-content-field-colorpicker-size-large;
         }
         > div, we-select.o_we_theme_colors_select, we-toggler {
             display: flex;
