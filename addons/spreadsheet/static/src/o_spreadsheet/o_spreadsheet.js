@@ -18469,6 +18469,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             this.state.values = this.getFilterValues(this.props.filterPosition);
         }
+        get isReadonly() {
+            return this.env.model.getters.isReadonly();
+        }
         getFilterValues(position) {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const filter = this.env.model.getters.getFilter({ sheetId, ...position });
@@ -21733,6 +21736,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.showFormulaState = this.env.model.getters.shouldShowFormulas();
             owl.onMounted(() => this.focusInput());
             owl.onWillUnmount(() => {
+                clearTimeout(this.debounceTimeoutId);
                 this.env.model.dispatch("CLEAR_SEARCH");
                 this.env.model.dispatch("SET_FORMULA_VISIBILITY", { show: this.showFormulaState });
             });
@@ -33347,30 +33351,26 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { end } = this.getters.getColDimensions(sheetId, targetCol);
             const maxCol = this.getters.getNumberCols(sheetId);
             if (this.offsetX + this.offsetCorrectionX + this.viewportWidth < end) {
-                for (let col = this.left; this.offsetX + this.offsetCorrectionX + this.viewportWidth < end; col++) {
-                    if (col > maxCol) {
-                        break;
-                    }
-                    if (this.getters.isColHidden(sheetId, col)) {
-                        continue;
-                    }
-                    this.offsetX = this.getters.getColDimensions(sheetId, col).end - this.offsetCorrectionX;
-                    this.offsetScrollbarX = this.offsetX;
-                    this.adjustViewportZoneX();
+                let finalTarget = targetCol;
+                while (this.getters.isColHidden(sheetId, finalTarget) && targetCol < maxCol) {
+                    finalTarget++;
                 }
+                const finalTargetEnd = this.getters.getColDimensions(sheetId, finalTarget).end;
+                const startIndex = this.searchHeaderIndex("COL", finalTargetEnd - this.viewportWidth - this.offsetCorrectionX, this.boundaries.left, true);
+                this.offsetX =
+                    this.getters.getColDimensions(sheetId, startIndex).end - this.offsetCorrectionX;
+                this.offsetScrollbarX = this.offsetX;
+                this.adjustViewportZoneX();
             }
             else if (this.left > targetCol) {
-                for (let col = this.left; col >= targetCol; col--) {
-                    if (col < 0) {
-                        break;
-                    }
-                    if (this.getters.isColHidden(sheetId, col)) {
-                        continue;
-                    }
-                    this.offsetX = this.getters.getColDimensions(sheetId, col).start - this.offsetCorrectionX;
-                    this.offsetScrollbarX = this.offsetX;
-                    this.adjustViewportZoneX();
+                let finalTarget = targetCol;
+                while (this.getters.isColHidden(sheetId, finalTarget) && targetCol > 0) {
+                    finalTarget--;
                 }
+                this.offsetX =
+                    this.getters.getColDimensions(sheetId, finalTarget).start - this.offsetCorrectionX;
+                this.offsetScrollbarX = this.offsetX;
+                this.adjustViewportZoneX();
             }
         }
         adjustPositionY(targetRow) {
@@ -33378,30 +33378,26 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { end } = this.getters.getRowDimensions(sheetId, targetRow);
             const maxRow = this.getters.getNumberRows(sheetId);
             if (this.offsetY + this.viewportHeight + this.offsetCorrectionY < end) {
-                for (let row = this.top; this.offsetY + this.viewportHeight + this.offsetCorrectionY < end; row++) {
-                    if (row > maxRow) {
-                        break;
-                    }
-                    if (this.getters.isRowHidden(sheetId, row)) {
-                        continue;
-                    }
-                    this.offsetY = this.getters.getRowDimensions(sheetId, row).end - this.offsetCorrectionY;
-                    this.offsetScrollbarY = this.offsetY;
-                    this.adjustViewportZoneY();
+                let finalTarget = targetRow;
+                while (this.getters.isRowHidden(sheetId, finalTarget) && targetRow < maxRow) {
+                    finalTarget++;
                 }
+                const finalTargetEnd = this.getters.getRowDimensions(sheetId, finalTarget).end;
+                const startIndex = this.searchHeaderIndex("ROW", finalTargetEnd - this.viewportHeight - this.offsetCorrectionY, this.boundaries.top, true);
+                this.offsetY =
+                    this.getters.getRowDimensions(sheetId, startIndex).end - this.offsetCorrectionY;
+                this.offsetScrollbarY = this.offsetY;
+                this.adjustViewportZoneY();
             }
             else if (this.top > targetRow) {
-                for (let row = this.top; row >= targetRow; row--) {
-                    if (row < 0) {
-                        break;
-                    }
-                    if (this.getters.isRowHidden(sheetId, row)) {
-                        continue;
-                    }
-                    this.offsetY = this.getters.getRowDimensions(sheetId, row).start - this.offsetCorrectionY;
-                    this.offsetScrollbarY = this.offsetY;
-                    this.adjustViewportZoneY();
+                let finalTarget = targetRow;
+                while (this.getters.isRowHidden(sheetId, finalTarget) && targetRow > 0) {
+                    finalTarget--;
                 }
+                this.offsetY =
+                    this.getters.getRowDimensions(sheetId, finalTarget).start - this.offsetCorrectionY;
+                this.offsetScrollbarY = this.offsetY;
+                this.adjustViewportZoneY();
             }
         }
         setViewportOffset(offsetX, offsetY) {
@@ -34975,14 +34971,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "REPLACE_ALL_SEARCH":
                     this.replaceAll(cmd.replaceWith);
                     break;
-                case "EVALUATE_CELLS":
-                case "UPDATE_CELL":
-                case "REMOVE_FILTER_TABLE":
-                case "UPDATE_FILTER":
-                    this.isSearchDirty = true;
-                    break;
                 case "UNDO":
                 case "REDO":
+                case "REMOVE_FILTER_TABLE":
+                case "UPDATE_FILTER":
                 case "REMOVE_COLUMNS_ROWS":
                 case "HIDE_COLUMNS_ROWS":
                 case "UNHIDE_COLUMNS_ROWS":
@@ -37974,7 +37966,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             for (const filterTable of this.copiedTables) {
                 this.dispatch("REMOVE_FILTER_TABLE", {
-                    sheetId: this.getters.getActiveSheetId(),
+                    sheetId: this.sheetId,
                     target: [filterTable.zone],
                 });
             }
@@ -44368,9 +44360,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.21';
-    __info__.date = '2023-09-22T07:47:24.833Z';
-    __info__.hash = 'c5df5e7';
+    __info__.version = '16.1.22';
+    __info__.date = '2023-10-03T13:23:25.224Z';
+    __info__.hash = '88f1cec';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
