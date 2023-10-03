@@ -1647,17 +1647,5 @@ if records:
             </field>
         </record>
 
-        <record id="model_account_download_electronic_invoice" model="ir.actions.server">
-            <field name="name">Download Electronic Invoices</field>
-            <field name="model_id" ref="model_account_move"/>
-            <field name="binding_model_id" ref="model_account_move"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-                if records:
-                    action = records._action_download_electronic_invoice()
-            </field>
-        </record>
-
     </data>
 </odoo>

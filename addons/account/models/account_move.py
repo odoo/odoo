@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from werkzeug.urls import url_encode
-
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
@@ -3099,27 +3096,6 @@ class AccountMove(models.Model):
 
         return success
 
-    ####################################################
-    # Export Electronic Document
-    ####################################################
-
-    def _action_download_electronic_invoice(self):
-        if not self:
-            return False
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/account/export_edi_documents?%s' % url_encode({'ids': self.ids}),
-            'target': 'new',
-        }
-
-    def _get_edi_doc_attachments_to_export(self):
-        """
-        To override
-        :return a recordset of ir.attachment to export
-        """
-        return self.env['ir.attachment']
-
-
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
@@ -4347,10 +4323,10 @@ class AccountMove(models.Model):
         else:
             return self.env['ir.actions.report']._render('account.account_invoices', self.ids)[0], "Invoices.pdf"
 
-    def _get_invoice_pdf_report_filename(self):
-        """ Get the filename of the generated PDF invoice report. """
+    def _get_invoice_report_filename(self, extension='pdf'):
+        """ Get the filename of the generated invoice report with extension file. """
         self.ensure_one()
-        return f"{self.name.replace('/', '_')}.pdf"
+        return f"{self.name.replace('/', '_')}.{extension}"
 
     def _get_invoice_proforma_pdf_report_filename(self):
         """ Get the filename of the generated proforma PDF invoice report. """
