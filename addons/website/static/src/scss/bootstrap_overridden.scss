@@ -13,6 +13,12 @@ $gray-900: #212529 !default;
 $white: #FFF !default;
 $black: #000 !default;
 
+// This coupling allows to control the appearance of some app components (and
+// more). Note that it is still possible to have more than 2 "bright" main
+// colors by using them in color combinations config instead of as theme colors.
+$light: o-color('o-color-3');
+$dark: o-color('o-color-5');
+
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
 
