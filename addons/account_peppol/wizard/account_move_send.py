@@ -15,7 +15,7 @@ class AccountMoveSend(models.Model):
         compute='_compute_checkbox_send_peppol', store=True, readonly=False,
         help='Send the invoice via PEPPOL',
     )
-    enable_peppol = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    enable_peppol = fields.Boolean(compute='_compute_enable_peppol')
     # technical field needed for computing a warning text about the peppol configuration
     peppol_warning = fields.Char(
         string="Warning",
@@ -58,10 +58,8 @@ class AccountMoveSend(models.Model):
                                         "Please check and verify their Peppol endpoint and the Electronic Invoicing format: "
                                         "%s", names)
 
-    def _compute_send_mail_extra_fields(self):
-        # Extends 'account'
-        super()._compute_send_mail_extra_fields()
-
+    @api.depends('enable_ubl_cii_xml')
+    def _compute_enable_peppol(self):
         for wizard in self:
             # show peppol option if either the ubl option is available or any move already has a ubl file generated
             # and moves are not processing/done

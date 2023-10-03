@@ -12,11 +12,11 @@ class ResPartner(models.Model):
         string="Format",
         selection=[
             ('facturx', "Factur-X (CII)"),
-            ('ubl_bis3', "Peppol BIS Billing 3.0"),
+            ('ubl_bis3', "BIS Billing 3.0"),
             ('xrechnung', "XRechnung CIUS"),
             ('nlcius', "NLCIUS"),
-            ('ubl_a_nz', "Peppol BIS Billing 3.0 A-NZ"),
-            ('ubl_sg', "Peppol BIS Billing 3.0 SG"),
+            ('ubl_a_nz', "BIS Billing 3.0 A-NZ"),
+            ('ubl_sg', "BIS Billing 3.0 SG"),
         ],
         compute='_compute_ubl_cii_format',
         store=True,
@@ -24,7 +24,7 @@ class ResPartner(models.Model):
     )
     peppol_endpoint = fields.Char(
         string="Peppol Endpoint",
-        help="Unique identifier used by the Peppol BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
+        help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
         compute="_compute_peppol_endpoint",
         store=True,
         readonly=False,
@@ -32,7 +32,7 @@ class ResPartner(models.Model):
     )
     peppol_eas = fields.Selection(
         string="Peppol e-address (EAS)",
-        help="""Code used to identify the Endpoint for Peppol BIS Billing 3.0 and its derivatives.
+        help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
              List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
         compute="_compute_peppol_eas",
         store=True,
