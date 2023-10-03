@@ -14,11 +14,13 @@
     </t>
 
     <t t-name="web.DomainSelector.DomainSelectorAutocomplete" >
-        <div class="o_input d-flex flex-wrap h-100 gap-1">
+        <div class="o_input d-flex flex-wrap h-100 gap-1 o_tags_selector">
             <TagsList tags="tags"/>
             <AutoCompleteWithSources
                 resModel="props.resModel"
                 value="''"
+                domain="props.domain"
+                context="props.context"
                 className="'o_input o_domain_leaf_value_input flex-grow-1'"
                 fieldString="props.fieldString"
                 multiSelect="true"
@@ -32,7 +34,9 @@
         <AutoCompleteWithSources
             resModel="props.resModel"
             value="displayName"
-            className="'o_input o_domain_leaf_value_input h-100'"
+            domain="props.domain"
+            context="props.context"
+            className="'o_input o_domain_leaf_value_input h-100 o_tag_selector'"
             fieldString="props.fieldString"
             multiSelect="false"
             getIds="() => []"
