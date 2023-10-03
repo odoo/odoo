@@ -3,6 +3,7 @@
 from markupsafe import Markup
 import re
 from werkzeug.exceptions import NotFound
+from urllib.parse import urlsplit
 
 from odoo import http, tools, _, release
 from odoo.http import request
@@ -30,7 +31,13 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
     def assets_embed(self, ext, **kwargs):
+        # If the request comes from a different origin, we must provide the CORS
+        # assets to enable the redirection of routes to the CORS controller.
+        headers = request.httprequest.headers
+        origin_url = urlsplit(headers.get('referer'))
         bundle = 'im_livechat.assets_embed'
+        if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
+            bundle = 'im_livechat.assets_cors'
         asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext not in ('css', 'js'):
             raise request.not_found()
@@ -143,7 +150,7 @@ class LivechatController(http.Controller):
     def _get_guest_name(self):
         return _("Visitor")
 
-    @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public', cors="*")
+    @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public')
     @add_guest_to_context
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         user_id = None
@@ -252,20 +259,6 @@ class LivechatController(http.Controller):
             channel._send_history_message(pid, page_history)
         return True
 
-    @http.route('/im_livechat/notify_typing', type='json', auth='public', cors="*")
-    def notify_typing(self, uuid, is_typing):
-        """ Broadcast the typing notification of the website user to other channel members
-            :param uuid: (string) the UUID of the livechat channel
-            :param is_typing: (boolean) tells whether the website user is typing or not.
-        """
-        channel = request.env['discuss.channel'].sudo().search([('uuid', '=', uuid)])
-        if not channel:
-            raise NotFound()
-        channel_member = channel.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', request.env.user.partner_id.id)])
-        if not channel_member:
-            raise NotFound()
-        channel_member._notify_typing(is_typing=is_typing)
-
     @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
     def email_livechat_transcript(self, uuid, email):
         channel = request.env['discuss.channel'].sudo().search([
@@ -274,7 +267,7 @@ class LivechatController(http.Controller):
         if channel:
             channel._email_livechat_transcript(email)
 
-    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public", cors="*")
+    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
     @add_guest_to_context
     def visitor_leave_session(self, uuid):
         """ Called when the livechat visitor leaves the conversation.
@@ -287,11 +280,3 @@ class LivechatController(http.Controller):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=discuss_channel.id)
         channel_member_sudo._rtc_leave_call()
         discuss_channel._close_livechat_session()
-
-    @http.route(['/im_livechat/chat_history'], type="json", auth="public", cors="*")
-    def im_livechat_chat_history(self, uuid, last_id=False, limit=20):
-        channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
-        if not channel:
-            return []
-        else:
-            return channel._channel_fetch_message(last_id, limit)

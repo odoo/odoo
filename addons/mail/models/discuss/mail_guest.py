@@ -28,21 +28,15 @@ def add_guest_to_context(func):
             req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name)
             or req.env.context.get("guest_token", "")
         )
-        parts = token.split(req.env["mail.guest"]._cookie_separator)
-        guest = req.env["mail.guest"]
-        if len(parts) == 2:
-            guest_id, guest_access_token = parts
-            guest = req.env["mail.guest"].browse(int(guest_id)).sudo().exists()
-            if not guest or not guest.access_token or not consteq(guest.access_token, guest_access_token):
-                guest = req.env["mail.guest"]
-            elif not guest.timezone:
-                timezone = req.env["mail.guest"]._get_timezone_from_request(req)
-                if timezone:
-                    guest._update_timezone(timezone)
-        guest = guest.sudo(False)
-        req.update_context(guest=guest)
-        if hasattr(self, "env"):
-            self.env.context = {**self.env.context, "guest": guest}
+        guest = req.env["mail.guest"]._get_guest_from_token(token)
+        if guest and not guest.timezone:
+            timezone = req.env["mail.guest"]._get_timezone_from_request(req)
+            if timezone:
+                guest._update_timezone(timezone)
+        if guest:
+            req.update_context(guest=guest)
+            if hasattr(self, "env"):
+                self.env.context = {**self.env.context, "guest": guest}
         return func(self, *args, **kwargs)
 
     return wrapper
@@ -82,6 +76,17 @@ class MailGuest(models.Model):
         res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
         for guest in self:
             guest.im_status = res.get(guest.id, 'offline')
+
+    def _get_guest_from_token(self, token=""):
+        """Returns the guest record for the given token, if applicable."""
+        guest = self.env["mail.guest"]
+        parts = token.split(self._cookie_separator)
+        if len(parts) == 2:
+            guest_id, guest_access_token = parts
+            guest = self.browse(int(guest_id)).sudo().exists()
+            if not guest or not guest.access_token or not consteq(guest.access_token, guest_access_token):
+                guest = self.env["mail.guest"]
+        return guest.sudo(False)
 
     def _get_guest_from_context(self):
         """Returns the current guest record from the context, if applicable."""
