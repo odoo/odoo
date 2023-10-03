@@ -107,6 +107,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/embed/livechat_data.js',
             ('remove', 'im_livechat/static/src/embed/frontend/**/*'),
             ('remove', 'im_livechat/static/src/embed/external/**/*'),
+            ('remove', 'im_livechat/static/src/embed/cors/**/*'),
         ],
         'im_livechat.assets_embed': [
             'web/static/lib/jquery/jquery.js',
@@ -131,6 +132,10 @@ Help your customers with this chat, and analyse their feedback.
 
             ('include', 'im_livechat.assets_core'),
             'im_livechat/static/src/embed/external/**/*',
+        ],
+        'im_livechat.assets_cors': [
+            ('include', 'im_livechat.assets_embed'),
+            'im_livechat/static/src/embed/cors/**/*',
         ],
         'im_livechat.embed_test_assets': [
             ('include', 'web.tests_assets'),

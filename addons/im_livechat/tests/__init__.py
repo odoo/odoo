@@ -5,6 +5,7 @@ from . import chatbot_common
 from . import test_chatbot_form_ui
 from . import test_chatbot_internals
 from . import test_digest
+from . import test_cors_livechat
 from . import test_get_discuss_channel
 from . import test_get_operator
 from . import test_im_livechat_report
