@@ -1529,18 +1529,24 @@
             still customizable.
         </we-alert>
         <we-row class="o_we_theme_colors_selector">
-            <we-colorpicker data-name="color_1_opt" title="Primary"
-                            data-customize-website-color="" data-color="o-color-1"
-                            data-use-css-color="true" data-selected-tab="custom-colors"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-3"
-                            data-use-css-color="true" data-selected-tab="custom-colors"/>
-            <we-colorpicker data-name="color_2_opt" title="Secondary"
-                            data-customize-website-color="" data-color="o-color-2"
-                            data-use-css-color="true" data-selected-tab="custom-colors"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-4"
-                            data-use-css-color="true" data-selected-tab="custom-colors"/>
-            <we-colorpicker data-customize-website-color="" data-color="o-color-5"
-                            data-use-css-color="true" data-selected-tab="custom-colors"/>
+            <div class="o_we_theme_colors_selector_group">
+                <we-title>Main</we-title>
+                <we-colorpicker data-name="color_1_opt" title="Primary"
+                                data-customize-website-color="" data-color="o-color-1"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+                <we-colorpicker data-name="color_2_opt" title="Secondary"
+                                data-customize-website-color="" data-color="o-color-2"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+            </div>
+            <div class="o_we_theme_colors_selector_group">
+                <we-title>Light &amp; Dark</we-title>
+                <we-colorpicker data-customize-website-color="" data-color="o-color-3"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+                <we-colorpicker data-customize-website-color="" data-color="o-color-4"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+                <we-colorpicker data-customize-website-color="" data-color="o-color-5"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+            </div>
             <we-select data-img="/website/static/src/img/snippets_options/palette.svg" class="o_we_theme_colors_select" data-variable="color-palettes-name"/>
         </we-row>
         <we-collapse class="o_we_theme_presets_collapse" string="Color Presets">
