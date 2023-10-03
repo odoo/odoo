@@ -14,7 +14,7 @@ import {
     useOwnedDialogs,
     useService,
 } from "@web/core/utils/hooks";
-import { createElement } from "@web/core/utils/xml";
+import { createElement, parseXML } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -652,7 +652,8 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
             resModel: comodel,
             views: [[false, "form"]],
         });
-        formArchInfo = new FormArchParser().parse(views.form.arch, relatedModels, comodel);
+        const xmlDoc = parseXML(views.form.arch);
+        formArchInfo = new FormArchParser().parse(xmlDoc, relatedModels, comodel);
         // Fields that need to be defined are the ones in the form view, this is natural,
         // plus the ones that the list record has, that is, present in either the list arch
         // or the kanban arch of the one2many field

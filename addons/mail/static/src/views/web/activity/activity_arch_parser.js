@@ -1,11 +1,10 @@
 /* @odoo-module */
 
-import { XMLParser } from "@web/core/utils/xml";
+import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 
-export class ActivityArchParser extends XMLParser {
-    parse(arch, models, modelName) {
-        const xmlDoc = this.parseXML(arch);
+export class ActivityArchParser {
+    parse(xmlDoc, models, modelName) {
         const jsClass = xmlDoc.getAttribute("js_class");
         const title = xmlDoc.getAttribute("string");
 
@@ -13,7 +12,7 @@ export class ActivityArchParser extends XMLParser {
         const templateDocs = {};
         const fieldNextIds = {};
 
-        this.visitXML(xmlDoc, (node) => {
+        visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
                 templateDocs[node.getAttribute("t-name")] = node;
                 return;
@@ -48,11 +47,9 @@ export class ActivityArchParser extends XMLParser {
             }
         });
         return {
-            arch,
             fieldNodes,
             templateDocs,
             title,
-            __rawArch: arch,
         };
     }
 }

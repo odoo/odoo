@@ -249,7 +249,8 @@ export class ViewCompiler {
      * @returns {string}
      */
     compile(key, params = {}) {
-        const child = this.compileNode(this.templates[key], params);
+        const root = this.templates[key].cloneNode(true);
+        const child = this.compileNode(root, params);
         const newRoot = createElement("t", [child]);
         return newRoot;
     }
@@ -438,27 +439,26 @@ export class ViewCompiler {
 }
 ViewCompiler.OWL_DIRECTIVE_WHITELIST = [];
 
-let templateIds = Object.create(null);
+let templateCache = Object.create(null);
 /**
  * @param {typeof ViewCompiler} ViewCompiler
- * @param {string} rawArch
+ * @param {string} key
  * @param {Record<string, Element>} templates
  * @param {Record<string, any>} [params]
  * @returns {Record<string, string>}
  */
-export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
-    if (!templateIds[rawArch]) {
-        templateIds[rawArch] = {};
-    }
-    const compiledTemplates = templateIds[rawArch];
-    const compiler = new ViewCompiler(templates);
-    for (const key in templates) {
-        if (!compiledTemplates[key]) {
-            const compiledDoc = compiler.compile(key, params);
-            compiledTemplates[key] = xml`${compiledDoc.outerHTML}`;
+export function useViewCompiler(ViewCompiler, templates, params) {
+    const compiledTemplates = {};
+    let compiler;
+    for (const tname in templates) {
+        const key = templates[tname].outerHTML;
+        if (!templateCache[key]) {
+            compiler = compiler || new ViewCompiler(templates);
+            templateCache[key] = xml`${compiler.compile(tname, params).outerHTML}`;
         }
+        compiledTemplates[tname] = templateCache[key];
     }
-    return { ...compiledTemplates };
+    return compiledTemplates;
 }
 
 /*
@@ -470,5 +470,5 @@ export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
  * This is how a memory leak occurs. :-)
  */
 export function resetViewCompilerCache() {
-    templateIds = Object.create(null);
+    templateCache = Object.create(null);
 }

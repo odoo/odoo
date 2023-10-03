@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
-import { createElement } from "@web/core/utils/xml";
+import { createElement, parseXML } from "@web/core/utils/xml";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
@@ -97,7 +97,8 @@ export async function loadSubViews(
             context: makeContext([fieldContext, userService.context, refinedContext]),
         });
         const { ArchParser } = viewRegistry.get(viewType);
-        const archInfo = new ArchParser().parse(views[viewType].arch, relatedModels, comodel);
+        const xmlDoc = parseXML(views[viewType].arch);
+        const archInfo = new ArchParser().parse(xmlDoc, relatedModels, comodel);
         fieldInfo.views[viewType] = {
             ...archInfo,
             limit: archInfo.limit || 40,
@@ -178,7 +179,6 @@ export class FormController extends Component {
         if (xmlDocButtonBox) {
             const buttonBoxTemplates = useViewCompiler(
                 this.props.Compiler || FormCompiler,
-                xmlDocButtonBox.outerHTML,
                 { ButtonBox: xmlDocButtonBox },
                 { isSubView: true }
             );

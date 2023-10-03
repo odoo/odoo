@@ -6,7 +6,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
 import { nbsp } from "@web/core/utils/strings";
-import { parseXML, serializeXML } from "@web/core/utils/xml";
+import { parseXML } from "@web/core/utils/xml";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
@@ -277,18 +277,17 @@ export class View extends Component {
             actionMenus = viewDescription.actionMenus;
         }
 
-        const rootNode = parseXML(arch.replace(/&amp;nbsp;/g, nbsp));
+        const archXmlDoc = parseXML(arch.replace(/&amp;nbsp;/g, nbsp));
         for (const action of ACTIONS) {
             if (action in this.props.context && !this.props.context[action]) {
-                rootNode.setAttribute(action, "0");
+                archXmlDoc.setAttribute(action, "0");
             }
         }
-        arch = serializeXML(rootNode);
 
-        let subType = rootNode.getAttribute("js_class");
-        const bannerRoute = rootNode.getAttribute("banner_route");
-        const sample = rootNode.getAttribute("sample");
-        const className = computeViewClassName(type, rootNode, [
+        let subType = archXmlDoc.getAttribute("js_class");
+        const bannerRoute = archXmlDoc.getAttribute("banner_route");
+        const sample = archXmlDoc.getAttribute("sample");
+        const className = computeViewClassName(type, archXmlDoc, [
             "o_view_controller",
             ...(props.className || "").split(" "),
         ]);
@@ -303,7 +302,7 @@ export class View extends Component {
         }
 
         Object.assign(this.env.config, {
-            viewArch: rootNode,
+            viewArch: archXmlDoc,
             viewId: viewDescription.id,
             viewType: type,
             viewSubType: subType,
@@ -323,7 +322,7 @@ export class View extends Component {
         // prepare the view props
         const viewProps = {
             info,
-            arch,
+            arch: archXmlDoc,
             fields,
             relatedModels,
             resModel,

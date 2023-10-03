@@ -1,20 +1,20 @@
 /** @odoo-module */
 
 import { Field } from "@web/views/fields/field";
-import { XMLParser } from "@web/core/utils/xml";
+import { visitXML } from "@web/core/utils/xml";
 import { stringToOrderBy } from "@web/search/utils/order_by";
 import { archParseBoolean, getActiveActions, getDecoration, processButton } from "@web/views/utils";
 import { encodeObjectForTemplate } from "@web/views/view_compiler";
 import { combineModifiers } from "@web/model/relational_model/utils";
 import { Widget } from "@web/views/widgets/widget";
 
-export class GroupListArchParser extends XMLParser {
+export class GroupListArchParser {
     parse(arch, models, modelName, jsClass) {
         const fieldNodes = {};
         const fieldNextIds = {};
         const buttons = [];
         let buttonId = 0;
-        this.visitXML(arch, (node) => {
+        visitXML(arch, (node) => {
             if (node.tagName === "button") {
                 buttons.push({
                     ...processButton(node),
@@ -36,7 +36,7 @@ export class GroupListArchParser extends XMLParser {
     }
 }
 
-export class ListArchParser extends XMLParser {
+export class ListArchParser {
     parseFieldNode(node, models, modelName) {
         return Field.parseFieldNode(node, models, modelName, "list");
     }
@@ -49,8 +49,7 @@ export class ListArchParser extends XMLParser {
         return processButton(node);
     }
 
-    parse(arch, models, modelName) {
-        const xmlDoc = this.parseXML(arch);
+    parse(xmlDoc, models, modelName) {
         const fieldNodes = {};
         const widgetNodes = {};
         let widgetNextId = 0;
@@ -69,7 +68,7 @@ export class ListArchParser extends XMLParser {
         const treeAttr = {};
         let nextId = 0;
         const fieldNextIds = {};
-        this.visitXML(arch, (node) => {
+        visitXML(xmlDoc, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
             }
@@ -82,14 +81,18 @@ export class ListArchParser extends XMLParser {
                 };
                 if (buttonGroup) {
                     buttonGroup.buttons.push(button);
-                    buttonGroup.column_invisible = combineModifiers(buttonGroup.column_invisible, node.getAttribute('column_invisible'), "AND");
+                    buttonGroup.column_invisible = combineModifiers(
+                        buttonGroup.column_invisible,
+                        node.getAttribute("column_invisible"),
+                        "AND"
+                    );
                 } else {
                     buttonGroup = {
                         id: `column_${nextId++}`,
                         type: "button_group",
                         buttons: [button],
                         hasLabel: false,
-                        column_invisible: node.getAttribute('column_invisible'),
+                        column_invisible: node.getAttribute("column_invisible"),
                     };
                     columns.push(buttonGroup);
                 }
@@ -138,10 +141,8 @@ export class ListArchParser extends XMLParser {
                 });
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
-                const xmlSerializer = new XMLSerializer();
-                const groupByArch = xmlSerializer.serializeToString(node);
                 const coModelName = fields[fieldName].relation;
-                const groupByArchInfo = groupListArchParser.parse(groupByArch, models, coModelName);
+                const groupByArchInfo = groupListArchParser.parse(node, models, coModelName);
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
                     fieldNodes: groupByArchInfo.fieldNodes,
@@ -152,12 +153,11 @@ export class ListArchParser extends XMLParser {
                 // AAB: not sure we need to handle invisible="True" button as the usecase seems way
                 // less relevant than for fields (so for buttons, relying on the modifiers logic
                 // that applies later on could be enough, even if the value is always true)
-                headerButtons = [...node.children]
-                    .map((node) => ({
-                        ...this.processButton(node),
-                        type: "button",
-                        id: buttonId++,
-                    }));
+                headerButtons = [...node.children].map((node) => ({
+                    ...this.processButton(node),
+                    type: "button",
+                    id: buttonId++,
+                }));
                 return false;
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {
@@ -229,7 +229,6 @@ export class ListArchParser extends XMLParser {
             columns,
             groupBy,
             xmlDoc,
-            __rawArch: arch,
             ...treeAttr,
         };
     }

@@ -76,7 +76,7 @@ QUnit.module("Views", (hooks) => {
         class ToyController extends Component {
             setup() {
                 this.class = "toy";
-                this.template = xml`${this.props.arch}`;
+                this.template = xml`${this.props.arch.outerHTML}`;
             }
         }
         ToyController.template = xml`<div t-attf-class="{{class}} {{props.className}}"><t t-call="{{ template }}"/></div>`;
@@ -125,7 +125,7 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 super.setup();
                 const { arch, fields, info } = this.props;
-                assert.strictEqual(arch, serverData.views["animal,false,toy"]);
+                assert.strictEqual(arch.outerHTML, serverData.views["animal,false,toy"]);
                 assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, false);
@@ -163,7 +163,7 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 super.setup();
                 const { arch, fields, info } = this.props;
-                assert.strictEqual(arch, serverData.views["animal,1,toy"]);
+                assert.strictEqual(arch.outerHTML, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, 1);
@@ -200,7 +200,7 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 super.setup();
                 const { arch, fields, info } = this.props;
-                assert.strictEqual(arch, serverData.views["animal,1,toy"]);
+                assert.strictEqual(arch.outerHTML, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, 1);
@@ -241,7 +241,7 @@ QUnit.module("Views", (hooks) => {
                 setup() {
                     super.setup();
                     const { arch, fields, info } = this.props;
-                    assert.strictEqual(arch, serverData.views["animal,false,toy"]);
+                    assert.strictEqual(arch.outerHTML, serverData.views["animal,false,toy"]);
                     assert.deepEqual(fields, {});
                     assert.strictEqual(info.actionMenus, undefined);
                     assert.strictEqual(this.env.config.viewId, false);
@@ -284,7 +284,7 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 super.setup();
                 const { arch, fields, info } = this.props;
-                assert.strictEqual(arch, serverData.views["animal,1,toy"]);
+                assert.strictEqual(arch.outerHTML, serverData.views["animal,1,toy"]);
                 assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, 1);
@@ -330,7 +330,7 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 super.setup();
                 const { arch, fields, info } = this.props;
-                assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
+                assert.strictEqual(arch.outerHTML, `<toy>Specific arch content</toy>`);
                 assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, undefined);
@@ -363,7 +363,7 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 super.setup();
                 const { arch, fields, info } = this.props;
-                assert.strictEqual(arch, serverData.views["animal,false,toy"]);
+                assert.strictEqual(arch.outerHTML, serverData.views["animal,false,toy"]);
                 assert.deepEqual(fields, {});
                 assert.deepEqual(info.actionMenus, {});
                 assert.strictEqual(this.env.config.viewId, false);
@@ -403,7 +403,7 @@ QUnit.module("Views", (hooks) => {
                 setup() {
                     super.setup();
                     const { arch, fields, info } = this.props;
-                    assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
+                    assert.strictEqual(arch.outerHTML, `<toy>Specific arch content</toy>`);
                     assert.deepEqual(fields, {});
                     assert.deepEqual(info.actionMenus, {});
                     assert.strictEqual(this.env.config.viewId, false);
@@ -446,7 +446,7 @@ QUnit.module("Views", (hooks) => {
                 setup() {
                     super.setup();
                     const { arch, fields, info } = this.props;
-                    assert.strictEqual(arch, `<toy>Specific arch content</toy>`);
+                    assert.strictEqual(arch.outerHTML, `<toy>Specific arch content</toy>`);
                     assert.deepEqual(fields, {});
                     assert.deepEqual(info.actionMenus, {});
                     assert.strictEqual(this.env.config.viewId, undefined);
