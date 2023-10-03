@@ -11,7 +11,7 @@ class ServerActions(models.Model):
     _inherit = ['ir.actions.server']
 
     state = fields.Selection(selection_add=[
-        ('sms', 'Send SMS Text Message'),
+        ('sms', 'Send SMS'), ('followers',),
     ], ondelete={'sms': 'cascade'})
     # SMS
     sms_template_id = fields.Many2one(

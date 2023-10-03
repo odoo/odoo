@@ -465,20 +465,20 @@ class IrActionsServer(models.Model):
         ('ir_cron', 'Scheduled Action')], string='Usage',
         default='ir_actions_server', required=True)
     state = fields.Selection([
-        ('code', 'Execute Python Code'),
-        ('object_create', 'Create a new Record'),
-        ('object_write', 'Update the Record'),
-        ('multi', 'Execute several actions')], string='Type',
-        default='code', required=True, copy=True,
+        ('object_write', 'Update Record'),
+        ('object_create', 'Create Record'),
+        ('code', 'Execute Code'),
+        ('multi', 'Execute existing actions')], string='Type',
+        default='object_write', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
-             "- 'Execute Python Code': a block of python code that will be executed\n"
-             "- 'Create a new Record': create a new record with new values\n"
              "- 'Update a Record': update the values of a record\n"
-             "- 'Execute several actions': define an action that triggers several other server actions\n"
+             "- 'Create Activity': create an activity (Discuss)\n"
              "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-             "- 'Add Followers': add followers to a record (Discuss)\n"
-             "- 'Create Next Activity': create an activity (Discuss)\n"
-             "- 'Send SMS Text Message': send SMS, log them on documents (SMS)")
+             "- 'Send SMS': send SMS, log them on documents (SMS)"
+             "- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+             "- 'Create Record': create a new record with new values\n"
+             "- 'Execute Code': a block of Python code that will be executed\n"
+             "- 'Execute existing actions': define an action that triggers several other server actions\n")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "

@@ -14,10 +14,12 @@ class ServerActions(models.Model):
     _inherit = ['ir.actions.server']
 
     state = fields.Selection(
-        selection_add=[('mail_post', 'Send Email'),
-                       ('followers', 'Add Followers'),
-                       ('remove_followers', 'Remove Followers'),
-                       ('next_activity', 'Create Next Activity'),
+        selection_add=[
+            ('next_activity', 'Create Activity'),
+            ('mail_post', 'Send Email'),
+            ('followers', 'Add Followers'),
+            ('remove_followers', 'Remove Followers'),
+            ('object_create',),
         ],
         ondelete={'mail_post': 'cascade',
                   'followers': 'cascade',

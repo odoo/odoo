@@ -1072,6 +1072,9 @@ class IrModelFields(models.Model):
     def _compute_display_name(self):
         IrModel = self.env["ir.model"]
         for field in self:
+            if self.env.context.get('hide_model'):
+                field.display_name = field.field_description
+                continue
             model_string = IrModel._get(field.model).name
             field.display_name = f'{field.field_description} ({model_string})'
 
