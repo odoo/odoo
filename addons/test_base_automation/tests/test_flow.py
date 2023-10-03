@@ -1008,3 +1008,33 @@ class TestCompute(common.TransactionCase):
         obj.active = True
         obj.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment")
         self.assertTrue(obj.active)
+
+
+@common.tagged("post_install", "-at_install")
+class TestHttp(common.HttpCase):
+    def test_webhook_trigger(self):
+        self.authenticate(None, None)
+        model = self.env["ir.model"]._get("base.automation.linked.test")
+        record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, log_webhook_calls=True, _actions={
+            "state": "object_write",
+            "update_field_id": self.env["ir.model.fields"]._get(model.model, "another_field").id,
+            "value": "written"
+        })
+
+        obj = self.env[model.model].create({"name": "some name"})
+        response = self.url_open(automation.url, data={"name": "some name"})
+        self.assertEqual(response.json(), {"status": "ok"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(obj.another_field, "written")
+
+        obj.another_field = False
+        with mute_logger("odoo.addons.base_automation.models.base_automation"):
+            response = self.url_open(automation.url, data={})
+        self.assertEqual(response.json(), {"status": "error"})
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(obj.another_field, False)
+
+        response = self.url_open("/web/hook/0123456789", data={"name": "some name"})
+        self.assertEqual(response.json(), {"status": "error"})
+        self.assertEqual(response.status_code, 404)
