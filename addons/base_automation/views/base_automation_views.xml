@@ -46,23 +46,13 @@
                                         />
                                         <field name="trg_field_ref_model_name" invisible="1" />
                                         <field name="trg_field_ref_display_name" invisible="1" />
-                                        <field name="trigger_field_ids" invisible="1" />
-                                        <field name="trigger_field_ids" placeholder="Select fields..." class="oe_inline" groups="base.group_no_one"
-                                            options="{'no_open': True, 'no_create': True}"
-                                            domain="[('model_id', '=', model_id)]"
-                                            invisible="trigger != 'on_create_or_write'" widget="many2many_tags" />
-                                        <field name="on_change_field_ids" class="oe_inline" string="Trigger Fields" placeholder="Trigger fields..."
-                                            options="{'no_open': True, 'no_create': True}"
-                                            domain="[('model_id', '=', model_id)]"
-                                            invisible="trigger != 'on_change'" required="trigger == 'on_change'"
-                                            widget="many2many_tags"/>
                                         <field name="trg_date_id" class="oe_inline" string="Date Field"
                                             options="{'no_open': True, 'no_create': True}"
                                                 invisible="trigger != 'on_time'"
                                                 required="trigger in ['on_time', 'on_time_created', 'on_time_updated']"
                                         />
                                     </div>
-                                    <div class="text-muted" invisible="trigger != 'on_change'"><i class="fa fa-lightbulb-o"/> Automation rules that run on live updates will be executed every time the trigger fields change, <em>whether you save or not</em>.</div>
+                                    <div class="text-muted" invisible="trigger != 'on_change'"><i class="fa fa-warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>
                                 <label for="url" string="URL" invisible="trigger != 'on_webhook'"/>
                                 <div invisible="trigger != 'on_webhook'">
@@ -73,17 +63,20 @@
                                         <button class="btn btn-seconadry" type="object" name="action_rotate_webhook_uuid" string="Rotate Secret" icon="fa-refresh" help="Change the URL's secret if you think the URL is no longer secure. You will have to update any automated system that calls this webhook to the new URL."/>
                                     </div>
                                 </div>
-                                <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'"/>
-                                <field name="trg_date_id" class="oe_inline" string="Date Field"
-                                    options="{'no_open': True, 'no_create': True}"
-                                    invisible="trigger != 'on_time'"
-                                    required="trigger in ['on_time', 'on_time_created', 'on_time_updated']"/>
-                                <label for="trg_date_range" class="oe_inline" string="Delay"
-                                    invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
-                                <div class="o_row oe_inline" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']" >
-                                    <field name="trg_date_range" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
-                                    <field name="trg_date_range_type" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                <label for="trg_date_range" string="Delay" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                <div class="d-flex flex-row gap-2" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']">
+                                    <field name="trg_date_range" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                    <field name="trg_date_range_type" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                    <span invisible="trigger != 'on_time_created'">after creation</span>
+                                    <span invisible="trigger != 'on_time_updated'">after last update</span>
+                                    <span invisible="trigger != 'on_time'">after</span>
+                                    <field name="trg_date_id" class="oe_inline" string="Date Field" placeholder="Select a date field..."
+                                        options="{'no_open': True, 'no_create': True}"
+                                        context="{'hide_model': 1}"
+                                        invisible="trigger != 'on_time'"
+                                        required="trigger in ['on_time', 'on_time_created', 'on_time_updated']"/>
                                 </div>
+                                <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'"/>
                                 <field name="trg_date_calendar_id" class="oe_inline"
                                     options="{'no_open': True, 'no_create': True}"
                                     invisible="not trg_date_id or trg_date_range_type != 'day'"/>
@@ -91,14 +84,21 @@
                                 <div class="alert alert-info" role="alert" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg">
                                     <field name="least_delay_msg"/>
                                 </div>
-                                <field name="filter_pre_domain" class="oe_inline" widget="domain" groups="base.group_no_one"
+                                <field name="filter_pre_domain" widget="domain" groups="base.group_no_one"
                                        options="{'model': 'model_name', 'in_dialog': True}"
                                        invisible="trigger == 'on_webhook'"
                                 />
-                                <field name="filter_domain" class="oe_inline" widget="domain"
-                                    options="{'model': 'model_name', 'in_dialog': True}"
-                                    invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink']"
+                                <label for="filter_domain" invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink']"/>
+                                <label for="filter_domain" string="Extra Conditions" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                <field name="filter_domain" nolabel="1" widget="domain"
+                                    options="{'model': 'model_name', 'in_dialog': False, 'foldable': True}"
+                                    invisible="trigger not in ['on_create_or_write', 'on_change', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />
+                                <field name="trigger_field_ids" string="When updating" placeholder="Select fields..."
+                                    options="{'no_open': True, 'no_create': True}"
+                                    domain="[('model_id', '=', model_id)]"
+                                    context="{'hide_model': 1}"
+                                    invisible="trigger not in ['on_create_or_write', 'on_change']" widget="many2many_tags" />
                             </group>
                             <group>
                                 <label for="record_getter" string="Target Record" invisible="trigger != 'on_webhook'" />
