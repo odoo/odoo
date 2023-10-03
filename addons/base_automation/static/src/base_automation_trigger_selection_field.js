@@ -12,7 +12,6 @@ const OPT_GROUPS = [
     {
         group: { sequence: 10, key: "values", name: _lt("Values Updated") },
         triggers: [
-            "on_create_or_write",
             "on_stage_set",
             "on_user_set",
             "on_tag_set",
@@ -28,7 +27,7 @@ const OPT_GROUPS = [
     },
     {
         group: { sequence: 40, key: "custom", name: _lt("Custom") },
-        triggers: ["on_unlink", "on_change"],
+        triggers: ["on_create_or_write", "on_unlink", "on_change"],
     },
     {
         group: { sequence: 50, key: "external", name: _lt("External") },
@@ -64,6 +63,7 @@ function computeDerivedOptions(options, fields, currentSelection, { excludeGroup
                 continue;
             }
         }
+
         const option = { group, value, label };
         derivedOptions.push(option);
     }

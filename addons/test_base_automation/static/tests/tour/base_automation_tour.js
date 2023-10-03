@@ -142,10 +142,10 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                         on_user_set: "User is set",
                         on_tag_set: "Tag is added",
                         on_priority_set: "Priority is set to",
-                        on_create_or_write: "On save",
                         on_time: "Based on date field",
                         on_time_created: "After creation",
                         on_time_updated: "After last update",
+                        on_create_or_write: "On save",
                         on_unlink: "On deletion",
                         on_change: "On live update",
                         on_webhook: "On webhook",
@@ -299,7 +299,7 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_time_trigge
                 );
                 assertEqual(
                     document.querySelector(".o_kanban_record .o_tag").innerText,
-                    "Date (res.partner)"
+                    "Date (Contact)"
                 );
             },
         },
@@ -454,7 +454,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 );
                 assertEqual(
                     triggerGroups.map((el) => el.innerText).join(" // "),
-                    "User is setOn save // Based on date fieldAfter creationAfter last update // On deletionOn live update // On webhook"
+                    "User is set // Based on date fieldAfter creationAfter last update // On saveOn deletionOn live update // On webhook"
                 );
             },
         },
@@ -488,7 +488,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 );
                 assertEqual(
                     triggerGroups.map((el) => el.innerText).join(" // "),
-                    "Stage is set toUser is setTag is addedPriority is set toOn save // Based on date fieldAfter creationAfter last update // On deletionOn live update // On webhook"
+                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn live update // On webhook"
                 );
             },
         },

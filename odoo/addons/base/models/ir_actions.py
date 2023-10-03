@@ -508,7 +508,7 @@ class IrActionsServer(models.Model):
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
 
-    update_field_id = fields.Many2one('ir.model.fields', string='Field to update', default=_default_update_field_id, ondelete='cascade')
+    update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', default=_default_update_field_id, ondelete='cascade')
     update_related_model_id = fields.Many2one('ir.model', compute='_compute_update_related_model_id')
 
     value = fields.Text(help="For Python expressions, this field may hold a Python expression "
@@ -518,12 +518,12 @@ class IrActionsServer(models.Model):
                              "For Static values, the value will be used directly without evaluation, e.g."
                              "`42` or `My custom name` or the selected record.")
     evaluation_type = fields.Selection([
-        ('value', 'Static value'),
+        ('value', 'Custom Value'),
         ('equation', 'Python expression')
     ], 'Value Type', default='value', change_default=True)
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
-    selection_value = fields.Many2one('ir.model.fields.selection', string="Selection value", ondelete='cascade',
+    selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
                                       domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
 
     value_field_to_show = fields.Selection([
