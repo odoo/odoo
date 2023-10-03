@@ -284,3 +284,12 @@ class BaseAutomationTestUi(HttpCase):
             "test_form_view_custom_reference_field",
             login="admin",
         )
+
+    def test_form_view_mail_triggers(self):
+        self.start_tour(
+            (
+                f"/web?debug=0#{_urlencode_kwargs(action=self.env.ref('base_automation.base_automation_act').id, view_type='form')}"
+            ),
+            "test_form_view_mail_triggers",
+            login="admin",
+        )
