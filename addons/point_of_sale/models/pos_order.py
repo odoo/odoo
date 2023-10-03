@@ -1525,7 +1525,7 @@ class ReportSaleDetails(models.AbstractModel):
         data = dict(data or {})
         # initialize data keys with their value if provided, else None
         data.update({
-            'session_ids': data.get('session_ids') or docids,
+            'session_ids': data.get('session_ids'),
             'config_ids': data.get('config_ids'),
             'date_start': data.get('date_start'),
             'date_stop': data.get('date_stop')
