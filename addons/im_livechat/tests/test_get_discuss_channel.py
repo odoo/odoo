@@ -41,16 +41,18 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
         # ensure member info are hidden (in particular email and real name when livechat username is present)
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self.assertEqual(sorted((m['persona'].get('partner', m['persona'].get('guest')) for m in channel_info['channel']['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
+        self.assertEqual(sorted((m['persona'] for m in channel_info['channel']['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
             'id': self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.id,
             'name': 'Visitor',
             'im_status': 'offline',
+            'type': "guest",
         }, {
             'active': True,
             'country': False,
             'id': operator.partner_id.id,
             'is_bot': False,
             'is_public': False,
+            'type': "partner",
             'user_livechat_username': 'Michel Operator',
         }], key=lambda m: m['id']))
 
@@ -69,32 +71,30 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                 'channel': {'id': channel_info['id']},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
                 'persona': {
-                    'partner': {
-                        'active': True,
-                        'country': False,
-                        'id': operator.partner_id.id,
-                        'is_bot': False,
-                        'is_public': False,
-                        'user_livechat_username': 'Michel Operator',
-                    },
+                    'active': True,
+                    'country': False,
+                    'id': operator.partner_id.id,
+                    'is_bot': False,
+                    'is_public': False,
+                    'type': "partner",
+                    'user_livechat_username': 'Michel Operator',
                 },
             },
             {
                 'channel': {'id': channel_info['id']},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', test_user.partner_id.id)]).id,
                 'persona': {
-                    'partner': {
-                        'active': True,
-                        'country': {
-                            'code': 'BE',
-                            'id': belgium.id,
-                            'name': 'Belgium',
-                        },
-                        'id': test_user.partner_id.id,
-                        'is_bot': False,
-                        'is_public': False,
-                        'name': 'Roger',
+                    'active': True,
+                    'country': {
+                        'code': 'BE',
+                        'id': belgium.id,
+                        'name': 'Belgium',
                     },
+                    'id': test_user.partner_id.id,
+                    'is_bot': False,
+                    'is_public': False,
+                    'name': 'Roger',
+                    'type': "partner",
                 },
             },
         ]]])
@@ -116,14 +116,13 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                 'channel': {'id': channel_info['id']},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
                 'persona': {
-                    'partner': {
-                        'active': True,
-                        'country': False,
-                        'id': operator.partner_id.id,
-                        'is_bot': False,
-                        'is_public': False,
-                        'user_livechat_username': 'Michel Operator',
-                    },
+                    'active': True,
+                    'country': False,
+                    'id': operator.partner_id.id,
+                    'is_bot': False,
+                    'is_public': False,
+                    'type': "partner",
+                    'user_livechat_username': 'Michel Operator',
                 },
             },
         ]]])

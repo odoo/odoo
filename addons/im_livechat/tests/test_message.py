@@ -58,6 +58,7 @@ class TestImLivechatMessage(HttpCase):
                 'id': self.users[1].partner_id.id,
                 'is_company': self.users[1].partner_id.is_company,
                 'name': "test1",
+                'type': "partner",
                 'user': {
                     'id': self.users[1].id,
                     'isInternalUser': self.users[1]._is_internal(),
@@ -67,7 +68,6 @@ class TestImLivechatMessage(HttpCase):
             'date': message.date,
             'write_date': message.write_date,
             'create_date': message.create_date,
-            'guestAuthor': False,
             'history_partner_ids': [],
             'id': message.id,
             'default_subject': channel_livechat_1.name,

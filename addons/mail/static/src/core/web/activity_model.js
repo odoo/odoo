@@ -50,7 +50,6 @@ export class Activity extends Record {
     static insert(data, { broadcast = true } = {}) {
         /** @type {import("models").Activity} */
         const activity = this.preinsert(data);
-        Object.assign(activity, { id: data.id });
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];
         }

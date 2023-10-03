@@ -29,7 +29,6 @@ export class NotificationGroup extends Record {
             const id = nextId++;
             /** @type {import("models").NotificationGroup} */
             group = this.preinsert({ id });
-            Object.assign(group, { id });
             this.store.discuss.notificationGroups.add(group);
         }
         group.update(data);

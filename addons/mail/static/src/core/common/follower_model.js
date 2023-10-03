@@ -2,14 +2,6 @@
 
 import { Record } from "@mail/core/common/record";
 
-/**
- * @typedef Data
- * @property {import("models").Thread} followedThread
- * @property {number} id
- * @property {Boolean} is_active
- * @property {import("@mail/core/common/persona_model").Data} partner
- */
-
 export class Follower extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Follower>} */
@@ -18,19 +10,11 @@ export class Follower extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Data} data
-     * @returns {import("models").Follower}
-     */
+    /** @returns {import("models").Follower} */
     static insert(data) {
         /** @type {import("models").Follower} */
         const follower = this.preinsert(data);
-        Object.assign(follower, {
-            followedThread: data.followedThread,
-            id: data.id,
-            isActive: data.is_active,
-            partner: { ...data.partner, type: "partner" },
-        });
+        Object.assign(follower, data);
         return follower;
     }
 
@@ -38,12 +22,10 @@ export class Follower extends Record {
     /** @type {number} */
     id;
     /** @type {boolean} */
-    isActive;
+    is_active;
     partner = Record.one("Persona");
 
-    /**
-     * @returns {boolean}
-     */
+    /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
         return this.partner.eq(this._store.user)

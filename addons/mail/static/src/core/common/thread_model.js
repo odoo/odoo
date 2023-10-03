@@ -32,7 +32,7 @@ export class Thread extends Record {
     static new(data) {
         /** @type {import("models").Thread} */
         const thread = super.new(data);
-        this.store.Composer.insert({ thread });
+        thread.composer = { thread };
         return thread;
     }
     /**
@@ -64,11 +64,7 @@ export class Thread extends Record {
         }
         /** @type {import("models").Thread} */
         thread = this.preinsert(data);
-        Object.assign(thread, {
-            id: data.id,
-            model: data.model,
-            type: data.type,
-        });
+        thread.type = data.type;
         onChange(thread, "message_unread_counter", () => {
             if (thread.channel) {
                 thread.channel.message_unread_counter = thread.message_unread_counter;
@@ -193,7 +189,7 @@ export class Thread extends Record {
     rtcInvitingSession = Record.one("RtcSession");
     invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");
-    composer = Record.one("Composer");
+    composer = Record.one("Composer", { onDelete: (r) => r.delete() });
     counter = 0;
     /** @type {string} */
     customName;
@@ -350,10 +346,7 @@ export class Thread extends Record {
         return this.channelMembers
             .map((member) => member.persona)
             .filter((persona) => !!persona)
-            .filter(
-                ({ id, type }) =>
-                    id !== (type === "partner" ? this._store.user?.id : this._store.guest?.id)
-            );
+            .filter((p) => p.notEq(this._store.self));
     }
 
     /** @type {import("models").Persona|undefined} */
