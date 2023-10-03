@@ -15,8 +15,8 @@ $o-portal-mobile-toolbar-bg: $gray-200;
 // Portal Tables
 $o-portal-table-th-pt: map-get($spacers, 2) !default; // bts4 pt-2
 $o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
-$o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
-$o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
+$o-portal-table-td-pt: map-get($spacers, 2) !default; // bts4 pt-2
+$o-portal-table-td-pb: map-get($spacers, 2) !default; // bts4 pb-2
 
 // Portal custom bg color
 $o-portal-bg-color: desaturate($gray-200, 100%);
@@ -29,6 +29,10 @@ body {
     // Set frontend direction that will be flipped with
     // rtlcss for right-to-left text direction.
     direction: ltr;
+}
+
+thv{
+    font-weight: 500;
 }
 
 header {
@@ -242,13 +246,6 @@ img, .media_iframe_video, .o_image {
 }
 
 // Portal specific
-// ===  Page custom bg ===
-// To be applied to all portal pages if bg-color is white (default).
-@if ($o-portal-use-default-colors) {
-    #wrapwrap.o_portal {
-        @include o-bg-color($o-portal-bg-color, $with-extras: false);
-    }
-}
 
 .o_portal {
     .breadcrumb {
@@ -291,10 +288,6 @@ img, .media_iframe_video, .o_image {
 
         }
 
-        tr:last-child td {
-            padding-bottom: $o-portal-table-td-pb * 1.5;
-        }
-
         td, th {
             vertical-align: middle;
             white-space: nowrap;
@@ -327,7 +320,7 @@ img, .media_iframe_video, .o_image {
     }
 }
 
-.o_portal_address {
+address {
     span[itemprop="name"] {
         margin-bottom: 0.3em;
     }
@@ -341,19 +334,12 @@ img, .media_iframe_video, .o_image {
         }
 
         .fa {
-            @include o-position-absolute(0, $left: 0);
             line-height: $line-height-base;
+            color: $o-gray-500;
 
-            + span, + div, + a {
+            + span, + div {
                 display: block;
-                // FontAwesome '.fa-fw' fixed-with + margin
-                padding-left: 1.28571429em + 0.5em;
             }
-        }
-
-        span[itemprop="email"] {
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
     }
 }
@@ -370,26 +356,14 @@ img, .media_iframe_video, .o_image {
     object-fit: cover;
 }
 
-.o_portal_sidebar {
-    #sidebar_content.card {
-        border-left: 0;
-        border-bottom: 0;
-
-        > div.card-body {
-            border-left: $border-width solid $border-color;
-        }
-
-        > ul > li {
-            border-left: $border-width solid $border-color;
-            margin-bottom: -1px;
-        }
-
-        > div.card-footer {
-            border-left: $border-width solid $border-color;
-            border-bottom: $border-width solid $border-color;
-        }
+form label {
+    font-weight: $font-weight-bold;
+    &.label-optional {
+        font-weight: $font-weight-normal;
     }
+}
 
+.o_portal_sidebar {
     .o_portal_html_view {
         overflow: hidden;
         background: white;
@@ -402,6 +376,18 @@ img, .media_iframe_video, .o_image {
         iframe {
             position: relative;
         }
+    }
+}
+
+.o_portal_sidebar_content {
+    @include media-breakpoint-down(lg) {
+        background: $o-gray-100;
+    }
+}
+
+.o_portal_content {
+    @include media-breakpoint-up(lg) {
+        border-left: $border-width solid $border-color;
     }
 }
 
