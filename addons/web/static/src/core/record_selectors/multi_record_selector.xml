@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.MultiRecordSelector" >
+        <div class="o_input d-flex flex-wrap h-100 gap-1 o_multi_record_selector">
+            <TagsList tags="tags"/>
+            <RecordAutocomplete
+                resModel="props.resModel"
+                value="''"
+                domain="props.domain"
+                context="props.context"
+                className="'o_input o_domain_leaf_value_input flex-grow-1'"
+                fieldString="props.fieldString"
+                multiSelect="true"
+                getIds.bind="getIds"
+                update.bind="update"
+            />
+        </div>
+    </t>
+
+</templates>
