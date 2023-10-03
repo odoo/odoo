@@ -131,7 +131,7 @@
                                         <templates>
                                             <t t-name="kanban-box">
                                                 <div class="oe_kanban_global_click row g-0 align-items-center">
-                                                    <div class="d-flex align-items-center gap-2">
+                                                    <div class="d-flex align-items-center gap-1">
                                                         <field name="sequence" widget="handle" class="px-1" />
                                                         <field name="state" invisible="1" />
                                                         <field name="evaluation_type" invisible="1" />
@@ -143,7 +143,7 @@
                                                         <i
                                                             data-name="server_action_icon"
                                                             t-att-title="record.state.value"
-                                                            class="fa"
+                                                            class="fa fa-fw"
                                                             t-att-class="{
                                                                 'code': 'fa-file-code-o',
                                                                 'object_create': 'fa-edit',
@@ -158,6 +158,7 @@
                                                         />
                                                         <field name="name" class="text-truncate" />
                                                         <t invisible="state != 'object_write'">
+                                                            <span>to</span>
                                                             <code invisible="evaluation_type != 'equation'" t-esc="record.value.raw_value"/>
                                                             <span invisible="evaluation_type == 'equation'" >
                                                                 <field name="selection_value" invisible="value_field_to_show != 'selection_value'" class="d-inline"/>
