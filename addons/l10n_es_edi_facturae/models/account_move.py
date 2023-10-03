@@ -379,10 +379,6 @@ class AccountMove(models.Model):
             errors.append(_('No valid certificate found for this company, Facturae EDI file will not be signed.\n'))
         return xml_content, errors
 
-    def _get_edi_doc_attachments_to_export(self):
-        # EXTENDS 'account'
-        return super()._get_edi_doc_attachments_to_export() + self.l10n_es_edi_facturae_xml_id
-
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------

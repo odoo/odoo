@@ -550,8 +550,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice1 + invoice2)
         wizard_values = {
             'mode': 'invoice_multi',
-            'enable_download': False,
-            'checkbox_download': False,
+            'enable_download': True,
+            'checkbox_download': True,
             'enable_send_mail': True,
             'display_mail_composer': False,
             'send_mail_readonly': False,
@@ -563,6 +563,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'mail_attachments_widget': False,
         }
         self.assertRecordValues(wizard, [wizard_values])
+
+        wizard.checkbox_download = False  # We don't want to download the zip (since then we process synchronously)
 
         # Process.
         results = wizard.action_send_and_print()
@@ -577,6 +579,73 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # Run the CRON.
         wizard.action_send_and_print(from_cron=True)
+        self.assertTrue(invoice1.invoice_pdf_report_id)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice1._name),
+            ('res_id', '=', invoice1.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        self.assertTrue(invoice2.invoice_pdf_report_id)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice2._name),
+            ('res_id', '=', invoice2.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        self.assertFalse(invoice1.is_being_sent)
+        self.assertFalse(invoice2.is_being_sent)
+
+        # Mix already sent invoice with a new one.
+        invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice1 + invoice2 + invoice3)
+        self.assertRecordValues(wizard, [wizard_values])
+        wizard.action_send_and_print(from_cron=True)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice1._name),
+            ('res_id', '=', invoice1.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice2._name),
+            ('res_id', '=', invoice2.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        self.assertTrue(invoice1.invoice_pdf_report_id)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice3._name),
+            ('res_id', '=', invoice3.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+
+    def test_invoice_multi_with_download(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        wizard_values = {
+            'mode': 'invoice_multi',
+            'enable_download': True,
+            'checkbox_download': True,
+            'enable_send_mail': True,
+            'display_mail_composer': False,
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+            'mail_lang': 'en_US',
+            'mail_partner_ids': [],
+            'mail_subject': False,
+            'mail_body': False,
+            'mail_attachments_widget': False,
+        }
+        self.assertRecordValues(wizard, [wizard_values])
+
+        # Process.
+        results = wizard.action_send_and_print()
+        self.assertEqual(results['type'], 'ir.actions.act_url')
+        self.assertRecordValues(wizard, [{'mode': 'done'}])
         self.assertTrue(invoice1.invoice_pdf_report_id)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),

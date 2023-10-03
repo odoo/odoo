@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest.mock import patch
+from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError
@@ -102,6 +102,7 @@ class AccountMoveSend(models.Model):
         return {
             'move_ids': [Command.set(move.ids)],
             'mail_template_id': self.mail_template_id.id,
+            'checkbox_download': self.checkbox_download,
             'checkbox_send_mail': self.checkbox_send_mail,
         }
 
@@ -119,7 +120,7 @@ class AccountMoveSend(models.Model):
         if move.invoice_pdf_report_id:
             return []
 
-        filename = move._get_invoice_pdf_report_filename()
+        filename = move._get_invoice_report_filename()
         return [{
             'id': f'placeholder_{filename}',
             'name': filename,
@@ -181,7 +182,7 @@ class AccountMoveSend(models.Model):
     @api.depends('move_ids')
     def _compute_enable_download(self):
         for wizard in self:
-            wizard.enable_download = wizard.mode == 'invoice_single'
+            wizard.enable_download = wizard.mode in ('invoice_single', 'invoice_multi')
 
     @api.depends('enable_download')
     def _compute_checkbox_download(self):
@@ -291,7 +292,7 @@ class AccountMoveSend(models.Model):
         :return: True if the PDF / electronic documents must be generated, False otherwise.
         """
         self.ensure_one()
-        return self.mode == 'invoice_single' and not invoice.invoice_pdf_report_id and invoice.state == 'posted'
+        return not invoice.invoice_pdf_report_id and invoice.state == 'posted'
 
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         """ Hook allowing to add some extra data for the invoice passed as parameter before the rendering of the pdf
@@ -317,7 +318,7 @@ class AccountMoveSend(models.Model):
 
         invoice_data['pdf_attachment_values'] = {
             'raw': content,
-            'name': invoice._get_invoice_pdf_report_filename(),
+            'name': invoice._get_invoice_report_filename(),
             'mimetype': 'application/pdf',
             'res_model': invoice._name,
             'res_id': invoice.id,
@@ -576,13 +577,21 @@ class AccountMoveSend(models.Model):
                     .create(invoice_data.pop('proforma_pdf_attachment_values'))
 
     @api.model
-    def _download(self, attachment_id):
-        """ Download the PDF. """
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/content/{attachment_id}?download=true',
-            'close': True, # close the wizard
-        }
+    def _download(self, attachment_ids):
+        """ Download the PDF or the zip of PDF if we are in 'multi' mode. """
+        if len(attachment_ids) == 1:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/web/content/{attachment_ids[0]}?download=true',
+                'close': True,  # close the wizard
+            }
+        else:
+            filename = self.move_ids._get_invoice_report_filename(extension='zip') if len(self.move_ids) == 1 else 'invoices.zip'
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f"/account/export_zip_documents?{url_encode({'ids': attachment_ids, 'filename': filename})}",
+                'close': True,
+            }
 
     def action_send_and_print(self, from_cron=False, allow_fallback_pdf=False):
         """ Create the documents and send them to the end customers.
@@ -595,45 +604,45 @@ class AccountMoveSend(models.Model):
         self.ensure_one()
 
         download = self.enable_download and self.checkbox_download
-        generate_invoice_documents = self.mode == 'invoice_single' or (self.mode == 'invoice_multi' and from_cron)
-        moves_data = {move: {} for move in self.move_ids}
 
+        moves_data = {move: {} for move in self.move_ids}
         if len(moves_data) == 1:
             moves_data[self.move_ids]['_form'] = self
         else:
             for move in self.move_ids:
                 moves_data[move]['_form'] = self.new(self._get_available_field_values_in_multi(move))
 
-        if generate_invoice_documents:
-            # Generate all invoice documents.
-            self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
-
-            # Manage errors.
-            errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
-            if errors:
-                self._hook_if_errors(errors, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
-
-            # Fallback in case of error.
-            errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
-            if allow_fallback_pdf and errors:
-                self._generate_invoice_fallback_documents(errors)
-
-            # Send mail.
-            success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error') and move.partner_id.email}
-            if success:
-                self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
-
-            self.mode = 'done'
-
-        if not from_cron:
+        if self.mode == 'invoice_multi' and not from_cron and not download:
             self.env.ref('account.ir_cron_account_move_send')._trigger()
+            return {'type': 'ir.actions.act_window_close'}
+
+        # Generate all invoice documents.
+        self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
+
+        # Manage errors.
+        errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+        if errors:
+            self._hook_if_errors(errors, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+
+        # Fallback in case of error.
+        errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+        if allow_fallback_pdf and errors:
+            self._generate_invoice_fallback_documents(errors)
+
+        # Send mail.
+        success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error') and move.partner_id.email}
+        if success:
+            self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+
+        self.mode = 'done'
 
         if download:
-            attachment = self.move_ids.invoice_pdf_report_id
-            if not attachment and moves_data:
-                attachment = list(moves_data.values())[0].get('proforma_pdf_attachment')
-            if attachment:
-                return self._download(attachment.id)
+            attachment_ids = []
+            for move in self.move_ids:
+                # _get_invoice_extra_attachments retrieves invoice PDF and other possible xml, etc.
+                attachment_ids += self._get_invoice_extra_attachments(move).ids or moves_data.get(move).get('proforma_pdf_attachment').ids
+            if attachment_ids:
+                return self._download(attachment_ids)
 
         return {'type': 'ir.actions.act_window_close'}
 
