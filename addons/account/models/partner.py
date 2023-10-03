@@ -424,7 +424,7 @@ class ResPartner(models.Model):
         for partner, child_ids in all_partners_and_children.items():
             partner.total_invoiced = sum(price_subtotal_sum for partner, price_subtotal_sum in price_totals if partner.id in child_ids)
 
-    api.depends('credit')
+    @api.depends('credit')
     def _compute_days_sales_outstanding(self):
         commercial_partners = {
             commercial_partner: (invoice_date_min, amount_total_signed_sum)
