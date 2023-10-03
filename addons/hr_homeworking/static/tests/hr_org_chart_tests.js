@@ -1,13 +1,9 @@
 /** @odoo-module */
 
-import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+import { registry } from "@web/core/registry";
 
-patch(MockServer.prototype, {
-    async _performRPC(route, args) {
-        if (args.method === "get_worklocation") {
-            return Promise.resolve()
-        }
-        return super._performRPC(...arguments);
-    },
+const mockRegistry = registry.category("mock_server");
+
+mockRegistry.add("get_worklocation", function(route, args) {
+    return Promise.resolve();
 });

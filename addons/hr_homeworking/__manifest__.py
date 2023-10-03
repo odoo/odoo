@@ -10,9 +10,8 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/hr_employee_views.xml',
-        'views/hr_homeworking_views.xml',
         'views/res_users.xml',
-        'wizard/calendar_popover_delete_wizard_homework.xml',
+        'wizard/homework_location_wizard.xml',
     ],
     'demo': [
         'data/hr_homeworking_demo.xml',

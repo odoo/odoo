@@ -12,24 +12,13 @@ class TestHrHomeworkingCommon(common.TransactionCase):
         super(TestHrHomeworkingCommon, cls).setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
 
-        # Test users to use through the various tests
-        cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr.group_hr_user')
-        cls.user_hruser_id = cls.user_hruser.id
-
-        cls.user_hrmanager = mail_new_test_user(cls.env, login='bastien', groups='base.group_user,hr.group_hr_manager')
-        cls.user_hrmanager_id = cls.user_hrmanager.id
-        cls.user_hrmanager.tz = 'Europe/Brussels'
-
         cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')
-        cls.user_employee_id = cls.user_employee.id
 
         # Hr Data
         Department = cls.env['hr.department'].with_context(tracking_disable=True)
         WorkLocation = cls.env['hr.work.location'].with_context(tracking_disable=True)
         main_partner_id = cls.env.ref('base.main_partner')
-        cls.hr_dept = Department.create({
-            'name': 'Human Resources',
-        })
+
         cls.rd_dept = Department.create({
             'name': 'Research and devlopment',
         })
@@ -54,24 +43,13 @@ class TestHrHomeworkingCommon(common.TransactionCase):
 
         cls.employee_emp = cls.env['hr.employee'].create({
             'name': 'David Employee',
-            'user_id': cls.user_employee_id,
+            'user_id': cls.user_employee.id,
             'department_id': cls.rd_dept.id,
+            'monday_location_id': cls.work_home.id,
+            'tuesday_location_id': cls.work_home.id,
+            'wednesday_location_id': cls.work_office_1.id,
+            'thursday_location_id': cls.work_office_1.id,
+            'friday_location_id': cls.work_office_1.id,
+            'saturday_location_id': cls.work_home.id,
+            'sunday_location_id': cls.work_home.id,
         })
-        cls.employee_emp_id = cls.employee_emp.id
-
-        cls.employee_hruser = cls.env['hr.employee'].create({
-            'name': 'Armande HrUser',
-            'user_id': cls.user_hruser_id,
-            'department_id': cls.rd_dept.id,
-        })
-        cls.employee_hruser_id = cls.employee_hruser.id
-
-        cls.employee_hrmanager = cls.env['hr.employee'].create({
-            'name': 'Bastien HrManager',
-            'user_id': cls.user_hrmanager_id,
-            'department_id': cls.hr_dept.id,
-            'parent_id': cls.employee_hruser_id,
-        })
-        cls.employee_hrmanager_id = cls.employee_hrmanager.id
-
-        cls.rd_dept.write({'manager_id': cls.employee_hruser_id})

@@ -13,13 +13,12 @@ patch(AttendeeCalendarController.prototype, {
         this.action = useService("action");
     },
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
-        if ('rawRecord' in record && 'date' in record.rawRecord) {
-            return this.action.doAction('hr_homeworking.hr_employee_location_action',{
+        if (record.homeworking && 'start' in record) {
+            return this.action.doAction('hr_homeworking.set_location_wizard_action',{
                 name: _t("Edit Record"),
                 additionalContext: {
-                    'default_start_date': serializeDate(record.start),
-                    'default_end_date_create': serializeDate(record.end),
-                    'default_work_location_id' : record.rawRecord.location_id,
+                    'default_date': serializeDate(record.start),
+                    'default_work_location_id' : record.work_location_id,
                     'dialog_size': 'medium',
                 },
                 onClose: async (closeInfo) => {
@@ -31,11 +30,10 @@ patch(AttendeeCalendarController.prototype, {
     },
     createRecord(record) {
         if (record.homework) {
-            return this.action.doAction('hr_homeworking.hr_employee_location_action',{
+            return this.action.doAction('hr_homeworking.set_location_wizard_action',{
                 name: _t("Create Record"),
                 additionalContext: {
-                    'default_start_date': serializeDate(record.start),
-                    'default_end_date_create': serializeDate(record.start),
+                    'default_date': serializeDate(record.start),
                     'dialog_size': 'medium',
                 },
                 onClose: async (closeInfo) => {
@@ -47,37 +45,21 @@ patch(AttendeeCalendarController.prototype, {
         }
     },
     deleteRecord(record) {
-        if ('rawRecord' in record && 'date' in record.rawRecord) {
-            if (record.rawRecord.weekly) {
-                this.openRecurringDeletionWizardForHomework(record);
-            } else {
-                this.displayDialog(ConfirmationDialog, {
-                    title: _t("Confirmation"),
-                    body: _t("Are you sure you want to delete this work location?"),
-                    confirm: () => {
-                        this.orm.call('hr.employee.location', "unlink", [
-                            record.rawRecord.idInDB,
-                        ]);
-                        this.model.load();
-                    },
-                    cancel: () => {
-                    },
-                });
-            }
+        if (record.id && record.homeworking && !record.ghostEvent) {
+            this.displayDialog(ConfirmationDialog, {
+                title: _t("Confirmation"),
+                body: _t("Are you sure you want to delete this exception?"),
+                confirm: () => {
+                    this.orm.call('hr.employee.location', "unlink", [
+                        record.id,
+                    ]);
+                    this.model.load();
+                },
+                cancel: () => {
+                },
+            });
         } else {
             super.deleteRecord(...arguments)
         }
     },
-
-    openRecurringDeletionWizardForHomework(record) {
-        this.action.doAction('hr_homeworking.hr_popover_delete_homework_action',{
-            additionalContext: {
-                'default_hr_employee_location_id': record.rawRecord.idInDB,
-                'default_start_date': serializeDate(record.start)
-            },
-            onClose: async (closeInfo) => {
-                this.model.load()
-            },
-        });
-    }
 })
