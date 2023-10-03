@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer"
+import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer";
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
 const { DateTime } = luxon;
@@ -93,9 +93,12 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                 work.push(...events);
             }
         } else {
-            work = Object.values(this.props.model.worklocations)
-                         .filter((wl) => wl.display)
-                         .map((wl) => this.convertWorkRecordToEvent(wl));
+            work = Object.values(this.props.model.worklocations).reduce((wls, wl) => {
+                if (wl.display) {
+                    wls.push(this.convertWorkRecordToEvent(wl));
+                }
+                return wls;
+            }, []);
         }
         return event.concat(work);
     },
@@ -114,10 +117,10 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         };
     },
     onDayRender(info){
+        const parsedDate = DateTime.fromJSDate(info.date).toISODate();
         if (this.props.model.scale === 'week' || this.props.model.scale === 'day'){
-            var ParseDate = (date) => date.getFullYear() + "-" +(date.getMonth() <10 ? "0" + (date.getMonth() + 1) : (date.getMonth()+1)) + "-" + (date.getDate() <10 ?"0" + date.getDate() : date.getDate());
-            let button = info.view.context.calendar.el.querySelector(".fc-day-header[data-date='" + ParseDate(info.date) + "']  .o_month")
-            let line = info.view.context.calendar.el.querySelector(".fc-day-header[data-date='" + ParseDate(info.date) + "']  .line")
+            const button = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_month`)
+            const line = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .line`)
             if (!button || !line)
                 return;
             info.homework = true;
@@ -125,8 +128,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             line.onclick = () =>this.onDateClick(info)
         }
         if (this.props.model.scale === 'month'){
-            var ParseDate = (date) => date.getFullYear() + "-" +(date.getMonth() <10 ? "0" + (date.getMonth() + 1) : (date.getMonth()+1)) + "-" + (date.getDate() <10 ?"0" + date.getDate() : date.getDate());
-            let box = info.view.el.querySelector(".fc-day-top[data-date='" + ParseDate(info.date) + "']")
+            const box = info.view.el.querySelector(`.fc-day-top[data-date='${parsedDate}']`)
             if (!box)
                 return;
             const content = renderToString(this.constructor.ButtonWorklocationTemplate, {})
@@ -143,7 +145,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             let injectedContentStr = "";
             const icon = event.extendedProps.icon;
             if (multiCalendar) {
-                const records = this.props.model.worklocations[info.event.start][icon].filter((rec) => rec.title === event.title);
+                const parsedDate = DateTime.fromJSDate(info.event.start).toISODate()
+                const records = this.props.model.worklocations[parsedDate][icon].filter((rec) => rec.title === event.title);
                 let iconStr;
                 if (icon === "home") {
                     iconStr = "fa-home";
@@ -159,9 +162,9 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                     injectedContentStr = renderToString(this.constructor.WorklocationTemplate, obj);
                 }
             } else {
-                const record = this.props.model.worklocations[info.event.id];
+                const record = this.props.model.worklocations[DateTime.fromJSDate(info.event.start).toISODate()];
                 if (record) {
-                    injectedContentStr = renderToString(this.constructor.WorklocationTemplate, {...record});
+                    injectedContentStr = renderToString(this.constructor.WorklocationTemplate, record);
                 }
             }
             const domParser = new DOMParser();
@@ -181,27 +184,21 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     onClick(info){
         if (info.event.extendedProps.worklocation){
             const elems = document.elementsFromPoint(info.jsEvent.x, info.jsEvent.y)
-            const day_elem = elems.find((elem) => elem.classList.contains("fc-day","fc-widget-content"))
-            const day_elem_date = day_elem.getAttribute("data-date")
-            let wl;
+            const dayElement = elems.find((elem) => elem.classList.contains("fc-day","fc-widget-content"))
+            const dayFromElement = dayElement.getAttribute("data-date")
+            let workLocation;
             if (this.props.model.multiCalendar) {
                 const elem = elems.find((elem) => elem.classList.contains("o_homework_content"))
                 if (!elem){
                     return;
                 }
-                const id = parseInt(elem.getAttribute("data-id"));
+                const id = elem.getAttribute("data-id");
                 const icon = info.event.extendedProps.icon;
-                const date = new Date(day_elem_date + " ")  // the empty string set's the time to 0
-                wl = this.props.model.worklocations[date][icon].find((location) => location.id === id);
+                workLocation = this.props.model.worklocations[dayFromElement][icon].find((wl) => wl.id === id);
             } else {
-                for (const location of Object.values(this.props.model.worklocations)) {
-                    if (location.start.toISODate() === day_elem_date) {
-                        wl = location;
-                        continue;
-                    }
-                }
+                workLocation = Object.values(this.props.model.worklocations).find(wl => wl.start.toISODate() === dayFromElement);
             }
-            this.openPopover(info.el, wl);
+            this.openPopover(info.el, workLocation);
             this.highlightEvent(info.event, "o_cw_custom_highlight");
         } else {
             super.onClick(...arguments);

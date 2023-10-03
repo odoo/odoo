@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
-import { serializeDateTime, deserializeDate } from "@web/core/l10n/dates";
+import { serializeDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
+
+const { Interval } = luxon;
 
 patch(AttendeeCalendarModel.prototype, {
     fetchEventLocation(data) {
@@ -26,56 +28,79 @@ patch(AttendeeCalendarModel.prototype, {
     async loadWorkLocations(data) {
         const res = await this.fetchEventLocation(data)
         this.multiCalendar = Object.keys(res).length > 1;
-        const merged = this.multiCalendar ? {} : [];
-        let previousIcon;
-        let previousTitle;
-        let previous = 0;
-        for (const key in res) {
-            const rawRecords = res[key];
-            for (const rawRecord of rawRecords) {
-                const normalizedRecord = this.normalizeLocalisationRecord(rawRecord)
+        const events = {};
+        let previousDay;
+        const rangeInterval = Interval.fromDateTimes(data.range.start.startOf("day"), data.range.end.endOf("day")).splitBy({day: 1});
+        for (const day of rangeInterval) {
+            const startDay = day.s;
+            const dayISO = startDay.toISODate();
+            const dayName = startDay.weekdayLong.toLowerCase();
+            if (!(dayISO in events)) {
+                events[dayISO] = {};
+            }
+            for (const employeeId in res) {
                 if (this.multiCalendar) {
-                    const startDate = normalizedRecord.start.toJSDate()
-                    if (!merged[startDate]) {
-                        merged[startDate] = {}
+                    if (res[employeeId].exceptions && dayISO in res[employeeId].exceptions) {
+                        // check if exception for that date
+                        const { location_type } = res[employeeId].exceptions[dayISO];
+                        if (location_type in events[dayISO]) {
+                            events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
+                        } else {
+                            events[dayISO][location_type] = [this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
+                        }
                     }
-                    if (!merged[startDate][normalizedRecord.icon]) {
-                        merged[startDate][normalizedRecord.icon] = []    
+                    else {
+                        const {location_type} = res[employeeId][`${dayName}_location_id`];
+                        if (location_type in events[dayISO]) {
+                            events[dayISO][location_type].push(this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][`${dayName}_location_id`]));
+                        } else {
+                            events[dayISO][location_type] = [this.createHomeworkingEventAt(res[employeeId], startDay, res[employeeId][`${dayName}_location_id`])];
+                        }
                     }
-                    merged[startDate][normalizedRecord.icon].push(normalizedRecord);
                 } else {
-                    if (rawRecord.icon === previousIcon && rawRecord.title === previousTitle && normalizedRecord.start.diff(merged[previous].end, "days").days == 1) {
-                        merged[previous].end = merged[previous].end.plus({days: 1});
-                        normalizedRecord.display = false;
+                    const hasException = res[employeeId].exceptions && dayISO in res[employeeId].exceptions;
+                    const workLocationData = hasException ? res[employeeId].exceptions[dayISO] : res[employeeId][`${dayName}_location_id`];
+                    const currentEvent = this.createHomeworkingEventAt(res[employeeId], startDay, workLocationData);
+                    const previousEvent = events[previousDay];
+                    if (previousEvent && previousEvent.icon === currentEvent.icon && previousEvent.title === currentEvent.title) {
+                        previousEvent.end = previousEvent.end.plus({days:1});
+                        currentEvent.display = false;
                     } else {
-                        previousIcon = rawRecord.icon;
-                        previousTitle = rawRecord.title;
-                        previous = merged.length;
+                        previousDay = dayISO;
                     }
-                    merged.push(normalizedRecord);
+                    events[dayISO] = currentEvent;
                 }
             }
         }
-        return this.multiCalendar ? merged : Object.assign({}, ...merged.map((x) => ({[x.id]: x})));
+        return events;
     },
 
-    normalizeLocalisationRecord(rawRecord) {
+    createHomeworkingEventAt(record, day, workLocationData) {
+        const { location_type, location_name, work_location_id, hr_employee_location_id} = workLocationData;
+        const ghostEvent = !Boolean(hr_employee_location_id);
+        const id = ghostEvent ? `default-location-${record.employee_id}-${day.toMillis()}` : String(hr_employee_location_id);
         return {
-            id : rawRecord['id'],
-            title : rawRecord['title'],
+            id,
+            title: location_name,
             isAllDay: true,
-            start : deserializeDate(rawRecord['date']),
-            end : deserializeDate(rawRecord['date']),
             duration : 1,
+            start: day,
+            end: day.plus({hours: 1}),
             isHatched: false,
             isStriked: false,
             display: true,
             multiCalendar: this.multiCalendar,
-            icon: rawRecord.icon,
-            userId: rawRecord.userId,
-            partner_id: rawRecord.partner_id[0],
-            colorIndex: this.partnerColorMap[rawRecord.partner_id],
-            rawRecord,
+            homeworking: true,
+            employeeId: record.employee_id,
+            employeeName: record.employee_name,
+            icon: location_type,
+            userId: record.user_id,
+            partnerId: record.partner_id,
+            colorIndex: this.partnerColorMap[record.partner_id],
+            resModel: "hr.employee.location",
+            work_location_id,
+            ghostEvent,
+            rawRecord: record,
         };
     },
 

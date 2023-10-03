@@ -15,10 +15,10 @@
         <t t-else="">
             <div class="o_homework_single">
                 <div class="fc-content text-nowrap" t-att-class="`wl_color_${colorIndex}`">
-                    <t t-if="rawRecord.icon === 'office'">
+                    <t t-if="icon === 'office'">
                         <div class="fa fa-building me-1"/>
                     </t>
-                    <t t-elif="rawRecord.icon === 'home'">
+                    <t t-elif="icon === 'home'">
                         <div class="fa fa-home me-1"/>
                     </t>
                     <t t-else="">

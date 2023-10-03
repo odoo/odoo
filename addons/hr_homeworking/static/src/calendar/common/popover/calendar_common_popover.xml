@@ -2,7 +2,7 @@
 <templates>
     <t t-name="homework.AttendeeCalendarCommonPopover">
         <t t-if="isWorkLocationEvent()">
-        <Record resModel="'hr.employee.location'" resId="props.record.rawRecord.idInDB" fieldNames="fieldNames" mode="'readonly'" t-slot-scope="slot">
+        <Record resModel="'hr.employee.location'" fieldNames="fieldNames" fields="fields" activeFields="fields" values="values" mode="'readonly'" t-slot-scope="slot">
             <div class="card-header d-flex justify-content-between py-2 pe-2">
                 <h4 class="p-0 pt-1">
                     <span class="popover-header border-0">
@@ -36,13 +36,10 @@
     </t>
     <t t-name="homework.AttendeeCalendarCommonPopover.body">
         <t t-if="isWorkLocationEvent()">
-            <Record resModel="'hr.employee.location'" resId="props.record.rawRecord.idInDB" fieldNames="fieldNames" mode="'readonly'" t-slot-scope="slot">
                 <ul class="list-group list-group-flush">
                     <div class="list-group-item">
                         <t t-if="props.record.start.ts != props.record.end.ts">
                             <t t-esc="props.record.start.toFormat('d MMM')" t-options="{'widget': 'date'}"/>
-                            -
-                            <t t-esc="props.record.end.toFormat('d MMM')" t-options="{'widget': 'date'}"/>
                         </t>
                         <t t-else="">
                             <t t-esc="props.record.start.toFormat('d MMM')" t-options="{'widget': 'date'}"/>
@@ -53,7 +50,6 @@
                         <Field name="'employee_name'" record="slot.record"/>
                     </div>
                 </ul>
-            </Record>
         </t>
         <t t-else="">
             <t t-call="calendar.AttendeeCalendarCommonPopover.body" />
@@ -62,11 +58,9 @@
 
     <t t-name="homework.AttendeeCalendarCommonPopover.footer">
         <t t-if="isWorkLocationEvent()">
-            <Record resModel="'hr.employee.location'" resId="props.record.rawRecord.idInDB" fieldNames="fieldNames" mode="'readonly'" t-slot-scope="slot">
-                <t t-if="isCurrentUserIsOwnerWorklocation()">
-                    <t t-call="calendar.AttendeeCalendarCommonPopover.footer" />
-                </t>
-            </Record>
+            <t t-if="isCurrentUserIsOwnerWorklocation()">
+                <t t-call="calendar.AttendeeCalendarCommonPopover.footer" />
+            </t>
         </t>
         <t t-else="">
             <t t-call="calendar.AttendeeCalendarCommonPopover.footer" />
