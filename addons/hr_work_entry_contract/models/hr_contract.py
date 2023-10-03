@@ -77,6 +77,9 @@ class HrContract(models.Model):
         ]
         return expression.AND([domain, self._get_sub_leave_domain()])
 
+    def _get_resource_calendar_leaves(self, start_dt, end_dt):
+        return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
+
     def _get_attendance_intervals(self, start_dt, end_dt):
         # {resource: intervals}
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
@@ -101,7 +104,7 @@ class HrContract(models.Model):
 
         attendances_by_resource = self._get_attendance_intervals(start_dt, end_dt)
 
-        resource_calendar_leaves = self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
+        resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
         # {resource: resource_calendar_leaves}
         leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
         for leave in resource_calendar_leaves:
