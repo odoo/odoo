@@ -11,6 +11,8 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 
+import { contains } from "@web/../tests/utils";
+
 QUnit.module("suggestion", {
     async beforeEach() {
         // Simulate real user interactions
@@ -248,4 +250,34 @@ QUnit.test("Internal user should be displayed first", async (assert) => {
     assert.strictEqual(suggestions[1].textContent, "Person C(c@test.com)");
     assert.strictEqual(suggestions[2].textContent, "Person B(b@test.com)");
     assert.strictEqual(suggestions[3].textContent, "Person A(a@test.com)");
+});
+
+QUnit.test("Current user that is a follower should be considered as such", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ share: true });
+    pyEnv["res.partner"].create([
+        { email: "a@test.com", name: "Person A" },
+        { email: "b@test.com", name: "Person B", user_ids: [userId] },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const { openFormView } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    await click("button:contains(Send message)");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 3 });
+    await contains(".o-mail-Composer-suggestion", {
+        text: "Mitchell Admin",
+        before: [".o-mail-Composer-suggestion", { text: "Person B(b@test.com)" }],
+    });
+    await contains(".o-mail-Composer-suggestion", {
+        text: "Person B(b@test.com)",
+        before: [".o-mail-Composer-suggestion", { text: "Person A(a@test.com)" }],
+    });
 });
