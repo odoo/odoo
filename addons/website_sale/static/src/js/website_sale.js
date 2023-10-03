@@ -238,7 +238,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         if (!$("#country_id").val()) {
             return;
         }
-        this.rpc("/shop/country_infos/" + $("#country_id").val(), {
+        return this.rpc("/shop/country_infos/" + $("#country_id").val(), {
             mode: $("#country_id").attr('mode'),
         }).then(function (data) {
             // placeholder phone_code
@@ -628,7 +628,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         if (!this.$('.checkout_autoformat').length) {
             return;
         }
-        this._changeCountry();
+        return this._changeCountry();
     },
     /**
      * @private
