@@ -18,7 +18,6 @@ export class CannedResponse extends Record {
         /** @type {import("models").CannedResponse} */
         const cannedResponse = this.preinsert(data);
         Object.assign(cannedResponse, {
-            id: data.id,
             name: data.source,
             substitution: data.substitution,
         });

@@ -13,7 +13,7 @@ patch(Thread.prototype, {
     update(data) {
         super.update(data);
         if (data?.visitor) {
-            this.visitor = { ...data.visitor, type: "visitor" };
+            this.visitor = data.visitor;
         }
         assignDefined(this, data, ["requested_by_operator"]);
     },

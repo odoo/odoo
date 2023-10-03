@@ -86,11 +86,8 @@ export class Message extends Record {
             });
         }
         this.attachments = attachments.map((attachment) => ({ message: this, ...attachment }));
-        if (data.author?.id) {
-            this.author = { ...data.author, type: "partner" };
-        }
-        if (data.guestAuthor?.id) {
-            this.author = { ...data.guestAuthor, type: "guest", channelId: this.originThread.id };
+        if ("author" in data) {
+            this.author = data.author;
         }
         this.linkPreviews = linkPreviews.map((data) => ({ ...data, message: this }));
         this.notifications = notifications.map((notif) => ({ ...notif, message: this }));
@@ -99,7 +96,7 @@ export class Message extends Record {
             this.originThread.selfFollower = {
                 followedThread: this.originThread,
                 id: data.user_follower_id,
-                isActive: true,
+                is_active: true,
                 partner: this._store.self,
             };
         }
@@ -117,6 +114,7 @@ export class Message extends Record {
     author = Record.one("Persona");
     /** @type {string} */
     body;
+    composer = Record.one("Composer", { onDelete: (r) => r.delete() });
     /** @type {string} */
     defaultSubject;
     /** @type {number|string} */

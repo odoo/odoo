@@ -52,10 +52,10 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         members_data = channel_info['channel']['channelMembers'][0][1]
         self.assertEqual(len(members_data), 2, "Channel info should get info for the 2 members")
-        partner_info = next(member for member in members_data if member['persona']['partner']['email'] == partner.email)
-        partner2_info = next(member for member in members_data if member['persona']['partner']['email'] == partner2.email)
-        self.assertFalse(partner2_info['persona']['partner']['out_of_office_date_end'], "current user should not be out of office")
-        self.assertEqual(partner_info['persona']['partner']['out_of_office_date_end'], leave_date_end.strftime(DEFAULT_SERVER_DATE_FORMAT), "correspondent should be out of office")
+        partner_info = next(member for member in members_data if member['persona']['email'] == partner.email)
+        partner2_info = next(member for member in members_data if member['persona']['email'] == partner2.email)
+        self.assertFalse(partner2_info['persona']['out_of_office_date_end'], "current user should not be out of office")
+        self.assertEqual(partner_info['persona']['out_of_office_date_end'], leave_date_end.strftime(DEFAULT_SERVER_DATE_FORMAT), "correspondent should be out of office")
 
 
 @tagged('out_of_office')

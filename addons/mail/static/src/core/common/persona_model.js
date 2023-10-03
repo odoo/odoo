@@ -30,7 +30,7 @@ export class Persona extends Record {
     }
 
     update(data) {
-        assignDefined(this, { ...data });
+        assignDefined(this, data);
         if (
             this.type === "partner" &&
             this.im_status !== "im_partner" &&

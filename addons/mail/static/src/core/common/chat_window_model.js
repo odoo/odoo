@@ -24,7 +24,6 @@ export class ChatWindow extends Record {
         if (!chatWindow) {
             /** @type {import("models").ChatWindow} */
             const chatWindow = this.preinsert(data);
-            Object.assign(chatWindow, { thread: data.thread });
             assignDefined(chatWindow, data);
             let index;
             const visible = this.env.services["mail.chat_window"].visible;

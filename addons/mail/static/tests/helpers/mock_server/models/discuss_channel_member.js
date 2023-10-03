@@ -45,22 +45,22 @@ patch(MockServer.prototype, {
         for (const member of members) {
             let persona;
             if (member.partner_id) {
-                persona = { partner: this._mockDiscussChannelMember_GetPartnerData([member.id]) };
+                persona = this._mockDiscussChannelMember_GetPartnerData([member.id]);
+                persona.type = "partner";
             }
             if (member.guest_id) {
                 const [guest] = this.getRecords("mail.guest", [["id", "=", member.guest_id]]);
                 persona = {
-                    guest: {
-                        id: guest.id,
-                        im_status: guest.im_status,
-                        name: guest.name,
-                    },
+                    id: guest.id,
+                    im_status: guest.im_status,
+                    name: guest.name,
+                    type: "guest",
                 };
             }
             const data = {
                 channel: { id: member.channel_id },
                 id: member.id,
-                persona: persona,
+                persona,
             };
             dataList.push(data);
         }

@@ -862,14 +862,12 @@ class Message(models.Model):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         count = self.env["mail.message.reaction"].search_count(group_domain)
         group_command = "ADD" if count > 0 else "DELETE"
-        guests = [("ADD" if action == "add" else "DELETE", {"id": guest.id})] if guest else []
-        partners = [("ADD" if action == "add" else "DELETE", {"id": partner.id})] if partner else []
+        personas = [("ADD" if action == "add" else "DELETE", {"id": guest.id if guest else partner.id, "type": "guest" if guest else "partner"})] if guest or partner else []
         group_values = {
             "content": content,
             "count": count,
-            "guests": guests,
+            "personas": personas,
             "message": {"id": self.id},
-            "partners": partners,
         }
         payload = {"Message": {"id": self.id, "messageReactionGroups": [(group_command, group_values)]}}
         self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
@@ -887,11 +885,15 @@ class Message(models.Model):
                 thread_ids_by_model_name[message.model].add(message.res_id)
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id) if message_sudo.author_id else False
-            guestAuthor = {
-                'id': message_sudo.author_guest_id.id,
-                'name': message_sudo.author_guest_id.name,
-            } if message_sudo.author_guest_id else False
+            author = False
+            if message_sudo.author_guest_id:
+                author = {
+                    'id': message_sudo.author_guest_id.id,
+                    'name': message_sudo.author_guest_id.name,
+                    'type': "guest",
+                }
+            elif message_sudo.author_id:
+                author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id)
             if message_sudo.model and message_sudo.res_id:
                 record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
                 record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
@@ -906,16 +908,14 @@ class Message(models.Model):
             reaction_groups = [{
                 'content': content,
                 'count': len(reactions),
-                'guests': [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id],
+                'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
                 'message': {'id': message_sudo.id},
-                'partners': [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id],
             } for content, reactions in reactions_per_content.items()]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update(message_sudo._message_format_extras(format_reply))
             vals.update({
                 'author': author,
                 'default_subject': default_subject,
-                'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),

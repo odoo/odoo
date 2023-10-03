@@ -70,7 +70,6 @@ export class Messaging {
             this.store.guest = {
                 ...data.currentGuest,
                 type: "guest",
-                channelId: data.channels[0]?.id,
             };
         }
         this.store.odoobot = { ...data.odoobot, type: "partner" };

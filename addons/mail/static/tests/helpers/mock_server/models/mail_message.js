@@ -75,12 +75,15 @@ patch(MockServer.prototype, {
                     {
                         content,
                         count: reactions.length,
-                        guests: [],
                         message: { id: messageId },
-                        partners: [
+                        personas: [
                             [
                                 action === "add" ? "ADD" : "DELETE",
-                                { id: this.pyEnv.currentPartnerId, name: currentPartner.name },
+                                {
+                                    id: this.pyEnv.currentPartnerId,
+                                    name: currentPartner.name,
+                                    type: "partner",
+                                },
                             ],
                         ],
                     },
@@ -202,24 +205,25 @@ patch(MockServer.prototype, {
         return messages.map((message) => {
             const thread =
                 message.model && this.getRecords(message.model, [["id", "=", message.res_id]])[0];
-            let formattedAuthor;
+            let author;
             if (message.author_id) {
-                const [author] = this.getRecords("res.partner", [["id", "=", message.author_id]], {
+                const [partner] = this.getRecords("res.partner", [["id", "=", message.author_id]], {
                     active_test: false,
                 });
                 const [user] = this.getRecords("res.users", [
                     ["partner_id", "=", message.author_id],
                 ]);
-                formattedAuthor = {
-                    id: author.id,
-                    is_company: author.is_company,
-                    name: author.name,
+                author = {
+                    id: partner.id,
+                    is_company: partner.is_company,
+                    name: partner.name,
+                    type: "partner",
                 };
                 if (user) {
-                    formattedAuthor["user"] = { id: user.id };
+                    author["user"] = { id: user.id };
                 }
             } else {
-                formattedAuthor = false;
+                author = false;
             }
             const attachments = this.getRecords("ir.attachment", [
                 ["id", "in", message.attachment_ids],
@@ -284,14 +288,21 @@ patch(MockServer.prototype, {
                 reactionGroups.push({
                     content: content,
                     count: reactionsPerContent[content].length,
-                    guests: guests.map((guest) => ({ id: guest.id, name: guest.name })),
                     message: { id: message.id },
-                    partners: partners.map((partner) => ({ id: partner.id, name: partner.name })),
+                    personas: guests
+                        .map((guest) => ({ id: guest.id, name: guest.name, type: "guests" }))
+                        .concat(
+                            partners.map((partner) => ({
+                                id: partner.id,
+                                name: partner.name,
+                                type: "partner",
+                            }))
+                        ),
                 });
             }
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
-                author: formattedAuthor,
+                author,
                 history_partner_ids: historyPartnerIds,
                 default_subject:
                     message.model &&
@@ -319,12 +330,14 @@ patch(MockServer.prototype, {
                 ])[0];
                 response.subtype_description = subtype.description;
             }
+            let guestAuthor;
             if (message.author_guest_id) {
                 const [guest] = this.pyEnv["mail.guest"].searchRead([
                     ["id", "=", message.author_guest_id],
                 ]);
-                response["guestAuthor"] = { id: guest.id, name: guest.name };
+                guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
             }
+            response.author = author || guestAuthor;
             response["module_icon"] = "/base/static/description/icon.png";
             return response;
         });

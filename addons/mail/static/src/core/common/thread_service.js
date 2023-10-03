@@ -693,12 +693,7 @@ export class ThreadService {
                 res_id: thread.id,
                 model: "discuss.channel",
             };
-            if (this.store.user) {
-                tmpData.author = this.store.self;
-            }
-            if (this.store.guest) {
-                tmpData.guestAuthor = this.store.self;
-            }
+            tmpData.author = this.store.self;
             if (parentId) {
                 tmpData.parentMessage = this.store.Message.get(parentId);
             }

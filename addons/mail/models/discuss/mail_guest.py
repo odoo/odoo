@@ -135,6 +135,7 @@ class MailGuest(models.Model):
             'currentGuest': {
                 'id': self.id,
                 'name': self.name,
+                'type': "guest",
             },
             'current_partner': False,
             'current_user_id': False,
@@ -147,6 +148,7 @@ class MailGuest(models.Model):
             'odoobot': {
                 'id': odoobot.id,
                 'name': odoobot.name,
+                'type': "partner",
             },
             'shortcodes': [],
             'starred_counter': False,
@@ -164,6 +166,7 @@ class MailGuest(models.Model):
                 data['name'] = guest.name
             if 'im_status' in fields:
                 data['im_status'] = guest.im_status
+            data['type'] = "guest"
             guests_formatted_data[guest] = data
         return guests_formatted_data
 

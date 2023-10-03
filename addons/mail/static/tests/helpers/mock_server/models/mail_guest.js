@@ -15,6 +15,7 @@ patch(MockServer.prototype, {
             currentGuest: {
                 id: guest.id,
                 name: guest.name,
+                type: "guest",
             },
             current_partner: false,
             current_user_id: false,

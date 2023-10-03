@@ -31,12 +31,7 @@ export class ChannelMember extends Record {
     update(data) {
         this.id = data.id;
         if ("persona" in data) {
-            this.persona = {
-                ...(data.persona.partner ?? data.persona.guest),
-                type: data.persona.guest ? "guest" : "partner",
-                country: data.persona.partner?.country,
-                channelId: data.persona.guest ? data.channel.id : null,
-            };
+            this.persona = data.persona;
         }
         let thread = data.thread ?? this.thread;
         if (!thread && data.channel?.id) {

@@ -969,7 +969,7 @@ QUnit.test("no out-of-focus notification on receiving self messages in chat", as
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
         id: channelId,
         message: {
-            author: { id: pyEnv.currentPartnerId },
+            author: { id: pyEnv.currentPartnerId, type: "partner" },
             id: 126,
             model: "discuss.channel",
             res_id: channelId,
