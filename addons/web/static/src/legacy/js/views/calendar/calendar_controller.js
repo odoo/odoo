@@ -31,6 +31,8 @@ var CalendarController = AbstractController.extend({
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
         deleteRecord: '_onDeleteRecord',
+        viewRecord: '_onViewRecord',
+        duplicateRecord: '_onDuplicateRecord',
         dropRecord: '_onDropRecord',
         next: '_onNext',
         openCreate: '_onOpenCreate',
@@ -271,6 +273,52 @@ var CalendarController = AbstractController.extend({
             this.reload();
         }
     },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+        _onDuplicateRecord: async function (event) {
+            var self = this;
+            var eventId = event.data._id;
+            eventId = eventId && parseInt(eventId).toString() === eventId ? parseInt(eventId) : eventId;
+    
+            this._rpc({
+                model: 'calendar.event',
+                method: 'copy',
+                args: [eventId],
+            }).then(function(duplicatedEventId){
+                if(duplicatedEventId) {
+                    self.reload();
+                }
+            });
+        },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+        _onViewRecord: async function (event) {
+            var self = this;
+            var eventId = event.data._id;
+            eventId = eventId && parseInt(eventId).toString() === eventId ? parseInt(eventId) : eventId;
+    
+            this._rpc({
+                model: 'calendar.event',
+                method: 'read',
+                args: [[eventId], ['res_id', 'res_model']],
+            }).then(function(result){
+                var resId = result && result[0] && result[0].res_id;
+                var resModel = result && result[0] && result[0].res_model;
+                if(resId && resModel) {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: resModel,
+                        res_id: resId,
+                        views: [[false, 'form']],
+                        target: 'current',
+                    });
+                }
+            });
+        },    
     /**
      * @private
      * @param {OdooEvent} event

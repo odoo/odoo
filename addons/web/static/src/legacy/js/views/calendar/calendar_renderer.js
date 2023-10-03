@@ -188,6 +188,8 @@ return AbstractRenderer.extend({
     },
     custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
         edit_event: '_onEditEvent',
+        view_record: '_onViewRecord',
+        duplicate_record: '_onDuplicateRecord',
         delete_event: '_onDeleteEvent',
         render_event: '_renderEvents',
     }),
@@ -1078,6 +1080,27 @@ return AbstractRenderer.extend({
     _onEditEvent: function (event) {
         this._unselectEvent();
         this.trigger_up('openEvent', {
+            _id: event.data.id,
+            title: event.data.title,
+        });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onDuplicateRecord: function (event) {
+        this._unselectEvent();
+        this.trigger_up('duplicateRecord', {
+            _id: event.data.id,
+            title: event.data.title,
+        });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onViewRecord: function (event) {
+        this.trigger_up('viewRecord', {
             _id: event.data.id,
             title: event.data.title,
         });

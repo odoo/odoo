@@ -35,6 +35,7 @@
 
     <t t-name="CalendarView.event.popover">
         <div class="o_cw_body">
+            <a href="#" class="btn btn-secondary o_cw_popover_view ml-2" style="float: right; margin-top: 3px; margin-right: 3px;"><i class="fa fa-link"></i></a>
             <ul class="list-group list-group-flush">
                 <li t-if="!widget.hideDate and widget.eventDate.date" class="list-group-item">
                     <i class="fa fa-fw fa-calendar-o"/>
@@ -47,7 +48,8 @@
             </ul>
             <ul t-if="widget.isEventDetailsVisible()" class="list-group list-group-flush o_cw_popover_fields_secondary"/>
             <div t-attf-class="card-footer border-top #{ !widget.isEventEditable() &amp;&amp;!widget.isEventDeletable() ? 'o_footer_shrink' : '' }">
-                <a t-if="widget.isEventEditable()" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
+                <a t-if="widget.isEventEditable()" href="#" class="btn btn-primary o_cw_popover_edit ml-2">Edit</a>
+                <a href="#" class="btn btn-secondary o_cw_popover_duplicate ml-2"><i class="fa fa-copy"></i></a>
                 <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
             </div>
         </div>
