@@ -6,19 +6,16 @@ import zipfile
 from odoo import http, _
 from odoo.http import request, content_disposition
 
-class AccountEdiDocumentDownloadController(http.Controller):
-    @http.route('/account/export_edi_documents', type='http', auth='user')
-    def export_edi_documents(self, **args):
+
+class AccountDocumentDownloadController(http.Controller):
+    @http.route('/account/export_zip_documents', type='http', auth='user')
+    def export_zip_documents(self, **args):
+        """ Download zipped attachments. """
         ids = list(map(int, request.httprequest.args.getlist('ids')))
-
-        moves = request.env['account.move'].browse(ids)
-        moves.check_access_rights('read')
-        moves.check_access_rule('read')
-
-        attachments = moves._get_edi_doc_attachments_to_export()
-        if not attachments:
-            error_msg = _("No EDI documents found for export.")
-            return request.not_found(error_msg)
+        filename = request.httprequest.args.get('filename')
+        attachments = request.env['ir.attachment'].browse(ids)
+        attachments.check_access_rights('read')
+        attachments.check_access_rule('read')
 
         # Create zip file
         buffer = io.BytesIO()
@@ -31,6 +28,6 @@ class AccountEdiDocumentDownloadController(http.Controller):
             ('Content-Type', 'zip'),
             ('X-Content-Type-Options', 'nosniff'),
             ('Content-Length', len(content)),
-            ('Content-Disposition', content_disposition('edi_documents.zip')),
+            ('Content-Disposition', content_disposition(filename)),
         ]
         return request.make_response(content, headers)

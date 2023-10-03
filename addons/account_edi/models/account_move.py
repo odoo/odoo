@@ -379,7 +379,3 @@ class AccountMove(models.Model):
                 move_result.setdefault('attachment_ids', []).extend(edi_attachments.get('attachment_ids', []))
                 move_result.setdefault('attachments', []).extend(edi_attachments.get('attachments', []))
         return result
-
-    def _get_edi_doc_attachments_to_export(self):
-        # EXTENDS 'account'
-        return super()._get_edi_doc_attachments_to_export() + self.edi_document_ids.attachment_id
