@@ -938,6 +938,18 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         megaMenuEl.classList.add('o_no_parent_editor');
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
     }
+    /**
+     * @override
+     */
+    _getRecordInfo(editable) {
+        const $editable = $(editable);
+        return {
+            resModel: $editable.data('oe-model'),
+            resId: $editable.data('oe-id'),
+            field: $editable.data('oe-field'),
+            type: $editable.data('oe-type'),
+        };
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
