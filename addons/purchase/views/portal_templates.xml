@@ -20,14 +20,16 @@
   <template id="portal_my_home_purchase" name="Show Requests for Quotation / Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
     <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
         <t t-call="portal.portal_docs_entry">
+            <t t-set="icon" t-value="'/purchase/static/src/img/rfq.svg'"/>
+            <t t-set="text">Follow your Requests for Quotation</t>
             <t t-set="title">Requests for Quotation</t>
             <t t-set="url" t-value="'/my/rfq'"/>
-            <t t-set="placeholder_count" t-value="'rfq_count'"/>
         </t>
         <t t-call="portal.portal_docs_entry">
-            <t t-set="title">Purchase Orders</t>
+            <t t-set="icon" t-value="'/purchase/static/src/img/calculator.svg'"/>
+            <t t-set="text">Follow orders you have to fulfill</t>
+            <t t-set="title">Our Orders</t>
             <t t-set="url" t-value="'/my/purchase'"/>
-            <t t-set="placeholder_count" t-value="'purchase_count'"/>
         </t>
     </xpath>
   </template>
@@ -40,7 +42,7 @@
               <t t-set="title" >Requests For Quotation</t>
           </t>
           <t t-if="not rfqs">
-              <p>There are currently no requests for quotation for your account.</p>
+              <p class="alert alert-warning">There are currently no requests for quotation for your account.</p>
           </t>
           <t t-if="rfqs" t-call="portal.portal_table">
               <thead>
@@ -77,7 +79,7 @@
               <t t-set="title">Purchase Orders</t>
           </t>
           <t t-if="not orders">
-              <p>There are currently no purchase orders for your account.</p>
+              <p class="alert alert-warning">There are currently no purchase orders for your account.</p>
           </t>
           <t t-if="orders" t-call="portal.portal_table">
               <thead>
@@ -102,7 +104,7 @@
                           <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
                       </td>
                       <td class="text-center">
-                          <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
+                          <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-primary fw-normal">
                               <i class="fa fa-fw fa-file-text" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
                           </span>
                           <span t-if="order.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
@@ -130,46 +132,47 @@
           <div class="row mt16 o_portal_purchase_sidebar">
               <!-- Sidebar -->
               <t t-call="portal.portal_record_sidebar">
-                  <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+                  <t t-set="classes" t-value="'col-lg-3 d-print-none'"/>
 
                   <t t-set="title">
-                      <h2 class="mb-0"><b t-field="order.amount_total" data-id="total_amount"/> </h2>
+                      <h2 t-field="order.amount_total" data-id="total_amount"/>
                   </t>
                   <t t-set="entries">
-                      <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                          <li class="list-group-item flex-grow-1">
-                              <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                                  <div class="btn-group flex-grow-1 me-1 mb-1">
+                      <div class="d-flex flex-wrap gap-4">
+                          <div class="flex-grow-1 order-md-last order-lg-first">
+                              <div class="o_download_pdf btn-toolbar flex-column flex-md-row flex-lg-column gap-1">
+                                  <div class="btn-group flex-grow-1">
                                       <a class="btn btn-secondary btn-block o_download_btn" t-att-href="order.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
                                   </div>
-                                  <div class="btn-group flex-grow-1 mb-1">
-                                      <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                                  <div class="btn-group flex-grow-1">
+                                      <a class="btn btn-outline-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                                   </div>
                               </div>
-                          </li>
+                          </div>
 
-                          <li class="navspy list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
+                          <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
                               <ul class="nav flex-column bs-sidenav"></ul>
-                          </li>
+                          </div>
 
-                          <li t-if="order.user_id" class="list-group-item flex-grow-1">
-                              <div class="small mb-1"><strong class="text-muted">Purchase Representative</strong></div>
-                              <div class="row flex-nowrap">
-                                  <div class="col flex-grow-0 pe-2">
-                                      <img class="rounded-circle mr4 float-start o_portal_contact_img" t-att-src="image_data_uri(order.user_id.avatar_1024)" alt="Contact"/>
-                                  </div>
-                                  <div class="col ps-0" style="min-width: 150px">
-                                      <span t-field="order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
-                                      <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
-                                  </div>
-                              </div>
-                          </li>
-                      </ul>
+                          <div t-if="order.user_id">
+                              <h6><small class="text-muted">Purchase Representative</small></h6>
+                              <div class="o_portal_contact_details d-flex flex-column gap-2">
+                                <div class="d-flex justify-content-start align-items-center gap-2">
+                                    <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(order.user_id.avatar_1024)" alt="Contact"/>
+                                    <div>
+                                        <h6 class="mb-0" t-out="order.user_id.name"/>
+                                        <a href="#discussion" class="small fw-bold">Send message</a>
+                                    </div>
+                                </div>
+                                <div t-field="order.user_id" t-options='{"widget": "contact", "fields": ["phone"], "no_marker": False}'/>
+                            </div>
+                          </div>
+                      </div>
                   </t>
               </t>
 
               <!-- Page content -->
-              <div id="quote_content" class="col-12 col-lg justify-content-end">
+              <div id="quote_content" class="o_portal_content col-12 col-lg-9">
 
                   <!-- status messages -->
                   <div t-if="order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
@@ -178,13 +181,14 @@
                   </div>
 
                   <!-- main content -->
-                  <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_purchase_content">
+                  <div id="portal_purchase_content">
                       <div t-call="purchase.purchase_order_portal_content"/>
                   </div>
 
                   <!-- chatter -->
-                  <div id="purchase_order_communication" class="mt-4">
-                      <h2>History</h2>
+                  <hr/>
+                  <div id="purchase_order_communication">
+                      <h4>History</h4>
                       <t t-call="portal.message_thread"/>
                   </div>
               </div><!-- // #quote_content -->
@@ -194,7 +198,7 @@
 
   <template id="purchase_order_portal_content" name="Purchase Order Portal Content">
       <!-- Intro -->
-      <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+      <div id="introduction" class="mt-5 mt-lg-0 pb-2 pt-0">
         <h2 class="my-0">
           <t t-if="order.state in ['draft', 'sent']">Request for Quotation</t>
           <t t-else="1">
@@ -204,7 +208,7 @@
         </h2>
       </div>
 
-      <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
+      <div>
           <!-- Informations -->
           <div id="informations">
               <div class="row" id="po_date">
@@ -243,8 +247,8 @@
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
-                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
-                                  <span t-else="" class="small badge text-bg-info"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
+                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge text-bg-success small"><i class="fa fa-fw fa-check"/>Paid</span>
+                                  <span t-else="" class="small badge text-bg-primary"><i class="fa fa-fw fa-clock-o"/>Waiting Payment</span>
                               </div>
                           </t>
                       </ul>
@@ -386,7 +390,7 @@
 
   <template id="portal_my_purchase_order_update_date" name="Portal: My Purchase Order Update Dates" inherit_id="purchase.portal_my_purchase_order" primary="True">
     <xpath expr="////div[@id='portal_purchase_content']" position="replace">
-      <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_purchase_content">
+      <div id="portal_purchase_content">
         <t t-set="update_dates" t-value="True"/>
         <div t-call="purchase.purchase_order_portal_content"/>
       </div>
