@@ -510,7 +510,7 @@
 
   <t t-name="o-spreadsheet-FilterMenu" owl="1">
     <div class="o-filter-menu d-flex flex-column bg-white" t-on-wheel.stop="">
-      <div>
+      <div t-if="!isReadonly">
         <div class="o-filter-menu-item" t-on-click="() => this.sortFilterZone('ascending')">
           Sort ascending (A ⟶ Z)
         </div>
@@ -518,7 +518,7 @@
           Sort descending (Z ⟶ A)
         </div>
       </div>
-      <div class="o-separator"/>
+      <div class="o-separator" t-if="!isReadonly"/>
       <div class="o-filter-menu-actions">
         <div class="o-filter-menu-action-text" t-on-click="selectAll">Select all</div>
         <div class="o-filter-menu-action-text" t-on-click="clearAll">Clear</div>
@@ -3257,7 +3257,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.19';
-  __info__.date = '2023-09-22T07:46:23.830Z';
-  __info__.hash = '229c563';
+  __info__.version = '16.0.20';
+  __info__.date = '2023-10-03T13:22:08.070Z';
+  __info__.hash = '3be5a75';
 -->
