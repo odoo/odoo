@@ -550,3 +550,56 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
     ],
 });
+
+registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
+    test: true,
+    steps: () => [
+        {
+            trigger: ".o_field_widget[name='model_id'] input",
+            run: "text base.automation.lead.test",
+        },
+        {
+            trigger:
+                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Automated Rule Test)",
+        },
+        {
+            trigger: ".o_field_widget[name='trigger'] select",
+            run() {
+                assertEqual(Array.from(this.$anchor[0].querySelectorAll("optgroup")).map(el => el.label).join(", "), "Values Updated, Timing Conditions, Custom")
+            }
+        },
+        {
+            trigger: ".o_field_widget[name='model_id'] input",
+            run: "text base.automation.lead.thread.test",
+        },
+        {
+            trigger:
+                ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Threaded Lead Test)",
+            run(helpers) {
+                waitOrmCalls = observeOrmCalls();
+                helpers.click(this.$anchor);
+                return nextTick();
+            },
+        },
+        {
+            trigger: "body",
+            async run() {
+                await waitOrmCalls();
+                await nextTick();
+            },
+        },
+        {
+            trigger: ".o_field_widget[name='trigger']",
+            run() {
+                assertEqual(Array.from(this.$anchor[0].querySelectorAll("select optgroup")).map(el => el.label).join(", "), "Values Updated, Email Events, Timing Conditions, Custom")
+            }
+        },
+        {
+            trigger: "button.o_form_button_cancel",
+        },
+        {
+            trigger: "body:not(:has(button.o_form_button_cancel)",
+            run() {}
+        }
+    ],
+});
