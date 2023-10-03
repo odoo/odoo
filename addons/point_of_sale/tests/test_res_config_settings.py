@@ -27,8 +27,8 @@ class TestConfigureShops(TestPoSCommon):
         """
         self._remove_on_payment_taxes()
 
-        pos_config1 = self.env['pos.config'].create({'name': 'Shop 1'})
-        pos_config2 = self.env['pos.config'].create({'name': 'Shop 2'})
+        pos_config1 = self.env['pos.config'].create({'name': 'Shop 1', 'module_pos_restaurant': False})
+        pos_config2 = self.env['pos.config'].create({'name': 'Shop 2', 'module_pos_restaurant': False})
         self.assertEqual(pos_config1.receipt_header, False)
         self.assertEqual(pos_config2.receipt_header, False)
 
@@ -56,6 +56,7 @@ class TestConfigureShops(TestPoSCommon):
         pos_config = self.env['pos.config'].create({
             'name': 'Shop',
             'is_header_or_footer': True,
+            'module_pos_restaurant': False,
             'receipt_header': 'header val',
             'receipt_footer': 'footer val',
         })

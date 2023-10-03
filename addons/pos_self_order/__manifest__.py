@@ -19,6 +19,7 @@
         "views/pos_session_view.xml",
         "views/custom_link_views.xml",
         "data/init_access.xml",
+        "data/custom_link_data.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
         "data/pos_restaurant_data.xml",

@@ -59,7 +59,15 @@ export class LandingPage extends Component {
         return "";
     }
 
-    start() {
+    clickCustomLink(link) {
+        const arrayLink = link.url.split("/");
+        const routeName = arrayLink[arrayLink.length - 1];
+
+        if (routeName !== "products") {
+            this.router.customLink(link);
+            return;
+        }
+
         if (
             this.selfOrder.config.self_ordering_takeaway &&
             this.selfOrder.currentOrder.take_away === null

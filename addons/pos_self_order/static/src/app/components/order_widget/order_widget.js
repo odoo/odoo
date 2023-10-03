@@ -37,31 +37,43 @@ export class OrderWidget extends Component {
     }
 
     get buttonToShow() {
-        const mode = this.selfOrder.config.self_ordering_pay_after;
-        const type = this.selfOrder.config.self_ordering_mode;
-        const isPaymentMethod = this.selfOrder.pos_payment_methods.find(
-            (p) => !p.is_online_payment
-        );
+        const currentPage = this.router.activeSlot;
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const kioskPayment = this.selfOrder.pos_payment_methods.find((p) => !p.is_online_payment); // cannot be online payment in kiosk for instance
+        const isLine = this.selfOrder.currentOrder.lines.length === 0;
 
-        if (!isPaymentMethod) {
-            return {
-                label: _t("Pay at cashier"),
-                disabled: this.selfOrder.currentOrder.lines.length === 0,
-            };
+        let label = "";
+        let disabled = "";
+
+        if (currentPage === "product_list") {
+            label = _t("Order");
+            disabled = isLine;
+        } else if (payAfter === "meal" && !this.selfOrder.currentOrder.isSavedOnServer) {
+            label = _t("Order");
+            disabled = isLine || !kioskPayment;
+        } else {
+            label = kioskPayment ? _t("Pay") : _t("Pay at cashier");
+            disabled = isLine || !kioskPayment;
         }
 
-        return {
-            label: mode === "each" || type === "kiosk" ? _t("Pay") : _t("Order"),
-            disabled: this.selfOrder.currentOrder.lines.length === 0,
-        };
+        return { label, disabled };
     }
 
     get lineNotSend() {
-        const lineNotSend = this.selfOrder.currentOrder.hasNotAllLinesSent();
+        const order = this.selfOrder.currentOrder;
+
+        if (order.isSavedOnServer) {
+            return {
+                price: order.amount_total,
+                count: order.totalQuantity,
+            };
+        }
+
+        const lineNotSend = order.hasNotAllLinesSent();
         return lineNotSend.reduce(
             (acc, line) => {
                 const currentQty = line.qty;
-                const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+                const lastChange = order.lastChangesSent[line.uuid];
                 const qty = !lastChange ? currentQty : currentQty - lastChange.qty;
 
                 acc.count += qty;

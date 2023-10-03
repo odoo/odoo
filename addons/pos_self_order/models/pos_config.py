@@ -133,10 +133,23 @@ class PosConfig(models.Model):
                 })
                 pos_config_id.self_ordering_image_home_ids = [(4, attachment.id)]
 
+            self.env['pos_self_order.custom_link'].create({
+                'name': 'Order Now',
+                'url': f'/pos-self/{pos_config_id.id}/products',
+                'pos_config_ids': [(4, pos_config_id.id)],
+            })
+
             if pos_config_id.module_pos_restaurant:
                 pos_config_id.self_ordering_mode = 'mobile'
 
         return pos_config_ids
+
+    def write(self, vals):
+        for record in self:
+            if vals.get('self_ordering_mode') == 'kiosk' or record.self_ordering_mode == 'kiosk':
+                vals['self_ordering_pay_after'] = 'each'
+
+        return super().write(vals)
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
@@ -298,7 +311,7 @@ class PosConfig(models.Model):
 
         return {
             "pos_config_id": self.id,
-            "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id else False,
+            "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,
             "company_name": self.company_id.name,
             "company_color": self.company_id.color,
             "custom_links": self._get_self_order_custom_links(),
