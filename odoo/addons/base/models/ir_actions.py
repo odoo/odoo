@@ -439,25 +439,6 @@ class IrActionsServer(models.Model):
 #  - Command: x2many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
-    @api.model
-    def _default_update_field_id(self):
-        if self.model_id:
-            model_id = self.model_id.id
-        elif 'default_model_id' in self.env.context:
-            model_id = self.env.context['default_model_id']
-        else:
-            return False
-
-        ir_model = self.env["ir.model"].browse(model_id)
-        if ir_model:
-            fields = self.env[ir_model.model]._fields
-            if 'state' in fields:
-                return ir_model.field_id.filtered(lambda ir_field: ir_field.name == 'state')
-            elif 'stage_id' in fields:
-                return ir_model.field_id.filtered(lambda ir_field: ir_field.name == 'stage_id')
-            elif 'priority' in fields:
-                return ir_model.field_id.filtered(lambda ir_field: ir_field.name == 'priority')
-
     name = fields.Char(compute='_compute_name', store=True, readonly=False, required=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
@@ -508,7 +489,7 @@ class IrActionsServer(models.Model):
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
 
-    update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', default=_default_update_field_id, ondelete='cascade')
+    update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', ondelete='cascade')
     update_related_model_id = fields.Many2one('ir.model', compute='_compute_update_related_model_id')
 
     value = fields.Text(help="For Python expressions, this field may hold a Python expression "
@@ -518,8 +499,8 @@ class IrActionsServer(models.Model):
                              "For Static values, the value will be used directly without evaluation, e.g."
                              "`42` or `My custom name` or the selected record.")
     evaluation_type = fields.Selection([
-        ('value', 'Custom Value'),
-        ('equation', 'Python expression')
+        ('value', 'Update'),
+        ('equation', 'Compute')
     ], 'Value Type', default='value', change_default=True)
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
