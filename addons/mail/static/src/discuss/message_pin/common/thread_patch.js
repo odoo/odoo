@@ -13,6 +13,8 @@ patch(Thread.prototype, {
         const { oeType } = ev.target.dataset;
         if (oeType === "pin-menu") {
             this.env.pinMenu?.open();
+        } else {
+            await super.onClickNotification(ev);
         }
         await super.onClickNotification(...arguments);
     },

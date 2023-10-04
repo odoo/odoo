@@ -108,7 +108,7 @@
                                             </div>
                                         </t>
                                     </t>
-                                    <t t-if="message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
+                                    <t t-if="message.hasTextContent and !env.inChatWindow and !props.thread?.readonly" t-call="mail.Message.actions"/>
                                 </div>
                                 <AttachmentList
                                     t-if="message.attachments.length > 0"
@@ -118,7 +118,7 @@
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                             </div>
-                            <t t-if="!message.hasTextContent or env.inChatWindow" t-call="mail.Message.actions"/>
+                            <t t-if="!message.hasTextContent or env.inChatWindow and !props.thread?.readonly" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>

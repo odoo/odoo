@@ -14,7 +14,11 @@ import { usePopover } from "@web/core/popover/popover_hook";
 threadActionsRegistry
     .add("notification-settings", {
         condition(component) {
-            return component.thread?.model === "discuss.channel" && !component.props.chatWindow;
+            return (
+                component.thread?.model === "discuss.channel" &&
+                !component.props.chatWindow &&
+                !component.thread?.readonly
+            );
         },
         setup(action) {
             const component = useComponent();
@@ -74,7 +78,8 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+                (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+                !component.thread?.readonly
             );
         },
         panelOuterClass: "o-discuss-ChannelInvitation",

@@ -10,6 +10,7 @@ export class AvatarCardPopover extends Component {
     static props = {
         id: { type: Number, required: true },
         close: { type: Function, required: true },
+        readonly: { type: Boolean, optional: true },
     };
 
     setup() {

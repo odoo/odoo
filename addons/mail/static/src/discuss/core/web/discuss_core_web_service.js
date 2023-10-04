@@ -41,7 +41,9 @@ export class DiscussCoreWeb {
                     this.store.odoobotOnboarding = false;
                     return;
                 }
-                this.threadService.notifyMessageToUser(channel, message);
+                if (!channel.readonly) {
+                    this.threadService.notifyMessageToUser(channel, message);
+                }
             }
         );
         this.busService.subscribe("res.users.settings", (payload) => {
