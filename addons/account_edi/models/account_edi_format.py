@@ -42,6 +42,9 @@ class AccountEdiFormat(models.Model):
     def create(self, vals_list):
         edi_formats = super().create(vals_list)
 
+        if not edi_formats:
+            return edi_formats
+
         # activate by default on journal
         if not self.pool.loaded:
             # The registry is not totally loaded. We cannot yet recompute the field on jourals as
