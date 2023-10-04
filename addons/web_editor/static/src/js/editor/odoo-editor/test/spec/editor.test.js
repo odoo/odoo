@@ -4571,7 +4571,7 @@ X[]
 
     describe('columnize', () => {
         const columnsContainer = contents => `<div class="container o_text_columns"><div class="row">${contents}</div></div>`;
-        const column = (size, contents) => `<div class="col-lg-${size}">${contents}</div>`;
+        const column = (size, contents) => `<div class="col-${size}">${contents}</div>`;
         describe('2 columns', () => {
             it('should do nothing', async () => {
                 await testEditor(BasicEditor, {
@@ -4813,10 +4813,10 @@ X[]
                     stepFunction: editor => editor.execCommand('columnize', 2),
                     contentAfter: '<div class="container"><div class="row"><div class="col">' +
                                       '<div class="o_text_columns"><div class="row">' + // no "container" class
-                                          '<div class="col-lg-6">' +
+                                          '<div class="col-6">' +
                                               '<p>ab[]cd</p>' +
                                           '</div>' +
-                                          '<div class="col-lg-6"><p><br></p></div>' +
+                                          '<div class="col-6"><p><br></p></div>' +
                                       '</div></div>' +
                                       '<p><br></p>' +
                                   '</div></div></div>',
