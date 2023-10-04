@@ -1068,6 +1068,10 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable && (isVisibleTextNode(n) || isZWS(n)));
     const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
 
+    const selectedFieldNodes = new Set(getSelectedNodes(editor.editable)
+            .map(n =>closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+            .filter(Boolean));
+
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
         const inlineAncestors = [];
@@ -1114,6 +1118,14 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
             } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
                 formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
             }
+        }
+    }
+
+    for (const selectedFieldNode of selectedFieldNodes) {
+        if (applyStyle) {
+            formatSpec.addStyle(selectedFieldNode, formatProps);
+        } else {
+            formatSpec.removeStyle(selectedFieldNode);
         }
     }
 

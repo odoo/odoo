@@ -77,6 +77,25 @@ describe('Format', () => {
                 contentAfter: `<p>[abc</p><p>def]</p>`,
             });
         });
+        it('should make qweb tag bold', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+                stepFunction: bold,
+                contentAfter: `<div><p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">[Test]</p></div>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
+                stepFunction: bold,
+                contentAfter: `<div><p t-field="record.name" contenteditable="false" style="font-weight: bolder;">[Test]</p></div>`,
+            });
+        });
+        it('should make qweb tag bold even with partial selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`,
+                stepFunction: bold,
+                contentAfter: `<div><p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">T[e]st</p></div>`,
+            });
+        });
         it('should make a whole heading bold after a triple click', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>]cd</p>`,
@@ -251,6 +270,13 @@ describe('Format', () => {
                 contentAfter: `<p>[abc</p><p>def]</p>`,
             });
         });
+        it('should make qweb tag italic', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+                stepFunction: italic,
+                contentAfter: `<div><p t-esc="'Test'" contenteditable="false" style="font-style: italic;">[Test]</p></div>`,
+            });
+        });
         it('should make a whole heading italic after a triple click', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<h1>[ab</h1><p>]cd</p>`,
@@ -337,6 +363,13 @@ describe('Format', () => {
                 contentBefore: `<p>${u(`[abc`)}</p><p>${u(`def]`)}</p>`,
                 stepFunction: underline,
                 contentAfter: '<p>[abc</p><p>def]</p>',
+            });
+        });
+        it('should make qweb tag underline', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+                stepFunction: underline,
+                contentAfter: `<div><p t-esc="'Test'" contenteditable="false" style="text-decoration-line: underline;">[Test]</p></div>`,
             });
         });
         it('should make a whole heading underline after a triple click', async () => {
@@ -481,6 +514,13 @@ describe('Format', () => {
                 contentBefore: `<p>${s(`[abc`)}</p><p>${s(`def]`)}</p>`,
                 stepFunction: strikeThrough,
                 contentAfter: '<p>[abc</p><p>def]</p>',
+            });
+        });
+        it('should make qweb tag strikeThrough', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+                stepFunction: strikeThrough,
+                contentAfter: `<div><p t-esc="'Test'" contenteditable="false" style="text-decoration-line: line-through;">[Test]</p></div>`,
             });
         });
         it('should make a whole heading strikeThrough after a triple click', async () => {
@@ -726,6 +766,13 @@ describe('Format', () => {
                 contentBefore: '<p>ab[cde]fg</p>',
                 stepFunction: setFontSize('10px'),
                 contentAfter: '<p>ab<span style="font-size: 10px;">[cde]</span>fg</p>',
+            });
+        });
+        it('should change the font size the qweb tag', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+                stepFunction: setFontSize('36px'),
+                contentAfter: `<div><p t-esc="'Test'" contenteditable="false" style="font-size: 36px;">[Test]</p></div>`,
             });
         });
         it('should change the font size of a whole heading after a triple click', async () => {
