@@ -124,6 +124,7 @@ class EventEvent(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True,
         default=lambda self: self.env.user)
+    use_barcode = fields.Boolean(compute='_compute_use_barcode')
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
         default=lambda self: self.env.company,
@@ -235,6 +236,11 @@ class EventEvent(models.Model):
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
+
+    def _compute_use_barcode(self):
+        use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
+        for record in self:
+            record.use_barcode = use_barcode
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
