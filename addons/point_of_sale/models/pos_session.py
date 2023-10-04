@@ -7,6 +7,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
+from odoo.osv import expression
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -1579,6 +1580,33 @@ class PosSession(models.Model):
         if reason:
             message_content.append(f'- Reason: {reason}')
         self.message_post(body='<br/>\n'.join(message_content))
+
+    @api.model
+    def _get_product_pricelist_item_domain(self, pricelist_ids, product_tmpl_ids, product_ids, initial_load=False):
+        pricelist_item_domain = [('pricelist_id', 'in', pricelist_ids)]
+        if initial_load:
+            pricelist_item_domain = expression.AND([
+                pricelist_item_domain,
+                ['|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids)],
+                ['|', ('product_id', '=', False), ('product_id', 'in', product_ids)],
+            ])
+        else:
+            pricelist_item_domain = expression.AND([
+                pricelist_item_domain,
+                expression.OR([
+                    ['&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids)],
+                    [('product_id', 'in', product_ids)],
+                ])
+            ])
+        return pricelist_item_domain
+
+    def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, fields, initial_load=False):
+        config_id = self.config_id or self.env['pos.config'].browse(self.env.context.get('config_id'))
+        pricelists = self.env['product.pricelist'].search(
+            [('id', 'in', config_id.available_pricelist_ids.ids if config_id.use_pricelist else tuple(config_id.pricelist_id.ids))]
+        )
+        pricelist_item_domain = self._get_product_pricelist_item_domain(pricelists.ids, product_tmpl_ids, product_ids, initial_load)
+        return self.env['product.pricelist.item'].search_read(pricelist_item_domain, fields, load=False)
 
 
 class ProcurementGroup(models.Model):

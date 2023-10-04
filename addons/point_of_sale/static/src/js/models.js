@@ -72,6 +72,7 @@ exports.PosModel = Backbone.Model.extend({
         this.uom_unit_id = null;
         this.default_pricelist = null;
         this.order_sequence = 1;
+        this.pricelistItemsInitialLoad = false;
         window.posmodel = this;
 
         // Object mapping the order's name (which contains the uid) to it's server_id after
@@ -425,6 +426,7 @@ exports.PosModel = Backbone.Model.extend({
         },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
+            self.pricelistItemsInitialLoad = true;
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
             self.pricelists = pricelists;
         },
@@ -438,6 +440,8 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'product.pricelist.item',
         domain: function(self) { return [['pricelist_id', 'in', _.pluck(self.pricelists, 'id')]]; },
+        condition: function (self) { return !self.config.limited_products_loading; },
+        readLoad: '_no_display_name',
         loaded: function(self, pricelist_items){
             var pricelist_by_id = {};
             _.each(self.pricelists, function (pricelist) {
@@ -445,9 +449,9 @@ exports.PosModel = Backbone.Model.extend({
             });
 
             _.each(pricelist_items, function (item) {
-                var pricelist = pricelist_by_id[item.pricelist_id[0]];
+                var pricelist = pricelist_by_id[item.pricelist_id];
                 pricelist.items.push(item);
-                item.base_pricelist = pricelist_by_id[item.base_pricelist_id[0]];
+                item.base_pricelist = pricelist_by_id[item.base_pricelist_id];
             });
         },
     },{
@@ -726,6 +730,7 @@ exports.PosModel = Backbone.Model.extend({
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
+                    var readLoad = (typeof model.readLoad === 'function' ? model.readLoad(self, tmp): model.readLoad) || '_classic_read';
                     progress += progress_step;
 
                     if(model.model ){
@@ -736,12 +741,13 @@ exports.PosModel = Backbone.Model.extend({
 
                         if (model.ids) {
                             params.method = 'read';
-                            params.args = [ids, fields];
+                            params.args = [ids, fields, readLoad];
                         } else {
                             params.method = 'search_read';
                             params.domain = domain;
                             params.fields = fields;
                             params.orderBy = order;
+                            params.kwargs = {'load': readLoad};
                         }
 
                         self.rpc(params).then(function (result) {
@@ -903,6 +909,7 @@ exports.PosModel = Backbone.Model.extend({
                 }
             }
         }
+        if(!missingProductIds.size) return;
         const productModel = _.find(this.models, function(model){return model.model === 'product.product';});
         const fields = productModel.fields;
         const products = await this.rpc({
@@ -911,7 +918,45 @@ exports.PosModel = Backbone.Model.extend({
             args: [[...missingProductIds], fields],
             context: Object.assign(this.session.user_context, { display_default_code: false }),
         });
+        await this._loadMissingPricelistItems(products);
         productModel.loaded(this, products);
+    },
+
+    /**
+     * Load missing pricelist items for the current session.
+     * @param {Array[Object]} products array of previously loaded products missing pricelist items.
+     * @returns 
+     */
+
+    async _loadMissingPricelistItems(products) {
+        if(!products.length) return;
+        const product_tmpl_ids = products.map(product => product.product_tmpl_id[0]);
+        const product_ids = products.map(product => product.id);
+        const pricelistItemModel = _.find(this.models, function(model){return model.model === 'product.pricelist.item';});
+        const fields = pricelistItemModel.fields;
+
+        const pricelistItems = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_pos_ui_product_pricelist_item_by_product',
+            args: [odoo.pos_session_id, product_tmpl_ids, product_ids, fields, this.pricelistItemsInitialLoad],
+            context: Object.assign(this.session.user_context, { config_id: this.config_id}),
+        });
+        // Merge the loaded pricelist items with the existing pricelists
+        // Prioritizing the addition of newly loaded pricelist items to the start of the existing pricelists.
+        // This ensures that the order reflects the desired priority of items in the pricelistItems array.
+        // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
+        // for reference check order of the Product Pricelist Item model
+        for (const pricelist of this.pricelists) {
+            const itemIds = new Set(pricelist.items.map(item => item.id));
+
+            const _pricelistItems = pricelistItems.filter(item => {
+                return item.pricelist_id === pricelist.id && !itemIds.has(item.id);
+            });
+            pricelist.items = [..._pricelistItems, ...pricelist.items];
+        }
+        if (this.pricelistItemsInitialLoad) {
+            this.pricelistItemsInitialLoad = false;
+        }
     },
 
     // load the partners based on the ids
@@ -950,6 +995,7 @@ exports.PosModel = Backbone.Model.extend({
             args: [this.config_id, product_model.fields],
             context: { ...this.session.user_context, ...product_model.context() },
         });
+        await this._loadMissingPricelistItems(products);
         product_model.loaded(this, products);
         return products.length
     },
@@ -969,6 +1015,7 @@ exports.PosModel = Backbone.Model.extend({
                 },
                 context: { ...this.session.user_context, ...product_model.context() },
             }, { shadow: true });
+            await this._loadMissingPricelistItems(products);
             product_model.loaded(this, products);
             page += 1;
         } while(products.length == this.config.limited_products_amount);
@@ -1962,6 +2009,7 @@ exports.PosModel = Backbone.Model.extend({
             args: [ids, product_model.fields],
             context: { ...this.session.user_context, ...product_model.context() },
         });
+        await this._loadMissingPricelistItems(product);
         product_model.loaded(this, product);
     },
     htmlToImgLetterRendering() {
@@ -2128,9 +2176,9 @@ exports.Product = Backbone.Model.extend({
         }
 
         var pricelist_items = _.filter(pricelist.items, function (item) {
-            return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
-                   (! item.product_id || item.product_id[0] === self.id) &&
-                   (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+            return (! item.product_tmpl_id || item.product_tmpl_id === self.product_tmpl_id) &&
+                   (! item.product_id || item.product_id === self.id) &&
+                   (! item.categ_id || _.contains(category_ids, item.categ_id)) &&
                    (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
                    (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
         });
