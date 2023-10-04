@@ -279,22 +279,32 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
-                                widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                            <t t-if="!record.image_1024.raw_value">
+                                <field name="avatar_128" class="o_kanban_image_fill_left d-block"
+                                    widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                            </t>
+                            <t t-else="">
+                                <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
+                                    widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                            </t>
+
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
                                             <field name="name" placeholder="Employee's Name"/>
+                                            <div class="float-end">
+                                                <div t-if="record.show_hr_icon_display.raw_value">
+                                                    <field name="hr_icon_display" class="o_employee_availability" widget="hr_presence_status" />
+                                                </div>
+                                            </div>
                                         </strong>
-                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
+                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle">
+                                            <field name="job_title"/>
+                                        </span>
                                     </div>
                                 </div>
                                 <ul>
-                                    <li id="last_login"/>
-                                    <li t-if="record.show_hr_icon_display.raw_value">
-                                        <field name="hr_icon_display" class="o_employee_availability" widget="hr_presence_status" />
-                                    </li>
                                     <li t-if="record.work_email.raw_value" class="o_text_overflow">
                                         <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                         <field name="work_email" />
@@ -303,16 +313,19 @@
                                         <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                         <field name="work_phone" />
                                     </li>
-                                    <li>
                                         <field name="employee_properties" widget="properties"/>
+                                    <li class="hr_tags">
+                                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     </li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content o_hr_employee_kanban_bottom position-absolute bottom-0 start-0 end-0">
-                                <div class="o_kanban_record_bottom">
+                                <div class="o_kanban_record_bottom mt-3">
                                     <div class="oe_kanban_bottom_left"/>
-                                    <div class="oe_kanban_bottom_right float-end pe-auto">
-                                        <widget name="hr_employee_chat"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <div class="hr_avatar mb-1 ms-2 me-n1">
+                                            <field name="user_id" widget="many2one_avatar_user" readonly="1"/>
+                                        </div>
                                         <div class="hr_activity_container mb-1 ms-2 me-n1">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
