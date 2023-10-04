@@ -10,7 +10,7 @@ import { getColor } from "@web/core/colors/colors";
 import { categorySorter } from "@pos_self_order/app/utils";
 import { Order } from "@pos_self_order/app/models/order";
 import { batched } from "@web/core/utils/timing";
-import { useState } from "@odoo/owl";
+import { useState, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -32,6 +32,8 @@ export class SelfOrder extends Reactive {
         Object.assign(this, {
             ...session.pos_self_order_data,
         });
+
+        this.markupDescriptions();
 
         this.productsGroupedByCategory = {};
         this.lastEditedProductId = null;
@@ -76,6 +78,14 @@ export class SelfOrder extends Reactive {
         }
 
         return this.editedOrder;
+    }
+
+    markupDescriptions() {
+        for (const product of this.products) {
+            product.description_self_order = product.description_self_order
+                ? markup(product.description_self_order)
+                : "";
+        }
     }
 
     initData() {

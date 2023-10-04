@@ -22,6 +22,14 @@
             <xpath expr="//group[@name='pos']" position="inside">
                 <field name="self_order_available" invisible="not available_in_pos"/>
             </xpath>
+            <group name="upsell" position="after">
+                <group string="Product Description for Self Order" name="description_self_order">
+                    <field name="description_self_order"
+                           placeholder="Information about your product for Self Order and Kiosk"
+                           nolabel="1"
+                           colspan="2"/>
+                </group>
+            </group>
         </field>
     </record>
 
