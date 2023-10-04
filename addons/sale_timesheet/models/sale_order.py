@@ -122,6 +122,10 @@ class SaleOrder(models.Model):
         moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
         return moves
 
+    def unlink(self):
+        self.timesheet_ids.sudo().unlink()
+        return super(SaleOrder, self).unlink()
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
