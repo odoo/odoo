@@ -683,13 +683,6 @@ class AccountPaymentRegister(models.TransientModel):
             'write_off_line_vals': [],
         }
 
-        conversion_rate = self.env['res.currency']._get_conversion_rate(
-            self.currency_id,
-            self.company_id.currency_id,
-            self.company_id,
-            self.payment_date,
-        )
-
         if self.payment_difference_handling == 'reconcile':
             if self.early_payment_discount_mode:
                 epd_aml_values_list = []
@@ -698,11 +691,11 @@ class AccountPaymentRegister(models.TransientModel):
                         epd_aml_values_list.append({
                             'aml': aml,
                             'amount_currency': -aml.amount_residual_currency,
-                            'balance': aml.company_currency_id.round(-aml.amount_residual_currency * conversion_rate),
+                            'balance': aml.currency_id._convert(-aml.amount_residual_currency, aml.company_currency_id, date=self.payment_date),
                         })
 
                 open_amount_currency = self.payment_difference * (-1 if self.payment_type == 'outbound' else 1)
-                open_balance = self.company_id.currency_id.round(open_amount_currency * conversion_rate)
+                open_balance = self.currency_id._convert(open_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date)
                 early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
                 for aml_values_list in early_payment_values.values():
                     payment_vals['write_off_line_vals'] += aml_values_list
@@ -715,14 +708,13 @@ class AccountPaymentRegister(models.TransientModel):
                     # Send money.
                     write_off_amount_currency = -self.payment_difference
 
-                write_off_balance = self.company_id.currency_id.round(write_off_amount_currency * conversion_rate)
                 payment_vals['write_off_line_vals'].append({
                     'name': self.writeoff_label,
                     'account_id': self.writeoff_account_id.id,
                     'partner_id': self.partner_id.id,
                     'currency_id': self.currency_id.id,
                     'amount_currency': write_off_amount_currency,
-                    'balance': write_off_balance,
+                    'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
                 })
         return payment_vals
 
@@ -760,24 +752,17 @@ class AccountPaymentRegister(models.TransientModel):
         if mode == 'early_payment':
             payment_vals['amount'] = total_amount
 
-            conversion_rate = self.env['res.currency']._get_conversion_rate(
-                currency,
-                self.company_id.currency_id,
-                self.company_id,
-                self.payment_date,
-            )
-
             epd_aml_values_list = []
             for aml in batch_result['lines']:
                 if aml.move_id._is_eligible_for_early_payment_discount(currency, self.payment_date):
                     epd_aml_values_list.append({
                         'aml': aml,
                         'amount_currency': -aml.amount_residual_currency,
-                        'balance': aml.company_currency_id.round(-aml.amount_residual_currency * conversion_rate),
+                        'balance': currency._convert(-aml.amount_residual_currency, aml.company_currency_id, self.company_id, self.payment_date),
                     })
 
             open_amount_currency = (batch_values['source_amount_currency'] - total_amount) * (-1 if batch_values['payment_type'] == 'outbound' else 1)
-            open_balance = self.company_id.currency_id.round(open_amount_currency * conversion_rate)
+            open_balance = currency._convert(open_amount_currency, aml.company_currency_id, self.company_id, self.payment_date)
             early_payment_values = self.env['account.move']\
                 ._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
             for aml_values_list in early_payment_values.values():

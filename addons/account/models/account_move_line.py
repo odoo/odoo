@@ -2,7 +2,6 @@ import ast
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import date, timedelta
-from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
@@ -634,17 +633,9 @@ class AccountMoveLine(models.Model):
 
     @api.depends('currency_id', 'company_id', 'move_id.date')
     def _compute_currency_rate(self):
-        @lru_cache()
-        def get_rate(from_currency, to_currency, company, date):
-            return self.env['res.currency']._get_conversion_rate(
-                from_currency=from_currency,
-                to_currency=to_currency,
-                company=company,
-                date=date,
-            )
         for line in self:
             if line.currency_id:
-                line.currency_rate = get_rate(
+                line.currency_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=line.company_currency_id,
                     to_currency=line.currency_id,
                     company=line.company_id,

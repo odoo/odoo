@@ -8,7 +8,7 @@ from datetime import date
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import Query, SQL
+from odoo.tools import Query, SQL, OrderedSet
 
 from odoo.addons.project.models.project_task import CLOSED_STATES
 
@@ -444,20 +444,17 @@ class Project(models.Model):
         if sale_line_read_group:
             # Get conversion rate from currencies of the sale order lines to currency of project
             convert_company = self.company_id or self.env.company
-            currency_ids = list(set([currency_id.id for currency_id, *_ in sale_line_read_group] + [self.currency_id.id]))
-            rates = self.env['res.currency'].browse(currency_ids)._get_rates(convert_company, date.today())
-            conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
 
             sols_per_product = defaultdict(lambda: [0.0, 0.0, []])
             downpayment_amount_invoiced = 0
             downpayment_sol_ids = []
             for currency, product, is_downpayment, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
                 if is_downpayment:
-                    downpayment_amount_invoiced += untaxed_amount_invoiced * conversion_rates[currency.id]
+                    downpayment_amount_invoiced += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company, round=False)
                     downpayment_sol_ids += sol_ids
                 else:
-                    sols_per_product[product.id][0] += convert_company.currency_id.round(untaxed_amount_to_invoice * conversion_rates[currency.id])
-                    sols_per_product[product.id][1] += convert_company.currency_id.round(untaxed_amount_invoiced * conversion_rates[currency.id])
+                    sols_per_product[product.id][0] += currency._convert(untaxed_amount_to_invoice, convert_company.currency_id, convert_company)
+                    sols_per_product[product.id][1] += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company)
                     sols_per_product[product.id][2] += sol_ids
             if downpayment_amount_invoiced:
                 downpayments_data = {
@@ -567,15 +564,12 @@ class Project(models.Model):
         self._cr.execute(query_string, query_param)
         invoices_move_line_read = self._cr.dictfetchall()
         if invoices_move_line_read:
-            # Get conversion rate from currencies to currency of the current company
-            currency_ids = {iml['currency_id'] for iml in invoices_move_line_read + [{'currency_id': self.currency_id.id}]}
-            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
-            conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
-
+            currency_ids = OrderedSet(iml['currency_id'] for iml in invoices_move_line_read)
             move_ids = set()
             amount_invoiced = amount_to_invoice = 0.0
             for moves_read in invoices_move_line_read:
-                price_subtotal = self.currency_id.round(moves_read['price_subtotal'] * conversion_rates[moves_read['currency_id']])
+                currency = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)
+                price_subtotal = currency._convert(moves_read['price_subtotal'], self.currency_id, self.company_id)
                 analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
                 move_ids.add(moves_read['move_id'])
                 if moves_read['parent_state'] == 'draft':

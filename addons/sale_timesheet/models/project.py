@@ -425,16 +425,9 @@ class Project(models.Model):
         costs_dict = {}
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
-        dict_rate_per_currency = {}
-        today = fields.Date.context_today(self)
         convert_company = self.company_id or self.env.company
         for timesheet_invoice_type, dummy, currency, amount, ids in aa_line_read_group:
-            if currency != self.currency_id:
-                rate = dict_rate_per_currency.get(currency.id, False)
-                if not rate:
-                    rate = currency._get_conversion_rate(currency, self.currency_id, convert_company, today)
-                    dict_rate_per_currency[currency.id] = rate
-                amount = self.currency_id.round(amount * rate)
+            amount = currency._convert(amount, self.currency_id, convert_company)
             invoice_type = timesheet_invoice_type
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
             revenue = revenues_dict.setdefault(invoice_type, {'invoiced': 0.0, 'to_invoice': 0.0})

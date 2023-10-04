@@ -73,16 +73,8 @@ class Project(models.Model):
         if mrp_aal_read_group:
             can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
             total_amount = 0
-            currency_ids = {currency.id for currency, amount in mrp_aal_read_group}
-            currency_ids.add(self.currency_id.id)
-            rate_per_currency_id = self.env['res.currency'].browse(currency_ids)._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
-            project_currency_rate = rate_per_currency_id[self.currency_id.id]
             for currency, amount_summed in mrp_aal_read_group:
-                if currency != self.currency_id:
-                    rate = project_currency_rate / rate_per_currency_id[currency.id]
-                    total_amount += self.currency_id.round(amount_summed * rate)
-                else:
-                    total_amount += amount_summed
+                total_amount += currency._convert(amount_summed, self.currency_id, self.company_id)
 
             mrp_costs = {
                 'id': mrp_category,

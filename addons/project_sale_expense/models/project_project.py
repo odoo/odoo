@@ -24,9 +24,6 @@ class Project(models.Model):
             return {}
         expenses_per_so_id = {}
         expense_ids = []
-        amount_billed = 0.0
-        today = fields.Date.context_today(self)
-        convert_company = self.company_id or self.env.company
         dict_amount_per_currency = defaultdict(lambda: 0.0)
         for res in expenses_read_group:
             so_id = res['sale_order_id']
@@ -35,13 +32,11 @@ class Project(models.Model):
             if can_see_expense:
                 expense_ids.extend(res['ids'])
             dict_amount_per_currency[res['currency_id']] += res['untaxed_amount_currency']
+
+        amount_billed = 0.0
         for currency_id in dict_amount_per_currency:
-            if currency_id == self.currency_id.id:
-                amount_billed += dict_amount_per_currency[currency_id]
-                continue
-            currency = self.env['res.currency'].browse(currency_id)
-            rate = currency._get_conversion_rate(currency, self.currency_id, convert_company, today)
-            amount_billed += self.currency_id.round(dict_amount_per_currency[currency_id] * rate)
+            currency = self.env['res.currency'].browse(currency_id).with_prefetch(dict_amount_per_currency)
+            amount_billed += currency._convert(dict_amount_per_currency[currency_id], self.currency_id, self.company_id)
 
         sol_read_group = self.env['sale.order.line'].sudo()._read_group(
             [
@@ -65,18 +60,9 @@ class Project(models.Model):
                 dict_invoices_amount_per_currency[currency]['to_invoice'] += untaxed_amount_to_invoice_sum
                 dict_invoices_amount_per_currency[currency]['invoiced'] += untaxed_amount_invoiced_sum
                 reinvoice_expense_ids += expense_data_per_product_id[product_id]
-        rate_per_currency_id = {self.currency_id.id: 1}
-        if len(set_currency_ids) > 1:
-            rate_per_currency_id = self.env['res.currency'].browse(set_currency_ids)._get_rates(self.company_id or self.env.company, today)
-        project_currency_rate = rate_per_currency_id[self.currency_id.id]
         for currency, revenues in dict_invoices_amount_per_currency.items():
-            if currency.id == self.currency_id.id:
-                total_amount_expense_to_invoice += revenues['to_invoice']
-                total_amount_expense_invoiced += revenues['invoiced']
-                continue
-            rate = project_currency_rate / rate_per_currency_id[currency.id]
-            total_amount_expense_to_invoice += self.currency_id.round(revenues['to_invoice'] * rate)
-            total_amount_expense_invoiced += self.currency_id.round(revenues['invoiced'] * rate)
+            total_amount_expense_to_invoice += currency._convert(revenues['to_invoice'], self.currency_id, self.company_id)
+            total_amount_expense_invoiced += currency._convert(revenues['invoiced'], self.currency_id, self.company_id)
 
         section_id = 'expenses'
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
