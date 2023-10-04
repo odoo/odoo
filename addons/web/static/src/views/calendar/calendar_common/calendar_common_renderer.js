@@ -41,6 +41,8 @@ const HOUR_FORMATS = {
     },
 };
 
+const { DateTime } = luxon;
+
 export class CalendarCommonRenderer extends Component {
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);
@@ -111,6 +113,7 @@ export class CalendarCommonRenderer extends Component {
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
             windowResize: this.onWindowResizeDebounced,
+            columnHeaderHtml: this.getHeaderHtml,
         };
     }
 
@@ -239,6 +242,9 @@ export class CalendarCommonRenderer extends Component {
             if (record.duration <= 0.25) {
                 el.classList.add("o_event_oneliner");
             }
+            if (DateTime.now() >= record.end) {
+                el.classList.add("opacity-75");
+            }
         }
 
         if (!el.querySelector(".fc-bg")) {
@@ -304,6 +310,12 @@ export class CalendarCommonRenderer extends Component {
     }
     onWindowResize() {
         this.updateSize();
+    }
+
+    getHeaderHtml(date) {
+        const scale = this.props.model.scale;
+        const { weekdayShort: weekday, day } = DateTime.fromJSDate(date);
+        return renderToString("web.CalendarCommonRendererHeader", { weekday, day, scale });
     }
 }
 CalendarCommonRenderer.components = {

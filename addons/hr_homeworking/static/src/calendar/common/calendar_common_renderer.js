@@ -3,39 +3,11 @@
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer"
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
-const { DateTime } = luxon;
 
 patch(AttendeeCalendarCommonRenderer.prototype, {
     get options(){
-        let a = Object.assign(super.options, {
-            columnHeaderHtml: function(date) {
-                const datetime = DateTime.fromJSDate(date);
-                if (this.props.model.scale === 'week'){
-                    return (
-                        "<div>" +
-                        datetime.toFormat("ccc dd") +
-                        "</div>" +
-                        renderToString(this.constructor.HeaderCalendarTemplate, {
-                            date: date,
-                            today: new Date(),
-                        })
-                    );
-                }
-                if (this.props.model.scale === 'day'){
-                    return (
-                        "<div>" +
-                        datetime.toFormat("LLLL dd, yyyy") +
-                        "</div>" +
-                        renderToString(this.constructor.HeaderCalendarTemplate, {
-                            date: date,
-                            today: new Date(),
-                        })
-                    );
-                }
-                return "<div>" + datetime.toFormat("cccc") + "</div>";
-            }
-        });
-        return Object.assign(a, {
+        return {
+            ...super.options,
             eventOrder: function(event1, event2){
                 if (event1.extendedProps.worklocation){
                     return -1;
@@ -46,8 +18,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                         return event1.title.localeCompare(event2.title);
                     }
                 }
-            }
-        })
+            },
+        };
     },
     fcEventToRecord(event) {
         const res = super.fcEventToRecord(...arguments);
@@ -218,5 +190,4 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
 });
 
 AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr.homeworking.CalendarCommonRenderer.worklocation";
-AttendeeCalendarCommonRenderer.HeaderCalendarTemplate = "hr.homeworking.CalendarCommonRenderer.buttonWorklocation";
 AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr.homeworking.CalendarCommonRenderer.buttonWorklocation";

@@ -7,7 +7,8 @@
                 <t t-esc="title"/>
                 <t t-if="!isAllDay">
                     <t t-if="24 > duration and duration > 0.5">
-                        <br/><t t-esc="startTime"/> - <t t-esc="endTime"/>
+                        <br/>
+                        <span class="fw-normal"><t t-esc="startTime" /> - <t t-esc="endTime" /></span>
                     </t>
                     <t t-else="">, <t t-esc="startTime"/></t>
                 </t>

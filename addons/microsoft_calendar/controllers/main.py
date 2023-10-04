@@ -3,12 +3,13 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.calendar.controllers.main import CalendarController
 
 
-class MicrosoftCalendarController(http.Controller):
+class MicrosoftCalendarController(CalendarController):
 
     @http.route('/microsoft_calendar/sync_data', type='json', auth='user')
-    def sync_data(self, model, **kw):
+    def microsoft_calendar_sync_data(self, model, **kw):
         """ This route/function is called when we want to synchronize Odoo
             calendar with Microsoft Calendar.
             Function return a dictionary with the status :  need_config_from_admin, need_auth,
@@ -55,3 +56,12 @@ class MicrosoftCalendarController(http.Controller):
             }
 
         return {"status": "success"}
+
+    @http.route()
+    def check_calendar_credentials(self):
+        res = super().check_calendar_credentials()
+        get_param = request.env['ir.config_parameter'].sudo().get_param
+        client_id = get_param('microsoft_calendar_client_id')
+        client_secret = get_param('microsoft_calendar_client_secret')
+        res['microsoft_calendar'] = bool(client_id and client_secret)
+        return res

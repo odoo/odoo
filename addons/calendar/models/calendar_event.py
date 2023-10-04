@@ -182,6 +182,9 @@ class Meeting(models.Model):
     # attendees
     attendee_ids = fields.One2many(
         'calendar.attendee', 'event_id', 'Participant')
+    current_attendee = fields.Many2one("calendar.attendee", compute="_compute_current_attendee", search="_search_current_attendee")
+    current_status = fields.Selection(string="Attending?", related="current_attendee.state", readonly=False)
+    should_show_status = fields.Boolean(compute="_compute_should_show_status")
     partner_ids = fields.Many2many(
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
@@ -246,6 +249,19 @@ class Meeting(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+
+    @api.depends("attendee_ids")
+    def _compute_should_show_status(self):
+        for event in self:
+            event.should_show_status = event.current_attendee and any(attendee.partner_id != self.env.user.partner_id for attendee in event.attendee_ids)
+
+    @api.depends('attendee_ids', 'attendee_ids.state')
+    def _compute_current_attendee(self):
+        for event in self:
+            event.current_attendee = event.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.env.user.partner_id)
+
+    def _search_current_attendee(self, operator, value):
+        return [("id", operator, value)]
 
     @api.depends('attendee_ids', 'attendee_ids.state', 'partner_ids')
     def _compute_attendees_count(self):
@@ -617,9 +633,12 @@ class Meeting(models.Model):
                 self.videocall_channel_id.add_members(new_partner_ids)
 
         time_fields = self.env['calendar.event']._get_time_fields()
-        if any([values.get(key) for key in time_fields]) or 'alarm_ids' in values:
+        if any([values.get(key) for key in time_fields]):
             update_alarms = True
             update_time = True
+
+        if 'alarm_ids' in values:
+            update_alarms = True
 
         if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
             if any({field: values.get(field) for field in time_fields if field in values}):

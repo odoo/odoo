@@ -3994,7 +3994,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".o_calendar_renderer .fc-day-header").textContent,
-            "January 30, 2016",
+            "Sat 30",
             "should display day passed in the context"
         );
     });
@@ -4030,12 +4030,12 @@ QUnit.module("Views", ({ beforeEach }) => {
         const dayHeaders = target.querySelectorAll(".fc-day-header");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Sunday",
+            "Sun 1",
             "The first day of the week should be Sunday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Saturday",
+            "Sat 7",
             "The last day of the week should be Saturday"
         );
 
@@ -4085,12 +4085,12 @@ QUnit.module("Views", ({ beforeEach }) => {
         const dayHeaders = target.querySelectorAll(".fc-day-header");
         assert.strictEqual(
             dayHeaders[0].textContent,
-            "Monday",
+            "Mon 26",
             "The first day of the week should be Monday"
         );
         assert.strictEqual(
             dayHeaders[dayHeaders.length - 1].textContent,
-            "Sunday",
+            "Sun 1",
             "The last day of the week should be Sunday"
         );
 
@@ -5075,6 +5075,41 @@ QUnit.module("Views", ({ beforeEach }) => {
                 target.querySelector(".o_datetime_picker .o_highlighted.o_today").textContent,
                 "4"
             );
+        });
+
+        QUnit.test("Scale: scale default is fetched from sessionStorage", async (assert) => {
+            assert.expect(4);
+
+            patchWithCleanup(browser, {
+                sessionStorage: {
+                    setItem(key, value) {
+                        if (key === "calendar-scale") {
+                            assert.step(`scale_${value}`);
+                        }
+                    },
+                    getItem(key) {
+                        if (key === "calendar-scale") {
+                            return "month";
+                        }
+                    },
+                },
+            });
+
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" attendee="partner_ids">
+                    <field name="partner_ids" write_field="partner_id" />
+                </calendar>
+                `,
+            });
+
+            assert.equal(target.querySelector(".scale_button_selection").textContent, "Month");
+            await changeScale(target, "year");
+            assert.equal(target.querySelector(".scale_button_selection").textContent, "Year");
+            assert.verifySteps(["scale_year"]);
         });
     });
 });

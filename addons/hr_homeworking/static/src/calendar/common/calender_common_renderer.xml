@@ -31,6 +31,12 @@
         </t>
     </t>
 
+    <t t-name="hr_homeworking.CalendarCommonRendererHeader" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_cw_day_number')]" position="after">
+            <t t-call="hr.homeworking.CalendarCommonRenderer.buttonWorklocation"/>
+        </xpath>
+    </t>
+
     <t t-name="hr.homeworking.CalendarCommonRenderer.buttonWorklocation">
         <div class="btnWorklocation w-100">
             <button class='rounded-pill o_month text-nowrap bg-info-light'>

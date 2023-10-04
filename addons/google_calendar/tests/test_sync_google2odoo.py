@@ -538,7 +538,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -582,7 +582,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -635,7 +635,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -685,7 +685,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             "attendees": [
                 {
-                    "email": "odoobot@example.com", "state": "accepted",
+                    "email": "odoobot@example.com", "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
@@ -1146,8 +1146,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         }])
         self.sync(gevent)
         # User attendee removed but gevent owner might be added after synch.
-        mails = sorted(set(event.attendee_ids.mapped('email')))
-        self.assertEqual(mails, ['odoobot@example.com'])
+        mails = event.attendee_ids.mapped('email')
+        self.assertFalse(mails)
 
         self.assertGoogleAPINotCalled()
 
@@ -1343,7 +1343,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "attendees": [
                 {
                     "email": mail_alias.display_name,
-                    "state": "accepted",
+                    "responseStatus": "accepted",
                 },
             ],
             'updated': self.now,
