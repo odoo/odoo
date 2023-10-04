@@ -365,7 +365,14 @@ export function getFieldsSpec(
         const { related, limit, defaultOrderBy, invisible } = activeFields[fieldName];
         fieldsSpec[fieldName] = {};
         // X2M
-        if (related && ((invisible !== "True" && invisible !== "1") || withInvisible)) {
+        if (
+            related &&
+            ((invisible !== "True" && invisible !== "1") ||
+                Object.values(related.activeFields).find(
+                    (rf) => rf.invisble !== "True" || rf.invisible !== 1
+                ) ||
+                withInvisible)
+        ) {
             fieldsSpec[fieldName].fields = getFieldsSpec(
                 related.activeFields,
                 related.fields,
