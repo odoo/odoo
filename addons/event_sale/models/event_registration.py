@@ -8,7 +8,6 @@ from odoo.tools import float_is_zero
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
-    is_paid = fields.Boolean('Is Paid')
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
@@ -16,7 +15,7 @@ class EventRegistration(models.Model):
             ('to_pay', 'Not Paid'),
             ('paid', 'Paid'),
             ('free', 'Free'),
-        ], compute="_compute_payment_status", compute_sudo=True)
+        ], compute="_compute_payment_status", compute_sudo=True, store=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
         store=True, ondelete="set null")
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False,
@@ -24,17 +23,13 @@ class EventRegistration(models.Model):
     utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False,
         store=True, ondelete="set null")
 
-    @api.depends('is_paid', 'sale_order_id.currency_id', 'sale_order_line_id.price_total')
+    @api.depends('sale_order_id.state', 'sale_order_id.currency_id', 'sale_order_line_id.price_total')
     def _compute_payment_status(self):
-        for record in self:
-            so = record.sale_order_id
-            so_line = record.sale_order_line_id
-            if not so or float_is_zero(so_line.price_total, precision_digits=so.currency_id.rounding):
-                record.payment_status = 'free'
-            elif record.is_paid:
-                record.payment_status = 'paid'
+        for so_line, registrations in self.grouped('sale_order_line_id').items():
+            if not so_line or float_is_zero(so_line.price_total, precision_digits=so_line.currency_id.rounding):
+                registrations.payment_status = 'free'
             else:
-                record.payment_status = 'to_pay'
+                registrations.payment_status = 'to_pay'
 
     @api.depends('sale_order_id')
     def _compute_utm_campaign_id(self):
@@ -125,7 +120,7 @@ class EventRegistration(models.Model):
                 render_context=render_context)
 
     def _action_set_paid(self):
-        self.write({'is_paid': True})
+        self.write({'payment_status': 'paid'})
 
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
