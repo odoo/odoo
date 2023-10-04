@@ -1,4 +1,5 @@
 /** @odoo-module */
+import { session } from "@web/session";
 
 /**
  * @typedef {object} ServerData
@@ -182,6 +183,11 @@ export function getBasicData() {
                     name: "Partner",
                     model: "partner",
                 },
+                {
+                    id: 55,
+                    name: "Users",
+                    model: "res.users",
+                },
             ],
         },
         "documents.folder": {
@@ -257,6 +263,12 @@ export function getBasicData() {
                     decimal_places: 2,
                 },
             ],
+        },
+        "res.users": {
+            fields: {
+                name: { string: "Name", type: "char" },
+            },
+            records: [{ id: session.uid, name: session.name }],
         },
         partner: {
             fields: {
@@ -354,6 +366,12 @@ export function getBasicData() {
                     string: "Json Field",
                     type: "json",
                     store: true,
+                },
+                user_ids: {
+                    relation: "res.users",
+                    string: "Users",
+                    type: "many2many",
+                    searchable: true,
                 },
             },
             records: [
