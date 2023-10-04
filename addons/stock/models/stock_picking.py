@@ -1496,11 +1496,11 @@ class Picking(models.Model):
         else:
             return {}
 
-    def _put_in_pack(self, move_line_ids, create_package_level=True):
-        package = False
+    def _put_in_pack(self, move_line_ids, create_package_level=True, package=None):
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
-            package = self.env['stock.quant.package'].create({})
+            if not package:
+                package = self.env['stock.quant.package'].create({})
 
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
@@ -1552,8 +1552,9 @@ class Picking(models.Model):
                 })
         return package
 
-    def action_put_in_pack(self):
+    def action_put_in_pack(self, package_id=None):
         self.ensure_one()
+        package = self.env['stock.quant.package'].browse(package_id) if package_id else None
         if self.state not in ('done', 'cancel'):
             if self.immediate_transfer:
                 for move in self.move_ids:
@@ -1577,7 +1578,7 @@ class Picking(models.Model):
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
-                    res = self._put_in_pack(move_line_ids)
+                    res = self._put_in_pack(move_line_ids, package=package)
                 return res
             else:
                 raise UserError(_("Please add 'Done' quantities to the picking to create a new pack."))
