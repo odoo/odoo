@@ -13,12 +13,10 @@ import os.path
 import pprint
 import re
 import subprocess
-import warnings
-
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 import pytz
+from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
 try:
     import jingtrang
@@ -30,7 +28,6 @@ from . import pycompat
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from .translate import _
-from odoo import SUPERUSER_ID, api
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
