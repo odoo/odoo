@@ -139,18 +139,19 @@ class Currency(models.Model):
             currency.is_current_company_currency = self.env.company.root_id.currency_id == currency
 
     @api.depends('rate_ids.rate')
+    @api.depends_context('to_currency', 'date', 'company', 'company_id')
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Date.context_today(self)
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
         company = company.root_id
+        to_currency = self.browse(self.env.context.get('to_currency')) or company.currency_id
         # the subquery selects the last rate before 'date' for the given currency/company
-        currency_rates = self._get_rates(company, date)
-        last_rate = self.env['res.currency.rate']._get_last_rates_for_companies(company)
+        currency_rates = (self + to_currency)._get_rates(self.env.company, date)
         for currency in self:
-            currency.rate = (currency_rates.get(currency.id) or 1.0) / last_rate[company]
+            currency.rate = currency_rates.get(to_currency.id) / currency_rates.get(currency.id)
             currency.inverse_rate = 1 / currency.rate
             if currency != company.currency_id:
-                currency.rate_string = '1 %s = %.6f %s' % (company.currency_id.name, currency.rate, currency.name)
+                currency.rate_string = '1 %s = %.6f %s' % (to_currency.name, currency.rate, currency.name)
             else:
                 currency.rate_string = ''
 
@@ -255,12 +256,14 @@ class Currency(models.Model):
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
     @api.model
-    def _get_conversion_rate(self, from_currency, to_currency, company, date):
-        currency_rates = (from_currency + to_currency)._get_rates(company, date)
-        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
-        return res
+    def _get_conversion_rate(self, from_currency, to_currency, company=None, date=None):
+        if from_currency == to_currency:
+            return 1
+        company = company or self.env.company
+        date = date or fields.Date.context_today(self)
+        return from_currency.with_company(company).with_context(to_currency=to_currency.id, date=str(date)).rate
 
-    def _convert(self, from_amount, to_currency, company, date, round=True):
+    def _convert(self, from_amount, to_currency, company=None, date=None, round=True):  # noqa: A002 builtin-argument-shadowing
         """Returns the converted amount of ``from_amount``` from the currency
            ``self`` to the currency ``to_currency`` for the given ``date`` and
            company.
@@ -272,12 +275,8 @@ class Currency(models.Model):
         self, to_currency = self or to_currency, to_currency or self
         assert self, "convert amount from unknown currency"
         assert to_currency, "convert amount to unknown currency"
-        assert company, "convert amount from unknown company"
-        assert date, "convert amount from unknown date"
         # apply conversion rate
-        if self == to_currency:
-            to_amount = from_amount
-        elif from_amount:
+        if from_amount:
             to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
         else:
             return 0.0
