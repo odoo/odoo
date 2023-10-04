@@ -11,7 +11,7 @@ async function addChartGlobalFilter(model) {
         id: "42",
         type: "date",
         label: "Last Year",
-        rangeType: "year",
+        rangeType: "fixedPeriod",
         defaultValue: { yearOffset: -1 },
     };
     await addGlobalFilter(
@@ -54,7 +54,7 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
             id: "42",
             type: "date",
             label: "Last Year",
-            rangeType: "year",
+            rangeType: "fixedPeriod",
         };
         await addGlobalFilter(
             model,

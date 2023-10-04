@@ -289,7 +289,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
                 switch (filter.type) {
                     case "date":
-                        if (time === filter.rangeType) {
+                        if (filter.rangeType === "fixedPeriod" && time) {
                             transformedValue = pivotPeriodToFilterValue(time, value);
                             if (JSON.stringify(transformedValue) === JSON.stringify(currentValue)) {
                                 transformedValue = undefined;

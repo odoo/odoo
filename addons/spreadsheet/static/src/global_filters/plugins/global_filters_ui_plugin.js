@@ -46,7 +46,8 @@ const uuidGenerator = new UuidGenerator();
 export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     constructor(config) {
         super(config);
-        this.orm = config.custom.env ? config.custom.env.services.orm : undefined;
+        this.orm = config.custom.env?.services.orm;
+        this.user = config.custom.env?.services.user;
         /**
          * Cache record display names for relation filters.
          * For each filter, contains a promise resolving to
@@ -93,7 +94,11 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 break;
             case "SET_GLOBAL_FILTER_VALUE":
                 this.recordsDisplayName[cmd.id] = cmd.displayNames;
-                this._setGlobalFilterValue(cmd.id, cmd.value);
+                if (!cmd.value) {
+                    this._clearGlobalFilterValue(cmd.id);
+                } else {
+                    this._setGlobalFilterValue(cmd.id, cmd.value);
+                }
                 break;
             case "SET_MANY_GLOBAL_FILTER_VALUE":
                 for (const filter of cmd.filters) {
@@ -154,19 +159,22 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     getGlobalFilterValue(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
 
-        const value = filterId in this.values ? this.values[filterId].value : filter.defaultValue;
-
-        const preventAutomaticValue =
-            this.values[filterId] &&
-            this.values[filterId].value &&
-            this.values[filterId].value.preventAutomaticValue;
-        const defaultsToCurrentPeriod = !preventAutomaticValue && filter.defaultsToCurrentPeriod;
-
-        if (filter.type === "date" && isEmpty(value) && defaultsToCurrentPeriod) {
+        const value = filterId in this.values ? this.values[filterId].value : undefined;
+        const preventAutomaticValue = this.values[filterId]?.value?.preventAutomaticValue;
+        const defaultValue = (!preventAutomaticValue && filter.defaultValue) || undefined;
+        if (filter.type === "date" && preventAutomaticValue) {
+            return undefined;
+        }
+        if (filter.type === "date" && isEmpty(value) && defaultValue) {
             return this._getValueOfCurrentPeriod(filterId);
         }
-
-        return value;
+        if (filter.type === "relation" && preventAutomaticValue) {
+            return [];
+        }
+        if (filter.type === "relation" && isEmpty(value) && defaultValue === "current_user") {
+            return [this.user.userId];
+        }
+        return value || defaultValue;
     }
 
     /**
@@ -237,13 +245,15 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                     return "";
                 }
                 if (!this.recordsDisplayName[filter.id]) {
-                    this.orm.call(filter.modelName, "read", [value, ["display_name"]]).then((result) => {
-                        const names = result.map(({display_name}) => display_name);
-                        this.recordsDisplayName[filter.id] = names;
-                        this.dispatch("EVALUATE_CELLS", {
-                            sheetId: this.getters.getActiveSheetId(),
+                    this.orm
+                        .call(filter.modelName, "read", [value, ["display_name"]])
+                        .then((result) => {
+                            const names = result.map(({ display_name }) => display_name);
+                            this.recordsDisplayName[filter.id] = names;
+                            this.dispatch("EVALUATE_CELLS", {
+                                sheetId: this.getters.getActiveSheetId(),
+                            });
                         });
-                    });
                     return "";
                 }
                 return this.recordsDisplayName[filter.id].join(", ");
@@ -273,22 +283,21 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      */
     _getValueOfCurrentPeriod(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
-        const rangeType = filter.rangeType;
-        switch (rangeType) {
-            case "year":
+        switch (filter.defaultValue) {
+            case "this_year":
                 return { yearOffset: 0 };
-            case "month": {
+            case "this_month": {
                 const month = new Date().getMonth() + 1;
                 const period = Object.entries(MONTHS).find((item) => item[1].value === month)[0];
                 return { yearOffset: 0, period };
             }
-            case "quarter": {
+            case "this_quarter": {
                 const quarter = Math.floor(new Date().getMonth() / 3);
                 const period = FILTER_DATE_OPTION.quarter[quarter];
                 return { yearOffset: 0, period };
             }
         }
-        return {};
+        return filter.defaultValue;
     }
 
     /**
@@ -307,7 +316,7 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 value = { yearOffset: undefined, preventAutomaticValue: true };
                 break;
             case "relation":
-                value = [];
+                value = { preventAutomaticValue: true };
                 break;
         }
         this.values[id] = { value, rangeType };
@@ -341,23 +350,27 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         if (filter.rangeType === "relative") {
             return getRelativeDateDomain(now, offset, value, field, type);
         }
-
+        const noPeriod = !value.period || value.period === "empty";
+        const noYear = value.yearOffset === undefined;
+        if (noPeriod && noYear) {
+            return [];
+        }
         const setParam = { year: now.year };
         const yearOffset = value.yearOffset || 0;
-        const plusParam = {
-            years: filter.rangeType === "year" ? yearOffset + offset : yearOffset,
-        };
-        if (!value.period || value.period === "empty") {
+        const plusParam = { years: yearOffset };
+        if (noPeriod) {
             granularity = "year";
+            plusParam.years += offset;
         } else {
-            switch (filter.rangeType) {
+            // value.period is can be "first_quarter", "second_quarter", etc. or
+            // full month name (e.g. "january", "february", "march", etc.)
+            granularity = value.period.endsWith("_quarter") ? "quarter" : "month";
+            switch (granularity) {
                 case "month":
-                    granularity = "month";
                     setParam.month = MONTHS[value.period].value;
                     plusParam.month = offset;
                     break;
                 case "quarter":
-                    granularity = "quarter";
                     setParam.quarter = QUARTER_OPTIONS[value.period].setParam.quarter;
                     plusParam.quarter = offset;
                     break;

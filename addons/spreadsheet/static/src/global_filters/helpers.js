@@ -4,11 +4,7 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Domain } from "@web/core/domain";
 
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
-import { getPeriodOptions } from "@web/search/utils/dates";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
-
-const { DateTime } = luxon;
 
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
@@ -22,18 +18,25 @@ export function checkFiltersTypeValueCombination(type, value) {
                     return CommandResult.InvalidValueTypeCombination;
                 }
                 break;
-            case "date":
-                if (typeof value === "string") {
+            case "date": {
+                if (value === "") {
+                    return CommandResult.Success;
+                } else if (typeof value === "string") {
                     const expectedValues = RELATIVE_DATE_RANGE_TYPES.map((val) => val.type);
-                    if (value && !expectedValues.includes(value)) {
-                        return CommandResult.InvalidValueTypeCombination;
+                    expectedValues.push("this_month", "this_quarter", "this_year");
+                    if (expectedValues.includes(value)) {
+                        return CommandResult.Success;
                     }
-                } else if (typeof value !== "object" || Array.isArray(value)) {
-                    // not a date
+                    return CommandResult.InvalidValueTypeCombination;
+                } else if (typeof value !== "object") {
                     return CommandResult.InvalidValueTypeCombination;
                 }
                 break;
+            }
             case "relation":
+                if (value === "current_user") {
+                    return CommandResult.Success;
+                }
                 if (!Array.isArray(value)) {
                     return CommandResult.InvalidValueTypeCombination;
                 }
@@ -131,24 +134,4 @@ export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldTy
     }
 
     return new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
-}
-
-/**
- * Returns a list of time options to choose from according to the requested
- * type. Each option contains its (translated) description.
- * see getPeriodOptions
- *
- *
- * @param {string} type "month" | "quarter" | "year"
- *
- * @returns {Array<Object>}
- */
-export function dateOptions(type) {
-    if (type === "month") {
-        return monthsOptions;
-    } else {
-        return getPeriodOptions(DateTime.local()).filter(({ id }) =>
-            FILTER_DATE_OPTION[type].includes(id)
-        );
-    }
 }

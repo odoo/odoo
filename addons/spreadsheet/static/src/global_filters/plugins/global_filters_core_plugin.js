@@ -1,9 +1,10 @@
 /** @odoo-module */
 
 /**
- * @typedef {"year"|"month"|"quarter"|"relative"} RangeType
+ * @typedef {"fixedPeriod"|"relative"} RangeType
  *
-/**
+ * @typedef {"last_month" | "last_week" | "last_year" | "last_three_years" | "this_month" | "this_quarter" | "this_year"} RelativePeriod
+ *
  * @typedef {Object} FieldMatching
  * @property {string} chain name of the field
  * @property {string} type type of the field
@@ -14,9 +15,8 @@
  * @property {string} label
  * @property {string} type "text" | "date" | "relation"
  * @property {RangeType} [rangeType]
- * @property {boolean} [defaultsToCurrentPeriod]
  * @property {boolean} [automaticDefaultValue]
- * @property {string|Array<string>|Object} defaultValue Default Value
+ * @property {RelativePeriod | "current_user" | string[] | string | undefined} defaultValue can be a period (for date filters), a list of ids (for relation filters) or simple text (for text filters)
  * @property {number} [modelID] ID of the related model
  * @property {string} [modelName] Name of the related model
  */

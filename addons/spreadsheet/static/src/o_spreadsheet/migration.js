@@ -4,7 +4,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 const { load, CorePlugin, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 5;
+export const ODOO_VERSION = 6;
 
 const MAP = {
     PIVOT: "ODOO.PIVOT",
@@ -34,6 +34,9 @@ export function migrate(data) {
     }
     if (version < 5) {
         _data = migrate4to5(_data);
+    }
+    if (version < 6) {
+        _data = migrate5to6(_data);
     }
     return _data;
 }
@@ -216,6 +219,22 @@ function migratePivotDaysParameters(formulaString) {
         return ast;
     });
     return "=" + astToFormula(convertedAst);
+}
+
+function migrate5to6(data) {
+    if (!data.globalFilters?.length) {
+        return data;
+    }
+    for (const filter of data.globalFilters) {
+        if (filter.type === "date" && ["year", "quarter", "month"].includes(filter.rangeType)) {
+            if (filter.defaultsToCurrentPeriod) {
+                filter.defaultValue = `this_${filter.rangeType}`;
+            }
+            filter.rangeType = "fixedPeriod";
+        }
+        delete filter.defaultsToCurrentPeriod;
+    }
+    return data;
 }
 
 export default class OdooVersion extends CorePlugin {

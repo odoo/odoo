@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 
 export const FILTER_DATE_OPTION = {
     quarter: ["first_quarter", "second_quarter", "third_quarter", "fourth_quarter"],
-    year: ["this_year", "last_year", "antepenultimate_year"],
 };
 
 // TODO Remove this mapping, We should only need number > description to avoid multiple conversions
