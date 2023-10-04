@@ -87,12 +87,12 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
                 $('a .fc-content:contains("Test Event")').click();
                 await new Promise((r) => setTimeout(r, 1000));
                 $('a .fc-content:contains("Test Event")').click();
+                await new Promise((r) => setTimeout(r, 1000));
             },
         },
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
-            extra_trigger: ".o_cw_body",
         },
         {
             content: "Validate the deletion",
