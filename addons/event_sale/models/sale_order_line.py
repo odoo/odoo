@@ -36,7 +36,7 @@ class SaleOrderLine(models.Model):
             if confirm:
                 existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
             if mark_as_paid:
-                existing_registrations.filtered(lambda self: not self.is_paid)._action_set_paid()
+                existing_registrations.filtered(lambda self: self.payment_status == 'to_pay')._action_set_paid()
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
