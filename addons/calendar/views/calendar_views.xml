@@ -232,7 +232,8 @@
                             <div class="d-flex align-items-baseline" colspan="2">
                                 <field name="partner_ids" widget="many2manyattendee"
                                     placeholder="Select attendees..."
-                                    context="{'force_email':True}"
+                                    options="{'no_quick_create': True}"
+                                    context="{'form_view_ref': 'base.view_partner_simple_form'}"
                                     domain="[('type','!=','private')]"
                                     class="oe_inline"
                                     readonly="not user_can_edit"
@@ -311,7 +312,8 @@
                         <field name="allday"/>
                         <field name="partner_ids" widget="many2manyattendee"
                             placeholder="Add attendees..."
-                            context="{'force_email':True}"
+                            options="{'no_quick_create': True}"
+                            context="{'form_view_ref': 'base.view_partner_simple_form'}"
                             class="oe_inline"
                         />
                         <label for="videocall_location" class="opacity-100"/>
