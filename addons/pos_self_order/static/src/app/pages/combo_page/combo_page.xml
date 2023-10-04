@@ -25,9 +25,9 @@
                                 onerror="this.remove()" />
                             <div class="d-flex flex-column justify-content-center w-75 p-3 ps-0">
                                 <span class="fs-1 fw-bolder" t-esc="state.selectedProduct.name"/>
-                                <div t-if="state.selectedProduct.description_ecommerce"
+                                <div t-if="state.selectedProduct.description_sale"
                                 class="o_self_order_main_desc text-muted overflow-y-auto"
-                                t-esc="state.selectedProduct.description_ecommerce"
+                                t-esc="state.selectedProduct.description_sale"
                                 />
                             </div>
                         </div>
