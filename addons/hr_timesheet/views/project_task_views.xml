@@ -11,7 +11,7 @@
                     <field name="effective_hours" widget="timesheet_uom" sum="Hours Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
                 <xpath expr="//label[@for='date_deadline']" position="before">
@@ -24,7 +24,7 @@
                             (incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                             <span class="fw-bold text-dark"> Sub-tasks</span>)
                         </span>
-                        <span invisible="not project_id">(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
+                        (<field name="progress" invisible="not project_id" class="oe_inline" nolabel="1" decoration-danger="progress > 1.005" digits="[1, 0]" widget="percentage"/>)
                     </div>
                 </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
@@ -147,7 +147,7 @@
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="total_hours_spent" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
             </field>
@@ -165,7 +165,7 @@
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-tasks Total Effective Hours" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" invisible="allocated_hours == 0"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" invisible="allocated_hours == 0"/>
                     <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" options="{'overflow_class': 'bg-danger'}" />
                 </field>
             </field>
@@ -186,7 +186,7 @@
                 <div class="oe_kanban_bottom_left" position="inside">
                    <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
                         <t t-set="badge" t-value=""/>
-                        <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
+                        <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
                         <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                         <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                         <t t-set="title" t-value="'Remaining hours'" t-else=""/>

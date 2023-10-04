@@ -685,4 +685,4 @@ class TestTimesheet(TestCommonTimesheet):
                 'employee_id': self.empl_employee.id,
             },
         ])
-        self.assertEqual(self.task1.progress, 100, 'The percentage of allocated hours should be 100%.')
+        self.assertEqual(self.task1.progress, 1, 'The progress of allocated hours should be 1.')
