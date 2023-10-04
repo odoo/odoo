@@ -279,7 +279,7 @@ export class FormController extends Component {
     async onWillSaveRecord(record) {}
 
     displayName() {
-        return this.model.root.data.display_name || this.env._t("New");
+        return this.model.root.data.display_name || (this.model.root.isNew && this.env._t("New")) || "";
     }
 
     async onPagerUpdate({ offset, resIds }) {
