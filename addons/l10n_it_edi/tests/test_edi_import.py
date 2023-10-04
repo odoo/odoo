@@ -112,6 +112,33 @@ class TestItEdiImport(TestItEdi):
         invoices = self.env['account.move'].with_company(self.company).search([('name', '=', 'BILL/2019/01/0001')])
         self.assertEqual(len(invoices), 1)
 
+    def test_receive_wrongly_signed_vendor_bill(self):
+        """
+            Some of the invoices (i.e. those from Servizio Elettrico Nazionale, the
+            ex-monopoly-of-energy company) have custom signatures that rely on an old
+            OpenSSL implementation that breaks the current one that sees them as malformed,
+            so we cannot read those files. Also, we couldn't find an alternative way to use
+            OpenSSL to just get the same result without getting the error.
+
+            A new fallback method has been added that reads the ASN1 file structure and
+            takes the encoded pkcs7-data tag content out of it, regardless of the
+            signature.
+
+            Being a non-optimized pure Python implementation, it takes about 2x the time
+            than the regular method, so it's better used as a fallback. We didn't use an
+            existing library not to further pollute the dependencies space.
+
+            task-3502910
+        """
+        with freeze_time('2019-01-01'):
+            self._assert_import_invoice('IT09633951000_NpFwF.xml.p7m', [{
+                'name': 'BILL/2023/09/0001',
+                'ref': '333333333333333',
+                'invoice_date': fields.Date.from_string('2023-09-08'),
+                'amount_untaxed': 57.54,
+                'amount_tax': 3.95,
+            }])
+
     def test_cron_receives_bill_from_another_company(self):
         """ Ensure that when from one of your company, you bill the other, the
         import isn't impeded because of conflicts with the filename """
