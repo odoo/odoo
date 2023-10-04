@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { parseFloatTime } from "@web/views/fields/parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } from "@odoo/owl";
 
@@ -94,18 +95,17 @@ class MrpTimerField extends Component {
             parse: (v) => parseFloatTime(v),
         });
 
-        onWillStart(async () => {
-            if (
-                !this.props.record.model.useSampleModel &&
-                this.props.record.data.state == "progress"
-            ) {
+        useRecordObserver(async (record) => {
+            if (!this.props.record.model.useSampleModel && record.data.state === "progress") {
                 this.duration = await this.orm.call(
                     "mrp.workorder",
                     "get_duration",
                     [this.props.record.resId]
                 );
+            } else {
+                this.duration = record.data[this.props.name];
             }
-        });
+        })
 
         onWillDestroy(() => clearTimeout(this.timer));
     }
@@ -119,11 +119,6 @@ class MrpTimerField extends Component {
 
     get ongoing() {
         return this.props.record.data.is_user_working;
-    }
-
-    get duration() {
-        // duration is expected to be given in minutes
-        return this.props.record.data[this.props.name];
     }
 }
 
