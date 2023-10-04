@@ -87,14 +87,18 @@ class AccountAnalyticLine(models.Model):
 
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
-        self._check_can_write(values)
+        if not self._check_can_write(values):
+            raise UserError(_('You cannot modify timesheets that are already invoiced.'))
+
         result = super(AccountAnalyticLine, self).write(values)
         return result
 
     def _check_can_write(self, values):
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
             if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
-                raise UserError(_('You cannot modify timesheets that are already invoiced.'))
+                return False
+        return True
+
 
     def _timesheet_determine_sale_line(self):
         """ Deduce the SO line associated to the timesheet line:
