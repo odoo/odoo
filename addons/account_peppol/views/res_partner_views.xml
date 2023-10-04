@@ -29,4 +29,29 @@
             </data>
         </field>
     </record>
+
+    <record id="res_partner_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ubl_cii_format']" position="after">
+                <field name="peppol_eas" string="Peppol EAS" optional="hide"/>
+                <field name="peppol_endpoint" string="Peppol Endpoint" optional="hide"/>
+                <field name="account_peppol_is_endpoint_valid" string="Peppol Validity" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_peppol" model="ir.actions.server">
+        <field name="name">Verify Peppol</field>
+        <field name="model_id" ref="account_peppol.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                action = record.button_account_peppol_check_partner_endpoint()
+        </field>
+    </record>
 </odoo>
