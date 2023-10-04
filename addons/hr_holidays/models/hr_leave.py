@@ -1033,9 +1033,9 @@ class HolidaysRequest(models.Model):
                 'res_id': holiday.id,
             }
             # Add the partner_id (if exist) as an attendee
-            if user and user.partner_id:
+            if holiday.employee_id and holiday.employee_id.work_contact_id:
                 meeting_values['partner_ids'] = [
-                    (4, user.partner_id.id)]
+                    (4, holiday.employee_id.work_contact_id.id)]
             result[user.id].append(meeting_values)
         return result
 
