@@ -274,8 +274,7 @@
                     </div>
                 </div>
                 <footer>
-                    <button string="Save" special="save" data-hotkey="q" class="oe_highlight" invisible="not context.get('active_id', False)"/>
-                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="context.get('active_id', False) or order_deadline_passed" data-hotkey="w"/>
+                    <button string="Add To Cart" name="add_to_cart" type="object" class="oe_highlight" invisible="order_deadline_passed" data-hotkey="w"/>
                     <button string="Discard" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>

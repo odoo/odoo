@@ -140,7 +140,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <field name="suggested_answer_ids" context="{'default_question_id': active_id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
+                            <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
@@ -154,7 +154,7 @@
                                 </tree>
                             </field>
 
-                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}"
+                            <field name="matrix_row_ids" context="{'default_matrix_question_id': id}"
                                 invisible="question_type != 'matrix'">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>

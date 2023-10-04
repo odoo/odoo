@@ -135,7 +135,7 @@
                 <div name="button_box" position="inside">
                     <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
                         groups="account.group_account_invoice,account.group_account_readonly"
-                        context="{'default_partner_id': active_id}">
+                        context="{'default_partner_id': id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
                                 <field name="currency_id" invisible="1"/>
@@ -197,7 +197,7 @@
                         <field name="show_credit_limit" invisible="1"/>
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
-                                <field name="bank_ids" nolabel="1" colspan="2" context="{'default_partner_id': active_id}" widget="auto_save_res_partner">
+                                <field name="bank_ids" nolabel="1" colspan="2" context="{'default_partner_id': id}" widget="auto_save_res_partner">
                                     <tree>
                                         <field name="sequence" widget="handle"/>
                                         <field name="acc_number"/>

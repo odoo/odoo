@@ -64,7 +64,7 @@
                     <div class="oe_button_box" name="button_box" groups="base.group_user" invisible="not can_manage_group">
                         <button name="%(mail_group.mail_group_member_action)d"
                                 type="action"
-                                context="{'search_default_mail_group_id': active_id}"
+                                context="{'search_default_mail_group_id': id}"
                                 class="oe_stat_button"
                                 icon="fa-users"
                                 help="Members of this group">
@@ -72,7 +72,7 @@
                         </button>
                        <button name="%(mail_group.mail_group_message_action)d"
                                 type="action"
-                                context="{'search_default_mail_group_id': active_id}"
+                                context="{'search_default_mail_group_id': id}"
                                 class="oe_stat_button"
                                 icon="fa-envelope"
                                 help="All messages of this group">
@@ -80,7 +80,7 @@
                         </button>
                         <button name="%(mail_group.mail_group_message_action)d"
                                 type="action"
-                                context="{'search_default_mail_group_id': active_id, 'search_default_moderation_status': 'pending_moderation'}"
+                                context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}"
                                 class="oe_stat_button"
                                 icon="fa-commenting-o"
                                 help="Emails waiting an action for this group"
@@ -89,7 +89,7 @@
                         </button>
                         <button name="%(mail_group.mail_group_moderation_action)d"
                                 type="action"
-                                context="{'search_default_mail_group_id': active_id}"
+                                context="{'search_default_mail_group_id': id}"
                                 invisible="not moderation"
                                 class="oe_stat_button"
                                 icon="fa-gavel"

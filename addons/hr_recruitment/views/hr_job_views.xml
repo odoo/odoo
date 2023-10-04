@@ -40,7 +40,7 @@
                                         <a name="action_open_activities" type="object">Activities</a>
                                     </div>
                                     <div role="menuitem">
-                                        <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': active_id}">Trackers</a>
+                                        <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': id}">Trackers</a>
                                     </div>
                                 </div>
                                 <div class="col-6 o_kanban_card_manage_section">
@@ -215,7 +215,7 @@
                 </button>
                 <button class="oe_stat_button" type="action"
                     name="%(action_hr_job_sources)d" icon="fa-bar-chart-o"
-                    context="{'default_job_id': active_id}">
+                    context="{'default_job_id': id}">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Trackers</span>
                     </div>

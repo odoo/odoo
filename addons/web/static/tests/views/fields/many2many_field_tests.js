@@ -1991,12 +1991,13 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2many basic keys in field evalcontext -- in list", async (assert) => {
-        assert.expect(6);
+        assert.expect(5);
         serverData.models.partner_type.fields.partner_id = {
             string: "Partners",
             type: "many2one",
             relation: "partner",
         };
+        serverData.models.partner.records.push({ id: 7, display_name: "default partner" });
         serverData.views = {
             "partner_type,false,form": `<form><field name="partner_id" /></form>`,
         };
@@ -2024,13 +2025,12 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <tree editable="top">
-                    <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
+                    <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': uid, 'allowed_company_ids': allowed_company_ids, 'company_id': current_company_id}"/>
                 </tree>`,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    assert.strictEqual(args.kwargs.context.default_partner_id, 1);
-                    assert.strictEqual(args.kwargs.context.model, "partner");
-                    assert.deepEqual(args.kwargs.context.ids, [1]);
+                    assert.strictEqual(args.kwargs.context.uid, 7);
+                    assert.deepEqual(args.kwargs.context.allowed_company_ids, [3]);
                     assert.strictEqual(args.kwargs.context.company_id, 3);
                 }
             },
@@ -2042,17 +2042,18 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal .o_field_many2one");
         assert.strictEqual(
             target.querySelector(".modal .o_field_many2one input").value,
-            "first record"
+            "default partner"
         );
     });
 
     QUnit.test("many2many basic keys in field evalcontext -- in form", async (assert) => {
-        assert.expect(6);
+        assert.expect(5);
         serverData.models.partner_type.fields.partner_id = {
             string: "Partners",
             type: "many2one",
             relation: "partner",
         };
+        serverData.models.partner.records.push({ id: 7, display_name: "default partner" });
         serverData.views = {
             "partner_type,false,form": `<form><field name="partner_id" /></form>`,
         };
@@ -2081,13 +2082,12 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
+                    <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': uid, 'allowed_company_ids': allowed_company_ids, 'company_id': current_company_id}"/>
                 </form>`,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    assert.strictEqual(args.kwargs.context.default_partner_id, 1);
-                    assert.strictEqual(args.kwargs.context.model, "partner");
-                    assert.deepEqual(args.kwargs.context.ids, [1]);
+                    assert.strictEqual(args.kwargs.context.default_partner_id, 7);
+                    assert.deepEqual(args.kwargs.context.allowed_company_ids, [3]);
                     assert.strictEqual(args.kwargs.context.company_id, 3);
                 }
             },
@@ -2099,19 +2099,20 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal .o_field_many2one");
         assert.strictEqual(
             target.querySelector(".modal .o_field_many2one input").value,
-            "first record"
+            "default partner"
         );
     });
 
     QUnit.test(
         "many2many basic keys in field evalcontext -- in a x2many in form",
         async (assert) => {
-            assert.expect(6);
+            assert.expect(5);
             serverData.models.partner_type.fields.partner_id = {
                 string: "Partners",
                 type: "many2one",
                 relation: "partner",
             };
+            serverData.models.partner.records.push({ id: 7, display_name: "default partner" });
             serverData.views = {
                 "partner_type,false,form": `<form><field name="partner_id" /></form>`,
             };
@@ -2144,15 +2145,14 @@ QUnit.module("Fields", (hooks) => {
                     <form>
                     <field name="p">
                         <tree editable="top">
-                            <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
+                            <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': uid, 'allowed_company_ids': allowed_company_ids, 'company_id': current_company_id}"/>
                         </tree>
                     </field>
                     </form>`,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
-                        assert.strictEqual(args.kwargs.context.default_partner_id, 1);
-                        assert.strictEqual(args.kwargs.context.model, "partner");
-                        assert.deepEqual(args.kwargs.context.ids, [1]);
+                        assert.strictEqual(args.kwargs.context.default_partner_id, 7);
+                        assert.deepEqual(args.kwargs.context.allowed_company_ids, [3]);
                         assert.strictEqual(args.kwargs.context.company_id, 3);
                     }
                 },
@@ -2164,7 +2164,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".modal .o_field_many2one");
             assert.strictEqual(
                 target.querySelector(".modal .o_field_many2one input").value,
-                "first record"
+                "default partner"
             );
         }
     );

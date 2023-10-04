@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Product Page Extra Fields" groups="base.group_no_one">
-                    <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
+                    <field name="shop_extra_field_ids" context="{'default_website_id': id}">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="field_id" required="1" options="{'no_create': True}"/>

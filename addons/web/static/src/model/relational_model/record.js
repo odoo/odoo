@@ -999,7 +999,11 @@ export class Record extends DataPoint {
         this._isEvalContextReady = true;
 
         if (!this._parentRecord || this._parentRecord._isEvalContextReady) {
-            this._updateChildrenContext();
+            for (const [fieldName, value] of Object.entries(toRaw(this.data))) {
+                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                    value._updateContext(getFieldContext(this, fieldName));
+                }
+            }
         }
     }
 
@@ -1115,14 +1119,6 @@ export class Record extends DataPoint {
                 throw e;
             }
             await this.model.hooks.onRecordChanged(this, this._getChanges());
-        }
-    }
-
-    _updateChildrenContext() {
-        for (const [fieldName, value] of Object.entries(toRaw(this.data))) {
-            if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
-                value._updateContext(getFieldContext(this, fieldName));
-            }
         }
     }
 }

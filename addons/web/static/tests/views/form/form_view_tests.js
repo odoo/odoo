@@ -1118,7 +1118,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <field string="Partner Types" name="timmy" widget="one2many" context="{
-                        'default_partner_id': active_id,
+                        'default_partner_id': id,
                         'form_view_ref': 'foo_partner_type_form_view'
                     }"/>
                 </form>`,
@@ -7340,7 +7340,7 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="action" name="1" context="{'test': active_id}">
+                            <button class="oe_stat_button" type="action" name="1" context="{'test': id}">
                                 <field name="qux" widget="statinfo"/>
                             </button>
                         </div>
@@ -7879,8 +7879,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
     });
 
-    QUnit.test("check if id and active_id are defined", async function (assert) {
-        assert.expect(2);
+    QUnit.test("check if id is available in evaluation context", async function (assert) {
+        assert.expect(1);
 
         let checkOnchange = false;
         await makeView({
@@ -7889,7 +7889,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="p" context="{'default_trululu': active_id, 'current_id': id}">
+                    <field name="p" context="{'current_id': id}">
                         <tree><field name="trululu"/></tree>
                         <form><field name="trululu"/></form>
                     </field>
@@ -7900,11 +7900,6 @@ QUnit.module("Views", (hooks) => {
                         args.kwargs.context.current_id,
                         false,
                         "current_id should be false"
-                    );
-                    assert.strictEqual(
-                        args.kwargs.context.default_trululu,
-                        false,
-                        "default_trululu should be false"
                     );
                 }
             },

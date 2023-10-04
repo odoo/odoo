@@ -73,7 +73,7 @@
                         </div>
                         <notebook colspan="4">
                             <page name="content" string="Content">
-                                <field name="slide_ids" string="Content" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': active_id, 'form_view_ref' : 'website_slides.view_slide_slide_form_wo_channel_id'}">
+                                <field name="slide_ids" string="Content" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': id, 'form_view_ref' : 'website_slides.view_slide_slide_form_wo_channel_id'}">
                                      <tree decoration-bf="is_category" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
@@ -128,7 +128,7 @@
                                                invisible="channel_type == 'training' or promote_strategy != 'specific'"
                                                required="channel_type != 'training' and promote_strategy == 'specific'"
                                                string="Content"
-                                               domain="[('channel_id', '=', active_id), ('is_category', '=', False)]"/>
+                                               domain="[('channel_id', '=', id), ('is_category', '=', False)]"/>
                                     </group>
                                 </group>
                             </page>

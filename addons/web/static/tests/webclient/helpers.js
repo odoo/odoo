@@ -344,7 +344,7 @@ export function getActionManagerServerData() {
       <header></header>
       <sheet>
       <div class="oe_button_box" name="button_box">
-      <button class="oe_stat_button" type="action" name="1" icon="fa-star" context="{'default_partner': active_id}">
+      <button class="oe_stat_button" type="action" name="1" icon="fa-star" context="{'default_partner': id}">
       <field string="Partners" name="o2m" widget="statinfo"/>
       </button>
       </div>

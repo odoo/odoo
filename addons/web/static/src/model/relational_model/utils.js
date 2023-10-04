@@ -343,9 +343,9 @@ export function getBasicEvalContext(config) {
         context: config.context,
         uid,
         allowed_company_ids,
-        active_id: config.resId || false,
-        active_ids: config.resId ? [config.resId] : [],
-        active_model: config.resModel,
+        active_id: config.resId || false, // deprecated, will be removed in v18
+        active_ids: config.resId ? [config.resId] : [], // deprecated, will be removed in v18
+        active_model: config.resModel, // deprecated, will be removed in v18
         current_company_id: config.currentCompanyId,
     };
 }

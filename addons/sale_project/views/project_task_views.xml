@@ -59,8 +59,8 @@
                     invisible="not display_sales_stat_buttons or sale_order_count == 0"
                     groups="sales_team.group_sale_salesman_all_leads"
                     context="{
-                        'create_for_project_id': active_id,
-                        'default_project_id': active_id,
+                        'create_for_project_id': id,
+                        'default_project_id': id,
                         'default_partner_id': partner_id
                     }">
                     <div class="o_field_widget o_stat_info">
@@ -80,8 +80,8 @@
                     invisible="not display_sales_stat_buttons or sale_order_count != 0"
                     groups="sales_team.group_sale_salesman_all_leads"
                     context="{
-                        'create_for_project_id': active_id,
-                        'default_project_id': active_id,
+                        'create_for_project_id': id,
+                        'default_project_id': id,
                         'default_partner_id': partner_id
                     }">
                     <div class="o_field_widget o_stat_info">

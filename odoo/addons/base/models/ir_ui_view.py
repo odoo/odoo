@@ -2875,6 +2875,9 @@ class NameManager:
                 view._raise_view_error(msg)
             info = self.available_fields[name].get('info')
             if info is None:
+                if name in ['active_id', 'active_ids', 'active_model']:
+                    _logger.warning("Using active_id, active_ids and active_model in expressions is deprecated, found %s", name)
+                    continue
                 msg = _(
                     "Field %(name)r used in %(use)s must be present in view but is missing.",
                     name=name, use=use,

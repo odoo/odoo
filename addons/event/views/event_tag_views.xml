@@ -24,7 +24,7 @@
                             <h1><field nolabel="1" name="name" placeholder='e.g. "Age Category"'/></h1>
                         </div>
                         <group>
-                            <field name="tag_ids" context="{'default_category_id': active_id}">
+                            <field name="tag_ids" context="{'default_category_id': id}">
                                 <tree string="Tags" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name" placeholder='e.g. "12-16 years old"'/>

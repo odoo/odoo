@@ -14,7 +14,7 @@
                 <header>
                     <button name="%(event_barcode_action_main_view)d"
                         type="action"
-                        context="{'default_event_id': active_id}">
+                        context="{'default_event_id': id}">
                         Registration Desk
                     </button>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
@@ -42,7 +42,7 @@
                             type="action"
                             class="oe_stat_button"
                             icon="fa-mobile"
-                            context="{'default_event_id': active_id}">
+                            context="{'default_event_id': id}">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Registration Desk</span>
                             </div>
