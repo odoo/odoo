@@ -1,4 +1,5 @@
 /* @odoo-module */
+import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 import { Messaging } from "@mail/core/common/messaging_service";
 
@@ -7,7 +8,7 @@ import { session } from "@web/session";
 
 patch(Messaging.prototype, {
     initialize() {
-        if (this.env.services["im_livechat.livechat"].guestToken) {
+        if (this.env.services["im_livechat.livechat"].state === SESSION_STATE.PERSISTED) {
             return super.initialize();
         }
         if (session.livechatData?.options.current_partner_id) {
