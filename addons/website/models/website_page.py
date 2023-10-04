@@ -20,7 +20,7 @@ class Page(models.Model):
     _description = 'Page'
     _order = 'website_id'
 
-    url = fields.Char('Page URL', required=True)
+    url = fields.Char('Page URL', required=True, translate=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
@@ -45,12 +45,15 @@ class Page(models.Model):
 
     def _compute_is_homepage(self):
         website = self.env['website'].get_current_website()
+        website_default_lang = website.default_lang_id.code
         for page in self:
-            page.is_homepage = page.url == (website.homepage_url or page.website_id == website and '/')
+            page.is_homepage = page.with_context(lang=website_default_lang).url == (website.homepage_url or page.website_id == website and '/')
 
     def _set_is_homepage(self):
         website = self.env['website'].get_current_website()
+        website_default_lang = website.default_lang_id.code
         for page in self:
+            page = page.with_context(lang=website_default_lang)
             if page.is_homepage:
                 if website.homepage_url != page.url:
                     website.homepage_url = page.url
@@ -160,6 +163,52 @@ class Page(models.Model):
         self.env.registry.clear_cache()
         return super().unlink()
 
+    def _handle_url_update(self, page, website_id, url, lang, redirect_old_url=None, name=None, redirect_type=None):
+        """ Handles a url update. More specifically, it slugifies it and makes
+        sure that the url is unique, handles redirection update, updates page
+        menus and website homepage url if needed.
+        :param page: The page whose url is updated.
+        :param website_id: The id of the website linked to the page.
+        :param url: The new url.
+        :param lang: The lang for which the url has to be updated.
+        :param redirect_old_url: True if a url redirection is needed.
+        :param name: The page name.
+        :param redirect_type: The type of redirection.
+        """
+        # Slugify the translated url
+        url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
+        page = page.with_context(lang=lang)
+        if page.url != url:
+            # Make sure that the slugified url is unique
+            url = self.env['website'].with_context(website_id=website_id, lang=lang).get_unique_path(url)
+            page.menu_ids.with_context(lang=lang).write({'url': url})
+            if redirect_old_url:
+                self.env['website.rewrite'].create({
+                    'name': name,
+                    'redirect_type': redirect_type,
+                    'url_from': page.url,
+                    'url_to': url,
+                    'website_id': website_id,
+                })
+            # Handle the synchronization of website's homepage URL if the lang
+            # is the default website language.
+            website = self.env['website'].get_current_website().with_context(lang=lang)
+            website_default_lang = website.default_lang_id.code
+            if lang == website_default_lang:
+                page_url_normalized = {'homepage_url': page.url}
+                website._handle_homepage_url(page_url_normalized)
+                if website.homepage_url == page_url_normalized['homepage_url']:
+                    website.homepage_url = url
+        return url
+
+    def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
+        self.ensure_one()
+        if fname == 'url':
+            for lang, url in translations.items():
+                website_id = self.website_id.id if self.website_id else False
+                translations[lang] = self._handle_url_update(self, website_id, url, lang)
+        return super()._update_field_translations(fname, translations, digest=digest, source_lang=source_lang)
+
     def write(self, vals):
         for page in self:
             website_id = False
@@ -175,25 +224,11 @@ class Page(models.Model):
                     redirect_old_url = url.get('redirect_old_url')
                     redirect_type = url.get('redirect_type')
                     url = url.get('url')
-                url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
-                if page.url != url:
-                    url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
-                    page.menu_ids.write({'url': url})
-                    if redirect_old_url:
-                        self.env['website.rewrite'].create({
-                            'name': vals.get('name') or page.name,
-                            'redirect_type': redirect_type,
-                            'url_from': page.url,
-                            'url_to': url,
-                            'website_id': website_id,
-                        })
-                    # Sync website's homepage URL
-                    website = self.env['website'].get_current_website()
-                    page_url_normalized = {'homepage_url': page.url}
-                    website._handle_homepage_url(page_url_normalized)
-                    if website.homepage_url == page_url_normalized['homepage_url']:
-                        website.homepage_url = url
-                vals['url'] = url
+                name = vals.get('name') or page.name
+                vals['url'] = self._handle_url_update(
+                    page, website_id, url, self.env.user.lang, redirect_old_url=redirect_old_url,
+                    name=name, redirect_type=redirect_type
+                )
 
             # If name has changed, check for key uniqueness
             if 'name' in vals and page.name != vals['name']:

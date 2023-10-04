@@ -21,6 +21,12 @@
                 t-model="state.url"
                 t-ref="input"
             />
+            <t t-if="isTranslatable">
+                <TranslationButton
+                    fieldName="props.name"
+                    record="props.record"
+                />
+            </t>
         </div>
         <div t-if="enableRedirect">
             <div class="mt-4">
