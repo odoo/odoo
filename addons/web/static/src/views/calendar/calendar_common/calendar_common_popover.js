@@ -5,10 +5,11 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
-import { Record } from "@web/views/record";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
-
+import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { Component } from "@odoo/owl";
+import { useModel } from "@web/model/model";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 
 export class CalendarCommonPopover extends Component {
     setup() {
@@ -16,6 +17,104 @@ export class CalendarCommonPopover extends Component {
         this.timeDuration = null;
         this.date = null;
         this.dateDuration = null;
+        const modelParams = {
+            config: {
+                resModel: this.props.model.resModel,
+                resId: this.props.record.id,
+                resIds: [this.props.record.id],
+                fields: this.props.model.fields,
+                activeFields: this.props.model.activeFields,
+                isMonoRecord: true,
+                mode: "readonly",
+            },
+            hooks: {},
+        };
+        const values = this.props.record.rawRecord;
+
+        // This extension is here to load from values (that should be
+        // transformed to unity spec)
+        class RelationalModelWithValues extends RelationalModel {
+            setup() {
+                super.setup(...arguments);
+                this._dataTransformed = false;
+            }
+
+            async load() {
+                if (!this._dataTransformed) {
+                    this._dataTransformed = true;
+                    const proms = [];
+                    for (const fieldName in values) {
+                        if (
+                            ["one2many", "many2many"].includes(this.config.fields[fieldName].type)
+                        ) {
+                            if (
+                                values[fieldName].length &&
+                                typeof values[fieldName][0] === "number"
+                            ) {
+                                const resModel = this.config.fields[fieldName].relation;
+                                const resIds = values[fieldName];
+                                const activeField = modelParams.config.activeFields[fieldName];
+                                if (activeField.related) {
+                                    const { activeFields, fields } = activeField.related;
+                                    const fieldSpec = getFieldsSpec(activeFields, fields, {});
+                                    const kwargs = {
+                                        context: activeField.context || {},
+                                        specification: fieldSpec,
+                                    };
+                                    proms.push(
+                                        this.orm
+                                            .webRead(resModel, resIds, kwargs)
+                                            .then((records) => {
+                                                values[fieldName] = records;
+                                            })
+                                    );
+                                }
+                            }
+                        }
+                        if (this.config.fields[fieldName].type === "many2one") {
+                            const loadDisplayName = async (resId) => {
+                                const resModel = this.config.fields[fieldName].relation;
+                                const activeField = modelParams.config.activeFields[fieldName];
+                                const kwargs = {
+                                    context: activeField.context || {},
+                                    specification: { display_name: {} },
+                                };
+                                const records = await this.orm.webRead(resModel, [resId], kwargs);
+                                return records[0].display_name;
+                            };
+                            if (typeof values[fieldName] === "number") {
+                                const prom = loadDisplayName(values[fieldName]);
+                                prom.then((displayName) => {
+                                    values[fieldName] = {
+                                        id: values[fieldName],
+                                        display_name: displayName,
+                                    };
+                                });
+                                proms.push(prom);
+                            } else if (Array.isArray(values[fieldName])) {
+                                if (values[fieldName][1] === undefined) {
+                                    const prom = loadDisplayName(values[fieldName][0]);
+                                    prom.then((displayName) => {
+                                        values[fieldName] = {
+                                            id: values[fieldName][0],
+                                            display_name: displayName,
+                                        };
+                                    });
+                                    proms.push(prom);
+                                }
+                                values[fieldName] = {
+                                    id: values[fieldName][0],
+                                    display_name: values[fieldName][1],
+                                };
+                            }
+                        }
+                        await Promise.all(proms);
+                    }
+                }
+                this.root = this._createRoot(this.config, values);
+            }
+        }
+        this.model = useModel(RelationalModelWithValues, modelParams);
 
         this.computeDateTimeAndDuration();
     }
@@ -85,7 +184,6 @@ export class CalendarCommonPopover extends Component {
 CalendarCommonPopover.components = {
     Dialog,
     Field,
-    Record,
 };
 CalendarCommonPopover.template = "web.CalendarCommonPopover";
 CalendarCommonPopover.subTemplates = {

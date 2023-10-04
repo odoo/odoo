@@ -44,28 +44,26 @@
             </li>
         </ul>
         <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
-            <Record resModel="props.model.resModel" resId="props.record.id" fields="props.model.fields" activeFields="activeFields" mode="'readonly'" values="props.record.rawRecord" t-slot-scope="slot">
-                <t t-foreach="Object.keys(props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
-                    <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
-                    <t t-if="!isInvisible(fieldInfo, slot.record)">
-                        <li class="list-group-item flex-shrink-0 d-flex align-items-start" t-att-class="fieldInfo.attrs.class">
-                            <strong class="me-2" t-if="!fieldInfo.options.noLabel">
-                                <t t-if="fieldInfo.options.icon">
-                                    <b>
-                                        <i t-att-class="fieldInfo.options.icon" />
-                                    </b>
-                                </t>
-                                <t t-else="">
-                                    <t t-esc="fieldInfo.string" />:
-                                </t>
-                            </strong>
-                            <div class="flex-grow-1">
-                                <Field name="fieldInfo.name" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget" />
-                            </div>
-                        </li>
-                    </t>
+            <t t-foreach="Object.keys(props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
+                <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
+                <t t-if="!isInvisible(fieldInfo, this.model.root)">
+                    <li class="list-group-item flex-shrink-0 d-flex align-items-start" t-att-class="fieldInfo.attrs.class">
+                        <strong class="me-2" t-if="!fieldInfo.options.noLabel">
+                            <t t-if="fieldInfo.options.icon">
+                                <b>
+                                    <i t-att-class="fieldInfo.options.icon" />
+                                </b>
+                            </t>
+                            <t t-else="">
+                                <t t-esc="fieldInfo.string" />:
+                            </t>
+                        </strong>
+                        <div class="flex-grow-1">
+                            <Field name="fieldInfo.name" record="this.model.root" fieldInfo="fieldInfo" type="fieldInfo.widget" />
+                        </div>
+                    </li>
                 </t>
-            </Record>
+            </t>
         </ul>
     </t>
 

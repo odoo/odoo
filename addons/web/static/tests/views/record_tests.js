@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { Field } from "@web/views/fields/field";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { Record } from "@web/views/record";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -11,7 +10,6 @@ import {
     click,
     editInput,
     getFixture,
-    getNodesTextContent,
     mount,
     nextTick,
     patchWithCleanup,
@@ -334,167 +332,6 @@ QUnit.module("Record Component", (hooks) => {
         await click(target.querySelectorAll(".o-autocomplete--dropdown-item a")[0]);
         assert.verifySteps(["record changed"]);
         assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "abc");
-    });
-
-    QUnit.test("handles many2one fields (2)", async function (assert) {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => fn(),
-        });
-
-        serverData.models = {
-            bar: {
-                records: [
-                    { id: 1, display_name: "bar1" },
-                    { id: 3, display_name: "abc" },
-                ],
-            },
-        };
-
-        class Parent extends Component {
-            setup() {
-                this.fields = {
-                    foo: {
-                        name: "foo",
-                        type: "many2one",
-                        relation: "bar",
-                    },
-                };
-                this.values = {
-                    foo: 1,
-                };
-            }
-
-            onRecordChanged(record, changes) {
-                assert.step("record changed");
-                assert.deepEqual(changes, { foo: 3 });
-                assert.deepEqual(record.data, { foo: [3, "abc"] });
-            }
-        }
-        Parent.components = { Record, Many2OneField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
-                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
-            </Record>
-        `;
-
-        await mount(Parent, target, {
-            env: await makeTestEnv({
-                serverData,
-                mockRPC(route, args) {
-                    assert.step(route);
-                },
-            }),
-        });
-        assert.verifySteps(["/web/dataset/call_kw/bar/web_read"]);
-        assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
-    });
-
-    QUnit.test("handles many2one fields (3)", async function (assert) {
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => fn(),
-        });
-
-        serverData.models = {
-            bar: {
-                records: [
-                    { id: 1, display_name: "bar1" },
-                    { id: 3, display_name: "abc" },
-                ],
-            },
-        };
-
-        class Parent extends Component {
-            setup() {
-                this.fields = {
-                    foo: {
-                        name: "foo",
-                        type: "many2one",
-                        relation: "bar",
-                    },
-                };
-                this.values = {
-                    foo: [1],
-                };
-            }
-
-            onRecordChanged(record, changes) {
-                assert.step("record changed");
-                assert.deepEqual(changes, { foo: 3 });
-                assert.deepEqual(record.data, { foo: [3, "abc"] });
-            }
-        }
-        Parent.components = { Record, Many2OneField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
-                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
-            </Record>
-        `;
-
-        await mount(Parent, target, {
-            env: await makeTestEnv({
-                serverData,
-                mockRPC(route, args) {
-                    assert.step(route);
-                },
-            }),
-        });
-        assert.verifySteps(["/web/dataset/call_kw/bar/web_read"]);
-        assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
-    });
-
-    QUnit.test("handles x2many fields", async function (assert) {
-        serverData.models = {
-            tag: {
-                records: [
-                    { id: 1, display_name: "bug" },
-                    { id: 3, display_name: "ref" },
-                ],
-            },
-        };
-
-        class Parent extends Component {
-            setup() {
-                this.activeFields = {
-                    tags: {
-                        related: {
-                            activeFields: {
-                                display_name: {},
-                            },
-                            fields: {
-                                display_name: { name: "display_name", type: "string" },
-                            },
-                        },
-                    },
-                };
-                this.fields = {
-                    tags: {
-                        name: "Tags",
-                        type: "many2many",
-                        relation: "tag",
-                    },
-                };
-                this.values = {
-                    tags: [1, 3],
-                };
-            }
-        }
-        Parent.components = { Record, Many2ManyTagsField };
-        Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['tags']" activeFields="activeFields" fields="fields" values="values" t-slot-scope="data">
-                <Many2ManyTagsField name="'tags'" record="data.record"/>
-            </Record>
-        `;
-
-        await mount(Parent, target, {
-            env: await makeTestEnv({
-                serverData,
-                mockRPC(route, args) {
-                    assert.step(route);
-                },
-            }),
-        });
-        assert.verifySteps(["/web/dataset/call_kw/tag/web_read"]);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_tag")), ["bug", "ref"]);
     });
 
     QUnit.test(
