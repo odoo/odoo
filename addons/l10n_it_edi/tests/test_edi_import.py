@@ -9,6 +9,9 @@ from odoo import fields, sql_db, tools, Command
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiImport(TestItEdi):
@@ -42,6 +45,14 @@ class TestItEdiImport(TestItEdi):
     # Vendor bills
     # -----------------------------
 
+    def test_receive_invalid_xml(self):
+        xml_decode = self.env['ir.attachment']._decode_edi_l10n_it_edi
+        with tools.mute_logger("odoo.addons.l10n_it_edi.models.ir_attachment"):
+            self.assertEqual([], xml_decode("none.xml", None))
+            self.assertEqual([], xml_decode("empty.xml", ""))
+            self.assertEqual([], xml_decode("invalid.xml", "invalid"))
+            self.assertEqual([], xml_decode("invalid2.xml", "<invalid/>"))
+
     def test_receive_vendor_bill(self):
         """ Test a sample e-invoice file from
         https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml
@@ -71,6 +82,33 @@ class TestItEdiImport(TestItEdi):
                 'price_unit': 1.0,
             }],
         }])
+
+    def test_receive_wrongly_signed_vendor_bill(self):
+        """
+            Some of the invoices (i.e. those from Servizio Elettrico Nazionale, the
+            ex-monopoly-of-energy company) have custom signatures that rely on an old
+            OpenSSL implementation that breaks the current one that sees them as malformed,
+            so we cannot read those files. Also, we couldn't find an alternative way to use
+            OpenSSL to just get the same result without getting the error.
+
+            A new fallback method has been added that reads the ASN1 file structure and
+            takes the encoded pkcs7-data tag content out of it, regardless of the
+            signature.
+
+            Being a non-optimized pure Python implementation, it takes about 2x the time
+            than the regular method, so it's better used as a fallback. We didn't use an
+            existing library not to further pollute the dependencies space.
+
+            task-3502910
+        """
+        with freeze_time('2019-01-01'):
+            self._assert_import_invoice('IT09633951000_NpFwF.xml.p7m', [{
+                'name': 'BILL/2023/09/0001',
+                'ref': '333333333333333',
+                'invoice_date': fields.Date.from_string('2023-09-08'),
+                'amount_untaxed': 57.54,
+                'amount_tax': 3.95,
+            }])
 
     def test_receive_bill_sequence(self):
         """ Ensure that the received bill gets assigned the right sequence. """
