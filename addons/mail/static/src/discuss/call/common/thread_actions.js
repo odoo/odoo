@@ -14,7 +14,8 @@ threadActionsRegistry
             return (
                 component.thread?.allowCalls &&
                 !component.thread?.eq(component.rtc.state.channel) &&
-                !component.props.chatWindow?.hidden
+                !component.props.chatWindow?.hidden &&
+                !component.thread?.readonly
             );
         },
         icon: "fa fa-fw fa-phone",
@@ -34,7 +35,8 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.allowCalls &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+                (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+                !component.thread?.readonly
             );
         },
         panelOuterClass: "o-discuss-CallSettings",

@@ -9,9 +9,6 @@ export class DiscussChannelListController extends ListController {
     }
 
     async openRecord(record) {
-        if (!record.data.is_member) {
-            return super.openRecord(record);
-        }
         this.actionService.doAction("mail.action_discuss", {
             name: _t("Discuss"),
             additionalContext: { active_id: record.resId },

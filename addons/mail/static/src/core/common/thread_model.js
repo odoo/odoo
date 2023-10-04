@@ -80,6 +80,7 @@ export class Thread extends Record {
                 "message_unread_counter",
                 "message_needaction_counter",
                 "name",
+                "readonly",
                 "seen_message_id",
                 "state",
                 "type",
@@ -189,6 +190,7 @@ export class Thread extends Record {
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
+    readonly = false;
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.

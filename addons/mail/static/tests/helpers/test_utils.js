@@ -36,25 +36,11 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
         const actionOpenDiscuss = {
             // hardcoded actionId, required for discuss_container props validation.
             id: 104,
-            context,
+            context: { ...context, active_id: pActiveId },
             params,
             tag: "mail.action_discuss",
             type: "ir.actions.client",
         };
-        const activeId =
-            pActiveId ?? context.active_id ?? params.default_active_id ?? "mail.box_inbox";
-        let [threadModel, threadId] =
-            typeof activeId === "number" ? ["discuss.channel", activeId] : activeId.split("_");
-        if (threadModel === "discuss.channel") {
-            threadId = parseInt(threadId, 10);
-        }
-        // TODO-DISCUSS-REFACTORING: remove when activeId will be handled.
-        webClient.env.services["mail.thread"].setDiscussThread(
-            webClient.env.services["mail.store"].Thread.insert({
-                model: threadModel,
-                id: threadId,
-            })
-        );
         await doAction(webClient, actionOpenDiscuss, { props });
     };
 }

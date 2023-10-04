@@ -83,8 +83,9 @@ export class DiscussSidebarCategories extends Component {
 
     filteredThreads(category) {
         return category.threads.filter((thread) => {
+            const isChannelMember = thread.type !== "channel" || !thread.readonly;
             return (
-                (thread.is_pinned || thread.group_based_subscription) &&
+                ((thread.is_pinned && isChannelMember) || thread.eq(this.store.discuss.thread)) &&
                 (!this.state.quickSearchVal ||
                     cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
             );

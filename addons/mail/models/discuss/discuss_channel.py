@@ -772,10 +772,12 @@ class Channel(models.Model):
                 'allow_public_upload': channel.allow_public_upload,
                 'model': "discuss.channel",
             }
+
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
+                info['readonly'] = not bool(member)
                 if member:
                     info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'

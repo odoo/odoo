@@ -1630,24 +1630,6 @@ QUnit.test("composer state: attachments save and restore", async () => {
     await contains(".o-mail-AttachmentCard", { text: "text4.txt" });
 });
 
-QUnit.test(
-    "sidebar: cannot unpin channel group_based_subscription: mandatorily pinned",
-    async () => {
-        const pyEnv = await startServer();
-        pyEnv["discuss.channel"].create({
-            name: "General",
-            channel_member_ids: [
-                Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
-            ],
-            group_based_subscription: true,
-        });
-        const { openDiscuss } = await start();
-        openDiscuss();
-        await contains("button", { text: "General" });
-        await contains("div[title='Leave this channel']", { count: 0 });
-    }
-);
-
 QUnit.test("restore thread scroll position", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([

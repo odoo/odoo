@@ -390,7 +390,8 @@ export class WebsocketWorker {
      */
     _retryConnectionWithDelay() {
         this.connectRetryDelay =
-            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + this.RECONNECT_JITTER * Math.random();
+            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) +
+            this.RECONNECT_JITTER * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
