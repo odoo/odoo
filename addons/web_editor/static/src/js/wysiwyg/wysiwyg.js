@@ -3210,7 +3210,8 @@ export class Wysiwyg extends Component {
      * @param {Node} node
      */
     _onPostSanitize(node) {
-        if (node?.querySelectorAll) {
+        // _fixLinkMutatedElements check to be removed after the new link edge soltion is merged.
+        if (node?.querySelectorAll && this.odooEditor && !this.odooEditor._fixLinkMutatedElements) {
             for (const element of node.querySelectorAll('.o_editable, .o_not_editable')) {
                 const editable = element.classList.contains('o_editable');
                 if (element.isContentEditable !== editable) {

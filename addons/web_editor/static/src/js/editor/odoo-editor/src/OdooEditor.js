@@ -1876,14 +1876,14 @@ export class OdooEditor extends EventTarget {
 
     setContenteditableLink(link) {
         const editableChildren = link.querySelectorAll('[contenteditable=true]');
-        this._stopContenteditable();
-
         this._fixLinkMutatedElements = {
             link,
             wasContenteditableTrue: [...editableChildren],
             wasContenteditableFalse: [],
             wasContenteditableNull: [],
         };
+        this._stopContenteditable();
+
         const contentEditableAttribute = link.getAttribute('contenteditable');
         if (contentEditableAttribute === 'true') {
             this._fixLinkMutatedElements.wasContenteditableTrue.push(link);
