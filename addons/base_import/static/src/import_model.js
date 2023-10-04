@@ -314,7 +314,7 @@ export class BaseImportModel {
         }
         this.importOptionsValues[optionName].value = value;
         if (this.importOptionsValues[optionName].reloadParse) {
-            await this.updateData();
+            return (await this.updateData()).res;
         }
     }
 
