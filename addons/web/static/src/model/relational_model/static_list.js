@@ -90,6 +90,7 @@ export class StaticList extends DataPoint {
             context,
             uid: context.uid,
             allowed_company_ids: context.allowed_company_ids,
+            current_company_id: this.config.currentCompanyId,
             parent: this._parent.evalContext,
         };
     }
@@ -955,7 +956,7 @@ export class StaticList extends DataPoint {
     _updateContext(context) {
         Object.assign(this.context, context);
         for (const record of Object.values(this._cache)) {
-            record._updateChildrenContext();
+            record._setEvalContext();
         }
     }
 }

@@ -226,7 +226,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="action" name="%(lunch.lunch_product_action_statbutton)d"
-                            context="{'search_default_category_id': active_id,'default_category_id': active_id}"
+                            context="{'search_default_category_id': id,'default_category_id': id}"
                             invisible="product_count == 0"
                             icon="fa-cutlery">
                             <field string="Products" name="product_count" widget="statinfo"/>
@@ -264,7 +264,7 @@
                                         <div class="float-end">
                                             <button class="badge text-bg-primary" type="action"
                                                 name="%(lunch.lunch_product_action_statbutton)d"
-                                                context="{'search_default_category_id': active_id,'default_category_id': active_id}"
+                                                context="{'search_default_category_id': id,'default_category_id': id}"
                                                 invisible="product_count == 0">
                                                 <field string="Products" name="product_count" widget="statinfo"/>
                                             </button>

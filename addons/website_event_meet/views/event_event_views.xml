@@ -8,7 +8,7 @@
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_published']" position="before">
-                <button class="oe_stat_button" context="{'default_event_id': active_id, 'search_default_event_id': active_id}" icon="fa-comments-o" name="%(event_meeting_room_action)d" type="action">
+                <button class="oe_stat_button" context="{'default_event_id': id, 'search_default_event_id': id}" icon="fa-comments-o" name="%(event_meeting_room_action)d" type="action">
                     <field name="meeting_room_count" string="Rooms" widget="statinfo"/>
                 </button>
             </xpath>

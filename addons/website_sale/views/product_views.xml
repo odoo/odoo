@@ -153,7 +153,7 @@
                 <field name="accessory_product_ids" widget="many2many_tags" invisible="not sale_ok"
                        placeholder="Suggested accessories in the eCommerce cart"/>
                 <field name="alternative_product_ids" widget="many2many_tags"
-                       domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                       domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                        invisible="not sale_ok"
                        placeholder="Displayed in bottom of product pages"/>
             </group>

@@ -7,7 +7,7 @@
             <tree string="Project Collaborators" create="0">
                 <header>
                     <button name="%(project_share_wizard_action)d" class="btn-primary" type="action" string="Invite Collaborators"
-                            context="{'default_access_mode': 'edit', 'default_project_id': active_id}" display="always"/>
+                            context="{'default_access_mode': 'edit', 'default_project_id': context.get('active_id')}" display="always"/>
                 </header>
                 <field name="partner_id" options="{'no_create': True}"/>
                 <field name="partner_email"/>
