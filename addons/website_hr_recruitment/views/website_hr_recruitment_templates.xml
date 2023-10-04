@@ -784,7 +784,7 @@
                 <t t-else="">All Offices</t>
             </button>
             <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="officesDropdown">
-                <a t-attf-href="/jobs?{'all_countries=1' if is_remote else current_country_path}#{non_location_params}"
+                <a t-attf-href="/jobs?#{'all_countries=1' if is_remote else current_country_path}#{non_location_params}"
                     t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if office_id or is_remote else ' active'}">
                     All Offices
                     <span t-attf-class="badge rounded-pill#{' bg-primary' if office_id or is_remote else ' bg-light text-primary'} ms-2 px-2" t-out="count_per_office.get('all', '0')"/>
