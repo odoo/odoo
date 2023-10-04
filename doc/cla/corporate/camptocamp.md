@@ -49,3 +49,4 @@ Juan Miguel Sánchez Arce juan.sanchez@camptocamp.com https://github.com/JuMiSan
 Maksym Yankin maksym.yankin@camptocamp.com https://github.com/yankinmax
 Vincent Van Rossem vincent.vanrossem@camptocamp.com https://github.com/vvrossem
 Victor Vermot-Petit-Outhenin victor.vermot@camptocamp.com https://github.com/victorvermot
+Sarah Jallon sarah.jallon@camptocamp.com https://github.com/sarsurgithub
