@@ -14217,4 +14217,16 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["web_read", "web_save"]);
         }
     );
+
+    QUnit.test("existing record with falsy display_name", async function (assert) {
+        serverData.models.partner.records[0].display_name = "";
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="int_field"/></form>`,
+            resId: 1,
+        });
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "Unnamed");
+    });
 });
