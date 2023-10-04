@@ -54,19 +54,20 @@
         <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_employee_availability')]" position="inside">
+                <field name="name_work_location_display" string="Work Location" invisible="1"/>
                 <t t-set="text_color" t-value="'text-muted'"/>
                 <t t-if="record.hr_presence_state.raw_value !== 'to_define'">
                     <t t-set="text_color" t-value="record.hr_presence_state.raw_value === 'present' ? 'text-success' : 'text-warning'"/>
                 </t>
                 <t t-set="location_map" t-value="{'home': 'fa-home', 'office': 'fa-building', 'other': 'fa-map-marker'}"/>
                 <t t-set="location" t-value="record.hr_icon_display.raw_value.split('_')[1]"/>
+                <t t-set="location_name" t-value="record.name_work_location_display.raw_value"/>
                 <t t-set="icon" t-value="location_map[location]"/>
                 <t t-if="location !== 'holiday'">
                     <span class="fa fa-2x" t-attf-class="{{icon}} {{text_color}} d-flex me-2" role="img"
-                        t-attf-aria-label="Working from {{location}}" t-attf-title="Working from {{location}}"
+                        t-attf-aria-label="{{location}}" t-attf-title="{{location_name}}"
                         t-attf-name="presence {{record.hr_presence_state.raw_value}} at {{location}}"
                     />
-                    <field name="name_work_location_display" string="Work Location"/>
                 </t>
             </xpath>
         </field>
@@ -79,16 +80,18 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_employee_availability')]" position="inside">
+                <field name="name_work_location_display" string="Work Location" invisible="1"/>
                 <t t-set="text_color" t-value="text-muted"/>
                 <t t-if="record.hr_presence_state.raw_value !== 'to_define'">
                     <t t-set="text_color" t-value="record.hr_presence_state.raw_value === 'present' ? 'text-success' : 'text-warning'"/>
                 </t>
                 <t t-set="location_map" t-value="{'home': 'fa-home', 'office': 'fa-building', 'other': 'fa-map-marker'}"/>
                 <t t-set="location" t-value="record.hr_icon_display.raw_value.split('_')[1]"/>
+                <t t-set="location_name" t-value="record.name_work_location_display.raw_value"/>
                 <t t-set="icon" t-value="location_map[location]"/>
                 <t t-if="location !== 'holiday'">
                     <span class="fa fa-2x" t-attf-class="{{icon}} {{text_color}}" role="img"
-                        t-att-aria-label="`Working from ${location}`" t-att-title="`Working from ${location}`"
+                        t-att-aria-label="`Working from ${location}`" t-attf-title="{{location_name}}"
                         t-att-name="`presence ${record.hr_presence_state.raw_value} at ${location}`"
                     />
                 </t>

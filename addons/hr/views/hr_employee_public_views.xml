@@ -134,46 +134,50 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
-                                widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
-
+                            <t t-if="!record.image_1024.raw_value">
+                                <field name="avatar_128" class="o_kanban_image_fill_left d-block"
+                                    widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                            </t>
+                            <t t-else="">
+                                <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
+                                    widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                            </t>
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
                                             <field name="name" placeholder="Employee's Name"/>
+                                            <div class="float-end">
+                                                <t t-if="record.show_hr_icon_display.raw_value">
+                                                    <div class="o_employee_availability d-flex flex-row align-items-start">
+                                                        <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                                                        <span t-if="record.hr_icon_display.raw_value == 'presence_present'"
+                                                              class="fa fa-2x fa-circle text-success" name="presence_present" role="img"
+                                                              aria-label="Present" title="Present"
+                                                        />
+                                                        <!-- Employee is not present/connected and it is normal according to his work schedule -->
+                                                        <span t-if="record.hr_icon_display.raw_value == 'presence_absent'"
+                                                              class="fa fa-2x fa-circle-o text-warning" name="presence_absent" role="img"
+                                                              aria-label="Absent" title="Absent"
+                                                        />
+                                                        <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                                                        <span t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
+                                                              class="fa fa-2x fa-circle-o text-success" name="presence_absent_active" role="img"
+                                                              aria-label="Present but not active" title="Present but not active"
+                                                        />
+                                                        <!-- Employee is not here but according to his work schedule, he should be connected -->
+                                                        <span t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
+                                                              class="fa fa-2x fa-circle text-muted" name="presence_to_define" role="img"
+                                                              aria-label="To define" title="To define"
+                                                        />
+                                                    </div>
+                                                </t>
+                                            </div>
                                         </strong>
                                         <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
                                     </div>
                                 </div>
                                 <ul>
-                                    <li id="last_login"/>
-                                    <li id="presence">
-                                        <t t-if="record.show_hr_icon_display.raw_value">
-                                            <div class="o_employee_availability align-items-center">
-                                                <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_present'"
-                                                      class="fa fa-2x fa-circle text-success" name="presence_present" role="img"
-                                                      aria-label="Present" title="Present"
-                                                />
-                                                <!-- Employee is not present and it is normal according to his work schedule -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_absent'"
-                                                      class="fa fa-2x fa-circle-o text-warning" name="presence_absent" role="img"
-                                                      aria-label="Absent" title="Absent"
-                                                />
-                                                <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
-                                                      class="fa fa-2x fa-circle-o text-success" name="presence_absent_active" role="img"
-                                                      aria-label="Present but not active" title="Present but not active"
-                                                />
-                                                <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                                <span t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
-                                                      class="fa fa-2x fa-circle text-muted" name="presence_to_define" role="img"
-                                                      aria-label="To define" title="To define"
-                                                />
-                                            </div>
-                                        </t>
-                                    </li>
                                     <li t-if="record.work_email.raw_value">
                                         <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                         <field name="work_email"/>
@@ -184,10 +188,12 @@
                                     </li>
                                 </ul>
                                 <div class="oe_kanban_content position-absolute start-0 bottom-0 end-0 me-2">
-                                    <div class="o_kanban_record_bottom">
+                                    <div class="o_kanban_record_bottom mt-3">
                                         <div class="oe_kanban_bottom_left"/>
                                         <div class="oe_kanban_bottom_right">
-                                            <widget name="hr_employee_chat"/>
+                                            <div class="hr_avatar mb-1 ms-2 me-n1">
+                                                <field name="user_id" widget="many2one_avatar_user" readonly="1"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
