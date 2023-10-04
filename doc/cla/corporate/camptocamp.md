@@ -47,3 +47,4 @@ Silvio Gregorini silvio.gregorini@camptocamp.com https://github.com/SilvioC2C
 Iryna Vyshnevska iryna.vyshnevska@camptocamp.com https://github.com/i-vyshnevska
 Juan Miguel Sánchez Arce juan.sanchez@camptocamp.com https://github.com/JuMiSanAr
 Maksym Yankin maksym.yankin@camptocamp.com https://github.com/yankinmax
+Vincent Van Rossem vincent.vanrossem@camptocamp.com https://github.com/vvrossem
