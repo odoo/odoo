@@ -26,7 +26,7 @@ models which only purpose is to run tests.""",
     'assets': {
         'test_website.test_bundle': [
             'http://test.external.link/javascript1.js',
-            '/web/static/lib/jquery.ui/jquery-ui.css',
+            '/web/static/src/libs/fontawesome/css/font-awesome.css',
             'http://test.external.link/style1.css',
             '/web/static/src/module_loader.js',
             'http://test.external.link/javascript2.js',
