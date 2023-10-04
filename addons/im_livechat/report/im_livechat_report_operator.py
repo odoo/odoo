@@ -19,6 +19,7 @@ class ImLivechatReportOperator(models.Model):
     start_date = fields.Datetime('Start Date of session', readonly=True)
     time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, group_operator="avg", help="Average time to give the first answer to the visitor")
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
+    rating = fields.Float('Average rating', readonly=True, group_operator="avg", help="Average rating given by the visitor")
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -32,6 +33,7 @@ class ImLivechatReportOperator(models.Model):
                     COUNT(DISTINCT C.id) AS nbr_channel,
                     C.id AS channel_id,
                     C.create_date AS start_date,
+                    C.rating_last_value as rating,
                     EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
                     EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer
                 FROM discuss_channel C

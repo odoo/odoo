@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <pivot string="Livechat Support Statistics" disable_linking="1" sample="1">
                     <field name="technical_name" type="row"/>
-                    <field name="duration" type="measure"/>
-                    <field name="nbr_message" type="measure"/>
+                    <field name="duration" type="measure" string="Duration of Session (min)"/>
+                    <field name="nbr_message" type="measure" string="Messages per session"/>
+                    <field name="is_without_answer" invisible="True"/>
                 </pivot>
             </field>
         </record>
@@ -20,7 +21,9 @@
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" sample="1" disable_linking="1">
                     <field name="technical_name"/>
-                    <field name="nbr_message" type="measure"/>
+                    <field name="nbr_message" type="measure" string="Messages per session"/>
+                    <field name="duration" string="Duration of Session (min)"/>
+                    <field name="is_without_answer" invisible="True"/>
                 </graph>
             </field>
         </record>
@@ -55,7 +58,7 @@
             <field name="name">Session Statistics</field>
             <field name="res_model">im_livechat.report.channel</field>
             <field name="view_mode">graph,pivot</field>
-            <field name="context">{"search_default_last_week":1}</field>
+            <field name="context">{"search_default_last_week":1, "group_by": "start_date:day"}</field>
             <field name="help">Livechat Support Channel Statistics allows you to easily check and analyse your company livechat session performance. Extract information about the missed sessions, the audience, the duration of a session, etc.</field>
         </record>
 
