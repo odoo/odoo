@@ -47,15 +47,4 @@
             </xpath>
         </field>
     </record>
-
-    <record id="hr_kanban_view_employees" model="ir.ui.view">
-        <field name="name">hr.employee.kanban.inherit.homeworking</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='hr_icon_display'][hasclass('o_employee_availability')]" position="after">
-                <field name="name_work_location_display" class="ps-2" string="Work Location"/>
-            </xpath>
-        </field>
-    </record>
 </odoo>
