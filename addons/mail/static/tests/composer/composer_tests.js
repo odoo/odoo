@@ -340,6 +340,34 @@ QUnit.test("add an emoji after a partner mention", async () => {
     await contains(".o-mail-Composer-input", { value: "@TestPartner 😊" });
 });
 
+QUnit.test("mention same user twice in a message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "@Te");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
+    await insertText(".o-mail-Composer-input", "@Te");
+    await click(".o-mail-Composer-suggestion");
+    await click("button", { text: "Send" });
+    await contains(
+        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
+        { text: "@TestPartner", count: 2 }
+    );
+});
+
 QUnit.test("mention a channel after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

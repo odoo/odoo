@@ -175,7 +175,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
             placeholder,
             text,
         });
-        body = body.replace(text, placeholder);
+        body = body.replaceAll(text, placeholder);
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}`;
@@ -187,7 +187,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
             placeholder,
             text,
         });
-        body = body.replace(text, placeholder);
+        body = body.replaceAll(text, placeholder);
     }
     const baseHREF = url("/web");
     for (const mention of mentions) {
@@ -197,7 +197,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
         const dataOeModel = `data-oe-model='${mention.model}'`;
         const target = "target='_blank'";
         const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-        body = body.replace(mention.placeholder, link);
+        body = body.replaceAll(mention.placeholder, link);
     }
     return body;
 }
