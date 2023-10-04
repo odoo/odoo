@@ -106,7 +106,6 @@
                           class="fa fa-2x fa-plane text-warning me-1" name="presence_absent" role="img"
                           aria-label="To define" title="On Time Off"
                     />
-                    <span>On Time Off</span>
                 </t>
             </xpath>
         </field>
@@ -127,7 +126,7 @@
             <xpath expr="//div[hasclass('o_employee_availability')]" position="inside">
                 <span class="d-flex" style="font-size: 100%"
                     t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_button oe_kanban_color_3':'oe_kanban_button oe_kanban_color_2'"
-                    t-att-title="luxon.DateTime.fromISO(record.leave_date_from.raw_value).toFormat('ccc d MMM') + ' - ' + luxon.DateTime.fromISO(record.leave_date_to.raw_value).toFormat('ccc d MMM')">
+                    title="On leave">
                     <!-- Employee is absent, in holiday but he is connected -->
                     <i t-if="record.hr_icon_display.raw_value == 'presence_holiday_present'"
                         class="fa fa-2x fa-plane text-success me-1" name="presence_absent_active" role="img"
@@ -136,9 +135,8 @@
                     <!-- Employee is on holiday, not present and not connected -->
                     <i t-if="record.hr_icon_display.raw_value == 'presence_holiday_absent'"
                         class="fa fa-2x fa-plane text-warning me-1" name="presence_absent" role="img"
-                        aria-label="To define" title="On Time Off"
+                        aria-label="To define" title="On leave"
                     />
-                    <field t-if="record.current_leave_id.raw_value" name="current_leave_id"/>
                 </span>
             </xpath>
         </field>
