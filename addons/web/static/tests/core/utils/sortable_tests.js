@@ -498,4 +498,115 @@ QUnit.module("Draggable", ({ beforeEach }) => {
 
         assert.verifySteps([]);
     });
+
+    QUnit.test("the classes parameters (placeholderElement, helpElement)", async (assert) => {
+        assert.expect(7);
+
+        let dragElement;
+
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    placeholderClasses: ["placeholder-t1", "placeholder-t2"],
+                    followingElementClasses: ["add-1", "add-2"],
+                    onDragStart({ element }) {
+                        dragElement = element;
+                        assert.hasClass(dragElement, "add-1");
+                        assert.hasClass(dragElement, "add-2");
+                        // the placeholder is added in onDragStart after the current element
+                        const children = [...dragElement.parentElement.children];
+                        const placeholder = children[children.indexOf(dragElement) + 1];
+                        assert.hasClass(placeholder, "placeholder-t1");
+                        assert.hasClass(placeholder, "placeholder-t2");
+                    },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+        await mount(List, target);
+        // First item after 2nd item
+        const { drop, moveTo } = await drag(".item:first-child");
+        await moveTo(".item:nth-child(2)");
+        await drop();
+        assert.doesNotHaveClass(dragElement, "add-1");
+        assert.doesNotHaveClass(dragElement, "add-2");
+        assert.containsNone(target, ".item.placeholder-t1.placeholder-t2");
+    });
+
+    QUnit.test("applyChangeOnDrop option", async (assert) => {
+        assert.expect(2);
+
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    placeholderClasses: ["placeholder"],
+                    applyChangeOnDrop: true,
+                    onDragStart({ element }) {
+                        const items = [...target.querySelectorAll(".item:not(.placeholder)")];
+                        assert.strictEqual(items.map((el) => el.innerText).toString(), "1,2,3");
+                    },
+                    onDragEnd({ element, group }) {
+                        const items = [...target.querySelectorAll(".item:not(.placeholder)")];
+                        assert.strictEqual(items.map((el) => el.innerText).toString(), "2,1,3");
+                    },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+        await mount(List, target);
+        // First item after 2nd item
+        const { drop, moveTo } = await drag(".item:first-child");
+        await moveTo(".item:nth-child(2)");
+        await drop();
+    });
+
+    QUnit.test("clone option", async (assert) => {
+        assert.expect(2);
+
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    placeholderClasses: ["placeholder"],
+                    clone: false,
+                    onDragStart({ element }) {
+                        assert.containsOnce(target, ".placeholder:not(.item)");
+                    },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+        await mount(List, target);
+        // First item after 2nd item
+        const { drop, moveTo } = await drag(".item:first-child");
+        await moveTo(".item:nth-child(2)");
+        await drop();
+        assert.containsNone(target, ".placeholder:not(.item)");
+    });
 });

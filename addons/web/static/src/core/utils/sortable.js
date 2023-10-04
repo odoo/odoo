@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { makeDraggableHook as nativeMakeDraggableHook } from "@web/core/utils/draggable_hook_builder";
+import {
+    DRAGGED_CLASS,
+    makeDraggableHook as nativeMakeDraggableHook,
+} from "@web/core/utils/draggable_hook_builder";
 import { pick } from "@web/core/utils/objects";
 
 /** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
@@ -28,6 +31,10 @@ import { pick } from "@web/core/utils/objects";
  * @property {boolean | (() => boolean)} [connectGroups] whether elements can be dragged
  *  accross different parent groups. Note that it requires a `groups` param to work.
  * @property {string | (() => string)} [cursor] cursor style during the dragging sequence.
+ * @property {Boolean} [clone] the placeholder is a clone of the drag element.
+ * @property {Array} [placeholderClasses] array of classes added to the placeholder element.
+ * @property {Boolean} [applyChangeOnDrop] on drop the change is applied to the DOM.
+ * @property {Array} [followingElementClasses] array of classes added to the element that follow the pointer.
  *
  * HANDLERS (also optional)
  *
@@ -69,11 +76,19 @@ const hookParams = {
     acceptedParams: {
         groups: [String, Function],
         connectGroups: [Boolean, Function],
+        clone: [Boolean],
+        placeholderClasses: [Object],
+        applyChangeOnDrop: [Boolean],
+        followingElementClasses: [Object],
     },
     defaultParams: {
         connectGroups: false,
         edgeScrolling: { speed: 20, threshold: 60 },
         groupSelector: null,
+        clone: true,
+        placeholderClasses: [],
+        applyChangeOnDrop: false,
+        followingElementClasses: [],
     },
 
     // Build steps
@@ -86,6 +101,11 @@ const hookParams = {
 
         // Connection accross groups
         ctx.connectGroups = params.connectGroups;
+
+        ctx.placeholderClone = params.clone;
+        ctx.placeholderClasses = params.placeholderClasses;
+        ctx.applyChangeOnDrop = params.applyChangeOnDrop;
+        ctx.followingElementClasses = params.followingElementClasses;
     },
 
     // Runtime steps
@@ -120,6 +140,65 @@ const hookParams = {
             callHandler("onElementLeave", { element });
         };
 
+        const onElementComplexPointerEnter = (ev) => {
+            const element = ev.currentTarget;
+
+            const siblingArray = [...element.parentElement.children].filter(
+                (el) =>
+                    el === current.placeHolder ||
+                    (el.matches(elementSelector) && !el.classList.contains(DRAGGED_CLASS))
+            );
+            const elementIndex = siblingArray.indexOf(element);
+            const placeholderIndex = siblingArray.indexOf(current.placeHolder);
+            const isDirectSibling = Math.abs(elementIndex - placeholderIndex) === 1;
+            if (
+                connectGroups ||
+                !groupSelector ||
+                current.group === element.closest(groupSelector)
+            ) {
+                const pos = current.placeHolder.compareDocumentPosition(element);
+                if (isDirectSibling) {
+                    if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
+                        element.before(current.placeHolder);
+                    } else if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
+                        element.after(current.placeHolder);
+                    }
+                } else {
+                    if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
+                        element.before(current.placeHolder);
+                    } else if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
+                        element.after(current.placeHolder);
+                    }
+                }
+            }
+            callHandler("onElementEnter", { element });
+        };
+
+        /**
+         * Element "pointerleave" event handler.
+         * @param {PointerEvent} ev
+         */
+        const onElementComplexPointerLeave = (ev) => {
+            const element = ev.currentTarget;
+
+            const siblingArray = [...element.parentElement.children].filter(
+                (el) =>
+                    el === current.placeHolder ||
+                    (el.matches(elementSelector) && !el.classList.contains(DRAGGED_CLASS))
+            );
+            const elementIndex = siblingArray.indexOf(element);
+            const isAtEdge = elementIndex === 0 || elementIndex === siblingArray.length - 1;
+            if (isAtEdge && (!groupSelector || current.group === element.closest(groupSelector))) {
+                const pos = current.placeHolder.compareDocumentPosition(element);
+                if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
+                    element.before(current.placeHolder);
+                } else if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
+                    element.after(current.placeHolder);
+                }
+            }
+            callHandler("onElementLeave", { element });
+        };
+
         /**
          * Group "pointerenter" event handler.
          * @param {PointerEvent} ev
@@ -140,15 +219,17 @@ const hookParams = {
         };
 
         const { connectGroups, current, elementSelector, groupSelector, ref } = ctx;
-        const { width, height } = current.elementRect;
+        if (ctx.placeholderClone) {
+            const { width, height } = current.elementRect;
 
-        // Adjusts size for the placeholder element
-        addStyle(current.placeHolder, {
-            visibility: "hidden",
-            display: "block",
-            width: `${width}px`,
-            height: `${height}px`,
-        });
+            // Adjusts size for the placeholder element
+            addStyle(current.placeHolder, {
+                visibility: "hidden",
+                display: "block",
+                width: `${width}px`,
+                height: `${height}px`,
+            });
+        }
 
         // Binds handlers on eligible groups, if the elements are not confined to
         // their parents and a 'groupSelector' has been provided.
@@ -162,8 +243,13 @@ const hookParams = {
         // Binds handlers on eligible elements
         for (const siblingEl of ref.el.querySelectorAll(elementSelector)) {
             if (siblingEl !== current.element && siblingEl !== current.placeHolder) {
-                addListener(siblingEl, "pointerenter", onElementPointerEnter);
-                addListener(siblingEl, "pointerleave", onElementPointerLeave);
+                if (ctx.placeholderClone) {
+                    addListener(siblingEl, "pointerenter", onElementPointerEnter);
+                    addListener(siblingEl, "pointerleave", onElementPointerLeave);
+                } else {
+                    addListener(siblingEl, "pointerenter", onElementComplexPointerEnter);
+                    addListener(siblingEl, "pointerleave", onElementComplexPointerLeave);
+                }
             }
         }
 
@@ -180,8 +266,17 @@ const hookParams = {
         const previous = current.placeHolder.previousElementSibling;
         const next = current.placeHolder.nextElementSibling;
         if (previous !== current.element && next !== current.element) {
+            const element = current.element;
+            if (ctx.applyChangeOnDrop) {
+                // Apply to the DOM the result of sortable()
+                if (previous) {
+                    previous.after(element);
+                } else if (next) {
+                    next.before(element);
+                }
+            }
             return {
-                element: current.element,
+                element,
                 group: current.group,
                 previous,
                 next,
@@ -199,8 +294,15 @@ const hookParams = {
             }
         }
 
-        current.placeHolder = current.element.cloneNode(false);
+        if (ctx.placeholderClone) {
+            current.placeHolder = current.element.cloneNode(false);
+        } else {
+            current.placeHolder = document.createElement("div");
+        }
+        current.placeHolder.classList.add(...ctx.placeholderClasses);
+        current.element.classList.add(...ctx.followingElementClasses);
 
+        addCleanup(() => current.element.classList.remove(...ctx.followingElementClasses));
         addCleanup(() => current.placeHolder.remove());
 
         return pick(current, "element", "group");

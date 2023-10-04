@@ -81,7 +81,7 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  */
 
 const DRAGGABLE_CLASS = "o_draggable";
-const DRAGGED_CLASS = "o_dragged";
+export const DRAGGED_CLASS = "o_dragged";
 
 const DEFAULT_ACCEPTED_PARAMS = {
     enable: [Boolean, Function],

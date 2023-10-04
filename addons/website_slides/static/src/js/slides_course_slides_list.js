@@ -11,9 +11,15 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
         this._super.apply(this,arguments);
 
         this.channelId = this.$el.data('channelId');
+        this.bindedSortable = [];
 
         this._updateHref();
         this._bindSortable();
+    },
+
+    destroy() {
+        this._unbindSortable();
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -28,20 +34,43 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
      * @private
      */
     _bindSortable: function () {
-        this.$('ul.o_wslides_js_slides_list_container').sortable({
-            handle: '.o_wslides_slides_list_drag',
-            stop: this._reorderSlides.bind(this),
-            items: '.o_wslides_slide_list_category',
-            placeholder: 'o_wslides_slides_list_slide_hilight position-relative mb-1'
-        });
+        const sortableBaseParam = {
+            clone: false,
+            placeholderClasses: ['o_wslides_slides_list_slide_hilight', 'position-relative', 'mb-1'],
+            onDrop: this._reorderSlides.bind(this),
+            applyChangeOnDrop: true
+        };
 
-        this.$('.o_wslides_js_slides_list_container ul').sortable({
-            handle: '.o_wslides_slides_list_drag',
-            connectWith: '.o_wslides_js_slides_list_container ul',
-            stop: this._reorderSlides.bind(this),
-            items: '.o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty)',
-            placeholder: 'o_wslides_slides_list_slide_hilight position-relative mb-1'
-        });
+        const container = this.el.querySelector('ul.o_wslides_js_slides_list_container');
+        this.bindedSortable.push(this.call(
+            "sortable",
+            "create",
+            {
+                ...sortableBaseParam,
+                ref: { el: container },
+                elements: ".o_wslides_slide_list_category",
+                handle: ".o_wslides_slide_list_category_header .o_wslides_slides_list_drag",
+                sortableId: "category",
+            },
+        ).enable());
+
+        this.bindedSortable.push(this.call(
+            "sortable",
+            "create",
+            {
+                ...sortableBaseParam,
+                ref: { el: container },
+                elements: ".o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty):not(.o_not_editable)",
+                handle: ".o_wslides_slides_list_drag",
+                connectGroups: true,
+                groups: ".o_wslides_js_slides_list_container ul",
+                sortableId: "list",
+            },
+        ).enable());
+    },
+
+    _unbindSortable: function () {
+        this.bindedSortable.forEach(sortable => sortable.cleanup());
     },
 
     /**
