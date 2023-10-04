@@ -191,6 +191,8 @@ export const storeService = {
                                     const r2 = res.store.get(l1);
                                     if (r2) {
                                         r2.__invs__.delete(r1.localId, name);
+                                        const { onDelete } = r1.Model.__rels__.get(name);
+                                        onDelete?.call(r1, r2);
                                     }
                                     r1.__rels__.set(name, undefined);
                                 }
@@ -239,12 +241,7 @@ export const storeService = {
                                     if ([null, false, undefined].includes(val)) {
                                         return true;
                                     }
-                                    for (const v of collection) {
-                                        preinsert(v, r1, name, (r3) => {
-                                            l1.__list__.push(r3.localId);
-                                            r3.__invs__.add(r1.localId, name);
-                                        });
-                                    }
+                                    l1.push(...collection);
                                 } else {
                                     // [Record.one] =
                                     const r1 = receiver;
@@ -252,6 +249,8 @@ export const storeService = {
                                     const r2 = res.store.get(l1);
                                     if (r2) {
                                         r2.__invs__.delete(r1.localId, name);
+                                        const { onDelete } = r1.Model.__rels__.get(name);
+                                        onDelete?.call(r1, r2);
                                     }
                                     if (Record.isCommand(val)) {
                                         const [cmd, cmdData] = val.at(-1);
@@ -261,9 +260,11 @@ export const storeService = {
                                         delete receiver[name];
                                         return true;
                                     }
-                                    preinsert(val, r1, name, (r3) => {
+                                    const r = preinsert(val, r1, name, (r3) => {
                                         r1.__rels__.set(name, r3?.localId);
                                     });
+                                    const { onAdd } = r1.Model.__rels__.get(name);
+                                    onAdd?.call(r1, r);
                                 }
                                 return true;
                             },
