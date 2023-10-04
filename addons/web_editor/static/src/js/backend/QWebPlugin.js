@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { ancestors } from '@web_editor/js/common/wysiwyg_utils';
+import { closestElement } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 export class QWebPlugin {
     constructor(options = {}) {
@@ -8,6 +9,7 @@ export class QWebPlugin {
         if (this._options.editor) {
             this._editable = this._options.editor.editable;
             this._document = this._options.editor.document;
+            this._selectQwebNode(this._options.editor);
         } else {
             this._editable = this._options.editable;
             this._document = this._options.document || window.document;
@@ -128,6 +130,18 @@ export class QWebPlugin {
             }
             if (this._options.editor) {
                 this._options.editor.observerActive('qweb-plugin-checkAllInline');
+            }
+        });
+    }
+    _selectQwebNode(editor) {
+        editor.addDomListener(editor.document, 'selectionchange', e => {
+            const selection = e.target.getSelection();
+            const qwebNode = selection.anchorNode && closestElement(selection.anchorNode, '[t-field],[t-esc],[t-out]');
+            if (qwebNode){
+                const range = new Range();
+                range.selectNode(qwebNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
             }
         });
     }
