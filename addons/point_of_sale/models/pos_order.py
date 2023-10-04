@@ -1077,7 +1077,7 @@ class PosOrder(models.Model):
     @api.model
     def search_paid_order_ids(self, config_id, domain, limit, offset):
         """Search for 'paid' orders that satisfy the given domain, limit and offset."""
-        default_domain = [('state', '!=', 'draft'), ('state', '!=', 'cancelled')]
+        default_domain = [('state', '!=', 'draft'), ('state', '!=', 'cancel')]
         if domain == []:
             real_domain = AND([[['config_id', '=', config_id]], default_domain])
         else:
