@@ -22,6 +22,7 @@ export function OR(...args) {
  * @param {Record} record
  * @param {string} fname
  * @param {(R) => void} fn
+ * @returns {R}
  */
 export function preinsert(val, record, fname, fn) {
     /** @type {R} */
@@ -38,6 +39,7 @@ export function preinsert(val, record, fname, fn) {
         const { targetModel } = record.Model.__rels__.get(fname);
         record.Model.store[targetModel].insert(val);
     }
+    return r3;
 }
 
 export class RecordInverses {
@@ -135,6 +137,8 @@ export class RecordList extends Array {
                         receiver.__list__[index] = r3?.localId;
                         if (r3) {
                             receiver.__addInverse__(r3);
+                            const { onAdd } = receiver.owner.Model.__rels__.get(receiver.name);
+                            onAdd?.call(receiver.owner, r3);
                         }
                     });
                 } else if (name === "length") {
@@ -155,7 +159,7 @@ export class RecordList extends Array {
      * @param {(R) => void} fn
      */
     _preinsert(val, fn) {
-        preinsert(val, this.owner, this.name, fn);
+        return preinsert(val, this.owner, this.name, fn);
     }
     /**
      * @param {number} index
@@ -167,10 +171,12 @@ export class RecordList extends Array {
     /** @param {R[]} records */
     push(...records) {
         for (const val of records) {
-            this._preinsert(val, (r3) => {
+            const r = this._preinsert(val, (r3) => {
                 this.__list__.push(r3.localId);
                 this.__addInverse__(r3);
             });
+            const { onAdd } = this.owner.Model.__rels__.get(this.name);
+            onAdd?.call(this.owner, r);
         }
         return this.__list__.length;
     }
@@ -197,10 +203,12 @@ export class RecordList extends Array {
     /** @param {R[]} records */
     unshift(...records) {
         for (const val of records) {
-            this._preinsert(val, (r3) => {
+            const r = this._preinsert(val, (r3) => {
                 this.__list__.unshift(r3.localId);
                 this.__addInverse__(r3);
             });
+            const { onAdd } = this.owner.Model.__rels__.get(this.name);
+            onAdd?.call(this.owner, r);
         }
         return this.__list__.length;
     }
@@ -276,6 +284,8 @@ export class RecordList extends Array {
         }
         for (const r of newRecords) {
             this.__addInverse__(r);
+            const { onAdd } = this.owner.Model.__rels__.get(this.name);
+            onAdd?.call(this.owner, r);
         }
     }
     /** @param {(a: R, b: R) => boolean} func */
@@ -428,20 +438,26 @@ export class Record {
     /**
      * @template {keyof import("model ").Models} M
      * @param {M} targetModel
+     * @param {(r) => void} [onAdd] function that is called when a record is added
+     *   in the relation.
+     * @param {(r) => void} [onDelete] function that is called when a record is removed
+     *   from the relation.
      * @returns {import("models").Models[M]}
      */
-    static one(targetModel) {
-        return [ONE_SYM, { targetModel }];
+    static one(targetModel, { onAdd, onDelete } = {}) {
+        return [ONE_SYM, { targetModel, onAdd, onDelete }];
     }
     /**
      * @template {keyof import("model").Models} M
      * @param {M} targetModel
+     * @param {(r) => void} [onAdd] function that is called when a record is added
+     *   in the relation.
      * @param {(r) => void} [onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M][]}
      */
-    static many(targetModel, { onDelete } = {}) {
-        return [MANY_SYM, { targetModel, onDelete }];
+    static many(targetModel, { onAdd, onDelete } = {}) {
+        return [MANY_SYM, { targetModel, onAdd, onDelete }];
     }
     /**
      * @param {Object} data

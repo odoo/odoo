@@ -141,7 +141,7 @@ QUnit.test("should display invitations", async (assert) => {
         Thread: {
             id: channelId,
             model: "discuss.channel",
-            rtcInvitingSession: [["DELETE"]],
+            rtcInvitingSession: false,
         },
     });
     await contains(".o-discuss-CallInvitation", { count: 0 });

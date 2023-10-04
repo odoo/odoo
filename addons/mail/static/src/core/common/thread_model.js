@@ -186,7 +186,17 @@ export class Thread extends Record {
             this._store.env.services["discuss.rtc"].deleteSession(r.id);
         },
     });
-    rtcInvitingSession = Record.one("RtcSession");
+    rtcInvitingSession = Record.one("RtcSession", {
+        /** @this {import("models").Thread} */
+        onAdd(r) {
+            this.rtcSessions.add(r);
+            this._store.discuss.ringingThreads.add(this);
+        },
+        /** @this {import("models").Thread} */
+        onDelete(r) {
+            this._store.discuss.ringingThreads.delete(this);
+        },
+    });
     invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");
     composer = Record.one("Composer", { onDelete: (r) => r.delete() });
