@@ -57,6 +57,7 @@
                 <separator/>
                 <field name="user_id"/>
                 <field name="team_id"/>
+                <field name="product_tmpl_id"/>
                 <field name="product_id"/>
                 <field name="categ_id"/>
                 <field name="partner_id"/>
@@ -72,7 +73,9 @@
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Customer Industry" name="industry_id" context="{'group_by':'industry_id'}"/>
-                    <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
+                    <filter string="Product" name="Product" context="{'group_by':'product_tmpl_id'}"/>
+                    <filter string="Product Variant" name="Product Variant" context="{'group_by':'product_id'}"
+                            groups="product.group_product_variant"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
