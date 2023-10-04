@@ -24,7 +24,6 @@
                 <DateFilterValue t-if="filter.rangeType !== 'relative'"
                     period="filterValue &amp;&amp; filterValue.period"
                     yearOffset="filterValue &amp;&amp; filterValue.yearOffset"
-                    type="filter.rangeType"
                     onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)" />
                 <select t-if="filter.rangeType === 'relative'"
                     t-on-change="(e) => this.onDateInput(filter.id, e.target.value || undefined)"
@@ -44,7 +43,7 @@
             <i t-if="getters.isGlobalFilterActive(filter.id)"
                 class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon ms-1"
                 title="Clear"
-                t-on-click="() => this.onClear(filter.id)"/>
+                t-on-click="() => this.clear(filter.id)"/>
         </div>
     </t>
 </templates>

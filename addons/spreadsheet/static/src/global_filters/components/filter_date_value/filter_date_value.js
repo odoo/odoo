@@ -1,8 +1,9 @@
 /** @odoo-module */
 
 import { Component, onWillUpdateProps } from "@odoo/owl";
-import { dateOptions } from "@spreadsheet/global_filters/helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
+import { getPeriodOptions } from "@web/search/utils/dates";
 
 const { DateTime } = luxon;
 
@@ -10,6 +11,7 @@ export class DateFilterValue extends Component {
     setup() {
         this._setStateFromProps(this.props);
         onWillUpdateProps(this._setStateFromProps);
+        this.dateOptions = this.getDateOptions();
     }
     _setStateFromProps(props) {
         this.period = props.period;
@@ -23,12 +25,19 @@ export class DateFilterValue extends Component {
                 : undefined;
     }
 
-    dateOptions(type) {
-        return type ? dateOptions(type) : [];
-    }
-
-    isYear() {
-        return this.props.type === "year";
+    /**
+     * Returns a list of time options to choose from according to the requested
+     * type. Each option contains its (translated) description.
+     * see getPeriodOptions
+     *
+     * @returns {Array<Object>}
+     */
+    getDateOptions() {
+        const periodOptions = getPeriodOptions(DateTime.local());
+        const quarters = FILTER_DATE_OPTION["quarter"].map((quarterId) =>
+            periodOptions.find((option) => option.id === quarterId)
+        );
+        return quarters.concat(monthsOptions);
     }
 
     isSelected(periodId) {
@@ -61,7 +70,6 @@ DateFilterValue.components = { DateTimeInput };
 
 DateFilterValue.props = {
     // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
-    type: { validate: (/**@type {string} */ t) => ["year", "month", "quarter"].includes(t) },
     onTimeRangeChanged: Function,
     yearOffset: { type: Number, optional: true },
     period: { type: String, optional: true },

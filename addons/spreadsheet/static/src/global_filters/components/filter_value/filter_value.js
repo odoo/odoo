@@ -21,18 +21,23 @@ export class FilterValue extends Component {
     }
 
     onTagSelected(id, values) {
-        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
-            id,
-            value: values.map((record) => record.id),
-            displayNames: values.map((record) => record.display_name),
-        });
+        if (!values.length) {
+            // force clear, even automatic default values
+            this.clear(id);
+        } else {
+            this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+                id,
+                value: values.map((record) => record.id),
+                displayNames: values.map((record) => record.display_name),
+            });
+        }
     }
 
     translate(text) {
         return _t(text);
     }
 
-    onClear(id) {
+    clear(id) {
         this.props.model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id });
     }
 }

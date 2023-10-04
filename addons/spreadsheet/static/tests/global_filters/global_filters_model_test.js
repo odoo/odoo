@@ -54,7 +54,7 @@ const LAST_YEAR_FILTER = {
         id: "42",
         type: "date",
         label: "Last Year",
-        rangeType: "year",
+        rangeType: "fixedPeriod",
         defaultValue: { yearOffset: -1 },
     },
 };
@@ -63,7 +63,7 @@ const LAST_YEAR_LEGACY_FILTER = {
     filter: {
         id: "41",
         type: "date",
-        rangeType: "year",
+        rangeType: "fixedPeriod",
         label: "Legacy Last Year",
         defaultValue: { year: "last_year" },
     },
@@ -261,7 +261,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         await addGlobalFilter(
             model,
-            { filter: { ...LAST_YEAR_FILTER.filter, rangeType: "month" } },
+            { filter: LAST_YEAR_FILTER.filter },
             { pivot: DEFAULT_FIELD_MATCHINGS, list: DEFAULT_FIELD_MATCHINGS }
         );
         const gf = model.getters.getGlobalFilters()[0];
@@ -335,7 +335,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         /** @type GlobalFilter */
         const filter = {
             ...THIS_YEAR_GLOBAL_FILTER.filter,
-            rangeType: "quarter",
             defaultValue: { yearOffset: 0, period: "third_quarter" },
         };
         await addGlobalFilter(
@@ -358,7 +357,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         /** @type GlobalFilter */
         const filter = {
             ...THIS_YEAR_GLOBAL_FILTER.filter,
-            rangeType: "month",
             defaultValue: { yearOffset: 0, period: "july" },
         };
         await addGlobalFilter(
@@ -493,6 +491,28 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(computedDomain.length, 0, "it should not have updated the pivot domain");
     });
 
+    QUnit.test("Relational filter default to current user", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        await addGlobalFilter(model, {
+            filter: {
+                id: "42",
+                type: "relation",
+                label: "User Filter",
+                modelName: "res.users",
+                defaultValue: "current_user",
+            },
+        });
+        const [filter] = model.getters.getGlobalFilters();
+        assert.deepEqual(model.getters.getGlobalFilterValue(filter.id), [7]);
+
+        model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
+        assert.deepEqual(
+            model.getters.getGlobalFilterValue(filter.id),
+            [],
+            "can clear automatic value"
+        );
+    });
+
     QUnit.test("Get active filters with multiple filters", async function (assert) {
         assert.expect(2);
 
@@ -509,7 +529,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "43",
                 type: "date",
                 label: "Date Filter",
-                rangeType: "quarter",
+                rangeType: "fixedPeriod",
             },
         });
         await addGlobalFilter(model, {
@@ -577,7 +597,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "42",
                 type: "date",
                 label: "Date Filter",
-                rangeType: "quarter",
+                rangeType: "fixedPeriod",
             },
         });
         const [filter] = model.getters.getGlobalFilters();
@@ -649,7 +669,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const [filter] = model.getters.getGlobalFilters();
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "quarter",
+            rangeType: "fixedPeriod",
             value: {
                 yearOffset: 0,
                 period: "first_quarter",
@@ -659,7 +679,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), `Q1/${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "year",
+            rangeType: "fixedPeriod",
             value: {
                 yearOffset: 0,
             },
@@ -668,7 +688,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), `${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "year",
+            rangeType: "fixedPeriod",
             value: {
                 period: "january",
                 yearOffset: 0,
@@ -678,7 +698,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getCellValue(model, "A10"), `01/${DateTime.now().year}`);
         await setGlobalFilterValue(model, {
             id: filter.id,
-            rangeType: "year",
+            rangeType: "fixedPeriod",
             value: {},
         });
         await nextTick();
@@ -914,7 +934,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         type: "date",
                         label: "my filter",
                         defaultValue: {},
-                        rangeType: "year",
+                        rangeType: "fixedPeriod",
                     },
                 ],
             };
@@ -967,7 +987,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         type: "date",
                         label: "my filter",
                         defaultValue: { yearOffset: 0 },
-                        rangeType: "year",
+                        rangeType: "fixedPeriod",
                     },
                 ],
             };
@@ -1027,7 +1047,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             filter: {
                 id: "42",
                 type: "date",
-                rangeType: "month",
+                rangeType: "fixedPeriod",
                 label: "This month",
                 defaultValue: {}, // no default value!
             },
@@ -1066,9 +1086,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 filter: {
                     id: "42",
                     type: "date",
-                    rangeType: "month",
+                    rangeType: "fixedPeriod",
                     label: "This month",
-                    defaultValue: { period: "january" },
+                    defaultValue: { yearOffset: 0, period: "january" },
                 },
                 pivot: {
                     1: { chain: "date", type: "date" },
@@ -1105,7 +1125,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         type: "date",
                         label: "my filter",
                         defaultValue: {},
-                        rangeType: "year",
+                        rangeType: "fixedPeriod",
                     },
                 ],
             };
@@ -1195,8 +1215,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "1",
                 type: "date",
                 label,
-                defaultsToCurrentPeriod: true,
-                rangeType: "year",
+                defaultValue: "this_year",
+                rangeType: "fixedPeriod",
             },
         });
         assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
@@ -1213,8 +1233,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "1",
                 type: "date",
                 label,
-                defaultsToCurrentPeriod: true,
-                rangeType: "month",
+                defaultValue: "this_month",
+                rangeType: "fixedPeriod",
             },
         });
         assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
@@ -1232,8 +1252,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "1",
                 type: "date",
                 label,
-                defaultsToCurrentPeriod: true,
-                rangeType: "quarter",
+                defaultValue: "this_quarter",
+                rangeType: "fixedPeriod",
             },
         });
         assert.deepEqual(model.getters.getGlobalFilterValue("1"), {
@@ -1249,11 +1269,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 {
                     type: "date",
                     label,
-                    defaultsToCurrentPeriod: true,
-                    defaultValue: {},
+                    defaultValue: "this_year",
                     fields: {},
                     id: "1",
-                    rangeType: "year",
+                    rangeType: "fixedPeriod",
                 },
             ],
         });
@@ -1425,7 +1444,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 filter: {
                     id: "42",
                     type: "date",
-                    rangeType: "month",
+                    rangeType: "fixedPeriod",
                 },
             });
             const newValue = { yearOffset: -6, period: "may" };
@@ -1434,10 +1453,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             });
             assert.deepEqual(model.getters.getGlobalFilterValue("42"), newValue);
             model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters: [{ filterId: "42" }] });
-            assert.deepEqual(model.getters.getGlobalFilterValue("42"), {
-                yearOffset: undefined,
-                preventAutomaticValue: true,
-            });
+            assert.deepEqual(model.getters.getGlobalFilterValue("42"), undefined);
         }
     );
 
@@ -1473,21 +1489,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         id: "43",
                         type: "date",
                         label: "date filter 1",
-                        rangeType: "month",
-                    },
-                },
-                {
-                    pivot: { 1: { chain: "date", type: "date" } },
-                }
-            );
-            await addGlobalFilter(
-                model,
-                {
-                    filter: {
-                        id: "44",
-                        type: "date",
-                        label: "date filter 2",
-                        rangeType: "year",
+                        rangeType: "fixedPeriod",
                     },
                 },
                 {
@@ -1511,7 +1513,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             const dateFilters2 = model.getters.getFiltersMatchingPivot(
                 '=ODOO.PIVOT.HEADER(1,"date:year","2016")'
             );
-            assert.deepEqual(dateFilters2, [{ filterId: "44", value: { yearOffset: -6 } }]);
+            assert.deepEqual(dateFilters2, [{ filterId: "43", value: { yearOffset: -6 } }]);
         }
     );
 
@@ -1555,7 +1557,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         id: "43",
                         type: "date",
                         label: "date filter 1",
-                        rangeType: "month",
+                        rangeType: "fixedPeriod",
                     },
                 },
                 {

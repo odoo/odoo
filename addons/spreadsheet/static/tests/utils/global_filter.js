@@ -4,7 +4,7 @@ export const THIS_YEAR_GLOBAL_FILTER = {
         id: "43",
         type: "date",
         label: "This Year",
-        rangeType: "year",
+        rangeType: "fixedPeriod",
         defaultValue: { yearOffset: 0 },
     },
 };
