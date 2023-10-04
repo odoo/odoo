@@ -15,7 +15,7 @@
             <div class="page col-6 position-relative p-1">
                 <div class="oe_structure"/>
                 <div class="o_event_foldable_badge_back text-center">
-                    <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'">
+                    <t t-if="event.use_barcode">
                         <t t-if="attendee">
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
@@ -37,7 +37,7 @@
             <div class="o_event_foldable_badge_bottom_quarter page col-6 p-1">
                 <div class="oe_structure"/>
                 <div class="o_event_foldable_badge_back text-center">
-                    <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'">
+                    <t t-if="event.use_barcode">
                         <t t-if="attendee">
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
@@ -164,7 +164,7 @@
                                     <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
                                 </div>
 
-                                <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'">
+                                <t t-if="event.use_barcode">
                                     <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}&amp;width=168&amp;height=84&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
                                 </t>
                             </t>
@@ -264,7 +264,7 @@
                 <img t-if="event.organizer_id.image_256" class="o_event_badge_logo text-center mb-2" t-att-src="image_data_uri(event.organizer_id.image_256)"/>
                 <span t-if="event.badge_format != 'A4_french_fold'" class="o_event_badge_barcode_container mb-2">
                     <img t-att-class="'mb-2' + (' ms-5' if event.organizer_id.image_256 else '')" t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
-                    <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'">
+                    <t t-if="event.use_barcode">
                         <t t-if="attendee">
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>

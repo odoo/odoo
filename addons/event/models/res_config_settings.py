@@ -25,10 +25,10 @@ class ResConfigSettings(models.TransientModel):
     module_website_event_track_quiz = fields.Boolean("Quiz on Tracks")
     module_website_event_exhibitor = fields.Boolean("Advanced Sponsors")
     use_event_barcode = fields.Boolean(string="Use Event Barcode", help="Enable or Disable Event Barcode functionality.", config_parameter='event.use_event_barcode')
+    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     module_website_event_sale = fields.Boolean("Online Ticketing")
     module_event_booth = fields.Boolean("Booth Management")
     use_google_maps_static_api = fields.Boolean("Google Maps static API", default=_default_use_google_maps_static_api)
-    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
 
     @api.depends('use_google_maps_static_api')
     def _compute_maps_static_api_key(self):

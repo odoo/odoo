@@ -18,7 +18,7 @@ class EventRegistration(models.Model):
     _order = 'id desc'
 
     @api.model
-    def _get_random_token(self):
+    def _get_random_barcode(self):
         """Generate a string representation of a pseudo-random 8-byte number for barcode
         generation.
 
@@ -29,7 +29,6 @@ class EventRegistration(models.Model):
         compatible with all scanners.
          """
         return str(int.from_bytes(os.urandom(8), 'little'))
-    barcode = fields.Char(default=_get_random_token, readonly=True, copy=False, index=True)
 
     # event
     event_id = fields.Many2one(
@@ -37,6 +36,8 @@ class EventRegistration(models.Model):
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket', ondelete='restrict')
     active = fields.Boolean(default=True)
+    barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
+
     # utm informations
     utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
