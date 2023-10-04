@@ -250,7 +250,8 @@ class AccountAnalyticLine(models.Model):
     def _get_view(self, view_id=None, view_type='form', **options):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         arch, view = super()._get_view(view_id, view_type, **options)
-        arch = self._apply_timesheet_label(arch, view_type=view_type)
+        # Use of sudo as the portal user doesn't have access to uom
+        arch = self.sudo()._apply_timesheet_label(arch, view_type=view_type)
         arch = self._apply_time_label(arch, related_model=self._name)
         return arch, view
 
