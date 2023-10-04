@@ -21,7 +21,7 @@
     const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
     const { isEnterprise } = odoo.info;
-    const { onWillStart } = owl;
+    const { onWillStart } = odoo.loader.modules.get("@odoo/owl");
     let appsMenusOnly = false;
     const isStudioInstalled = odoo.loader.modules.has("@web_studio/studio_service");
     let actionCount = 0;
@@ -125,9 +125,11 @@
         let timeLimit = tl;
         while (!stopCondition()) {
             if (timeLimit <= 0) {
-                throw new Error(`Timeout, the clicked element took more than ${tl / 1000} seconds to load`)
+                throw new Error(
+                    `Timeout, the clicked element took more than ${tl / 1000} seconds to load`
+                );
             }
-            await new Promise(resolve => setTimeout(resolve, interval));
+            await new Promise((resolve) => setTimeout(resolve, interval));
             timeLimit -= interval;
         }
     }

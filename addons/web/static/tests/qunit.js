@@ -4,11 +4,12 @@ import { isVisible as isElemVisible } from "@web/core/utils/ui";
 import { fullTraceback, fullAnnotatedTraceback } from "@web/core/errors/error_utils";
 import { registry } from "@web/core/registry";
 import { escape } from "@web/core/utils/strings";
+import { Component, whenReady } from "@odoo/owl";
 
 const consoleError = console.error;
 
 function setQUnitDebugMode() {
-    owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
+    whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
     QUnit.config.debug = true; // allows for helper functions to behave differently (logging, the HTML element in which the test occurs etc...)
     QUnit.config.testTimeout = 60 * 60 * 1000;
     // Allows for interacting with the test when it is over
@@ -32,8 +33,6 @@ QUnit.debug = (name, cb) => {
 QUnit.config.autostart = false;
 
 export function setupQUnit() {
-    const { Component } = owl;
-
     // -----------------------------------------------------------------------------
     // QUnit config
     // -----------------------------------------------------------------------------

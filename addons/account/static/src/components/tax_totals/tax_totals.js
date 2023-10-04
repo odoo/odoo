@@ -6,8 +6,15 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
 import { getCurrency } from "@web/core/currency";
-
-const { Component, onPatched, onWillUpdateProps, onWillRender, toRaw, useRef, useState } = owl;
+import {
+    Component,
+    onPatched,
+    onWillUpdateProps,
+    onWillRender,
+    toRaw,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 /**
  A line of some TaxTotalsComponent, giving the values of a tax group.

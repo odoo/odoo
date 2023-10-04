@@ -5,8 +5,7 @@ import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class BomOverviewControlPanel extends Component {
     setup() {

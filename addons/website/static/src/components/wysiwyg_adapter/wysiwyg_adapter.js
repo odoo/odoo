@@ -13,8 +13,7 @@ import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/util
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
-
-const { onWillStart, useEffect, onWillUnmount } = owl;
+import { onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait

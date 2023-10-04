@@ -3,8 +3,7 @@
 import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewSpecialLine } from "../bom_overview_special_line/mrp_bom_overview_special_line";
-
-const { Component, onWillUnmount, onWillUpdateProps, useState } = owl;
+import { Component, onWillUnmount, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class BomOverviewExtraBlock extends Component {
     setup() {

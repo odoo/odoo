@@ -5,8 +5,7 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-
-const { Component, onWillRender } = owl;
+import { Component, onWillRender } from "@odoo/owl";
 
 export class QtyAtDatePopover extends Component {
     setup() {

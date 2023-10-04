@@ -144,6 +144,6 @@ export async function prepareWowlFormViewDialogs(serverData, mockRPC) {
     const wowlEnv = await makeTestEnv({ serverData, mockRPC });
     const legacyEnv = makeTestEnvironment();
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
-    owl.Component.env = legacyEnv;
+    Component.env = legacyEnv;
     await mount(MainComponentsContainer, getFixture(), { env: wowlEnv });
 }

@@ -1,8 +1,7 @@
 /** @odoo-module */
 
 import { ListRenderer } from "@web/views/list/list_renderer";
-
-const { useEffect } = owl;
+import { useEffect } from "@odoo/owl";
 
 export class SectionListRenderer extends ListRenderer {
     setup() {

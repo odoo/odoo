@@ -6,6 +6,7 @@ import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
 import makeTestEnvironment from "../helpers/test_env";
 import { SERVICES_METADATA } from "@web/env";
+import { Component } from "@odoo/owl";
 
 QUnit.module('core', {}, function () {
 
@@ -404,7 +405,7 @@ QUnit.module('core', {}, function () {
 
         SERVICES_METADATA.rpc = true;
         var def;
-        owl.Component.env = await makeTestEnvironment({}, () => {
+        Component.env = await makeTestEnvironment({}, () => {
             def = testUtils.makeTestPromise();
             return def;
         });

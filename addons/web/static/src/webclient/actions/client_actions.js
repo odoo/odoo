@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
 
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, markup, onMounted, xml } from "@odoo/owl";
 
 export function displayNotificationAction(env, action) {
     const params = action.params || {};
@@ -20,7 +20,7 @@ export function displayNotificationAction(env, action) {
     const links = (params.links || []).map((link) => {
         return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
     });
-    const message = owl.markup(sprintf(escape(params.message), ...links));
+    const message = markup(sprintf(escape(params.message), ...links));
     env.services.notification.add(message, options);
     return params.next;
 }

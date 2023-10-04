@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-const { Component, useState, onWillUpdateProps } = owl;
+import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ChatterPager extends Component {
     setup() {

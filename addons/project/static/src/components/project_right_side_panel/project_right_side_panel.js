@@ -10,8 +10,7 @@ import { ProjectRightSidePanelSection } from './components/project_right_side_pa
 import { ProjectMilestone } from './components/project_milestone';
 import { ProjectProfitability } from './components/project_profitability';
 import { getCurrency } from '@web/core/currency';
-
-const { Component, onWillStart, useState } = owl;
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class ProjectRightSidePanel extends Component {
     setup() {

@@ -10,7 +10,20 @@ import { isVisible } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { registerCleanup } from "./cleanup";
 
-import { App, onMounted, onPatched, useComponent } from "@odoo/owl";
+import {
+    App,
+    onError,
+    onMounted,
+    onPatched,
+    onRendered,
+    onWillDestroy,
+    onWillPatch,
+    onWillRender,
+    onWillStart,
+    onWillUnmount,
+    onWillUpdateProps,
+    useComponent,
+} from "@odoo/owl";
 
 /**
  * @typedef {keyof HTMLElementEventMap | keyof WindowEventMap} EventType
@@ -775,29 +788,42 @@ export function useChild() {
     onPatched(setChild);
 }
 
-const lifeCycleHooks = [
-    "onError",
-    "onMounted",
-    "onPatched",
-    "onRendered",
-    "onWillDestroy",
-    "onWillPatch",
-    "onWillRender",
-    "onWillStart",
-    "onWillUnmount",
-    "onWillUpdateProps",
-];
 export function useLogLifeCycle(logFn, name = "") {
-    const component = owl.useComponent();
+    const component = useComponent();
     let loggedName = `${component.constructor.name}`;
     if (name) {
         loggedName = `${component.constructor.name} ${name}`;
     }
-    for (const hook of lifeCycleHooks) {
-        owl[hook](() => {
-            logFn(`${hook} ${loggedName}`);
-        });
-    }
+    onError(() => {
+        logFn(`onError ${loggedName}`);
+    });
+    onMounted(() => {
+        logFn(`onMounted ${loggedName}`);
+    });
+    onPatched(() => {
+        logFn(`onPatched ${loggedName}`);
+    });
+    onRendered(() => {
+        logFn(`onRendered ${loggedName}`);
+    });
+    onWillDestroy(() => {
+        logFn(`onWillDestroy ${loggedName}`);
+    });
+    onWillPatch(() => {
+        logFn(`onWillPatch ${loggedName}`);
+    });
+    onWillRender(() => {
+        logFn(`onWillRender ${loggedName}`);
+    });
+    onWillStart(() => {
+        logFn(`onWillStart ${loggedName}`);
+    });
+    onWillUnmount(() => {
+        logFn(`onWillUnmount ${loggedName}`);
+    });
+    onWillUpdateProps(() => {
+        logFn(`onWillUpdateProps ${loggedName}`);
+    });
 }
 
 /**

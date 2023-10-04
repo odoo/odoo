@@ -30,8 +30,7 @@ publicWidget.registry.SaleOrderPortalReorderWidget = publicWidget.Widget.extend(
 
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
-
-const { Component, onWillStart } = owl;
+import { Component, onWillStart } from "@odoo/owl";
 
 // Reorder Dialog
 

@@ -2,8 +2,7 @@
 
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { useService } from "@web/core/utils/hooks";
-
-const { onWillStart } = owl;
+import { onWillStart } from "@odoo/owl";
 
 export class ProjectControlPanel extends ControlPanel {
     setup() {

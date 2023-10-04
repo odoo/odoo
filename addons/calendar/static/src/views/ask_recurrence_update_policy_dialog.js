@@ -2,8 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class AskRecurrenceUpdatePolicyDialog extends Component {
     setup() {
@@ -24,7 +23,7 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
     }
 
     get selected() {
-        return Object.entries(this.possibleValues).find(state => state[1].checked)[0];
+        return Object.entries(this.possibleValues).find((state) => state[1].checked)[0];
     }
 
     set selected(val) {

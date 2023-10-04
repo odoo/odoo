@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import {
@@ -1585,7 +1586,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("standalone many2one field", async function (assert) {
-        class Comp extends owl.Component {
+        class Comp extends Component {
             setup() {
                 this.fields = {
                     partner_id: {
@@ -1600,7 +1601,7 @@ QUnit.module("Fields", (hooks) => {
             }
         }
         Comp.components = { Record, Field };
-        Comp.template = owl.xml`
+        Comp.template = xml`
             <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>

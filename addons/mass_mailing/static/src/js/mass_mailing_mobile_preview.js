@@ -2,9 +2,7 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { getBundle } from "@web/core/assets";
-
-const { useEffect, onWillStart } = owl;
-
+import { useEffect, onWillStart } from "@odoo/owl";
 
 export class MassMailingMobilePreviewDialog extends Dialog {
     setup() {

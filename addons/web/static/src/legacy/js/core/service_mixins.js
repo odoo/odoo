@@ -6,6 +6,7 @@ import {
     ConnectionLostError,
     RPCError,
 } from "@web/core/network/rpc_service";
+import { Component } from "@odoo/owl";
 
 function protectMethod(widget, fn) {
     return function (...args) {
@@ -35,7 +36,7 @@ function protectMethod(widget, fn) {
 
 var ServicesMixin = {
     bindService: function (serviceName) {
-        const { services } = owl.Component.env;
+        const { services } = Component.env;
         const service = services[serviceName];
         if (!service) {
             throw new Error(`Service ${serviceName} is not available`);

@@ -24,7 +24,7 @@ import {
     loadState,
 } from "@web/../tests/webclient/helpers";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, onWillStart, xml } from "@odoo/owl";
 const actionRegistry = registry.category("actions");
 
 function getBreadCrumbTexts(target) {
@@ -411,7 +411,7 @@ QUnit.module("ActionManager", (hooks) => {
             const slowWillStartDef = makeDeferred();
             class ClientAction extends Component {
                 setup() {
-                    owl.onWillStart(() => slowWillStartDef);
+                    onWillStart(() => slowWillStartDef);
                 }
             }
             ClientAction.template = xml`<div class="client_action">ClientAction</div>`;
@@ -620,7 +620,7 @@ QUnit.module("ActionManager", (hooks) => {
                         return { fromId: this.id };
                     },
                 });
-                owl.onWillStart(() => def);
+                onWillStart(() => def);
             }
         }
         ToyController.template = xml`

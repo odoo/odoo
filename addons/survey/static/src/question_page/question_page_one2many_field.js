@@ -6,8 +6,7 @@ import { registry } from "@web/core/registry";
 import { useOpenX2ManyRecord, useX2ManyCrud, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
 import { patch } from '@web/core/utils/patch';
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-
-const { useSubEnv } = owl;
+import { useSubEnv } from "@odoo/owl";
 
 patch(X2ManyFieldDialog.prototype, {
     /**

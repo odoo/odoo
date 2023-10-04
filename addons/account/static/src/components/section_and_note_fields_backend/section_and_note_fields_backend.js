@@ -6,8 +6,7 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { TextField, ListTextField } from "@web/views/fields/text/text_field";
 import { CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-const { Component, useEffect } = owl;
+import { Component, useEffect } from "@odoo/owl";
 
 export class SectionAndNoteListRenderer extends ListRenderer {
     /**

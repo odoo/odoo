@@ -47,7 +47,7 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { getTimePickers } from "../../core/datetime/datetime_test_helpers";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { calendarView } from "@web/views/calendar/calendar_view";
-import { onWillRender } from "@odoo/owl";
+import { Component, onWillRender, onWillStart, xml } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -4547,12 +4547,12 @@ QUnit.module("Views", ({ beforeEach }) => {
 
     QUnit.test(`fields are added in the right order in popover`, async (assert) => {
         const def = makeDeferred();
-        class DeferredWidget extends owl.Component {
+        class DeferredWidget extends Component {
             setup() {
-                owl.onWillStart(() => def);
+                onWillStart(() => def);
             }
         }
-        DeferredWidget.template = owl.xml``;
+        DeferredWidget.template = xml``;
         fieldRegistry.add("deferred_widget", { component: DeferredWidget });
         registerCleanup(() => fieldRegistry.remove("deferred_widget"));
 

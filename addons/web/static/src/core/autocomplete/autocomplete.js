@@ -5,7 +5,7 @@ import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useExternalListener, useRef, useState } from "@odoo/owl";
 
 export class AutoComplete extends Component {
     setup() {
@@ -51,7 +51,7 @@ export class AutoComplete extends Component {
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
 
-        owl.onWillUpdateProps((nextProps) => {
+        onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value || this.forceValFromProp) {
                 this.forceValFromProp = false;
                 if (!this.inEdition) {

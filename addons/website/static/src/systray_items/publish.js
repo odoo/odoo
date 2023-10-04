@@ -4,8 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Switch } from '@website/components/switch/switch';
 import { useService, useBus } from '@web/core/utils/hooks';
-
-const { Component, xml, useState } = owl;
+import { Component, xml, useState } from "@odoo/owl";
 
 const websiteSystrayRegistry = registry.category('website_systray');
 

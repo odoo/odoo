@@ -9254,7 +9254,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
         class MyComponent extends Component {
-            static template = owl.xml`<div t-att-class="props.class" t-esc="value"/>`;
+            static template = xml`<div t-att-class="props.class" t-esc="value"/>`;
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
@@ -9287,7 +9287,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("kanban card: record value should be update", async (assert) => {
         class MyComponent extends Component {
-            static template = owl.xml`<div><button t-on-click="onClick">CLick</button></div>`;
+            static template = xml`<div><button t-on-click="onClick">CLick</button></div>`;
             onClick() {
                 this.props.record.update({ foo: "yolo" });
             }
@@ -13512,7 +13512,7 @@ QUnit.module("Views", (hooks) => {
         let def;
         class MyField extends Component {
             setup() {
-                owl.onWillRender(() => {
+                onWillRender(() => {
                     renderCount++;
                 });
             }

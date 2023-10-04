@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { useBus } from "@web/core/utils/hooks";
-
-const { EventBus, Component, xml, useState } = owl;
+import { EventBus, Component, xml, useState } from "@odoo/owl";
 
 export class FullscreenIndication extends Component {
     setup() {

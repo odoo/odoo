@@ -14,8 +14,7 @@ import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
-
-const { useSubEnv, status } = owl;
+import { useSubEnv, status } from "@odoo/owl";
 
 export class MassMailingHtmlField extends HtmlField {
     static props = {

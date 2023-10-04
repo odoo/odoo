@@ -4,8 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { onEmployeeSubRedirect } from './hooks';
-
-const { Component, onWillStart, onWillRender, useState } = owl;
+import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
 
 class HrOrgChartPopover extends Component {
     async setup() {

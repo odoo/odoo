@@ -3,8 +3,7 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class IconSelectionField extends Component {
     get icon() {

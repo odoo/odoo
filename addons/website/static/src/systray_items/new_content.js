@@ -6,8 +6,7 @@ import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { sprintf } from '@web/core/utils/strings';
-
-const { Component, xml, useState, onWillStart } = owl;
+import { Component, xml, useState, onWillStart } from "@odoo/owl";
 
 export const MODULE_STATUS = {
     NOT_INSTALLED: 'NOT_INSTALLED',

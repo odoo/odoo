@@ -15,8 +15,16 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from '@website/js/utils';
 import { renderToElement } from "@web/core/utils/render";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-
-const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState, useExternalListener } = owl;
+import {
+    Component,
+    onWillStart,
+    onMounted,
+    onWillUnmount,
+    useRef,
+    useEffect,
+    useState,
+    useExternalListener,
+} from "@odoo/owl";
 
 class BlockPreview extends Component {}
 BlockPreview.template = 'website.BlockPreview';

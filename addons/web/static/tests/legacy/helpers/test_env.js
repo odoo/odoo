@@ -3,7 +3,7 @@
     import Bus from "@web/legacy/js/core/bus";
     import { templates } from "@web/core/assets";
     import { renderToString } from "@web/core/utils/render";
-    const { App, Component } = owl;
+    import { App, Component } from "@odoo/owl";
 
     let app;
 

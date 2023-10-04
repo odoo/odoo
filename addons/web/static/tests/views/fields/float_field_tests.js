@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, clickSave, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -66,7 +67,7 @@ QUnit.module("Fields", (hooks) => {
             "The value should be rendered in human readable format (k, M, G, T)."
         );
     });
-    
+
     QUnit.test("human readable format 3", async function (assert) {
         await makeView({
             type: "form",
@@ -548,8 +549,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("float field can be updated by another field/widget", async function (assert) {
-        class MyWidget extends owl.Component {
-            static template = owl.xml`<button t-on-click="onClick">do it</button>`;
+        class MyWidget extends Component {
+            static template = xml`<button t-on-click="onClick">do it</button>`;
             onClick() {
                 const val = this.props.record.data.float_field;
                 this.props.record.update({ float_field: val + 1 });

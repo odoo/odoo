@@ -1,6 +1,16 @@
 /** @odoo-module **/
 
-import { Component, EventBus, xml } from "@odoo/owl";
+import {
+    Component,
+    EventBus,
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUpdateProps,
+    useEffect,
+    useState,
+    xml,
+} from "@odoo/owl";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
@@ -3451,10 +3461,10 @@ QUnit.module("Views", (hooks) => {
         let rpcCount = 0;
         class AsyncField extends CharField {
             setup() {
-                owl.onWillStart(async () => {
+                onWillStart(async () => {
                     assert.step("willStart");
                 });
-                owl.onWillUpdateProps(async () => {
+                onWillUpdateProps(async () => {
                     assert.step("willUpdateProps");
                     if (rpcCount === 1) {
                         return new Promise(() => {});
@@ -3891,12 +3901,12 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("evaluate in python field options", async function (assert) {
         assert.expect(3);
 
-        class MyField extends owl.Component {
+        class MyField extends Component {
             setup() {
                 assert.strictEqual(this.props.horizontal, true);
             }
         }
-        MyField.template = owl.xml`<div>ok</div>`;
+        MyField.template = xml`<div>ok</div>`;
         fieldRegistry.add("my_field", {
             component: MyField,
             extractProps: function ({ options }) {
@@ -10572,8 +10582,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic support for widgets", async function (assert) {
-        class MyComponent extends owl.Component {
-            static template = owl.xml`<div t-esc="value"/>`;
+        class MyComponent extends Component {
+            static template = xml`<div t-esc="value"/>`;
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
@@ -10602,8 +10612,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("widget with class attribute", async function (assert) {
-        class MyComponent extends owl.Component {
-            static template = owl.xml`<span>Hello</span>`;
+        class MyComponent extends Component {
+            static template = xml`<span>Hello</span>`;
         }
         const myComponent = {
             component: MyComponent,
@@ -10624,8 +10634,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("widget with readonly attribute", async function (assert) {
-        class MyComponent extends owl.Component {
-            static template = owl.xml`<span t-esc="value"/>`;
+        class MyComponent extends Component {
+            static template = xml`<span t-esc="value"/>`;
             get value() {
                 return this.props.readonly ? "readonly" : "not readonly";
             }
@@ -10674,13 +10684,13 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic support for widgets: onchange update", async function (assert) {
-        class MyWidget extends owl.Component {
-            static template = owl.xml`<t t-esc="state.dataToDisplay" />`;
+        class MyWidget extends Component {
+            static template = xml`<t t-esc="state.dataToDisplay" />`;
             setup() {
-                this.state = owl.useState({
+                this.state = useState({
                     dataToDisplay: this.props.record.data.foo,
                 });
-                owl.useEffect(() => {
+                useEffect(() => {
                     this.state.dataToDisplay = this.props.record.data.foo + "!";
                 });
             }
@@ -13698,10 +13708,10 @@ QUnit.module("Views", (hooks) => {
                 setup() {
                     super.setup(...arguments);
                     const prefix = `${this.constructor.name} ${this.props.name}`;
-                    owl.onMounted(() => assert.step(`[${prefix}] onMounted`));
-                    owl.onPatched(() => assert.step(`[${prefix}] onPatched`));
-                    owl.onWillStart(() => assert.step(`[${prefix}] onWillStart`));
-                    owl.onWillUpdateProps(() => assert.step(`[${prefix}] onWillUpdateProps`));
+                    onMounted(() => assert.step(`[${prefix}] onMounted`));
+                    onPatched(() => assert.step(`[${prefix}] onPatched`));
+                    onWillStart(() => assert.step(`[${prefix}] onWillStart`));
+                    onWillUpdateProps(() => assert.step(`[${prefix}] onWillUpdateProps`));
                 },
             });
         }
@@ -13755,10 +13765,10 @@ QUnit.module("Views", (hooks) => {
                     setup() {
                         super.setup(...arguments);
                         const prefix = `${this.constructor.name} ${this.props.name}`;
-                        owl.onMounted(() => assert.step(`[${prefix}] onMounted`));
-                        owl.onPatched(() => assert.step(`[${prefix}] onPatched`));
-                        owl.onWillStart(() => assert.step(`[${prefix}] onWillStart`));
-                        owl.onWillUpdateProps(() => assert.step(`[${prefix}] onWillUpdateProps`));
+                        onMounted(() => assert.step(`[${prefix}] onMounted`));
+                        onPatched(() => assert.step(`[${prefix}] onPatched`));
+                        onWillStart(() => assert.step(`[${prefix}] onWillStart`));
+                        onWillUpdateProps(() => assert.step(`[${prefix}] onWillUpdateProps`));
                     },
                 });
             }

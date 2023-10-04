@@ -512,7 +512,7 @@ QUnit.module("Record Component", (hooks) => {
                             type: "boolean",
                         },
                     };
-                    this.values = owl.useState({
+                    this.values = useState({
                         foo: "abc",
                         bar: true,
                     });

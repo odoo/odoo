@@ -6,8 +6,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { WORKER_VERSION } from "@bus/workers/websocket_worker";
-
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 /**
  * Communicate with a SharedWorker in order to provide a single websocket

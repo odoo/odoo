@@ -1,20 +1,19 @@
 /** @odoo-module */
 
-import { registry } from '@web/core/registry';
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-
-const { onWillStart, useState, onWillUpdateProps, Component } = owl;
+import { onWillStart, useState, onWillUpdateProps, Component } from "@odoo/owl";
 
 export class DepartmentChart extends Component {
     setup() {
         super.setup();
 
-        this.action = useService('action');
-        this.orm = useService('orm');
+        this.action = useService("action");
+        this.orm = useService("orm");
         this.state = useState({
-            hierarchy: {}
+            hierarchy: {},
         });
         onWillStart(async () => await this.fetchHierarchy(this.props.record.resId));
 
@@ -24,18 +23,20 @@ export class DepartmentChart extends Component {
     }
 
     async fetchHierarchy(departmentId) {
-        this.state.hierarchy = await this.orm.call('hr.department', 'get_department_hierarchy', [departmentId]);
+        this.state.hierarchy = await this.orm.call("hr.department", "get_department_hierarchy", [
+            departmentId,
+        ]);
     }
 
     openDepartmentEmployees(departmentId) {
-        this.action.doAction('hr.act_employee_from_department', {
+        this.action.doAction("hr.act_employee_from_department", {
             additionalContext: {
-                'active_id': departmentId,
-            }
+                active_id: departmentId,
+            },
         });
     }
 }
-DepartmentChart.template = 'hr.DepartmentChart';
+DepartmentChart.template = "hr.DepartmentChart";
 DepartmentChart.props = {
     ...standardWidgetProps,
 };

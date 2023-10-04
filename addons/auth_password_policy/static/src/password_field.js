@@ -8,8 +8,7 @@ import { useInputField } from "@web/views/fields/input_field_hook";
 
 import { recommendations, ConcretePolicy } from "./password_policy";
 import { Meter } from "./password_meter";
-
-const { Component, onWillStart, useState } = owl;
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class PasswordField extends Component {
     setup() {

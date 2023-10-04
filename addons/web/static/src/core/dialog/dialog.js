@@ -3,7 +3,7 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, useChildSubEnv, useExternalListener, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useChildSubEnv, useExternalListener, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder";
 
@@ -69,7 +69,7 @@ export class Dialog extends Component {
         });
         const throttledResize = throttleForAnimation(this.onResize.bind(this));
         useExternalListener(window, "resize", throttledResize);
-        owl.onWillDestroy(() => {
+        onWillDestroy(() => {
             if (this.env.isSmall) {
                 this.data.scrollToOrigin();
             }

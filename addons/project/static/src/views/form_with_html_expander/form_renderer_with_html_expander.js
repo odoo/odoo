@@ -2,8 +2,7 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { FormRenderer } from '@web/views/form/form_renderer';
-
-const { useRef, useEffect } = owl;
+import { useRef, useEffect } from "@odoo/owl";
 
 export class FormRendererWithHtmlExpander extends FormRenderer {
     setup() {

@@ -1229,8 +1229,8 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("Dropdown with a tooltip", async (assert) => {
         assert.expect(2);
 
-        class MyComponent extends owl.Component {}
-        MyComponent.template = owl.xml`
+        class MyComponent extends Component {}
+        MyComponent.template = xml`
             <Dropdown tooltip="'My tooltip'">
                 <DropdownItem/>
             </Dropdown>`;
@@ -1246,8 +1246,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         "Dropdown with a date picker inside do not close when a click occurs in date picker",
         async (assert) => {
             registry.category("services").add("datetime_picker", datetimePickerService);
-            class MyComponent extends owl.Component {}
-            MyComponent.template = owl.xml`
+            class MyComponent extends Component {}
+            MyComponent.template = xml`
                 <Dropdown>
                     <t t-set-slot="toggler">
                         Dropdown toggler

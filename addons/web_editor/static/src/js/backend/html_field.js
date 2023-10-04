@@ -28,6 +28,7 @@ import {
     onWillUpdateProps,
     useEffect,
     onWillUnmount,
+    status,
 } from "@odoo/owl";
 import { uniqueId } from '@web/core/utils/functions';
 import { Wysiwyg, stripHistoryIds } from '../wysiwyg/wysiwyg';
@@ -387,7 +388,7 @@ export class HtmlField extends Component {
                 }
                 this.wysiwyg.odooEditor.observerActive('commitChanges');
             }
-            if (owl.status(this) !== 'destroyed') {
+            if (status(this) !== 'destroyed') {
                 await this.updateValue();
             }
         }

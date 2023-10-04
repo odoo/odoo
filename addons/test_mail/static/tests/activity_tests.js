@@ -13,6 +13,7 @@ import { editInput, patchWithCleanup, click, patchDate } from "@web/../tests/hel
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
 import { contains } from "@web/../tests/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 const { DateTime } = luxon;
 
 let serverData;
@@ -225,7 +226,7 @@ QUnit.module("test_mail", {}, function () {
 
             for (let i = 0; i < 101; i++) {
                 activityToCreate.push({
-                    display_name: "An activity " + (i * 2),
+                    display_name: "An activity " + i * 2,
                     date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
                     can_write: true,
                     state: "planned",
@@ -241,7 +242,10 @@ QUnit.module("test_mail", {}, function () {
             }
             const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
             for (let i = 0; i < 101; i++) {
-                recordsToCreate.push({ name: "pagerTestRecord" + i, activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]] });
+                recordsToCreate.push({
+                    name: "pagerTestRecord" + i,
+                    activity_ids: [createdActivity[i * 2], createdActivity[i * 2 + 1]],
+                });
             }
             pyEnv["mail.test.activity"].create(recordsToCreate);
 
@@ -251,7 +255,7 @@ QUnit.module("test_mail", {}, function () {
             await openView({
                 res_model: "mail.test.activity",
                 views: [[false, "activity"]],
-                domain: [['name', 'like', 'pagerTestRecord']],
+                domain: [["name", "like", "pagerTestRecord"]],
             });
             assert.containsN(
                 document.body,
@@ -753,10 +757,10 @@ QUnit.module("test_mail", {}, function () {
         patchWithCleanup(ActivityRenderer.prototype, {
             setup() {
                 super.setup();
-                owl.onMounted(() => {
+                onMounted(() => {
                     assert.step("mounted");
                 });
-                owl.onWillUnmount(() => {
+                onWillUnmount(() => {
                     assert.step("willUnmount");
                 });
             },

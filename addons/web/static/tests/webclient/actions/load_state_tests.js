@@ -30,7 +30,7 @@ import {
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 
 function getBreadCrumbTexts(target) {
     return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
@@ -776,7 +776,7 @@ QUnit.module("ActionManager", (hooks) => {
         const hashchangeDef = makeDeferred();
         class MyAction extends Component {
             setup() {
-                owl.onMounted(() => {
+                onMounted(() => {
                     assert.step("myAction mounted");
                     browser.addEventListener("hashchange", () => {
                         hashchangeDef.resolve();
@@ -818,7 +818,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         class MyAction extends Component {
             setup() {
-                owl.onMounted(() => {
+                onMounted(() => {
                     assert.step("myAction mounted");
                     const newURL = baseURL + "#action=__test__client__action__&menu_id=1";
                     // immediate triggering

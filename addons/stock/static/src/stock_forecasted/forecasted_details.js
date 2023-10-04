@@ -1,8 +1,7 @@
 /** @odoo-module **/
 import { formatFloat } from "@web/core/utils/numbers";
 import { useService } from "@web/core/utils/hooks";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ForecastedDetails extends Component {
     setup() {

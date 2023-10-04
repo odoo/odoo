@@ -2,8 +2,7 @@
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { ListRenderer } from "@web/views/list/list_renderer";
-
-const { onWillUpdateProps } = owl;
+import { onWillUpdateProps } from "@odoo/owl";
 
 export class ProjectSharingListRenderer extends ListRenderer {
     setup() {

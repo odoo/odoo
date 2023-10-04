@@ -13,7 +13,7 @@ import {
     toggleMenuItem,
 } from "./helpers";
 
-import { Component, onWillUpdateProps, onWillStart, useState, xml } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillStart, useState, xml, useSubEnv } from "@odoo/owl";
 
 let target;
 let serverData;
@@ -266,10 +266,10 @@ QUnit.module("Search", (hooks) => {
 
             class TestComponent extends Component {
                 setup() {
-                    owl.onWillStart(() => {
+                    onWillStart(() => {
                         assert.deepEqual(this.props.domain, []);
                     });
-                    owl.onWillUpdateProps((nextProps) => {
+                    onWillUpdateProps((nextProps) => {
                         assert.deepEqual(nextProps.domain, [[1, "=", 1]]);
                     });
                 }
@@ -312,7 +312,7 @@ QUnit.module("Search", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                owl.useSubEnv({ config: {} });
+                useSubEnv({ config: {} });
                 this.searchState = useState({
                     resModel: "animal",
                     domain: [["type", "=", "carnivorous"]],

@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { status, useEnv, useSubEnv } from "@odoo/owl";
+import { status, useComponent, useEnv, useSubEnv } from "@odoo/owl";
 
 function disableButtons(el) {
     const btns = [...el.querySelectorAll("button:not([disabled])")];
@@ -28,7 +28,7 @@ function undefinedAsTrue(val) {
 export function useViewButtons(model, ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
-    const comp = owl.useComponent();
+    const comp = useComponent();
     const env = useEnv();
     const beforeExecuteAction =
         options.beforeExecuteAction ||

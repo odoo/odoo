@@ -2,8 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { FloatField, floatField } from '@web/views/fields/float/float_field';
-
-const { useRef, useEffect } = owl;
+import { useRef, useEffect } from "@odoo/owl";
 
 export class MrpConsumed extends FloatField {
     setup() {

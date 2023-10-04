@@ -8,8 +8,7 @@ import {useWowlService} from '@web/legacy/utils';
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import { renderToElement } from "@web/core/utils/render";
-
-const { Component, useEffect, useState, xml, useRef } = owl;
+import { Component, useEffect, useState, xml, useRef } from "@odoo/owl";
 
 export class PageDependencies extends Component {
     setup() {
