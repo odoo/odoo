@@ -157,9 +157,6 @@
                        invisible="not sale_ok"
                        placeholder="Displayed in bottom of product pages"/>
             </group>
-            <group name="ecommerce_description" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </group>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group string="eCommerce Shop" name="shop" invisible="not sale_ok">
                     <field name="website_url" invisible="1"/>
@@ -170,6 +167,12 @@
                 </group>
                 <group name="product_template_images" string="Extra Product Media" invisible="not sale_ok">
                     <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
+                </group>
+                <group string="eCommerce Description">
+                    <field name="description_ecommerce"
+                           placeholder="This note is added to the product page on your eCommerce shop"
+                           nolabel="1"
+                           colspan="2"/>
                 </group>
             </xpath>
         </field>

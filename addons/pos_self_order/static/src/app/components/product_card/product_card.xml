@@ -5,9 +5,6 @@
             <button class="self_order_product_card btn btn-light m-0 overflow-hidden border fw-bolder"
                 t-on-click="selectProduct"
                 t-ref="selfProductCard">
-                <div t-if="props.product.description_ecommerce" class="product-information-tag" t-on-click.prevent.stop="getProductInfo">
-                    <i class="product-information-tag-logo fa fa-info fs-4" role="img" aria-label="Product Information" title="Product Information" />
-                </div>
                 <img
                     class="o_self_order_item_card_image rounded bg-view"
                     t-attf-src="/menu/get-image/{{ props.product.id }}/512?unique={{props.product.write_date}}"
