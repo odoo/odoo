@@ -149,7 +149,10 @@ class MrpUnbuild(models.Model):
         consume_moves -= finished_moves
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
-            raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
+            raise UserError(_(
+                    "Please specify a manufacturing order.\n"
+                    "That way, we’ll be able to retrieve the serial numbers of the components."
+                ))
 
         if any(consume_move.has_tracking != 'none' and not self.mo_id for consume_move in consume_moves):
             raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))

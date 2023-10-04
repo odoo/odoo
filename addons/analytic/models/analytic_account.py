@@ -99,7 +99,7 @@ class AccountAnalyticAccount(models.Model):
                 ('auto_account_id', 'in', [account.id for account in accounts]),
                 '!', ('company_id', 'child_of', company.id),
             ], limit=1):
-                raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
+                raise UserError(_("No company-switching allowed for your analytic account while there are some linked analytic items around! It's a recipe for analytical chaos!"))
 
     @api.depends('code', 'partner_id')
     def _compute_display_name(self):

@@ -11812,7 +11812,7 @@ QUnit.module("Views", (hooks) => {
         await click(rows[0].querySelectorAll(".o_data_cell")[1]);
         await editInput(target, ".o_data_row [name=int_field] input", 666);
         assert.ok(
-            $(".modal").text().includes("those 2 records"),
+            $(".modal").text().includes("update 2 records?"),
             "the number of records should be correctly displayed"
         );
 
@@ -12413,7 +12413,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 modalText,
                 "Among the 4 selected records, 2 are valid for this update. Are you sure you want to " +
-                    "perform the following update on those 2 records? Field:int_fieldUpdate to:666"
+                    "update 2 records? Enjoy how well designed Odoo is :)Field:int_fieldUpdate to:666"
             );
             assert.strictEqual(
                 target.querySelector(".modal .o_modal_changes .o_field_widget").parentNode.style
@@ -12850,7 +12850,7 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_data_row [name=int_field] input", 666);
         assert.containsOnce(target, ".modal", "there should be an opened modal");
         assert.ok(
-            $(".modal").text().includes("those 2 records"),
+            $(".modal").text().includes("update 2 records?"),
             "the number of records should be correctly displayed"
         );
 

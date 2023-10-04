@@ -951,7 +951,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
-msgid "Are you sure you want to cancel the selected quotation?"
+msgid "So are you sure you want to cancel those"
 msgstr ""
 
 #. module: sale
@@ -1110,15 +1110,10 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid ""
-"Cannot create an invoice. No items are available to invoice.\n"
+"There’s nothing to invoice!\n"
 "\n"
-"To resolve this issue, please ensure that:\n"
-"   • The products have been delivered before attempting to invoice them.\n"
-"   • The invoicing policy of the product is configured correctly.\n"
-"\n"
-"If you want to invoice based on ordered quantities instead:\n"
-"   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
-"   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
+"Tip: Quantities to invoice appear in blue in the invoice form. If you have none, you might consider delivering your customer before invoicing :)\n"
+"Alternatively, you can change your product setting into “Invoice based on ordered quantities”"
 msgstr ""
 
 #. module: sale
@@ -4137,8 +4132,8 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid ""
-"Some confirmed sale orders are selected. Their related documents might be\n"
-"                        affected by the cancellation."
+"You are about to cancel confirmed sales. Invoices &amp; deliveries might be "
+"cancelled too."
 msgstr ""
 
 #. module: sale

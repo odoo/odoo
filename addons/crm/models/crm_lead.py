@@ -1398,7 +1398,9 @@ class Lead(models.Model):
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
         if max_length and len(self.ids) > max_length and not self.env.is_superuser():
-            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s.", max_length=max_length))
+            raise UserError(_(
+                "Data safety alert! To prevent any disappearing act, Leads and Opportunities can only be "
+                "merged in groups of %(max_length)s. So gather your fabulous fivesome!", max_length=max_length))
 
         opportunities = self._sort_by_confidence_level(reverse=True)
 

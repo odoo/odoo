@@ -8518,7 +8518,7 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
-msgid "The product is not available in sufficient quantity"
+msgid "The product is not available in sufficient quantity."
 msgstr ""
 
 #. module: stock
@@ -9983,8 +9983,11 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
-"You can not delete product moves if the picking is done. You can only "
-"correct the done quantities."
+"Deleting product moves after a picking is done?\n"
+"\n"
+"That would be like going back in time to revert all operations triggered after this move. You better not do it, Marty!\n"
+"\n"
+"Instead, try to change the “done” quantity to 0."
 msgstr ""
 
 #. module: stock
@@ -10203,8 +10206,8 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
-"You cannot validate a transfer if no quantities are reserved. To force the "
-"transfer, encode quantities."
+"Transfer trouble alert! 0 quantity transfer? That's like trying to move air around!\n"
+"Set the quantities, and let the magic happen!"
 msgstr ""
 
 #. module: stock

@@ -1855,10 +1855,11 @@ class AccountMove(models.Model):
             for move_id, sum_debit, sum_credit in unbalanced_moves:
                 move = self.browse(move_id)
                 error_msg += _(
-                    "\n\n"
-                    "The move (%s) is not balanced.\n"
-                    "The total of debits equals %s and the total of credits equals %s.\n"
-                    "You might want to specify a default account on journal \"%s\" to automatically balance each move.",
+                    '\n\n'
+                    'Unbalanced move alert! The move %s is feeling a bit unbalanced, with %s on '
+                    'the debit side and %s on the credit side. We need some equilibrium here!\n\n'
+                    'Consider adding a default account on the journal \"%s\" to '
+                    'automatically balance each move and restore order to the accounting universe!',
                     move.display_name,
                     format_amount(self.env, sum_debit, move.company_id.currency_id),
                     format_amount(self.env, sum_credit, move.company_id.currency_id),
@@ -3715,7 +3716,10 @@ class AccountMove(models.Model):
 
             if not invoice.partner_id:
                 if invoice.is_sale_document():
-                    raise UserError(_("The field 'Customer' is required, please complete it to validate the Customer Invoice."))
+                    raise UserError(_(
+                        "The 'Customer' field is required to validate the invoice.\n"
+                        "You probably don’t want to explain to your auditor that you invoiced the invisible man :)"
+                    ))
                 elif invoice.is_purchase_document():
                     raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
@@ -3731,7 +3735,10 @@ class AccountMove(models.Model):
             if move.state in ['posted', 'cancel']:
                 raise UserError(_('The entry %s (id %s) must be in draft.', move.name, move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
-                raise UserError(_('You need to add a line before posting.'))
+                raise UserError(_(
+                    "Make sure you add a line before posting the invoice. Invoices can't be created from thin air.\n"
+                    "You’ll thank me later for avoiding a weird explanation to your auditor :)"
+                ))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
@@ -3898,7 +3905,7 @@ class AccountMove(models.Model):
 
     def action_switch_move_type(self):
         if any(move.posted_before for move in self):
-            raise ValidationError(_("You cannot switch the type of a posted document."))
+            raise ValidationError(_("Once a document is posted, its type is set in stone and you can’t change it anymore."))
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 

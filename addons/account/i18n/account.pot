@@ -22,9 +22,9 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"The move (%s) is not balanced.\n"
-"The total of debits equals %s and the total of credits equals %s.\n"
-"You might want to specify a default account on journal \"%s\" to automatically balance each move."
+"Unbalanced move alert! The move %s is feeling a bit unbalanced, with %s on the debit side and %s on the credit side. We need some equilibrium here!\n"
+"\n"
+"Consider adding a default account on the journal \"%s\" to automatically balance each move and restore order to the accounting universe!"
 msgstr ""
 
 #. module: account
@@ -13500,9 +13500,9 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"The field 'Customer' is required, please complete it to validate the "
-"Customer Invoice."
-msgstr ""
+"The 'Customer' field is required to validate the invoice.\n"
+"You probably don’t want to explain to your auditor that you invoiced the invisible man :)"
+msgstr "
 
 #. module: account
 #. odoo-python
@@ -15520,8 +15520,8 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
-"You can not delete payment terms as other records still reference it. "
-"However, you can archive it."
+"Uh-oh! Those payment terms are quite popular and can’t be deleted, as there "
+"are still some records referencing it. How about archiving it instead?"
 msgstr ""
 
 #. module: account
@@ -15537,8 +15537,8 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
-"You can only change the period/account for items that are not yet "
-"reconciled."
+"Oops! You can't change the period/account for already reconciled items! Only"
+" the unreconciled ones are up for the adventure!"
 msgstr ""
 
 #. module: account
@@ -15581,7 +15581,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
-msgid "You can only reverse posted moves."
+msgid ""
+"To reverse a journal entry, it has to be posted first.\n"
+"That would be like asking for a credit note for something not invoiced; it’s fishy :)"
 msgstr ""
 
 #. module: account
@@ -15735,8 +15737,8 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register a payment because there is nothing left to pay on the "
-"selected journal items."
+"There's nothing left to pay on those selected journal items, so no payment "
+"registration necessary. You've got your finances under control like a boss!"
 msgstr ""
 
 #. module: account
@@ -16049,7 +16051,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a posted document."
+msgid ""
+"Once a document is posted, its type is set in stone and you can’t change it "
+"anymore."
 msgstr ""
 
 #. module: account
@@ -16157,7 +16161,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You need to add a line before posting."
+msgid ""
+"Make sure you add a line before posting the invoice. Invoices can't be created from thin air.\n"
+"You’ll thank me later for avoiding a weird explanation to your auditor :)"
 msgstr ""
 
 #. module: account
