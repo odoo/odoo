@@ -23,6 +23,7 @@
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
                     <filter string="Blocking" name="blocking" domain="[('state', 'not in', ['1_done','1_canceled']), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator/>
+                    <filter name="conflict_tasks" string="Task in Conflict" context="{'highlight_conflicting_task': 1}"/>
                     <filter string="Last Stage Update" name="date_last_stage_update" date="date_last_stage_update"/>
                     <separator/>
                     <filter string="Open Tasks" name="open_tasks" domain="[('state', 'not in', ['1_done','1_canceled'])]"/>
