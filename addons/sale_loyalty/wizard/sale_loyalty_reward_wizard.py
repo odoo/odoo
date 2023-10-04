@@ -4,6 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+
 class SaleLoyaltyRewardWizard(models.TransientModel):
     _name = 'sale.loyalty.reward.wizard'
     _description = 'Sale Loyalty - Reward Selection Wizard'
@@ -50,6 +51,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
                 break
         if not selected_coupon:
             raise ValidationError(_('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
-        self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
+        old_lines = self.order_id.order_line.filtered(lambda l: l.reward_id == self.selected_reward_id)
+        self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id, old_lines=old_lines, add_promotions=True)
         self.order_id._update_programs_and_rewards()
         return True

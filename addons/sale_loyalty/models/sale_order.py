@@ -96,7 +96,9 @@ class SaleOrder(models.Model):
         if len(claimable_rewards) == 1:
             coupon = next(iter(claimable_rewards))
             if len(claimable_rewards[coupon]) == 1:
-                self._apply_program_reward(claimable_rewards[coupon], coupon)
+                old_lines = self.order_line.filtered(lambda l: l.reward_id == claimable_rewards[coupon])
+                self._apply_program_reward(claimable_rewards[coupon], coupon, old_lines=old_lines, add_promotions=True)
+                self._update_programs_and_rewards()
                 return True
         elif not claimable_rewards:
             return True
@@ -129,6 +131,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         assert reward.reward_type == 'product'
 
+        old_reward_lines = kwargs.get('old_lines', self.env['sale.order.line'])
+        old_reward_line = old_reward_lines.filtered(lambda r: r.reward_id == reward) if not kwargs.get('add_promotions', False) else self.env['sale.order.line']
         reward_products = reward.reward_product_ids
         product = product or reward_products[:1]
         if not product or not product in reward_products:
@@ -136,12 +140,16 @@ class SaleOrder(models.Model):
         taxes = self.fiscal_position_id.map_tax(product.taxes_id.filtered(lambda t: t.company_id == self.company_id))
         points = self._get_real_points_for_coupon(coupon)
         claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
-        cost = points if reward.clear_wallet else claimable_count * reward.required_points
+        if not reward.clear_wallet and old_reward_line:
+            claim_qty = min(reward.reward_product_qty * claimable_count, old_reward_line.product_uom_qty)
+        else:
+            claim_qty = reward.reward_product_qty * claimable_count
+        cost = points if reward.clear_wallet else claim_qty * reward.required_points / reward.reward_product_qty
         return [{
             'name': _("Free Product - %(product)s", product=product.name),
             'product_id': product.id,
             'discount': 100,
-            'product_uom_qty': reward.reward_product_qty * claimable_count,
+            'product_uom_qty': claim_qty,
             'reward_id': reward.id,
             'coupon_id': coupon.id,
             'points_cost': cost,
@@ -491,12 +499,11 @@ class SaleOrder(models.Model):
         This is calculated by taking the points on the coupon, the points the order will give to the coupon (if applicable) and removing the points taken by already applied rewards.
         """
         self.ensure_one()
-        points = coupon.points
+        points = coupon.points 
         if coupon.program_id.applies_on != 'future' and self.state not in ('sale', 'done'):
             # Points that will be given by the order upon confirming the order
             points += self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon).points
         # Points already used by rewards
-        points -= sum(self.order_line.filtered(lambda l: l.coupon_id == coupon).mapped('points_cost'))
         points = coupon.currency_id.round(points)
         return points
 
@@ -756,7 +763,7 @@ class SaleOrder(models.Model):
                 # Reward is not applicable anymore, the reward lines will simply be removed at the end of this function
                 continue
             try:
-                values_list = self._get_reward_line_values(reward, coupon, product=reward_key[3])
+                values_list = self._get_reward_line_values(reward, coupon, product=reward_key[3], old_lines=reward_line_pool)
             except UserError:
                 # It could happen that we have nothing to discount after changing the order.
                 values_list = []

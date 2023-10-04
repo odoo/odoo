@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import float_compare
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -80,12 +82,18 @@ class SaleOrderLine(models.Model):
         cost_in_vals = 'points_cost' in vals
         if cost_in_vals:
             previous_cost = {l: l.points_cost for l in self}
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        reward_qty_in_vals = float_compare(vals.get('product_uom_qty', 0.0), 0.0, precision_digits=decimal_precision) > 0 and \
+            any(l.reward_id.reward_type == 'product' for l in self)
         res = super().write(vals)
         if cost_in_vals:
             # Update our coupon points if the order is in a confirmed state
             for line in self:
                 if previous_cost[line] != line.points_cost and line.order_id.state in ('sale', 'done'):
                     line.coupon_id.points += (previous_cost[line] - line.points_cost)
+        if reward_qty_in_vals:
+            for line in self.filtered(lambda l: l.reward_id.reward_type == 'product' and not l.reward_id.clear_wallet):
+                line.points_cost = line.product_uom_qty * line.reward_id.required_points / line.reward_id.reward_product_qty
         return res
 
     def unlink(self):
