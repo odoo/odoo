@@ -4,7 +4,8 @@
 import json
 from collections import defaultdict
 
-from odoo import models, _lt, fields
+from odoo import models, _lt
+from odoo.tools.misc import OrderedSet
 
 
 class Project(models.Model):
@@ -35,13 +36,13 @@ class Project(models.Model):
         bills_move_line_read = self._cr.dictfetchall()
         if bills_move_line_read:
             # Get conversion rate from currencies to currency of the current company
-            currency_ids = {bml['currency_id'] for bml in bills_move_line_read + [{'currency_id': self.currency_id.id}]}
-            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
-            conversion_rates = {cid: self.currency_id.rate / rate_from for cid, rate_from in rates.items()}
+            currency_ids = OrderedSet(bml['currency_id'] for bml in bills_move_line_read)
             amount_invoiced = amount_to_invoice = 0.0
             move_ids = set()
             for moves_read in bills_move_line_read:
-                price_subtotal = self.currency_id.round(moves_read['price_subtotal'] * conversion_rates[moves_read['currency_id']])
+                price_subtotal = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)._convert(
+                    from_amount=moves_read['price_subtotal'], to_currency=self.currency_id,
+                )
                 analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
                 move_ids.add(moves_read['move_id'])
                 if moves_read['parent_state'] == 'draft':
@@ -151,16 +152,10 @@ class Project(models.Model):
                 revenue_ids.append(aal['id'])
 
         total_revenues = total_costs = 0.0
-        rates_per_currency_id = self.env['res.currency'].browse(set_currency_ids)._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
-        project_currency_rate = rates_per_currency_id[self.currency_id.id]
         for currency_id, dict_amounts in dict_amount_per_currency_id.items():
-            if currency_id == self.currency_id.id:
-                total_revenues += dict_amounts['revenues']
-                total_costs += dict_amounts['costs']
-                continue
-            rate = project_currency_rate / rates_per_currency_id[currency_id]
-            total_revenues += self.currency_id.round(dict_amounts['revenues'] * rate)
-            total_costs += self.currency_id.round(dict_amounts['costs'] * rate)
+            currency = self.env['res.currency'].browse(currency_id).with_prefetch(dict_amount_per_currency_id)
+            total_revenues += currency._convert(dict_amounts['revenues'], self.currency_id, self.company_id)
+            total_costs += currency._convert(dict_amounts['costs'], self.currency_id, self.company_id)
 
         # we dont know what part of the numbers has already been billed or not, so we have no choice but to put everything under the billed/invoiced columns.
         # The to bill/to invoice ones will simply remain 0
