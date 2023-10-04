@@ -997,18 +997,25 @@ export class Wysiwyg extends Component {
         this.odooEditor.historyReset();
     }
     /**
-     * Saves the content.
+     * Saves the content or the given editable.
      *
      * @param {boolean} [reload=true]
+     * @param {Object} [editable=false] Specific editable to save
      * @returns {Promise}
      */
-    async saveContent(reload = true) {
+    async saveContent(reload = true, editable = false) {
         this.savingContent = true;
-        await this.cleanForSave();
+        if (!editable) {
+            await this.cleanForSave();
+            const editables = "getContentEditableAreas" in this.options ? this.options.getContentEditableAreas(this.odooEditor) : [];
+            await this.savePendingImages(editables.length ? $(editables) : this.$editable);
+            await this._saveViewBlocks();
+        } else {
+            await this.cleanForSave(editable);
+            await this.savePendingImages(editable);
+            await this._saveViewBlocks(false, editable);
+        }
 
-        const editables = "getContentEditableAreas" in this.options ? this.options.getContentEditableAreas(this.odooEditor) : [];
-        await this.savePendingImages(editables.length ? $(editables) : this.$editable);
-        await this._saveViewBlocks();
         this.savingContent = false;
 
         window.removeEventListener('beforeunload', this._onBeforeUnload);
@@ -1130,10 +1137,10 @@ export class Wysiwyg extends Component {
     closestElement(...args) {
         return closestElement(...args);
     }
-    async cleanForSave() {
+    async cleanForSave(editable = this.odooEditor.editable) {
         if (this.odooEditor) {
-            this.odooEditor.cleanForSave();
-            this._attachHistoryIds();
+            this.odooEditor.cleanForSave(editable);
+            this._attachHistoryIds(editable);
         }
 
         if (this.snippetsMenu) {
@@ -2522,18 +2529,20 @@ export class Wysiwyg extends Component {
     }
 
     /**
-     * Searches all the dirty element on the page and saves them one by one. If
+     * Searches all the dirty element on the page or given element and saves them one by one. If
      * one cannot be saved, this notifies it to the user and restarts rte
      * edition.
      *
      * @param {Object} [context] - the context to use for saving rpc, default to
      *                           the editor context found on the page
+     * @param {Object} [element] - Specific given element to save
      * @return {Promise} rejected if the save cannot be done
      */
-    _saveViewBlocks(context) {
+    _saveViewBlocks(context, element = false) {
         // TODO should be review to probably not search in the whole body,
         // iframe or not.
-        const $ = getJqueryFromDocument(this.$editable[0].ownerDocument);
+        // If the element is given, then search within not from the document.
+        const $ = element ? getJqueryFromDocument(element) : getJqueryFromDocument(this.$editable[0].ownerDocument);
         const $allBlocks = $((this.options || {}).savableSelector).filter('.o_dirty');
 
         const $dirty = $('.o_dirty');
