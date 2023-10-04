@@ -125,9 +125,11 @@
         let timeLimit = tl;
         while (!stopCondition()) {
             if (timeLimit <= 0) {
-                throw new Error(`Timeout, the clicked element took more than ${tl / 1000} seconds to load`)
+                throw new Error(
+                    `Timeout, the clicked element took more than ${tl / 1000} seconds to load`
+                );
             }
-            await new Promise(resolve => setTimeout(resolve, interval));
+            await new Promise((resolve) => setTimeout(resolve, interval));
             timeLimit -= interval;
         }
     }
@@ -255,35 +257,39 @@
         if (appsMenusOnly === true) {
             return;
         }
-        const filterMenuButton = document.querySelector(".o_control_panel .o_filter_menu > button");
+        const searchBarMenu = document.querySelector(
+            ".o_control_panel .dropdown-toggle.o_searchview_dropdown_toggler"
+        );
+        if (!searchBarMenu) {
+            return;
+        }
+        // Open the search bar menu dropdown
+        await triggerClick(searchBarMenu, `toggling menu "${searchBarMenu.innerText.trim()}"`);
+        const filterMenuButton = document.querySelector(
+            ".o_control_panel .o_dropdown_container.o_filter_menu"
+        );
+        // Is there a filter menu in the search bar
         if (!filterMenuButton) {
             return;
         }
-        // Open the filter menu dropdown
-        await triggerClick(
-            filterMenuButton,
-            `toggling menu "${filterMenuButton.innerText.trim()}"`
-        );
 
-        const simpleFilterSel = ".o_control_panel .o_filter_menu > .dropdown-menu > .dropdown-item";
-        const dateFilterSel = ".o_control_panel .o_filter_menu > .dropdown-menu > .dropdown";
+        const simpleFilterSel = ".o_control_panel .o_filter_menu > .dropdown-item";
+        const dateFilterSel = ".o_control_panel .o_filter_menu > .o_accordion";
         const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
         console.log("Testing", filterMenuItems.length, "filters");
         for (const filter of filterMenuItems) {
             const currentViewCount = viewUpdateCount;
-            if (filter.classList.contains("dropdown")) {
+            if (filter.classList.contains("o_accordion")) {
+                // If a fitler has options, it will simply unfold and show all options.
                 await triggerClick(
-                    filter.querySelector(".dropdown-toggle"),
+                    filter.querySelector(".o_accordion_toggle"),
                     `filter "${filter.innerText.trim()}"`
                 );
-                // the sub-dropdown opens 200ms after the mousenter, so we trigger an ArrayRight
-                // keydown s.t. it opens directly
-                window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
-                await waitForNextAnimationFrame();
 
-                // If a fitler has options, it will simply unfold and show all options.
                 // We then click on the first one.
-                const firstOption = filter.querySelector(".dropdown-menu > .dropdown-item");
+                const firstOption = filter.querySelector(
+                    ".o_accordion > .o_accordion_values > .dropdown-item"
+                );
                 if (firstOption) {
                     await triggerClick(
                         firstOption,
@@ -291,16 +297,7 @@
                     );
                     await waitForCondition(() => currentViewCount !== viewUpdateCount);
                 }
-            } else if (!filter.classList.contains("o_menu_item")) {
-                // Advanced Search item
-                await triggerClick(filter, `Advanced Search}"`);
-                await waitForCondition(() => !!document.querySelector(`.modal button.btn-close`));
-                await triggerClick(
-                    document.querySelector(`.modal button.btn-close`),
-                    "close 'Advanced Search' dialog"
-                );
-                await waitForCondition(() => !document.querySelector(`.modal button.btn-close`));
-            } else {
+            } else if (!filter.classList.contains("o_add_custom_filter")) {
                 await triggerClick(filter, `filter "${filter.innerText.trim()}"`);
                 await waitForCondition(() => currentViewCount !== viewUpdateCount);
             }
