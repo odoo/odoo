@@ -97,21 +97,15 @@ class Project(models.Model):
             return {}
         expense_ids = []
         amount_billed = 0.0
-        dict_amount_per_currency = defaultdict(lambda: 0.0)
-        set_currency_ids = {self.currency_id.id}
+        all_currencies = {res['currency_id'] for res in expenses_read_group}
         for res in expenses_read_group:
             if can_see_expense:
                 expense_ids.extend(res['ids'])
-            set_currency_ids.add(res['currency_id'])
-            dict_amount_per_currency[res['currency_id']] += res['untaxed_amount']
-        rate_per_currency_id = self.env['res.currency'].browse(set_currency_ids)._get_rates(self.company_id or self.env.company, fields.Date.context_today(self))
-        project_currency_rate = rate_per_currency_id[self.currency_id.id]
-        for currency_id, amount in dict_amount_per_currency.items():
-            if currency_id == self.currency_id.id:
-                amount_billed += amount
-                continue
-            rate = project_currency_rate / rate_per_currency_id[currency_id]
-            amount_billed += self.currency_id.round(amount * rate)
+            amount_billed += self.env['res.currency'].browse(res['currency_id']).with_prefetch(all_currencies)._convert(
+                from_amount=res['untaxed_amount'],
+                to_currency=self.currency_id,
+                company=self.company_id,
+            )
 
         section_id = 'expenses'
         expense_profitability_items = {

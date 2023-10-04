@@ -401,24 +401,13 @@ class SaleOrder(models.Model):
 
     @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
-        cache = {}
         for order in self:
-            order_date = order.date_order.date()
-            if not order.company_id:
-                order.currency_rate = order.currency_id.with_context(date=order_date).rate or 1.0
-                continue
-            elif not order.currency_id:
-                order.currency_rate = 1.0
-            else:
-                key = (order.company_id.id, order_date, order.currency_id.id)
-                if key not in cache:
-                    cache[key] = self.env['res.currency']._get_conversion_rate(
-                        from_currency=order.company_id.currency_id,
-                        to_currency=order.currency_id,
-                        company=order.company_id,
-                        date=order_date,
-                    )
-                order.currency_rate = cache[key]
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(
+                from_currency=order.company_id.currency_id,
+                to_currency=order.currency_id,
+                company=order.company_id,
+                date=order.date_order.date(),
+            )
 
     @api.depends('company_id')
     def _compute_has_active_pricelist(self):

@@ -458,14 +458,13 @@ class account_journal(models.Model):
             )
         }
 
-        curr_cache = {}
         sale_purchase_journals._fill_dashboard_data_count(dashboard_data, 'account.move', 'entries_count', [])
         for journal in sale_purchase_journals:
             # User may have read access on the journal but not on the company
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
-            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay[journal.id], currency, curr_cache=curr_cache)
-            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency, curr_cache=curr_cache)
-            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency, curr_cache=curr_cache)
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay[journal.id], currency)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency)
             amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
             dashboard_data[journal.id].update({
                 'number_to_check': count,
@@ -530,7 +529,7 @@ class account_journal(models.Model):
             ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
         ])
 
-    def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
+    def _count_results_and_sum_amounts(self, results_dict, target_currency):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
         amount_total must be signed!
@@ -538,22 +537,16 @@ class account_journal(models.Model):
         # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
         # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
         # calls of the method.
-        curr_cache = {} if curr_cache is None else curr_cache
         total_amount = 0
         for result in results_dict:
             document_currency = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             date = result.get('invoice_date') or fields.Date.context_today(self)
 
-            if document_currency == target_currency:
-                total_amount += result.get('amount_total') or 0
-            elif company.currency_id == target_currency:
+            if company.currency_id == target_currency:
                 total_amount += result.get('amount_total_company') or 0
             else:
-                key = (document_currency, target_currency, company, date)
-                if key not in curr_cache:
-                    curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
-                total_amount += (result.get('amount_total') or 0) * curr_cache[key]
+                total_amount += document_currency._convert(result.get('amount_total'), target_currency, company, date)
         return (len(results_dict), target_currency.round(total_amount))
 
     def _get_journal_dashboard_bank_running_balance(self):
@@ -617,11 +610,10 @@ class account_journal(models.Model):
         """, [self.ids])
         query_result = group_by_journal(self.env.cr.dictfetchall())
         result = {}
-        curr_cache = {}
         for journal in self:
             # User may have read access on the journal but not on the company
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
-            result[journal.id] = self._count_results_and_sum_amounts(query_result[journal.id], currency, curr_cache)
+            result[journal.id] = self._count_results_and_sum_amounts(query_result[journal.id], currency)
         return result
 
     def _get_move_action_context(self):
