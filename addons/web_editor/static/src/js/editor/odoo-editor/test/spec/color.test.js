@@ -19,6 +19,19 @@ describe('applyColor', () => {
                 '<font><span>g</span>h</font>i</p>',
         });
     });
+    it('should apply a color to the qweb tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+            stepFunction: setColor('rgb(255, 0, 0)', 'color'),
+            contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        });
+
+        await testEditor(BasicEditor, {
+            contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
+            stepFunction: setColor('rgb(255, 0, 0)', 'color'),
+            contentAfter: `<div>[<p t-field="record.display_name" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        });
+    });
     it('should apply a background color to a slice of text in a span in a font', async () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>a<font>b<span>c[def]g</span>h</font>i</p>',

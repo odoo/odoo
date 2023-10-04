@@ -594,6 +594,10 @@ export const editorCommands = {
         const selectedNodes = mode === "backgroundColor"
             ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
             : selectionNodes;
+        const selectedFieldNodes = new Set(getSelectedNodes(editor.editable)
+                .map(n => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .filter(Boolean));
+
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font') || closestElement(node, 'span');
             const children = font && descendants(font);
@@ -642,6 +646,11 @@ export const editorCommands = {
             }
             return font;
         });
+
+        for (const fieldNode of selectedFieldNodes) {
+            colorElement(fieldNode, color, mode);
+        }
+
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
