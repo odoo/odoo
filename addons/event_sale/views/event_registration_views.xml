@@ -48,8 +48,8 @@
                 <field name="sale_order_id" invisible="1"/>
             </xpath>
             <xpath expr="//group" position="before">
-                <field name="is_paid" invisible="1"/>
-                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="not is_paid"/>
+                <field name="payment_status" invisible="1"/>
+                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="payment_status != 'paid'"/>
             </xpath>
             <group name="utm_link" position="before">
                 <group string="Transaction" groups="base.group_no_one">
