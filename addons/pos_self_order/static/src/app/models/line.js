@@ -66,11 +66,6 @@ export class Line extends Reactive {
         });
     }
 
-    get displayPrice() {
-        // for the moment we use price with tax included but we should look at the config setup
-        return this.price_subtotal_incl;
-    }
-
     updateDataFromServer(data) {
         for (const key in data) {
             let updatedValue = data[key];
