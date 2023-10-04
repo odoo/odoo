@@ -77,7 +77,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         content: 'Drag the facebook link at the end of the list',
         trigger: 'we-list table we-button.o_we_drag_handle',
         position: 'bottom',
-        run: "drag_and_drop we-list table tr:last-child",
+        run: "drag_and_drop_native we-list table tr:last-child",
     },
     {
         content: 'Check drop completed',

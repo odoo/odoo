@@ -111,6 +111,11 @@
             });
         },
 
+        destroy() {
+            this._unbindSortable();
+            return this._super(...arguments);
+        },
+
         //--------------------------------------------------------------------------
         // Private
         //--------------------------------------------------------------------------
@@ -141,12 +146,23 @@
          * @private
          */
         _bindSortable: function () {
-            this.$el.sortable({
-                handle: '.o_wslides_js_quiz_sequence_handler',
-                items: '.o_wslides_js_lesson_quiz_question',
-                stop: this._reorderQuestions.bind(this),
-                placeholder: 'o_wslides_js_quiz_sequence_highlight position-relative my-3'
-            });
+            this.bindedSortable = this.call(
+                "sortable",
+                "create",
+                {
+                    ref: { el: this.el },
+                    handle: ".o_wslides_js_quiz_sequence_handler",
+                    elements: ".o_wslides_js_lesson_quiz_question",
+                    onDrop: this._reorderQuestions.bind(this),
+                    clone: false,
+                    placeholderClasses: ['o_wslides_js_quiz_sequence_highlight', 'position-relative', 'my-3'],
+                    applyChangeOnDrop: true
+                },
+            ).enable();
+        },
+
+        _unbindSortable: function () {
+            this.bindedSortable?.cleanup();
         },
 
         /**
