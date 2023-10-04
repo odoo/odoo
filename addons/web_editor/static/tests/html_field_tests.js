@@ -5,7 +5,8 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { FormController } from '@web/views/form/form_controller';
 import { HtmlField } from "@web_editor/js/backend/html_field";
-import { parseHTML } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { parseHTML, setSelection } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { onRendered } from "@odoo/owl";
 import { wysiwygData } from "web_editor.test_utils";
 
@@ -46,6 +47,63 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         registry.category("fields").add("html", HtmlField, { force: true });
     });
 
+    QUnit.module("Form view interactions with the HtmlField");
+
+    QUnit.test("A new MediaDialog after switching record in a Form view should have the correct resId", async (assert) => {
+        serverData.models.partner.records = [
+            {id: 1, txt: "<p>first</p>"},
+            {id: 2, txt: "<p>second</p>"},
+        ];
+        let wysiwyg, mediaDialog;
+        const wysiwygPromise = makeDeferred();
+        const mediaDialogPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            }
+        });
+        patchWithCleanup(MediaDialog.prototype, {
+            setup() {
+                mediaDialog = this;
+                mediaDialogPromise.resolve();
+                this.size = 'xl';
+                this.contentClass = 'o_select_media_dialog';
+                this.title = "TEST";
+                this.tabs = [];
+                this.state = {};
+                // no call to super to avoid services dependencies
+                // this test only cares about the props given to the dialog
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+
+        assert.containsOnce(target, ".odoo-editor-editable p:contains(first)");
+
+        // click on the pager to switch to the next record
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.containsOnce(target, ".odoo-editor-editable p:contains(second)");
+        const paragraph = target.querySelector(".odoo-editor-editable p");
+        setSelection(paragraph, 0, paragraph, 0);
+
+        wysiwyg.openMediaDialog();
+        await mediaDialogPromise;
+
+        assert.equal(mediaDialog.props.resId, 2);
+    });
 
     QUnit.module('Sandboxed Preview');
 
