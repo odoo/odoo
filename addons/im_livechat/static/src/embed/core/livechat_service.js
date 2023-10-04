@@ -37,6 +37,7 @@ export class LivechatService {
     TEMPORARY_ID = "livechat_temporary_thread";
     SESSION_COOKIE = "im_livechat_session";
     OPERATOR_COOKIE = "im_livechat_previous_operator_pid";
+    GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
     /** @type {keyof typeof SESSION_STATE} */
     state = SESSION_STATE.NONE;
     /** @type {LivechatRule} */
@@ -126,13 +127,17 @@ export class LivechatService {
      */
     async leaveSession({ notifyServer = true } = {}) {
         const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
-        if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
-            this.busService.deleteChannel(session.uuid);
-            await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
+        try {
+            if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
+                this.busService.deleteChannel(session.uuid);
+                await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
+            }
+        } finally {
+            localStorage.removeItem(this.GUEST_TOKEN_STORAGE_KEY);
+            cookie.delete(this.SESSION_COOKIE);
+            this.state = SESSION_STATE.NONE;
+            this.sessionInitialized = false;
         }
-        cookie.delete(this.SESSION_COOKIE);
-        this.state = SESSION_STATE.NONE;
-        this.sessionInitialized = false;
     }
 
     /**
@@ -194,9 +199,12 @@ export class LivechatService {
         }
         if (!threadData?.operator_pid) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
-            this.state = SESSION_STATE.NONE;
-            cookie.delete(this.SESSION_COOKIE);
+            this.leaveSession({ notifyServer: false });
             return;
+        }
+        if ("guest_token" in threadData) {
+            localStorage.setItem(this.GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
+            delete threadData.guest_token;
         }
         this.updateSession(threadData);
         const thread = this.store.Thread.insert({
@@ -249,7 +257,7 @@ export class LivechatService {
      * @returns {string|undefined}
      */
     get guestToken() {
-        return this.sessionCookie?.guest_token;
+        return localStorage.getItem(this.GUEST_TOKEN_STORAGE_KEY);
     }
 
     /**
