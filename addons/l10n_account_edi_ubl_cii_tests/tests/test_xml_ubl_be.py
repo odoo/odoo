@@ -687,3 +687,15 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             ('res_field', 'in', ('invoice_pdf_report_file', 'ubl_cii_xml_file')),
         ])
         self.assertEqual(len(invoice_attachments), 2)
+
+    def test_import_quantity_and_or_unit_price_zero(self):
+        """ Tests some special handling cases in which the quantity or unit_price are missing.
+        """
+        subfolder = "tests/test_files/from_odoo"
+        # The tax 21% from l10n_be is retrieved since it's a duplicate of self.tax_21
+        tax_21 = self.env.ref(f'account.{self.env.company.id}_attn_VAT-OUT-21-L')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder, filename='bis3_out_invoice_quantity_and_or_unit_price_zero.xml', amount_total=3630.00, amount_tax=630.00,
+            list_line_subtotals=[1000, 1000, 1000], currency_id=self.currency_data['currency'].id, list_line_price_unit=[1000, 100, 10],
+            list_line_discount=[0, 0, 0], list_line_taxes=[tax_21, tax_21, tax_21], list_line_quantity=[1, 10, 100], move_type='out_invoice',
+        )
