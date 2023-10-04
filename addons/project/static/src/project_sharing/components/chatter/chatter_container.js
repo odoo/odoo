@@ -5,8 +5,7 @@ import { ChatterComposer } from "./chatter_composer";
 import { ChatterMessageCounter } from "./chatter_message_counter";
 import { ChatterMessages } from "./chatter_messages";
 import { ChatterPager } from "./chatter_pager";
-
-const { Component, markup, onWillStart, useState, onWillUpdateProps } = owl;
+import { Component, markup, onWillStart, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ChatterContainer extends Component {
     setup() {

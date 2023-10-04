@@ -2,8 +2,7 @@
 
 import { FormController } from "@web/views/form/form_controller";
 import { useService } from "@web/core/utils/hooks";
-
-const { onWillStart } = owl;
+import { onWillStart } from "@odoo/owl";
 
 export class CalendarFormController extends FormController {
     setup() {
@@ -13,24 +12,24 @@ export class CalendarFormController extends FormController {
         onWillStart(async () => {
             this.discussVideocallLocation = await ormService.call(
                 "calendar.event",
-                "get_discuss_videocall_location",
+                "get_discuss_videocall_location"
             );
         });
     }
-    
+
     /**
      * @override
      */
     async beforeExecuteActionButton(clickParams) {
         const action = clickParams.name;
-        if (action == 'clear_videocall_location' || action === 'set_discuss_videocall_location') {
+        if (action == "clear_videocall_location" || action === "set_discuss_videocall_location") {
             let newVal = false;
-            let videoCallSource = 'custom'
+            let videoCallSource = "custom";
             let changes = {};
-            if (action === 'set_discuss_videocall_location') {
+            if (action === "set_discuss_videocall_location") {
                 newVal = this.discussVideocallLocation;
-                videoCallSource = 'discuss';
-                changes.access_token = this.discussVideocallLocation.split('/').pop();
+                videoCallSource = "discuss";
+                changes.access_token = this.discussVideocallLocation.split("/").pop();
             }
             changes = Object.assign(changes, {
                 videocall_location: newVal,

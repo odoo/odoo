@@ -2,18 +2,17 @@
 
 import { CalendarFilterPanel } from "@web/views/calendar/filter_panel/calendar_filter_panel";
 import { TimeOffCardMobile } from "../../../dashboard/time_off_card";
-import { getFormattedDateSpan } from '@web/views/calendar/utils';
+import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
 import { useService } from "@web/core/utils/hooks";
 import { serializeDate } from "@web/core/l10n/dates";
-
-const { useState, onWillStart, onWillUpdateProps } = owl;
+import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
     setup() {
         super.setup();
 
-        this.orm = useService('orm');
+        this.orm = useService("orm");
         this.getFormattedDateSpan = getFormattedDateSpan;
         this.leaveState = useState({
             holidays: [],
@@ -30,38 +29,38 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
 
     async updateSpecialDays() {
         const context = {
-            'employee_id': this.props.employee_id,
-        }
+            employee_id: this.props.employee_id,
+        };
         const specialDays = await this.orm.call(
-            'hr.employee', 'get_special_days_data', [
+            "hr.employee",
+            "get_special_days_data",
+            [
                 serializeDate(this.props.model.rangeStart, "datetime"),
                 serializeDate(this.props.model.rangeEnd, "datetime"),
             ],
             {
-                'context': context,
-            },
+                context: context,
+            }
         );
-        specialDays['bankHolidays'].forEach(bankHoliday => {
-            bankHoliday.start = luxon.DateTime.fromISO(bankHoliday.start)
-            bankHoliday.end = luxon.DateTime.fromISO(bankHoliday.end)
+        specialDays["bankHolidays"].forEach((bankHoliday) => {
+            bankHoliday.start = luxon.DateTime.fromISO(bankHoliday.start);
+            bankHoliday.end = luxon.DateTime.fromISO(bankHoliday.end);
         });
-        specialDays['mandatoryDays'].forEach(mandatoryDay => {
-            mandatoryDay.start = luxon.DateTime.fromISO(mandatoryDay.start)
-            mandatoryDay.end = luxon.DateTime.fromISO(mandatoryDay.end)
+        specialDays["mandatoryDays"].forEach((mandatoryDay) => {
+            mandatoryDay.start = luxon.DateTime.fromISO(mandatoryDay.start);
+            mandatoryDay.end = luxon.DateTime.fromISO(mandatoryDay.end);
         });
-        this.leaveState.bankHolidays = specialDays['bankHolidays'];
-        this.leaveState.mandatoryDays = specialDays['mandatoryDays'];
+        this.leaveState.bankHolidays = specialDays["bankHolidays"];
+        this.leaveState.mandatoryDays = specialDays["mandatoryDays"];
     }
 
     async loadFilterData() {
-        if(!this.env.isSmall) {
+        if (!this.env.isSmall) {
             return;
         }
 
         const filterData = {};
-        const data = await this.orm.call(
-            'hr.leave.type', 'get_days_all_request', [],
-        );
+        const data = await this.orm.call("hr.leave.type", "get_days_all_request", []);
 
         data.forEach((leave) => {
             filterData[leave[3]] = leave;
@@ -69,11 +68,11 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
         this.leaveState.holidays = filterData;
     }
 }
-TimeOffCalendarFilterPanel.template = 'hr_holidays.CalendarFilterPanel';
+TimeOffCalendarFilterPanel.template = "hr_holidays.CalendarFilterPanel";
 TimeOffCalendarFilterPanel.components = {
     ...TimeOffCalendarFilterPanel.components,
     TimeOffCardMobile,
-}
+};
 TimeOffCalendarFilterPanel.subTemplates = {
     filter: "hr_holidays.CalendarFilterPanel.filter",
-}
+};

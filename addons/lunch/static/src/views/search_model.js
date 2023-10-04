@@ -4,9 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 
 import { Domain } from '@web/core/domain';
 import { SearchModel } from '@web/search/search_model';
-
-const { useState, onWillStart } = owl;
-
+import { useState, onWillStart } from "@odoo/owl";
 
 export class LunchSearchModel extends SearchModel {
     setup() {

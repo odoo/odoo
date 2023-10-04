@@ -7,8 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import wUtils from '@website/js/utils';
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class WebsiteSwitcherSystray extends Component {
     setup() {

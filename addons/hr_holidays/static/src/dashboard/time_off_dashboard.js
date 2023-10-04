@@ -1,10 +1,9 @@
 /* @odoo-module */
 
-import { TimeOffCard } from './time_off_card';
-import { useNewAllocationRequest } from '@hr_holidays/views/hooks';
+import { TimeOffCard } from "./time_off_card";
+import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
 import { useBus, useService } from "@web/core/utils/hooks";
-
-const { Component, useState, onWillStart } = owl;
+import { Component, useState, onWillStart } from "@odoo/owl";
 
 export class TimeOffDashboard extends Component {
     setup() {
@@ -13,8 +12,8 @@ export class TimeOffDashboard extends Component {
         this.state = useState({
             holidays: [],
         });
-        useBus(this.env.timeOffBus, 'update_dashboard', async () => {
-            await this.loadDashboardData()
+        useBus(this.env.timeOffBus, "update_dashboard", async () => {
+            await this.loadDashboardData();
         });
 
         onWillStart(async () => {
@@ -25,17 +24,12 @@ export class TimeOffDashboard extends Component {
     async loadDashboardData() {
         const context = {};
         if (this.props.employeeId !== null) {
-            context['employee_id'] = this.props.employeeId;
+            context["employee_id"] = this.props.employeeId;
         }
 
-        this.state.holidays = await this.orm.call(
-            'hr.leave.type',
-            'get_days_all_request',
-            [],
-            {
-                context: context
-            }
-        );
+        this.state.holidays = await this.orm.call("hr.leave.type", "get_days_all_request", [], {
+            context: context,
+        });
     }
     async newAllocationRequest() {
         await this.newRequest(this.props.employeeId);
@@ -43,5 +37,5 @@ export class TimeOffDashboard extends Component {
 }
 
 TimeOffDashboard.components = { TimeOffCard };
-TimeOffDashboard.template = 'hr_holidays.TimeOffDashboard';
-TimeOffDashboard.props = ['employeeId'];
+TimeOffDashboard.template = "hr_holidays.TimeOffDashboard";
+TimeOffDashboard.props = ["employeeId"];

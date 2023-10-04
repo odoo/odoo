@@ -2,8 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ContractWarningTooltip extends Component {
     get tooltipInfo() {

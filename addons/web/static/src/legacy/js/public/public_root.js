@@ -20,7 +20,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
-import { App, whenReady } from "@odoo/owl";
+import { App, Component, whenReady } from "@odoo/owl";
 
 const { Settings } = luxon;
 
@@ -314,7 +314,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 /**
  * Configure Owl with the public env
  */
-owl.Component.env = legacyEnv;
+Component.env = legacyEnv;
 
 /**
  * This widget is important, because the tour manager needs a root widget in

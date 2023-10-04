@@ -1,18 +1,29 @@
 /* @odoo-module */
 
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useNewAllocationRequest } from '@hr_holidays/views/hooks';
-
-const { Component } = owl;
+import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
+import { Component } from "@odoo/owl";
 
 export class TimeOffCardPopover extends Component {}
 
-TimeOffCardPopover.template = 'hr_holidays.TimeOffCardPopover';
-TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left', 'employeeId', 'holidayStatusId', 'close?', 'onClickNewAllocationRequest?'];
+TimeOffCardPopover.template = "hr_holidays.TimeOffCardPopover";
+TimeOffCardPopover.props = [
+    "allocated",
+    "approved",
+    "planned",
+    "left",
+    "employeeId",
+    "holidayStatusId",
+    "close?",
+    "onClickNewAllocationRequest?",
+];
 
 export class TimeOffCard extends Component {
     setup() {
-        this.popover = usePopover(TimeOffCardPopover, { position: "right", popoverClass: "bg-view" });
+        this.popover = usePopover(TimeOffCardPopover, {
+            position: "right",
+            popoverClass: "bg-view",
+        });
         this.newAllocationRequest = useNewAllocationRequest();
     }
 
@@ -35,9 +46,9 @@ export class TimeOffCard extends Component {
     }
 }
 
-TimeOffCard.template = 'hr_holidays.TimeOffCard';
-TimeOffCard.props = ['name', 'data', 'requires_allocation', 'employeeId', 'holidayStatusId'];
+TimeOffCard.template = "hr_holidays.TimeOffCard";
+TimeOffCard.props = ["name", "data", "requires_allocation", "employeeId", "holidayStatusId"];
 
 export class TimeOffCardMobile extends TimeOffCard {}
 
-TimeOffCardMobile.template = 'hr_holidays.TimeOffCardMobile';
+TimeOffCardMobile.template = "hr_holidays.TimeOffCardMobile";

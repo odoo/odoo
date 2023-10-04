@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { useSequential } from "@mail/utils/common/hooks";
-import { useComponent, useEffect, useState } from "@odoo/owl";
+import { status, useComponent, useEffect, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -171,7 +171,7 @@ export function useSuggestion() {
                 await suggestionService.fetchSuggestions(self.search, {
                     thread: self.thread,
                 });
-                if (owl.status(comp) === "destroyed") {
+                if (status(comp) === "destroyed") {
                     return;
                 }
                 self.update();

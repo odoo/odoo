@@ -3,7 +3,7 @@
 import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
-const { EventBus, Component, markup, useEffect, useState } = owl;
+import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
 
 export class WebsiteLoader extends Component {
     setup() {

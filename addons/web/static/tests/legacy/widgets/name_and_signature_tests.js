@@ -3,6 +3,7 @@
     import { NameAndSignature } from "@web/legacy/js/widgets/name_and_signature";
     import makeTestEnvironment from "../helpers/test_env";
     import { patchWithCleanup } from "@web/../tests/helpers/utils";
+    import { Component } from "@odoo/owl";
 
     const MockedNameAndSignature = NameAndSignature.extend({
         events: {
@@ -15,7 +16,7 @@
 
     async function MockedNameAndSignatureGenerator (options) {
         const parent = $("#qunit-fixture");
-        patchWithCleanup(owl.Component, {
+        patchWithCleanup(Component, {
             env: await makeTestEnvironment({}, (route) => {
                 if (route === "/web/sign/get_fonts/") {
                     return Promise.resolve();

@@ -1,5 +1,13 @@
 /* @odoo-module */
-import { Component, useState, onMounted, onWillUnmount, useEffect, useRef } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    onMounted,
+    onWillUnmount,
+    useEffect,
+    useRef,
+    status,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -282,7 +290,7 @@ export class VoicePlayer extends Component {
     }
 
     addOnAudioProcess() {
-        if (owl.status(this) === "destroyed") {
+        if (status(this) === "destroyed") {
             return;
         }
         const time = this.getCurrentTime();

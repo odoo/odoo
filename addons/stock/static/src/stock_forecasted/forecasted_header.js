@@ -1,10 +1,9 @@
 /** @odoo-module **/
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
+import { Component } from "@odoo/owl";
 
-const { Component } = owl;
-
-export class ForecastedHeader extends Component{
+export class ForecastedHeader extends Component {
     setup(){
         this.orm = useService("orm");
         this.action = useService("action");

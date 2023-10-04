@@ -3,8 +3,7 @@
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-
-const { useEffect, useRef } = owl;
+import { useEffect, useRef } from "@odoo/owl";
 
 export class CountedQuantityWidgetField extends FloatField {
     setup() {

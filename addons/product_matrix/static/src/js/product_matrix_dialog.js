@@ -4,8 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Dialog } from '@web/core/dialog/dialog';
 import { formatMonetary } from "@web/views/fields/formatters";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-const { Component, onMounted, markup, useRef } = owl;
-
+import { Component, onMounted, markup, useRef } from "@odoo/owl";
 
 export class ProductMatrixDialog extends Component {
     setup() {

@@ -1,8 +1,7 @@
 /** @odoo-module **/
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ReceptionReportLine extends Component {
     setup() {

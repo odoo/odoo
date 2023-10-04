@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-const { Component} = owl;
+import { Component } from "@odoo/owl";
 
 export class ForecastedButtons extends Component {
 

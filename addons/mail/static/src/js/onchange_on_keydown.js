@@ -5,8 +5,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { charField, CharField } from "@web/views/fields/char/char_field";
 import { textField, TextField } from "@web/views/fields/text/text_field";
 import { archParseBoolean } from "@web/views/utils";
-
-const { useEffect } = owl;
+import { useEffect } from "@odoo/owl";
 
 /**
  * Support a key-based onchange in text fields.
