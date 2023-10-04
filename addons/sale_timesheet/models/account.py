@@ -38,7 +38,8 @@ class AccountAnalyticLine(models.Model):
             ('is_service', '=', True),
             ('is_expense', '=', False),
             ('state', '=', 'sale'),
-            ('order_partner_id', 'child_of', self.commercial_partner_id.ids)
+            ('order_partner_id', 'child_of', self.commercial_partner_id.ids),
+            ('is_downpayment', '=', False),
         ], super()._default_sale_line_domain()])
 
     @api.depends('commercial_partner_id')
