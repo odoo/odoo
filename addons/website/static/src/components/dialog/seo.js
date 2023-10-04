@@ -4,8 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
-
-const { Component, useState, reactive, onMounted, onWillStart, useEffect } = owl;
+import { Component, useState, reactive, onMounted, onWillStart, useEffect } from "@odoo/owl";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b

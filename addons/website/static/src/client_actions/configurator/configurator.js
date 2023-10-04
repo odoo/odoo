@@ -8,8 +8,17 @@ import {svgToPNG} from '@website/js/utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { mixCssColors } from '@web/core/utils/colors';
-
-const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart, useExternalListener } = owl;
+import {
+    Component,
+    onMounted,
+    reactive,
+    useEnv,
+    useRef,
+    useState,
+    useSubEnv,
+    onWillStart,
+    useExternalListener,
+} from "@odoo/owl";
 
 const ROUTES = {
     descriptionScreen: 2,

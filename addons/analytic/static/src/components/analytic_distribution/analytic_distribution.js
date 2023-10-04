@@ -17,8 +17,14 @@ import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { formatPercentage } from "@web/views/fields/formatters";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-
-const { Component, useState, useRef, useExternalListener, onWillStart, onPatched } = owl;
+import {
+    Component,
+    useState,
+    useRef,
+    useExternalListener,
+    onWillStart,
+    onPatched,
+} from "@odoo/owl";
 
 const PLAN_APPLICABILITY = {
     mandatory: _t("Mandatory"),

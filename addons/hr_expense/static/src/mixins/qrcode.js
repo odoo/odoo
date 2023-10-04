@@ -2,8 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
-const { onMounted, onPatched, useRef } = owl;
+import { onMounted, onPatched, useRef } from "@odoo/owl";
 
 export const ExpenseMobileQRCode = (T) => class ExpenseMobileQRCode extends T {
     setup() {

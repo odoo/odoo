@@ -15,12 +15,17 @@ import {
     toggleSearchBarMenu,
     toggleMenuItem,
 } from "@web/../tests/search/helpers";
-import { createWebClient, doAction }  from "@web/../tests/webclient/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
-import { Component, xml } from "@odoo/owl";
+import {
+    Component,
+    xml,
+    onWillStart as onWillStartOWL,
+    onWillUpdateProps as onWillUpdatePropsOWL,
+} from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 
@@ -106,13 +111,13 @@ function makeTestComponent({ onWillStart, onWillUpdateProps } = {}) {
     let domain;
     class TestComponent extends Component {
         setup() {
-            owl.onWillStart(async () => {
+            onWillStartOWL(async () => {
                 if (onWillStart) {
                     await onWillStart();
                 }
                 domain = this.props.domain;
             });
-            owl.onWillUpdateProps(async (nextProps) => {
+            onWillUpdatePropsOWL(async (nextProps) => {
                 if (onWillUpdateProps) {
                     await onWillUpdateProps();
                 }
@@ -3454,19 +3459,22 @@ QUnit.module("Search", (hooks) => {
         );
     });
 
-    QUnit.test("Don't display empty state message when some filters are availible", async (assert) => {
-        const { TestComponent } = makeTestComponent();
-        await makeWithSearch({
-            serverData,
-            Component: TestComponent,
-            resModel: "partner",
-            searchViewId: false,
-        });
+    QUnit.test(
+        "Don't display empty state message when some filters are availible",
+        async (assert) => {
+            const { TestComponent } = makeTestComponent();
+            await makeWithSearch({
+                serverData,
+                Component: TestComponent,
+                resModel: "partner",
+                searchViewId: false,
+            });
 
-        assert.containsNone(
-            target,
-            ".o_search_panel_empty_state",
-            "Search panel does not have the empty state container"
-        );
-    });
+            assert.containsNone(
+                target,
+                ".o_search_panel_empty_state",
+                "Search panel does not have the empty state container"
+            );
+        }
+    );
 });

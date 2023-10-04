@@ -4,8 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { CharField, charField } from "@web/views/fields/char/char_field";
-
-const { useState } = owl;
+import { useState } from "@odoo/owl";
 
 export function getGoogleSlideUrl(value, page) {
     let url = false;

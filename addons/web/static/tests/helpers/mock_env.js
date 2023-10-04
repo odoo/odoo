@@ -7,6 +7,7 @@ import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
 import { mocks } from "./mock_services";
 import { patchWithCleanup } from "./utils";
+import { Component } from "@odoo/owl";
 
 function prepareRegistry(registry, keepContent = false) {
     const _addEventListener = registry.addEventListener.bind(registry);
@@ -124,7 +125,7 @@ export async function makeTestEnv(config = {}) {
 
     let env = makeEnv();
     await startServices(env);
-    owl.Component.env = env;
+    Component.env = env;
     if ("config" in config) {
         env = Object.assign(Object.create(env), { config: config.config });
     }

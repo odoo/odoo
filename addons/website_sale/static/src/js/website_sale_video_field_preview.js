@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-
-const { Component }  = owl;
+import { Component } from "@odoo/owl";
 
 export class FieldVideoPreview extends Component {}
 FieldVideoPreview.template = 'website_sale.FieldVideoPreview';

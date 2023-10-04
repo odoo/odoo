@@ -10,8 +10,7 @@ import { unsplashService } from '@web_unsplash/services/unsplash_service';
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import weTestUtils from '@web_editor/../tests/test_utils';
 import {Wysiwyg} from '@web_editor/js/wysiwyg/wysiwyg';
-
-const { useEffect } = owl;
+import { useEffect } from "@odoo/owl";
 
 QUnit.module('field html file upload', {
     beforeEach: function () {

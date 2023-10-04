@@ -5,8 +5,7 @@ import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
-
-const { Component, useEffect, useExternalListener, useState } = owl;
+import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
     setup() {

@@ -5,8 +5,7 @@ import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { Switch } from '@website/components/switch/switch';
 import {unslugHtmlDataObject} from '../../services/website_service';
-
-const { xml, useState, Component, onWillStart } = owl;
+import { xml, useState, Component, onWillStart } from "@odoo/owl";
 
 const NO_OP = () => {};
 

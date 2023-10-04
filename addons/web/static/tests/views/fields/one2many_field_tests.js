@@ -34,6 +34,7 @@ import { Record } from "@web/model/relational_model/record";
 import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { errorService } from "../../../src/core/errors/error_service";
+import { onWillDestroy, onWillStart } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 
@@ -5196,10 +5197,10 @@ QUnit.module("Fields", (hooks) => {
             class DeltaField extends field.component {
                 setup() {
                     super.setup();
-                    owl.onWillStart(() => {
+                    onWillStart(() => {
                         delta++;
                     });
-                    owl.onWillDestroy(() => {
+                    onWillDestroy(() => {
                         delta--;
                     });
                 }

@@ -7,8 +7,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { localization } from "@web/core/l10n/localization";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 import { makeTestEnv } from "../../helpers/mock_env";
-
-const { Component, mount, useState, xml } = owl;
+import { Component, mount, useState, xml } from "@odoo/owl";
 
 let serverData;
 let target;

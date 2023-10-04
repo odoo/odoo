@@ -4,8 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { BomOverviewControlPanel } from "../bom_overview_control_panel/mrp_bom_overview_control_panel";
 import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
-
-const { Component, EventBus, onWillStart, useSubEnv, useState } = owl;
+import { Component, EventBus, onWillStart, useSubEnv, useState } from "@odoo/owl";
 
 export class BomOverviewComponent extends Component {
     setup() {

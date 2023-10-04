@@ -1,8 +1,7 @@
 /** @odoo-module **/
 import { ForecastedButtons } from "@stock/stock_forecasted/forecasted_buttons";
 import { patch } from "@web/core/utils/patch";
-
-const { onWillStart } = owl;
+import { onWillStart } from "@odoo/owl";
 
 patch(ForecastedButtons.prototype, {
     setup() {

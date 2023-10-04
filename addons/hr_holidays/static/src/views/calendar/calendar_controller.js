@@ -2,17 +2,16 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { CalendarController } from '@web/views/calendar/calendar_controller';
-import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
+import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { Dropdown, DropdownItem } from "@web/core/dropdown/dropdown";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
-import { TimeOffCalendarFilterPanel } from './filter_panel/calendar_filter_panel';
-import { TimeOffFormViewDialog } from '../view_dialog/form_view_dialog';
-import { useLeaveCancelWizard } from '../hooks';
-
-const { EventBus, useSubEnv } = owl;
+import { TimeOffCalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
+import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
+import { useLeaveCancelWizard } from "../hooks";
+import { EventBus, useSubEnv } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
     setup() {
@@ -37,24 +36,26 @@ export class TimeOffCalendarController extends CalendarController {
     newTimeOffRequest() {
         const context = {};
         if (this.employeeId) {
-            context['default_employee_id'] = this.employeeId;
+            context["default_employee_id"] = this.employeeId;
         }
-        if (this.model.meta.scale == 'day') {
-            context['default_date_from'] = serializeDate(
-                this.model.data.range.start.set({ hours: 7 }), "datetime"
+        if (this.model.meta.scale == "day") {
+            context["default_date_from"] = serializeDate(
+                this.model.data.range.start.set({ hours: 7 }),
+                "datetime"
             );
-            context['default_date_to'] = serializeDate(
-                this.model.data.range.end.set({ hours: 19 }), "datetime"
+            context["default_date_to"] = serializeDate(
+                this.model.data.range.end.set({ hours: 19 }),
+                "datetime"
             );
         }
 
         this.displayDialog(FormViewDialog, {
-            resModel: 'hr.leave',
-            title: _t('New Time Off'),
+            resModel: "hr.leave",
+            title: _t("New Time Off"),
             viewId: this.model.formViewId,
             onRecordSaved: () => {
                 this.model.load();
-                this.env.timeOffBus.trigger('update_dashboard');
+                this.env.timeOffBus.trigger("update_dashboard");
             },
             context: context,
         });
@@ -67,14 +68,14 @@ export class TimeOffCalendarController extends CalendarController {
                 body: _t("Are you sure you want to delete this record?"),
                 confirm: async () => {
                     await this.model.unlinkRecord(record.resId);
-                    this.env.timeOffBus.trigger('update_dashboard');
+                    this.env.timeOffBus.trigger("update_dashboard");
                 },
                 cancel: () => {},
             });
         } else {
             this.leaveCancelWizard(record.resId, () => {
                 this.model.load();
-                this.env.timeOffBus.trigger('update_dashboard');
+                this.env.timeOffBus.trigger("update_dashboard");
             });
         }
     }
@@ -82,12 +83,13 @@ export class TimeOffCalendarController extends CalendarController {
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
         const onDialogClosed = () => {
             this.model.load();
-            this.env.timeOffBus.trigger('update_dashboard');
+            this.env.timeOffBus.trigger("update_dashboard");
         };
 
         return new Promise((resolve) => {
             this.displayDialog(
-                TimeOffFormViewDialog, {
+                TimeOffFormViewDialog,
+                {
                     resModel: this.model.resModel,
                     resId: record.id || false,
                     context,
@@ -96,7 +98,7 @@ export class TimeOffCalendarController extends CalendarController {
                     onRecordSaved: onDialogClosed,
                     onRecordDeleted: (record) => this.deleteRecord(record),
                     onLeaveCancelled: onDialogClosed,
-                    size: 'md',
+                    size: "md",
                 },
                 { onClose: () => resolve() }
             );

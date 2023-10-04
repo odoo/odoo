@@ -2,8 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { useBus } from "@web/core/utils/hooks";
-
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 class FieldIframePreview extends Component {
     setup() {

@@ -6,8 +6,7 @@ import { getBundle, loadBundle } from "@web/core/assets";
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
 import { WebsiteLoader } from '../components/website_loader/website_loader';
-
-const { reactive, EventBus } = owl;
+import { reactive, EventBus } from "@odoo/owl";
 
 const websiteSystrayRegistry = registry.category('website_systray');
 

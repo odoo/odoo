@@ -3,8 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class IAPActionButtonsWidget extends Component {
     setup() {

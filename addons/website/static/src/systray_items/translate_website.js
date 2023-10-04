@@ -2,8 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from '@web/core/utils/hooks';
-
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 class TranslateWebsiteSystray extends Component {
     setup() {

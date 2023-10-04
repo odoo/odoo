@@ -5,8 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { parseFloatTime } from "@web/views/fields/parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-const { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } = owl;
+import { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } from "@odoo/owl";
 
 function formatMinutes(value) {
     if (value === false) {

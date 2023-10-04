@@ -3,8 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import {AddPageDialog} from "../dialog/dialog";
 import {useService} from "@web/core/utils/hooks";
-
-const {onWillStart, useState} = owl;
+import { onWillStart, useState } from "@odoo/owl";
 
 /**
  * Used to share code and keep the same behaviour on different types of 'website

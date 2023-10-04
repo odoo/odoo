@@ -10,8 +10,7 @@ import { renderToString } from "@web/core/utils/render";
 import { useSortable } from "@web/core/utils/sortable";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
-
-const { blockDom, Component, useState, useRef } = owl;
+import { blockDom, Component, useState, useRef } from "@odoo/owl";
 
 export class BoardController extends Component {
     setup() {
