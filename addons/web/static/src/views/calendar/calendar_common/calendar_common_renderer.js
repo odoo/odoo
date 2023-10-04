@@ -313,8 +313,9 @@ export class CalendarCommonRenderer extends Component {
     }
 
     getHeaderHtml(date) {
+        const scale = this.props.model.scale;
         const { weekdayShort: weekday, day } = DateTime.fromJSDate(date);
-        return renderToString("web.CalendarCommonRendererHeader", { weekday, day });
+        return renderToString("web.CalendarCommonRendererHeader", { weekday, day, scale });
     }
 }
 CalendarCommonRenderer.components = {
