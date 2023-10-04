@@ -194,7 +194,8 @@ class Project(models.Model):
                 ('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id),
                 ('is_expense', '=', False),
                 ('state', '=', 'sale'),
-                ('remaining_hours', '>', 0)
+                ('remaining_hours', '>', 0),
+                ('is_downpayment', '=', False),
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
@@ -618,6 +619,7 @@ class ProjectTask(models.Model):
             ('is_expense', '=', False),
             ('state', '=', 'sale'),
             ('remaining_hours', '>', 0),
+            ('is_downpayment', '=', False),
         ]
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.partner_id.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))

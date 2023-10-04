@@ -20,7 +20,7 @@ class Project(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id)]",
+        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('order_partner_id', '=?', partner_id), ('is_downpayment', '=', False)]",
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
@@ -759,7 +759,7 @@ class ProjectTask(models.Model):
         domain="""[
             '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', partner_id if partner_id else []),
                  ('order_partner_id', '=?', partner_id),
-            ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
+            ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'), ('is_downpayment', '=', False),
         ]""",
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"

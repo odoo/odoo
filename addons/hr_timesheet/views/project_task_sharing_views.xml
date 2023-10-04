@@ -17,7 +17,7 @@
                 <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
-                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='portal_user_names']" position="after">
@@ -25,7 +25,7 @@
                 <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
-                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
@@ -38,7 +38,7 @@
                         (incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                         <span class="fw-bold text-dark"> Sub-tasks</span>)
                     </span>
-                    <span class="ps-1">(<field name="progress" class="oe_inline" nolabel="1" widget="integer"/> %)</span>
+                    (<field name="progress" invisible="not project_id" class="oe_inline" nolabel="1" decoration-danger="progress > 1.005" digits="[1, 0]" widget="percentage"/>)
                 </div>
             </xpath>
             <xpath expr="//notebook/page[@name='description_page']" position="after">
@@ -141,7 +141,7 @@
             <div class="oe_kanban_bottom_left" position="inside">
                 <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
                     <t t-set="badge" t-value="'border border-success'"/>
-                    <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
+                    <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
                     <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
