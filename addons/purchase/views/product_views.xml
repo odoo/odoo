@@ -43,7 +43,7 @@
                 </xpath>
                 <group name="purchase" position="before">
                     <field name="seller_ids" context="{'default_product_tmpl_id': id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &gt; 1" readonly="product_variant_count &gt; 1"/>
-                    <field name="variant_seller_ids" context="{'model': active_model, 'active_id': active_id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &lt;= 1" readonly="product_variant_count &lt;= 1"/>
+                    <field name="variant_seller_ids" context="{'model': 'product.template', 'active_id': id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &lt;= 1" readonly="product_variant_count &lt;= 1"/>
                 </group>
                 <group name="bill" position="attributes">
                     <attribute name="groups">purchase.group_purchase_manager</attribute>
@@ -76,6 +76,9 @@
             <field name="arch" type="xml">
                 <field name="seller_ids" position="attributes">
                     <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
+                </field>
+                <field name="variant_seller_ids" position="attributes">
+                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
                 </field>
             </field>
         </record>

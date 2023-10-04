@@ -13,7 +13,7 @@
                 <field name="optional_product_ids"
                     widget="many2many_tags"
                     options="{'color_field': 'color'}"
-                    domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                    domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                     placeholder="Recommend when 'Adding to Cart' or quotation"/>
             </group>
         </field>

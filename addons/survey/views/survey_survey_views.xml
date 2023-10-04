@@ -64,7 +64,7 @@
                     </group>
                     <notebook>
                         <page string="Questions" name="questions">
-                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id}">
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': id}">
                                 <tree decoration-bf="is_page">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title" widget="survey_description_page"/>
@@ -154,7 +154,7 @@
                                                 placeholder="Pick a Badge..."
                                                 invisible="not certification_give_badge or certification_badge_id"
                                                 required="certification_give_badge"
-                                                domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
+                                                domain="[('survey_id', '=', id), ('survey_id', '!=', False)]"
                                                 context="{'default_name': title,
                                                         'default_description': 'Congratulations, you have succeeded this certification',
                                                         'default_rule_auth': 'nobody',
