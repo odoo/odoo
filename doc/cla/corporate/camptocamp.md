@@ -46,3 +46,4 @@ Anna Janiszewska anna.janiszewska@camptocamp.com https://github.com/ajaniszewska
 Matthieu Mequignon matthieu.mequignon@camptocamp.com https://github.com/mmequignon
 Silvio Gregorini silvio.gregorini@camptocamp.com https://github.com/SilvioC2C
 Iryna Vyshnevska iryna.vyshnevska@camptocamp.com https://github.com/i-vyshnevska
+Juan Miguel Sánchez Arce juan.sanchez@camptocamp.com https://github.com/JuMiSanAr
