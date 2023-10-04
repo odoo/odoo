@@ -9,9 +9,13 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='tz']" position="after">
+                    <field name="has_access_livechat" invisible="1"/>
                     <field name="livechat_username" string="Online Chat Name"
-                        readonly="0"
-                        invisible="share"/>
+                        invisible="not has_access_livechat"/>
+                    <field name="livechat_lang_ids" string="Online Chat Language"
+                        invisible="not has_access_livechat"
+                        options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"
+                        widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -23,9 +27,13 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                     <xpath expr="//group[@name='messaging']" position="after">
+                        <field name="has_access_livechat" invisible="1"/>
                         <group name="livechat" string="Livechat"
-                            invisible="share">
+                            invisible="not has_access_livechat">
                             <field name="livechat_username"/>
+                            <field name="livechat_lang_ids" string="Online Chat Language"
+                                options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"
+                                widget="many2many_tags"/>
                         </group>
                     </xpath>
             </field>

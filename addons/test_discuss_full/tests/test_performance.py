@@ -12,7 +12,7 @@ from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
-    _query_count = 59
+    _query_count = 72
 
     def setUp(self):
         super().setUp()
@@ -1018,6 +1018,8 @@ class TestDiscussFullPerformance(HttpCase):
                 'is_discuss_sidebar_category_livechat_open': True,
                 'push_to_talk_key': False,
                 'use_push_to_talk': False,
+                'livechat_lang_ids': [],
+                'livechat_username': False,
                 'user_id': {'id': self.users[0].id},
                 'voice_active_duration': 0,
                 'volume_settings_ids': [('ADD', [])],
