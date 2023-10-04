@@ -51,3 +51,4 @@ Vincent Van Rossem vincent.vanrossem@camptocamp.com https://github.com/vvrossem
 Victor Vermot-Petit-Outhenin victor.vermot@camptocamp.com https://github.com/victorvermot
 Sarah Jallon sarah.jallon@camptocamp.com https://github.com/sarsurgithub
 Ricardo Almeida Soares ricardo.almeidasoares@camptocamp.com https://github.com/ricardoalso
+Italo Lopes italo.lopes@camptocamp.com https://github.com/imlopes
