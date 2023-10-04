@@ -2130,12 +2130,12 @@ we-select.o_we_border_preview_aligned_select {
                     width: $o-we-handle-edge-size;
                 }
                 &.w {
-                    inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 0;
+                    inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 $o-we-handle-border-width * 0.5;
                     transform: translateX(-50%);
                     cursor: ew-resize;
                 }
                 &.e {
-                    inset: $o-we-handles-offset-to-hide 0 $o-we-handles-offset-to-hide * -1 auto;
+                    inset: $o-we-handles-offset-to-hide $o-we-handle-border-width * 0.5 $o-we-handles-offset-to-hide * -1 auto;
                     transform: translateX(50%);
                     cursor: ew-resize;
                 }
@@ -2145,6 +2145,10 @@ we-select.o_we_border_preview_aligned_select {
 
                     &.o_grid_handle {
                         transform: translateY(-50%);
+
+                        &:before {
+                            transform: translateY($o-we-handle-border-width * 0.5);
+                        }
                     }
                 }
                 &.s {
@@ -2153,25 +2157,29 @@ we-select.o_we_border_preview_aligned_select {
 
                     &.o_grid_handle {
                         transform: translateY(50%);
+
+                        &:before {
+                            transform: translateY($o-we-handle-border-width * -0.5);
+                        }
                     }
                 }
                 &.ne {
-                    inset: $o-we-handles-offset-to-hide 0 auto auto;
+                    inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5 auto auto;
                     transform: translate(50%, -50%);
                     cursor: nesw-resize;
                 }
                 &.se {
-                    inset: auto 0 $o-we-handles-offset-to-hide * -1 auto;
+                    inset: auto $o-we-handle-border-width * 0.5 ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) auto;
                     transform: translate(50%, 50%);
                     cursor: nwse-resize;
                 }
                 &.sw {
-                    inset: auto auto $o-we-handles-offset-to-hide * -1 0;
+                    inset: auto auto ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5;
                     transform: translate(-50%, 50%);
                     cursor: nesw-resize;
                 }
                 &.nw {
-                    inset: $o-we-handles-offset-to-hide auto auto 0;
+                    inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) auto auto $o-we-handle-border-width * 0.5;
                     transform: translate(-50%, -50%);
                     cursor: nwse-resize;
                 }
@@ -2246,24 +2254,27 @@ we-select.o_we_border_preview_aligned_select {
                     }
                     &.o_column_handle {
 
-                        &::before {
-                            inset: 0 $o-we-handle-border-width * -0.5;
-                        }
-
                         &.n::before {
                             margin: 0 auto auto;
-                            transform: translateY(-50%);
                         }
 
                         &.s::before {
                             margin: auto auto 0;
-                            transform: translateY(50%);
                         }
                     }
                 }
 
                 &.readonly {
-                    display: none;
+                    cursor: default;
+
+                    &.o_column_handle.o_side_y {
+                        border: none;
+                        background: none;
+                    }
+
+                    &::after, .o_handle_indicator {
+                        display: none;
+                    }
                 }
             }
 
