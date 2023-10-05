@@ -199,8 +199,8 @@ class ReportMoOverview(models.AbstractModel):
         for move in record.move_raw_ids:
             if move.product_id.detailed_type != 'product':
                 continue
-            components_qty_to_produce[move.product_id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id)
-            components_qty_reserved[move.product_id] += move.product_uom._compute_quantity(move.reserved_availability, move.product_id.uom_id)
+            components_qty_to_produce[move.product_id] += move.product_qty
+            components_qty_reserved[move.product_id] += move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
         producible_qty = record.product_qty
         for product_id, comp_qty_to_produce in components_qty_to_produce.items():
             if float_is_zero(comp_qty_to_produce, precision_rounding=product_id.uom_id.rounding):
@@ -419,7 +419,7 @@ class ReportMoOverview(models.AbstractModel):
     def _format_component_move(self, production, move_raw, replenishments, replenish_data, level, index):
         currency = (production.company_id or self.env.company).currency_id
         product = move_raw.product_id
-        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity_done
+        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity
         replenish_mo_cost, dummy_real_cost = self._compute_cost_sums(replenishments)
         replenish_quantity = sum(rep.get('summary', {}).get('quantity', 0.0) for rep in replenishments)
         missing_quantity = quantity - replenish_quantity
@@ -495,7 +495,7 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index):
         product = move_raw.product_id
-        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity_done
+        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity
         currency = (production.company_id or self.env.company).currency_id
         forecast = replenish_data['products'][product.id].get('forecast', [])
         current_lines = filter(lambda line: line.get('document_in', False) and line.get('document_out', False)
@@ -848,7 +848,7 @@ class ReportMoOverview(models.AbstractModel):
                 if move.state not in ('partially_available', 'assigned'):
                     continue
                 # count reserved stock in move_raw's uom
-                reserved = move.product_uom._compute_quantity(move.reserved_availability, move_raw.product_uom)
+                reserved = move.product_uom._compute_quantity(move.quantity, move_raw.product_uom)
                 # check if the move reserved qty was counted before (happens if multiple outs share pick/pack)
                 reserved = min(reserved - move.product_uom._compute_quantity(replenish_data['qty_already_reserved'][move], move_raw.product_uom), move_raw.product_uom_qty)
                 total_reserved += reserved

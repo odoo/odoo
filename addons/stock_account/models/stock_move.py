@@ -76,6 +76,8 @@ class StockMove(models.Model):
         self.ensure_one()
         res = OrderedSet()
         for move_line in self.move_line_ids:
+            if not move_line.picked:
+                continue
             if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
                 continue
             if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
@@ -104,6 +106,8 @@ class StockMove(models.Model):
         """
         res = self.env['stock.move.line']
         for move_line in self.move_line_ids:
+            if not move_line.picked:
+                continue
             if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
                 continue
             if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
@@ -178,7 +182,7 @@ class StockMove(models.Model):
             valued_move_lines = move._get_out_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
             if float_is_zero(forced_quantity or valued_quantity, precision_rounding=move.product_id.uom_id.rounding):
                 continue
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
@@ -201,7 +205,7 @@ class StockMove(models.Model):
             valued_move_lines = move.move_line_ids
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
             quantity = forced_quantity or valued_quantity
 
             unit_cost = move._get_price_unit()
@@ -244,7 +248,9 @@ class StockMove(models.Model):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
-            if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+                continue
+            if not any(move.move_line_ids.mapped('picked')):
                 continue
             for valued_type in self._get_valued_types():
                 if getattr(move, '_is_%s' % valued_type)():
@@ -316,11 +322,11 @@ class StockMove(models.Model):
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
-            qty_done = 0
+            quantity = 0
             for valued_move_line in valued_move_lines:
-                qty_done += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
 
-            qty = forced_qty or qty_done
+            qty = forced_qty or quantity
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
@@ -331,7 +337,7 @@ class StockMove(models.Model):
                 amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.with_company(move.company_id).standard_price
                 new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
 
-            tmpl_dict[move.product_id.id] += qty_done
+            tmpl_dict[move.product_id.id] += quantity
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
             move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
@@ -367,7 +373,7 @@ class StockMove(models.Model):
             valued_move_lines = move._get_in_move_lines()
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
             unit_cost = move.product_id.standard_price
             if move.product_id.cost_method != 'standard':
                 unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
@@ -415,7 +421,7 @@ class StockMove(models.Model):
         amount, unit_amount = 0, 0
         if self.state != 'done':
             unit_amount = self.product_uom._compute_quantity(
-                self.quantity_done, self.product_id.uom_id)
+                self.quantity, self.product_id.uom_id)
             # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
             # we would have to recompute all the analytic estimation at each out.
             amount = - unit_amount * self.product_id.standard_price

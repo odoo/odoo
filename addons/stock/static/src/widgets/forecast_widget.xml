@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="stock.ForecastWidget">
-        <span t-if="['draft', 'partially_available', 'assigned', 'cancel', 'done'].includes(state)"
-              t-out="reservedAvailability"/>
-        <span t-elif="!forecastExpectedDate and willBeFulfilled" class="text-success">
+        <span t-if="!forecastExpectedDate and willBeFulfilled" class="text-success">
             Available
         </span>
         <span t-elif="forecastExpectedDate and willBeFulfilled"

@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_is_zero, float_round
 
 
 class ReturnPickingLine(models.TransientModel):
@@ -128,7 +128,6 @@ class ReturnPicking(models.TransientModel):
         return vals
 
     def _create_returns(self):
-        # TODO sle: the unreserve of the next moves could be less brutal
         for return_move in self.product_return_moves.mapped('move_id'):
             return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
 
@@ -144,8 +143,7 @@ class ReturnPicking(models.TransientModel):
         for return_line in self.product_return_moves:
             if not return_line.move_id:
                 raise UserError(_("You have manually created product lines, please delete them to proceed."))
-            # TODO sle: float_is_zero?
-            if return_line.quantity:
+            if not float_is_zero(return_line.quantity, return_line.uom_id.rounding):
                 returned_lines += 1
                 vals = self._prepare_move_default_values(return_line, new_picking)
                 r = return_line.move_id.copy(vals)

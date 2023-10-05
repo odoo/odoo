@@ -495,9 +495,9 @@ class StockMove(models.Model):
                 for move in picking.move_ids:
                     # For assigned moves
                     for move_line in move._get_move_lines():
-                        move_line.qty_done = move_line.reserved_uom_qty
+                        move_line.quantity = move_line.reserved_uom_qty
                     # Create move line for remaining qty
-                    missing_to_do = move.product_qty - move.quantity_done
+                    missing_to_do = move.product_qty - move.quantity
                     missing_to_do = move.product_uom._compute_quantity(missing_to_do, move.product_uom, rounding_method='HALF-UP')
                     if move.product_id.tracking == 'serial':
                         for i in range(int(missing_to_do)):
@@ -508,7 +508,7 @@ class StockMove(models.Model):
                             })
                             sml_values.append(dict(
                                 **move._prepare_move_line_vals(),
-                                qty_done=1,
+                                quantity=1,
                                 lot_id=len(lot_values) - 1,
                                 package_id=package_for_picking and len(package_values) - 1 or False
                             ))
@@ -520,14 +520,14 @@ class StockMove(models.Model):
                         })
                         sml_values.append(dict(
                             **move._prepare_move_line_vals(),
-                            qty_done=missing_to_do,
+                            quantity=missing_to_do,
                             lot_id=len(lot_values) - 1,
                             package_id=package_for_picking and len(package_values) - 1 or False
                         ))
                     else:
                         sml_values.append(dict(
                             **move._prepare_move_line_vals(),
-                            qty_done=missing_to_do,
+                            quantity=missing_to_do,
                             package_id=package_for_picking and len(package_values) - 1 or False
                         ))
                 if package_for_picking:

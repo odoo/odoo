@@ -32,7 +32,7 @@
                     domain="[('id', 'in', parent.picking_ids)]"
                     options="{'no_create_edit': True}"/>
             </xpath>
-            <xpath expr="//field[@name='quantity_done']" position="attributes">
+            <xpath expr="//field[@name='quantity']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
         </field>
@@ -54,10 +54,9 @@
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="result_package_id" groups="stock.group_tracking_lot"/>
-                <field name="reserved_uom_qty" readonly="1"/>
                 <field name="product_uom_id" options="{'no_create': True}"
                     groups="uom.group_uom" readonly="1" force_save="1"/>
-                <field name="qty_done"/>
+                <field name="quantity"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1"/>
             </tree>
         </field>
@@ -70,7 +69,6 @@
             <form string="Stock Batch Transfer">
                 <field name="company_id" invisible="1"/>
                 <field name="show_check_availability" invisible="1"/>
-                <field name="show_validate" invisible="1"/>
                 <field name="show_allocation" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="is_wave" invisible="1"/>
@@ -79,13 +77,11 @@
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
-                        invisible="state != 'in_progress' or show_check_availability or not show_validate"/>
+                        invisible="state != 'in_progress' or show_check_availability"/>
                     <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
                         invisible="state != 'in_progress' or not show_check_availability"/>
                     <button name="action_done" string="Validate" type="object"
-                        invisible="state != 'in_progress' or not show_check_availability or not show_validate"/>
-                    <button name="action_set_quantities_to_reservation" string="Set quantities" type="object"
-                        invisible="not show_set_qty_button"/>
+                        invisible="state != 'in_progress' or not show_check_availability"/>
                     <button name="action_clear_quantities_to_zero" string="Clear quantities" type="object"
                         invisible="not show_clear_qty_button"/>
                     <button name="action_assign" string="Check Availability" type="object"

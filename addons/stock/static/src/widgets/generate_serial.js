@@ -39,11 +39,7 @@ export class GenerateDialog extends Component {
         ]);
         const newlines = [];
         let lines = []
-        if (this.props.move.data.show_reserved) {
-            lines = this.props.move.data.move_line_ids;
-        } else {
-            lines = this.props.move.data.move_line_nosuggest_ids;
-        }
+        lines = this.props.move.data.move_line_ids;
 
         // create records directly from values to bypass onchanges
         for (const values of move_line_vals) {

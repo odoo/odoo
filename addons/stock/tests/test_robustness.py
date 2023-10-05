@@ -206,7 +206,7 @@ class TestRobustness(TransactionCase):
             move1.write({'move_line_ids': [(0, 0, {
                 'product_id': product1.id,
                 'product_uom_id': self.uom_unit.id,
-                'qty_done': 1,
+                'quantity': 1,
                 'lot_id': lot2.id,
                 'location_id': move1.location_id.id,
                 'location_dest_id': move1.location_dest_id.id,
@@ -216,7 +216,7 @@ class TestRobustness(TransactionCase):
             move2.write({'move_line_ids': [(0, 0, {
                 'product_id': product2.id,
                 'product_uom_id': self.uom_unit.id,
-                'qty_done': 1,
+                'quantity': 1,
                 'lot_id': lot1.id,
                 'location_id': move2.location_id.id,
                 'location_dest_id': move2.location_dest_id.id,
@@ -251,7 +251,7 @@ class TestRobustness(TransactionCase):
         moveA.write({'move_line_ids': [(0, 0, {
             'product_id': productA.id,
             'product_uom_id': self.uom_unit.id,
-            'qty_done': 5,
+            'quantity': 5,
             'lot_id': lotA.id,
             'location_id': moveA.location_id.id,
             'location_dest_id': moveA.location_dest_id.id,
@@ -259,4 +259,4 @@ class TestRobustness(TransactionCase):
         moveA._action_done()
         moveA._set_lot_ids()
 
-        self.assertEqual(moveA.quantity_done, 5)
+        self.assertEqual(moveA.quantity, 5)

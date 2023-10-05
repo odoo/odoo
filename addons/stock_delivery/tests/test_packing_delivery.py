@@ -52,7 +52,7 @@ class TestPacking(TestPackingCommon):
             'product_id': self.product_aw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
-            'qty_done': 5,
+            'quantity': 5,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id
         })
@@ -60,7 +60,7 @@ class TestPacking(TestPackingCommon):
             'product_id': self.product_bw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
-            'qty_done': 5,
+            'quantity': 5,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id
         })
@@ -93,12 +93,13 @@ class TestPacking(TestPackingCommon):
             'product_id': self.product_aw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
-            'qty_done': 5,
+            'quantity': 5,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id
         })
         self.assertEqual(picking_ship.state, 'assigned', 'Delivery state should be assigned.')
         self.assertFalse(picking_ship.sale_id.id, 'Sale order shouldn\'t be set')
+        picking_ship.move_ids.picked = True
         picking_ship.button_validate()
         self.assertEqual(picking_ship.state, 'done')
 
@@ -127,7 +128,8 @@ class TestPacking(TestPackingCommon):
         # Confirm the picking and send to shipper
         picking_ship = so.picking_ids.filtered(lambda p: p.picking_type_id.name == 'Pick')
         picking_ship.action_confirm()
-        picking_ship.move_ids.quantity_done = 1.0
+        picking_ship.move_ids.quantity = 1.0
+        picking_ship.move_ids.picked = True
         picking_ship.button_validate()
 
         # Mock carrier shipping method

@@ -100,7 +100,7 @@ class Location(models.Model):
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company!'),
                         ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
 
-    @api.depends('outgoing_move_line_ids.reserved_qty', 'incoming_move_line_ids.reserved_qty',
+    @api.depends('outgoing_move_line_ids.quantity_product_uom', 'incoming_move_line_ids.quantity_product_uom',
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
                  'outgoing_move_line_ids.product_id.weight', 'outgoing_move_line_ids.product_id.weight',
                  'quant_ids.quantity', 'quant_ids.product_id.weight')
@@ -116,9 +116,9 @@ class Location(models.Model):
                 location.net_weight += quant.product_id.weight * quant.quantity
             location.forecast_weight = location.net_weight
             for line in incoming_move_lines:
-                location.forecast_weight += line.product_id.weight * line.reserved_qty
+                location.forecast_weight += line.product_id.weight * line.quantity_product_uom
             for line in outgoing_move_lines:
-                location.forecast_weight -= line.product_id.weight * line.reserved_qty
+                location.forecast_weight -= line.product_id.weight * line.quantity_product_uom
 
     @api.depends('name', 'location_id.complete_name', 'usage')
     def _compute_complete_name(self):
@@ -207,7 +207,7 @@ class Location(models.Model):
                               for f in {'usage', 'scrap_location'}))
             reserved_quantities = self.env['stock.move.line'].search_count([
                 ('location_id', 'in', modified_locations.ids),
-                ('reserved_qty', '>', 0),
+                ('quantity', '>', 0),
             ])
             if reserved_quantities:
                 raise UserError(_(
@@ -312,17 +312,16 @@ class Location(models.Model):
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
-                    ], ['location_dest_id'], ['reserved_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:recordset'])
+                    ], ['location_dest_id'], ['quantity:array_agg', 'product_uom_id:recordset'])
                     quant_data = self.env['stock.quant']._read_group([
                         ('product_id', '=', product.id),
                         ('location_id', 'in', locations.ids),
                     ], ['location_id'], ['quantity:sum'])
 
                     qty_by_location.update({location.id: quantity_sum for location, quantity_sum in quant_data})
-                    for location_dest, reserved_qty_list, qty_done_list, uoms in move_line_data:
-                        qty_done = sum(max(ml_uom._compute_quantity(float(qty), product.uom_id), float(qty_reserved))
-                                    for qty_reserved, qty, ml_uom in zip(reserved_qty_list, qty_done_list, uoms))
-                        qty_by_location[location_dest.id] += qty_done
+                    for location_dest, quantity_list, uoms in move_line_data:
+                        quantity = sum(ml_uom._compute_quantity(float(qty), product.uom_id) for qty, ml_uom in zip(quantity_list, uoms))
+                        qty_by_location[location_dest.id] += quantity
 
             if additional_qty:
                 for location_id, qty in additional_qty.items():
@@ -379,8 +378,8 @@ class Location(models.Model):
             # check if enough space
             if package and package.package_type_id:
                 # check weight
-                package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id)])
-                if self.storage_category_id.max_weight < self.forecast_weight + sum(package_smls.mapped(lambda sml: sml.reserved_qty * sml.product_id.weight)):
+                package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id), ('state', 'not in', ['done', 'cancel'])])
+                if self.storage_category_id.max_weight < self.forecast_weight + sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight)):
                     return False
                 # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)

@@ -31,5 +31,4 @@ class TestPicking(common.TransactionCase):
             'location_dest_id': self.env.ref('stock.stock_location_stock').id,
         })
         self.assertFalse(picking.move_ids)
-        picking.action_reset_draft()
         self.assertEqual(picking.state, 'draft')

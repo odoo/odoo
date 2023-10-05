@@ -223,8 +223,6 @@ class PurchaseOrder(models.Model):
             'location_dest_id': self._get_destination_location(),
             'location_id': self.partner_id.property_stock_supplier.id,
             'company_id': self.company_id.id,
-            'state': 'draft',
-            'immediate_transfer': False,
         }
 
     def _create_picking(self):
@@ -339,7 +337,7 @@ class PurchaseOrderLine(models.Model):
                     if move.state == 'done':
                         if move._is_purchase_return():
                             if move.to_refund:
-                                total -= move.product_uom._compute_quantity(move.quantity_done, line.product_uom, rounding_method='HALF-UP')
+                                total -= move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
                             # Edge case: the dropship is returned to the stock, no to the supplier.
                             # In this case, the received quantity on the PO is set although we didn't
@@ -349,7 +347,7 @@ class PurchaseOrderLine(models.Model):
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_purchase_return() and not move.to_refund:
                             pass
                         else:
-                            total += move.product_uom._compute_quantity(move.quantity_done, line.product_uom, rounding_method='HALF-UP')
+                            total += move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
                 line._track_qty_received(total)
                 line.qty_received = total
 
@@ -523,10 +521,10 @@ class PurchaseOrderLine(models.Model):
         qty = 0.0
         outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
         for move in outgoing_moves:
-            qty_to_compute = move.quantity_done if move.state == 'done' else move.product_uom_qty
+            qty_to_compute = move.quantity if move.state == 'done' else move.product_uom_qty
             qty -= move.product_uom._compute_quantity(qty_to_compute, self.product_uom, rounding_method='HALF-UP')
         for move in incoming_moves:
-            qty_to_compute = move.quantity_done if move.state == 'done' else move.product_uom_qty
+            qty_to_compute = move.quantity if move.state == 'done' else move.product_uom_qty
             qty += move.product_uom._compute_quantity(qty_to_compute, self.product_uom, rounding_method='HALF-UP')
         return qty
 

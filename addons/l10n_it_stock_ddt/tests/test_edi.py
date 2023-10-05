@@ -143,7 +143,7 @@ class TestItEdiDDT(TestItEdi):
     def _create_delivery(self, sale_order, qty=1):
         """ Create a picking of a limited quantity and create a backorder """
         pickings = sale_order.picking_ids.filtered(lambda picking: picking.state != 'done')
-        pickings.move_ids.write({'quantity_done': qty})
+        pickings.move_ids.write({'quantity': qty})
         wizard_action = pickings.button_validate()
         context = wizard_action['context']
         wizard = Form(self.env['stock.backorder.confirmation'].with_context(context))

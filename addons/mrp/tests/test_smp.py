@@ -117,11 +117,11 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         # Reload the wizard to apply generated serial numbers
         wizard = Form(self.env['stock.assign.serial'].browse(action['res_id']))
         wizard.save().apply()
-        # 1st & 3rd MO in sequence should have only 1 move lines (1 lot) for product_to_use_1 (2nd in bom)
+        # 1st & 2nd MO in sequence should have only 1 move lines (1 lot) for product_to_use_1 (2nd in bom)
         self.assertEqual(mo.procurement_group_id.mrp_production_ids[0].move_raw_ids[1].move_lines_count, 1)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[2].move_raw_ids[1].move_lines_count, 1)
-        # 2nd MO should have 2 move lines (2 different lots) for product_to_use_1
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[1].move_raw_ids[1].move_lines_count, 2)
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids[1].move_raw_ids[1].move_lines_count, 1)
+        # 3rd MO should have 2 move lines (2 different lots) for product_to_use_1
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids[2].move_raw_ids[1].move_lines_count, 2)
 
         # Verify if lot IDs were correctly assigned to move lines
         mo.procurement_group_id.mrp_production_ids.button_mark_done()

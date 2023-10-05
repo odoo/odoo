@@ -1,7 +1,7 @@
 import copy
 
 from odoo.exceptions import UserError
-from odoo.tests import common, tagged
+from odoo.tests import common, tagged, Form
 
 
 class TestConsumeComponentCommon(common.TransactionCase):
@@ -261,7 +261,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         # Quantities are fully reserved (stock.move state is available)
         mo_all.action_assign()
         for mov in mo_all.move_raw_ids:
-            self.assertEqual(mov.product_qty, mov.reserved_availability, "Reserved quantity shall be equal to To Consume quantity.")
+            self.assertEqual(mov.product_qty, mov.quantity, "Reserved quantity shall be equal to To Consume quantity.")
 
         # Test for Serial Product
         self.executeConsumptionTriggers(mo_serial)
@@ -269,9 +269,9 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.executeConsumptionTriggers(mo_lot)
         for mov in mo_all.move_raw_ids:
             if mov.has_tracking == 'none' or mov.raw_material_production_id.state == 'done':
-                self.assertEqual(mov.product_qty, mov.quantity_done, "Done quantity shall be equal to To Consume quantity.")
+                self.assertTrue(mov.picked, "non tracked components should be picked")
             else:
-                self.assertEqual(0, mov.quantity_done, "Done quantity shall be equal to 0.")
+                self.assertFalse(mov.picked, "tracked components should be picked")
 
     def test_option_enabled_and_qty_available(self):
         """Option enabled, qty available
@@ -296,13 +296,13 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         # Quantities are fully reserved (stock.move state is available)
         mo_all.action_assign()
         for mov in mo_all.move_raw_ids:
-            self.assertEqual(mov.product_qty, mov.reserved_availability, "Reserved quantity shall be equal to To Consume quantity.")
+            self.assertEqual(mov.product_qty, mov.quantity, "Reserved quantity shall be equal to To Consume quantity.")
 
         self.executeConsumptionTriggers(mo_serial)
         self.executeConsumptionTriggers(mo_none)
         self.executeConsumptionTriggers(mo_lot)
         for mov in mo_all.move_raw_ids:
-            self.assertEqual(mov.product_qty, mov.quantity_done, "Done quantity shall be equal to To Consume quantity.")
+            self.assertTrue(mov.picked, "All components should be picked")
 
     def test_option_enabled_and_qty_not_available(self):
         """Option enabled, qty not available
@@ -320,7 +320,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         # Quantities are not reserved at all (stock.move state is confirmed)
         mo_all.action_assign()
         for mov in mo_all.move_raw_ids:
-            self.assertEqual(0, mov.reserved_availability, "Reserved quantity shall be equal to 0.")
+            self.assertEqual(0, mov.quantity, "Reserved quantity shall be equal to 0.")
 
         self.executeConsumptionTriggers(mo_serial)
         self.executeConsumptionTriggers(mo_none)
@@ -328,9 +328,9 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         for mov in mo_all.move_raw_ids:
             if mov.has_tracking == 'none':
-                self.assertEqual(mov.product_qty, mov.quantity_done, "Done quantity shall be equal to To Consume quantity.")
+                self.assertTrue(mov.picked, "components should be picked even without no quantity reserved")
             else:
-                self.assertEqual(0, mov.quantity_done, "Done quantity shall be equal to To Consume quantity.")
+                self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
 
     def test_option_enabled_and_qty_partially_available(self):
         """Option enabled, qty partially available
@@ -360,23 +360,24 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             mo.action_assign()
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
-                    self.assertEqual(raw_none_qty, mov.reserved_availability, "Reserved quantity shall be equal to " + str(raw_none_qty)+ ".")
+                    self.assertEqual(raw_none_qty, mov.quantity, "Reserved quantity shall be equal to " + str(raw_none_qty) + ".")
                 else:
-                    self.assertEqual(raw_tracked_qty, mov.reserved_availability, "Reserved quantity shall be equal to " + str(raw_tracked_qty)+ ".")
+                    self.assertEqual(raw_tracked_qty, mov.quantity, "Reserved quantity shall be equal to " + str(raw_tracked_qty) + ".")
 
             if serialTrigger is None:
                 self.executeConsumptionTriggers(mo)
             elif serialTrigger == 1:
-                mo.qty_producing = mo.product_qty
-                mo._onchange_producing()
+                mo_form = Form(mo)
+                mo_form.qty_producing = mo_form.product_qty
+                mo = mo_form.save()
             elif serialTrigger == 2:
                 mo.action_generate_serial()
 
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
-                    self.assertEqual(mov.product_qty, mov.quantity_done, "Done quantity shall be equal to To Consume quantity.")
+                    self.assertTrue(mov.picked, "non tracked components should be picked")
                 else:
-                    self.assertEqual(raw_tracked_qty, mov.quantity_done, "Done quantity shall be equal to " + str(raw_tracked_qty)+ ".")
+                    self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
             mo.action_cancel()
 
         testUnit(self.mo_none_tmpl)

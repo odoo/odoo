@@ -38,7 +38,7 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
@@ -110,10 +110,7 @@ class StockMove(models.Model):
                 'show_lots_text': False,
             })
         elif self.env.user.has_group('base.group_portal'):
-            if self.show_reserved:
-                action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_operations').id, 'form')]
-            else:
-                action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_nosuggest_operations').id, 'form')]
+            action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_operations').id, 'form')]
         return action
 
     def action_show_subcontract_details(self):
@@ -134,10 +131,6 @@ class StockMove(models.Model):
             'domain': [('id', 'in', moves.ids)],
             'context': ctx
         }
-
-    def _set_quantities_to_reservation(self):
-        move_untouchable = self.filtered(lambda m: m.is_subcontract and m._get_subcontract_production()._has_tracked_component())
-        return super(StockMove, self - move_untouchable)._set_quantities_to_reservation()
 
     def _action_cancel(self):
         for move in self:
@@ -225,11 +218,6 @@ class StockMove(models.Model):
         vals['location_id'] = self.location_id.id
         return vals
 
-    def _should_bypass_set_qty_producing(self):
-        if (self.production_id | self.raw_material_production_id)._get_subcontract_move():
-            return False
-        return super()._should_bypass_set_qty_producing()
-
     def _should_bypass_reservation(self, forced_location=False):
         """ If the move is subcontracted then ignore the reservation. """
         should_bypass_reservation = super()._should_bypass_reservation(forced_location=forced_location)
@@ -239,7 +227,7 @@ class StockMove(models.Model):
 
     def _update_subcontract_order_qty(self, new_quantity):
         for move in self:
-            move_quantity = move.quantity_done if move.from_immediate_transfer else move.product_uom_qty
+            move_quantity = move.product_uom_qty
             quantity_to_remove = move_quantity - new_quantity
             if float_is_zero(quantity_to_remove, precision_rounding=move.product_uom.rounding):
                 continue

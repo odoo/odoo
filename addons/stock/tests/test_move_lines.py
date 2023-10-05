@@ -61,7 +61,7 @@ class StockMoveLine(TestStockCommon):
             'location_dest_id': self.stock_location,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
-        with move_form.move_line_nosuggest_ids.new() as ml:
+        with move_form.move_line_ids.new() as ml:
             ml.quant_id = self.quant
 
         move = move_form.save()
@@ -70,7 +70,7 @@ class StockMoveLine(TestStockCommon):
         self.assertEqual(move.move_line_ids.package_id, self.pack)
         self.assertEqual(move.move_line_ids.owner_id, self.partner)
         self.assertEqual(move.move_line_ids.location_id, self.shelf1)
-        self.assertEqual(move.move_line_ids.qty_done, 10)
+        self.assertEqual(move.move_line_ids.quantity, 10)
 
     def test_pick_from_3(self):
         """ check the quantity done is added up to the initial demand"""
@@ -86,17 +86,17 @@ class StockMoveLine(TestStockCommon):
         })
         move._action_confirm()
         move._action_assign()
-        self.assertEqual(move.move_line_ids.qty_done, 0)
+        move.move_line_ids.quantity = 0
+        self.assertEqual(move.move_line_ids.quantity, 0)
         move_form = Form(move, view='stock.view_stock_move_operations')
         with move_form.move_line_ids.edit(0) as ml:
             ml.quant_id = self.quant
         move = move_form.save()
-        self.assertEqual(move.move_line_ids.qty_done, 5)
-        self.assertEqual(move.move_line_ids.reserved_qty, 5)
+        self.assertEqual(move.move_line_ids.quantity, 5)
 
     def test_pick_from_4(self):
         """ check the quantity done is not negative if the quant has negative quantity"""
-        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, -20, self.lot, package_id=self.pack, owner_id=self.partner)
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, -20, lot_id=self.lot, package_id=self.pack, owner_id=self.partner)
         self.assertEqual(self.quant.quantity, -10)
         move = self.env['stock.move'].create({
             'name': 'Test move',
@@ -106,7 +106,7 @@ class StockMoveLine(TestStockCommon):
             'location_dest_id': self.stock_location,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
-        with move_form.move_line_nosuggest_ids.new() as ml:
+        with move_form.move_line_ids.new() as ml:
             ml.quant_id = self.quant
 
-        self.assertEqual(move.move_line_ids.qty_done, 0)
+        self.assertEqual(move.move_line_ids.quantity, 0)

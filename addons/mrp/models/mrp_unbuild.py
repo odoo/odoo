@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from collections import defaultdict
+
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
-from odoo.osv import expression
+from odoo.tools.misc import clean_context
 
-from collections import defaultdict
 
 class MrpUnbuild(models.Model):
     _name = "mrp.unbuild"
@@ -131,17 +131,19 @@ class MrpUnbuild(models.Model):
     def action_unbuild(self):
         self.ensure_one()
         self._check_company()
+        # remove the default_* keys that was only needed in the unbuild wizard
+        self.env.context = dict(clean_context(self.env.context))
         if self.product_id.tracking != 'none' and not self.lot_id.id:
             raise UserError(_('You should provide a lot number for the final product.'))
 
-        if self.mo_id:
-            if self.mo_id.state != 'done':
-                raise UserError(_('You cannot unbuild a undone manufacturing order.'))
+        if self.mo_id and self.mo_id.state != 'done':
+            raise UserError(_('You cannot unbuild a undone manufacturing order.'))
 
         consume_moves = self._generate_consume_moves()
         consume_moves._action_confirm()
         produce_moves = self._generate_produce_moves()
-        produce_moves.with_context(default_lot_id=False)._action_confirm()
+        produce_moves._action_confirm()
+        produce_moves.quantity = 0
 
         finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
         consume_moves -= finished_moves
@@ -153,18 +155,15 @@ class MrpUnbuild(models.Model):
             raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))
 
         for finished_move in finished_moves:
-            if finished_move.has_tracking != 'none':
-                self.env['stock.move.line'].create({
-                    'move_id': finished_move.id,
-                    'lot_id': self.lot_id.id,
-                    'qty_done': finished_move.product_uom_qty,
-                    'product_id': finished_move.product_id.id,
-                    'product_uom_id': finished_move.product_uom.id,
-                    'location_id': finished_move.location_id.id,
-                    'location_dest_id': finished_move.location_dest_id.id,
-                })
-            else:
-                finished_move.quantity_done = finished_move.product_uom_qty
+            self.env['stock.move.line'].create({
+                'move_id': finished_move.id,
+                'lot_id': self.lot_id.id,
+                'quantity': finished_move.product_uom_qty,
+                'product_id': finished_move.product_id.id,
+                'product_uom_id': finished_move.product_uom.id,
+                'location_id': finished_move.location_id.id,
+                'location_dest_id': finished_move.location_dest_id.id,
+            })
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
@@ -178,12 +177,12 @@ class MrpUnbuild(models.Model):
                     moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
                 for move_line in moves_lines:
                     # Iterate over all move_lines until we unbuilded the correct quantity.
-                    taken_quantity = min(needed_quantity, move_line.qty_done - qty_already_used[move_line])
+                    taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
                     if taken_quantity:
                         self.env['stock.move.line'].create({
                             'move_id': move.id,
                             'lot_id': move_line.lot_id.id,
-                            'qty_done': taken_quantity,
+                            'quantity': taken_quantity,
                             'product_id': move.product_id.id,
                             'product_uom_id': move_line.product_uom_id.id,
                             'location_id': move.location_id.id,
@@ -192,12 +191,13 @@ class MrpUnbuild(models.Model):
                         needed_quantity -= taken_quantity
                         qty_already_used[move_line] += taken_quantity
             else:
-                move.quantity_done = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
+                move.quantity = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
 
+        (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()
         consume_moves._action_done()
         produce_moves._action_done()
-        produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
+        produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.quantity > 0)
         consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
         if self.mo_id:
             unbuild_msg = _("%(qty)s %(measure)s unbuilt in %(order)s",
@@ -300,7 +300,7 @@ class MrpUnbuild(models.Model):
                     'default_location_id': self.location_id.id,
                     'default_unbuild_id': self.id,
                     'default_quantity': unbuild_qty,
-                    'default_product_uom_name': self.product_id.uom_name
+                    'default_product_uom_name': self.product_id.uom_name,
                 },
-                'target': 'new'
+                'target': 'new',
             }

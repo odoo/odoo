@@ -79,32 +79,27 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order_lifo1.state, 'purchase')
 
         # Process the receipt of purchase order 1
-        purchase_order_lifo1.picking_ids[0].move_ids.quantity_done = purchase_order_lifo1.picking_ids[0].move_ids.product_qty
+        purchase_order_lifo1.picking_ids[0].move_ids.quantity = purchase_order_lifo1.picking_ids[0].move_ids.product_qty
+        purchase_order_lifo1.picking_ids[0].move_ids.picked = True
         purchase_order_lifo1.picking_ids[0].button_validate()
 
         # I confirm the second purchase order
         purchase_order_lifo2.button_confirm()
 
         # Process the receipt of purchase order 2
-        purchase_order_lifo2.picking_ids[0].move_ids.quantity_done = purchase_order_lifo2.picking_ids[0].move_ids.product_qty
+        purchase_order_lifo2.picking_ids[0].move_ids.quantity = purchase_order_lifo2.picking_ids[0].move_ids.product_qty
+        purchase_order_lifo2.picking_ids[0].move_ids.picked = True
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
         self.company_data['default_warehouse'].out_type_id.show_operations = False
-        # <field name="immediate_transfer" invisible="1"/>
-        # def _get_action(self, action_xmlid):
-        #     ...
-        #     context = {
-        #         ...
-        #         'default_immediate_transfer': default_immediate_tranfer,
-        #         ...
-        #     }
-        #     ...
+
         out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
-            move.quantity_done = 20.0
+            move.quantity = 20.0
+            move.picked = True
             move.date = fields.Datetime.now()
         outgoing_lifo_shipment = out_form.save()
 

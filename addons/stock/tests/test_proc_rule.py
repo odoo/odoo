@@ -92,7 +92,6 @@ class TestProcRule(TransactionCase):
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
             'state': 'draft',
-            'immediate_transfer': False,
         }
         pick_output = self.env['stock.picking'].create(vals)
         pick_output.move_ids._onchange_product_id()
@@ -136,7 +135,8 @@ class TestProcRule(TransactionCase):
             'move_dest_ids': [(4, move_dest.id)],
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
-            'quantity_done': 10,
+            'quantity': 10,
+            'picked': True
         })
         new_deadline = move_orig.date_deadline - timedelta(days=6)
         move_orig.date_deadline = new_deadline

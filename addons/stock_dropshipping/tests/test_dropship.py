@@ -123,7 +123,8 @@ class TestDropship(common.TransactionCase):
         self.assertEqual(purchase.dropship_picking_count, 1)
 
         # Send the 200 pieces
-        purchase.picking_ids.move_ids.quantity_done = purchase.picking_ids.move_ids.product_qty
+        purchase.picking_ids.move_ids.quantity = purchase.picking_ids.move_ids.product_qty
+        purchase.picking_ids.move_ids.picked = True
         purchase.picking_ids.button_validate()
 
         # Check one move line was created in Customers location with 200 pieces
@@ -201,7 +202,7 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created")
         purchase.button_confirm()
         sale_order.picking_ids.move_line_ids.lot_name = '123'
-        sale_order.picking_ids.action_set_quantities_to_reservation()
+        sale_order.picking_ids.move_ids.picked = True
         sale_order.picking_ids.button_validate()
         self.assertEqual(sale_order.picking_ids.state, 'done')
         self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.name, '123')

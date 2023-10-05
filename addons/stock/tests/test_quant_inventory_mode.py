@@ -243,9 +243,8 @@ class TestEditableQuant(TransactionCase):
         self.assertEqual(self.product.qty_available, 75)
         smls = self.env['stock.move.line'].search([('product_id', '=', self.product.id)])
         self.assertRecordValues(smls, [
-            {'qty_done': 100},
-            {'qty_done': 25},
-            {'qty_done': 0},
+            {'quantity': 100},
+            {'quantity': 25},
         ])
 
     def test_edit_quant_5(self):

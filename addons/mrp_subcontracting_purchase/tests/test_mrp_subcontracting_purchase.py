@@ -98,7 +98,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         # check that a neg qty can't proprogate once receipt is done
         for move in receipt.move_ids:
-            move.move_line_ids.qty_done = move.product_qty
+            move.move_line_ids.quantity = move.product_qty
+        receipt.move_ids.picked = True
         receipt.button_validate()
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(sub_mos.state, 'done')
@@ -127,7 +128,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertTrue(mo)
 
         receipt = po.picking_ids
-        receipt.move_ids.quantity_done = 10
+        receipt.move_ids.quantity = 10
+        receipt.move_ids.picked = True
         receipt.button_validate()
 
         return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
@@ -137,7 +139,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_id, _ = return_wizard._create_returns()
 
         return_picking = self.env['stock.picking'].browse(return_id)
-        return_picking.move_ids.quantity_done = 3
+        return_picking.move_ids.quantity = 3
+        return_picking.move_ids.picked = True
         return_picking.button_validate()
 
         self.assertEqual(self.finished2.qty_available, 7.0)
@@ -169,7 +172,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertTrue(mo)
 
         receipt = po.picking_ids
-        receipt.move_ids.quantity_done = 10
+        receipt.move_ids.quantity = 10
+        receipt.move_ids.picked = True
         receipt.button_validate()
 
         return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
@@ -180,7 +184,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_id, _ = return_wizard._create_returns()
 
         return_picking = self.env['stock.picking'].browse(return_id)
-        return_picking.move_ids.quantity_done = 3
+        return_picking.move_ids.quantity = 3
+        return_picking.move_ids.picked = True
         return_picking.button_validate()
 
         self.assertEqual(self.finished2.qty_available, 7.0)
@@ -276,12 +281,14 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         action = po.action_view_subcontracting_resupply()
         resupply_picking = self.env[action['res_model']].browse(action['res_id'])
-        resupply_picking.move_ids.quantity_done = 1
+        resupply_picking.move_ids.quantity = 1
+        resupply_picking.move_ids.picked = True
         resupply_picking.button_validate()
 
         action = po.action_view_picking()
         final_picking = self.env[action['res_model']].browse(action['res_id'])
-        final_picking.move_ids.quantity_done = 1
+        final_picking.move_ids.quantity = 1
+        final_picking.move_ids.picked = True
         final_picking.button_validate()
 
         action = po.action_create_invoice()
@@ -308,16 +315,15 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'order_line': [Command.create({
                 'name': self.finished.name,
                 'product_id': self.finished.id,
-                'product_uom_qty': 10,
+                'product_qty': 10,
                 'product_uom': self.finished.uom_id.id,
                 'price_unit': 1,
             })],
         })
-
         purchase.button_confirm()
         # receive product
         receipt = purchase.picking_ids
-        receipt.move_ids.quantity_done = 10
+        receipt.move_ids.picked = True
         receipt.button_validate()
         # create bill
         purchase.action_create_invoice()
