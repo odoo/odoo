@@ -12,6 +12,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { LinkAttachment } from "../../discuss/core/common/link_attachment";
 
 import {
     Component,
@@ -53,6 +54,7 @@ export class Chatter extends Component {
         FollowerList,
         SuggestedRecipientsList,
         SearchMessagesPanel,
+        LinkAttachment,
     };
     static props = [
         "close?",
@@ -93,6 +95,7 @@ export class Chatter extends Component {
         this.attachmentBox = useRef("attachment-box");
         this.activityService = useState(useService("mail.activity"));
         this.threadService = useService("mail.thread");
+        this.attachmentUploadService = useService("mail.attachment_upload");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
         this.rpc = useService("rpc");
@@ -100,12 +103,15 @@ export class Chatter extends Component {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
-            scrollToAttachments: 0,
             showActivities: true,
             showAttachmentLoading: false,
             /** @type {import("models").Thread} */
             thread: undefined,
             isSearchOpen: false,
+            current: 'media',
+            media: undefined,
+            link: undefined,
+            file: undefined,
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
@@ -189,18 +195,6 @@ export class Chatter extends Component {
         );
         useEffect(
             () => {
-                if (
-                    this.state.thread &&
-                    !["new", "loading"].includes(this.state.thread.status) &&
-                    this.state.scrollToAttachments > 0
-                ) {
-                    this.attachmentBox.el.scrollIntoView({ block: "center" });
-                }
-            },
-            () => [this.state.thread?.status, this.state.scrollToAttachments]
-        );
-        useEffect(
-            () => {
                 if (!this.state.thread) {
                     return;
                 }
@@ -217,6 +211,18 @@ export class Chatter extends Component {
             },
             () => [this.state.thread, this.state.thread?.isLoadingAttachments]
         );
+        useEffect(
+            () => {
+                if (!this.state.thread) {
+                    return;
+                } else {
+                    this.state.media = this.media();
+                    this.state.link = this.link();
+                    this.state.file = this.file();
+                }
+            },
+            () => []
+        )
     }
 
     /**
@@ -419,9 +425,6 @@ export class Chatter extends Component {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
-        if (this.state.isAttachmentBoxOpened) {
-            this.state.scrollToAttachments++;
-        }
     }
 
     onClickSearch() {
@@ -452,5 +455,47 @@ export class Chatter extends Component {
             return this.recipientsPopover.close();
         }
         this.recipientsPopover.open(ev.target, { thread: this.state.thread });
+    }
+
+    getAttachment(type) {
+        switch(type) {
+            case 'media':
+                const mediaAttachments =  this.state.thread.attachments.filter(attachment => attachment.isMedia);
+                this.state.media = mediaAttachments.length;
+                return mediaAttachments ?? [];
+
+            case 'link':
+                const messages = this.state.thread.messages.map((message) => message.linkPreviews && message.linkPreviews.length > 0 ? message.linkPreviews[0] : null).filter(linkPreview => linkPreview !== null);
+                this.state.link = messages.length
+                return messages;
+
+            case 'file':
+                const fileAttachments =  this.state.thread.attachments.filter(attachment => !attachment.isMedia);
+                this.state.file = fileAttachments.length;
+                return fileAttachments ?? [];
+
+            default:
+                return;
+        }
+    }
+
+    handleTabSelection = (ev) => {
+        if (ev.target.dataset.tab !== this.state.current) {
+            this.state.current = ev.target.dataset.tab;
+        }
+        ev.target.classList.toggle("active", true);
+    };
+
+    media() {
+        return this.state.thread?.attachments.filter(attachment => attachment.isMedia).length || 0;
+    }
+
+    link() {
+        return this.state.thread?.messages.reduce((count, message) => count + (message.linkPreviews && message.linkPreviews.length > 0 ? 1 : 0), 0) || 0;
+    }
+
+    file() {
+        console.log(this.state.thread?.attachments.filter(attachment => !attachment.isMedia).length)
+        return this.state.thread?.attachments.filter(attachment => !attachment.isMedia).length || 0;
     }
 }
