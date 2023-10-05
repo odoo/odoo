@@ -118,6 +118,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             if (!this.closeSessionClicked) {
                 this.closeSessionClicked = true;
                 let response;
+                // If there are orders in the db left unsynced, we try to sync.
+                await this.env.pos.push_orders_with_closing_popup();
                 if (this.cashControl) {
                      response = await this.rpc({
                         model: 'pos.session',
