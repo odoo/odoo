@@ -61,7 +61,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         self.assertEqual(new_layer.value, 20)
 
         # Check the remaing value of current layers
-        self.assertEqual(old_layers[0].remaining_value, 50)
+        self.assertEqual(old_layers[0].remaining_value, 53.33)
         self.assertEqual(sum(slv.remaining_value for slv in old_layers), 80)
 
         # Check account move
@@ -218,14 +218,14 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         revaluation_wizard.account_id = self.stock_valuation_account
         revaluation_wizard.save().action_validate_revaluation()
 
-        self.assertEqual(self.product1.standard_price, 3)
+        self.assertEqual(self.product1.standard_price, 2.67)
 
         # Check the creation of stock.valuation.layer
         new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
         self.assertEqual(new_layer.value, 20)
 
         # Check the remaing value of current layers
-        self.assertEqual(old_layers[0].remaining_value, 50)
+        self.assertEqual(old_layers[0].remaining_value, 53.33)
         self.assertEqual(sum(slv.remaining_value for slv in old_layers), 80)
 
         # Check account move

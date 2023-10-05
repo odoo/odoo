@@ -93,15 +93,15 @@ class StockValuationLayerRevaluation(models.TransientModel):
         }
 
         remaining_qty = sum(remaining_svls.mapped('remaining_qty'))
+        svls_remaining_value = sum(remaining_svls.mapped('remaining_value'))
+        if self.added_value < -svls_remaining_value:
+            raise UserError(_('Total value of stock valuation cannot be decreased to a negative value.'))
         remaining_value = self.added_value
-        remaining_value_unit_cost = self.currency_id.round(remaining_value / remaining_qty)
         for svl in remaining_svls:
             if float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding):
                 taken_remaining_value = remaining_value
             else:
-                taken_remaining_value = remaining_value_unit_cost * svl.remaining_qty
-            if float_compare(svl.remaining_value + taken_remaining_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
-                raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be use to correct a specific transfer.'))
+                taken_remaining_value = self.currency_id.round(self.added_value * svl.remaining_value / svls_remaining_value)
 
             svl.remaining_value += taken_remaining_value
             remaining_value -= taken_remaining_value
@@ -109,9 +109,11 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
-        # Update the stardard price in case of AVCO
-        if product_id.categ_id.property_cost_method in ('average', 'fifo'):
+        # Update the stardard price
+        if product_id.categ_id.property_cost_method == 'average':
             product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
+        elif product_id.categ_id.property_cost_method == 'fifo':
+            product_id.with_context(disable_auto_svl=True).standard_price = remaining_svls[0].remaining_value / remaining_svls[0].remaining_qty
 
         # If the Inventory Valuation of the product category is automated, create related account move.
         if self.property_valuation != 'real_time':

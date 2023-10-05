@@ -4006,16 +4006,20 @@ class TestStockValuation(TransactionCase):
         }
         self.product1.categ_id.property_cost_method = 'fifo'
 
-        self._make_in_move(self.product1, 1, unit_cost=15)
-        self._make_in_move(self.product1, 1, unit_cost=30)
-        self.assertEqual(self.product1.standard_price, 15)
+        for i in range(5):
+            self._make_in_move(self.product1, 1, unit_cost=i + 1)
 
         Form(self.env['stock.valuation.layer.revaluation'].with_context({
             **revaluation_vals,
             'default_added_value': -10.0,
         })).save().action_validate_revaluation()
 
-        self.assertEqual(self.product1.standard_price, 10)
+        remaining_svls_value = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.product1.id),
+            ('remaining_qty', '>', 0),
+        ]).mapped('remaining_value')
+        self.assertItemsEqual(remaining_svls_value, [0.33, 0.67, 1.0, 1.33, 1.67])
+        self.assertEqual(self.product1.standard_price, remaining_svls_value[0])
 
         revaluation = Form(self.env['stock.valuation.layer.revaluation'].with_context({
             **revaluation_vals,
