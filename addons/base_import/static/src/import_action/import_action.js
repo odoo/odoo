@@ -107,7 +107,13 @@ export class ImportAction extends Component {
 
     async onOptionChanged(name, value, fieldName = null) {
         this.model.block();
-        await this.model.setOption(name, value, fieldName);
+        const result = await this.model.setOption(name, value, fieldName);
+        if (result) {
+            const { res, error } = result;
+            if (!error && res.file_length) {
+                this.state.fileLength = res.file_length;
+            }
+        }
         this.model.unblock();
     }
 
