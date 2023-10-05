@@ -106,6 +106,12 @@ export class SelfOrder extends Reactive {
             return product;
         });
 
+        this.combos = this.combos.map((c) => {
+            const combo = new Combo(c);
+            this.comboByIds[combo.id] = combo;
+            return combo;
+        });
+
         this.productsGroupedByCategory = this.products.reduce((acc, product) => {
             product.pos_categ_ids.map((pos_categ_ids) => {
                 acc[pos_categ_ids] = acc[pos_categ_ids] || [];
@@ -121,11 +127,14 @@ export class SelfOrder extends Reactive {
                 .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id))
         );
 
-        this.combos = this.combos.map((c) => {
-            const combo = new Combo(c);
-            this.comboByIds[combo.id] = combo;
-            return combo;
-        });
+        if (this.categoryList.size === 0) {
+            this.categoryList.add({
+                has_image: false,
+                id: 0,
+                name: _t("Other"),
+                sequence: -1,
+            });
+        }
 
         this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
     }
@@ -197,6 +206,10 @@ export class SelfOrder extends Reactive {
     }
 
     async sendDraftOrderToServer() {
+        if (this.currentOrder.isSavedOnServer || this.currentOrder.lines.length === 0) {
+            return true;
+        }
+
         try {
             const rpcUrl = this.currentOrder.isAlreadySent
                 ? "/pos-self-order/update-existing-order"
@@ -306,18 +319,6 @@ export class SelfOrder extends Reactive {
 
     updateOrderFromServer(order) {
         this.currentOrder.updateDataFromServer(order);
-    }
-
-    isSession() {
-        if (this.config.self_ordering_mode !== "kiosk") {
-            return;
-        }
-
-        if (!this.pos_session || !this.pos_session.id) {
-            this.router.navigate("closed");
-        } else if (this.router.activeSlot === "closed") {
-            this.router.navigate("default");
-        }
     }
 
     isOrder() {

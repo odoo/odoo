@@ -68,6 +68,10 @@ export class LandingPage extends Component {
             return;
         }
 
+        this.start();
+    }
+
+    start() {
         if (
             this.selfOrder.config.self_ordering_takeaway &&
             this.selfOrder.currentOrder.take_away === null
