@@ -46,8 +46,12 @@
                             </setting>
                         </block>
                         <block title="Attendance" name="attendance_setting_container">
-                            <setting id="event_barcode" company_dependent="1" help="Scan badges to confirm attendances">
-                                <field name="module_event_barcode" widget="upgrade_boolean"/>
+                            <setting id="event" company_dependent="1" help="Enable barcode scanning">
+                                <field name="use_event_barcode"/>
+                                <div class="content-group row mt16" invisible="use_event_barcode==False">
+                                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                                    <field name="barcode_nomenclature_id" required="use_event_barcode==True"/>
+                                </div>
                             </setting>
                         </block>
                     </app>

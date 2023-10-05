@@ -69,6 +69,7 @@
                         <group string="Event Information" name="event">
                             <field class="text-break" name="event_id" readonly="state != 'draft'"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
+                            <field name="barcode" groups="base.group_no_one"/>
                             <field name="event_ticket_id" invisible="not event_id" readonly="state != 'draft'"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
                                    domain="[('event_id', '=', event_id)]"/>

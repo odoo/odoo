@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+import os
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_date, email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
+_logger = logging.getLogger(__name__)
 
 
 class EventRegistration(models.Model):
@@ -14,12 +17,27 @@ class EventRegistration(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
+    @api.model
+    def _get_random_barcode(self):
+        """Generate a string representation of a pseudo-random 8-byte number for barcode
+        generation.
+
+        A decimal serialisation is longer than a hexadecimal one *but* it
+        generates a more compact barcode (Code128C rather than Code128A).
+
+        Generate 8 bytes (64 bits) barcodes as 16 bytes barcodes are not
+        compatible with all scanners.
+         """
+        return str(int.from_bytes(os.urandom(8), 'little'))
+
     # event
     event_id = fields.Many2one(
         'event.event', string='Event', required=True)
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket', ondelete='restrict')
     active = fields.Boolean(default=True)
+    barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
+
     # utm informations
     utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
@@ -48,7 +66,9 @@ class EventRegistration(models.Model):
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=6)
-
+    _sql_constraints = [
+        ('barcode_event_uniq', 'unique(barcode)', "Barcode should be unique")
+    ]
     @api.depends('partner_id')
     def _compute_name(self):
         for registration in self:
@@ -115,6 +135,27 @@ class EventRegistration(models.Model):
         if self.phone:
             country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
             self.phone = self._phone_format(fname='phone', country=country) or self.phone
+
+    @api.model
+    def register_attendee(self, barcode, event_id):
+        attendee = self.search([('barcode', '=', barcode)], limit=1)
+        if not attendee:
+            return {'error': 'invalid_ticket'}
+        res = attendee._get_registration_summary()
+        if attendee.state == 'cancel':
+            status = 'canceled_registration'
+        elif not attendee.event_id.is_ongoing:
+            status = 'not_ongoing_event'
+        elif attendee.state != 'done':
+            if event_id and attendee.event_id.id != event_id:
+                status = 'need_manual_confirmation'
+            else:
+                attendee.action_set_done()
+                status = 'confirmed_registration'
+        else:
+            status = 'already_registered'
+        res.update({'status': status, 'event_id': event_id})
+        return res
 
     # ------------------------------------------------------------
     # CRUD

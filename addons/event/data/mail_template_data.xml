@@ -261,10 +261,17 @@
                         <t t-out="object.name or 'Guest'"/>
                     </span>
                 </td><td valign="middle" align="right">
-                    <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}&amp;responsive_html=1"
-                        target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
-                        View Ticket
-                    </a>
+                    <div style="margin-bottom: 5px;">
+                        <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}&amp;responsive_html=1"
+                            target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                            View Ticket
+                        </a>
+                    </div>
+                    <t t-if="object.barcode"> 
+                        <div style="margin-bottom: 5px;">
+                            <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" alt="QR Code"/>
+                        </div>
+                    </t>
                     <t t-if="not object.company_id.uses_default_logo">
                         <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
                     </t>

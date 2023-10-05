@@ -15,9 +15,19 @@
             <div class="page col-6 position-relative p-1">
                 <div class="oe_structure"/>
                 <div class="o_event_foldable_badge_back text-center">
-                    <div class="o_event_foldable_badge_barcode_container_top"></div>
-                    <div class="o_event_foldable_badge_barcode_id_top fs-4 mt-2">
-                        ID:  <span t-out="attendee.id if attendee else '0123456789'"/>
+                    <t t-if="event.use_barcode">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                    <div class="o_event_foldable_badge_barcode_container_top">
+                        <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=174&amp;height=174&amp;quiet=0" alt="QR Code"/>
+                    </div>
+                    <div class="fs-4 mt-2">
+                        <span t-out="attendee.barcode if attendee else '12345678901234567890'"/>
                     </div>
                 </div>
             </div>
@@ -27,9 +37,20 @@
             <div class="o_event_foldable_badge_bottom_quarter page col-6 p-1">
                 <div class="oe_structure"/>
                 <div class="o_event_foldable_badge_back text-center">
-                    <div class="o_event_foldable_badge_barcode_container_bottom"></div>
-                    <div class="o_event_foldable_badge_barcode_id_bottom fs-4 mt-2">
-                        ID:  <span t-out="attendee.id if attendee else '0123456789'"/>
+                    <t t-if="event.use_barcode">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                    <div class="o_event_foldable_badge_barcode_container_bottom">
+                        <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=174&amp;height=174&amp;quiet=0" alt="QR Code"/>
+                    </div>
+
+                    <div class="fs-4 mt-2">
+                        <span t-out="attendee.barcode if attendee else '12345678901234567890'"/>
                     </div>
                 </div>
             </div>
@@ -136,7 +157,18 @@
                         <div t-if="not responsive_html" class="o_event_full_page_ticket_sponsors_container"></div>
                     </div>
                     <div class="o_event_full_page_ticket_barcode">
-                        <div class="o_event_full_page_ticket_barcode_container px-2"></div>
+                    
+                        <div class="o_event_full_page_ticket_barcode_container px-2">
+                            <t t-if="not attendee or (attendee and attendee.barcode)"> 
+                                <div class="pb-3">
+                                    <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
+                                </div>
+
+                                <t t-if="event.use_barcode">
+                                    <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}&amp;width=168&amp;height=84&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
+                                </t>
+                            </t>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -230,7 +262,18 @@
             </div>
             <div class="position-absolute bottom-0 w-100 text-center">
                 <img t-if="event.organizer_id.image_256" class="o_event_badge_logo text-center mb-2" t-att-src="image_data_uri(event.organizer_id.image_256)"/>
-                <span t-if="event.badge_format != 'A4_french_fold'" class="o_event_badge_barcode_container mb-2"></span>
+                <span t-if="event.badge_format != 'A4_french_fold'" class="o_event_badge_barcode_container mb-2">
+                    <img t-att-class="'mb-2' + (' ms-5' if event.organizer_id.image_256 else '')" t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
+                    <t t-if="event.use_barcode">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                </span>
+
                 <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
                 <t t-set="ticket" t-value="attendee.event_ticket_id if attendee else first_ticket"/>
                 <div t-if="ticket" class="text-center w-100" t-attf-style="background-color: {{ticket.color or '#875A7B'}};">

@@ -17,7 +17,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgments for any event registration
 """,
-    'depends': ['base_setup', 'mail', 'phone_validation', 'portal', 'utm'],
+    'depends': ['barcodes', 'base_setup', 'mail', 'phone_validation', 'portal', 'utm'],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
@@ -30,6 +30,7 @@ Key Features
         'views/event_stage_views.xml',
         'report/event_event_templates.xml',
         'report/event_event_reports.xml',
+        'report/event_registration_report.xml',
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         'data/event_data.xml',
@@ -48,6 +49,7 @@ Key Features
     'installable': True,
     'assets': {
         'web.assets_backend': [
+            'event/static/src/client_action/**/*',
             'event/static/src/scss/event.scss',
             'event/static/src/icon_selection_field/icon_selection_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.xml',

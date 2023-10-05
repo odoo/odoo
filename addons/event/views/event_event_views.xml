@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <odoo><data>
+    <record id="event_barcode_action_main_view" model="ir.actions.client">
+        <field name="name">Barcode Interface</field>
+        <field name="tag">event.event_barcode_scan_view</field>
+        <field name="target">fullscreen</field>
+    </record>
 
     <record model="ir.ui.view" id="view_event_form">
         <field name="name">event.event.form</field>
@@ -7,6 +12,11 @@
         <field name="arch" type="xml">
             <form string="Events" class="o_event_form_view">
                 <header>
+                    <button name="%(event_barcode_action_main_view)d"
+                        type="action"
+                        context="{'default_event_id': active_id}">
+                        Registration Desk
+                    </button>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -27,6 +37,17 @@
                                 help="Total Registrations for this Event">
                             <field name="seats_expected" widget="statinfo" string="Attendees"/>
                         </button>
+
+                        <button name="%(event_barcode_action_main_view)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-mobile"
+                            context="{'default_event_id': active_id}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Registration Desk</span>
+                            </div>
+                        </button>
+
                     </div>
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
@@ -303,4 +324,11 @@
         <field name="action" ref="event.action_event_view"/>
     </record>
 
+    <!-- EVENT.EVENT HEADER: REGISTRATION DESK MENU -->
+    <menuitem name="Registration Desk"
+        id="menu_event_registration_desk"   
+        sequence="30"
+        action="event.event_barcode_action_main_view"
+        parent="event.event_main_menu"
+        groups="event.group_event_registration_desk"/>
 </data></odoo>
