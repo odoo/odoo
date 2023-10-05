@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { Component, whenReady, App, onMounted } from "@odoo/owl";
+import { Component, whenReady, App } from "@odoo/owl";
 import { makeEnv, startServices } from "@web/env";
 import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
@@ -15,7 +15,6 @@ import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page
 import { PaymentSuccessPage } from "@pos_self_order/app/pages/payment_success_page/payment_success_page";
 import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
 import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/stand_number_page";
-import { ClosedPage } from "@pos_self_order/app/pages/closed_page/closed_page";
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
 
 class selfOrderIndex extends Component {
@@ -25,7 +24,6 @@ class selfOrderIndex extends Component {
         Router,
         CartPage,
         ProductPage,
-        ClosedPage,
         OrdersHistoryPage,
         ComboPage,
         PaymentPage,
@@ -39,10 +37,9 @@ class selfOrderIndex extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
-
-        onMounted(() => {
-            this.selfOrder.isSession();
-        });
+    }
+    get selfIsReady() {
+        return Object.values(this.selfOrder.productByIds).length > 0;
     }
 }
 

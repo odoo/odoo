@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.selfOrderIndex">
-        <Router pos_config_id="selfOrder.pos_config_id">
+        <div t-if="!selfOrder.ordering" class="w-100 m-0 text-center bg-black text-white">
+            <p>We're currently closed.</p>
+        </div>
+        <Router t-if="selfIsReady" pos_config_id="selfOrder.pos_config_id">
             <t t-set-slot="default" route="`/pos-self/${selfOrder.pos_config_id}`">
                 <LandingPage />
             </t>
@@ -29,13 +32,13 @@
             <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.pos_config_id}/stand_number`">
                 <StandNumberPage />
             </t>
-            <t t-set-slot="closed" route="`/pos-self/${selfOrder.pos_config_id}/closed`">
-                <ClosedPage />
-            </t>
             <t t-set-slot="orderHistory" route="`/pos-self/${selfOrder.pos_config_id}/orders`">
                 <OrdersHistoryPage />
             </t>
         </Router>
+        <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center text-center">
+            Hey, looks like you forgot to create products or add them to pos_config. Please add them before using the Self Order
+        </div>
         <MainComponentsContainer />
     </t>
 </templates>

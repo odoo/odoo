@@ -150,6 +150,9 @@ class PosConfig(models.Model):
             if vals.get('self_ordering_mode') == 'kiosk' or record.self_ordering_mode == 'kiosk':
                 vals['self_ordering_pay_after'] = 'each'
 
+            if (not vals.get('module_pos_restaurant') and not record.module_pos_restaurant) and vals.get('self_ordering_mode') == 'mobile':
+                vals['self_ordering_pay_after'] = 'each'
+
         return super().write(vals)
 
     @api.depends("module_pos_restaurant")
@@ -175,7 +178,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         table_qr_code = []
-        if self.self_ordering_mode == 'mobile':
+        if self.self_ordering_mode == 'mobile' and self.module_pos_restaurant and self.self_ordering_service_mode == 'table':
             table_qr_code.extend([{
                     'name': floor.name,
                     'type': 'table',

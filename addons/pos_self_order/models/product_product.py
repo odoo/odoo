@@ -16,13 +16,19 @@ class ProductTemplate(models.Model):
         default=True,
     )
 
-    @api.constrains('available_in_pos')
-    def _check_combo_inclusions(self):
-        super()._check_combo_inclusions()
-        self.self_order_available = False
+    @api.onchange('available_in_pos')
+    def _on_change_available_in_pos(self):
+        for record in self:
+            if not record.available_in_pos:
+                record.self_order_available = False
 
     def write(self, vals_list):
+        if 'available_in_pos' in vals_list:
+            if not vals_list['available_in_pos']:
+                vals_list['self_order_available'] = False
+
         res = super().write(vals_list)
+
         if 'self_order_available' in vals_list:
             for record in self:
                 for product in record.product_variant_ids:

@@ -74,13 +74,12 @@ export class SelfOrderBus {
 
         if (payload.status === "closed") {
             this.selfOrder.pos_session = [];
+            this.selfOrder.ordering = false;
         } else {
             // reload to get potential new settings
             // more easier than RPC for now
             window.location.reload();
         }
-
-        this.selfOrder.isSession();
     }
 
     ws_productChanged(message) {
