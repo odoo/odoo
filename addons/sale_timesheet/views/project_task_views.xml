@@ -152,12 +152,12 @@
                 <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
                     <field name="timesheet_invoice_id" invisible="1"/>
-                    <field name="so_line" groups="!sales_team.group_sale_salesman"
+                    <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"
                         attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
                         domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
                         optional="hide"/>
-                    <field name="so_line" groups="sales_team.group_sale_salesman"
+                    <field name="so_line" widget="so_line_field" groups="sales_team.group_sale_salesman"
                         attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True}"
                         domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"

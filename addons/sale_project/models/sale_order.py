@@ -60,10 +60,17 @@ class SaleOrder(models.Model):
             fields=['sale_order_id', 'ids:array_agg(id)'],
             groupby=['sale_order_id'],
         )
-        so_to_tasks_and_count = {
-            group['sale_order_id'][0]: {'task_ids': group['ids'], 'count': group['sale_order_id_count']}
-            for group in tasks_per_so
-        }
+        so_to_tasks_and_count = {}
+        for group in tasks_per_so:
+            if group['sale_order_id']:
+                so_to_tasks_and_count[group['sale_order_id'][0]] = {'task_ids': group['ids'], 'count': group['sale_order_id_count']}
+            else:
+                # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
+                for task in self.env['project.task'].browse(group['ids']):
+                    so_to_tasks_item = so_to_tasks_and_count.setdefault(task.sale_line_id.order_id.id, {'task_ids': [], 'count': 0})
+                    so_to_tasks_item['task_ids'].append(task.id)
+                    so_to_tasks_item['count'] += 1
+
         for order in self:
             order.tasks_ids = [Command.set(so_to_tasks_and_count.get(order.id, {}).get('task_ids', []))]
             order.tasks_count = so_to_tasks_and_count.get(order.id, {}).get('count', 0)

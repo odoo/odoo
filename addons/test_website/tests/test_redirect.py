@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
 from odoo.tests import HttpCase, tagged
-from odoo.tests.common import HOST
 from odoo.tools import mute_logger
 from odoo.addons.http_routing.models.ir_http import slug
 
@@ -211,7 +210,29 @@ class TestRedirect(HttpCase):
             r.url.endswith(url_rec2),
             "Unpublished record should redirect to published record set in redirect")
 
-    def test_05_redirect_308_multiple_url_endpoint(self):
+    @mute_logger('odoo.http')
+    def test_05_redirect_404_notfound_record(self):
+        # 1. Accessing unexisting record: raise 404
+        url_rec1 = '/test_website/200/unexisting-100000'
+        r = self.url_open(url_rec1)
+        self.assertEqual(r.status_code, 404)
+
+        # 2. Accessing unpublished record with redirect to a 404: expecting 404
+        redirect = self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect route unexisting record',
+            'redirect_type': '301',
+            'url_from': url_rec1,
+            'url_to': '/get',
+        })
+        r = self.url_open(url_rec1, allow_redirects=False)
+        self.assertEqual(r.status_code, 301)
+        self.assertTrue(r.headers.get('Location', '').endswith(redirect.url_to))
+
+        r = self.url_open(url_rec1, allow_redirects=True)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(r.url.endswith(redirect.url_to))
+
+    def test_redirect_308_multiple_url_endpoint(self):
         self.env['website.rewrite'].create({
             'name': 'Test Multi URL 308',
             'redirect_type': '308',
