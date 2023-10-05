@@ -1026,7 +1026,7 @@ QUnit.module("Fields", (hooks) => {
         // Unfold the domain
         await click(target, ".o_field_domain > div > div");
 
-        // As the domain is empty, there should be a button to add a new rule
+        // There should be a button to add a new rule
         assert.containsOnce(target, ".o_domain_tree a[role=button]");
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
@@ -1068,5 +1068,43 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_domain a i");
 
         assert.containsOnce(target, ".o_field_domain .o_facet_values:contains('Color index = 2')");
+    });
+
+    QUnit.test("add condition in empty foldable domain", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+        serverData.models.partner.records[0].foo = '[("id", "=", 1)]';
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type', 'foldable': true}" />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+        // As the domain is not empty, the "Add condition" button should not be available
+        assert.containsNone(target, ".o_domain_add_first_node_button");
+
+        // Unfold the domain and delete the condition
+        await click(target, ".o_field_domain > div > div");
+        await click(target, ".o_domain_delete_node_button");
+
+        // Fold domain selector
+        await click(target, ".o_field_domain a i");
+
+        // As the domain is empty, the "Add condition" button should now be available
+        assert.containsOnce(target, ".o_domain_add_first_node_button");
+
+        // Click on "Add condition"
+        await click(target, ".o_domain_add_first_node_button");
+        // Domain is now unfolded with the default condition
+        assert.containsOnce(target, ".o_model_field_selector");
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, '[("id", "=", 1)]');
     });
 });

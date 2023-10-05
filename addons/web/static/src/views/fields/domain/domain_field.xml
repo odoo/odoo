@@ -11,6 +11,11 @@
                         <div class="d-print-contents">
                             <t t-if="!state.facets.length">
                                 <span>Match <strong>all records</strong></span>
+                                <t t-if="!props.readonly">
+                                    <button class="btn btn-sm btn-primary o_domain_add_first_node_button mx-2" t-on-click.stop="() => this.addCondition()">
+                                        <i class="fa fa-plus"/> Add condition
+                                    </button>
+                                </t>
                             </t>
                             <t t-foreach="state.facets" t-as="facet" t-key="facet_index">
                                 <div class="d-inline-flex align-items-stretch text-nowrap px-1 position-relative"
