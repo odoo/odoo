@@ -52,7 +52,7 @@ class PeerTest {
         this.started = true;
         await this._started;
         if (this.initialParsedSelection) {
-            setTestSelection(this.initialParsedSelection, this.document);
+            await setTestSelection(this.initialParsedSelection, this.document);
             this.wysiwyg.odooEditor._recordHistorySelection();
         } else {
             document.getSelection().removeAllRanges();
@@ -96,10 +96,7 @@ class PeerTest {
         this.onlineMutex = new Mutex();
         this._onlineResolver = undefined;
     }
-    makeStep(fn) {
-        fn(this);
-    }
-    getValue() {
+    async getValue() {
         this.wysiwyg.odooEditor.observerUnactive('PeerTest.getValue');
         renderTextualSelection(this.document);
 
@@ -107,7 +104,7 @@ class PeerTest {
 
         const selection = parseTextualSelection(this.wysiwyg.$editable[0]);
         if (selection) {
-            setTestSelection(selection, this.document);
+            await setTestSelection(selection, this.document);
         }
         this.wysiwyg.odooEditor.observerActive('PeerTest.getValue');
 
@@ -139,12 +136,6 @@ class PeerTest {
                 }
             });
         });
-    }
-}
-
-export function insert(string) {
-    return (peer) => {
-        peer.wysiwyg.odooEditor.execCommand('insert', string);
     }
 }
 
@@ -359,11 +350,11 @@ QUnit.module('web_editor', {
                 await peers.p1.focus();
                 await peers.p2.focus();
 
-                await peers.p1.makeStep(insert('b'));
+                await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
-                assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the document changed');
-                assert.equal(peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the document changed');
-                assert.equal(peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed');
+                assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the document changed');
+                assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the document changed');
+                assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed');
 
                 removePeers(peers);
             });
@@ -381,11 +372,11 @@ QUnit.module('web_editor', {
 
                 await peers.p1.openDataChannel(peers.p2);
 
-                await peers.p1.makeStep(insert('b'));
+                await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
-                assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                assert.equal(peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed');
+                assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
+                assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
+                assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed');
 
                 removePeers(peers);
             });
@@ -401,13 +392,13 @@ QUnit.module('web_editor', {
                 await peers.p1.focus();
                 await peers.p2.focus();
 
-                await peers.p1.makeStep(insert('b'));
+                await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
                 await peers.p1.openDataChannel(peers.p2);
 
-                assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                assert.equal(peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed because it has not focused');
+                assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
+                assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed because it has not focused');
 
                 removePeers(peers);
             });
@@ -428,17 +419,17 @@ QUnit.module('web_editor', {
                     await peers.p2.focus();
                     await peers.p1.openDataChannel(peers.p2);
 
-                    await peers.p1.makeStep(insert('b'));
+                    await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
                     await peers.p1.writeToServer();
 
                     assert.equal(peers.p1.wysiwyg._isDocumentStale, false, 'p1 should not have a stale document');
-                    assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
+                    assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
 
                     assert.equal(peers.p2.wysiwyg._isDocumentStale, false, 'p2 should not have a stale document');
-                    assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                    assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
 
                     assert.equal(peers.p3.wysiwyg._isDocumentStale, true, 'p3 should have a stale document');
-                    assert.equal(peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
+                    assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                     await peers.p3.focus();
                     await peers.p1.openDataChannel(peers.p3);
@@ -446,11 +437,11 @@ QUnit.module('web_editor', {
                     await new Promise(resolve => setTimeout(resolve));
 
                     assert.equal(peers.p3.wysiwyg._isDocumentStale, false, 'p3 should not have a stale document');
-                    assert.equal(peers.p3.getValue(), `<p>[]ab</p>`, 'p3 should have the same document as p1');
+                    assert.equal(await peers.p3.getValue(), `<p>[]ab</p>`, 'p3 should have the same document as p1');
 
-                    await peers.p1.makeStep(insert('c'));
-                    assert.equal(peers.p1.getValue(), `<p>abc[]</p>`, 'p1 should have the same document as p3');
-                    assert.equal(peers.p3.getValue(), `<p>[]abc</p>`, 'p3 should have the same document as p1');
+                    await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'c');
+                    assert.equal(await peers.p1.getValue(), `<p>abc[]</p>`, 'p1 should have the same document as p3');
+                    assert.equal(await peers.p3.getValue(), `<p>[]abc</p>`, 'p3 should have the same document as p1');
 
                     removePeers(peers);
                 });
@@ -484,17 +475,17 @@ QUnit.module('web_editor', {
                         assert.equal(peers.p1.wysiwyg._historyShareId, peers.p2.wysiwyg._historyShareId, 'p1 and p2 should have the same _historyShareId');
                         assert.equal(peers.p1.wysiwyg._historyShareId, peers.p3.wysiwyg._historyShareId, 'p1 and p3 should have the same _historyShareId');
 
-                        assert.equal(peers.p1.getValue(), `<p>a[]</p>`, 'p1 should have the same document as p2');
-                        assert.equal(peers.p2.getValue(), `[]<p>a</p>`, 'p2 should have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `[]<p>a</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>a[]</p>`, 'p1 should have the same document as p2');
+                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should have the same document as p1');
 
                         await peers.p3.setOffline();
 
-                        await peers.p1.makeStep(insert('b'));
+                        await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                        assert.equal(peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
+                        assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         await peers.p1.writeToServer();
                         assert.equal(peers.p1.wysiwyg._isDocumentStale, false, 'p1 should not have a stale document');
@@ -508,9 +499,9 @@ QUnit.module('web_editor', {
                         assert.equal(p3Spies._applySnapshot.callCount, 0, 'p3 _applySnapshot should not have been called');
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p3 _resetFromServerAndResyncWithClients should not have been called');
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                        assert.equal(peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `<p>[]ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
+                        assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]ab</p>`, 'p3 should have the same document as p1');
 
                         removePeers(peers);
                     });
@@ -549,12 +540,12 @@ QUnit.module('web_editor', {
                             '_onRecoveryClientTimeout',
                         ]);
 
-                        await peers.p1.makeStep(insert('b'));
+                        await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
                         await peers.p1.writeToServer();
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `[]<p>a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
+                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         peers.p1.destroyEditor();
 
@@ -564,8 +555,8 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._applySnapshot.callCount, 0, 'p2 _applySnapshot should not have been called');
 
                         await peers.p2.setOnline();
-                        assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');
@@ -573,7 +564,7 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._applySnapshot.callCount, 0, 'p2 _applySnapshot should not have been called');
 
                         await peers.p3.setOnline();
-                        assert.equal(peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
                         assert.equal(p3Spies._recoverFromStaleDocument.callCount, 1, 'p3 _recoverFromStaleDocument should have been called once');
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p3 _resetFromServerAndResyncWithClients should not have been called');
                         assert.equal(p3Spies._processMissingSteps.callCount, 1, 'p3 _processMissingSteps should have been called once');
@@ -615,13 +606,13 @@ QUnit.module('web_editor', {
                             '_onRecoveryClientTimeout',
                         ]);
 
-                        await peers.p1.makeStep(insert('b'));
+                        await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
                         await peers.p1.writeToServer();
                         peers.p1.setOffline();
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `[]<p>a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
+                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 0, 'p2 _recoverFromStaleDocument should not have been called');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p2 _resetFromServerAndResyncWithClients should not have been called');
@@ -629,8 +620,8 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._applySnapshot.callCount, 0, 'p2 _applySnapshot should not have been called');
 
                         await peers.p2.setOnline();
-                        assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');
@@ -638,7 +629,7 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._applySnapshot.callCount, 0, 'p2 _applySnapshot should not have been called');
 
                         await peers.p3.setOnline();
-                        assert.equal(peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
                         assert.equal(p3Spies._recoverFromStaleDocument.callCount, 1, 'p3 _recoverFromStaleDocument should have been called once');
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p3 _resetFromServerAndResyncWithClients should have been called once');
                         assert.equal(p3Spies._processMissingSteps.callCount, 1, 'p3 _processMissingSteps should have been called once');
@@ -686,12 +677,12 @@ QUnit.module('web_editor', {
                             '_resetFromClient',
                         ]);
 
-                        await peers.p1.makeStep(insert('b'));
+                        await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
                         await peers.p1.writeToServer();
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `[]<p>a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
+                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         peers.p1.destroyEditor();
 
@@ -709,7 +700,7 @@ QUnit.module('web_editor', {
                         peers.p2.setOnline();
                         await peers.p3.setOnline();
 
-                        assert.equal(peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
 
                         assert.equal(p3Spies._recoverFromStaleDocument.callCount, 1, 'p3 _recoverFromStaleDocument should have been called once');
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p3 _resetFromServerAndResyncWithClients should have been called once');
@@ -743,11 +734,11 @@ QUnit.module('web_editor', {
                             '_resetFromClient',
                         ]);
 
-                        await peers.p1.makeStep(insert('b'));
+                        await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
                         await peers.p1.writeToServer();
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
+                        assert.equal(await peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
 
                         peers.p1.destroyEditor();
 
@@ -758,7 +749,7 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._resetFromClient.callCount, 0, 'p2 _resetFromClient should not have been called');
 
                         await peers.p2.setOnline();
-                        assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');
@@ -796,13 +787,13 @@ QUnit.module('web_editor', {
                             '_resetFromClient',
                         ]);
 
-                        await peers.p1.makeStep(insert('b'));
+                        await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
                         await peers.p1.writeToServer();
                         peers.p1.setOffline();
 
-                        assert.equal(peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `[]<p>a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
+                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 0, 'p2 _recoverFromStaleDocument should not have been called');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p2 _resetFromServerAndResyncWithClients should not have been called');
@@ -811,8 +802,8 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._resetFromClient.callCount, 0, 'p2 _resetFromClient should not have been called');
 
                         await peers.p2.setOnline();
-                        assert.equal(peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');
@@ -844,12 +835,12 @@ QUnit.module('web_editor', {
                 await peers.p2.focus();
                 await peers.p1.openDataChannel(peers.p2);
 
-                await peers.p1.makeStep(insert('b'));
+                await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
                 await peers.p1.setOffline();
                 peers.p1.removeDataChannel(peers.p2);
 
-                const setSelection = (peer) => {
+                const setSelection = peer => {
                     const selection = peer.document.getSelection();
                     const pElement = peer.wysiwyg.odooEditor.editable.querySelector('p')
                     const range = new Range();
@@ -866,11 +857,11 @@ QUnit.module('web_editor', {
                 }
 
                 setSelection(peers.p1);
-                await peers.p1.makeStep(insert('c'));
+                await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'c');
                 addP(peers.p1, 'd');
 
                 setSelection(peers.p2);
-                await peers.p2.makeStep(insert('e'));
+                await peers.p2.wysiwyg.odooEditor.execCommand('insert', 'e');
                 addP(peers.p2, 'f');
 
                 peers.p1.setOnline();
@@ -902,8 +893,8 @@ QUnit.module('web_editor', {
                 await peers.p1.openDataChannel(peers.p2);
                 await p1PromiseForMissingStep;
 
-                assert.equal(peers.p1.getValue(), `<p>ac[]eb</p><p>d</p><p>f</p>`, 'p1 should have the value merged with p2');
-                assert.equal(peers.p2.getValue(), `<p>ace[]b</p><p>d</p><p>f</p>`, 'p2 should have the value merged with p1');
+                assert.equal(await peers.p1.getValue(), `<p>ac[]eb</p><p>d</p><p>f</p>`, 'p1 should have the value merged with p2');
+                assert.equal(await peers.p2.getValue(), `<p>ace[]b</p><p>d</p><p>f</p>`, 'p2 should have the value merged with p1');
 
                 removePeers(peers);
             });
