@@ -138,7 +138,7 @@ class MicrosoftService(models.AbstractModel):
             headers = {}
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))
-
+        print("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))
         ask_time = fields.Datetime.now()
         try:
             if method.upper() in ('GET', 'DELETE'):

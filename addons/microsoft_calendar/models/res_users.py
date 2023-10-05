@@ -108,9 +108,12 @@ class User(models.Model):
 
     def _sync_microsoft_calendar(self):
         self.ensure_one()
+        last_modified_dt = None
         # Create the Calendar Credentials if it is not defined yet and define the last sync date after creation.
         if not self.microsoft_calendar_account_id and self._check_microsoft_calendar_credentials():
             self.microsoft_last_sync_date = fields.datetime.now()
+        else:
+            last_modified_dt = self.microsoft_last_sync_date
 
         if self._get_microsoft_sync_status() != "sync_active":
             return False
@@ -118,9 +121,9 @@ class User(models.Model):
         full_sync = not bool(self.microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
             try:
-                events, next_sync_token = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
+                events, next_sync_token = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token, last_modified_dt=last_modified_dt)
             except InvalidSyncToken:
-                events, next_sync_token = calendar_service.get_events(token=token)
+                events, next_sync_token = calendar_service.get_events(token=token, last_modified_dt=last_modified_dt)
                 full_sync = True
         self.microsoft_calendar_account_id.calendar_sync_token = next_sync_token
 

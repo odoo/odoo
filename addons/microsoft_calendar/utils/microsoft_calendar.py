@@ -45,7 +45,7 @@ class MicrosoftCalendarService():
         self.microsoft_service = microsoft_service
 
     @requires_auth_token
-    def _get_events_from_paginated_url(self, url, token=None, params=None, timeout=TIMEOUT):
+    def _get_events_from_paginated_url(self, url, token=None, params=None, timeout=TIMEOUT, last_modified_dt=None):
         """
         Get a list of events from a paginated URL.
         Each page contains a link to the next page, so loop over all the pages to get all the events.
@@ -60,6 +60,8 @@ class MicrosoftCalendarService():
                 'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
                 'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
             }
+        if last_modified_dt:
+            params['lastModifiedDateTime'] = "gt:" + last_modified_dt.strftime("%Y-%m-%dT00:00:00Z")
 
         # get the first page of events
         _, data, _ = self.microsoft_service._do_request(
@@ -79,10 +81,11 @@ class MicrosoftCalendarService():
         token_url = data.get('@odata.deltaLink')
         next_sync_token = urls.url_parse(token_url).decode_query().get('$deltatoken', False) if token_url else None
 
+        print("captured events: ", len(events))
         return events, next_sync_token
 
     @requires_auth_token
-    def _get_events_delta(self, sync_token=None, token=None, timeout=TIMEOUT):
+    def _get_events_delta(self, sync_token=None, token=None, timeout=TIMEOUT, last_modified_dt=None):
         """
         Get a set of events that have been added, deleted or updated in a time range.
         See: https://docs.microsoft.com/en-us/graph/api/event-delta?view=graph-rest-1.0&tabs=http
@@ -92,7 +95,7 @@ class MicrosoftCalendarService():
 
         try:
             events, next_sync_token = self._get_events_from_paginated_url(
-                url, params=params, token=token, timeout=timeout)
+                url, params=params, token=token, timeout=timeout, last_modified_dt=last_modified_dt)
         except requests.HTTPError as e:
             if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content) and sync_token:
                 # retry with a full sync
@@ -117,14 +120,14 @@ class MicrosoftCalendarService():
         return MicrosoftEvent(events)
 
     @requires_auth_token
-    def get_events(self, sync_token=None, token=None, timeout=TIMEOUT):
+    def get_events(self, sync_token=None, token=None, timeout=TIMEOUT, last_modified_dt=None):
         """
         Retrieve all the events that have changed (added/updated/removed) from Microsoft Outlook.
         This is done in 2 steps:
         1) get main changed events (so single events and serie masters)
         2) get occurrences linked to a serie masters (to retrieve all needed details such as iCalUId)
         """
-        events, next_sync_token = self._get_events_delta(sync_token=sync_token, token=token, timeout=timeout)
+        events, next_sync_token = self._get_events_delta(sync_token=sync_token, token=token, timeout=timeout, last_modified_dt=last_modified_dt)
 
         # get occurences details for all serie masters
         for master in filter(lambda e: e.type == 'seriesMaster', events):
