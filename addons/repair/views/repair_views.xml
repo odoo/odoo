@@ -67,7 +67,6 @@
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
                    <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
                    <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
-                   <button name="action_set_quantities_to_reservation" invisible="not show_set_qty_button" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                    <button name="action_clear_quantities_to_zero" invisible="not show_clear_qty_button" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                    <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object"/>
                    <button name="action_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
@@ -147,7 +146,6 @@
                                 <field name="picking_code" column_invisible="True"/>
                                 <field name="product_type" column_invisible="True"/>
                                 <field name="show_details_visible" column_invisible="True"/>
-                                <field name="show_reserved_availability" column_invisible="True"/>
                                 <field name="show_operations" readonly="1" column_invisible="True"/>
                                 <field name="additional" column_invisible="True"/>
                                 <field name="move_lines_count" column_invisible="True"/>
@@ -159,18 +157,16 @@
                                 <field name="description_picking" string="Description" optional="hide"/>
                                 <field name="date" optional="hide"/>
                                 <field name="date_deadline" optional="hide"/>
-                                <field name="is_initial_demand_editable" column_invisible="True"/>
-                                <field name="is_quantity_done_editable" column_invisible="True"/>
                                 <field name="product_packaging_id" groups="product.group_stock_packaging"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
-                                <field name="reserved_availability" column_invisible="True"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0 and repair_line_type == 'add'"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0 or repair_line_type != 'add'"/>
                                 <field name="forecast_availability" string="Reserved" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
-                                <field name="quantity_done" string="Done" readonly="not product_id"/>
+                                <field name="quantity" string="Done" readonly="not product_id"/>
                                 <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="picked" string="Used"/>
                                 <field name="lot_ids" widget="many2many_tags"
                                     groups="stock.group_production_lot"
                                     invisible="not show_details_visible or has_tracking != 'serial'"

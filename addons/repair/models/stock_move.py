@@ -113,7 +113,7 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id or move.repair_line_type != 'add' or not move.repair_id.sale_order_id:
                 continue
-            product_qty = move.product_uom_qty if move.repair_id.state != 'done' else move.quantity_done
+            product_qty = move.product_uom_qty if move.repair_id.state != 'done' else move.quantity
             so_line_vals.append({
                 'order_id': move.repair_id.sale_order_id.id,
                 'product_id': move.product_id.id,

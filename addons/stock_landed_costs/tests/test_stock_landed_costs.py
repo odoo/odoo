@@ -62,7 +62,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         self.env.company.anglo_saxon_accounting = True
         picking_landed_cost_1.action_confirm()
         picking_landed_cost_1.action_assign()
-        picking_landed_cost_1.move_ids.quantity_done = 5
+        picking_landed_cost_1.move_ids.quantity = 5
         picking_landed_cost_1.button_validate()
 
         vals = dict(picking_default_vals, **{
@@ -86,7 +86,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         # Confirm and assign picking
         picking_landed_cost_2.action_confirm()
         picking_landed_cost_2.action_assign()
-        picking_landed_cost_2.move_ids.quantity_done = 10
+        picking_landed_cost_2.move_ids.quantity = 10
         picking_landed_cost_2.button_validate()
 
         self.assertEqual(product_landed_cost_1.value_svl, 0)
@@ -197,7 +197,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             po.button_confirm()
 
             receipt = po.picking_ids
-            receipt.move_ids.quantity_done = 1
+            receipt.move_ids.quantity = 1
             receipt.button_validate()
             po.order_line[1].qty_received = 1
 

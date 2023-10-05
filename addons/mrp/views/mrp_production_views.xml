@@ -349,7 +349,8 @@
                                     That being said, the best would be to have the byproducts feature working without relying on anything in the view,
                                     e.g. so the byproducts feature works with xmlrpc calls.
                                     -->
-                                    <field name="quantity_done"/>
+                                    <field name="quantity"/>
+                                    <field name="picked"/>
                                     <!-- Required for test_fifo_byproduct -->
                                     <field name="cost_share"/>
                                 </tree>
@@ -391,22 +392,23 @@
                                     <field name="should_consume_qty" column_invisible="True"/>
                                     <field name="product_uom_qty" force_save="1" string="To Consume" column_invisible="not parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" column_invisible="parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
-                                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
-                                    <field name="reserved_availability" column_invisible="True"/>
                                     <field name="show_reserved" column_invisible="True"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <!-- Button are used in state draft to doesn't have the name of the column "Reserved"-->
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0"/>
-                                    <field name="forecast_availability" string="Reserved" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
-                                    <field name="quantity_done" string="Consumed"
-                                        decoration-success="product_uom_qty - quantity_done &gt; 0.0001"
-                                        decoration-warning="quantity_done - product_uom_qty &gt; 0.0001"
+                                    <!-- TODO put forecast back -->
+                                    <field name="forecast_availability" string="Forecast" widget="forecast_widget"/>
+                                    <field name="quantity" string="Reserved"
+                                        decoration-success="product_uom_qty - quantity &gt; 0.0001"
+                                        decoration-warning="quantity - product_uom_qty &gt; 0.0001"
                                         column_invisible="parent.state == 'draft'"
                                         readonly="has_tracking != 'none'"
                                         force_save="1" widget="mrp_consumed"/>
+                                    <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="show"/>
                                     <field name="manual_consumption" column_invisible="True" force_save="1"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
@@ -453,7 +455,7 @@
                                     <field name="move_lines_count" column_invisible="True"/>
                                     <field name="state" column_invisible="True" force_save="1"/>
                                     <field name="product_uom_qty" string="To Produce" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or parent.is_locked)"/>
-                                    <field name="quantity_done" string="Produced" column_invisible="parent.state == 'draft'" readonly="has_tracking != 'none'"/>
+                                    <field name="quantity" string="Produced" column_invisible="parent.state == 'draft'" readonly="has_tracking != 'none'"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="cost_share" optional="hide"/>
                                     <field name="show_details_visible" column_invisible="True"/>

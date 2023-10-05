@@ -13,8 +13,8 @@ export class ForecastWidgetField extends FloatField {
         this.orm = useService("orm");
         this.resId = resId;
 
-        this.reservedAvailability = formatFloat(data.reserved_availability, {
-            ...fields.reserved_availability,
+        this.reservedAvailability = formatFloat(data.quantity, {
+            ...fields.quantity,
             ...this.nodeOptions,
         });
         this.forecastExpectedDate = formatDate(

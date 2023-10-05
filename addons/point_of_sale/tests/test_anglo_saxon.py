@@ -277,7 +277,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
         self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")
-        current_session.picking_ids.move_ids_without_package.quantity_done = 1
+        current_session.picking_ids.move_ids_without_package.write({'quantity': 1, 'picked': True})
         current_session.picking_ids.button_validate()
 
         # I test that the generated journal entries are correct.

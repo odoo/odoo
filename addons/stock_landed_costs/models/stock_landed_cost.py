@@ -130,7 +130,7 @@ class StockLandedCost(models.Model):
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
 
                 # Prorate the value at what's still in stock
-                cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                cost_to_add = (remaining_qty / line.move_id.quantity) * line.additional_landed_cost
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     valuation_layer = self.env['stock.valuation.layer'].create({
                         'value': cost_to_add,
@@ -157,9 +157,9 @@ class StockLandedCost(models.Model):
                 # in stock.
                 qty_out = 0
                 if line.move_id._is_in():
-                    qty_out = line.move_id.product_qty - remaining_qty
+                    qty_out = line.move_id.quantity - remaining_qty
                 elif line.move_id._is_out():
-                    qty_out = line.move_id.product_qty
+                    qty_out = line.move_id.quantity
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
             # batch standard price computation avoid recompute quantity_svl at each iteration

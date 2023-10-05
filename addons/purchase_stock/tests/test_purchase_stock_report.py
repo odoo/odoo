@@ -43,9 +43,7 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         # Receives 5 products.
         receipt = po.picking_ids
-        res_dict = receipt.button_validate()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        receipt.button_validate()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         draft_picking_qty_in = docs['draft_picking_qty']['in']
         draft_purchase_qty = docs['draft_purchase_qty']
@@ -118,9 +116,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt = po.picking_ids
 
         # Receives 4 products.
-        res_dict = receipt.button_validate()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        receipt.button_validate()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         draft_picking_qty_in = docs['draft_picking_qty']['in']
         draft_purchase_qty = docs['draft_purchase_qty']
@@ -227,9 +223,10 @@ class TestPurchaseStockReports(TestReportsCommon):
             'location_dest_id': receipt_move.location_dest_id.id,
             'product_id': self.product.id,
             'product_uom_id': uom_12.id,
-            'qty_done': 1,
+            'quantity': 1,
             'picking_id': receipt.id,
         })]
+        receipt.move_ids.picked = True
         receipt.button_validate()
 
         data = self.env['vendor.delay.report'].read_group(
@@ -267,16 +264,17 @@ class TestPurchaseStockReports(TestReportsCommon):
             'location_dest_id': child_loc_01.id,
             'product_id': self.product.id,
             'product_uom_id': self.product.uom_id.id,
-            'qty_done': 6,
+            'quantity': 6,
             'picking_id': receipt.id,
         }), (0, 0, {
             'location_id': receipt_move.location_id.id,
             'location_dest_id': child_loc_02.id,
             'product_id': self.product.id,
             'product_uom_id': self.product.uom_id.id,
-            'qty_done': 4,
+            'quantity': 4,
             'picking_id': receipt.id,
         })]
+        receipt.move_ids.picked = True
         receipt.button_validate()
 
         data = self.env['vendor.delay.report'].read_group(
@@ -306,7 +304,7 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         receipt01 = po.picking_ids
         receipt01_move = receipt01.move_ids
-        receipt01_move.quantity_done = 6
+        receipt01_move.quantity = 6
         action = receipt01.button_validate()
         Form(self.env[action['res_model']].with_context(action['context'])).save().process()
 
@@ -320,7 +318,8 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['on_time_rate'], 60)
 
         receipt02 = receipt01.backorder_ids
-        receipt02.move_ids.quantity_done = 4
+        receipt02.move_ids.quantity = 4
+        receipt02.move_ids.picked = True
         receipt02.button_validate()
 
         (receipt01 | receipt02).move_ids.invalidate_recordset()
@@ -349,7 +348,8 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         receipt01 = po.picking_ids
         receipt01_move = receipt01.move_ids
-        receipt01_move.quantity_done = 6
+        receipt01_move.quantity = 6
+        receipt01_move.picked = True
         action = receipt01.button_validate()
         Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
 

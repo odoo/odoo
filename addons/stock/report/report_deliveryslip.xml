@@ -83,10 +83,10 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span t-field="move.quantity_done">3.00</span>
+                                    <span t-field="move.quantity">3.00</span>
                                     <span t-field="move.product_uom">units</span>
                                     <span t-if="move.product_packaging_id">
-                                        (<span t-field="move.product_packaging_qty_done" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
+                                        (<span t-field="move.product_packaging_quantity" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
                                     </span>
                                 </td>
                             </tr>
@@ -229,8 +229,8 @@
         <t t-if="has_serial_number" name="move_line_lot">
             <td><span t-field="move_line.lot_id.name"/></td>
         </t>
-        <td class="text-center" name="move_line_lot_qty_done">
-            <span t-field="move_line.qty_done"/>
+        <td class="text-center" name="move_line_lot_quantity">
+            <span t-field="move_line.quantity"/>
             <span t-field="move_line.product_uom_id"/>
         </td>
     </template>
@@ -250,13 +250,13 @@
                     (<span t-out="aggregated_lines[line]['packaging_qty']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
                 </span>
             </td>
-            <td class="text-center" name="move_line_aggregated_qty_done">
-                <t t-if="aggregated_lines[line]['qty_done']">
-                    <span t-esc="aggregated_lines[line]['qty_done']"
+            <td class="text-center" name="move_line_aggregated_quantity">
+                <t t-if="aggregated_lines[line]['quantity']">
+                    <span t-esc="aggregated_lines[line]['quantity']"
                         t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
                     <span t-esc="aggregated_lines[line]['product_uom'].name"/>
                     <span t-if="aggregated_lines[line]['packaging'].name">
-                        (<span t-out="aggregated_lines[line]['packaging_qty_done']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
+                        (<span t-out="aggregated_lines[line]['packaging_quantity']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
                     </span>
                 </t>
             </td>

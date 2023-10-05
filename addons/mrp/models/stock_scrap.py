@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 
+
 class StockScrap(models.Model):
     _inherit = 'stock.scrap'
 
@@ -55,7 +56,7 @@ class StockScrap(models.Model):
             else:
                 return super()._onchange_serial_number()
 
-    @api.depends('move_ids', 'move_ids.move_line_ids.qty_done', 'product_id')
+    @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
     def _compute_scrap_qty(self):
         self.scrap_qty = 1
         for scrap in self:

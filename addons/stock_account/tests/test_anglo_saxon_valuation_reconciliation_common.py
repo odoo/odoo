@@ -117,9 +117,11 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
         def do_picking():
             pickings.action_confirm()
             pickings.action_assign()
-            for picking in pickings:
-                for ml in picking.move_line_ids:
-                    ml.qty_done = quantity or ml.reserved_qty
+            if quantity:
+                for picking in pickings:
+                    for ml in picking.move_line_ids:
+                        ml.quantity = quantity
+            pickings.move_ids.picked = True
             pickings._action_done()
 
         if not date:

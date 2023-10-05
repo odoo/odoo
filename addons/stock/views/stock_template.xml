@@ -24,9 +24,9 @@
                     </li>
                 </t>
             </t>
-            <t t-if="'qty_done' in vals">
+            <t t-if="'quantity' in vals">
                 <li>
-                    Quantity: <t t-esc="move.qty_done"/> -&gt; <t t-esc="float(vals.get('qty_done'))"/>
+                    Quantity: <t t-esc="move.quantity"/> -&gt; <t t-esc="float(vals.get('quantity'))"/>
                 </li>
             </t>
             <t t-if="'location_id' in vals">

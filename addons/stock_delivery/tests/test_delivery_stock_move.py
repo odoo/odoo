@@ -91,7 +91,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         self.assertEqual(moves[0].weight, 2.0, 'wrong move weight')
 
         # Ship
-        moves.move_line_ids.write({'qty_done': 2})
+        moves.move_line_ids.write({'quantity': 2})
         self.picking = self.sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids.sale_price, 1725.0, 'wrong shipping value')
 
@@ -133,7 +133,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         moves = self.sale_prepaid.picking_ids.move_ids
         # Ship
         for ml, lot in zip(moves.move_line_ids, serial_numbers):
-            ml.write({'qty_done': 1, 'lot_id': lot.id})
+            ml.write({'quantity': 1, 'lot_id': lot.id})
         self.picking = self.sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids[0].sale_price, 862.5, 'wrong shipping value')
 
@@ -160,12 +160,14 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         so.action_confirm()
 
         # Deliver one product and create a backorder
-        self.assertEqual(sum([line.quantity_done for line in so.picking_ids.move_ids]), 0)
-        so.picking_ids.move_ids[0].quantity_done = 1
+        self.assertEqual(sum([line.quantity for line in so.picking_ids.move_ids]), 2)
+        so.picking_ids.move_ids[0].quantity = 1
+        so.picking_ids.move_ids[0].picked = True
         backorder_wizard_dict = so.picking_ids.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
-        self.assertEqual(sum([line.quantity_done for line in so.picking_ids.move_ids]), 1)
+        self.assertEqual(len(so.picking_ids), 2)
+        self.assertEqual(sum([line.quantity for line in so.picking_ids.move_ids]), 2)
 
         # Invoice the delivered product
         invoice = so._create_invoices()
@@ -200,7 +202,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         })
 
         sale_order.action_confirm()
-        sale_order.picking_ids.move_ids.quantity_done = 2
+        sale_order.picking_ids.move_ids.quantity = 2
         sale_order.picking_ids.button_validate()
 
         # Return picking

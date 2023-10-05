@@ -184,7 +184,7 @@ class TestSaleMrpKitBom(TransactionCase):
         self.assertEqual(so.order_line.qty_delivered, 0)
 
         picking = so.picking_ids
-        picking.move_ids.quantity_done = 0.86000
+        picking.move_ids.write({'quantity': 0.86000, 'picked': True})
         picking.button_validate()
 
         # Checks the delivery amount (must be 10).
@@ -249,9 +249,7 @@ class TestSaleMrpKitBom(TransactionCase):
         self.assertEqual(so.order_line.qty_delivered, 0)
 
         picking = so.picking_ids
-        action = picking.button_validate()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.process()
+        picking.button_validate()
 
         # Checks the delivery amount (must be 1).
         self.assertEqual(so.order_line.qty_delivered, 1)
@@ -386,7 +384,7 @@ class TestSaleMrpKitBom(TransactionCase):
         ship = so.picking_ids[1]
 
         for move in pick.move_ids:
-            move.quantity_done = 1
+            move.write({'quantity': 1, 'picked': True})
 
         pick.action_put_in_pack()
         pick.button_validate()
@@ -395,7 +393,7 @@ class TestSaleMrpKitBom(TransactionCase):
         ship.package_level_ids._set_is_done()
 
         for move_line in ship.move_line_ids:
-            self.assertEqual(move_line.move_id.product_uom_qty, move_line.qty_done, "Quantity done should be equal to the quantity reserved in the move line")
+            self.assertEqual(move_line.move_id.product_uom_qty, move_line.quantity, "Quantity done should be equal to the quantity reserved in the move line")
 
     def test_kit_in_delivery_slip(self):
         """
@@ -511,7 +509,7 @@ class TestSaleMrpKitBom(TransactionCase):
         so.action_confirm()
         picking = so.picking_ids
         self.assertEqual(len(so.picking_ids.move_ids_without_package), 7)
-        picking.move_ids.quantity_done = 1
+        picking.move_ids.write({'quantity': 1, 'picked': True})
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
 

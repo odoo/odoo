@@ -434,15 +434,6 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 1)
 
-    def test_increase_decrease_reserved_quantity_1(self):
-        """ Decrease then increase reserved quantity when no quant are in a location.
-        """
-        self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
-        with self.assertRaises(UserError):
-            self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, -1.0, strict=True)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
-
     def test_action_done_1(self):
         pack_location = self.env.ref('stock.location_pack_zone')
         pack_location.active = True
@@ -484,13 +475,6 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
-        with self.assertRaises(UserError):
-            self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, -1.0, strict=True)
-
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
-
     def test_access_rights_1(self):
         """ Directly update the quant with a user with or without stock access rights should not raise
         an AccessError only deletion will.
@@ -522,14 +506,14 @@ class StockQuant(TransactionCase):
         with self.assertRaises(AccessError):
             quant.with_user(self.stock_user).unlink()
 
-    def test_in_date_1(self):
+    def test_quant_in_date_1(self):
         """ Check that no incoming date is set when updating the quantity of an untracked quant.
         """
         quantity, in_date = self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
         self.assertEqual(quantity, 1)
         self.assertNotEqual(in_date, None)
 
-    def test_in_date_1b(self):
+    def test_quant_in_date_1b(self):
         self.env['stock.quant'].create({
             'product_id': self.product.id,
             'location_id': self.stock_location.id,
@@ -539,7 +523,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(quantity, 3)
         self.assertNotEqual(in_date, None)
 
-    def test_in_date_2(self):
+    def test_quant_in_date_2(self):
         """ Check that an incoming date is correctly set when updating the quantity of a tracked
         quant.
         """
@@ -552,7 +536,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(quantity, 1)
         self.assertNotEqual(in_date, None)
 
-    def test_in_date_3(self):
+    def test_quant_in_date_3(self):
         """ Check that the FIFO strategies correctly applies when you have multiple lot received
         at different times for a tracked product.
         """
@@ -570,8 +554,7 @@ class StockQuant(TransactionCase):
         in_date_lot2 = datetime.now() - timedelta(days=5)
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot1, in_date=in_date_lot1)
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot2, in_date=in_date_lot2)
-
-        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
+        quants = self.env['stock.quant']._get_reserve_quantity(self.product_serial, self.stock_location, 1.0)
 
         # Default removal strategy is FIFO, so lot2 should be received as it was received earlier.
         self.assertEqual(quants[0][0].lot_id.id, lot2.id)
@@ -597,12 +580,13 @@ class StockQuant(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot1, in_date=in_date_lot1)
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot2, in_date=in_date_lot2)
 
-        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
+        self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
+        quants = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', self.stock_location.id)])
 
         # Removal strategy is LIFO, so lot1 should be received as it was received later.
         self.assertEqual(quants[0][0].lot_id.id, lot1.id)
 
-    def test_in_date_5(self):
+    def test_quant_in_date_5(self):
         """ Receive the same lot at different times, once they're in the same location, the quants
         are merged and only the earliest incoming date is kept.
         """
@@ -659,8 +643,7 @@ class StockQuant(TransactionCase):
         # Add a product from lot2 in stock_location/subloc3
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_subloc3, 1.0, lot_id=lot2, in_date=in_date)
         # Require one unit of the product
-        quants = self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1)
-
+        quants = self.env['stock.quant']._get_reserve_quantity(self.product_serial, self.stock_location, 1)
         # Default removal strategy is 'Closest location', so lot1 should be received as it was put in a closer location. (stock_location/subloc2 < stock_location/subloc3)
         self.assertEqual(quants[0][0].lot_id.id, lot1.id)
 
@@ -682,12 +665,14 @@ class StockQuant(TransactionCase):
             'quantity': 3.0
         })
         # Request 3 units of product, with 'Closest location' as removal strategy
-        quants = self.env['stock.quant']._update_reserved_quantity(self.product, self.stock_location, 3)
+        quants = self.env['stock.quant']._get_reserve_quantity(self.product, self.stock_location, 3)
 
         # The 2 in stock_location/subloc2 should be taken first, as the location name is smaller alphabetically
-        self.assertEqual(quants[0][0].reserved_quantity, 2)
+        self.assertEqual(quants[0][1], 2)
+        self.assertEqual(quants[0][0].location_id, self.stock_subloc2)
         # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
-        self.assertEqual(quants[1][0].reserved_quantity, 1)
+        self.assertEqual(quants[1][1], 1)
+        self.assertEqual(quants[1][0].location_id, self.stock_subloc3)
 
     def test_in_date_6(self):
         """
@@ -706,9 +691,9 @@ class StockQuant(TransactionCase):
         })
         move._action_confirm()
         move._action_assign()
-        move.quantity_done = 1
+        move.quantity = 1
+        move.picked = True
         move._action_done()
-
 
         tomorrow = fields.Datetime.now() + timedelta(days=1)
         with patch.object(fields.Datetime, 'now', lambda: tomorrow):
@@ -722,7 +707,8 @@ class StockQuant(TransactionCase):
             })
             move._action_confirm()
             move._action_assign()
-            move.quantity_done = 1
+            move.quantity = 1
+            move.picked = True
             move._action_done()
 
             quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('location_id', '=', self.stock_location.id), ('quantity', '>', 0)])
@@ -744,7 +730,8 @@ class StockQuant(TransactionCase):
         })
         move._action_confirm()
         move._action_assign()
-        move.quantity_done = 1
+        move.quantity = 1
+        move.picked = True
         move._action_done()
 
         quant = self.gather_relevant(self.product, self.stock_subloc2)
@@ -775,7 +762,6 @@ class StockQuant(TransactionCase):
                 'product_uom': self.product.uom_id.id,
             })],
             'state': 'draft',
-            'immediate_transfer': False,
         })
         picking.action_confirm()
 
@@ -783,9 +769,10 @@ class StockQuant(TransactionCase):
             'name': 'Super Package',
         })
         picking.move_ids.move_line_ids.write({
-            'qty_done': 10,
+            'quantity': 10,
             'result_package_id': package.id,
         })
+        picking.move_ids.picked = True
         picking.button_validate()
 
         package.unpack()
@@ -846,7 +833,7 @@ class StockQuant(TransactionCase):
         receipt01.action_confirm()
         receipt01.move_line_ids.write({
             'lot_name': 'Michel',
-            'qty_done': 1.0
+            'quantity': 1.0
         })
         receipt01.button_validate()
 
@@ -858,8 +845,9 @@ class StockQuant(TransactionCase):
         stock_return_picking_action = wizard.create_returns()
 
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids.move_line_ids.qty_done = 1.0
+        return_pick.move_ids.move_line_ids.quantity = 1.0
         return_pick.action_put_in_pack()
+        return_pick.move_ids.picked = True
         return_pick._action_done()
 
         self.assertEqual(return_pick.move_line_ids.lot_id, quant.lot_id)
@@ -881,7 +869,7 @@ class StockQuant(TransactionCase):
         receipt02.action_confirm()
         receipt02.move_line_ids.write({
             'lot_name': 'Michel',
-            'qty_done': 1.0
+            'quantity': 1.0
         })
         receipt02.button_validate()
 
@@ -1082,17 +1070,18 @@ class StockQuantRemovalStrategy(TransactionCase):
         for package_size, number_of_packages in packages_data:
             if not package_size:
                 ml_vals_list.append(dict(**ml_common_vals, **{
-                    'qty_done': number_of_packages,
+                    'quantity': number_of_packages,
                 }))
                 continue
             for dummy in range(number_of_packages):
                 package = packages[0]
                 packages = packages[1:]
                 ml_vals_list.append(dict(**ml_common_vals, **{
-                    'qty_done': package_size,
+                    'quantity': package_size,
                     'result_package_id': package.id,
                 }))
         self.env['stock.move.line'].create(ml_vals_list)
+        move.picked = True
         move._action_done()
 
     def test_least_package_removal_strategy_priority_to_package(self):
@@ -1151,9 +1140,9 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.assertEqual(len(move.move_line_ids), 12)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'reserved_qty': 1000}] +
-            [{'reserved_qty': 50}] * 5 +
-            [{'reserved_qty': 5}] * 6
+            [{'quantity': 1000}] +
+            [{'quantity': 50}] * 5 +
+            [{'quantity': 5}] * 6
         )
 
     def test_least_package_removal_strategy_not_possible(self):
@@ -1182,7 +1171,7 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.assertEqual(len(move.move_line_ids), 2)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'reserved_qty': 10}] + [{'reserved_qty': 3}]
+            [{'quantity': 10}] + [{'quantity': 3}]
         )
         # Make sure it selects the smallest possible package as best leaf.
         self.assertEqual(
@@ -1216,9 +1205,9 @@ class StockQuantRemovalStrategy(TransactionCase):
         self.assertEqual(len(move.move_line_ids), 8)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'reserved_qty': 2}] +
-            [{'reserved_qty': 10}] * 5 +
-            [{'reserved_qty': 5}] * 2
+            [{'quantity': 2}] +
+            [{'quantity': 10}] * 5 +
+            [{'quantity': 5}] * 2
         )
 
     def test_clean_quant_after_package_move(self):
@@ -1241,8 +1230,9 @@ class StockQuantRemovalStrategy(TransactionCase):
         move._action_assign()
         move.move_line_ids.write({
             'result_package_id': package.id,
-            'qty_done': 1,
+            'quantity': 1,
         })
+        move.picked = True
         move._action_done()
 
         self.assertFalse(self.env['stock.quant'].search_count([

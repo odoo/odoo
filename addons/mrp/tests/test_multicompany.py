@@ -175,8 +175,9 @@ class TestMrpMulticompany(common.TransactionCase):
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = lot_b
-            ml.qty_done = 1
+            ml.quantity = 1
         details_operation_form.save()
+        mo.move_raw_ids.picked = True
         with self.assertRaises(UserError):
             mo.button_mark_done()
 

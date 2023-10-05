@@ -44,6 +44,7 @@ class TestRepairTraceability(TestMrpCommon):
         mo.lot_producing_id = ptrepair_lot
         # Set component serial to B2
         mo.move_raw_ids.move_line_ids.lot_id = ptremove_lot
+        mo.move_raw_ids.picked = True
         mo.button_mark_done()
 
         with Form(self.env['repair.order']) as ro_form:
@@ -56,6 +57,7 @@ class TestRepairTraceability(TestMrpCommon):
         ro.action_validate()
         ro.move_ids[0].lot_ids = ptremove_lot # Remove product Serial B2 from the product.
         ro.action_repair_start()
+        ro.move_ids.picked = True
         ro.action_repair_end()
 
         # Create a manufacturing order with product (with SN A2)
@@ -74,6 +76,7 @@ class TestRepairTraceability(TestMrpCommon):
         })
         # Set component serial to B2 again, it is possible
         mo2.move_raw_ids.move_line_ids.lot_id = ptremove_lot
+        mo2.move_raw_ids.picked = True
         # We are not forbidden to use that serial number, so nothing raised here
         mo2.button_mark_done()
 
@@ -92,6 +95,7 @@ class TestRepairTraceability(TestMrpCommon):
             mo = mo_form.save()
             mo.action_confirm()
             mo.action_assign()
+            mo.move_raw_ids.picked = True
             mo.button_mark_done()
             return mo
 
@@ -128,8 +132,8 @@ class TestRepairTraceability(TestMrpCommon):
         ro.action_validate()
         ro.move_ids[0].lot_ids = sn_lot
         ro.action_repair_start()
+        ro.move_ids.picked = True
         ro.action_repair_end()
-
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)

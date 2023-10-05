@@ -116,7 +116,8 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.qty_available, 0.0)
         self.assertEqual(product.virtual_available, -5.0)
 
-        customer_move.quantity_done = 5
+        customer_move.quantity = 5
+        customer_move.picked = True
         customer_move._action_done()
         self.assertEqual(product.qty_available, -5.0)
 
@@ -124,7 +125,8 @@ class TestWarehouse(TestStockCommon):
         receive_move = self._create_move(product, self.env.ref('stock.stock_location_suppliers'), self.warehouse_1.lot_stock_id, product_uom_qty=15)
 
         receive_move._action_confirm()
-        receive_move.quantity_done = 15
+        receive_move.quantity = 15
+        receive_move.picked = True
         receive_move._action_done()
 
         product._compute_quantities()
@@ -139,7 +141,8 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.qty_available, 10.0)
         self.assertEqual(product.virtual_available, 8.0)
 
-        customer_move_2.quantity_done = 2.0
+        customer_move_2.quantity = 2.0
+        customer_move_2.picked = True
         customer_move_2._action_done()
         product._compute_quantities()
         self.assertEqual(product.qty_available, 8.0)
@@ -167,7 +170,8 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.move_ids.quantity_done = 1
+        picking_out.move_ids.quantity = 1
+        picking_out.move_ids.picked = True
         picking_out._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
@@ -180,7 +184,8 @@ class TestWarehouse(TestStockCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
-        return_pick.move_ids.quantity_done = 1
+        return_pick.move_ids.quantity = 1
+        return_pick.move_ids.picked = True
         return_pick._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
@@ -210,7 +215,8 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.move_ids.quantity_done = 1
+        picking_out.move_ids.quantity = 1
+        picking_out.move_ids.picked = True
         picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0
@@ -283,7 +289,6 @@ class TestWarehouse(TestStockCommon):
             'location_id': warehouse_shop.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
         })
-        picking_out.action_reset_draft()
         self.env['stock.move'].create({
             'name': product.name,
             'product_id': product.id,
@@ -367,7 +372,6 @@ class TestWarehouse(TestStockCommon):
             'location_id': warehouse_shop_namur.lot_stock_id.id,
             'location_dest_id': customer_location.id,
             'state': 'draft',
-            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': product.name,
@@ -387,17 +391,20 @@ class TestWarehouse(TestStockCommon):
         picking_stock_transit = self.env['stock.picking'].search([('location_id', '=', warehouse_distribution_namur.lot_stock_id.id)])
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
-        picking_stock_transit.move_ids[0].quantity_done = 1.0
+        picking_stock_transit.move_ids[0].quantity = 1.0
+        picking_stock_transit.move_ids[0].picked = True
         picking_stock_transit._action_done()
 
         picking_transit_shop_namur = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_namur.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_namur)
         picking_transit_shop_namur.action_assign()
-        picking_transit_shop_namur.move_ids[0].quantity_done = 1.0
+        picking_transit_shop_namur.move_ids[0].quantity = 1.0
+        picking_transit_shop_namur.move_ids[0].picked = True
         picking_transit_shop_namur._action_done()
 
         picking_out_namur.action_assign()
-        picking_out_namur.move_ids[0].quantity_done = 1.0
+        picking_out_namur.move_ids[0].picked = True
+        picking_out_namur.move_ids[0].quantity = 1.0
         picking_out_namur._action_done()
 
         # Check that the correct quantity has been provided to customer
@@ -413,7 +420,6 @@ class TestWarehouse(TestStockCommon):
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
             'location_dest_id': customer_location.id,
             'state': 'draft',
-            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': product.name,
@@ -433,17 +439,20 @@ class TestWarehouse(TestStockCommon):
         picking_stock_transit = self.env['stock.picking'].search([('location_id', '=', warehouse_distribution_wavre.lot_stock_id.id)])
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
-        picking_stock_transit.move_ids[0].quantity_done = 1.0
+        picking_stock_transit.move_ids[0].quantity = 1.0
+        picking_stock_transit.move_ids[0].picked = True
         picking_stock_transit._action_done()
 
         picking_transit_shop_wavre = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_wavre.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_wavre)
         picking_transit_shop_wavre.action_assign()
-        picking_transit_shop_wavre.move_ids[0].quantity_done = 1.0
+        picking_transit_shop_wavre.move_ids[0].quantity = 1.0
+        picking_transit_shop_wavre.move_ids[0].picked = True
         picking_transit_shop_wavre._action_done()
 
         picking_out_wavre.action_assign()
-        picking_out_wavre.move_ids[0].quantity_done = 1.0
+        picking_out_wavre.move_ids[0].quantity = 1.0
+        picking_out_wavre.move_ids[0].picked = True
         picking_out_wavre._action_done()
 
         # Check that the correct quantity has been provided to customer

@@ -84,12 +84,12 @@ class StockScrap(models.Model):
         for scrap in self:
             scrap.scrap_location_id = locations_per_company[scrap.company_id.id]
 
-    @api.depends('move_ids', 'move_ids.move_line_ids.qty_done', 'product_id')
+    @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
     def _compute_scrap_qty(self):
         self.scrap_qty = 1
         for scrap in self:
             if scrap.move_ids:
-                scrap.scrap_qty = scrap.move_ids[0].quantity_done
+                scrap.scrap_qty = scrap.move_ids[0].quantity
 
     @api.onchange('lot_id')
     def _onchange_serial_number(self):
@@ -123,15 +123,18 @@ class StockScrap(models.Model):
             'scrapped': True,
             'scrap_id': self.id,
             'location_dest_id': self.scrap_location_id.id,
-            'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
-                                           'product_uom_id': self.product_uom_id.id,
-                                           'qty_done': self.scrap_qty,
-                                           'location_id': self.location_id.id,
-                                           'location_dest_id': self.scrap_location_id.id,
-                                           'package_id': self.package_id.id,
-                                           'owner_id': self.owner_id.id,
-                                           'lot_id': self.lot_id.id, })],
-#             'restrict_partner_id': self.owner_id.id,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_uom_id.id,
+                'quantity': self.scrap_qty,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.scrap_location_id.id,
+                'package_id': self.package_id.id,
+                'owner_id': self.owner_id.id,
+                'lot_id': self.lot_id.id,
+            })],
+            # 'restrict_partner_id': self.owner_id.id,
+            'picked': True,
             'picking_id': self.picking_id.id
         }
 

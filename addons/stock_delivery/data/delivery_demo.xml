@@ -22,7 +22,7 @@
                 'location_dest_id': ref('stock.stock_location_customers'),
             })]"/>
         </record>
-        
+
         <record id="outgoing_shipment_with_carrier_assigned" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment</field>
@@ -42,7 +42,7 @@
                 'location_dest_id': ref('stock.stock_location_customers'),
             })]"/>
         </record>
-        
+
         <record id="outgoing_shipment_with_carrier_done" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="origin">outgoing shipment</field>
@@ -77,7 +77,7 @@
         </function>
         <function model="stock.move.line" name="write">
             <value model="stock.move.line" search="[('picking_id', '=', ref('outgoing_shipment_with_carrier_done'))]"/>
-            <value eval="{'qty_done': 1}"/>
+            <value eval="{'quantity': 1}"/>
         </function>
         <function model="stock.picking" name="_action_done">
             <value model="stock.picking" eval="[

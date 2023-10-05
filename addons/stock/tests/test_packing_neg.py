@@ -48,7 +48,6 @@ class TestPackingNeg(TransactionCase):
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
             'state': 'draft',
-            'immediate_transfer': False,
         }
         pick_neg = self.env['stock.picking'].create(vals)
         pick_neg._onchange_picking_type()
@@ -67,13 +66,13 @@ class TestPackingNeg(TransactionCase):
         package3 = self.env['stock.quant.package'].create({'name': 'Palneg 3'})
         # Create package for each line and assign it as result_package_id
         # create pack operation
-        pick_neg.move_line_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
+        pick_neg.move_line_ids[0].write({'result_package_id': package1.id, 'quantity': 120})
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
             'product_uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick_neg.id,
             'lot_id': lot_a.id,
-            'qty_done': 120,
+            'quantity': 120,
             'result_package_id': package2.id,
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock')
@@ -83,12 +82,13 @@ class TestPackingNeg(TransactionCase):
             'product_uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick_neg.id,
             'result_package_id': package3.id,
-            'qty_done': 60,
+            'quantity': 60,
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock')
         })
 
         # Transfer the receipt
+        pick_neg.move_ids.picked = True
         pick_neg._action_done()
 
         # Make a delivery order of 300 pieces to the customer
@@ -107,7 +107,6 @@ class TestPackingNeg(TransactionCase):
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
             'state': 'draft',
-            'immediate_transfer': False,
         }
         delivery_order_neg = self.env['stock.picking'].create(vals)
         delivery_order_neg._onchange_picking_type()
@@ -122,18 +121,18 @@ class TestPackingNeg(TransactionCase):
 
         for rec in delivery_order_neg.move_line_ids:
             if rec.package_id.name == 'Palneg 1':
-                rec.qty_done = rec.reserved_qty
                 rec.result_package_id = False
             elif rec.package_id.name == 'Palneg 2' and rec.lot_id.name == 'Lot neg':
                 rec.write({
-                  'qty_done': 140,
+                  'quantity': 140,
                   'result_package_id': False,
                 })
             elif rec.package_id.name == 'Palneg 3':
-                rec.qty_done = 10
+                rec.quantity = 10
                 rec.result_package_id = False
 
         # Process this picking
+        delivery_order_neg.move_ids.picked = True
         delivery_order_neg._action_done()
 
         # Check the quants that you have -20 pieces pallet 2 in stock, and a total quantity
@@ -166,7 +165,6 @@ class TestPackingNeg(TransactionCase):
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
             'state': 'draft',
-            'immediate_transfer': False,
         }
         delivery_reconcile = self.env['stock.picking'].create(vals)
         delivery_reconcile._onchange_picking_type()
@@ -178,7 +176,8 @@ class TestPackingNeg(TransactionCase):
             ('product_id', '=', product_neg.id),
             ('name', '=', 'Lot neg')], limit=1)
         pack = self.env["stock.quant.package"].search([('name', '=', 'Palneg 2')], limit=1)
-        delivery_reconcile.move_line_ids[0].write({'lot_id': lot.id, 'qty_done': 20.0, 'result_package_id': pack.id})
+        delivery_reconcile.move_line_ids[0].write({'lot_id': lot.id, 'quantity': 20.0, 'result_package_id': pack.id})
+        delivery_reconcile.move_ids.picked = True
         delivery_reconcile._action_done()
 
         # Check the negative quant was reconciled

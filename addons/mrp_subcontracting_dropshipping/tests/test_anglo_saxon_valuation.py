@@ -69,8 +69,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         po.button_confirm()
 
         delivery = po.picking_ids
-        res = delivery.button_validate()
-        Form(self.env['stock.immediate.transfer'].with_context(res['context'])).save().process()
+        delivery.button_validate()
 
         stock_in_acc_id = self.categ_fifo_auto.property_stock_account_input_categ_id.id
         stock_out_acc_id = self.categ_fifo_auto.property_stock_account_output_categ_id.id
@@ -104,7 +103,8 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         return_wizard = return_form.save()
         return_id, _ = return_wizard._create_returns()
         return_picking = self.env['stock.picking'].browse(return_id)
-        return_picking.move_ids.quantity_done = 1
+        return_picking.move_ids.quantity = 1
+        return_picking.move_ids.picked = True
         return_picking.button_validate()
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
@@ -125,7 +125,8 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         return_wizard = return_form.save()
         return_id, _ = return_wizard._create_returns()
         return_picking = self.env['stock.picking'].browse(return_id)
-        return_picking.move_ids.quantity_done = 1
+        return_picking.move_ids.quantity = 1
+        return_picking.move_ids.picked = True
         return_picking.button_validate()
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])

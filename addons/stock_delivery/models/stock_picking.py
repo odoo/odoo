@@ -42,18 +42,18 @@ class StockPicking(models.Model):
                         packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.quantity')
     def _compute_bulk_weight(self):
         picking_weights = defaultdict(float)
         res_groups = self.env['stock.move.line']._read_group(
             [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
-            ['picking_id', 'product_id', 'product_uom_id', 'qty_done'],
+            ['picking_id', 'product_id', 'product_uom_id', 'quantity'],
             ['__count'],
         )
-        for picking, product, product_uom, qty_done, count in res_groups:
+        for picking, product, product_uom, quantity, count in res_groups:
             picking_weights[picking.id] += (
                 count
-                * product_uom._compute_quantity(qty_done, product.uom_id)
+                * product_uom._compute_quantity(quantity, product.uom_id)
                 * product.weight
             )
         for picking in self:

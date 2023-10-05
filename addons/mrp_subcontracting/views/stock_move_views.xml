@@ -23,10 +23,7 @@
                     invisible="tracking not in ('serial', 'lot')"
                     required="tracking in ('serial', 'lot')"
                     context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
-                <field name="reserved_uom_qty" readonly="1" force_save="1"/>
-                <field name="qty_done" 
-                    decoration-warning="reserved_uom_qty &lt; qty_done"
-                    decoration-success="reserved_uom_qty == qty_done"/>
+                <field name="quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
             </tree>
         </field>
@@ -70,18 +67,7 @@
             </xpath>
         </field>
     </record>
-    <record id="mrp_subcontracting_view_stock_move_nosuggest_operations" model="ir.ui.view">
-        <field name="name">mrp.subcontracting.stock.move.operations.nosuggest.form</field>
-        <field name="model">stock.move</field>
-        <field name="mode">primary</field>
-        <field name="priority">1000</field>
-        <field name="inherit_id" ref="stock.view_stock_move_nosuggest_operations" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='move_line_nosuggest_ids']" position="attributes">
-                <attribute name="context">{'tree_view_ref': 'mrp_subcontracting.mrp_subcontracting_view_stock_move_line_operation_tree','default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}</attribute>
-            </xpath>
-        </field>
-    </record>
+
     <record id="mrp_subcontracting_move_form_view" model="ir.ui.view">
         <field name="name">mrp.subcontracting.move.form.view</field>
         <field name="model">stock.move</field>
@@ -105,7 +91,7 @@
                     <group>
                         <field name="order_finished_lot_id"/>
                         <field name="product_uom" groups="uom.group_uom"/>
-                        <field name="quantity_done" string="Total Consumed" readonly="1"/>
+                        <field name="quantity" string="Total Consumed" readonly="1"/>
                     </group>
                     <field name="move_line_ids"
                         readonly="state in ['done', 'cancel']"
@@ -121,7 +107,7 @@
                             <field name="location_id" column_invisible="True"/>
                             <field name="location_dest_id" column_invisible="True"/>
                             <field name="product_id" readonly="1" force_save="1"/>
-                            <field name="qty_done"/>
+                            <field name="quantity"/>
                             <field name="lot_id" column_invisible="parent.has_tracking not in ('serial', 'lot')" required="tracking in ('serial', 'lot')" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot"/>
                         </tree>
                     </field>
@@ -152,7 +138,7 @@
         <field name="model">stock.move</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
+            <tree delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
                 <field name="company_id" column_invisible="True"/>
                 <field name="sequence" column_invisible="True"/>
                 <field name="product_uom_category_id" column_invisible="True"/>
@@ -172,8 +158,7 @@
                 <field name="raw_material_production_id" column_invisible="True"/>
                 <field name="product_id" required="1" readonly="state == 'done'"/>
                 <field name="order_finished_lot_id"/>
-                <field name="reserved_availability" invisible="is_done" string="Reserved"/>
-                <field name="quantity_done" string="Consumed" readonly="1"/>
+                <field name="quantity" string="Consumed" readonly="1"/>
                 <field name="product_uom" groups="uom.group_uom"/>
             </tree>
         </field>

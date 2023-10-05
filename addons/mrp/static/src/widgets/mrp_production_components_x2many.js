@@ -7,7 +7,7 @@ import { StockMoveX2ManyField, MovesListRenderer } from "@stock/views/picking_fo
 export class MrpProductionComponentsListRenderer extends MovesListRenderer  {
     getCellClass(column, record) {
         let classNames = super.getCellClass(...arguments);
-        if (column.name == "quantity_done" && !record.data.manual_consumption) {
+        if (column.name == "quantity" && !record.data.manual_consumption) {
             classNames += ' o_non_manual_consumption';
         }
         return classNames;

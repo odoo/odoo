@@ -55,8 +55,7 @@ class TestCreatePicking(common.TestProductCommon):
 
         # Validate first shipment
         self.picking = self.po.picking_ids[0]
-        for ml in self.picking.move_line_ids:
-            ml.qty_done = ml.reserved_uom_qty
+        self.picking.move_ids.picked = True
         self.picking._action_done()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [7.0], 'Purchase: all products should be received')
 
@@ -169,7 +168,8 @@ class TestCreatePicking(common.TestProductCommon):
 
         # Process pickings
         picking.action_confirm()
-        picking.move_ids.quantity_done = 100.0
+        picking.move_ids.quantity = 100.0
+        picking.move_ids.picked = True
         picking.button_validate()
 
         # mts move will be automatically assigned
@@ -219,8 +219,11 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move2.product_qty, 12)
 
         # deliver everything
-        move1.quantity_done = 24
-        move2.quantity_done = 1
+        move1.quantity = 24
+        move1.picked = True
+        move2.quantity = 1
+        move2.picked = True
+
         po.picking_ids.button_validate()
 
         # check the delivered quantity
@@ -273,7 +276,6 @@ class TestCreatePicking(common.TestProductCommon):
             'procure_method': 'make_to_order',
             'picking_id': customer_picking.id,
         })
-        customer_picking.action_reset_draft()
         customer_picking.action_confirm()
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
@@ -308,13 +310,15 @@ class TestCreatePicking(common.TestProductCommon):
 
         purchase_order_2.button_confirm()
 
-        purchase_order.picking_ids.move_ids.quantity_done = 80.0
+        purchase_order.picking_ids.move_ids.quantity = 80.0
+        purchase_order.picking_ids.move_ids.picked = True
         purchase_order.picking_ids.button_validate()
 
-        purchase_order_2.picking_ids.move_ids.quantity_done = 20.0
+        purchase_order_2.picking_ids.move_ids.quantity = 20.0
+        purchase_order_2.picking_ids.move_ids.picked = True
         purchase_order_2.picking_ids.button_validate()
 
-        self.assertEqual(sum(customer_picking.move_ids.mapped('reserved_availability')), 100.0, 'The total quantity for the customer move should be available and reserved.')
+        self.assertEqual(sum(customer_picking.move_ids.mapped('quantity')), 100.0, 'The total quantity for the customer move should be available and reserved.')
 
     def test_04_rounding(self):
         """ We set the Unit(s) rounding to 1.0 and ensure buying 1.2 units in a PO is rounded to 1.0
@@ -342,7 +346,8 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move1.product_qty, 2.0)
 
         # deliver everything
-        move1.quantity_done = 2.0
+        move1.quantity = 2.0
+        move1.picked = True
         po.picking_ids.button_validate()
 
         # check the delivered quantity
@@ -420,7 +425,6 @@ class TestCreatePicking(common.TestProductCommon):
             'picking_id': delivery_order.id,
         })
 
-        delivery_order.action_reset_draft()
         delivery_order.action_confirm()
         # find created po the product
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
@@ -471,7 +475,8 @@ class TestCreatePicking(common.TestProductCommon):
         po.button_approve()
 
         po.picking_ids.move_line_ids.write({
-            'qty_done': 1.0
+            'quantity': 1.0,
+            'picked': True
         })
         po.picking_ids.button_validate()
 
@@ -486,7 +491,8 @@ class TestCreatePicking(common.TestProductCommon):
         po.button_confirm()
 
         first_picking = po.picking_ids
-        first_picking.move_ids.quantity_done = 5
+        first_picking.move_ids.quantity = 5
+        first_picking.move_ids.picked = True
         # create the backorder
         backorder_wizard_dict = first_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
@@ -507,7 +513,8 @@ class TestCreatePicking(common.TestProductCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
-        return_pick.move_ids.quantity_done = 2
+        return_pick.move_ids.quantity = 2
+        return_pick.move_ids.picked = True
         return_pick._action_done()
 
         self.assertEqual(po.order_line.qty_received, 3)
@@ -672,12 +679,13 @@ class TestCreatePicking(common.TestProductCommon):
             line.product_qty = 10
         po = po_form.save()
         po.button_approve()
-
         first_picking = po.picking_ids
-        first_picking.move_ids.quantity_done = 10
+        first_picking.move_ids.quantity = 10
+        first_picking.move_ids.picked = True
         first_picking.button_validate()
         second_picking = first_picking.move_ids.move_dest_ids.picking_id
-        second_picking.move_ids.quantity_done = 10
+        second_picking.move_ids.quantity = 10
+        second_picking.move_ids.picked = True
         second_picking.button_validate()
 
         self.assertEqual(po.order_line.qty_received, 10)
@@ -695,11 +703,13 @@ class TestCreatePicking(common.TestProductCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
-        return_pick.move_ids.quantity_done = 2
+        return_pick.move_ids.quantity = 2
+        return_pick.move_ids.picked = True
         return_pick._action_done()
         push_pick = return_pick.move_ids.move_dest_ids.picking_id
         push_pick.action_assign()
-        push_pick.move_ids.quantity_done = 2
+        push_pick.move_ids.quantity = 2
+        push_pick.move_ids.picked = True
         push_pick._action_done()
 
         self.assertEqual(po.order_line.qty_received, 8)

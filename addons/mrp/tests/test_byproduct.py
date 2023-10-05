@@ -105,7 +105,7 @@ class TestMrpByProduct(common.TransactionCase):
         mnf_product_a.action_confirm()
         self.assertEqual(mnf_product_a.state, "confirmed")
         mnf_product_a.move_raw_ids._action_assign()
-        mnf_product_a.move_raw_ids.quantity_done = mnf_product_a.move_raw_ids.product_uom_qty
+        mnf_product_a.move_raw_ids.picked = True
         mnf_product_a.move_raw_ids._action_done()
         self.assertEqual(mnf_product_a.state, "progress")
         mnf_product_a.qty_producing = 2
@@ -357,8 +357,6 @@ class TestMrpByProduct(common.TransactionCase):
             'production_id': mo.id,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
-            'product_uom_qty': 0,
-            'quantity_done': 0
             })
         byproduct_2 = self.env['stock.move'].create({
             'name': 'By Product 2',
@@ -367,8 +365,6 @@ class TestMrpByProduct(common.TransactionCase):
             'production_id': mo.id,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
-            'product_uom_qty': 0,
-            'quantity_done': 0
             })
 
         # Update byproduct has cost share > 100%
@@ -404,6 +400,5 @@ class TestMrpByProduct(common.TransactionCase):
         mo_form.qty_producing = 1
         mo = mo_form.save()
         self.assertEqual(mo.state, 'to_close')
-        mo.move_byproduct_ids[0].quantity_done = 1
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')

@@ -46,14 +46,14 @@ class MrpConsumptionWarning(models.TransientModel):
                     if line.product_id != move.product_id:
                         continue
                     qty_expected = line.product_uom_id._compute_quantity(line.product_expected_qty_uom, move.product_uom)
-                    qty_compare_result = float_compare(qty_expected, move.quantity_done, precision_rounding=move.product_uom.rounding)
+                    qty_compare_result = float_compare(qty_expected, move.quantity, precision_rounding=move.product_uom.rounding)
                     if qty_compare_result != 0:
                         if (move.has_tracking in ('lot', 'serial')
                             and not production.use_auto_consume_components_lots
                             and qty_compare_result > 0):
                             problem_tracked_products |= line.product_id
                             break
-                        move.quantity_done = qty_expected
+                        move.quantity = qty_expected
                     # in case multiple lines with same product => set others to 0 since we have no way to know how to distribute the qty done
                     line.product_expected_qty_uom = 0
                 # move was deleted before confirming MO or force deleted somehow
@@ -65,9 +65,10 @@ class MrpConsumptionWarning(models.TransientModel):
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom_id.id,
                         'product_uom_qty': line.product_expected_qty_uom,
-                        'quantity_done': line.product_expected_qty_uom,
+                        'quantity': line.product_expected_qty_uom,
                         'raw_material_production_id': line.mrp_production_id.id,
                         'additional': True,
+                        'picked': True,
                     })
         if problem_tracked_products:
             raise UserError(

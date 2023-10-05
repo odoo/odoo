@@ -53,9 +53,8 @@ class StockMove(TransactionCase):
         self.env['stock.move.line'].create({
             'move_id': picking.move_ids_without_package.id,
             'product_id': self.product.id,
-            'reserved_uom_qty': 1.0,
-            'qty_done': 0,
+            'quantity': 1.0,
         })
-        self.assertEqual(picking.move_ids.reserved_availability, 1.0)
+        self.assertEqual(picking.move_ids.quantity, 1.0)
         self.assertEqual(picking.move_ids.state, 'assigned')
-        self.assertEqual(picking.move_ids.quantity_done, 0)
+        self.assertEqual(picking.move_ids.picked, False)

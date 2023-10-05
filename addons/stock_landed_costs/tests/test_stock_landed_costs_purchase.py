@@ -21,7 +21,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'picking_type_id': cls.warehouse.in_type_id.id,
             'location_id': cls.supplier_location_id,
             'state': 'draft',
-            'immediate_transfer': False,
             'location_dest_id': cls.warehouse.lot_stock_id.id})
         cls.Move.create({
             'name': cls.product_refrigerator.name,
@@ -45,7 +44,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'picking_type_id': cls.warehouse.out_type_id.id,
             'location_id': cls.warehouse.lot_stock_id.id,
             'state': 'draft',
-            'immediate_transfer': False,
             'location_dest_id': cls.customer_location_id})
         cls.Move.create({
             'name': cls.product_refrigerator.name,
@@ -298,26 +296,20 @@ class TestLandedCosts(TestStockLandedCostsCommon):
     def _process_incoming_shipment(self):
         """ Two product incoming shipment. """
         # Confirm incoming shipment.
-        self.picking_in.action_reset_draft()
         self.picking_in.action_confirm()
         # Transfer incoming shipment
-        res_dict = self.picking_in.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict.get('context'))).save()
-        wizard.process()
+        self.picking_in.button_validate()
         return self.picking_in
 
     def _process_outgoing_shipment(self):
         """ One product Outgoing shipment. """
         # Confirm outgoing shipment.
-        self.picking_out.action_reset_draft()
         self.picking_out.action_confirm()
         # Product assign to outgoing shipments
         self.picking_out.action_assign()
         # Transfer picking.
 
-        res_dict = self.picking_out.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        wizard.process()
+        self.picking_out.button_validate()
 
     def _create_landed_costs(self, value, picking_in):
         return self.LandedCost.create(dict(
@@ -391,7 +383,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # Receive the goods
         receipt = order.picking_ids[0]
-        receipt.move_ids.quantity_done = 1
+        receipt.move_ids.quantity = 1
         receipt.button_validate()
 
         # Check SVL and AML
@@ -465,7 +457,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         po.button_confirm()
 
         receipt = po.picking_ids
-        receipt.move_ids.quantity_done = 1
+        receipt.move_ids.quantity = 1
         receipt.button_validate()
         po.order_line[1].qty_received = 1
 

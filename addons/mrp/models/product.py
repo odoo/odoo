@@ -314,7 +314,7 @@ class ProductProduct(models.Model):
     def _count_returned_sn_products(self, sn_lot):
         res = self.env['stock.move.line'].search_count([
             ('lot_id', '=', sn_lot.id),
-            ('qty_done', '=', 1),
+            ('quantity', '=', 1),
             ('state', '=', 'done'),
             ('production_id', '=', False),
             ('location_id.usage', '=', 'production'),

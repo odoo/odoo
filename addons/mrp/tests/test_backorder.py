@@ -74,7 +74,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo_backorder.product_id.id, production.product_id.id)
         self.assertEqual(mo_backorder.product_qty, 3)
         self.assertEqual(sum(mo_backorder.move_raw_ids.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_uom_qty")), 9)
-        self.assertEqual(mo_backorder.reserve_visible, False)  # the reservation of the first MO should've been moved here
+        self.assertEqual(mo_backorder.reserve_visible, False)  # the reservation is retrigger depending on the picking type
 
     def test_no_tracking_pbm_1(self):
         """Create a MO for 4 product. Produce 1. The backorder button should
@@ -195,18 +195,18 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location, nb_product_todo*4, lot_id=lot_1)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, nb_product_todo, lot_id=lot_2)
 
-        production.action_assign()
         active_production = production
         for i in range(nb_product_todo):
+            active_production.action_assign()
 
             details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
-                ml.qty_done = 4
+                ml.quantity = 4
                 ml.lot_id = lot_1
             details_operation_form.save()
             details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
             with details_operation_form.move_line_ids.edit(0) as ml:
-                ml.qty_done = 1
+                ml.quantity = 1
                 ml.lot_id = lot_2
             details_operation_form.save()
 
@@ -215,6 +215,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             production_form.lot_producing_id = lot_final
             active_production = production_form.save()
 
+            active_production.move_raw_ids.picked = True
             active_production.button_mark_done()
             if i + 1 != nb_product_todo:  # If last MO, don't make a backorder
                 action = active_production.button_mark_done()
@@ -249,7 +250,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
         details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
-            ml.qty_done = 4 * 3
+            ml.quantity = 4 * 3
         details_operation_form.save()
 
         # Consume 1 Product from lot1 and 2 from lot 2
@@ -257,10 +258,10 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(len(p2_smls), 2, 'One for each lot')
         details_operation_form = Form(production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
-            ml.qty_done = 1
+            ml.quantity = 1
             ml.lot_id = lot1
         with details_operation_form.move_line_ids.edit(1) as ml:
-            ml.qty_done = 2
+            ml.quantity = 2
             ml.lot_id = lot2
         details_operation_form.save()
 
@@ -272,7 +273,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         p2_bo_mls = production.procurement_group_id.mrp_production_ids[-1].move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
         self.assertEqual(len(p2_bo_mls), 1)
         self.assertEqual(p2_bo_mls.lot_id, lot1)
-        self.assertEqual(p2_bo_mls.reserved_qty, 2)
+        self.assertEqual(p2_bo_mls.quantity, 2)
 
     def test_uom_backorder(self):
         """
@@ -352,22 +353,20 @@ class TestMrpProductionBackorder(TestMrpCommon):
         production.action_assign()
         active_production = production
         for i in range(nb_product_todo):
-
-            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
-            with details_operation_form.move_line_ids.edit(0) as ml:
-                ml.qty_done = 1
-                ml.lot_id = serials_p1[i]
-            details_operation_form.save()
-            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
-            with details_operation_form.move_line_ids.edit(0) as ml:
-                ml.qty_done = 1
-                ml.lot_id = serials_p2[i]
-            details_operation_form.save()
-
             production_form = Form(active_production)
             production_form.qty_producing = 1
             production_form.lot_producing_id = serials_final[i]
             active_production = production_form.save()
+            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p1), view=self.env.ref('stock.view_stock_move_operations'))
+            with details_operation_form.move_line_ids.edit(0) as ml:
+                ml.quantity = 1
+                ml.lot_id = serials_p1[i]
+            details_operation_form.save()
+            details_operation_form = Form(active_production.move_raw_ids.filtered(lambda m: m.product_id == p2), view=self.env.ref('stock.view_stock_move_operations'))
+            with details_operation_form.move_line_ids.edit(0) as ml:
+                ml.quantity = 1
+                ml.lot_id = serials_p2[i]
+            details_operation_form.save()
             active_production.button_mark_done()
             if i + 1 != nb_product_todo:  # If last MO, don't make a backorder
                 action = active_production.button_mark_done()
@@ -556,6 +555,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(production.reserve_visible, False)
         backorder = produce_one(production)
         self.assertEqual(backorder.state, 'confirmed')
+        # The backorder is re reserved depending on the picking type
         self.assertEqual(backorder.reserve_visible, False)
 
 

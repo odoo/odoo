@@ -718,7 +718,7 @@
 
         <function model="stock.move" name="write">
             <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp.mrp_production_drawer').id)]).ids"/>
-            <value eval="{'quantity_done': 5}"/>
+            <value eval="{'quantity': 5, 'picked': True}"/>
         </function>
 
         <function model="mrp.production" name="button_mark_done">

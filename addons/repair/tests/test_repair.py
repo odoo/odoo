@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
 
@@ -215,7 +215,7 @@ class TestRepair(common.TransactionCase):
         # No partner warning -> working case -> already linked warning
 
         # Ensure SO doesn't exist
-        self.assertEqual(repair.sale_order_id.__len__(), 0)
+        self.assertEqual(len(repair.sale_order_id), 0)
         repair.partner_id = None
         with self.assertRaises(UserError) as err:
             repair.action_create_sale_order()
@@ -223,11 +223,10 @@ class TestRepair(common.TransactionCase):
         repair.partner_id = self.res_partner_12.id
         repair.action_create_sale_order()
         # Ensure SO and SOL were created
-        self.assertNotEqual(repair.sale_order_id.__len__(), 0)
-        self.assertEqual(repair.sale_order_id.order_line.__len__(), 3)
+        self.assertNotEqual(len(repair.sale_order_id), 0)
+        self.assertEqual(len(repair.sale_order_id.order_line), 3)
         with self.assertRaises(UserError) as err:
             repair.action_create_sale_order()
-        self.assertIn("You cannot create a quotation for a repair order that is already linked", err.exception.args[0])
 
         # (*) -> cancel (action_repair_cancel)
             # PRE
@@ -271,15 +270,16 @@ class TestRepair(common.TransactionCase):
         # under_repair -> done (action_repair_end -> action_repair_done)
             # PRE
                 # state == under_repair !-> UserError
-                # lines' qty_done >= lines' product_uom_qty !-> Warning
+                # lines' quantity >= lines' product_uom_qty !-> Warning
                 # line tracked => line has lot_ids !-> ValidationError
             # POST
-                # lines with qty_done == 0 are cancelled (related sol product_uom_qty is consequently set to 0)
+                # lines with quantity == 0 are cancelled (related sol product_uom_qty is consequently set to 0)
                 # repair.product_id => repair.move_id
                 # move_ids.state == (done || cancel)
                 # state == done
-                # move_ids with qty_done (LOWER or HIGHER than) product_uom_qty MUST NOT be splitted
-        # Any line with qty_done < product_uom_qty => Warning
+                # move_ids with quantity (LOWER or HIGHER than) product_uom_qty MUST NOT be splitted
+        # Any line with quantity < product_uom_qty => Warning
+        repair.move_ids.picked = True
         end_action = repair.action_repair_end()
         self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
         warn_uncomplete_wizard = Form(
@@ -287,22 +287,22 @@ class TestRepair(common.TransactionCase):
             .with_context(**end_action['context'])
             ).save()
         # LineB : no serial => ValidationError
-        with self.assertRaises(ValidationError) as err:
+        lot = lineB.move_line_ids.lot_id
+        with self.assertRaises(UserError) as err:
+            lineB.move_line_ids.lot_id = False
             warn_uncomplete_wizard.action_validate()
-        self.assertIn("Serial number is required for operation lines", err.exception.args[0])
 
         # LineB with lots
-        move_line = lineB.move_line_ids[0]
-        move_line.qty_done = move_line.reserved_uom_qty
+        lineB.move_line_ids.lot_id = lot
 
-        lineA.quantity_done = 2  # qty_done = product_uom_qty
-        lineC.quantity_done = 2  # qty_done > product_uom_qty (No warning)
+        lineA.quantity = 2  # quantity = product_uom_qty
+        lineC.quantity = 2  # quantity > product_uom_qty (No warning)
         lineD = self._create_simple_part_move(repair.id, 0.0)
         repair.move_ids |= lineD  # product_uom_qty = 0   : state is cancelled
 
         self.assertEqual(lineD.state, 'assigned')
-        num_of_lines = repair.move_ids.__len__()
-        self.assertEqual(repair.move_id.__len__(), 0)
+        num_of_lines = len(repair.move_ids)
+        self.assertFalse(repair.move_id)
         repair.action_repair_end()
 
         self.assertEqual(repair.state, "done")
@@ -310,15 +310,14 @@ class TestRepair(common.TransactionCase):
         #line a,b,c are 'done', line d is 'cancel'
         self.assertTrue(all(m.state == 'done' for m in done_moves))
         self.assertEqual(lineD.state, 'cancel')
-        self.assertEqual(repair.move_id.__len__(), 1)
-        self.assertEqual(repair.move_ids.__len__(), num_of_lines)  # No split
+        self.assertEqual(len(repair.move_id), 1)
+        self.assertEqual(len(repair.move_ids), num_of_lines)  # No split
 
         # (*) -> cancel (action_repair_cancel)
             # PRE
                 # state != done !-> UserError
         with self.assertRaises(UserError) as err:
             repair.action_repair_cancel()
-        self.assertEqual(err.exception.args[0], "You cannot cancel a Repair Order that's already been completed")
 
     def test_02_repair_sale_order_binding(self):
         # Binding from SO to RO(s)
@@ -411,13 +410,14 @@ class TestRepair(common.TransactionCase):
 
         # repair_order.action_repair_end()
         #   -> order_line.qty_delivered == order_line.product_uom_qty
-        #   -> "RO Lines"'s SOL.qty_delivered == move.quantity_done
-        for line in repair_order.move_ids:
-            line.quantity_done = line.product_uom_qty
+        #   -> "RO Lines"'s SOL.qty_delivered == move.quantity
         repair_order.action_repair_start()
+        for line in repair_order.move_ids:
+            line.quantity = line.product_uom_qty
+        repair_order.move_ids.picked = True
         repair_order.action_repair_end()
         self.assertTrue(float_is_zero(order_line.qty_delivered, 2))
-        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.quantity_done, 2), 0)
+        self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.quantity, 2), 0)
         self.assertTrue(float_is_zero(sol_part_1.qty_delivered, 2))
 
     def test_03_sale_order_delivered_qty(self):
@@ -546,9 +546,8 @@ class TestRepair(common.TransactionCase):
         picking = picking_form.save()
         picking.action_confirm()
         picking.action_assign()
-        res_dict = picking.button_validate()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        picking.button_validate()
+
         self.assertEqual(picking.state, 'done')
         # Create a return
         stock_return_picking_form = Form(self.env['stock.return.picking']
@@ -558,7 +557,7 @@ class TestRepair(common.TransactionCase):
         stock_return_picking.product_return_moves.quantity = 1.0
         stock_return_picking_action = stock_return_picking.create_returns()
         return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_picking.action_set_quantities_to_reservation()
+        return_picking.move_ids.picked = True
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
 

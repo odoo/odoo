@@ -72,7 +72,7 @@ class TestDDT(TestSaleCommon):
 
         # deliver partially
         pick = self.so.picking_ids
-        pick.move_ids.write({'quantity_done': 1})
+        pick.move_ids.write({'quantity': 1, 'picked': True})
         wiz_act = pick.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
@@ -84,14 +84,14 @@ class TestDDT(TestSaleCommon):
 
         # deliver partially
         pickx1 = self.so.picking_ids.filtered(lambda p: p.state != 'done')
-        pickx1.move_ids.write({'quantity_done': 1})
+        pickx1.move_ids.write({'quantity': 1, 'picked': True})
         wiz_act = pickx1.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
 
         # and again
         pickx2 = self.so.picking_ids.filtered(lambda p: p.state != 'done')
-        pickx2.move_ids.write({'quantity_done': 2})
+        pickx2.move_ids.write({'quantity': 2, 'picked': True})
         wiz_act = pickx2.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
@@ -129,7 +129,7 @@ class TestDDT(TestSaleCommon):
 
         # deliver partially
         picking_1 = so.picking_ids
-        picking_1.move_ids.write({'quantity_done': 1})
+        picking_1.move_ids.write({'quantity': 1, 'picked': True})
         wiz_act = picking_1.button_validate()
         wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
         wiz.process()
@@ -139,7 +139,7 @@ class TestDDT(TestSaleCommon):
         invoice_1.action_post()
 
         picking_2 = so.picking_ids.filtered(lambda p: p.state != 'done')
-        picking_2.move_ids.write({'quantity_done': 2})
+        picking_2.move_ids.write({'quantity': 2, 'picked': True})
         picking_2.button_validate()
 
         invoice_2 = so._create_invoices()

@@ -179,7 +179,8 @@ class TestPurchaseMrpFlow(TransactionCase):
         """
         moves_to_process = moves.filtered(lambda m: m.product_id in quantities_to_process.keys())
         for move in moves_to_process:
-            move.write({'quantity_done': quantities_to_process[move.product_id]})
+            move.quantity = quantities_to_process[move.product_id]
+            move.picked = True
 
     def _assert_quantities(self, moves, quantities_to_process):
         """ Helper to check expected quantities based on a dict following this structure :
@@ -214,7 +215,7 @@ class TestPurchaseMrpFlow(TransactionCase):
             move._action_confirm()
             move._action_assign()
             move_line = move.move_line_ids[0]
-            move_line.qty_done = qty_to_process[comp][0]
+            move_line.quantity = qty_to_process[comp][0]
             move._action_done()
 
     def test_kit_component_cost(self):
@@ -232,7 +233,6 @@ class TestPurchaseMrpFlow(TransactionCase):
             line.price_unit = 1260
         po = po.save()
         po.button_confirm()
-        po.picking_ids.action_set_quantities_to_reservation()
         po.picking_ids.button_validate()
 
         # Unit price equaly dived among bom lines (cost share not set)
@@ -285,7 +285,6 @@ class TestPurchaseMrpFlow(TransactionCase):
 
         po = po.save()
         po.button_confirm()
-        po.picking_ids.action_set_quantities_to_reservation()
         po.picking_ids.button_validate()
 
         layer = po.picking_ids.move_ids.stock_valuation_layer_ids
@@ -349,7 +348,7 @@ class TestPurchaseMrpFlow(TransactionCase):
 
         # Process only 7 units of each component
         qty_to_process = 7
-        move_ids.write({'quantity_done': qty_to_process})
+        move_ids.write({'quantity': qty_to_process, 'picked': True})
 
         # Create a backorder for the missing componenents
         pick = po.picking_ids[0]
@@ -456,9 +455,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components and validate the picking
-        wiz_act = return_pick.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        return_pick.button_validate()
 
         # Now quantity received should be 3 again
         self.assertEqual(order_line.qty_received, 3)
@@ -475,7 +472,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         # Process all components except one of each
         for move in return_of_return_pick.move_ids:
             move.write({
-                'quantity_done': expected_quantities[move.product_id] - 1,
+                'quantity': expected_quantities[move.product_id] - 1,
                 'to_refund': True
             })
 

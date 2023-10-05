@@ -147,7 +147,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
             'state': 'draft',
-            'immediate_transfer': False,
         })
 
         self.env['stock.move'].create({
@@ -189,7 +188,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(picking_stock_postprod.origin, 'SOURCEDOCUMENT', 'The post-prod origin should be the SO name')
 
         picking_stock_preprod.action_assign()
-        picking_stock_preprod.move_line_ids.qty_done = 4
+        picking_stock_preprod.move_ids.write({'quantity': 4, 'picked': True})
         picking_stock_preprod._action_done()
 
         self.assertFalse(sum(self.env['stock.quant']._gather(self.raw_product, self.warehouse.lot_stock_id).mapped('quantity')))
@@ -230,7 +229,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
             'state': 'draft',
-            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': self.finished_product.name,

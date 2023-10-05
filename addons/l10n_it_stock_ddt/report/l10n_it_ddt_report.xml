@@ -110,21 +110,21 @@
                     <tbody>
                         <t t-set="total_value" t-value="0"/>
                         <t t-foreach="o.move_ids" t-as="move">
-                            <t t-if="move.quantity_done">
+                            <t t-if="move.quantity">
                                 <tr>
                                     <td>
                                         <span t-field="move.product_id"/>
                                     </td>
                                     <td>
-                                        <span t-field="move.quantity_done"/>
+                                        <span t-field="move.quantity"/>
                                         <span t-field="move.product_uom" groups="uom.group_uom"/>
                                     </td>
                                     <td>
                                         <t t-if="move.sale_line_id">
-                                            <t t-set="lst_price" t-value="move.sale_line_id.price_unit * move.quantity_done"/>
+                                            <t t-set="lst_price" t-value="move.sale_line_id.price_unit * move.quantity"/>
                                         </t>
                                         <t t-else="">
-                                            <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)"/>
+                                            <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)"/>
                                         </t>
                                         <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                         <t t-set="total_value" t-value="total_value + lst_price"/>

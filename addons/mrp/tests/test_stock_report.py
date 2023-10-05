@@ -123,7 +123,7 @@ class TestMrpStockReports(TestReportsCommon):
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
         pick_form = Form(pick)
         with pick_form.move_line_ids_without_package.edit(0) as move_line:
-            move_line.qty_done = 20
+            move_line.quantity = 20
         pick = pick_form.save()
         pick.button_validate()
         # Produces 3 products then creates a backorder for the remaining product.
@@ -236,7 +236,7 @@ class TestMrpStockReports(TestReportsCommon):
         picking = picking_form.save()
         picking.action_confirm()
 
-        picking.move_ids.quantity_done = 1
+        picking.move_ids.write({'quantity': 1, 'picked': True})
         move = picking.move_ids.filtered(lambda m: m.name == "Super Kit" and m.product_id == compo03)
         move.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Package0001'})
         picking.button_validate()
@@ -254,4 +254,6 @@ class TestMrpStockReports(TestReportsCommon):
                 break
             if keys[0] in line:
                 keys = keys[1:]
+
+
         self.assertFalse(keys, "All keys should be in the report with the defined order")

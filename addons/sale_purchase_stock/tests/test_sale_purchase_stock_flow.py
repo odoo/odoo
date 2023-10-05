@@ -71,7 +71,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
             'location_id': sm.location_id.id,
             'location_dest_id': sm.location_dest_id.id,
             'product_id': sm.product_id.id,
-            'qty_done': 12,
+            'quantity': 12,
             'company_id': sm.company_id.id,
             'product_uom_id': sm.product_uom.id,
             'picking_id': delivery.id,
@@ -79,8 +79,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
         delivery.button_validate()
 
         self.assertEqual(delivery.state, 'done')
-        self.assertEqual(delivery.move_ids.move_line_ids.qty_done, 12)
+        self.assertEqual(delivery.move_ids.move_line_ids.quantity, 12)
         self.assertEqual(so.order_line.qty_delivered, 12)
 
-        sm.move_line_ids.qty_done = 10
+        sm.move_line_ids.quantity = 10
         self.assertEqual(so.order_line.qty_delivered, 10)

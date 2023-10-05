@@ -7,15 +7,15 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption', {
     test: true,
     steps: () => [
         {
-            trigger: 'div[name=move_raw_ids] td[name="quantity_done"]:last:contains("5.00")',
+            trigger: 'div[name=move_raw_ids] td[name="quantity"]:last:contains("5.00")',
             run: () => {},
         },
         {
-            trigger: 'div[name=move_raw_ids] td[name="quantity_done"]:last',
+            trigger: 'div[name=move_raw_ids] td[name="quantity"]:last',
             run: 'click',
         },
         {
-            trigger: 'div[name="quantity_done"] input',
+            trigger: 'div[name="quantity"] input',
             run: 'text 6.0'
         },
         {
@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption', {
             trigger: ".o_pager_value:first()",
         },
         {
-            trigger: 'div[name=move_raw_ids] td[name="quantity_done"]:last:contains("6.00")',
+            trigger: 'div[name=move_raw_ids] td[name="quantity"]:last:contains("6.00")',
             run: () => {},
         },
         {
@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption', {
             trigger: ".o_pager_value:first()",
         },
         {
-            trigger: 'div[name=move_raw_ids] td[name="quantity_done"]:last:contains("2.00")',
+            trigger: 'div[name=move_raw_ids] td[name="quantity"]:last:contains("2.00")',
             run: () => {},
         },
         {

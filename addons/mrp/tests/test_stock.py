@@ -296,7 +296,7 @@ class TestKitPicking(common.TestMrpCommon):
         }
 
     def test_kit_immediate_transfer(self):
-        """ Make sure a kit is split in the corrects quantity_done by components in case of an
+        """ Make sure a kit is split in the corrects quantity by components in case of an
         immediate transfer.
         """
         picking = self.env['stock.picking'].create({
@@ -308,7 +308,8 @@ class TestKitPicking(common.TestMrpCommon):
         self.env['stock.move'].create({
             'name': self.kit_parent.name,
             'product_id': self.kit_parent.id,
-            'product_uom_qty': 3,
+            'quantity': 3,
+            'picked': True,
             'product_uom': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
@@ -316,14 +317,12 @@ class TestKitPicking(common.TestMrpCommon):
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
         picking.button_validate()
-        backorder_wizard_dict = picking.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
-        backorder_wizard_form.save().process()
 
         # We check that the picking has the correct quantities after its move were splitted.
         self.assertEqual(len(picking.move_ids), 7)
-        for move_line in picking.move_ids:
-            self.assertEqual(move_line.quantity_done, self.expected_quantities[move_line.product_id])
+        for move in picking.move_ids:
+            self.assertEqual(move.quantity, self.expected_quantities[move.product_id])
+            self.assertEqual(move.state, 'done')
 
     def test_kit_planned_transfer(self):
         """ Make sure a kit is split in the corrects product_qty by components in case of a
@@ -334,7 +333,6 @@ class TestKitPicking(common.TestMrpCommon):
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'immediate_transfer': False,
         })
         move_receipt_1 = self.env['stock.move'].create({
             'name': self.kit_parent.name,
@@ -368,8 +366,6 @@ class TestKitPicking(common.TestMrpCommon):
             'picking_type_id': in_type.id,
             'location_id': customer_location.id,
             'location_dest_id': stock_location.id,
-            'state': 'draft',
-            'immediate_transfer': False,
             'move_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
@@ -381,19 +377,20 @@ class TestKitPicking(common.TestMrpCommon):
         })
         receipt.action_confirm()
 
-        receipt.move_line_ids.qty_done = 1
+        receipt.move_line_ids.quantity = 1
         receipt.move_line_ids = [(0, 0, {
             'product_id': kit.id,
-            'qty_done': 1,
+            'quantity': 1,
             'product_uom_id': kit.uom_id.id,
             'location_id': customer_location.id,
             'location_dest_id': stock_location.id,
         })]
+        receipt.move_ids.picked = True
 
         receipt.button_validate()
 
         self.assertEqual(receipt.state, 'done')
         self.assertRecordValues(receipt.move_ids, [
-            {'product_id': product.id, 'quantity_done': 1, 'state': 'done'},
-            {'product_id': compo.id, 'quantity_done': 1, 'state': 'done'},
+            {'product_id': product.id, 'quantity': 1, 'state': 'done'},
+            {'product_id': compo.id, 'quantity': 1, 'state': 'done'},
         ])

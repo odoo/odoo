@@ -43,7 +43,7 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, list_lot_and_qty[i]["datetime"])
 
         # Same test but with with the "month/day/year" date format this time.
@@ -61,7 +61,7 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, list_lot_and_qty[i]["datetime"])
 
     def test_set_multiple_lot_name_with_expiration_date_02_product_dont_use_expiration_date(self):
@@ -90,7 +90,7 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, False)
 
     def test_set_multiple_lot_name_with_expiration_date_03_adaptive_date_format(self):
@@ -119,7 +119,7 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, list_lot_and_qty[i]["datetime"])
 
         # Now, tries with day first but the year is at the first place in the given dates.
@@ -137,7 +137,7 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, list_lot_and_qty[i]["datetime"])
 
     def test_set_multiple_lot_name_with_expiration_date_04_written_months(self):
@@ -160,7 +160,7 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, list_lot_and_qty[i]["datetime"])
 
     @freeze_time('2023-04-17')
@@ -191,35 +191,35 @@ class TestStockLot(StockGenerateCommon):
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
 
         self.assertEqual(move.move_line_ids[0].lot_name, "ln01")
-        self.assertEqual(move.move_line_ids[0].qty_done, 1)
+        self.assertEqual(move.move_line_ids[0].quantity, 1)
         self.assertEqual(move.move_line_ids[0].expiration_date, datetime(day=31, month=12, year=2023))
 
         self.assertEqual(move.move_line_ids[1].lot_name, "ln02")
-        self.assertEqual(move.move_line_ids[1].qty_done, 1)
+        self.assertEqual(move.move_line_ids[1].quantity, 1)
         self.assertEqual(move.move_line_ids[1].expiration_date, datetime(day=17, month=4, year=1989))
 
         self.assertEqual(move.move_line_ids[2].lot_name, "ln03")
-        self.assertEqual(move.move_line_ids[2].qty_done, 1)
+        self.assertEqual(move.move_line_ids[2].quantity, 1)
         self.assertEqual(move.move_line_ids[2].expiration_date, today)
 
         self.assertEqual(move.move_line_ids[3].lot_name, "ln04")
-        self.assertEqual(move.move_line_ids[3].qty_done, 1989)
+        self.assertEqual(move.move_line_ids[3].quantity, 1989)
         self.assertEqual(move.move_line_ids[3].expiration_date, today)
 
         self.assertEqual(move.move_line_ids[4].lot_name, "ln05")
-        self.assertEqual(move.move_line_ids[4].qty_done, 1989.04)
+        self.assertEqual(move.move_line_ids[4].quantity, 1989.04)
         self.assertEqual(move.move_line_ids[4].expiration_date, today)
 
         self.assertEqual(move.move_line_ids[5].lot_name, "ln06\t1989+04")
-        self.assertEqual(move.move_line_ids[5].qty_done, 1)
+        self.assertEqual(move.move_line_ids[5].quantity, 1)
         self.assertEqual(move.move_line_ids[5].expiration_date, today)
 
         self.assertEqual(move.move_line_ids[6].lot_name, "ln07\tdacember")
-        self.assertEqual(move.move_line_ids[6].qty_done, 1)
+        self.assertEqual(move.move_line_ids[6].quantity, 1)
         self.assertEqual(move.move_line_ids[6].expiration_date, today)
 
         self.assertEqual(move.move_line_ids[7].lot_name, "ln08")
-        self.assertEqual(move.move_line_ids[7].qty_done, 1)
+        self.assertEqual(move.move_line_ids[7].quantity, 1)
         self.assertEqual(move.move_line_ids[7].expiration_date, datetime(day=17, month=12, year=2023))
 
     def test_set_multiple_lot_name_with_expiration_date_06_one_line(self):
@@ -237,5 +237,5 @@ class TestStockLot(StockGenerateCommon):
             move = self.get_new_move(product=product_lot)
             self._import_lots(lot_name, move)
             self.assertEqual(move.move_line_ids.lot_name, "lot-001")
-            self.assertEqual(move.move_line_ids.qty_done, 20)
+            self.assertEqual(move.move_line_ids.quantity, 20)
             self.assertEqual(move.move_line_ids.expiration_date, datetime(day=4, month=8, year=2048))

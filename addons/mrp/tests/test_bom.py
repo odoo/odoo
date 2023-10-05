@@ -1264,7 +1264,7 @@ class TestBoM(TestMrpCommon):
             operation.duration_expected = 480
         with mo_form.move_byproduct_ids.new() as by_product_line:
             by_product_line.product_id = by_product
-            by_product_line.quantity_done = 6
+            by_product_line.quantity = 6
         mo_3 = mo_form.save()
         bom_from_mo_3 = generate_bom_from_mo(mo_3)
         # Checks the MO's data.

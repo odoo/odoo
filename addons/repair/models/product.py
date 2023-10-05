@@ -9,9 +9,9 @@ class Product(models.Model):
 
     def _count_returned_sn_products(self, sn_lot):
         res = self.env['stock.move'].search_count([
-            ('repair_line_type', '=', 'remove'),
+            ('repair_line_type', 'in', ['remove', 'recycle']),
             ('product_uom_qty', '=', 1),
-            ('move_line_ids.lot_id', 'in', sn_lot.id),
+            ('move_line_ids.lot_id', '=', sn_lot.id),
             ('state', '=', 'done'),
             ('location_dest_usage', '=', 'internal'),
         ])

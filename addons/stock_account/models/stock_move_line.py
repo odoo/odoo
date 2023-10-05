@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
             if move_line.state != 'done':
                 continue
             rounding = move.product_id.uom_id.rounding
-            diff = move.product_uom._compute_quantity(move_line.qty_done, move.product_id.uom_id)
+            diff = move.product_uom._compute_quantity(move_line.quantity, move.product_id.uom_id)
             if float_is_zero(diff, precision_rounding=rounding):
                 continue
             self._create_correction_svl(move, diff)
@@ -32,19 +32,19 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         analytic_move_to_recompute = set()
-        if 'qty_done' in vals or 'move_id' in vals:
+        if 'quantity' in vals or 'move_id' in vals:
             for move_line in self:
                 move_id = vals.get('move_id', move_line.move_id.id)
                 analytic_move_to_recompute.add(move_id)
-        if 'qty_done' in vals:
+        if 'quantity' in vals:
             for move_line in self:
                 if move_line.state != 'done':
                     continue
                 move = move_line.move_id
-                if float_compare(vals['qty_done'], move_line.qty_done, precision_rounding=move.product_uom.rounding) == 0:
+                if float_compare(vals['quantity'], move_line.quantity, precision_rounding=move.product_uom.rounding) == 0:
                     continue
                 rounding = move.product_id.uom_id.rounding
-                diff = move.product_uom._compute_quantity(vals['qty_done'] - move_line.qty_done, move.product_id.uom_id, rounding_method='HALF-UP')
+                diff = move.product_uom._compute_quantity(vals['quantity'] - move_line.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                 if float_is_zero(diff, precision_rounding=rounding):
                     continue
                 self._create_correction_svl(move, diff)

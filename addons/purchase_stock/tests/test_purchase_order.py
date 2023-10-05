@@ -71,7 +71,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
-        self.picking.move_line_ids.write({'qty_done': 5.0})
+        self.picking.move_line_ids.write({'quantity': 5.0})
+        self.picking.move_ids.picked = True
         self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
@@ -102,7 +103,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase')
         self.assertEqual(self.po.incoming_picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
-        self.picking.move_line_ids.write({'qty_done': 5.0})
+        self.picking.move_line_ids.write({'quantity': 5.0})
+        self.picking.move_ids.picked = True
         self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
@@ -131,8 +133,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Validate picking
-        return_pick.move_line_ids.write({'qty_done': 2})
-
+        return_pick.move_line_ids.write({'quantity': 2})
+        return_pick.move_ids.picked = True
         return_pick.button_validate()
 
         # Check Received quantity
@@ -188,9 +190,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po1.button_confirm()
 
         picking = po1.picking_ids
-        wiz_act = picking.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        picking.button_validate()
 
         # Return 5 units
         stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
@@ -206,9 +206,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             })
         res = return_wiz.create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
-        wiz_act = return_pick.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        return_pick.button_validate()
 
         self.assertEqual(po1.order_line.qty_received, 5)
 
@@ -246,9 +244,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         )
 
         # receive products
-        wiz_act = po.picking_ids.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        po.picking_ids.button_validate()
 
         # update second line
         old_date = po.order_line[1].date_planned
@@ -300,12 +296,13 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.button_confirm()
         picking = po.picking_ids[0]
         # Process 9.0 out of the 10.0 ordered qty
-        picking.move_line_ids.write({'qty_done': 9.0})
+        picking.move_line_ids.write({'quantity': 9.0})
+        picking.move_ids.picked = True
         res_dict = picking.button_validate()
         # No backorder
         self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process_cancel_backorder()
         # `on_time_rate` should be equals to the ratio of quantity received against quantity ordered
-        expected_rate = sum(picking.move_line_ids.mapped("qty_done")) / sum(po.order_line.mapped("product_qty")) * 100
+        expected_rate = sum(picking.move_line_ids.mapped("quantity")) / sum(po.order_line.mapped("product_qty")) * 100
         self.assertEqual(expected_rate, po.on_time_rate)
 
         # Create a purchase order with 80% qty received for company B
@@ -319,12 +316,13 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.button_confirm()
         picking = po.picking_ids[0]
         # Process 8.0 out of the 10.0 ordered qty
-        picking.move_line_ids.write({'qty_done': 8.0})
+        picking.move_line_ids.write({'quantity': 8.0})
+        picking.move_ids.picked = True
         res_dict = picking.button_validate()
         # No backorder
         self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process_cancel_backorder()
         # `on_time_rate` should be equal to the ratio of quantity received against quantity ordered
-        expected_rate = sum(picking.move_line_ids.mapped("qty_done")) / sum(po.order_line.mapped("product_qty")) * 100
+        expected_rate = sum(picking.move_line_ids.mapped("quantity")) / sum(po.order_line.mapped("product_qty")) * 100
         self.assertEqual(expected_rate, po.on_time_rate)
 
         # Tricky corner case
@@ -372,7 +370,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
         po.button_confirm()
         picking = po.picking_ids[0]
-        picking.move_line_ids.write({'qty_done': 3.66})
+        picking.move_line_ids.write({'quantity': 3.66})
+        picking.move_ids.picked = True
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
 
@@ -413,7 +412,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(purchase_order.state, 'purchase')
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
-        self.assertEqual(purchase_order.picking_ids.move_line_ids.reserved_qty, 7)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity, 7)
 
 
         purchase_order.order_line.product_qty = 4
@@ -422,7 +421,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         purchase_order.button_confirm()
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
-        self.assertEqual(purchase_order.picking_ids.move_line_ids.reserved_qty, 4)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity, 4)
 
     def test_message_qty_already_received(self):
         self.env.user.write({'company_id': self.company_data['company'].id})
@@ -441,19 +440,19 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         _purchase_order.button_confirm()
 
         first_picking = _purchase_order.picking_ids[0]
-        first_picking.move_ids.quantity_done = 5
+        first_picking.move_ids.quantity = 5
         backorder_wizard_dict = first_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
 
         second_picking = _purchase_order.picking_ids[1]
-        second_picking.move_ids.quantity_done = 5
+        second_picking.move_ids.quantity = 5
         backorder_wizard_dict = second_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
 
         third_picking = _purchase_order.picking_ids[2]
-        third_picking.move_ids.quantity_done = 5
+        third_picking.move_ids.quantity = 5
         backorder_wizard_dict = third_picking.button_validate()
         backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
         backorder_wizard.process()
@@ -604,7 +603,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking = po.picking_ids
         self.assertEqual(po.state, "purchase")
         self.assertEqual(picking.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
-        picking.move_line_ids_without_package.write({'qty_done': 1})
+        picking.move_line_ids_without_package.write({'quantity': 1})
+        picking.move_ids.write({'picked': True})
         res_dict = picking.button_validate()
         self.env[res_dict['res_model']].with_context(res_dict['context']).process()
         backorder = picking.backorder_ids
@@ -623,7 +623,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             line.product_qty = 5
         po = po_form.save()
         po.button_confirm()
-        po.picking_ids.move_ids.quantity_done = 5
+        po.picking_ids.move_ids.quantity = 5
+        po.picking_ids.move_ids.picked = True
         po.picking_ids.button_validate()
         self.assertEqual(po.picking_ids.state, 'done')
         quant = self.env['stock.quant'].search([('product_id', '=', product.id), ('location_id.usage', '=', 'internal')])
@@ -632,34 +633,14 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(quant.quantity, 5)
 
     def test_po_edit_after_receive(self):
-        po_1 = self.env['purchase.order'].create(self.po_vals)
-        po_1.button_confirm()
-        po_1.picking_ids.move_ids.quantity_done = 5
-        po_1.picking_ids.button_validate()
-        self.assertEqual(po_1.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0])
-        po_1.with_context(import_file=True).order_line[0].product_qty = 10
-        self.assertEqual(po_1.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0, 5.0])
-
-        ### Without backorder ###
-        po_2 = self.env['purchase.order'].create(self.po_vals)
-        po_2.button_confirm()
-        self.assertEqual(len(po_2.picking_ids), 1)
-
-        receipt_picking = po_2.picking_ids
-        receipt_picking.move_ids.quantity_done = 2
-        backorder_wizard_dict = receipt_picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process_cancel_backorder()
-        self.assertEqual(po_2.order_line.mapped('product_uom_qty'), [5.0, 5.0])
-        self.assertEqual(po_2.order_line.mapped('qty_received'), [2.0, 2.0])
-
-        po_2.write({
-            'order_line': [
-                (1, po_2.order_line[0].id, {'product_qty': 2}),
-                (1, po_2.order_line[1].id, {'product_qty': 2})
-            ]
-        })
-        self.assertEqual(len(po_2.picking_ids), 1)
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+        self.po.picking_ids.move_ids.quantity = 5
+        self.po.picking_ids.move_ids.picked = True
+        self.po.picking_ids.button_validate()
+        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0])
+        self.po.with_context(import_file=True).order_line[0].product_qty = 10
+        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0, 5.0])
 
     def test_receive_returned_product_without_po_update(self):
         """
@@ -670,7 +651,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po.button_confirm()
 
         receipt01 = po.picking_ids
-        receipt01.move_ids.quantity_done = 5
+        receipt01.move_ids.quantity = 5
         receipt01.button_validate()
 
         wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
@@ -678,7 +659,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         res = wizard.create_returns()
 
         return_pick = self.env['stock.picking'].browse(res['res_id'])
-        return_pick.move_ids.quantity_done = 5
+        return_pick.move_ids.quantity = 5
         return_pick.button_validate()
 
         wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
@@ -686,7 +667,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         res = wizard.create_returns()
 
         receipt02 = self.env['stock.picking'].browse(res['res_id'])
-        receipt02.move_ids.quantity_done = 5
+        receipt02.move_ids.quantity = 5
         receipt02.button_validate()
 
         self.assertEqual(po.order_line[0].qty_received, 5)

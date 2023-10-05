@@ -193,7 +193,7 @@ class StockForecasted(models.AbstractModel):
                 if move.state not in ('partially_available', 'assigned'):
                     continue
                 # count reserved stock.
-                reserved = move.product_uom._compute_quantity(move.reserved_availability, move.product_id.uom_id)
+                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
                 # check if the move reserved qty was counted before (happens if multiple outs share pick/pack)
                 reserved = min(reserved - used_reserved_moves[move], out.product_qty)
                 if reserved and not reserved_move:
@@ -219,7 +219,7 @@ class StockForecasted(models.AbstractModel):
             for move in linked_moves:
                 if move.state in ('draft', 'cancel', 'assigned', 'done'):
                     continue
-                reserved = move.product_uom._compute_quantity(move.reserved_availability, move.product_id.uom_id)
+                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
                 demand = max(move.product_qty - reserved, 0)
                 # to make sure we don't demand more than the out (useful when same pick/pack goes to multiple out)
                 demand = min(demand, demand_out)
@@ -227,9 +227,9 @@ class StockForecasted(models.AbstractModel):
                     continue
                 # check available qty for move if chained, move available is what was move by orig moves
                 if move.move_orig_ids:
-                    move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('quantity_done'))
+                    move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('quantity'))
                     sibling_moves = (move.move_orig_ids.move_dest_ids - move)
-                    move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity_done'))
+                    move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity'))
                     move_available_qty = move_in_qty - move_out_qty - reserved
                 else:
                     move_available_qty = currents[(out.product_id.id, move.location_id.id)]

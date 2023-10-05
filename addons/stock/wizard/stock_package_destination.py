@@ -16,7 +16,7 @@ class ChooseDestinationLocation(models.TransientModel):
     @api.depends('picking_id')
     def _compute_move_line_ids(self):
         for destination in self:
-            destination.move_line_ids = destination.picking_id.move_line_ids.filtered(lambda l: l.qty_done > 0 and not l.result_package_id)
+            destination.move_line_ids = destination.picking_id.move_line_ids.filtered(lambda l: l.quantity > 0 and not l.result_package_id)
 
     @api.depends('move_line_ids')
     def _filter_location(self):

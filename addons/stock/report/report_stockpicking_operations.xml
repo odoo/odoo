@@ -115,15 +115,14 @@
                                             <span t-field="ml.product_id.description_picking">Description on transfer</span>
                                         </td>
                                         <td>
-                                            <span t-if="o.state != 'done'" t-field="ml.reserved_uom_qty">3.00</span>
-                                            <span t-else="" t-field="ml.qty_done">3.00</span>
+                                            <span t-field="ml.quantity">3.00</span>
                                             <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
                                             <span t-if="ml.move_id.product_packaging_id">
                                                 <span t-if="o.state != 'done'">
                                                     (<span t-field="ml.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
                                                 </span>
                                                 <span t-if="o.state == 'done'">
-                                                    (<span t-field="ml.product_packaging_qty_done" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
+                                                    (<span t-field="ml.product_packaging_quantity" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
                                                 </span>
                                             </span>
                                         </td>
@@ -193,7 +192,7 @@
                                 </tbody>
                             </table>
                             
-                            <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.reserved_availability and x.move_line_ids and x.state!='done')"/>
+                            <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.quantity and x.move_line_ids and x.state!='done')"/>
                             <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="fa fa-exclamation-triangle" />
                                 All products could not be reserved. Click on the "Check Availability" button to try to reserve products.
                             </p>

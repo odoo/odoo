@@ -37,11 +37,10 @@ class StockGenerateCommon(TransactionCase):
 
     def get_new_move(self, nbre_of_lines=0, product=False):
         product = product or self.product_serial
-        self.env['stock.quant']._update_available_quantity(product, self.location, nbre_of_lines)
         move_lines_vals = [Command.create({
                 'product_id': product.id,
                 'product_uom_id': self.uom_unit.id,
-                'reserved_uom_qty': 1,
+                'quantity': 1,
                 'location_id': self.location.id,
                 'location_dest_id': self.location_dest.id,
             }) for i in range(nbre_of_lines)]
@@ -61,27 +60,23 @@ class StockGenerateCommon(TransactionCase):
         """
         nbre_of_lines = 5
         move = self.get_new_move(nbre_of_lines)
-
+        move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
             default_next_serial_number='001',
             default_next_serial_count=nbre_of_lines,
         ))
         wiz = form_wizard.save()
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines)
         wiz.generate_serial_numbers()
+
         # Checks new move lines have the right SN
         generated_numbers = ['001', '002', '003', '004', '005']
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines + len(generated_numbers))
-        for move_line in move.move_line_nosuggest_ids:
-            # For a product tracked by SN, the `qty_done` is set on 1 when
+        self.assertEqual(len(move.move_line_ids), len(generated_numbers))
+        for move_line in move.move_line_ids:
+            # For a product tracked by SN, the `quantity` is set on 1 when
             # `lot_name` is set.
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.lot_name, generated_numbers.pop(0))
-        # Checks pre-generated move lines didn't change
-        for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
-            self.assertEqual(move_line.qty_done, 0)
-            self.assertEqual(move_line.lot_name, False)
 
     def test_generate_02_prefix_suffix(self):
         """ Generates some Serial Numbers and checks the prefix and/or suffix
@@ -90,6 +85,7 @@ class StockGenerateCommon(TransactionCase):
         nbre_of_lines = 10
         # Case #1: Prefix, no suffix
         move = self.get_new_move(nbre_of_lines)
+        move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
             default_next_serial_number='bilou-87',
@@ -102,10 +98,10 @@ class StockGenerateCommon(TransactionCase):
             'bilou-87', 'bilou-88', 'bilou-89', 'bilou-90', 'bilou-91',
             'bilou-92', 'bilou-93', 'bilou-94', 'bilou-95', 'bilou-96'
         ]
-        for move_line in move.move_line_nosuggest_ids:
-            # For a product tracked by SN, the `qty_done` is set on 1 when
+        for move_line in move.move_line_ids:
+            # For a product tracked by SN, the `quantity` is set on 1 when
             # `lot_name` is set.
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(
                 move_line.lot_name,
                 generated_numbers.pop(0)
@@ -113,6 +109,7 @@ class StockGenerateCommon(TransactionCase):
 
         # Case #2: No prefix, suffix
         move = self.get_new_move(nbre_of_lines)
+        move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
             default_next_serial_number='005-ccc',
@@ -125,10 +122,10 @@ class StockGenerateCommon(TransactionCase):
             '005-ccc', '006-ccc', '007-ccc', '008-ccc', '009-ccc',
             '010-ccc', '011-ccc', '012-ccc', '013-ccc', '014-ccc'
         ]
-        for move_line in move.move_line_nosuggest_ids:
-            # For a product tracked by SN, the `qty_done` is set on 1 when
+        for move_line in move.move_line_ids:
+            # For a product tracked by SN, the `quantity` is set on 1 when
             # `lot_name` is set.
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(
                 move_line.lot_name,
                 generated_numbers.pop(0)
@@ -150,10 +147,10 @@ class StockGenerateCommon(TransactionCase):
             'alpha-012-351-beta', 'alpha-012-352-beta', 'alpha-012-353-beta',
             'alpha-012-354-beta'
         ]
-        for move_line in move.move_line_nosuggest_ids:
-            # For a product tracked by SN, the `qty_done` is set on 1 when
+        for move_line in move.move_line_ids:
+            # For a product tracked by SN, the `quantity` is set on 1 when
             # `lot_name` is set.
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(
                 move_line.lot_name,
                 generated_numbers.pop(0)
@@ -175,10 +172,10 @@ class StockGenerateCommon(TransactionCase):
             'BAV023B00001S00007', 'BAV023B00001S00008', 'BAV023B00001S00009',
             'BAV023B00001S00010'
         ]
-        for move_line in move.move_line_nosuggest_ids:
-            # For a product tracked by SN, the `qty_done` is set on 1 when
+        for move_line in move.move_line_ids:
+            # For a product tracked by SN, the `quantity` is set on 1 when
             # `lot_name` is set.
-            self.assertEqual(move_line.qty_done, 1)
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(
                 move_line.lot_name,
                 generated_numbers.pop(0)
@@ -201,7 +198,7 @@ class StockGenerateCommon(TransactionCase):
         form_wizard.next_serial_count = 3
         wiz = form_wizard.save()
         wiz.generate_serial_numbers()
-        self.assertEqual(move.move_line_nosuggest_ids.mapped('lot_name'), ["code-xxx0", "code-xxx1", "code-xxx2"])
+        self.assertEqual(move.move_line_ids.mapped('lot_name'), ["code-xxx0", "code-xxx1", "code-xxx2"])
 
     def test_generate_04_generate_in_multiple_time(self):
         """ Generates a Serial Number for each move lines (except the last one)
@@ -210,7 +207,7 @@ class StockGenerateCommon(TransactionCase):
         """
         nbre_of_lines = 10
         move = self.get_new_move(nbre_of_lines)
-
+        move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
         ))
@@ -239,13 +236,12 @@ class StockGenerateCommon(TransactionCase):
             # Correspond to the third assignment
             'ro-1337-bot', 'ro-1338-bot', 'ro-1339-bot', 'ro-1340-bot',
         ]
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines + len(generated_numbers))
-        self.assertEqual(len(move.move_line_nosuggest_ids), len(generated_numbers))
-        for move_line in move.move_line_nosuggest_ids:
-            self.assertEqual(move_line.qty_done, 1)
+        self.assertEqual(len(move.move_line_ids), len(generated_numbers))
+        for move_line in move.move_line_ids:
+            self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.lot_name, generated_numbers.pop(0))
-        for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
-            self.assertEqual(move_line.qty_done, 0)
+        for move_line in (move.move_line_ids - move.move_line_ids):
+            self.assertEqual(move_line.quantity, 0)
             self.assertEqual(move_line.lot_name, False)
 
     def test_generate_with_putaway(self):
@@ -269,8 +265,8 @@ class StockGenerateCommon(TransactionCase):
         wiz = form_wizard.save()
         wiz.generate_serial_numbers()
 
-        for move_line in move.move_line_nosuggest_ids:
-            self.assertEqual(move_line.qty_done, 1)
+        for move_line in move.move_line_ids:
+            self.assertEqual(move_line.quantity, 1)
             # The location dest must be the default one.
             self.assertEqual(move_line.location_dest_id.id, self.location_dest.id)
 
@@ -286,6 +282,7 @@ class StockGenerateCommon(TransactionCase):
 
         # Checks now with putaway...
         move = self.get_new_move(nbre_of_lines)
+        move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
         ))
@@ -294,8 +291,8 @@ class StockGenerateCommon(TransactionCase):
         wiz = form_wizard.save()
         wiz.generate_serial_numbers()
 
-        for move_line in move.move_line_nosuggest_ids:
-            self.assertEqual(move_line.qty_done, 1)
+        for move_line in move.move_line_ids:
+            self.assertEqual(move_line.quantity, 1)
             # The location dest must be now the one from the putaway.
             self.assertEqual(move_line.location_dest_id.id, shelf_location.id)
 
@@ -343,7 +340,6 @@ class StockGenerateCommon(TransactionCase):
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock_location.id,
             'state': 'draft',
-            'immediate_transfer': False,
         })
         move = self.env['stock.move'].create({
             'name': self.product_serial.name,
@@ -368,8 +364,8 @@ class StockGenerateCommon(TransactionCase):
         wiz.generate_serial_numbers()
 
         self.assertRecordValues(move.move_line_ids, [
-            {'qty_done': 1, 'lot_name': '001', 'location_dest_id': sub_loc_01.id},
-            {'qty_done': 1, 'lot_name': '002', 'location_dest_id': sub_loc_02.id},
-            {'qty_done': 1, 'lot_name': '003', 'location_dest_id': sub_loc_03.id},
-            {'qty_done': 1, 'lot_name': '004', 'location_dest_id': sub_loc_04.id},
+            {'quantity': 1, 'lot_name': '001', 'location_dest_id': sub_loc_01.id},
+            {'quantity': 1, 'lot_name': '002', 'location_dest_id': sub_loc_02.id},
+            {'quantity': 1, 'lot_name': '003', 'location_dest_id': sub_loc_03.id},
+            {'quantity': 1, 'lot_name': '004', 'location_dest_id': sub_loc_04.id},
         ])

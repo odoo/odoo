@@ -36,7 +36,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'product_id': cls.product1.id,
             'product_uom': cls.uom_unit.id,
             'product_uom_qty': 100.0,
-            'quantity_done': 100.0,
+            'quantity': 100.0,
             'state': 'done',
             'date': fields.Datetime.now(),
         })
@@ -213,7 +213,8 @@ class TestReportStockQuantity(tests.TransactionCase):
         } for date in (today, in_two_days)])
 
         (move01 + move02)._action_confirm()
-        move01.quantity_done = 1
+        move01.quantity = 1
+        move01.picked = True
         move01._action_done()
 
         self.env.flush_all()

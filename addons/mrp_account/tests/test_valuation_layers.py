@@ -370,20 +370,20 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_in.id,
             'state': 'draft',
-            'immediate_transfer': False,
             'move_line_ids': [(0, 0, {
                 'product_id': self.product1.id,
-                'qty_done': 1,
+                'quantity': 1,
                 'product_uom_id': self.product1.uom_id.id,
                 'location_id': self.customer_location.id,
                 'location_dest_id': self.stock_location.id,
             })]
         })
+        receipt.move_ids.picked = True
         receipt.button_validate()
 
         self.assertEqual(receipt.state, 'done')
         self.assertRecordValues(receipt.move_ids, [
-            {'product_id': self.component.id, 'quantity_done': 1, 'state': 'done'},
+            {'product_id': self.component.id, 'quantity': 1, 'state': 'done'},
         ])
         self.assertEqual(self.component.qty_available, 1)
         self.assertEqual(self.component.value_svl, 1424)
@@ -434,7 +434,8 @@ class TestMrpStockValuation(TestStockValuation):
             'product_uom_qty': 10.0,
         })
         production_in.action_confirm()
-        move.quantity_done = 10
+        move.quantity = 10
+        move.picked = True
         production_in.button_validate()
 
         in_aml = self._get_production_cost_move_lines()
@@ -457,7 +458,8 @@ class TestMrpStockValuation(TestStockValuation):
             'product_uom_qty': 10.0,
         })
         production_out.action_confirm()
-        move.quantity_done = 10
+        move.quantity = 10
+        move.picked = True
         production_out.button_validate()
 
         out_aml = self._get_production_cost_move_lines() - in_aml
@@ -509,7 +511,8 @@ class TestMrpStockValuation(TestStockValuation):
             'product_uom_qty': 10.0,
         })
         production_in.action_confirm()
-        move.quantity_done = 10
+        move.quantity = 10
+        move.picked = True
         production_in.button_validate()
 
         in_aml = self.env['account.move.line'].search([
@@ -534,7 +537,8 @@ class TestMrpStockValuation(TestStockValuation):
             'product_uom_qty': 10.0,
         })
         production_out.action_confirm()
-        move.quantity_done = 10
+        move.quantity = 10
+        move.picked = True
         production_out.button_validate()
 
         out_aml = self.env['account.move.line'].search([

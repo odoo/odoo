@@ -44,11 +44,11 @@
 
     <function model="stock.move" name="write">
         <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp_account.mrp_production_drawer_2').id)]).ids"/>
-        <value eval="{'quantity_done': 5}"/>
+        <value eval="{'quantity': 5}"/>
     </function>
     <function model="stock.move" name="write">
         <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp_account.mrp_production_drawer_3').id)]).ids"/>
-        <value eval="{'quantity_done': 4}"/>
+        <value eval="{'quantity': 4}"/>
     </function>
 
     <function model="mrp.production" name="_post_inventory">

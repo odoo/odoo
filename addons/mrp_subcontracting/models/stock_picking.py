@@ -13,10 +13,6 @@ class StockPicking(models.Model):
     _name = 'stock.picking'
     _inherit = 'stock.picking'
 
-    # override existing field domains to prevent suboncontracting production lines from showing in Detailed Operations tab
-    move_line_nosuggest_ids = fields.One2many(
-        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
-                     '|', ('reserved_qty', '=', 0.0), '&', ('reserved_qty', '!=', 0.0), ('qty_done', '!=', 0.0)])
     move_line_ids_without_package = fields.One2many(
         domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
                      '|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
@@ -49,7 +45,7 @@ class StockPicking(models.Model):
             productions = move._get_subcontract_production()
             recorded_productions = productions.filtered(lambda p: p._has_been_recorded())
             recorded_qty = sum(recorded_productions.mapped('qty_producing'))
-            sm_done_qty = sum(productions._get_subcontract_move().mapped('quantity_done'))
+            sm_done_qty = sum(productions._get_subcontract_move().filtered(lambda m: m.picked).mapped('quantity'))
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
                 continue
@@ -59,7 +55,7 @@ class StockPicking(models.Model):
             if len(production) > 1:
                 raise UserError(_("There shouldn't be multiple productions to record for the same subcontracted move."))
             # Manage additional quantities
-            quantity_done_move = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
+            quantity_done_move = move.product_uom._compute_quantity(move.quantity, production.product_uom_id)
             if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
                 change_qty = self.env['change.production.qty'].create({
                     'mo_id': production.id,
@@ -67,14 +63,15 @@ class StockPicking(models.Model):
                 })
                 change_qty.with_context(skip_activity=True).change_prod_qty()
             # Create backorder MO for each move lines
-            amounts = [move_line.qty_done for move_line in move.move_line_ids]
+            amounts = [move_line.quantity for move_line in move.move_line_ids]
             len_amounts = len(amounts)
             productions = production._split_productions({production: amounts}, set_consumed_qty=True)
-            productions.move_finished_ids.move_line_ids.write({'qty_done': 0})
+            productions.move_finished_ids.move_line_ids.write({'quantity': 0})
             for production, move_line in zip(productions, move.move_line_ids):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id
                 production.qty_producing = production.product_qty
+                production._set_qty_producing()
             productions[:len_amounts].subcontracting_has_been_recorded = True
 
         for picking in self:
@@ -138,7 +135,7 @@ class StockPicking(models.Model):
             'bom_id': bom.id,
             'location_src_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
-            'product_qty': subcontract_move.from_immediate_transfer and subcontract_move.quantity_done or subcontract_move.product_qty,
+            'product_qty': subcontract_move.product_qty or subcontract_move.quantity,
             'picking_type_id': warehouse.subcontracting_type_id.id,
             'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay)
         }
@@ -150,13 +147,11 @@ class StockPicking(models.Model):
             # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
                 continue
-            quantity = move.from_immediate_transfer and move.quantity_done or move.product_qty
+            quantity = move.product_qty or move.quantity
             if float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
-            self.env['stock.move'].create(mo._get_moves_raw_values())
-            self.env['stock.move'].create(mo._get_moves_finished_values())
             mo.date_finished = move.date  # Avoid to have the picking late depending of the MO
             mo.action_confirm()
 

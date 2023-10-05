@@ -62,9 +62,9 @@ class ReceptionReport(models.AbstractModel):
                     product_to_qty_draft[move.product_id] += move.product_qty - qty_already_assigned
                 else:
                     quantity_to_assign = move.product_qty
-                    if move.picking_id.immediate_transfer:
+                    if not move.product_qty:
                         # if immediate transfer is not Done and quantity_done hasn't been edited, then move.product_qty will incorrectly = 1 (due to default)
-                        quantity_to_assign = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
+                        quantity_to_assign = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                     product_to_qty_to_assign[move.product_id].append((quantity_to_assign - qty_already_assigned, move))
 
         # only match for non-mto moves in same warehouse
@@ -105,33 +105,33 @@ class ReceptionReport(models.AbstractModel):
                 qty_to_reserve = out.product_qty
                 product_uom = out.product_id.uom_id
                 if 'done' not in doc_states and out.state == 'partially_available':
-                    qty_to_reserve -= out.product_uom._compute_quantity(out.reserved_availability, product_uom)
+                    qty_to_reserve -= out.product_uom._compute_quantity(out.quantity, product_uom)
                 moves_in_ids = []
-                qty_done = 0
+                quantity = 0
                 for move_in_qty, move_in in product_to_qty_to_assign[out.product_id]:
                     moves_in_ids.append(move_in.id)
-                    if float_compare(qty_done + move_in_qty, qty_to_reserve, precision_rounding=product_uom.rounding) <= 0:
+                    if float_compare(quantity + move_in_qty, qty_to_reserve, precision_rounding=product_uom.rounding) <= 0:
                         qty_to_add = move_in_qty
                         move_in_qty = 0
                     else:
-                        qty_to_add = qty_to_reserve - qty_done
+                        qty_to_add = qty_to_reserve - quantity
                         move_in_qty -= qty_to_add
-                    qty_done += qty_to_add
+                    quantity += qty_to_add
                     if move_in_qty:
                         product_to_qty_to_assign[out.product_id][0] = (move_in_qty, move_in)
                     else:
                         product_to_qty_to_assign[out.product_id] = product_to_qty_to_assign[out.product_id][1:]
-                    if float_compare(qty_to_reserve, qty_done, precision_rounding=product_uom.rounding) == 0:
+                    if float_compare(qty_to_reserve, quantity, precision_rounding=product_uom.rounding) == 0:
                         break
 
-                if not float_is_zero(qty_done, precision_rounding=product_uom.rounding):
-                    sources_to_lines[source].append(self._prepare_report_line(qty_done, product_id, out, source[0], move_ins=self.env['stock.move'].browse(moves_in_ids)))
+                if not float_is_zero(quantity, precision_rounding=product_uom.rounding):
+                    sources_to_lines[source].append(self._prepare_report_line(quantity, product_id, out, source[0], move_ins=self.env['stock.move'].browse(moves_in_ids)))
 
                 # draft qtys can be shown but not assigned
                 qty_expected = product_to_qty_draft.get(product_id, 0)
-                if float_compare(qty_to_reserve, qty_done, precision_rounding=product_uom.rounding) > 0 and\
+                if float_compare(qty_to_reserve, quantity, precision_rounding=product_uom.rounding) > 0 and\
                         not float_is_zero(qty_expected, precision_rounding=product_uom.rounding):
-                    to_expect = min(qty_expected, qty_to_reserve - qty_done)
+                    to_expect = min(qty_expected, qty_to_reserve - quantity)
                     sources_to_lines[source].append(self._prepare_report_line(to_expect, product_id, out, source[0], is_qty_assignable=False))
                     product_to_qty_draft[product_id] -= to_expect
 
@@ -237,18 +237,18 @@ class ReceptionReport(models.AbstractModel):
             potential_ins = self.env['stock.move'].browse(ins)
             if out.id in out_to_new_out:
                 new_out = out_to_new_out[out.id]
-                if potential_ins[0].state != 'done' and out.reserved_availability:
+                if potential_ins[0].state != 'done' and out.quantity:
                     # let's assume if 1 of the potential_ins isn't done, then none of them are => we are only assigning the not-reserved
                     # qty and the new move should have all existing reserved quants (i.e. move lines) assigned to it
                     out.move_line_ids.move_id = new_out
-                elif potential_ins[0].state == 'done' and out.reserved_availability > qty_to_link:
+                elif potential_ins[0].state == 'done' and out.quantity > qty_to_link:
                     # let's assume if 1 of the potential_ins is done, then all of them are => we can link them to already reserved moves, but we
                     # need to make sure the reserved qtys still match the demand amount the move (we're assigning).
                     out.move_line_ids.move_id = new_out
                     assigned_amount = 0
                     for move_line_id in new_out.move_line_ids:
                         if assigned_amount + move_line_id.reserved_qty > qty_to_link:
-                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
+                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'quantity': 0})
                             new_move_line.reserved_uom_qty = move_line_id.reserved_uom_qty
                             move_line_id.reserved_uom_qty = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
                             new_move_line.reserved_uom_qty -= out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty, out.product_uom, rounding_method='HALF-UP')
@@ -309,15 +309,15 @@ class ReceptionReport(models.AbstractModel):
                 # don't do action confirm to avoid creating additional unintentional reservations
                 new_out.write({'state': 'confirmed'})
                 out.move_line_ids.move_id = new_out
-                (out | new_out)._compute_reserved_availability()
-                if new_out.reserved_availability > new_out.product_qty:
+                (out | new_out)._compute_quantity()
+                if new_out.quantity > new_out.product_qty:
                     # extra reserved amount goes to no longer linked out
-                    reserved_amount_to_remain = new_out.reserved_availability - new_out.product_qty
+                    reserved_amount_to_remain = new_out.quantity - new_out.product_qty
                     for move_line_id in new_out.move_line_ids:
                         if reserved_amount_to_remain <= 0:
                             break
                         if move_line_id.reserved_qty > reserved_amount_to_remain:
-                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'qty_done': 0})
+                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'quantity': 0})
                             new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
                             move_line_id.reserved_uom_qty -= new_move_line.reserved_uom_qty
                             new_move_line.move_id = out
@@ -325,7 +325,7 @@ class ReceptionReport(models.AbstractModel):
                         else:
                             move_line_id.move_id = out
                             reserved_amount_to_remain -= move_line_id.reserved_qty
-                    (out | new_out)._compute_reserved_availability()
+                    (out | new_out)._compute_quantity()
                 out.move_orig_ids = False
                 new_out._recompute_state()
         out.procure_method = 'make_to_stock'

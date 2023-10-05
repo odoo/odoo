@@ -152,7 +152,7 @@ class StockPicking(models.Model):
     def _find_auto_batch(self):
         self.ensure_one()
         # Check if auto_batch is enabled for this picking.
-        if not self.picking_type_id.auto_batch or self.immediate_transfer or self.batch_id or not self.move_ids or not self._is_auto_batchable():
+        if not self.picking_type_id.auto_batch or self.batch_id or not self.move_ids or not self._is_auto_batchable():
             return False
 
         # Try to find a compatible batch to insert the picking
@@ -199,7 +199,6 @@ class StockPicking(models.Model):
         domain = [
             ('id', '!=', self.id),
             ('company_id', '=', self.company_id.id if self.company_id else False),
-            ('immediate_transfer', '=', False),
             ('state', '=', 'assigned'),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('batch_id', '=', False),

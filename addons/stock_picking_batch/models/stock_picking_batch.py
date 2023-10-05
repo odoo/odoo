@@ -29,9 +29,6 @@ class StockPickingBatch(models.Model):
     show_check_availability = fields.Boolean(
         compute='_compute_move_ids',
         string='Show Check Availability')
-    show_validate = fields.Boolean(
-        compute='_compute_show_validate',
-        string='Show Validate Button')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
         string='Show Allocation Button')
@@ -63,14 +60,14 @@ class StockPickingBatch(models.Model):
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
 
-    @api.depends('state', 'show_validate',
+    @api.depends('state',
                  'picking_ids.show_set_qty_button',
                  'picking_ids.show_clear_qty_button')
     def _compute_show_qty_button(self):
         self.show_set_qty_button = False
         self.show_clear_qty_button = False
         for batch in self:
-            if not batch.show_validate or batch.state != 'in_progress':
+            if batch.state != 'in_progress':
                 continue
             if any(p.show_set_qty_button for p in self.picking_ids):
                 batch.show_set_qty_button = True
@@ -90,8 +87,6 @@ class StockPickingBatch(models.Model):
                 ('company_id', '=', batch.company_id.id),
                 ('state', 'in', domain_states),
             ]
-            if not batch.is_wave:
-                domain = AND([domain, [('immediate_transfer', '=', False)]])
             if batch.picking_type_id:
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
             batch.allowed_picking_ids = self.env['stock.picking'].search(domain)
@@ -102,11 +97,6 @@ class StockPickingBatch(models.Model):
             batch.move_ids = batch.picking_ids.move_ids
             batch.move_line_ids = batch.picking_ids.move_line_ids
             batch.show_check_availability = any(m.state not in ['assigned', 'done'] for m in batch.move_ids)
-
-    @api.depends('picking_ids', 'picking_ids.show_validate')
-    def _compute_show_validate(self):
-        for batch in self:
-            batch.show_validate = any(picking.show_validate for picking in batch.picking_ids)
 
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
@@ -204,26 +194,23 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
 
-    def action_set_quantities_to_reservation(self):
-        self.picking_ids.filtered("show_set_qty_button").action_set_quantities_to_reservation()
-
     def action_clear_quantities_to_zero(self):
         self.picking_ids.filtered("show_clear_qty_button").action_clear_quantities_to_zero()
 
     def action_done(self):
-        def has_no_qty_done(picking):
-            return all(float_is_zero(line.qty_done, precision_rounding=line.product_uom_id.rounding) for line in picking.move_line_ids if line.state not in ('done', 'cancel'))
+        def has_no_quantity(picking):
+            return all(not m.picked or float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in picking.move_ids if m.state not in ('done', 'cancel'))
 
         self.ensure_one()
         self._check_company()
         # Empty 'waiting for another operation' pickings will be removed from the batch when it is validated.
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
-        empty_waiting_pickings = self.mapped('picking_ids').filtered(lambda p: p.state == 'waiting' and has_no_qty_done(p))
+        empty_waiting_pickings = self.mapped('picking_ids').filtered(lambda p: p.state == 'waiting' and has_no_quantity(p))
         pickings = pickings - empty_waiting_pickings
 
         empty_pickings = set()
         for picking in pickings:
-            if has_no_qty_done(picking):
+            if has_no_quantity(picking):
                 empty_pickings.add(picking.id)
             picking.message_post(
                 body=Markup("<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>") % (
@@ -254,24 +241,21 @@ class StockPickingBatch(models.Model):
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            picking_move_lines = self.move_line_ids
-
-            move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-                and not ml.result_package_id
+            quantity_move_line_ids = self.move_line_ids.filtered(
+                lambda ml:
+                    float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
+                    not ml.result_package_id
             )
+            move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
             if not move_line_ids:
-                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+                move_line_ids = quantity_move_line_ids
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:
                     package = move_line_ids.picking_id[0]._put_in_pack(move_line_ids, False)
                     return move_line_ids.picking_id[0]._post_put_in_pack_hook(package)
                 return res
-            else:
-                raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
+            raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
 
     def action_view_reception_report(self):
         action = self.picking_ids[0].action_view_reception_report()
@@ -313,8 +297,7 @@ class StockPickingBatch(models.Model):
                 erroneous_pickings = batch.picking_ids - batch.allowed_picking_ids
                 raise UserError(_(
                     "The following transfers cannot be added to batch transfer %s. "
-                    "Please check their states and operation types, if they aren't immediate "
-                    "transfers.\n\n"
+                    "Please check their states and operation types.\n\n"
                     "Incompatibilities: %s", batch.name, ', '.join(erroneous_pickings.mapped('name'))))
 
     def _track_subtype(self, init_values):
