@@ -162,7 +162,7 @@
                             <t t-call="website_slides.slide_icon">
                                 <t t-set="slide" t-value="aside_slide"/>
                             </t>
-                            <div class="o_wslides_lesson_link_name" t-att-title="aside_slide.name">
+                            <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
                                 <span t-esc="aside_slide.name"/>
                                 <span class="align-items-end" t-if="aside_slide.question_ids">
                                     <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-light text-600')">
@@ -218,12 +218,12 @@
     <div class="d-flex flex-wrap align-items-start my-3 w-100">
         <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
         <div class="col-12 col-md order-2 order-md-1 d-flex">
-            <div class="d-flex align-items-start">
-                <h1 class="h4 my-0 d-flex flex_row">
+            <div class="d-flex align-items-start overflow-hidden">
+                <h1 class="h4 my-0 d-flex flex_row overflow-hidden">
                     <t t-call="website_slides.slide_icon">
                         <t t-set="icon_class" t-valuef="me-2"/>
                     </t>
-                    <span t-field="slide.name"/>
+                    <span class="text-truncate" t-field="slide.name"/>
                 </h1>
             </div>
         </div>

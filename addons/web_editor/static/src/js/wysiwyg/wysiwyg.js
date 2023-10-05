@@ -172,6 +172,7 @@ const Wysiwyg = Widget.extend({
             // Hack: check if mail module is installed.
             this.getSession()['notification_type']
         ) {
+            this._currentClientId = this._generateClientId();
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             // Wait until editor is focused to join the peer to peer network.
             this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
@@ -512,7 +513,6 @@ const Wysiwyg = Widget.extend({
             this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
         }
 
-        this._currentClientId = this._generateClientId();
         this._startCollaborationTime = new Date().getTime();
 
         this._checkConnectionChange = () => {
@@ -2416,19 +2416,11 @@ const Wysiwyg = Widget.extend({
         this._isOnline = true;
         if (!this.ptp) return;
 
-        // Ask for potential missing steps from all peers.
-        return Promise.all(this._getPtpClients().map(client => {
-            return this.requestClient(
-                client.id,
-                'get_missing_steps', {
-                    fromStepId: peek(this.odooEditor.historyGetBranchIds()).id,
-                },
-                { transport: 'rtc' }
-            ).then(missingSteps => {
-                if (missingSteps === REQUEST_ERROR) return;
-                this._processMissingSteps(missingSteps);
-            });
-        }));
+        // If it was disconnected to some peers, send the join signal again.
+        this.ptp.notifyAllClients('ptp_join');
+        // Send last step to all peers. If the peers cannot add the step, they
+        // will ask for missing steps.
+        this.ptp.notifyAllClients('oe_history_step', peek(this.odooEditor.historyGetSteps()), { transport: 'rtc' });
     },
     /**
      * Process missing steps received from a peer.
@@ -2561,6 +2553,9 @@ const Wysiwyg = Widget.extend({
                             }
                             this._historySyncFinished = true;
                         } else {
+                            // Make both send their last step to each other to
+                            // ensure they are in sync.
+                            this.ptp.notifyAllClients('oe_history_step', peek(this.odooEditor.historyGetSteps()), { transport: 'rtc' });
                             this._setCollaborativeSelection(fromClientId);
                         }
 
@@ -2905,12 +2900,14 @@ const Wysiwyg = Widget.extend({
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
         if (!collaborationChannel || !collaborationChannel.collaborationResId) {
+            this._currentClientId = undefined;
             this.resetValue(value);
             return;
         }
+        this._currentClientId = this._generateClientId();
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.resetValue(value);
         this.setupCollaboration(collaborationChannel);
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         // Wait until editor is focused to join the peer to peer network.
         this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
 

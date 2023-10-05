@@ -177,7 +177,7 @@ export const CLIPBOARD_WHITELISTS = {
 };
 
 // Commands that don't require a DOM selection but take an argument instead.
-const SELECTIONLESS_COMMANDS = ['addRow', 'addColumn', 'removeRow', 'removeColumn'];
+const SELECTIONLESS_COMMANDS = ['addRow', 'addColumn', 'removeRow', 'removeColumn', 'resetSize'];
 
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
@@ -412,6 +412,11 @@ export class OdooEditor extends EventTarget {
                 `, 'text/html').body.firstChild)
                 this.addDomListener(uiMenu.querySelector('.o_delete_row'), 'click', this._onTableDeleteRowClick);
             }
+
+            // Reset the size of the table
+            uiMenu.append(parser.parseFromString(`<div class="o_reset_table_size"><span class="fa fa-table"></span>` + this.options._t('Reset Size') + `</div>
+                `, 'text/html').body.firstChild)
+            this.addDomListener(uiMenu.querySelector('.o_reset_table_size'), 'click', () => this.execCommand('resetSize', this._tableUiTarget));
 
             this[`_${direction}Ui`] = ui;
             this.document.body.append(ui);
@@ -1072,6 +1077,9 @@ export class OdooEditor extends EventTarget {
         this.multiselectionRefresh();
         this.observerActive();
         this.dispatchEvent(new Event('historyResetFromSteps'));
+    }
+    historyGetSteps() {
+        return this._historySteps;
     }
     historyGetMissingSteps({fromStepId, toStepId}) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
@@ -2632,8 +2640,8 @@ export class OdooEditor extends EventTarget {
             this._columnUi.style.visibility = 'hidden';
         }
         if (row || column) {
-            const table = closestElement(row || column, 'table');
-            table && table.addEventListener('mouseleave', () => this._toggleTableUi(), { once: true });
+            this._tableUiTarget = closestElement(row || column, 'table');
+            this._tableUiTarget && this._tableUiTarget.addEventListener('mouseleave', () => this._toggleTableUi(), { once: true });
         }
     }
     /**
@@ -2654,7 +2662,13 @@ export class OdooEditor extends EventTarget {
             xy: {left: 'x', top: 'y'},
             size: {left: 'width', top: 'height'}
         };
-
+        const table = getInSelection(this.document, 'table');
+        const resetTableSize = ui.querySelector('.o_reset_table_size');
+        if (table && !table.hasAttribute('style')) {
+            resetTableSize.classList.add('d-none');
+        } else {
+            resetTableSize.classList.remove('d-none');
+        }
         const side1 = isRow ? 'left' : 'top';
         ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
         ui.style[props.size[side1]] = !isRow && togglerRect[props.size[side1]] + 'px';
@@ -4632,7 +4646,16 @@ export class OdooEditor extends EventTarget {
                         const textFragments = splitAroundUrl[i].split(/\r?\n/);
                         let textIndex = 1;
                         for (const textFragment of textFragments) {
-                            this._applyCommand('insert', textFragment);
+                            // Replace consecutive spaces by alternating nbsp.
+                            const modifiedTextFragment = textFragment.replace(/( {2,})/g, match => {
+                                let alertnateValue = false;
+                                return match.replace(/ /g, () => {
+                                    alertnateValue = !alertnateValue;
+                                    const replaceContent = alertnateValue ? '\u00A0' : ' ';
+                                    return replaceContent;
+                                });
+                            });
+                            this._applyCommand('insert', modifiedTextFragment);
                             if (textIndex < textFragments.length) {
                                 // Break line by inserting new paragraph and
                                 // remove current paragraph's bottom margin.

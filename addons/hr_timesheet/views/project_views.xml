@@ -316,7 +316,7 @@
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
                     <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
-                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title">
+                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="remaining_hours" widget="timesheet_uom"/>
                     </div>
                 </xpath>
@@ -336,7 +336,7 @@
                     <field name="encode_uom_in_days" invisible="1"/>
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
-                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
+                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
                         <t t-set="badge" t-value=""/>
                         <t t-set="badge" t-value="'border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>

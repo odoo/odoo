@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +24,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
-msgid "Complete the Stripe onboarding."
-msgstr ""
+msgid "Complete the Stripe onboarding for company %s."
+msgstr "ดำเนินการเตรียมความพร้อมด้วย Stripe ให้กับบริษัท %s"
 
 #. module: pos_stripe
 #. odoo-python
@@ -33,34 +34,43 @@ msgstr ""
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Do not have access to fetch token from Stripe"
-msgstr ""
+msgstr "ไม่มีสิทธิ์เข้าถึงโทเค็นการดึงข้อมูลจาก Stripe"
 
 #. module: pos_stripe
 #: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
 msgid ""
 "Don't forget to complete Stripe connect before using this payment method."
 msgstr ""
+"อย่าลืมทำการเชื่อมต่อ Stripe ให้เสร็จสิ้นก่อนที่จะใช้วิธีการชำระเงินนี้"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Failed to discover: %s"
-msgstr ""
+msgstr "การค้นพบล้มเหลว: %s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
+#, python-format
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
+msgstr "โหลดแหล่งข้อมูลไม่สำเร็จ: net::ERR_INTERNET_DISCONNECTED."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "No available Stripe readers."
-msgstr ""
+msgstr "ไม่มีเครื่องอ่าน Stripe ที่ใช้งานได้"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Payment canceled because not reader connected"
-msgstr ""
+msgstr "การชำระเงินถูกยกเลิกเนื่องจากไม่ได้เชื่อมต่อกับเครื่องอ่าน"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
@@ -77,7 +87,7 @@ msgstr "เซสชั่นการขายหน้าร้าน"
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Reader disconnected"
-msgstr ""
+msgstr "เครื่องอ่านถูกตัดการเชื่อมต่อ"
 
 #. module: pos_stripe
 #. odoo-python
@@ -91,26 +101,26 @@ msgstr "Stripe"
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Stripe Error"
-msgstr ""
+msgstr "เกิดข้อผิดพลาด Stripe"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "Stripe Serial Number"
-msgstr ""
+msgstr "หมายเลขซีเรียล Stripe"
 
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
-msgid "Stripe payment provider is missing"
-msgstr ""
+msgid "Stripe payment provider for company %s is missing"
+msgstr "ผู้ให้บริการการชำระเงิน Stripe สำหรับบริษัท %s ได้หายไป"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/js/payment_stripe.js:0
 #, python-format
 msgid "Stripe readers %s not listed in your account"
-msgstr ""
+msgstr "โปรแกรมอ่าน Stripe %s ไม่อยู่ในบัญชีของคุณ"
 
 #. module: pos_stripe
 #. odoo-python
@@ -125,9 +135,9 @@ msgstr "สถานี %s ได้ใช้วิธีการชำระ�
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "There are some issues between us and Stripe, try again later."
-msgstr ""
+msgstr "มีปัญหาบางอย่างเกิดขึ้นระหว่างเรากับ Stripe โปรดลองอีกครั้งในภายหลัง"
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
-msgstr ""
+msgstr "[หมายเลขซีเรียลของ Stripe เทอร์มินัล] เช่น: WSC513105011295"
