@@ -11,7 +11,10 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { standardFieldProps } from "../standard_field_props";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { toTree } from "@web/core/domain_tree";
-import { useGetDomainTreeDescription } from "@web/core/domain_selector/utils";
+import {
+    useGetDomainTreeDescription,
+    useGetDefaultLeafDomain,
+} from "@web/core/domain_selector/utils";
 
 export class DomainField extends Component {
     static template = "web.DomainField";
@@ -34,6 +37,7 @@ export class DomainField extends Component {
         this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.getDomainTreeDescription = useGetDomainTreeDescription();
+        this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.addDialog = useOwnedDialogs();
 
         this.state = useState({
@@ -109,6 +113,12 @@ export class DomainField extends Component {
             resModel = props.record.data[resModel];
         }
         return resModel;
+    }
+
+    async addCondition() {
+        const defaultDomain = await this.getDefaultLeafDomain(this.getResModel());
+        this.update(defaultDomain);
+        this.state.folded = false;
     }
 
     async loadFacets(props = this.props) {
