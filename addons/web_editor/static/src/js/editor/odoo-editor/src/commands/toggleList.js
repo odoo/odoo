@@ -31,7 +31,11 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
     } else {
         const list = insertListAfter(this, mode, [this]);
         for (const attribute of this.attributes) {
-            list.setAttribute(attribute.name, attribute.value);
+            if (attribute.name === 'class' && attribute.value && list.className) {
+                list.className = `${list.className} ${attribute.value}`;
+            } else {
+                list.setAttribute(attribute.name, attribute.value);
+            }
         }
         restoreCursor(new Map([[this, list.firstElementChild]]));
     }
@@ -42,7 +46,11 @@ HTMLParagraphElement.prototype.oToggleList = function (offset, mode = 'UL') {
     const list = insertListAfter(this, mode, [[...this.childNodes]]);
     const classList = [...list.classList];
     for (const attribute of this.attributes) {
-        list.setAttribute(attribute.name, attribute.value);
+        if (attribute.name === 'class' && attribute.value && list.className) {
+            list.className = `${list.className} ${attribute.value}`;
+        } else {
+            list.setAttribute(attribute.name, attribute.value);
+        }
     }
     for (const className of classList) {
         list.classList.toggle(className, true); // restore list classes
