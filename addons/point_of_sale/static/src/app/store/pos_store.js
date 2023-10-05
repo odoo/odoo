@@ -1097,6 +1097,40 @@ export class PosStore extends Reactive {
         });
     }
 
+    // To be used in the context of closing the POS
+    // Saves the order locally and try to send it to the backend.
+    // If there is an error show a popup and ask to continue the closing or not
+    async push_orders_with_closing_popup (opts = {}) {
+        try {            
+            await this.push_orders(opts);
+            return true;
+        } catch (error) {
+            console.warn(error);
+            const reason = this.failed
+                ? _t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to configuration errors. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  )
+                : _t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to internet connection issues. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  );
+            const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
+                title: _t('Offline Orders'),
+                body: reason,
+                confirmText: _t('Close anyway'),
+                cancelText: _t('Do not close'),
+            });
+            return confirmed;
+        }
+    }
+
     push_orders(opts = {}) {
         return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
     }
@@ -1123,12 +1157,11 @@ export class PosStore extends Reactive {
                 } else {
                     this._makeOrdersUnpaid(orders);
                     this.set_synch('connected');
-                    return error;
                 }
             } else {
                 this.set_synch('disconnected');
-                return error;
             }
+            throw error;
         } finally {
             this._after_flush_orders(orders);
         }
@@ -1827,35 +1860,9 @@ export class PosStore extends Reactive {
         }
 
         // If there are orders in the db left unsynced, we try to sync.
-        // If sync successful, close without asking.
-        // Otherwise, ask again saying that some orders are not yet synced.
-        try {
-            await this.push_orders();
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
-        } catch (error) {
-            console.warn(error);
-            const reason = this.failed
-                ? _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to configuration errors. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  )
-                : _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to internet connection issues. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  );
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: _t("Offline Orders"),
-                body: reason,
-            });
-            if (confirmed) {
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
-            }
+        const syncSuccess = await this.push_orders_with_closing_popup();
+        if (syncSuccess) {
+            window.location = '/web#action=point_of_sale.action_client_pos_menu';
         }
     }
     async selectPartner() {
