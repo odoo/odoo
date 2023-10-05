@@ -50,12 +50,8 @@ from odoo.service import db, security
 
 _logger = logging.getLogger(__name__)
 
-if hasattr(sys, 'frozen'):
-    # When running on compiled windows binary, we don't have access to package loader.
-    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
-    loader = jinja2.FileSystemLoader(path)
-else:
-    loader = jinja2.PackageLoader('odoo.addons.web', "views")
+path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
+loader = jinja2.FileSystemLoader(path)
 
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = json.dumps
