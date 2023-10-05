@@ -10,7 +10,8 @@ class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-new-order/<device_type>/", auth="public", type="json", website=True)
     def process_new_order(self, order, access_token, table_identifier, device_type):
         lines = order.get('lines')
-        pos_config, table = self._verify_authorization(access_token, table_identifier, order.get('take_away'))
+        is_take_away = order.get('take_away')
+        pos_config, table = self._verify_authorization(access_token, table_identifier, is_take_away)
         pos_session = pos_config.current_session_id
 
         date_string = fields.Date.today().isoformat()
@@ -20,6 +21,12 @@ class PosSelfOrderController(http.Controller):
         sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
         order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
         tracking_number = f"{'A' if device_type == 'kiosk' else 'B'}{ir_sequence_tracking}"
+
+        fiscal_position = (
+            pos_config.self_ordering_alternative_fp_id
+            if is_take_away
+            else pos_config.default_fiscal_position_id
+        )
 
         # Create the order without lines and prices computed
         # We need to remap the order because some required fields are not used in the frontend.
@@ -35,7 +42,7 @@ class PosSelfOrderController(http.Controller):
                 'table_id': table.id if table else False,
                 'partner_id': False,
                 'date_order': str(fields.Datetime.now()),
-                'fiscal_position_id': pos_config.default_fiscal_position_id.id,
+                'fiscal_position_id': fiscal_position.id,
                 'statement_ids': [],
                 'lines': [],
                 'amount_tax': 0,
@@ -52,7 +59,7 @@ class PosSelfOrderController(http.Controller):
         posted_order_id = pos_config.env['pos.order'].with_context(from_self=True).create_from_ui([order], draft=True)[0].get('id')
 
         # Process the lines and get their prices computed
-        lines = self._process_lines(lines, pos_config, posted_order_id, order.get('take_away'))
+        lines = self._process_lines(lines, pos_config, posted_order_id, is_take_away)
 
         # Compute the order prices
         amount_total, amount_untaxed = self._get_order_prices(lines)

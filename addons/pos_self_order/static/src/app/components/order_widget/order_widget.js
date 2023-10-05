@@ -40,20 +40,19 @@ export class OrderWidget extends Component {
         const currentPage = this.router.activeSlot;
         const payAfter = this.selfOrder.config.self_ordering_pay_after;
         const kioskPayment = this.selfOrder.pos_payment_methods.find((p) => !p.is_online_payment); // cannot be online payment in kiosk for instance
-        const isLine = this.selfOrder.currentOrder.lines.length === 0;
+        const isLine = this.selfOrder.currentOrder.lines.length !== 0;
 
         let label = "";
-        let disabled = "";
+        let disabled = !isLine;
 
         if (currentPage === "product_list") {
             label = _t("Order");
-            disabled = isLine;
         } else if (payAfter === "meal" && !this.selfOrder.currentOrder.isSavedOnServer) {
             label = _t("Order");
-            disabled = isLine || !kioskPayment;
+            disabled = disabled || !kioskPayment;
         } else {
             label = kioskPayment ? _t("Pay") : _t("Pay at cashier");
-            disabled = isLine || !kioskPayment;
+            disabled = disabled || kioskPayment;
         }
 
         return { label, disabled };
