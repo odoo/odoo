@@ -307,7 +307,7 @@
                                         <hr/>
                                         <group>
                                             <group>
-                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="name" string="Contact Name" required="1"/>
                                                 <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
                                                     attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
