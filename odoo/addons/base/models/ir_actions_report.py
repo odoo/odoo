@@ -370,7 +370,7 @@ class IrActionsReport(models.Model):
                 res_ids.append(None)
 
         if not bodies:
-            body = bytearray().join([lxml.html.tostring(c) for c in body_parent.getchildren()])
+            body = bytearray().join([lxml.html.tostring(c) for c in body_parent])
             bodies.append(body)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over

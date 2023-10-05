@@ -78,7 +78,7 @@ class Partner(models.Model):
                 replacement_data['parent_condition'] = ", ('parent_id', '!=', False)"
 
             replacement_formatted = replacement_xml % replacement_data
-            for replace_node in etree.fromstring(replacement_formatted).getchildren():
+            for replace_node in etree.fromstring(replacement_formatted):
                 city_node.addprevious(replace_node)
             parent = city_node.getparent()
             parent.remove(city_node)
