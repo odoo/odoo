@@ -4,7 +4,6 @@ import { PosGlobalState } from "@point_of_sale/js/models";
 import { pos_env as legacyEnv } from "@point_of_sale/js/pos_env";
 
 import { registry } from "@web/core/registry";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { reactive, markRaw } from "@odoo/owl";
 import { Reactive } from "@point_of_sale/utils";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -99,42 +98,9 @@ export class PosStore extends Reactive {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
 
-        if (this.globalState.db.get_orders().length) {
-            // If there are orders in the db left unsynced, we try to sync.
-            // If sync successful, close without asking.
-            // Otherwise, ask again saying that some orders are not yet synced.
-            try {
-                await this.globalState.push_orders();
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
-            } catch (error) {
-                console.warn(error);
-                const reason = this.globalState.failed
-                    ? _t(
-                          "Some orders could not be submitted to " +
-                              "the server due to configuration errors. " +
-                              "You can exit the Point of Sale, but do " +
-                              "not close the session before the issue " +
-                              "has been resolved."
-                      )
-                    : _t(
-                          "Some orders could not be submitted to " +
-                              "the server due to internet connection issues. " +
-                              "You can exit the Point of Sale, but do " +
-                              "not close the session before the issue " +
-                              "has been resolved."
-                      );
-                const { confirmed } = await this.popup.add(ConfirmPopup, {
-                    title: _t("Offline Orders"),
-                    body: reason,
-                });
-                if (confirmed) {
-                    // FIXME POSREF setting the location prevents the next render, the loading screen never shows
-                    this.globalState.uiState = "CLOSING";
-                    this.globalState.loadingSkipButtonIsShown = false;
-                    window.location = "/web#action=point_of_sale.action_client_pos_menu";
-                }
-            }
-        }
+        // If there are orders in the db left unsynced, we try to sync.
+        await this.globalState.push_orders_with_closing_popup();
+        window.location = '/web#action=point_of_sale.action_client_pos_menu';
     }
     async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
