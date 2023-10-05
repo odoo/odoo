@@ -55,6 +55,12 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
+    def _get_default_tip_product(self):
+        tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
+        if not tip_product_id:
+            tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
+        return tip_product_id
+
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_order_printer = fields.Boolean('Order Printer')
@@ -137,8 +143,7 @@ class PosConfig(models.Model):
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
         help='This field is there to pass the id of the pos user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
-    tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_tip_product_id', store=True,
-        help="This product is used as reference on customer receipts.")
+    tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help="This product is used as reference on customer receipts.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
@@ -253,13 +258,6 @@ class PosConfig(models.Model):
     def _compute_customer_facing_display(self):
         for config in self:
             config.iface_customer_facing_display = config.iface_customer_facing_display_via_proxy or config.iface_customer_facing_display_local
-
-    @api.depends('iface_tipproduct')
-    def _compute_tip_product_id(self):
-        for pos_config in self:
-            pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
-            if not pos_config.tip_product_id:
-                pos_config.tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
 
     @api.depends('iface_customer_facing_display')
     def _compute_iface_customer_facing_display_background_image_1920(self):
@@ -394,7 +392,7 @@ class PosConfig(models.Model):
         return pos_configs
 
     def _reset_default_on_vals(self, vals):
-        if 'tip_product_id' in vals and any(self.mapped('iface_tipproduct')) and not vals['tip_product_id']:
+        if 'tip_product_id' in vals and vals['iface_tipproduct'] and not vals['tip_product_id']:
             default_product = self.env.ref('point_of_sale.product_product_tip', False)
             if default_product:
                 vals['tip_product_id'] = default_product.id
