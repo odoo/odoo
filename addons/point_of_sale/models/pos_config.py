@@ -579,7 +579,7 @@ class PosConfig(models.Model):
             if not pos_configs:
                 self = self.with_company(company)
                 pos_configs = self.env['pos.config'].create({
-                'name': 'Shop',
+                'name': _('Shop'),
                 'company_id': company.id,
                 'module_pos_restaurant': False,
             })
@@ -639,7 +639,7 @@ class PosConfig(models.Model):
             if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
                     'type': 'general',
-                    'name': 'Point of Sale',
+                    'name': _('Point of Sale'),
                     'code': 'POSS',
                     'company_id': company.id,
                     'sequence': 20
@@ -778,7 +778,7 @@ class PosConfig(models.Model):
                     ('pos_payment_method_ids', '=', False),
                 ])
                 cash_journal = self.env['account.journal'].create({
-                    'name': 'Cash %s' % journal_counter,
+                    'name': _('Cash %s', journal_counter),
                     'code': 'RCSH%s' % journal_counter,
                     'type': 'cash',
                     'company_id': company.id
@@ -786,7 +786,7 @@ class PosConfig(models.Model):
                 journal_counter += 1
                 payment_methods = pos_config.payment_method_ids
                 payment_methods |= self.env['pos.payment.method'].create({
-                    'name': _('Cash ') + pos_config.name,
+                    'name': _('Cash %s', pos_config.name),
                     'journal_id': cash_journal.id,
                     'company_id': company.id,
                 })

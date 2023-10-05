@@ -101,7 +101,7 @@ class PosConfig(models.Model):
             ])
             if not pos_configs:
                 pos_configs = self.env['pos.config'].with_company(company).create({
-                'name': 'Bar',
+                'name': _('Bar'),
                 'company_id': company.id,
                 'module_pos_restaurant': True,
                 'iface_splitbill': True,
