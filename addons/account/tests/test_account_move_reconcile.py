@@ -4768,3 +4768,39 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             },
         ]
         self.assertRecordValues(caba_move.line_ids.sorted('id').sorted('sequence'), expected_caba_move_line_values)
+
+    def test_corner_case_automated_action_bill_reset_to_draft(self):
+        """
+        Ensure that whenever an automated action (domain with `payment_state`) is created,
+        reseting a payment to draft will not change the invoice's `payment_state` to `paid`
+        """
+        base_automation = self.env['ir.module.module']._get('base_automation')
+        if base_automation.state != 'installed':
+            self.skipTest('`base_automation` is not installed')
+
+        self.env['base.automation'].create({
+                'name': 'Base Automation: test',
+                'model_id': self.env.ref('account.model_account_move').id,
+                'state': 'code',
+                'code': "",
+                'trigger': 'on_create_or_write',
+                'active': True,
+                'filter_domain': "[('payment_state', '!=', 'paid')]",
+            })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 100,
+                }),
+            ]
+        })
+        invoice.action_post()
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': invoice.date,
+        })._create_payments()
+        payment.action_draft()
+
+        self.assertEqual(invoice.payment_state, "not_paid")

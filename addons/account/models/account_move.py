@@ -889,6 +889,7 @@ class AccountMove(models.Model):
         if stored_ids:
             self.env['account.partial.reconcile'].flush_model()
             self.env['account.payment'].flush_model(['is_matched'])
+            self._compute_amount()
 
             queries = []
             for source_field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
@@ -953,6 +954,8 @@ class AccountMove(models.Model):
                                 new_pmt_state = invoice._get_invoice_in_payment_state()
 
                         else:
+                            # if currency.is_zero(invoice.amount_total) or reconciliation_vals:
+                            #     new_pmt_state = 'paid'
                             new_pmt_state = 'paid'
 
                             reverse_move_types = set()
