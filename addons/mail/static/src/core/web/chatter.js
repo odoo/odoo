@@ -12,6 +12,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { ChatterAttachment } from "./chatter_attachment";
 
 import {
     Component,
@@ -45,6 +46,7 @@ export class Chatter extends Component {
     static template = "mail.Chatter";
     static components = {
         AttachmentList,
+        ChatterAttachment,
         Dropdown,
         Thread,
         Composer,
@@ -100,7 +102,6 @@ export class Chatter extends Component {
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
-            scrollToAttachments: 0,
             showActivities: true,
             showAttachmentLoading: false,
             /** @type {import("models").Thread} */
@@ -186,18 +187,6 @@ export class Chatter extends Component {
                 }
             },
             () => [this.state.thread?.status, this.attachments]
-        );
-        useEffect(
-            () => {
-                if (
-                    this.state.thread &&
-                    !["new", "loading"].includes(this.state.thread.status) &&
-                    this.state.scrollToAttachments > 0
-                ) {
-                    this.attachmentBox.el.scrollIntoView({ block: "center" });
-                }
-            },
-            () => [this.state.thread?.status, this.state.scrollToAttachments]
         );
         useEffect(
             () => {
@@ -419,9 +408,6 @@ export class Chatter extends Component {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
-        if (this.state.isAttachmentBoxOpened) {
-            this.state.scrollToAttachments++;
-        }
     }
 
     onClickSearch() {

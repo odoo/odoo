@@ -139,6 +139,10 @@ export class Attachment extends Record {
         return videoMimeTypes.includes(this.mimetype);
     }
 
+    get isMedia() {
+        return this.isImage || this.isVideo || this.isVoice;
+    }
+
     get isViewable() {
         return (
             (this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube) &&

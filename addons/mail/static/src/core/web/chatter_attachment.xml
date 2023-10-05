@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.ChatterAttachment">
+        <div class="flex-grow-1">
+            <div class="d-flex flex-column">
+                <div class="o-mail-AttachmentpanelCatgory mb-2" t-on-click="(ev) => this.handleTabSelection(ev)">
+                    <div class="o-mail-AttachmentPanelCategory-title " t-att-class="state.current === 'media' ? 'active' : ''" data-tab="media" title="Media">
+                        Media
+                    </div>
+                    <div class="o-mail-AttachmentPanelCategory-title" t-att-class="state.current === 'links' ? 'active' : ''" data-tab="links" title="Links">
+                        Links
+                    </div>
+                    <div class="o-mail-AttachmentPanelCategory-title" t-att-class="state.current === 'files' ? 'active' : ''" data-tab="files" title="Files">
+                        Files
+                    </div>
+                </div>
+                <div t-if="state.current === 'media'">
+                    <p t-if="state.media === 0" class="text-center fst-italic text-500 mt-4">This conversation doesn't have any media attachments.</p>
+                    <AttachmentList imagesHeight="100" attachments="mediaAttachments"  unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                </div>
+                <div t-elif="state.current === 'links'">
+                    <p t-if="state.linkPreviews === 0" class="text-center fst-italic text-500 mt-4">This conversation doesn't have any link attachments.</p>
+                    <LinkPreviewList linkPreviews="linkAttachements" deletable="true" />
+                </div>
+                <div t-elif="state.current === 'files'">
+                    <p t-if="state.files === 0" class="text-center fst-italic text-500 mt-4">This conversation doesn't have any file attachments.</p>
+                    <AttachmentList imagesHeight="100" attachments="fileAttachments"  unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

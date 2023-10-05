@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, scroll } from "@web/../tests/utils";
+import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("attachment box");
 
@@ -73,6 +73,7 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
+    await click(".o-mail-AttachmentPanelCategory-title[title='Files']")
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
 
@@ -115,6 +116,7 @@ QUnit.test("view attachments", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
+    await click(".o-mail-AttachmentPanelCategory-title[title='Files']")
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
@@ -126,37 +128,6 @@ QUnit.test("view attachments", async () => {
 
     await click(".o-FileViewer div[aria-label='Next']");
     await contains(".o-FileViewer-header", { text: "Blah.txt" });
-});
-
-QUnit.test("scroll to attachment box when toggling on", async () => {
-    patchUiSize({ size: SIZES.XXL });
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    for (let i = 0; i < 30; i++) {
-        pyEnv["mail.message"].create({
-            body: "not empty".repeat(50),
-            model: "res.partner",
-            res_id: partnerId,
-        });
-    }
-    pyEnv["ir.attachment"].create({
-        mimetype: "text/plain",
-        name: "Blah.txt",
-        res_id: partnerId,
-        res_model: "res.partner",
-    });
-    const { openView } = await start();
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
-    await contains(".o-mail-Message", { count: 30 });
-    await scroll(".o-mail-Chatter", "bottom");
-    await click("button[aria-label='Attach files']");
-    await contains(".o-mail-AttachmentBox");
-    await contains(".o-mail-Chatter", { scroll: 0 });
-    await contains(".o-mail-AttachmentBox", { visible: true });
 });
 
 QUnit.test("do not auto-scroll to attachment box when initially open", async () => {
@@ -208,6 +179,7 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     });
     await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
+    await click(".o-mail-AttachmentPanelCategory-title[title='Files']")
     await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });
     await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });

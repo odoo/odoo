@@ -101,16 +101,12 @@
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
-                            Files
+                            Attachments
                         </span>
                         <hr class="flex-grow-1"/>
                     </div>
+                    <ChatterAttachment thread="this.state.thread" />
                     <div class="d-flex flex-column">
-                        <AttachmentList
-                            attachments="attachments"
-                            unlinkAttachment.bind="unlinkAttachment"
-                            imagesHeight="100"
-                        />
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">
                                 <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">

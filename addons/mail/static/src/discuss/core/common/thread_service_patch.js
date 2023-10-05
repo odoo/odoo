@@ -37,6 +37,7 @@ patch(ThreadService.prototype, {
             const rawAttachments = await this.rpc("/discuss/channel/attachments", {
                 before: Math.min(...thread.attachments.map(({ id }) => id)),
                 channel_id: thread.id,
+                model: thread.model,
                 limit,
             });
             const attachments = rawAttachments.map((a) => this.store.Attachment.insert(a));
