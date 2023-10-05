@@ -234,9 +234,9 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
-        expected_file = get_resource_path(self.test_module, 'tests/test_files', expected_file_path)
-        self.assertTrue(expected_file, "expected file not found")
-        expected_etree = etree.parse(expected_file).getroot()
+        expected_file_full_path = get_resource_path(self.test_module, 'tests/test_files', expected_file_path)
+        self.assertTrue(expected_file_full_path, "expected file not found")
+        expected_etree = etree.parse(expected_file_full_path).getroot()
 
         modified_etree = self.with_applied_xpath(
             expected_etree,
