@@ -203,7 +203,7 @@ class IrActionsReport(models.Model):
             return None
         attachment_vals = {
             'name': attachment_name,
-            'datas': base64.encodestring(buffer.getvalue()),
+            'datas': base64.encodebytes(buffer.getvalue()),
             'datas_fname': attachment_name,
             'res_model': self.model,
             'res_id': record.id,
@@ -563,7 +563,7 @@ class IrActionsReport(models.Model):
 
         # Check special case having only one record with existing attachment.
         if len(save_in_attachment) == 1 and not pdf_content:
-            return base64.decodestring(list(save_in_attachment.values())[0].datas)
+            return base64.decodebytes(list(save_in_attachment.values())[0].datas)
 
         # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
@@ -633,7 +633,7 @@ class IrActionsReport(models.Model):
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
         if self.attachment_use:
             for attachment_id in save_in_attachment.values():
-                content = base64.decodestring(attachment_id.datas)
+                content = base64.decodebytes(attachment_id.datas)
                 streams.append(io.BytesIO(content))
 
         # Build the final pdf.
