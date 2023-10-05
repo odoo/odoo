@@ -123,7 +123,7 @@ const weekAdapter = {
         return `${nextWeek.weekNumber}/${nextWeek.weekYear}`;
     },
     format(normalizedValue, locale) {
-        const [year, week] = normalizedValue.split("/");
+        const [week, year] = normalizedValue.split("/");
         return sprintf(_t("W%(week)s %(year)s"), { week, year });
     },
 };
