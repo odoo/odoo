@@ -42,8 +42,11 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
 
 export class ProjectTaskRecord extends RelationalModel.Record {
     _update(changes, options) {
-        const value = changes.personal_stage_type_ids;
-        if (Array.isArray(value)) {
+        let value = changes.personal_stage_type_ids;
+        if(value){
+            if (!Array.isArray(value)) {
+                value = [value, false];
+            }
             delete changes.personal_stage_type_ids;
             changes.personal_stage_type_id = value;
         }
