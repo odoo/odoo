@@ -19,7 +19,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
         {
             content: "Write something in composer",
             trigger: ".o-mail-Composer-input",
-            run: "text blahblah",
+            run: "text blahblah @",
+        },
+        {
+            content: "Mention a partner",
+            trigger: ".o-mail-Composer-suggestion:contains(Marc Demo)",
         },
         {
             content: "Add one file in composer",
@@ -75,9 +79,17 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
                 const bodyContent = document.querySelector(
                     '.o_field_html[name="body"]'
                 ).textContent;
-                if (!bodyContent.includes("blahblah")) {
+                if (!bodyContent.includes("blahblah @Marc Demo")) {
                     console.error(
-                        `Full composer should contain text from small composer ("blahblah") in body input (actual: ${bodyContent})`
+                        `Full composer should contain text from small composer ("blahblah @Marc Demo") in body input (actual: ${bodyContent})`
+                    );
+                }
+                const mentionLink = document.querySelector(
+                    '.o_field_html[name="body"] a'
+                ).textContent;
+                if (!mentionLink.includes("@Marc Demo")) {
+                    console.error(
+                        `Full composer should contain mention link from small composer ("@Marc Demo") in body input)`
                     );
                 }
             },
@@ -98,7 +110,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
         },
         {
             content: "Check message is shown",
-            trigger: '.o-mail-Message-body:contains("blahblah")',
+            trigger: '.o-mail-Message-body:contains("blahblah @Marc Demo")',
         },
         {
             content: "Check message contains the attachment",
