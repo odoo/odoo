@@ -109,6 +109,9 @@
                 <field name="leave_date_to"/>
                 <field name="is_absent"/>
             </xpath>
+            <xpath expr="//field[@name='hr_icon_display'][hasclass('o_employee_availability')]" position="attributes">
+                <attribute name="widget">hr_presence_status_private</attribute>
+            </xpath>
         </field>
     </record>
 

@@ -158,9 +158,6 @@
                                     </div>
                                 </div>
                                 <ul>
-                                    <li t-if="record.show_hr_icon_display.raw_value">
-                                        <field name="hr_icon_display" class="o_employee_availability align-items-center" widget="hr_presence_status" />
-                                    </li>
                                     <li t-if="record.work_email.raw_value">
                                         <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                         <field name="work_email"/>
