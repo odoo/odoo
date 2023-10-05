@@ -50,9 +50,9 @@ class QueryURL(object):
                     paths[key] = u"%s" % value
             elif value:
                 if isinstance(value, list) or isinstance(value, set):
-                    fragments.append(werkzeug.url_encode([(key, item) for item in value]))
+                    fragments.append(werkzeug.urls.url_encode([(key, item) for item in value]))
                 else:
-                    fragments.append(werkzeug.url_encode([(key, value)]))
+                    fragments.append(werkzeug.urls.url_encode([(key, value)]))
         for key in path_args:
             value = paths.get(key)
             if value is not None:

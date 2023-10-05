@@ -136,7 +136,7 @@ class WebsiteEventController(http.Controller):
             'countries': countries,
             'pager': pager,
             'searches': searches,
-            'search_path': "?%s" % werkzeug.url_encode(searches),
+            'search_path': "?%s" % werkzeug.urls.url_encode(searches),
         }
 
         return request.render("website_event.index", values)

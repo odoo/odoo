@@ -45,7 +45,7 @@ class AuthSignupHome(Home):
                     if user_sudo and template:
                         template.sudo().with_context(
                             lang=user_sudo.lang,
-                            auth_login=werkzeug.url_encode({'auth_login': user_sudo.email}),
+                            auth_login=werkzeug.urls.url_encode({'auth_login': user_sudo.email}),
                         ).send_mail(user_sudo.id, force_send=True)
                 return self.web_login(*args, **kw)
             except UserError as e:

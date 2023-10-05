@@ -6,7 +6,7 @@ import logging
 import psycopg2
 import werkzeug
 
-from werkzeug import url_encode
+from werkzeug.urls import url_encode
 
 from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import binary_content
