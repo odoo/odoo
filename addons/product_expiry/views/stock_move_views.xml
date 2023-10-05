@@ -22,6 +22,26 @@
             </xpath>
         </field>
     </record>
+    <record id="view_stock_move_operations_expiry" model="ir.ui.view">
+        <field name="name">stock.move.operation.immediate.expiry</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='show_lots_m2o']" position="after">
+                <field name="use_expiration_date" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_stock_move_operations_immediate_expiry" model="ir.ui.view">
+        <field name="name">stock.move.operation.expiry</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations_immediate"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='show_lots_m2o']" position="after">
+                <field name="use_expiration_date" />
+            </xpath>
+        </field>
+    </record>
 
     <record id="view_stock_move_line_operation_tree_expiry" model="ir.ui.view">
         <field name="name">stock.move.line.inherit.tree</field>
@@ -32,6 +52,7 @@
                 <field name="is_expired" column_invisible="True"/>
                 <button class="fa fa-exclamation-triangle text-danger"
                     title="This lot is expired." string="This lot is expired"
+                    column_invisible="not parent.use_expiration_date or parent.show_lot_text and not parent.show_lots_m2o"
                     disabled="1"
                     invisible="not is_expired"/>
             </xpath>

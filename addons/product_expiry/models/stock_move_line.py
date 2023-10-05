@@ -14,7 +14,7 @@ class StockMoveLine(models.Model):
         string='Expiration Date', compute='_compute_expiration_date', store=True,
         help='This is the date on which the goods with this Serial Number may'
         ' become dangerous and must not be consumed.')
-    is_expired = fields.Boolean(related='lot_id.product_expiry_alert')
+    is_expired = fields.Boolean(compute='_compute_product_expiry_alert')
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
 
@@ -27,6 +27,11 @@ class StockMoveLine(models.Model):
         if not column_exists(self._cr, "stock_move_line", "expiration_date"):
             create_column(self._cr, "stock_move_line", "expiration_date", "timestamp")
         return super()._auto_init()
+
+    @api.depends('lot_id', 'quant_id')
+    def _compute_product_expiry_alert(self):
+        for move_line in self:
+            move_line.is_expired = move_line.lot_id.product_expiry_alert or move_line.quant_id.lot_id.product_expiry_alert
 
     @api.depends('product_id', 'picking_type_use_create_lots', 'lot_id.expiration_date')
     def _compute_expiration_date(self):
