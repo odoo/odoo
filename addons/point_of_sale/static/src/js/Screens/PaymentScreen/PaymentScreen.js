@@ -21,7 +21,13 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-cancel', this._sendPaymentCancel);
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
-            useListener('validate-order', () => this.validateOrder(false));
+            useListener('validate-order', () => {
+                if (this.currentOrder.isSent) {
+                    this.showScreen(this.nextScreen);
+                } else {
+                    this.validateOrder(false);
+                }
+            });
             this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
             NumberBuffer.use(this._getNumberBufferConfig);
             useErrorHandlers();
@@ -256,6 +262,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     }
                 }
             } finally {
+                this.currentOrder.isSent = true;
                 // Always show the next screen regardless of error since pos has to
                 // continue working even offline.
                 this.showScreen(this.nextScreen);
