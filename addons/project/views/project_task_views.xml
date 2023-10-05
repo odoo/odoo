@@ -258,6 +258,7 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="project_id" invisible="1"/>
+                    <field name="project_privacy_visibility" invisible="1"/>
                     <header>
                         <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
@@ -340,10 +341,17 @@
                                 context="{'default_project_id': project_id}"
                                 invisible="not project_id or not allow_milestones"/>
                             <field name="user_ids"
+                                invisible="project_privacy_visibility == 'portal'"
                                 class="o_task_user_field"
                                 options="{'no_open': True, 'no_quick_create': True}"
                                 widget="many2many_avatar_user"
                                 domain="[('share', '=', False), ('active', '=', True)]"/>
+                            <field name="user_ids"
+                                invisible="project_privacy_visibility != 'portal'"
+                                class="o_task_user_field"
+                                options="{'no_open': True, 'no_quick_create': True}"
+                                widget="many2many_avatar_user"
+                                domain="[('active', '=', True)]"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                         </group>
                         <group>

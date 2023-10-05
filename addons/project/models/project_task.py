@@ -316,6 +316,9 @@ class Task(models.Model):
         if self.state != '04_waiting_normal':
             self.state = '01_in_progress'
 
+        if self.project_id.privacy_visibility != 'portal':
+            self.user_ids = self.user_ids - self.user_ids.filtered('share')
+
     def is_blocked_by_dependences(self):
         return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
 
@@ -1661,6 +1664,12 @@ class Task(models.Model):
     # ---------------------------------------------------
     def _unsubscribe_portal_users(self):
         self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
+
+    def _unassign_portal_users(self):
+        self.env['project.task.stage.personal'].sudo().search([
+            ('task_id', 'in', self.ids),
+            ('user_id', 'in', self.user_ids.filtered('share').ids),
+        ]).unlink()
 
     # ---------------------------------------------------
     # Analytic accounting
