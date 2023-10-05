@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -106,6 +107,9 @@ export class LivechatService {
      * @param {Object} values
      */
     updateSession(values) {
+        if (Record.isRecord(values?.channel)) {
+            values.channel = values.channel.toData();
+        }
         const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
         Object.assign(session, {
             visitor_uid: this.visitorUid,

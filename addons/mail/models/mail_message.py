@@ -870,7 +870,7 @@ class Message(models.Model):
             "personas": personas,
             "message": {"id": self.id},
         }
-        payload = {"Message": {"id": self.id, "messageReactionGroups": [(group_command, group_values)]}}
+        payload = {"Message": {"id": self.id, "reactions": [(group_command, group_values)]}}
         self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
 
     # ------------------------------------------------------
@@ -918,10 +918,10 @@ class Message(models.Model):
                 'author': author,
                 'default_subject': default_subject,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
+                'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
-                'messageReactionGroups': reaction_groups,
+                'reactions': reaction_groups,
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
                 'create_date': message_sudo.create_date,
@@ -976,7 +976,7 @@ class Message(models.Model):
                     'body': HTML content of the message
                     'model': u'res.partner',
                     'record_name': u'Agrolait',
-                    'attachment_ids': [
+                    'attachments': [
                         {
                             'file_type_icon': u'webimage',
                             'id': 45,
@@ -1042,7 +1042,7 @@ class Message(models.Model):
                 'is_note': message_sudo.subtype_id.id == note_id,
                 'is_discussion': message_sudo.subtype_id.id == com_id,
                 'subtype_description': message_sudo.subtype_id.description,
-                'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
+                'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message_sudo.partner_ids],
                 'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
             if vals['model'] and self.env[vals['model']]._original_module:

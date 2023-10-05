@@ -265,12 +265,13 @@ patch(MockServer.prototype, {
             id: channel.id,
         });
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Channel: {
+            Thread: {
                 id: channel.id,
                 channelMembers: [["DELETE", { id: channelMember.id }]],
                 memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                     ["channel_id", "=", channel.id],
                 ]),
+                model: "discuss.channel",
             },
         });
 
@@ -336,7 +337,7 @@ patch(MockServer.prototype, {
             ]) > 0;
         if (isSelfMember) {
             this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-                Channel: {
+                Thread: {
                     id: channel.id,
                     channelMembers: [
                         [
@@ -349,6 +350,7 @@ patch(MockServer.prototype, {
                     memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                         ["channel_id", "=", channel.id],
                     ]),
+                    model: "discuss.channel",
                 },
             });
         }
@@ -420,7 +422,7 @@ patch(MockServer.prototype, {
                 ["id", "=", partner_id],
             ]);
             for (const channelInfo of channelInfos) {
-                notifications.push([relatedPartner, "discuss.channel/legacy_insert", channelInfo]);
+                notifications.push([relatedPartner, "mail.record/insert", { Thread: channelInfo }]);
             }
         }
         return notifications;
@@ -517,13 +519,11 @@ patch(MockServer.prototype, {
                 is_minimized: foldState !== "closed",
             };
             this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
-                Thread: {
-                    foldStateCount: state_count,
-                    id: channel.id,
-                    model: "discuss.channel",
-                    fold_state: foldState,
-                },
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.Thread/fold_state", {
+                foldStateCount: state_count,
+                id: channel.id,
+                model: "discuss.channel",
+                fold_state: foldState,
             });
         }
     },
@@ -626,25 +626,11 @@ patch(MockServer.prototype, {
             const [group_public_id] = this.getRecords("res.groups", [
                 ["id", "=", channel.group_public_id],
             ]);
-            const lastMessageId = messages.reduce((lastMessageId, message) => {
-                if (!lastMessageId || message.id > lastMessageId) {
-                    return message.id;
-                }
-                return lastMessageId;
-            }, undefined);
             const messageNeedactionCounter = this.getRecords("mail.notification", [
                 ["res_partner_id", "=", this.pyEnv.currentPartnerId],
                 ["is_read", "=", false],
                 ["mail_message_id", "in", messages.map((message) => message.id)],
             ]).length;
-            const channelData = {
-                avatarCacheKey: channel.avatarCacheKey,
-                channel_type: channel.channel_type,
-                id: channel.id,
-                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                    ["channel_id", "=", channel.id],
-                ]),
-            };
             const res = assignDefined({}, channel, [
                 "id",
                 "name",
@@ -656,9 +642,13 @@ patch(MockServer.prototype, {
                 "avatarCacheKey",
             ]);
             Object.assign(res, {
-                last_message_id: lastMessageId,
+                channel_type: channel.channel_type,
+                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                    ["channel_id", "=", channel.id],
+                ]),
                 message_needaction_counter: messageNeedactionCounter,
                 authorizedGroupFullName: group_public_id ? group_public_id.name : false,
+                model: "discuss.channel",
             });
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
                 channel.id
@@ -674,7 +664,7 @@ patch(MockServer.prototype, {
                         ? memberOfCurrentUser.seen_message_id[0]
                         : memberOfCurrentUser.seen_message_id,
                 });
-                Object.assign(channelData, {
+                Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                 });
@@ -683,7 +673,7 @@ patch(MockServer.prototype, {
                         id: memberOfCurrentUser.rtc_inviting_session_id,
                     };
                 }
-                channelData["channelMembers"] = [
+                res["channelMembers"] = [
                     [
                         "ADD",
                         this._mockDiscussChannelMember_DiscussChannelMemberFormat([
@@ -702,7 +692,7 @@ patch(MockServer.prototype, {
                             fetched_message_id: member.fetched_message_id,
                         };
                     });
-                channelData["channelMembers"] = [
+                res["channelMembers"] = [
                     [
                         "ADD",
                         this._mockDiscussChannelMember_DiscussChannelMemberFormat(
@@ -734,7 +724,6 @@ patch(MockServer.prototype, {
                     ),
                 ],
             ];
-            res.channel = channelData;
             res.allow_public_upload = channel.allow_public_upload;
             return res;
         });
@@ -761,11 +750,9 @@ patch(MockServer.prototype, {
                 id: channel.id,
             });
         } else {
-            this.pyEnv["bus.bus"]._sendone(
-                this.pyEnv.currentPartner,
-                "discuss.channel/legacy_insert",
-                this._mockDiscussChannelChannelInfo([channel.id])[0]
-            );
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
+                Thread: this._mockDiscussChannelChannelInfo([channel.id])[0],
+            });
         }
     },
     /**
@@ -833,9 +820,10 @@ patch(MockServer.prototype, {
             custom_channel_name: name,
         });
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
-            Channel: {
+            Thread: {
                 custom_channel_name: name,
                 id: channelId,
+                model: "discuss.channel",
             },
         });
     },
@@ -950,11 +938,8 @@ patch(MockServer.prototype, {
                         authorizedGroupFullName: channel.group_public_id
                             ? channel.group_public_id.name
                             : false,
-                        channel: {
-                            channel_type: channel.channel_type,
-                            id: channel.id,
-                        },
                         id: channel.id,
+                        model: "discuss.channel",
                         name: channel.name,
                     };
                 });
@@ -982,9 +967,10 @@ patch(MockServer.prototype, {
         });
         const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
-            Channel: {
+            Thread: {
                 avatarCacheKey: channel.avatarCacheKey,
-                id: id,
+                id,
+                model: "discuss.channel",
             },
         });
     },

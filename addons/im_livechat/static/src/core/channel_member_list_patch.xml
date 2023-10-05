@@ -9,9 +9,9 @@
                         <i class="fa fa-comment-o me-1" aria-label="Lang"/>
                         <t t-esc="member.getLangName()"/>
                     </span>
-                    <span t-if="member.persona?.country or props.thread.channel?.anonymous_country">
+                    <span t-if="member.persona?.country or props.thread.anonymous_country">
                         <i class="fa fa-globe me-1" aria-label="country"/>
-                        <t t-esc="member.persona?.country?.name ?? props.thread.channel.anonymous_country.name"/>
+                        <t t-esc="member.persona?.country?.name ?? props.thread.anonymous_country.name"/>
                     </span>
                 </div>
             </div>

@@ -10,24 +10,15 @@ export class CannedResponse extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object} data
-     * @returns {import("models").CannedResponse}
-     */
+    /** @returns {import("models").CannedResponse} */
     static insert(data) {
-        /** @type {import("models").CannedResponse} */
-        const cannedResponse = this.preinsert(data);
-        Object.assign(cannedResponse, {
-            name: data.source,
-            substitution: data.substitution,
-        });
-        return cannedResponse;
+        return super.insert(data);
     }
 
     /** @type {number} */
     id;
     /** @type {string} */
-    name;
+    source;
     /** @type {string} */
     substitution;
 }

@@ -34,7 +34,7 @@ export class ActivityService {
         });
         this.broadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",
-            payload: { resId: activity.res_id, resModel: activity.res_model },
+            payload: { id: activity.res_id, model: activity.res_model },
         });
     }
 
@@ -47,7 +47,7 @@ export class ActivityService {
         );
         this.broadcastChannel?.postMessage({
             type: "RELOAD_CHATTER",
-            payload: { resId: activity.res_id, resModel: activity.res_model },
+            payload: { id: activity.res_id, model: activity.res_model },
         });
         return action;
     }
@@ -114,8 +114,8 @@ export class ActivityService {
             }
             case "RELOAD_CHATTER": {
                 const thread = this.env.services["mail.thread"].getThread(
-                    data.payload.resModel,
-                    data.payload.resId
+                    data.payload.model,
+                    data.payload.id
                 );
                 this.env.services["mail.thread"].fetchNewMessages(thread);
                 break;
@@ -124,12 +124,8 @@ export class ActivityService {
     }
 
     _serialize(activity) {
-        const data = { ...activity };
-        delete data._store;
-        delete data.__rels__;
-        delete data.__invs__;
-        delete data.Model;
-        return JSON.parse(JSON.stringify(data));
+        activity = activity.toData();
+        return JSON.parse(JSON.stringify(activity));
     }
 }
 

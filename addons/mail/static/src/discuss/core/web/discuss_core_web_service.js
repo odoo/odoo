@@ -58,14 +58,13 @@ export class DiscussCoreWeb {
                 this.store.ChatWindow.insert({ thread: channel });
             }
         );
-        this.busService.subscribe("mail.record/insert", (payload) => {
-            const { "res.users.settings": settings } = payload;
-            if (settings) {
+        this.busService.subscribe("res.users.settings", (payload) => {
+            if (payload) {
                 this.store.discuss.chats.isOpen =
-                    settings.is_discuss_sidebar_category_chat_open ??
+                    payload.is_discuss_sidebar_category_chat_open ??
                     this.store.discuss.chats.isOpen;
                 this.store.discuss.channels.isOpen =
-                    settings.is_discuss_sidebar_category_channel_open ??
+                    payload.is_discuss_sidebar_category_channel_open ??
                     this.store.discuss.channels.isOpen;
             }
         });
@@ -83,27 +82,24 @@ export class DiscussCoreWeb {
                 this.store.ChatWindow.insert({ thread: chat });
             }
         });
-        this.busService.subscribe("mail.record/insert", (payload) => {
-            if (payload.Thread) {
-                const data = payload.Thread;
-                const thread = this.store.Thread.get(data);
-                if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
-                    thread.foldStateCount = data.foldStateCount;
-                    if (data.fold_state !== thread.state) {
-                        thread.state = data.fold_state;
-                        if (thread.state === "closed") {
-                            const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
-                                chatWindow.thread?.eq(thread)
-                            );
-                            if (chatWindow) {
-                                this.chatWindowService.close(chatWindow, { notifyState: false });
-                            }
-                        } else {
-                            this.store.ChatWindow.insert({
-                                thread,
-                                folded: thread.state === "folded",
-                            });
+        this.busService.subscribe("discuss.Thread/fold_state", (data) => {
+            const thread = this.store.Thread.get(data);
+            if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
+                thread.foldStateCount = data.foldStateCount;
+                if (data.fold_state !== thread.state) {
+                    thread.state = data.fold_state;
+                    if (thread.state === "closed") {
+                        const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
+                            chatWindow.thread?.eq(thread)
+                        );
+                        if (chatWindow) {
+                            this.chatWindowService.close(chatWindow, { notifyState: false });
                         }
+                    } else {
+                        this.store.ChatWindow.insert({
+                            thread,
+                            folded: thread.state === "folded",
+                        });
                     }
                 }
             }

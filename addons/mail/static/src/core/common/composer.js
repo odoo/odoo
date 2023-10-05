@@ -315,7 +315,7 @@ export class Composer extends Component {
                     options: suggestions.map((suggestion) => {
                         return {
                             cannedResponse: suggestion,
-                            name: suggestion.name,
+                            source: suggestion.source,
                             label: suggestion.substitution,
                             classList: "o-mail-Composer-suggestion",
                         };

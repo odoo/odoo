@@ -11,7 +11,7 @@ patch(Thread.prototype, {
         if (this.type === "channel" || this.type === "group") {
             return url(
                 `/discuss/channel/${this.id}/avatar_128`,
-                assignDefined({}, { unique: this.channel?.avatarCacheKey })
+                assignDefined({}, { unique: this.avatarCacheKey })
             );
         }
         if (this.type === "chat") {

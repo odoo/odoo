@@ -18,7 +18,7 @@
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
-                        <t t-elif="!message.isTransient">
+                        <t t-elif="!message.is_transient">
                             <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
                                 <t t-esc="messageService.dateSimple(message)"/>
                             </small>
@@ -36,7 +36,7 @@
                                 <strong class="me-1 text-truncate"><t t-if="message.author" t-esc="message.author.name"/><t t-else="" t-esc="message.email_from"/></strong>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.isTransient" class="o-mail-Message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <RelativeTime datetime="message.datetime"/>
                             </small>
@@ -45,11 +45,11 @@
                                 className="'ms-1'"
                                 message="props.message"
                                 thread="props.thread"/>
-                            <small t-if="!isOriginThread and !message.isTransient" t-on-click.prevent="openRecord" class="ms-1 text-500">
-                                <t t-if="message.resModel !== 'discuss.channel'">
+                            <small t-if="!isOriginThread and !message.is_transient" t-on-click.prevent="openRecord" class="ms-1 text-500">
+                                <t t-if="message.model !== 'discuss.channel'">
                                     on <a t-att-href="message.resUrl"><t t-esc="message.originThread?.displayName"/></a>
                                 </t>
-                                <t t-if="message.resModel === 'discuss.channel'">
+                                <t t-if="message.model === 'discuss.channel'">
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
                                 </t>
                             </small>
@@ -72,20 +72,20 @@
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
-                                    <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription or state.isEditing)">
+                                    <t t-if="message.type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                    'border': state.isEditing and !message.isNote,
-                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
-                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
+                                                    'border': state.isEditing and !message.is_note,
+                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
+                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.is_note and !message.isHighlightedFromMention,
                                                     'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
-                                                            'p-1': message.isNote,
-                                                            'mb-0 py-2 px-3': !message.isNote,
-                                                            'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
+                                                            'p-1': message.is_note,
+                                                            'mb-0 py-2 px-3': !message.is_note,
+                                                            'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
                                                             'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
@@ -95,7 +95,7 @@
                                                         <div t-if="message.type === 'email'" t-ref="shadowBody"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
                                                         <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
-                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtypeDescription) ?? message.subtypeDescription"/>
+                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                                                     </t>
                                                 </div>
                                             </div>
