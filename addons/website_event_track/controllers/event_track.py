@@ -287,12 +287,11 @@ class EventTrackController(http.Controller):
         time_slots_by_day_start_time = {start_datetime: 0}
         for i in range(0, time_slots_count):
             # If the new time slot is still on the current day
-            next_day = (start_datetime + timedelta(days=1)).date()
-            if (start_datetime + timedelta(minutes=15*i)).date() <= next_day:
+            next_day = (start_datetime + timedelta(days=1))
+            if (start_datetime + timedelta(minutes=15*i)).date() <= next_day.date():
                 time_slots_by_day_start_time[start_datetime] += 1
             else:
-                start_datetime = next_day.datetime()
-                time_slots_by_day_start_time[start_datetime] = 0
+                time_slots_by_day_start_time[next_day] = 0
 
         return time_slots_by_day_start_time
 
