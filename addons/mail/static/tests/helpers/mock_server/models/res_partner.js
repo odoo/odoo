@@ -146,16 +146,12 @@ patch(MockServer.prototype, {
                     ["channel_id", "=", channel_id],
                     ["partner_id", "=", partnerFormat.id],
                 ]);
-                partnerFormat["persona"] = {
-                    channelMembers: [
-                        [
-                            "ADD",
-                            this._mockDiscussChannelMember_DiscussChannelMemberFormat([
-                                member.id,
-                            ])[0],
-                        ],
+                partnerFormat["channelMembers"] = [
+                    [
+                        "ADD",
+                        this._mockDiscussChannelMember_DiscussChannelMemberFormat([member.id])[0],
                     ],
-                };
+                ];
                 return partnerFormat;
             });
             // reduce results to max limit

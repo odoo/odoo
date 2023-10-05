@@ -26,7 +26,7 @@ patch(Thread, {
                         livechatService.updateSession({
                             state: thread.state,
                             seen_message_id: thread.seen_message_id,
-                            channel: thread.channel,
+                            channel: thread,
                             allow_public_upload: thread.allow_public_upload,
                         });
                     }

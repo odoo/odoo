@@ -51,8 +51,8 @@ class DiscussChannel(models.Model):
         for channel in self:
             if channel.chatbot_current_step_id:
                 channel_infos_dict[channel.id]["chatbot_script_id"] = channel.chatbot_current_step_id.chatbot_script_id.id
-            channel_infos_dict[channel.id]['channel']['anonymous_name'] = channel.anonymous_name
-            channel_infos_dict[channel.id]['channel']['anonymous_country'] = {
+            channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
+            channel_infos_dict[channel.id]['anonymous_country'] = {
                 'code': channel.country_id.code,
                 'id': channel.country_id.id,
                 'name': channel.country_id.name,

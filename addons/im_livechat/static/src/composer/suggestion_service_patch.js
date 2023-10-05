@@ -3,7 +3,6 @@
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
 
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, {
@@ -31,20 +30,14 @@ patch(SuggestionService.prototype, {
     },
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
-        const cannedResponses = Object.values(this.store.CannedResponse.records)
-            .filter((cannedResponse) => {
-                return cleanTerm(cannedResponse.name).includes(cleanedSearchTerm);
-            })
-            .map(({ id, name, substitution }) => {
-                return {
-                    id,
-                    name,
-                    substitution: _t(substitution),
-                };
-            });
+        const cannedResponses = Object.values(this.store.CannedResponse.records).filter(
+            (cannedResponse) => {
+                return cleanTerm(cannedResponse.source).includes(cleanedSearchTerm);
+            }
+        );
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.name);
-            const cleanedName2 = cleanTerm(c2.name);
+            const cleanedName1 = cleanTerm(c1.source);
+            const cleanedName2 = cleanTerm(c2.source);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)

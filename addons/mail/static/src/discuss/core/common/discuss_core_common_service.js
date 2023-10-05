@@ -35,8 +35,7 @@ export class DiscussCoreCommon {
                 const thread = this.store.Thread.insert({
                     ...channel,
                     model: "discuss.channel",
-                    channel: channel.channel,
-                    type: channel.channel.channel_type,
+                    type: channel.channel_type,
                 });
                 if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
                     this.notificationService.add(
@@ -49,7 +48,7 @@ export class DiscussCoreCommon {
                 const { id, last_interest_dt } = payload;
                 const channel = this.store.Thread.get({ model: "discuss.channel", id });
                 if (channel) {
-                    channel.update({ last_interest_dt });
+                    channel.last_interest_dt = last_interest_dt;
                     if (channel.type !== "channel") {
                         this.threadService.sortChannels();
                     }
@@ -64,14 +63,6 @@ export class DiscussCoreCommon {
                     type: "info",
                 });
                 thread.delete();
-            });
-            this.busService.subscribe("discuss.channel/legacy_insert", (payload) => {
-                this.store.Thread.insert({
-                    id: payload.channel.id,
-                    model: "discuss.channel",
-                    type: payload.channel.channel_type,
-                    ...payload,
-                });
             });
             this.busService.addEventListener("notification", ({ detail: notifications }) => {
                 // Do not handle new message notification if the channel was just left. This issue
@@ -147,15 +138,6 @@ export class DiscussCoreCommon {
                     }
                 }
             });
-            this.busService.subscribe("mail.record/insert", (payload) => {
-                if (payload.Channel) {
-                    this.store.Thread.insert({
-                        id: payload.Channel.id,
-                        model: "discuss.channel",
-                        channel: payload.Channel,
-                    });
-                }
-            });
         });
     }
 
@@ -168,9 +150,9 @@ export class DiscussCoreCommon {
         const thread = this.store.Thread.insert({
             ...serverData,
             model: "discuss.channel",
-            type: serverData.channel.channel_type,
+            type: serverData.channel_type,
             isAdmin:
-                serverData.channel.channel_type !== "group" &&
+                serverData.channel_type !== "group" &&
                 serverData.create_uid === this.store.user?.user?.id,
         });
         return thread;
@@ -214,7 +196,7 @@ export class DiscussCoreCommon {
             const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
             channel = this.store.Thread.insert({
                 model: "discuss.channel",
-                type: channelData.channel.channel_type,
+                type: channelData.channel_type,
                 ...channelData,
             });
         }

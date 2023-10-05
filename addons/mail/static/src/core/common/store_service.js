@@ -6,7 +6,7 @@ import { reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { modelRegistry, preinsert, Record, RecordInverses, RecordList } from "./record";
+import { modelRegistry, Record, RecordInverses, RecordList } from "./record";
 
 export class Store extends Record {
     /** @returns {import("models").Store} */
@@ -153,34 +153,15 @@ export const storeService = {
                 [OgClass.name]: class extends OgClass {
                     constructor() {
                         super();
-                        for (const name of Model.__rels__.keys()) {
-                            // Relational fields contain symbols for detection in original class.
-                            // This constructor is called on genuine records:
-                            // - 'one' fields => undefined
-                            // - 'many' fields => RecordList
-                            let newVal;
-                            if (this[name]?.[0] === Record.one()[0]) {
-                                newVal = undefined;
-                            }
-                            if (this[name]?.[0] === Record.many()[0]) {
-                                newVal = new RecordList();
-                                newVal.__store__ = res.store;
-                                newVal.name = name;
-                                newVal.owner = this;
-                            }
-                            this.__rels__.set(name, newVal);
-                            this.__invs__ = new RecordInverses();
-                            this[name] = newVal;
-                        }
-                        return new Proxy(this, {
+                        const proxy = new Proxy(this, {
                             /** @param {Record} receiver */
                             get(target, name, receiver) {
                                 if (name !== "__rels__" && receiver.__rels__.has(name)) {
                                     const l1 = receiver.__rels__.get(name);
-                                    if (l1 instanceof RecordList) {
+                                    if (RecordList.isMany(l1)) {
                                         return l1;
                                     }
-                                    return res.store.get(l1);
+                                    return l1[0];
                                 }
                                 return Reflect.get(target, name, receiver);
                             },
@@ -188,13 +169,8 @@ export const storeService = {
                                 if (name !== "__rels__" && target.__rels__.has(name)) {
                                     const r1 = target;
                                     const l1 = r1.__rels__.get(name);
-                                    const r2 = res.store.get(l1);
-                                    if (r2) {
-                                        r2.__invs__.delete(r1.localId, name);
-                                        const { onDelete } = r1.Model.__rels__.get(name);
-                                        onDelete?.call(r1, r2);
-                                    }
-                                    r1.__rels__.set(name, undefined);
+                                    l1.clear();
+                                    return true;
                                 }
                                 const ret = Reflect.deleteProperty(target, name);
                                 return ret;
@@ -205,18 +181,19 @@ export const storeService = {
                                     Reflect.set(target, name, val, receiver);
                                     return true;
                                 }
-                                const oldVal = receiver.__rels__.get(name);
-                                if (oldVal instanceof RecordList) {
+                                /** @type {RecordList<Record>} */
+                                const r1 = receiver;
+                                const l1 = receiver.__rels__.get(name);
+                                if (RecordList.isMany(l1)) {
                                     // [Record.many] =
-                                    const r1 = receiver;
-                                    /** @type {RecordList<Record>} */
-                                    const l1 = r1.__rels__.get(name);
                                     if (Record.isCommand(val)) {
                                         for (const [cmd, cmdData] of val) {
                                             if (Array.isArray(cmdData)) {
                                                 for (const item of cmdData) {
                                                     if (cmd === "ADD") {
                                                         l1.add(item);
+                                                    } else if (cmd === "ADD.noinv") {
+                                                        l1.__addNoinv(item);
                                                     } else {
                                                         l1.delete(item);
                                                     }
@@ -224,6 +201,8 @@ export const storeService = {
                                             } else {
                                                 if (cmd === "ADD") {
                                                     l1.add(cmdData);
+                                                } else if (cmd === "ADD.noinv") {
+                                                    l1.__addNoinv(cmdData);
                                                 } else {
                                                     l1.delete(cmdData);
                                                 }
@@ -231,44 +210,64 @@ export const storeService = {
                                         }
                                         return true;
                                     }
+                                    if ([null, false, undefined].includes(val)) {
+                                        l1.clear();
+                                        return true;
+                                    }
+                                    if (!Array.isArray(val)) {
+                                        val = [val];
+                                    }
                                     /** @type {Record[]|Set<Record>|RecordList<Record>} */
-                                    const collection = val;
+                                    const collection = Record.isRecord(val) ? [val] : val;
                                     const oldRecords = l1.slice();
                                     for (const r2 of oldRecords) {
                                         r2.__invs__.delete(r1.localId, name);
                                     }
                                     l1.clear();
-                                    if ([null, false, undefined].includes(val)) {
-                                        return true;
-                                    }
                                     l1.push(...collection);
                                 } else {
+                                    let isAddNoinv = false;
                                     // [Record.one] =
-                                    const r1 = receiver;
-                                    const l1 = r1.__rels__.get(name);
-                                    const r2 = res.store.get(l1);
-                                    if (r2) {
-                                        r2.__invs__.delete(r1.localId, name);
-                                        const { onDelete } = r1.Model.__rels__.get(name);
-                                        onDelete?.call(r1, r2);
-                                    }
                                     if (Record.isCommand(val)) {
                                         const [cmd, cmdData] = val.at(-1);
-                                        val = cmd === "ADD" ? cmdData : null;
+                                        isAddNoinv = cmd === "ADD.noinv";
+                                        val = ["ADD", "ADD.noinv"].includes(cmd) ? cmdData : null;
                                     }
                                     if ([null, false, undefined].includes(val)) {
                                         delete receiver[name];
                                         return true;
                                     }
-                                    const r = preinsert(val, r1, name, (r3) => {
-                                        r1.__rels__.set(name, r3?.localId);
-                                    });
-                                    const { onAdd } = r1.Model.__rels__.get(name);
-                                    onAdd?.call(r1, r);
+                                    if (isAddNoinv) {
+                                        l1.__addNoinv(val);
+                                    } else {
+                                        l1.add(val);
+                                    }
                                 }
                                 return true;
                             },
                         });
+                        if (this instanceof Store) {
+                            res.store = proxy;
+                        }
+                        for (const name of Model.__rels__.keys()) {
+                            // Relational fields contain symbols for detection in original class.
+                            // This constructor is called on genuine records:
+                            // - 'one' fields => undefined
+                            // - 'many' fields => RecordList
+                            // this[name]?.[0] is ONE_SYM or MANY_SYM
+                            const newVal = new RecordList(this[name]?.[0]);
+                            if (this instanceof Store) {
+                                newVal.__store__ = proxy;
+                            } else {
+                                newVal.__store__ = res.store;
+                            }
+                            newVal.name = name;
+                            newVal.owner = this;
+                            this.__rels__.set(name, newVal);
+                            this.__invs__ = new RecordInverses();
+                            this[name] = newVal;
+                        }
+                        return proxy;
                     }
                 },
             }[OgClass.name];
@@ -282,10 +281,33 @@ export const storeService = {
             // Detect relational fields with a dummy record and setup getter/setters on them
             const obj = new OgClass();
             for (const [name, val] of Object.entries(obj)) {
-                if (![Record.one()[0], Record.many()[0]].includes(val?.[0])) {
+                const SYM = val?.[0];
+                if (![Record.one()[0], Record.many()[0]].includes(SYM)) {
                     continue;
                 }
-                Model.__rels__.set(name, val[1]);
+                Model.__rels__.set(name, { [SYM]: true, ...val[1] });
+            }
+        }
+        // Sync inverse fields
+        for (const Model of Object.values(Models)) {
+            for (const [name, { targetModel, inverse }] of Model.__rels__.entries()) {
+                if (targetModel && !Models[targetModel]) {
+                    throw new Error(`No target model ${targetModel} exists`);
+                }
+                if (inverse) {
+                    const rel2 = Models[targetModel].__rels__.get(inverse);
+                    if (rel2.targetModel && rel2.targetModel !== Model.name) {
+                        throw new Error(
+                            `Fields ${Models[targetModel].name}.${inverse} has wrong targetModel. Expected: "${Model.name}" Actual: "${rel2.targetModel}"`
+                        );
+                    }
+                    if (rel2.inverse && rel2.inverse !== name) {
+                        throw new Error(
+                            `Fields ${Models[targetModel].name}.${inverse} has wrong inverse. Expected: "${name}" Actual: "${rel2.inverse}"`
+                        );
+                    }
+                    Object.assign(rel2, { targetModel: Model.name, inverse: name });
+                }
             }
         }
         // Make true store (as a model)

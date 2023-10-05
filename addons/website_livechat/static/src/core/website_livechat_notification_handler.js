@@ -13,7 +13,7 @@ export const websiteLivechatNotifications = {
                 ...payload,
                 id: payload.id,
                 model: "discuss.channel",
-                type: payload.channel.channel_type,
+                type: payload.channel_type,
             });
             const chatWindow = store.ChatWindow.insert({ thread: channel });
             chatWindowService.makeVisible(chatWindow);

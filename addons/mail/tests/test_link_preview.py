@@ -108,7 +108,7 @@ class TestLinkPreview(MailCommon):
                     'payload': {
                         'LinkPreview': [{
                             'id': link_preview.id,
-                            'message_id': message.id,
+                            'message': {'id': message.id},
                             'image_mimetype': False,
                             'og_description': self.og_description,
                             'og_image': self.og_image,

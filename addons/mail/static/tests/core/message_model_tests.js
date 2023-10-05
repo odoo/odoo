@@ -14,7 +14,7 @@ QUnit.test("Message model properties", async (assert) => {
     });
     /** @type {import("models").Message} */
     const message = env.services["mail.store"].Message.insert({
-        attachment_ids: [
+        attachments: [
             {
                 filename: "test.txt",
                 id: 750,
@@ -29,8 +29,8 @@ QUnit.test("Message model properties", async (assert) => {
         needaction_partner_ids: [3],
         starred_partner_ids: [3],
         isStarred: true,
-        resModel: "res.partner",
-        resId: 3,
+        model: "res.partner",
+        res_id: 3,
     });
     assert.ok(message);
     assert.ok(message.isNeedaction);

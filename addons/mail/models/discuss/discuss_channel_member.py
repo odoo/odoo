@@ -152,7 +152,7 @@ class ChannelMember(models.Model):
             if 'id' in fields:
                 data['id'] = member.id
             if 'channel' in fields:
-                data['channel'] = member.channel_id._channel_format(fields=fields.get('channel')).get(member.channel_id)
+                data['thread'] = member.channel_id._channel_format(fields=fields.get('channel')).get(member.channel_id)
             if 'persona' in fields:
                 if member.partner_id:
                     persona = member._get_partner_data(fields=fields.get('persona', {}).get('partner'))

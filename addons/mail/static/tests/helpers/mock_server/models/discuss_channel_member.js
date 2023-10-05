@@ -58,7 +58,7 @@ patch(MockServer.prototype, {
                 };
             }
             const data = {
-                channel: { id: member.channel_id },
+                thread: { id: member.channel_id, model: "discuss.channel" },
                 id: member.id,
                 persona,
             };

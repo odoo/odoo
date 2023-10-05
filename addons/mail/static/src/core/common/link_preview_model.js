@@ -8,24 +8,14 @@ export class LinkPreview extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object} data
-     * @returns {import("models").LinkPreview}
-     */
+    /** @returns {import("models").LinkPreview} */
     static insert(data) {
-        const message = this.store.Message.get(data.message_id);
-        data.message = message;
-        delete data.message_id;
-        /** @type {import("models").LinkPreview} */
-        const linkPreview = this.preinsert(data);
-        Object.assign(linkPreview, data);
-        message?.linkPreviews.add(linkPreview);
-        return linkPreview;
+        return super.insert(data);
     }
 
     /** @type {number} */
     id;
-    message = Record.one("Message");
+    message = Record.one("Message", { inverse: "linkPreviews" });
     /** @type {string} */
     image_mimetype;
     /** @type {string} */
@@ -58,7 +48,6 @@ export class LinkPreview extends Record {
     get isCard() {
         return !this.isImage && !this.isVideo;
     }
-
 }
 
 LinkPreview.register();

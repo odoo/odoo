@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
+import { assignIn } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -45,9 +46,7 @@ export class NotificationGroup extends Record {
             type: data.type ?? this.type,
             status: data.status ?? this.status,
         });
-        if ("notifications" in data) {
-            this.notifications = data.notifications;
-        }
+        assignIn(this, data, ["notifications"]);
         this.lastMessage = this.notifications[0]?.message;
         for (const notification of this.notifications) {
             if (this.lastMessage?.id < notification.message?.id) {

@@ -45,7 +45,7 @@ export class DiscussPublic extends Component {
         return this.store.Thread.insert({
             id: this.props.data.channelData.id,
             model: "discuss.channel",
-            type: this.props.data.channelData.channel.channel_type,
+            type: this.props.data.channelData.channel_type,
             uuid: this.props.data.channelData.uuid,
         });
     }

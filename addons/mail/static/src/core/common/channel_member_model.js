@@ -17,35 +17,14 @@ export class ChannelMember extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object|Array} data
-     * @returns {import("models").ChannelMember}
-     */
+    /** @returns {import("models").ChannelMember} */
     static insert(data) {
-        /** @type {import("models").ChannelMember} */
-        const member = this.preinsert(data);
-        member.update(data);
-        return member;
-    }
-
-    update(data) {
-        this.id = data.id;
-        if ("persona" in data) {
-            this.persona = data.persona;
-        }
-        let thread = data.thread ?? this.thread;
-        if (!thread && data.channel?.id) {
-            thread = {
-                id: data.channel.id,
-                model: "discuss.channel",
-            };
-        }
-        this.thread ??= thread;
+        return super.insert(data);
     }
 
     /** @type {number} */
     id;
-    persona = Record.one("Persona");
+    persona = Record.one("Persona", { inverse: "channelMembers" });
     rtcSession = Record.one("RtcSession");
     thread = Record.one("Thread");
 

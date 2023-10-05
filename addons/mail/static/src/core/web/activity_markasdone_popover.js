@@ -31,8 +31,8 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDone() {
-        const { res_id: resId, res_model: resModel } = this.props.activity;
-        const thread = this.threadService.getThread(resModel, resId);
+        const { res_id, res_model } = this.props.activity;
+        const thread = this.threadService.getThread(res_model, res_id);
         await this.env.services["mail.activity"].markAsDone(this.props.activity);
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities"]);
@@ -41,8 +41,8 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDoneAndScheduleNext() {
-        const { res_id: resId, res_model: resModel } = this.props.activity;
-        const thread = this.threadService.getThread(resModel, resId);
+        const { res_id, res_model } = this.props.activity;
+        const thread = this.threadService.getThread(res_model, res_id);
         if (this.props.onClickDoneAndScheduleNext) {
             this.props.onClickDoneAndScheduleNext();
         }

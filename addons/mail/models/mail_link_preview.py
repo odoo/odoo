@@ -91,7 +91,7 @@ class LinkPreview(models.Model):
     def _link_preview_format(self):
         return [{
             'id': preview.id,
-            'message_id': preview.message_id.id,
+            'message': {'id': preview.message_id.id},
             'image_mimetype': preview.image_mimetype,
             'og_description': preview.og_description,
             'og_image': preview.og_image,

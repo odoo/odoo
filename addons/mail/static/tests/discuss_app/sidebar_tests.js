@@ -808,11 +808,9 @@ QUnit.test("channel - states: close from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-        "res.users.settings": {
-            id: userSettingsId,
-            is_discuss_sidebar_category_channel_open: false,
-        },
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+        id: userSettingsId,
+        is_discuss_sidebar_category_channel_open: false,
     });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     await contains("button", { count: 0, text: "channel1" });
@@ -827,11 +825,9 @@ QUnit.test("channel - states: open from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-        "res.users.settings": {
-            id: userSettingsId,
-            is_discuss_sidebar_category_channel_open: true,
-        },
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+        id: userSettingsId,
+        is_discuss_sidebar_category_channel_open: true,
     });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
     await contains("button", { text: "channel1" });
@@ -932,11 +928,9 @@ QUnit.test("chat - states: close from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-        "res.users.settings": {
-            id: userSettingsId,
-            is_discuss_sidebar_category_chat_open: false,
-        },
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+        id: userSettingsId,
+        is_discuss_sidebar_category_chat_open: false,
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
@@ -951,11 +945,9 @@ QUnit.test("chat - states: open from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-        "res.users.settings": {
-            id: userSettingsId,
-            is_discuss_sidebar_category_chat_open: true,
-        },
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+        id: userSettingsId,
+        is_discuss_sidebar_category_chat_open: true,
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });

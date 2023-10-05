@@ -53,7 +53,7 @@ class TestImLivechatMessage(HttpCase):
             rating_id=record_rating.id,
         )
         self.assertEqual(message.message_format(), [{
-            'attachment_ids': [],
+            'attachments': [],
             'author': {
                 'id': self.users[1].partner_id.id,
                 'is_company': self.users[1].partner_id.is_company,
@@ -75,7 +75,7 @@ class TestImLivechatMessage(HttpCase):
             'is_note': True,
             'linkPreviews': [],
             'message_type': 'notification',
-            'messageReactionGroups': [],
+            'reactions': [],
             'model': 'discuss.channel',
             'module_icon': '/mail/static/description/icon.png',
             'needaction_partner_ids': [],

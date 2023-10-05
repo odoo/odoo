@@ -13,7 +13,7 @@ patch(FormController.prototype, {
         if (isSameThread) {
             // not first load
             const { resModel, resId } = this.model.root;
-            this.env.bus.trigger("MAIL:RELOAD-THREAD", { resModel, resId });
+            this.env.bus.trigger("MAIL:RELOAD-THREAD", { model: resModel, id: resId });
         }
     },
 

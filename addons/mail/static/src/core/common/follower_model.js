@@ -12,10 +12,7 @@ export class Follower extends Record {
     }
     /** @returns {import("models").Follower} */
     static insert(data) {
-        /** @type {import("models").Follower} */
-        const follower = this.preinsert(data);
-        Object.assign(follower, data);
-        return follower;
+        return super.insert(data);
     }
 
     followedThread = Record.one("Thread");

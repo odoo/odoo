@@ -2,7 +2,7 @@
 
 import { AND, Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
-import { assignDefined, onChange } from "@mail/utils/common/misc";
+import { assignDefined, assignIn, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -32,7 +32,14 @@ export class Thread extends Record {
     static new(data) {
         /** @type {import("models").Thread} */
         const thread = super.new(data);
-        thread.composer = { thread };
+        thread.composer = {};
+        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
+        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
+        onChange(thread, "is_pinned", () => {
+            if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
+                this.store.discuss.thread = undefined;
+            }
+        });
         return thread;
     }
     /**
@@ -46,10 +53,7 @@ export class Thread extends Record {
         // Transform "Thread,<model> AND <id>" to "<model>_<id>""
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
     }
-    /**
-     * @param {Object} data
-     * @returns {import("models").Thread}
-     */
+    /** @returns {import("models").Thread} */
     static insert(data) {
         if (!("id" in data)) {
             throw new Error("Cannot insert thread: id is missing in data");
@@ -57,42 +61,22 @@ export class Thread extends Record {
         if (!("model" in data)) {
             throw new Error("Cannot insert thread: model is missing in data");
         }
-        let thread = this.get(data);
-        if (thread) {
-            thread.update(data);
-            return thread;
-        }
-        /** @type {import("models").Thread} */
-        thread = this.preinsert(data);
-        thread.type = data.type;
-        onChange(thread, "message_unread_counter", () => {
-            if (thread.channel) {
-                thread.channel.message_unread_counter = thread.message_unread_counter;
-            }
-        });
-        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && thread.eq(this.store.discuss.thread)) {
-                this.store.discuss.thread = undefined;
-            }
-        });
-        thread.update(data);
-        // return reactive version.
-        return thread;
+        return super.insert(data);
     }
 
     /** @param {Object} data */
     update(data) {
-        const { id, name, attachments: attachmentsData, description, ...serverData } = data;
+        const { id, name, attachments, description, ...serverData } = data;
         assignDefined(this, { id, name, description });
-        if (attachmentsData) {
-            this.attachments = attachmentsData.sort((a1, a2) => a2.id - a1.id);
+        if (attachments) {
+            this.attachments = attachments;
+            this.attachments.sort((a1, a2) => a2.id - a1.id);
         }
         if (serverData) {
             assignDefined(this, serverData, [
                 "uuid",
                 "authorizedGroupFullName",
+                "avatarCacheKey",
                 "description",
                 "hasWriteAccess",
                 "is_pinned",
@@ -111,23 +95,16 @@ export class Thread extends Record {
                 "is_editable",
                 "defaultDisplayMode",
             ]);
-            if (serverData.channel && "message_unread_counter" in serverData.channel) {
-                this.message_unread_counter = serverData.channel.message_unread_counter;
+            assignIn(this, data, [
+                "custom_channel_name",
+                "memberCount",
+                "channelMembers",
+                "invitedMembers",
+            ]);
+            if ("channel_type" in data) {
+                this.type = data.channel_type;
             }
-            const lastServerMessageId = serverData.last_message_id ?? this.lastServerMessage?.id;
-            if (this.lastServerMessage?.id !== lastServerMessageId) {
-                this.lastServerMessage = { id: lastServerMessageId };
-            }
-            if (this.model === "discuss.channel" && serverData.channel) {
-                this.channel = assignDefined(this.channel ?? {}, serverData.channel);
-            }
-
-            this.memberCount = serverData.channel?.memberCount ?? this.memberCount;
-            if (this.type === "chat" && serverData.channel) {
-                this.customName = serverData.channel.custom_channel_name;
-            }
-            if (serverData.channel?.channelMembers) {
-                this.channelMembers = serverData.channel.channelMembers;
+            if ("channelMembers" in data) {
                 if (this.type === "chat") {
                     for (const member of this.channelMembers) {
                         if (
@@ -139,9 +116,6 @@ export class Thread extends Record {
                         }
                     }
                 }
-            }
-            if ("invitedMembers" in serverData) {
-                this.invitedMembers = serverData.invitedMembers;
             }
             if ("seen_partners_info" in serverData) {
                 this.seenInfos = serverData.seen_partners_info.map(
@@ -199,10 +173,10 @@ export class Thread extends Record {
     });
     invitedMembers = Record.many("ChannelMember");
     chatPartner = Record.one("Persona");
-    composer = Record.one("Composer", { onDelete: (r) => r.delete() });
+    composer = Record.one("Composer", { inverse: "thread", onDelete: (r) => r.delete() });
     counter = 0;
     /** @type {string} */
-    customName;
+    custom_channel_name;
     /** @type {string} */
     description;
     followers = Record.many("Follower");
@@ -274,7 +248,6 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {String} */
     last_interest_dt;
-    lastServerMessage = Record.one("Message");
     /** @type {Boolean} */
     is_editable;
 
@@ -337,7 +310,7 @@ export class Thread extends Record {
 
     get displayName() {
         if (this.type === "chat" && this.chatPartner) {
-            return this.customName || this.chatPartner.nameOrDisplayName;
+            return this.custom_channel_name || this.chatPartner.nameOrDisplayName;
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(

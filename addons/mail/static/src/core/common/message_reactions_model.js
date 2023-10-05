@@ -8,21 +8,9 @@ export class MessageReactions extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object} data
-     * @returns {import("models").MessageReactions}
-     */
+    /** @returns {import("models").MessageReactions} */
     static insert(data) {
-        if (data.message && !(data.message instanceof Record)) {
-            data.message = this.store.Message.insert(data.message);
-        }
-        let reaction = data.message.reactions.find(({ content }) => content === data.content);
-        if (!reaction) {
-            /** @type {import("models").MessageReactions} */
-            reaction = this.preinsert(data);
-        }
-        Object.assign(reaction, data);
-        return reaction;
+        return super.insert(data);
     }
 
     /** @type {string} */

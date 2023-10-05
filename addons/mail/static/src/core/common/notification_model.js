@@ -12,15 +12,9 @@ export class Notification extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object} data
-     * @returns {import("models").Notification}
-     */
+    /** @returns {import("models").Notification} */
     static insert(data) {
-        /** @type {import("models").Notification} */
-        const notification = this.preinsert(data);
-        notification.update(data);
-        return notification;
+        return super.insert(data);
     }
 
     update(data) {
@@ -37,7 +31,7 @@ export class Notification extends Record {
                   }
                 : undefined,
         });
-        if (!this.message.author?.eq(this._store.self)) {
+        if (!this.message?.author?.eq(this._store.self)) {
             return;
         }
         const thread = this.message.originThread;

@@ -182,11 +182,9 @@ QUnit.test("Open from the bus", async () => {
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
         count: 0,
     });
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-        "res.users.settings": {
-            id: settingsId,
-            is_discuss_sidebar_category_livechat_open: true,
-        },
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+        id: settingsId,
+        is_discuss_sidebar_category_livechat_open: true,
     });
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
 });
@@ -210,11 +208,9 @@ QUnit.test("Close from the bus", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
-    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-        "res.users.settings": {
-            id: settingsId,
-            is_discuss_sidebar_category_livechat_open: false,
-        },
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
+        id: settingsId,
+        is_discuss_sidebar_category_livechat_open: false,
     });
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
         count: 0,

@@ -49,8 +49,8 @@ export class MailCoreCommon {
                     if (!message) {
                         continue;
                     }
-                    message.delete();
                     this.env.bus.trigger("mail.message/delete", { message });
+                    message.delete();
                 }
             });
             this.busService.subscribe("mail.message/notification_update", (payload) => {
@@ -69,7 +69,20 @@ export class MailCoreCommon {
                 const { message_ids: messageIds, starred } = payload;
                 for (const messageId of messageIds) {
                     const message = this.store.Message.insert({ id: messageId });
-                    this.messageService.updateStarred(message, starred);
+                    message.isStarred = starred;
+                    const starredBox = this.store.discuss.starred;
+                    if (starred) {
+                        starredBox.counter++;
+                        starredBox.messages.add(message);
+                    } else {
+                        starredBox.counter--;
+                        starredBox.messages.delete(message);
+                    }
+                }
+            });
+            this.busService.subscribe("res.users.settings", (payload) => {
+                if (payload) {
+                    this.userSettingsService.updateFromCommands(payload);
                 }
             });
             this.busService.subscribe("mail.record/insert", (payload) => {
@@ -100,18 +113,10 @@ export class MailCoreCommon {
                 }
                 const { Message: messageData } = payload;
                 if (messageData) {
-                    const isStarred = this.store.Message.get(messageData.id)?.isStarred;
-                    const message = this.store.Message.insert({
+                    this.store.Message.insert({
                         ...messageData,
                         body: messageData.body ? markup(messageData.body) : messageData.body,
                     });
-                    if (isStarred && message.isEmpty) {
-                        this.messageService.updateStarred(message, false);
-                    }
-                }
-                const { "res.users.settings": settings } = payload;
-                if (settings) {
-                    this.userSettingsService.updateFromCommands(settings);
                 }
             });
         });

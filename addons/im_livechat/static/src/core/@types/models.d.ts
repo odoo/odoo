@@ -3,6 +3,8 @@ declare module "models" {
         livechat: DiscussAppCategory,
     }
     export interface Thread {
+        anonymous_country: Object,
+        anonymous_name: String,
         operator: Persona,
     }
 }

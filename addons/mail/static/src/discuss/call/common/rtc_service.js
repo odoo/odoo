@@ -715,7 +715,7 @@ export class Rtc {
         this.clear();
         this.state.logs.clear();
         this.state.channel = channel;
-        this.state.channel.update({ rtcSessions });
+        this.state.channel.rtcSessions = rtcSessions;
         this.state.selfSession = this.store.RtcSession.get(sessionId);
         this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
         this.state.logs.set("channelId", this.state.channel?.id);
@@ -1577,13 +1577,14 @@ export const rtcService = {
         services["bus_service"].subscribe("discuss.channel/joined", ({ channel }) => {
             rtc.updateRtcSessions(channel.id, channel.rtcSessions);
         });
+        services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {
+            if (payload) {
+                services["mail.user_settings"].setVolumes(payload);
+            }
+        });
         services["bus_service"].subscribe("mail.record/insert", (payload) => {
             if (payload.RtcSession) {
                 rtc.store.RtcSession.insert(payload.RtcSession);
-            }
-            const { "res.users.settings.volumes": volumeSettings } = payload;
-            if (volumeSettings) {
-                services["mail.user_settings"].setVolumes(volumeSettings);
             }
         });
         return rtc;

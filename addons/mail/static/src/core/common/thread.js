@@ -157,7 +157,7 @@ export class Thread extends Component {
         });
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
-            if (detail.resModel === model && detail.resId === id) {
+            if (detail.model === model && detail.id === id) {
                 this.threadService.fetchNewMessages(this.props.thread);
             }
         });
@@ -208,8 +208,8 @@ export class Thread extends Component {
             await this.env.messageHighlight?.highlightMessage(
                 this.store.Message.insert({
                     id: Number(oeId),
-                    resId: this.props.thread.id,
-                    resModel: this.props.thread.model,
+                    res_id: this.props.thread.id,
+                    model: this.props.thread.model,
                 }),
                 this.props.thread
             );
@@ -227,7 +227,7 @@ export class Thread extends Component {
         if (!msg.author?.eq(prevMsg.author)) {
             return false;
         }
-        if (msg.resModel !== prevMsg.resModel || msg.resId !== prevMsg.resId) {
+        if (msg.model !== prevMsg.model || msg.res_id !== prevMsg.res_id) {
             return false;
         }
         if (msg.parentMessage) {

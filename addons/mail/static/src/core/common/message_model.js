@@ -2,7 +2,7 @@
 
 import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { assignDefined } from "@mail/utils/common/misc";
+import { assignDefined, assignIn, onChange } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -17,14 +17,23 @@ export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Message>} */
     static records = {};
+    static new(data) {
+        const message = super.new(data);
+        onChange(message, "isEmpty", () => {
+            if (message.isEmpty && message.isStarred) {
+                message.isStarred = false;
+                const starred = this.store.discuss.starred;
+                starred.counter--;
+                starred.messages.delete(message);
+            }
+        });
+        return message;
+    }
     /** @returns {import("models").Message} */
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object} data
-     * @returns {import("models").Message}
-     */
+    /** @returns {import("models").Message} */
     static insert(data) {
         if (data.res_id) {
             this.store.Thread.insert({
@@ -32,46 +41,23 @@ export class Message extends Record {
                 id: data.res_id,
             });
         }
-        /** @type {import("models").Message} */
-        const message = this.preinsert(data);
-        message.update(data);
-        return message;
+        return super.insert(data);
     }
 
     /** @param {Object} data */
     update(data) {
         const {
-            attachment_ids: attachments = this.attachments,
-            default_subject: defaultSubject = this.defaultSubject,
-            is_discussion: isDiscussion = this.isDiscussion,
-            is_note: isNote = this.isNote,
-            is_transient: isTransient = this.isTransient,
-            linkPreviews = this.linkPreviews,
             message_type: type = this.type,
-            model: resModel = this.resModel,
             module_icon,
-            notifications = this.notifications,
-            parentMessage,
-            recipients = this.recipients,
             record_name,
-            res_id: resId = this.resId,
             res_model_name,
-            subtype_description: subtypeDescription = this.subtypeDescription,
             ...remainingData
         } = data;
         assignDefined(this, remainingData);
         assignDefined(this, {
-            defaultSubject,
-            isDiscussion,
-            isNote,
             isStarred: this._store.user
                 ? this.starred_partner_ids.includes(this._store.user.id)
                 : false,
-            isTransient,
-            parentMessage: parentMessage || undefined,
-            resId,
-            resModel,
-            subtypeDescription,
             type,
         });
         // origin thread before other information (in particular notification insert uses it)
@@ -85,13 +71,7 @@ export class Message extends Record {
                         : record_name || undefined,
             });
         }
-        this.attachments = attachments.map((attachment) => ({ message: this, ...attachment }));
-        if ("author" in data) {
-            this.author = data.author;
-        }
-        this.linkPreviews = linkPreviews.map((data) => ({ ...data, message: this }));
-        this.notifications = notifications.map((notif) => ({ ...notif, message: this }));
-        this.recipients = recipients.map((recipient) => ({ ...recipient, type: "partner" }));
+        assignIn(this, data, ["author", "notifications", "reactions", "recipients"]);
         if ("user_follower_id" in data && data.user_follower_id && this._store.self) {
             this.originThread.selfFollower = {
                 followedThread: this.originThread,
@@ -100,9 +80,6 @@ export class Message extends Record {
                 partner: this._store.self,
             };
         }
-        if ("messageReactionGroups" in data) {
-            this.reactions = data.messageReactionGroups;
-        }
         if (this.isNotification && !this.notificationType) {
             const parser = new DOMParser();
             const htmlBody = parser.parseFromString(this.body, "text/html");
@@ -110,36 +87,36 @@ export class Message extends Record {
         }
     }
 
-    attachments = Record.many("Attachment");
+    attachments = Record.many("Attachment", { inverse: "message" });
     author = Record.one("Persona");
     /** @type {string} */
     body;
-    composer = Record.one("Composer", { onDelete: (r) => r.delete() });
+    composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {string} */
-    defaultSubject;
+    default_subject;
     /** @type {number|string} */
     id;
     /** @type {boolean} */
-    isDiscussion;
+    is_discussion;
     /** @type {boolean} */
-    isNote;
+    is_note;
     /** @type {boolean} */
     isStarred;
     /** @type {boolean} */
-    isTransient;
-    linkPreviews = Record.many("LinkPreview");
+    is_transient;
+    linkPreviews = Record.many("LinkPreview", { inverse: "message" });
     /** @type {number[]} */
     needaction_partner_ids = [];
     /** @type {number[]} */
     history_partner_ids = [];
     parentMessage = Record.one("Message");
-    reactions = Record.many("MessageReactions");
-    notifications = Record.many("Notification");
+    reactions = Record.many("MessageReactions", { inverse: "message" });
+    notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
     /** @type {number|string} */
-    resId;
+    res_id;
     /** @type {string|undefined} */
-    resModel;
+    model;
     /** @type {string} */
     scheduledDatetime;
     /** @type {Number[]} */
@@ -147,7 +124,7 @@ export class Message extends Record {
     /** @type {string} */
     subject;
     /** @type {string} */
-    subtypeDescription;
+    subtype_description;
     /** @type {Object[]} */
     trackingValues = [];
     /** @type {string} */
@@ -207,7 +184,7 @@ export class Message extends Record {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.resModel === "discuss.channel";
+        return this.isSelfMentioned && this.model === "discuss.channel";
     }
 
     get isSelfAuthored() {
@@ -222,7 +199,7 @@ export class Message extends Record {
     }
 
     get hasActions() {
-        return !this.isTransient;
+        return !this.is_transient;
     }
 
     /**
@@ -236,7 +213,7 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get isNotification() {
-        return this.type === "notification" && this.resModel === "discuss.channel";
+        return this.type === "notification" && this.model === "discuss.channel";
     }
 
     get isSubjectSimilarToOriginThreadName() {
@@ -251,17 +228,17 @@ export class Message extends Record {
 
     get isSubjectDefault() {
         const threadName = this.originThread?.name?.trim().toLowerCase();
-        const defaultSubject = this.defaultSubject ? this.defaultSubject.toLowerCase() : "";
+        const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
     }
 
     get originThread() {
-        return this._store.Thread.get({ model: this.resModel, id: this.resId });
+        return this._store.Thread.get({ model: this.model, id: this.res_id });
     }
 
     get resUrl() {
-        return `${url("/web")}#model=${this.resModel}&id=${this.resId}`;
+        return `${url("/web")}#model=${this.model}&id=${this.res_id}`;
     }
 
     get editDate() {
@@ -277,7 +254,7 @@ export class Message extends Record {
             this.isBodyEmpty &&
             this.attachments.length === 0 &&
             this.trackingValues.length === 0 &&
-            !this.subtypeDescription
+            !this.subtype_description
         );
     }
     get isBodyEmpty() {

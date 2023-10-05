@@ -52,7 +52,7 @@ export class ThreadService {
         return this.store.Thread.insert({
             ...channelData,
             model: "discuss.channel",
-            type: channelData.channel.channel_type,
+            type: channelData.channel_type,
         });
     }
 
@@ -119,7 +119,7 @@ export class ThreadService {
                 newUnreadCounter++;
             }
         }
-        thread.update({
+        Object.assign(thread, {
             seen_message_id: lastSeenId,
             message_needaction_counter: newNeedactionCounter,
             message_unread_counter: newUnreadCounter,
@@ -202,7 +202,7 @@ export class ThreadService {
                     Object.assign(data, { body: data.body ? markup(data.body) : data.body })
                 );
             });
-            thread.update({ isLoaded: true });
+            thread.isLoaded = true;
             return messages;
         } catch (e) {
             thread.hasLoadingFailed = true;
@@ -605,7 +605,7 @@ export class ThreadService {
                     name: newName,
                 });
             } else if (thread.type === "chat") {
-                thread.customName = newName;
+                thread.custom_channel_name = newName;
                 await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
                     name: newName,
                 });

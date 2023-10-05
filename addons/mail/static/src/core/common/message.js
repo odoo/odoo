@@ -239,8 +239,8 @@ export class Message extends Component {
 
     get showSubtypeDescription() {
         return (
-            this.message.subtypeDescription &&
-            this.message.subtypeDescription.toLowerCase() !==
+            this.message.subtype_description &&
+            this.message.subtype_description.toLowerCase() !==
                 htmlToTextContentInline(this.message.body || "").toLowerCase()
         );
     }
@@ -252,7 +252,7 @@ export class Message extends Component {
         if (this.props.message.type === "auto_comment") {
             return _t("Automated message");
         }
-        if (!this.props.message.isDiscussion && this.props.message.type !== "user_notification") {
+        if (!this.props.message.is_discussion && this.props.message.type !== "user_notification") {
             return _t("Note");
         }
         return _t("Message");
@@ -262,7 +262,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get canAddReaction() {
-        return Boolean(!this.message.isTransient && this.message.resId);
+        return Boolean(!this.message.is_transient && this.message.res_id);
     }
 
     get deletable() {
@@ -284,7 +284,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get canToggleStar() {
-        return Boolean(!this.message.isTransient && this.message.resId && this.store.user);
+        return Boolean(!this.message.is_transient && this.message.res_id && this.store.user);
     }
 
     get showUnfollow() {
@@ -440,7 +440,6 @@ export class Message extends Component {
         const messageContent = convertBrToLineBreak(this.props.message.body);
         this.props.message.composer = {
             mentionedPartners: this.props.message.recipients,
-            message: this.props.message,
             textInputContent: messageContent,
             selection: {
                 start: messageContent.length,

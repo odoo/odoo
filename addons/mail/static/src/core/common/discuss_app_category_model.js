@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { assignDefined } from "@mail/utils/common/misc";
 import { Record } from "./record";
 
 export class DiscussAppCategory extends Record {
@@ -11,10 +10,7 @@ export class DiscussAppCategory extends Record {
     }
     /** @returns {import("models").DiscussAppCategory} */
     static insert(data) {
-        /** @type {import("models").DiscussAppCategory} */
-        const category = this.preinsert(data);
-        assignDefined(category, data);
-        return category;
+        return super.insert(data);
     }
 
     /** @type {string} */
