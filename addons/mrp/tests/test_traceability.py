@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.exceptions import UserError
 
 from datetime import datetime
 import logging
@@ -639,8 +640,12 @@ class TestTraceability(TestMrpCommon):
         correctly create new serial from sequence.
         """
         seq = self.env['ir.sequence'].search([('code', '=', 'stock.lot.serial')])
-        seq.prefix = 'xx%(doy)sxx'
         mo, _bom, p_final, _p1, _p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
+
+        seq.active = False
+        # No initial serial and No default sequence
+        with self.assertRaises(UserError):
+            mo.action_generate_serial()
 
         # manually create lot_1
         self.env['stock.lot'].create({
@@ -648,6 +653,13 @@ class TestTraceability(TestMrpCommon):
             'product_id': p_final.id,
             'company_id': self.env.company.id,
         })
-        # generate serial lot_2 from the MO
+
+        # generate serial lot_2 from the MO (next_serial)
+        mo.action_generate_serial()
+        self.assertEqual(mo.lot_producing_id.name, "test_001")
+
+        seq.active = True
+        seq.prefix = 'xx%(doy)sxx'
+        # generate serial lot_3 from the MO (next from sequence)
         mo.action_generate_serial()
         self.assertIn(datetime.now().strftime('%j'), mo.lot_producing_id.name)
