@@ -4921,6 +4921,35 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event.o_past_event", 4, "should show 4 past events");
     });
 
+    QUnit.test("calendar should show date information on header", async (assert) => {
+        assert.expect(6);
+        patchDate(2015, 11, 26, 9, 0, 0);
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" mode="week"/>
+            `,
+        });
+        const header = target.querySelector(".o_calendar_header h5.d-inline-flex");
+        assert.equal(header.textContent, "December 2015 Week 52");
+        await changeScale(target, "day");
+        assert.equal(header.textContent, "26 December 2015");
+        await changeScale(target, "month");
+        assert.equal(header.textContent, "December 2015");
+        await changeScale(target, "year");
+        assert.equal(header.textContent, "2015");
+        await changeScale(target, "week");
+        await navigate(target, "next");
+        assert.equal(header.textContent, "December 2015 - January 2016 Week 53");
+        await navigate(target, "prev");
+        await navigate(target, "prev");
+        await navigate(target, "prev");
+        await navigate(target, "prev");
+        assert.equal(header.textContent, "November - December 2015 Week 49");
+    });
+
     QUnit.module("CalendarView - DatePicker", ({ beforeEach }) => {
         beforeEach(() => {
             target = getFixture();
