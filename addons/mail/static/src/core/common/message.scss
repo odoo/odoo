@@ -21,20 +21,13 @@
 }
 
 .o-mail-Message-body > p {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 
     &:last-of-type:has(~ .o-mail-Message-edited) {
         display: inline-block;
     }
 }
 
-.o-mail-Message-body {
-    a.o_mail_redirect {
-        padding: map-get($spacers, 1);
-        border-radius: $border-radius;
-        background: rgba($primary, .2);
-    }
-}
 
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;

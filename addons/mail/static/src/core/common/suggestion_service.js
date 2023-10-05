@@ -35,16 +35,16 @@ export class SuggestionService {
 
     /**
      * @param {string} term
-     * @param {import("models").Thread} thread
+     * @param {import("models").Thread} [thread]
      */
     async fetchPartners(term, thread) {
         const kwargs = { search: term };
-        if (thread.model === "discuss.channel") {
+        if (thread?.model === "discuss.channel") {
             kwargs.channel_id = thread.id;
         }
         const suggestedPartners = await this.orm.silent.call(
             "res.partner",
-            thread.model === "discuss.channel"
+            thread?.model === "discuss.channel"
                 ? "get_mention_suggestions_from_channel"
                 : "get_mention_suggestions",
             [],
@@ -85,9 +85,9 @@ export class SuggestionService {
      * @param {Object} [options={}]
      * @param {Integer} [options.thread] prioritize and/or restrict
      *  result in the context of given thread
-     * @returns {[mainSuggestion[], extraSuggestion[]]}
+     * @returns {{ type: String, mainSuggestions: Array, extraSuggestions: Array }}
      */
-    searchSuggestions({ delimiter, term }, { thread } = {}, sort = false) {
+    searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
@@ -242,6 +242,7 @@ export class SuggestionService {
         return {
             type: "Thread",
             mainSuggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
+            extraSuggestions: [],
         };
     }
 }
