@@ -1,10 +1,12 @@
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
+from odoo.modules.module import get_resource_path
 from odoo.tests import tagged
+from odoo.tools import file_open
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -60,10 +62,11 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'company_registry': '123 568 941 00056',
             'ubl_cii_format': 'oioubl_201',
         })
-        cls.dk_local_tax_1 = cls.env["account.chart.template"].ref('tax120')
-        cls.dk_local_tax_2 = cls.env["account.chart.template"].ref('tax110')
-        cls.dk_foreign_tax_1 = cls.env["account.chart.template"].ref('tax210')
-        cls.dk_foreign_tax_2 = cls.env["account.chart.template"].ref('tax220')
+        cls.dk_local_sale_tax_1 = cls.env["account.chart.template"].ref('tax120')
+        cls.dk_local_sale_tax_2 = cls.env["account.chart.template"].ref('tax110')
+        cls.dk_foreign_sale_tax_1 = cls.env["account.chart.template"].ref('tax210')
+        cls.dk_foreign_sale_tax_2 = cls.env["account.chart.template"].ref('tax220')
+        cls.dk_local_purchase_tax_goods = cls.env["account.chart.template"].ref('tax400')
 
     def create_post_and_send_invoice(self, partner=None, move_type='out_invoice'):
         if not partner:
@@ -71,10 +74,10 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
         if partner == self.partner_a:
             # local dk taxes
-            tax_1, tax_2 = self.dk_local_tax_1, self.dk_local_tax_2
+            tax_1, tax_2 = self.dk_local_sale_tax_1, self.dk_local_sale_tax_2
         else:
             # dk taxes for foreigners
-            tax_1, tax_2 = self.dk_foreign_tax_1, self.dk_foreign_tax_2
+            tax_1, tax_2 = self.dk_foreign_sale_tax_1, self.dk_foreign_sale_tax_2
 
         invoice = self.env["account.move"].create({
             'move_type': move_type,
@@ -103,6 +106,10 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
         invoice.action_post()
         invoice._generate_pdf_and_send_invoice(self.move_template, from_cron=False, allow_fallback_pdf=False)
         return invoice
+
+    #########
+    # EXPORT
+    #########
 
     @freeze_time('2017-01-01')
     def test_export_invoice_two_line_partner_dk(self):
@@ -166,3 +173,99 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
         self.partner_c.company_registry = False
         with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
+
+    #########
+    # IMPORT
+    #########
+
+    def import_bill_xml_file_in_purchase_journal(self, file_path):
+        full_file_path = get_resource_path(self.test_module, 'tests/test_files', file_path)
+        self.assertTrue(full_file_path, f'File not found: {file_path}')
+        with file_open(full_file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+        purchase_journal = self.company_data["default_journal_purchase"]
+        invoice = purchase_journal._create_document_from_attachment(xml_attachment.id)
+        return invoice
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_import_exemple_file_1(self):
+        file_name = 'external/ADVORD_01_01_00_Invoice_v2p1.xml'
+        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
+        self.assertRecordValues(bill, ({
+            'ref': 'A00095678',
+            'invoice_date': fields.Date.from_string('2006-04-10'),
+            'amount_total': 6_250.00,
+        },))
+        self.assertRecordValues(bill.invoice_line_ids, ({
+            'name': 'Fine toy',
+            'quantity': 1,
+            'price_unit': 5_000.00,
+            'price_subtotal': 5_000.00,
+            'price_total': 6_250.00,
+            'tax_ids': self.dk_local_purchase_tax_goods.ids,
+        },))
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_import_exemple_file_2(self):
+        file_name = 'external/ADVORD_02_02_00_Invoice_v2p1.xml'
+        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
+        self.assertRecordValues(bill, ({
+            'ref': 'A00095680',
+            'invoice_date': fields.Date.from_string('2006-04-10'),
+            'amount_total': 5_000.00,
+        },))
+        self.assertRecordValues(bill.invoice_line_ids, ({
+            'name': 'Superble',
+            'quantity': 800,
+            'price_unit': 5.00,
+            'price_subtotal': 4_000.00,
+            'price_total': 5_000.00,
+            'tax_ids': self.dk_local_purchase_tax_goods.ids,
+        },))
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_import_exemple_file_3(self):
+        file_name = 'external/ADVORD_03_03_00_Invoice_v2p1.xml'
+        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
+        self.assertRecordValues(bill, ({
+            'ref': 'A00095678',
+            'invoice_date': fields.Date.from_string('2006-04-10'),
+            'amount_total': 6_250.00,
+        },))
+        self.assertRecordValues(bill.invoice_line_ids, ({
+            'name': 'Konsulentrapport',
+            'quantity': 1,
+            'price_unit': 5_000.00,
+            'price_subtotal': 5_000.00,
+            'price_total': 6_250.00,
+            'tax_ids': self.dk_local_purchase_tax_goods.ids,
+        },))
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_import_exemple_file_4(self):
+        file_name = 'external/BASPRO_01_01_00_Invoice_v2p1.xml'
+        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
+        self.assertRecordValues(bill, ({
+            'ref': 'A00095678',
+            'invoice_date': fields.Date.from_string('2005-11-20'),
+            'amount_total': 6_312.50,
+        },))
+        self.assertRecordValues(bill.invoice_line_ids, ({
+            'name': 'Hejsetavle',
+            'quantity': 1,
+            'price_unit': 5_000.00,
+            'price_subtotal': 5_000.00,
+            'price_total': 6_250.00,
+            'tax_ids': self.dk_local_purchase_tax_goods.ids,
+        }, {
+            'name': 'Beslag',
+            'quantity': 2,
+            'price_unit': 25.00,
+            'price_subtotal': 50.00,
+            'price_total': 62.50,
+            'tax_ids': self.dk_local_purchase_tax_goods.ids,
+        }))
