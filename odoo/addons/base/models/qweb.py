@@ -1078,13 +1078,12 @@ class QWeb(object):
         body = []
         if el.text is not None:
             body.append(self._append(ast.Str(pycompat.to_text(el.text))))
-        if el.getchildren():
-            for item in el:
-                # ignore comments & processing instructions
-                if isinstance(item, etree._Comment):
-                    continue
-                body.extend(self._compile_node(item, options))
-                body.extend(self._compile_tail(item))
+        for item in el:
+            # ignore comments & processing instructions
+            if isinstance(item, etree._Comment):
+                continue
+            body.extend(self._compile_node(item, options))
+            body.extend(self._compile_tail(item))
         return body
 
     def _compile_directive_else(self, el, options):

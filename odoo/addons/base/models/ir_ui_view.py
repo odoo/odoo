@@ -1106,12 +1106,12 @@ actual arch.
         Model = self.env[model]
 
         if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
+            if list(node)[0].tag == 'node':
+                node_model = self.env[list(node)[0].get('object')]
                 node_fields = node_model.fields_get(None)
                 fields.update(node_fields)
-            if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
+            if list(node)[1].tag == 'arrow':
+                arrow_fields = self.env[list(node)[1].get('object')].fields_get(None)
                 fields.update(arrow_fields)
         else:
             fields = Model.fields_get(None)
@@ -1160,8 +1160,8 @@ actual arch.
         is_base_model = self.env.context.get('base_model_name', model) == model
 
         if node.tag == 'diagram':
-            if node.getchildren()[0].tag == 'node':
-                node_model = self.env[node.getchildren()[0].get('object')]
+            if list(node)[0].tag == 'node':
+                node_model = self.env[list(node)[0].get('object')]
                 if (not node.get("create") and
                         not node_model.check_access_rights('create', raise_exception=False) or
                         not self._context.get("create", True) and is_base_model):
