@@ -1533,8 +1533,6 @@ class Float(Field):
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
-        if not validate:
-            return value
         digits = self.get_digits(record.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
