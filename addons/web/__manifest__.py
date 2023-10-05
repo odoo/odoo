@@ -630,6 +630,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/main.js',
             'web/static/tests/mock_server_tests.js',
             'web/static/tests/setup.js',
+            'web/static/src/webclient/clickbot/clickbot.js',
 
             # These 2 lines below are taken from web.assets_frontend
             # They're required for the web.frontend_legacy to work properly
@@ -670,6 +671,9 @@ This module provides the core of the Odoo Web Client.
         # Used during the transition of the web architecture
         'web.frontend_legacy_tests': [
             'web/static/tests/legacy/frontend/*.js',
+        ],
+        'web.assets_clickbot': [
+            'web/static/src/webclient/clickbot/clickbot.js',
         ],
     },
     'bootstrap': True,  # load translations for login screen,
