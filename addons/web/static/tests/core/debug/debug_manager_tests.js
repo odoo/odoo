@@ -31,6 +31,7 @@ import { openViewItem } from "@web/webclient/debug_items";
 import {
     editSearchView,
     editView,
+    getView,
     setDefaults,
     viewMetadata,
     viewRawRecord,
@@ -345,6 +346,41 @@ QUnit.module("DebugMenu", (hooks) => {
         await click(target.querySelector(".modal .o_list_view .o_data_row td"));
         assert.containsNone(target, ".modal");
         assert.containsOnce(target, ".some_view");
+    });
+
+    QUnit.test("get view: basic rendering", async (assert) => {
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("view").add("getView", getView);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        };
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal-body").innerText,
+            `<tree><field name="foo" field_id="foo_0"/></tree>`
+        );
     });
 
     QUnit.test("can edit a pivot view", async (assert) => {

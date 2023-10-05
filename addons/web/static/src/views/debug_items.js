@@ -27,26 +27,21 @@ debugRegistry.category("view").add("viewSeparator", viewSeparator);
 class GetViewDialog extends Component {}
 GetViewDialog.template = xml`
 <Dialog title="this.constructor.title">
-    <pre t-esc="props.arch"/>
+    <pre t-esc="props.arch.outerHTML"/>
 </Dialog>`;
 GetViewDialog.components = { Dialog };
 GetViewDialog.props = {
-    arch: { type: String },
+    arch: { type: Element },
     close: { type: Function },
 };
 GetViewDialog.title = _t("Get View");
 
 export function getView({ component, env }) {
-    let { arch } = component.props;
-    if ("viewInfo" in component.props) {
-        //legacy
-        arch = component.props.viewInfo.arch;
-    }
     return {
         type: "item",
         description: _t("Get View"),
         callback: () => {
-            env.services.dialog.add(GetViewDialog, { arch });
+            env.services.dialog.add(GetViewDialog, { arch: component.props.arch });
         },
         sequence: 340,
     };
