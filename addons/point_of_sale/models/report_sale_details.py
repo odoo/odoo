@@ -155,7 +155,7 @@ class ReportSaleDetails(models.AbstractModel):
                         cash_out_count = 0
                         if session.cash_register_balance_start > 0:
                             cash_in_out_list.append({
-                                'name': 'Cash Opening',
+                                'name': _('Cash Opening'),
                                 'amount': session.cash_register_balance_start,
                             })
                         for cash_move in cash_moves:

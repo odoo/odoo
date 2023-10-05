@@ -109,7 +109,7 @@ class PosPaymentMethod(models.Model):
             payment_method_id = self.env['pos.payment.method'].search([('is_online_payment', '=', True), ('company_id', '=', company_id)], limit=1).exists()
             if not payment_method_id:
                 payment_method_id = self.env['pos.payment.method'].create({
-                    'name': 'Online Payment',
+                    'name': _('Online Payment'),
                     'is_online_payment': True,
                     'company_id': company_id,
                 })

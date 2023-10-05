@@ -135,7 +135,7 @@ class PosConfig(models.Model):
                 pos_config_id.self_ordering_image_home_ids = [(4, attachment.id)]
 
             self.env['pos_self_order.custom_link'].create({
-                'name': 'Order Now',
+                'name': _('Order Now'),
                 'url': f'/pos-self/{pos_config_id.id}/products',
                 'pos_config_ids': [(4, pos_config_id.id)],
             })
@@ -215,7 +215,7 @@ class PosConfig(models.Model):
             # Here we use "range" to determine the number of QR codes to generate from
             # this list, which will then be inserted into a PDF.
             table_qr_code.extend([{
-                'name': 'Generic',
+                'name': _('Generic'),
                 'type': 'default',
                 'tables': [{
                     'id': i,
