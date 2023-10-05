@@ -96,6 +96,40 @@ export class CalendarController extends Component {
         }
     }
 
+    get date() {
+        return this.model.meta.date || DateTime.now();
+    }
+
+    get currentYear() {
+        return this.date.toFormat("y");
+    }
+
+    get dayHeader() {
+        return `${this.date.toFormat("d")} ${this.date.toFormat("MMMM")} ${this.date.year}`;
+    }
+
+    get weekHeader() {
+        const { rangeStart, rangeEnd } = this.model;
+        if (rangeStart.year != rangeEnd.year) {
+            return `${rangeStart.toFormat("MMMM")} ${rangeStart.year} - ${rangeEnd.toFormat(
+                "MMMM"
+            )} ${rangeEnd.year}`;
+        } else if (rangeStart.month != rangeEnd.month) {
+            return `${rangeStart.toFormat("MMMM")} - ${rangeEnd.toFormat("MMMM")} ${
+                rangeStart.year
+            }`;
+        }
+        return `${rangeStart.toFormat("MMMM")} ${rangeStart.year}`;
+    }
+
+    get currentMonth() {
+        return `${this.date.toFormat("MMMM")} ${this.date.year}`;
+    }
+
+    get currentWeek() {
+        return this.date.toFormat("W");
+    }
+
     get rendererProps() {
         return {
             model: this.model,
