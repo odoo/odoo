@@ -95,7 +95,7 @@ class ResPartner(models.Model):
         Splits the VAT Number to get the country code in a first place and the code itself in a second place.
         This has to be done because some countries' code are one character long instead of two (i.e. "T" for Japan)
         '''
-        if vat[1].isalpha():
+        if len(vat) > 1 and vat[1].isalpha():
             vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         else:
             vat_country, vat_number = vat[:1].lower(), vat[1:].replace(' ', '')
