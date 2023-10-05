@@ -60,22 +60,42 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     /**
      * Modifies the elements to have the view of a subscriber/non-subscriber.
      *
+     * @todo should probably be merged with _updateSubscribeControlsStatus
      * @param {Object} data
      */
     _updateView(data) {
-        const isSubscriber = data.is_subscriber;
-        const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
-        const thanksBtnEl = this.el.querySelector('.js_subscribed_btn');
-        const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email'); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
+        this._updateSubscribeControlsStatus(!!data.is_subscriber);
 
-        subscribeBtnEl.disabled = isSubscriber;
+        // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
+        const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
         valueInputEl.value = data.value || '';
-        valueInputEl.disabled = isSubscriber;
+
         // Compat: remove d-none for DBs that have the button saved with it.
         this.el.classList.remove('d-none');
+    },
+    /**
+     * Updates the visibility of the subscribe and subscribed buttons.
+     *
+     * @param {boolean} isSubscriber
+     */
+    _updateSubscribeControlsStatus(isSubscriber) {
+        const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
+        const thanksBtnEl = this.el.querySelector('.js_subscribed_btn');
 
-        subscribeBtnEl.classList.toggle('d-none', !!isSubscriber);
+        subscribeBtnEl.disabled = isSubscriber;
+        subscribeBtnEl.classList.toggle('d-none', isSubscriber);
         thanksBtnEl.classList.toggle('d-none', !isSubscriber);
+        // The active button should always be the last one so that the
+        // design for input-group of Bootstrap works.
+        if (isSubscriber) {
+            subscribeBtnEl.after(thanksBtnEl);
+        } else {
+            thanksBtnEl.after(subscribeBtnEl);
+        }
+
+        // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
+        const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
+        valueInputEl.disabled = isSubscriber;
     },
 
     _getListId: function () {
@@ -115,9 +135,8 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {
-                self.$(".js_subscribe_btn").addClass('d-none');
-                self.$(".js_subscribed_btn").removeClass('d-none');
-                self.$('input.js_subscribe_value, input.js_subscribe_email').prop('disabled', !!result); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
+                self._updateSubscribeControlsStatus(true);
+
                 const $popup = self.$el.closest('.o_newsletter_modal');
                 if ($popup.length) {
                     $popup.modal('hide');
