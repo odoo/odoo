@@ -2,6 +2,9 @@
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "@spreadsheet/pivot/pivot_helpers";
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { toNormalizedPivotValue } from "@spreadsheet/pivot/pivot_model";
+import { pivotTimeAdapter } from "@spreadsheet/pivot/pivot_time_adapters";
+import { constants } from "@odoo/o-spreadsheet";
+const { DEFAULT_LOCALE } = constants;
 
 function stringArg(value) {
     return { type: "STRING", value: `${value}` };
@@ -170,5 +173,38 @@ QUnit.module("spreadsheet > toNormalizedPivotValue", {}, () => {
             assert.throws(() => toNormalizedPivotValue(field, 1));
             assert.throws(() => toNormalizedPivotValue(field, "won"));
         }
+    });
+});
+
+QUnit.module("spreadsheet > pivot time adapters formatted value", {}, () => {
+    QUnit.test("Day adapter", (assert) => {
+        const adapter = pivotTimeAdapter("day");
+        assert.strictEqual(adapter.format("11/12/2020", DEFAULT_LOCALE), "11/12/2020");
+        assert.strictEqual(adapter.format("01/11/2020", DEFAULT_LOCALE), "1/11/2020");
+        assert.strictEqual(adapter.format("12/05/2020", DEFAULT_LOCALE), "12/5/2020");
+    });
+
+    QUnit.test("Week adapter", (assert) => {
+        const adapter = pivotTimeAdapter("week");
+        assert.strictEqual(adapter.format("5/2024", DEFAULT_LOCALE), "W5 2024");
+        assert.strictEqual(adapter.format("51/2020", DEFAULT_LOCALE), "W51 2020");
+    });
+
+    QUnit.test("Month adapter", (assert) => {
+        const adapter = pivotTimeAdapter("month");
+        assert.strictEqual(adapter.format("12/2020", DEFAULT_LOCALE), "December 2020");
+        assert.strictEqual(adapter.format("02/2020", DEFAULT_LOCALE), "February 2020");
+    });
+
+    QUnit.test("Quarter adapter", (assert) => {
+        const adapter = pivotTimeAdapter("quarter");
+        assert.strictEqual(adapter.format("1/2022", DEFAULT_LOCALE), "Q1 2022");
+        assert.strictEqual(adapter.format("3/1998", DEFAULT_LOCALE), "Q3 1998");
+    });
+
+    QUnit.test("Year adapter", (assert) => {
+        const adapter = pivotTimeAdapter("year");
+        assert.strictEqual(adapter.format("2020", DEFAULT_LOCALE), "2020");
+        assert.strictEqual(adapter.format("1997", DEFAULT_LOCALE), "1997");
     });
 });
