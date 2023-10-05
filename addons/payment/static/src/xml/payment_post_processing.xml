@@ -60,7 +60,7 @@
                         Amount
                     </label>
                     <span id="o_payment_summary_amount"
-                          t-out="amount"
+                          t-out="formatCurrency(amount, currency_id)"
                           class="fs-4 fw-bold"
                     />
                 </div>
