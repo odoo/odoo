@@ -160,7 +160,7 @@
                 <t t-if="question_count or tags" t-call="website.website_search_box_input">
                     <t t-if="_page_name == 'tags'">
                         <t t-set="search_type" t-value="'forum_tags_only'"/>
-                        <t t-set="action" t-valuef="'/forum/%s/tag' % (_forum_slug)"/>
+                        <t t-set="action" t-value="'/forum/%s/tag' % (_forum_slug)"/>
                     </t>
                     <t t-else="">
                         <t t-set="search_type" t-value="'forums'"/>
