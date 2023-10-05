@@ -124,6 +124,7 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
         req = requests.post(url, json=payload, timeout=timeout)
         req.raise_for_status()
         response = req.json()
+        _logger.info("iap jsonrpc %s answered in %s seconds", url, req.elapsed.total_seconds())
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
             message = response['error']['data'].get('message')
