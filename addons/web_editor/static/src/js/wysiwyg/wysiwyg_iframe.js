@@ -63,6 +63,9 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
                 return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
             };
         }
+        if (this.$iframe && this.$iframe.length) {
+            options.document = this.$iframe[0].contentWindow.document;
+        }
         return options;
     },
     /**
