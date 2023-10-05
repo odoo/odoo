@@ -13,12 +13,12 @@
                         <tree>
                             <field name="product_id"/>
                             <field name="location_dest_id"/>
-                            <field name="qty_done" String="quantity"/>
+                            <field name="quantity" String="quantity"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                         </tree>
                         <kanban>
                             <field name="product_id"/>
-                            <field name="qty_done"/>
+                            <field name="quantity"/>
                             <field name="location_dest_id"/>
                             <templates>
                                 <t t-name="kanban-box">
@@ -28,7 +28,7 @@
                                                 <field name="product_id"/>
                                             </div>
                                             <div class="col-6 o_kanban_primary_right">
-                                                <field name="qty_done" String="quantity"/>
+                                                <field name="quantity" String="quantity"/>
                                             </div>
                                         </div>
                                         <div class="row">

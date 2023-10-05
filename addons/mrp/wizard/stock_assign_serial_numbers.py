@@ -78,10 +78,6 @@ class StockAssignSerialNumbers(models.TransientModel):
             for workorder in production.workorder_ids:
                 workorder.qty_produced = workorder.qty_producing
 
-        if productions and len(production_lots) < len(productions):
-            productions[-1].move_raw_ids.move_line_ids.write({'qty_done': 0})
-            productions[-1].state = "confirmed"
-
         if self.mark_as_done:
             productions.button_mark_done()
 

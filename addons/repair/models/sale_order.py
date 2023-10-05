@@ -57,7 +57,7 @@ class SaleOrderLine(models.Model):
             if len(move) != 1:
                 continue
             remaining_so_lines -= so_line
-            so_line.qty_delivered = move.quantity_done
+            so_line.qty_delivered = move.quantity
         return super(SaleOrderLine, remaining_so_lines)._compute_qty_delivered()
 
     @api.model_create_multi

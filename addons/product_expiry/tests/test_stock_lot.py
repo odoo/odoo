@@ -51,7 +51,6 @@ class TestStockLot(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'state': 'draft',
-            'immediate_transfer': False,
         })
 
         move_a = self.MoveObj.create({
@@ -70,10 +69,11 @@ class TestStockLot(TestStockCommon):
 
         # Replace pack operation of incoming shipments.
         picking_in.action_assign()
-        move_a.move_line_ids.qty_done = 33
+        move_a.move_line_ids.quantity = 33
         move_a.move_line_ids.lot_id = self.lot1_productAAA.id
 
         # Transfer Incoming Shipment.
+        move_a.picked = True
         picking_in._action_done()
 
         # run scheduled tasks
@@ -148,7 +148,6 @@ class TestStockLot(TestStockCommon):
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'state': 'draft',
-            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
 
         move_b = self.MoveObj.create({
@@ -166,7 +165,7 @@ class TestStockLot(TestStockCommon):
 
         # Replace pack operation of incoming shipments.
         picking_in.action_assign()
-        move_b.move_line_ids.qty_done = 44
+        move_b.move_line_ids.quantity = 44
         move_b.move_line_ids.lot_id = self.lot1_productBBB.id
 
         # Transfer Incoming Shipment.
@@ -197,7 +196,6 @@ class TestStockLot(TestStockCommon):
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'state': 'draft',
-            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
 
         move_c = self.MoveObj.create({
@@ -215,7 +213,7 @@ class TestStockLot(TestStockCommon):
 
         # Replace pack operation of incoming shipments.
         picking_in.action_assign()
-        move_c.move_line_ids.qty_done = 55
+        move_c.move_line_ids.quantity = 55
         move_c.move_line_ids.lot_id = self.lot1_productCCC.id
 
         # Transfer Incoming Shipment.
@@ -313,12 +311,12 @@ class TestStockLot(TestStockCommon):
 
         # Defines a date during the receipt.
         move_form = Form(receipt.move_ids_without_package, view="stock.view_stock_move_operations")
-        with move_form.move_line_nosuggest_ids.new() as line:
+        with move_form.move_line_ids.edit(0) as line:
             line.lot_name = 'Apple Box #2'
             line.expiration_date = expiration_date
-            line.qty_done = 4
         move = move_form.save()
 
+        move.picked = True
         receipt._action_done()
         # Get back the lot created when the picking was done...
         apple_lot = self.env['stock.lot'].search(
@@ -355,7 +353,8 @@ class TestStockLot(TestStockCommon):
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
-            move.quantity_done = 4
+            move.quantity = 4
+            move.picked = True
         receipt = picking_form.save()
 
         # Defines a date during the receipt.
@@ -424,8 +423,9 @@ class TestStockLot(TestStockCommon):
             'lot_id': good_lot.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
-            'qty_done': 4,
+            'quantity': 4,
         })]
+        delivery_1.move_ids.picked = True
         res = delivery_1.button_validate()
         # Validate a delivery for good products must not raise anything.
         self.assertEqual(res, True)
@@ -449,7 +449,7 @@ class TestStockLot(TestStockCommon):
             'lot_id': good_lot.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
-            'qty_done': 4,
+            'quantity': 4,
         }), (0, 0, {
             'company_id': self.env.company.id,
             'location_id': delivery_2.move_ids.location_id.id,
@@ -457,8 +457,9 @@ class TestStockLot(TestStockCommon):
             'lot_id': expired_lot_1.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
-            'qty_done': 4,
+            'quantity': 4,
         })]
+        delivery_2.move_ids.picked = True
         res = delivery_2.button_validate()
         # Validate a delivery containing expired products must raise a confirmation wizard.
         self.assertNotEqual(res, True)
@@ -482,8 +483,9 @@ class TestStockLot(TestStockCommon):
             'lot_id': expired_lot_1.id,
             'product_id': self.apple_product.id,
             'product_uom_id': self.apple_product.uom_id.id,
-            'qty_done': 4,
+            'quantity': 4,
         })]
+        delivery_3.move_ids.picked = True
         res = delivery_3.button_validate()
         # Validate a delivery containing expired products must raise a confirmation wizard.
         self.assertNotEqual(res, True)
@@ -535,7 +537,7 @@ class TestStockLot(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'product_id': self.apple_product.id,
-            'qty_done': 3,
+            'quantity': 3,
             'product_uom_id': self.apple_product.uom_id.id,
             'lot_id': lot.id,
             'company_id': self.env.company.id,

@@ -82,7 +82,7 @@ class TestStockLot(TestStockCommon):
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.new() as ml:
-            ml.qty_done = 3
+            ml.quantity = 3
             ml.lot_id = self.lot_good_apple
         details_operation_form.save()
         res = mo.button_mark_done()
@@ -105,7 +105,7 @@ class TestStockLot(TestStockCommon):
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.new() as ml:
-            ml.qty_done = 3
+            ml.quantity = 3
             ml.lot_id = self.lot_expired_apple
         details_operation_form.save()
         res = mo.button_mark_done()

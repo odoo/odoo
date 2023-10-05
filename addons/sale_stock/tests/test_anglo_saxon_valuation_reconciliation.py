@@ -63,7 +63,7 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
         })
         move1._action_confirm()
         move1._action_assign()
-        move1.move_line_ids.qty_done = 11
+        move1.move_line_ids.write({'quantity': 11, 'picked': True})
         move1._action_done()
 
 
@@ -112,7 +112,7 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
-        return_pick.move_ids.quantity_done = 1
+        return_pick.move_ids.write({'quantity': 1, 'picked': True})
         return_pick._action_done()
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',

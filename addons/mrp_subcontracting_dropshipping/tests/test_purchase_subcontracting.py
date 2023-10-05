@@ -241,7 +241,8 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(mo.picking_type_id, self.warehouse.subcontracting_type_id)
 
         delivery = po.picking_ids
-        delivery.move_line_ids.qty_done = 2.0
+        delivery.move_line_ids.quantity = 2.0
+        delivery.move_ids.picked = True
         delivery.button_validate()
 
         self.assertEqual(delivery.state, 'done')
@@ -259,7 +260,8 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         return_picking_id, _pick_type_id = return_wizard._create_returns()
 
         delivery_return01 = self.env['stock.picking'].browse(return_picking_id)
-        delivery_return01.move_line_ids.qty_done = 1.0
+        delivery_return01.move_line_ids.quantity = 1.0
+        delivery_return01.move_ids.picked = True
         delivery_return01.button_validate()
 
         self.assertEqual(delivery_return01.state, 'done')
@@ -276,7 +278,8 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         return_picking_id, _pick_type_id = return_wizard._create_returns()
 
         delivery_return02 = self.env['stock.picking'].browse(return_picking_id)
-        delivery_return02.move_line_ids.qty_done = 1.0
+        delivery_return02.move_line_ids.quantity = 1.0
+        delivery_return02.move_ids.picked = True
         delivery_return02.button_validate()
 
         self.assertEqual(delivery_return02.state, 'done')
@@ -343,7 +346,8 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(delivery.location_dest_id, super_subcontractor.property_stock_subcontractor)
         self.assertTrue(delivery.is_dropship)
 
-        delivery.move_line_ids.qty_done = 1.0
+        delivery.move_line_ids.quantity = 1.0
+        delivery.move_ids.picked = True
         delivery.button_validate()
 
         self.assertEqual(po.order_line.qty_received, 1.0)

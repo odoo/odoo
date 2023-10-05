@@ -56,7 +56,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         sale_order.action_confirm()
         picking = sale_order.picking_ids
-        picking.move_ids.quantity_done = 300
+        picking.move_ids.quantity = 300
+        picking.move_ids.picked = True
         action = picking.button_validate()
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
         wizard.save().process()
@@ -75,9 +76,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         #assert that sales order qty are correctly updated
         self.assertEqual(sale_order.order_line.qty_delivered, 3)
         self.assertEqual(sale_order.picking_ids[0].move_ids.product_qty, 2100) # 7 left to deliver => 300 * 7 = 2100
-        self.assertEqual(sale_order.picking_ids[0].move_ids.quantity_done, 0)
+        self.assertEqual(sale_order.picking_ids[0].move_ids.quantity, 0)
         self.assertEqual(sale_order.picking_ids[1].move_ids.product_qty, 300)
-        self.assertEqual(sale_order.picking_ids[1].move_ids.quantity_done, 300) # 1 delivered => 300 * 2 = 600
+        self.assertEqual(sale_order.picking_ids[1].move_ids.quantity, 300) # 1 delivered => 300 * 2 = 600
 
     def test_settle_order_with_incompatible_partner(self):
         """ If the partner of the sale order is not compatible with the current pos order,
@@ -242,9 +243,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         sale_order.action_confirm()
 
-        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[0].reserved_qty, 2)
+        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[0].quantity, 2)
         self.assertEqual(sale_order.order_line.move_ids.move_line_ids[0].location_id.id, self.shelf_1.id)
-        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].reserved_qty, 2)
+        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].quantity, 2)
         self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
 
         self.main_pos_config.company_id.write({'point_of_sale_update_stock_quantities': 'real'})
@@ -252,9 +253,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderRealTime', login="accountman")
         self.main_pos_config.current_session_id.close_session_from_ui()
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
-        self.assertEqual(pos_order.picking_ids.move_line_ids[0].qty_done, 2)
+        self.assertEqual(pos_order.picking_ids.move_line_ids[0].quantity, 2)
         self.assertEqual(pos_order.picking_ids.move_line_ids[0].location_id.id, self.shelf_1.id)
-        self.assertEqual(pos_order.picking_ids.move_line_ids[1].qty_done, 2)
+        self.assertEqual(pos_order.picking_ids.move_line_ids[1].quantity, 2)
         self.assertEqual(pos_order.picking_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
         self.assertEqual(sale_order.order_line.move_ids.move_lines_count, 0)
 

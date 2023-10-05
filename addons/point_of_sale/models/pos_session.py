@@ -804,7 +804,7 @@ class PosSession(models.Model):
                         signed_product_qty = move.product_qty
                         if move._is_in():
                             signed_product_qty *= -1
-                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity_done, move)
+                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity, move)
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         if move._is_in():
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -833,7 +833,7 @@ class PosSession(models.Model):
                     signed_product_qty = move.product_qty
                     if move._is_in():
                         signed_product_qty *= -1
-                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity_done, move)
+                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity, move)
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     if move._is_in():
                         stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)

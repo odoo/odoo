@@ -14,13 +14,13 @@ class StockQuantPackage(models.Model):
             package_weights = defaultdict(float)
             res_groups = self.env['stock.move.line']._read_group(
                 [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', self.env.context['picking_id'])],
-                ['result_package_id', 'product_id', 'product_uom_id', 'qty_done'],
+                ['result_package_id', 'product_id', 'product_uom_id', 'quantity'],
                 ['__count'],
             )
-            for result_package, product, product_uom, qty_done, count in res_groups:
+            for result_package, product, product_uom, quantity, count in res_groups:
                 package_weights[result_package.id] += (
                     count
-                    * product_uom._compute_quantity(qty_done, product.uom_id)
+                    * product_uom._compute_quantity(quantity, product.uom_id)
                     * product.weight
                 )
         for package in self:

@@ -63,7 +63,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 35)
         self.assertEqual(sale_order.margin, 15)
 
-        sale_order.picking_ids.move_ids.quantity_done = 1
+        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         sale_order.picking_ids.button_validate()
 
         self.assertEqual(order_line.purchase_price, 35)
@@ -84,7 +84,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 19.5)
         self.assertAlmostEqual(sale_order.margin, 61)
 
-        sale_order.picking_ids.move_ids.quantity_done = 2
+        sale_order.picking_ids.move_ids.write({'quantity': 2, 'picked': True})
         sale_order.picking_ids.button_validate()
 
         self.assertAlmostEqual(order_line.purchase_price, 24.5)
@@ -104,7 +104,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 10)
         self.assertAlmostEqual(sale_order.margin, 20)
 
-        sale_order.picking_ids.move_ids.quantity_done = 1
+        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         sale_order.picking_ids.button_validate()
 
         self.assertAlmostEqual(order_line.purchase_price, 10)
@@ -125,7 +125,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line.purchase_price, 15)
         self.assertAlmostEqual(sale_order.margin, 10)
 
-        sale_order.picking_ids.move_ids.quantity_done = 1
+        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         res = sale_order.picking_ids.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
 
@@ -156,8 +156,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertAlmostEqual(order_line_2.margin, 6 * 4)
         self.assertAlmostEqual(sale_order.margin, 58)
 
-        sale_order.picking_ids.move_ids[0].quantity_done = 2
-        sale_order.picking_ids.move_ids[1].quantity_done = 3
+        sale_order.picking_ids.move_ids[0].write({'quantity': 2, 'picked': True})
+        sale_order.picking_ids.move_ids[1].write({'quantity': 3, 'picked': True})
 
         res = sale_order.picking_ids.button_validate()
         Form(self.env[res['res_model']].with_context(res['context'])).save().process()
@@ -276,11 +276,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'picking_type_id': incoming_picking_type.id,
             'picking_id': picking.id,
         })
-        picking.action_reset_draft()
         picking.action_confirm()
-        res_dict = picking.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        wizard.process()
+        picking.button_validate()
 
         self.pricelist.currency_id = new_company_currency.id
         partner = self.env['res.partner'].create({'name': 'Super Partner'})

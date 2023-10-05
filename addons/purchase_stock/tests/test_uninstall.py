@@ -26,7 +26,8 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
 
         self.assertEqual(order_line.product_id.detailed_type, 'product')
 
-        stock_move.quantity_done = 1
+        stock_move.quantity = 1
+        stock_move.picked = True
         stock_move.picking_id.button_validate()
 
         self.assertEqual(purchase_order.order_line.qty_received, 1)

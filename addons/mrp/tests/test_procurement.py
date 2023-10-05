@@ -174,22 +174,21 @@ class TestProcurement(TestMrpCommon):
         self.assertTrue(picking_qc_to_stock)
         picking_input_to_qc.action_assign()
         self.assertEqual(picking_input_to_qc.state, 'assigned')
-        picking_input_to_qc.move_line_ids.write({'qty_done': 5.0})
+        picking_input_to_qc.move_ids.write({'quantity': 5.0, 'picked': True})
         picking_input_to_qc._action_done()
         picking_qc_to_stock.action_assign()
         self.assertEqual(picking_qc_to_stock.state, 'assigned')
-        picking_qc_to_stock.move_line_ids.write({'qty_done': 3.0})
+        picking_qc_to_stock.move_ids.write({'quantity': 3.0, 'picked': True})
         picking_qc_to_stock.with_context(skip_backorder=True, picking_ids_not_to_backorder=picking_qc_to_stock.ids).button_validate()
         self.assertEqual(picking_qc_to_stock.state, 'done')
         mo.action_assign()
-        self.assertEqual(mo.move_raw_ids.reserved_availability, 3.0)
+        self.assertEqual(mo.move_raw_ids.quantity, 3.0)
         produce_form = Form(mo)
         produce_form.qty_producing = 3.0
         mo = produce_form.save()
-        self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
-        picking_qc_to_stock.move_line_ids.qty_done = 5.0
-        self.assertEqual(mo.move_raw_ids.reserved_availability, 5.0)
-        self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
+        self.assertEqual(mo.move_raw_ids.quantity, 3.0)
+        picking_qc_to_stock.move_line_ids.quantity = 5.0
+        self.assertEqual(mo.move_raw_ids.quantity, 3.0)
 
     def test_link_date_mo_moves(self):
         """ Check link of shedule date for manufaturing with date stock move."""
@@ -343,7 +342,7 @@ class TestProcurement(TestMrpCommon):
         production.button_mark_done()
 
         move_dest._action_assign()
-        self.assertEqual(move_dest.reserved_availability, 10.0)
+        self.assertEqual(move_dest.quantity, 10.0)
 
     def test_auto_assign(self):
         """ When auto reordering rule exists, check for when:
@@ -455,7 +454,6 @@ class TestProcurement(TestMrpCommon):
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
-        pick_output.action_reset_draft()
         pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
         pick_output.action_assign()
 
@@ -467,7 +465,7 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(len(mo), 1, "Manufacture order was not automatically created")
         mo.action_assign()
         mo.is_locked = False
-        self.assertEqual(mo.move_raw_ids.reserved_availability, 0, "No components should be reserved yet")
+        self.assertEqual(mo.move_raw_ids.quantity, 0, "No components should be reserved yet")
         self.assertEqual(mo.product_qty, 15, "Quantity to produce should be picking demand + reordering rule max qty")
 
         # 2nd MO for product_2 should have been created and confirmed when 1st MO for product_1 was confirmed
@@ -483,7 +481,7 @@ class TestProcurement(TestMrpCommon):
         mo2 = mo2_form.save()
         mo2.button_mark_done()
 
-        self.assertEqual(mo.move_raw_ids.reserved_availability, 15, "Components should have been auto-reserved")
+        self.assertEqual(mo.move_raw_ids.quantity, 15, "Components should have been auto-reserved")
 
         # add new component to 1st MO
         mo_form = Form(mo)
@@ -501,12 +499,12 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mo3.product_qty, 6, "Quantity to produce should be 1 + reordering rule max qty")
 
         mo_form = Form(mo)
-        mo.move_raw_ids.quantity_done = 15
+        mo.move_raw_ids.quantity = 15
         mo_form.qty_producing = 15
         mo = mo_form.save()
         mo.button_mark_done()
 
-        self.assertEqual(pick_output.move_ids_without_package.reserved_availability, 10, "Completed products should have been auto-reserved in picking")
+        self.assertEqual(pick_output.move_ids_without_package.quantity, 10, "Completed products should have been auto-reserved in picking")
 
         # make sure next MO auto-reserves components now that they are in stock since
         # default reservation_method = 'at_confirm'
@@ -518,7 +516,7 @@ class TestProcurement(TestMrpCommon):
         mo_assign_at_confirm = mo_form.save()
         mo_assign_at_confirm.action_confirm()
 
-        self.assertEqual(mo_assign_at_confirm.move_raw_ids.reserved_availability, 5, "Components should have been auto-reserved")
+        self.assertEqual(mo_assign_at_confirm.move_raw_ids.quantity, 5, "Components should have been auto-reserved")
 
     def test_check_update_qty_mto_chain(self):
         """ Simulate a mto chain with a manufacturing order. Updating the

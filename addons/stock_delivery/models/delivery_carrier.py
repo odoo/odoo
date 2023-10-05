@@ -174,7 +174,7 @@ class DeliveryCarrier(models.Model):
             package_total_cost = 0.0
             for move_line in picking.move_line_ids:
                 package_total_cost += self._product_price_to_company_currency(
-                    move_line.qty_done, move_line.product_id, picking.company_id
+                    move_line.quantity, move_line.product_id, picking.company_id
                 )
             packages.append(DeliveryPackage(
                 commodities,
@@ -216,7 +216,7 @@ class DeliveryCarrier(models.Model):
         for product, lines in groupby(product_lines, lambda x: x.product_id):
             unit_quantity = sum(
                 line.product_uom_id._compute_quantity(
-                    line.qty_done if line.state == 'done' else line.reserved_uom_qty,
+                    line.quantity,
                     product.uom_id)
                 for line in lines)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))

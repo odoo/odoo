@@ -251,22 +251,20 @@ class Repair(models.Model):
         returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
         returned.is_returned = True
 
-    @api.depends('state',
-                 'move_ids.reserved_availability',
-                 'move_ids.quantity_done')
+    @api.depends('state', 'move_ids.quantity', 'move_ids.product_uom_qty')
     def _compute_show_qty_button(self):
         self.show_set_qty_button = False
         self.show_clear_qty_button = False
         for repair in self.filtered(lambda r: r.state not in ['cancel', 'done']):
-            if any(float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding) and not float_is_zero(m.reserved_availability, precision_rounding=m.product_uom.rounding) for m in repair.move_ids):
+            if any(float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) and not float_is_zero(m.product_uom_qty, precision_rounding=m.product_uom.rounding) for m in repair.move_ids):
                 repair.show_set_qty_button = True
-            elif any(not float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding) and float_compare(m.quantity_done, m.reserved_availability, precision_rounding=m.product_uom.rounding) == 0 for m in repair.move_ids):
+            elif any(not float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in repair.move_ids):
                 repair.show_clear_qty_button = True
 
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
         for repair in self:
-            already_reserved = repair.state not in ('done', 'cancel') and any(repair.mapped('move_ids.move_line_ids.reserved_qty'))
+            already_reserved = repair.state not in ('done', 'cancel') and any(repair.mapped('move_ids.move_line_ids.quantity'))
 
             repair.unreserve_visible = already_reserved
             repair.reserve_visible = repair.state in ('confirmed', 'under_repair') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in repair.move_ids)
@@ -326,7 +324,7 @@ class Repair(models.Model):
         return self.move_ids._action_assign()
 
     def action_clear_quantities_to_zero(self):
-        return self.move_ids.filtered(lambda m: float_compare(m.quantity_done, m.reserved_availability, precision_rounding=m.product_uom.rounding) == 0)._clear_quantities_to_zero()
+        return self.move_ids.filtered(lambda m: float_compare(m.quantity, m.reserved_availability, precision_rounding=m.product_uom.rounding) == 0)._clear_quantities_to_zero()
 
     def action_create_sale_order(self):
         if any(repair.sale_order_id for repair in self):
@@ -377,16 +375,15 @@ class Repair(models.Model):
         # Clean the context to get rid of residual default_* keys that could cause issues
         # during the creation of stock.move.
         self = self.with_context(clean_context(self._context))
-        self._check_product_tracking()
 
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         product_move_vals = []
 
-        # Cancel moves with 0 quantity_done
-        self.move_ids.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))._action_cancel()
+        # Cancel moves with 0 quantity
+        self.move_ids.filtered(lambda m: float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding))._action_cancel()
 
         no_service_policy = 'service_policy' not in self.env['product.template']
-        #SOL qty delivered = repair.move_ids.quantity_done
+        #SOL qty delivered = repair.move_ids.quantity
         for repair in self:
             if repair.sale_order_line_id:
                 ro_origin_product = repair.sale_order_line_id.product_template_id
@@ -418,9 +415,8 @@ class Repair(models.Model):
                 'move_line_ids': [(0, 0, {
                     'product_id': repair.product_id.id,
                     'lot_id': repair.lot_id.id,
-                    'reserved_uom_qty': 0,  # bypass reservation here
                     'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
-                    'qty_done': repair.product_qty,
+                    'quantity': repair.product_qty,
                     'package_id': False,
                     'result_package_id': False,
                     'owner_id': owner_id,
@@ -436,7 +432,6 @@ class Repair(models.Model):
 
         product_moves = self.env['stock.move'].create(product_move_vals)
         self.move_id = product_moves.id
-        self.sale_order_line_id.move_ids._set_quantities_to_reservation()
 
         all_moves = self.move_ids + product_moves
         all_moves._action_done()
@@ -454,7 +449,7 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
-        if any(float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in self.move_ids):
+        if any(float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in self.move_ids):
             ctx = dict(self.env.context or {})
             ctx['default_repair_ids'] = self.ids
             return {
@@ -475,9 +470,6 @@ class Repair(models.Model):
         if self.filtered(lambda repair: repair.state != 'confirmed'):
             self._action_repair_confirm()
         return self.write({'state': 'under_repair'})
-
-    def action_set_quantities_to_reservation(self):
-        return self.move_ids.filtered(lambda m: float_is_zero(m.quantity_done, precision_rounding=m.product_uom.rounding))._set_quantities_to_reservation()
 
     def action_unreserve(self):
         return self.move_ids.filtered(lambda m: m.state in ('assigned', 'partially_available'))._do_unreserve()
@@ -536,15 +528,6 @@ class Repair(models.Model):
         repairs_to_confirm.move_ids._trigger_scheduler()
         repairs_to_confirm.write({'state': 'confirmed'})
         return True
-
-    def _check_product_tracking(self):
-        invalid_lines = self.move_ids.filtered(lambda x: x.has_tracking != 'none' and not x.lot_ids)
-        if invalid_lines:
-            products = invalid_lines.product_id
-            raise ValidationError(_(
-                "Serial number is required for operation lines with products: %s",
-                ", ".join(products.mapped('display_name')),
-            ))
 
     def _get_location(self, field):
         return self.picking_type_id[MAP_REPAIR_TO_PICKING_LOCATIONS[field]]

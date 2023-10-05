@@ -57,10 +57,11 @@ class TestDeliveryCost(common.TransactionCase):
 
         picking = so.picking_ids[0]
         self.assertEqual(picking.carrier_id.id, so.carrier_id.id)
-        picking.move_ids[0].quantity_done = 1.0
+        picking.move_ids[0].quantity = 1.0
         self.assertGreater(picking.shipping_weight, 0.0)
 
         # Confirm picking for one quantiy and create a back order for the second
+        picking.move_ids.picked = True
         picking._action_done()
         self.assertEqual(picking.carrier_price, 40.0)
         # Check that the delivery cost (previously set to 0) has been correctly updated
@@ -68,8 +69,9 @@ class TestDeliveryCost(common.TransactionCase):
 
         # Confirm the back order
         bo = picking.backorder_ids
-        bo.move_ids[0].quantity_done = 1.0
+        bo.move_ids[0].quantity = 1.0
         self.assertGreater(bo.shipping_weight, 0.0)
+        bo.move_ids.picked = True
         bo._action_done()
         self.assertEqual(bo.carrier_price, 40.0)
 

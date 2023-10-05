@@ -129,9 +129,7 @@
 
                 <field name="is_locked" invisible="1"/>
                 <field name="show_check_availability" invisible="1"/>
-                <field name="show_validate" invisible="1"/>
                 <field name="show_lots_text" invisible="1"/>
-                <field name="immediate_transfer" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
                 <field name="hide_picking_type" invisible="1"/>
                 <field name="show_operations" invisible="1" readonly="1"/>
@@ -148,10 +146,8 @@
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="q"/>
                     <button name="action_assign" invisible="not show_check_availability" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
-                    <button name="button_validate" invisible="state in ('waiting', 'confirmed', 'draft', 'done', 'cancel') or not show_validate" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
-                    <button name="button_validate" invisible="state in ('draft', 'assigned', 'done', 'cancel') or not show_validate" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
-                    <button name="action_reset_draft" invisible="state in ('draft', 'done', 'cancel') or not immediate_transfer" string="Plan" type="object" groups="stock.group_stock_user" class="o_highlight" data-hotkey="d"/>
-                    <button name="action_set_quantities_to_reservation" invisible="not show_set_qty_button" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
+                    <button name="button_validate" invisible="state in ('draft', 'confirm', 'done', 'cancel')" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
+                    <button name="button_validate" invisible="state in ('waiting', 'assigned', 'done', 'cancel')" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
                     <button name="action_clear_quantities_to_zero" invisible="not show_clear_qty_button" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                     <widget name="signature" string="Sign" highlight="1"
                             invisible="not id or picking_type_code != 'outgoing' or state != 'done'"
@@ -267,10 +263,6 @@
                         <page string="Detailed Operations"
                             name="detailed_operations"
                             invisible="not show_operations">
-                            <field name="move_line_nosuggest_ids"
-                                   invisible="show_reserved"
-                                   readonly="not show_operations or state == 'cancel' or (state == 'done' and is_locked)"
-                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
                             <field name="move_line_ids_without_package"
                                    invisible="not show_reserved"
                                    readonly="not show_operations or state == 'cancel' or (state == 'done' and is_locked)"
@@ -286,9 +278,9 @@
                             <field name="move_ids_without_package" mode="tree,kanban"
                                 widget="stock_move_one2many"
                                 readonly="state == 'done' and is_locked"
-                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': immediate_transfer and 'stock.view_stock_move_operations_immediate' or 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
+                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
                                 add-label="Add a Product">
-                                <tree decoration-danger="state != 'done' and quantity_done > reserved_availability and show_reserved_availability" decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="1">
+                                <tree decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="1">
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="name" column_invisible="True"/>
                                     <field name="state" readonly="0" column_invisible="True"/>
@@ -301,7 +293,6 @@
                                     <field name="picking_code" column_invisible="True"/>
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="show_details_visible" column_invisible="True"/>
-                                    <field name="show_reserved_availability" column_invisible="True"/>
                                     <field name="show_operations" readonly="1" column_invisible="True"/>
                                     <field name="show_reserved" column_invisible="True"/>
                                     <field name="additional" column_invisible="True"/>
@@ -314,33 +305,30 @@
                                     <field name="description_picking" string="Description" optional="hide"/>
                                     <field name="date" optional="hide"/>
                                     <field name="date_deadline" optional="hide"/>
-                                    <field name="is_initial_demand_editable" column_invisible="True"/>
                                     <field name="is_quantity_done_editable" column_invisible="True"/>
                                     <field name="show_quant" column_invisible="True"/>
                                     <field name="show_lots_text" column_invisible="True"/>
                                     <field name="show_lots_m2o" column_invisible="True"/>
                                     <field name="display_assign_serial" column_invisible="True"/>
+                                    <field name="is_initial_demand_editable" column_invisible="True"/>
                                     <field name="display_import_lot" column_invisible="True"/>
-                                    <field name="from_immediate_transfer" column_invisible="True"/>
                                     <field name="picking_type_entire_packs" column_invisible="True"/>
                                     <field name="product_packaging_id" groups="product.group_stock_packaging"
                                         context="{'default_product_id': product_id}"
                                         readonly="not product_id"/>
-                                    <field name="product_uom_qty" string="Demand" column_invisible="parent.immediate_transfer" readonly="not is_initial_demand_editable"/>
-                                    <field name="product_uom_qty" string="Done" column_invisible="not parent.immediate_transfer or parent.state == 'done'" readonly="state != 'draft' and (not is_initial_demand_editable or (show_operations and is_locked and not is_initial_demand_editable))"/>
+                                    <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
-                                        invisible="reserved_availability == 0 and forecast_availability &lt;= 0 or parent.immediate_transfer or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                                        invisible="quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger"
-                                        invisible="reserved_availability &gt; 0 or forecast_availability &gt; 0 or parent.immediate_transfer or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
+                                        invisible="quantity &gt; 0 or forecast_availability &gt; 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <field name="forecast_availability" string="Reserved"
-                                        column_invisible="parent.state in ['draft', 'done'] or parent.picking_type_code != 'outgoing' or parent.immediate_transfer" widget="forecast_widget"/>
-                                    <field name="reserved_availability" string="Reserved"
-                                        column_invisible="parent.state in ['draft', 'done'] or parent.picking_type_code in ['incoming', 'outgoing'] or parent.immediate_transfer"/>
+                                        column_invisible="True" widget="forecast_widget"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
-                                    <field name="quantity_done" string="Done" column_invisible="parent.state == 'draft' or (parent.immediate_transfer and parent.state != 'done')" readonly="not is_quantity_done_editable" decoration-danger="quantity_done > product_uom_qty"/>
+                                    <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable" decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
                                     <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
                                     <field name="product_uom" groups="!uom.group_uom" column_invisible="True"/>
+                                    <field name="picked" optional="hide"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         groups="stock.group_production_lot"
                                         invisible="not show_details_visible or has_tracking != 'serial'"

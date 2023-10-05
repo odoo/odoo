@@ -296,6 +296,6 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(analytic_account.debit, 100)
-        mo.move_raw_ids[0].quantity_done = 0
+        mo.move_raw_ids[0].quantity = 0
         self.assertEqual(analytic_account.debit, 0)
         self.assertFalse(analytic_account.line_ids)

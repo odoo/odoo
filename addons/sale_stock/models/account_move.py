@@ -61,7 +61,7 @@ class AccountMove(models.Model):
                 continue
             product = sml.product_id
             product_uom = product.uom_id
-            qty_done = sml.product_uom_id._compute_quantity(sml.qty_done, product_uom)
+            quantity = sml.product_uom_id._compute_quantity(sml.quantity, product_uom)
 
             # is it a stock return considering the document type (should it be it thought of as positively or negatively?)
             is_stock_return = (
@@ -70,22 +70,22 @@ class AccountMove(models.Model):
                     self.move_type == 'out_refund' and (sml.location_id.usage, sml.location_dest_id.usage) == ('internal', 'customer')
             )
             if is_stock_return:
-                returned_qty = min(qties_per_lot[sml.lot_id], qty_done)
+                returned_qty = min(qties_per_lot[sml.lot_id], quantity)
                 qties_per_lot[sml.lot_id] -= returned_qty
-                qty_done = returned_qty - qty_done
+                quantity = returned_qty - quantity
 
             previous_qty_invoiced = previous_qties_invoiced[product]
             previous_qty_delivered = previous_qties_delivered[product]
-            # If we return more than currently delivered (i.e., qty_done < 0), we remove the surplus
-            # from the previously delivered (and qty_done becomes zero). If it's a delivery, we first
+            # If we return more than currently delivered (i.e., quantity < 0), we remove the surplus
+            # from the previously delivered (and quantity becomes zero). If it's a delivery, we first
             # try to reach the previous_qty_invoiced
-            if float_compare(qty_done, 0, precision_rounding=product_uom.rounding) < 0 or \
+            if float_compare(quantity, 0, precision_rounding=product_uom.rounding) < 0 or \
                     float_compare(previous_qty_delivered, previous_qty_invoiced, precision_rounding=product_uom.rounding) < 0:
-                previously_done = qty_done if is_stock_return else min(previous_qty_invoiced - previous_qty_delivered, qty_done)
+                previously_done = quantity if is_stock_return else min(previous_qty_invoiced - previous_qty_delivered, quantity)
                 previous_qties_delivered[product] += previously_done
-                qty_done -= previously_done
+                quantity -= previously_done
 
-            qties_per_lot[sml.lot_id] += qty_done
+            qties_per_lot[sml.lot_id] += quantity
 
         for lot, qty in qties_per_lot.items():
             # access the lot as a superuser in order to avoid an error

@@ -69,19 +69,10 @@ class StockMoveLine(models.Model):
             lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
-    def _reservation_is_updatable(self, quantity, reserved_quant):
-        self.ensure_one()
-        if self.produce_line_ids.lot_id:
-            ml_remaining_qty = self.qty_done - self.reserved_uom_qty
-            ml_remaining_qty = self.product_uom_id._compute_quantity(ml_remaining_qty, self.product_id.uom_id, rounding_method="HALF-UP")
-            if float_compare(ml_remaining_qty, quantity, precision_rounding=self.product_id.uom_id.rounding) < 0:
-                return False
-        return super(StockMoveLine, self)._reservation_is_updatable(quantity, reserved_quant)
-
     def write(self, vals):
         for move_line in self:
             production = move_line.move_id.production_id or move_line.move_id.raw_material_production_id
-            if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
+            if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'quantity')):
                 move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
         return super(StockMoveLine, self).write(vals)
 
@@ -229,7 +220,8 @@ class StockMove(models.Model):
     def _onchange_product_uom_qty(self):
         if self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
-            self._update_quantity_done(mo)
+            new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
+            self.quantity = new_qty
 
     @api.model
     def default_get(self, fields_list):
@@ -362,12 +354,12 @@ class StockMove(models.Model):
                 moves_ids_to_return.add(move.id)
                 continue
             if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                factor = move.product_uom._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
+                factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
             else:
                 factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
             boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
-                if move.picking_id.immediate_transfer or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
+                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
                 else:
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
@@ -375,7 +367,7 @@ class StockMove(models.Model):
             moves_ids_to_unlink.add(move.id)
 
         move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
-        move_to_unlink.quantity_done = 0
+        move_to_unlink.quantity = 0
         move_to_unlink._action_cancel()
         move_to_unlink.unlink()
         if phantom_moves_vals_list:
@@ -423,9 +415,9 @@ class StockMove(models.Model):
             'product_id': bom_line.product_id.id,
             'product_uom': bom_line.product_uom_id.id,
             'product_uom_qty': product_qty,
-            'quantity_done': quantity_done,
-            'state': 'draft',  # will be confirmed below
+            'quantity': quantity_done,
             'name': self.name,
+            'picked': self.picked,
             'bom_line_id': bom_line.id,
         }
 
@@ -477,8 +469,6 @@ class StockMove(models.Model):
             return True
         # Do not update extra product quantities
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
-            return True
-        if (not self.raw_material_production_id.use_auto_consume_components_lots and self.has_tracking != 'none') or self.manual_consumption or self._origin.manual_consumption:
             return True
         return False
 
@@ -542,15 +532,6 @@ class StockMove(models.Model):
         else:
             return 0.0
 
-    def _update_quantity_done(self, mo):
-        self.ensure_one()
-        new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
-        if not self.is_quantity_done_editable:
-            self.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
-            self.move_line_ids = self._set_quantity_done_prepare_vals(new_qty)
-        else:
-            self.quantity_done = new_qty
-
     def _update_candidate_moves_list(self, candidate_moves_set):
         super()._update_candidate_moves_list(candidate_moves_set)
         for production in self.mapped('raw_material_production_id'):
@@ -586,3 +567,11 @@ class StockMove(models.Model):
     def _determine_is_manual_consumption(self, product, production, bom_line):
         return (product.product_tmpl_id.tracking != 'none' and not production.use_auto_consume_components_lots) or \
                (product.product_tmpl_id.tracking == 'none' and bom_line and bom_line.manual_consumption)
+
+    def _get_relevant_state_among_moves(self):
+        res = super()._get_relevant_state_among_moves()
+        if res == 'partially_available'\
+                and self.raw_material_production_id\
+                and all(float_compare(move.quantity, move.should_consume_qty, precision_rounding=move.product_uom.rounding) == 0 for move in self):
+            res = 'assigned'
+        return res
