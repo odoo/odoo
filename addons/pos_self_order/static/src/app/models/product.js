@@ -40,10 +40,6 @@ export class Product extends Reactive {
         this.showPriceTaxIncluded = showPriceTaxIncluded;
     }
 
-    get prices() {
-        return this.price_info.display_price;
-    }
-
     get isCombo() {
         return this.pos_combo_ids;
     }
