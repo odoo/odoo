@@ -9,6 +9,7 @@ import "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import dom from "@web/legacy/js/core/dom";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
+import { jsonrpc } from "@web/core/network/rpc_service";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
@@ -759,7 +760,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         var clickedValue = $(ev.target).val();
         var isList = clickedValue === 'list';
         if (!this.editableMode) {
-            this.rpc('/shop/save_shop_layout_mode', {
+            jsonrpc('/shop/save_shop_layout_mode', {
                 'layout_mode': isList ? 'list' : 'grid',
             });
         }
