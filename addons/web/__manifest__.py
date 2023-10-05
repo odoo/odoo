@@ -452,6 +452,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/mock_server_tests.js',
             'web/static/tests/setup.js',
             'web/static/tests/utils.js',
+            'web/static/src/webclient/clickbot/clickbot.js',
         ],
         'web.qunit_suite_tests': [
             'web/static/tests/env_tests.js',
@@ -473,6 +474,9 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.qunit_mobile_suite_tests': [
             'web/static/tests/mobile/**/*.js',
+        ],
+        'web.assets_clickbot': [
+            'web/static/src/webclient/clickbot/clickbot.js',
         ],
     },
     'bootstrap': True,  # load translations for login screen,
