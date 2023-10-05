@@ -126,7 +126,7 @@ class AccountInvoiceSend(models.TransientModel):
             for invoice in self.invoice_ids:
                 prioritary_attachments = invoice.attachment_ids.filtered(lambda x: x.mimetype.endswith('pdf'))
                 if prioritary_attachments:
-                    invoice.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
+                    invoice.with_context(tracking_disable=True).sudo().write({'message_main_attachment_id': prioritary_attachments[0].id})
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
