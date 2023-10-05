@@ -1020,6 +1020,7 @@ Reason(s) of this behavior could be:
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
         groups = super(SaleOrder, self)._notify_get_groups(msg_vals=msg_vals)
+        recipient_group = None
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):
@@ -1027,7 +1028,16 @@ Reason(s) of this behavior could be:
                 if group_name not in ('customer', 'portal'):
                     group_data['has_button_access'] = True
 
-        return groups
+            recipient_group = (
+                'additional_intended_recipient',
+                lambda pdata: pdata['id'] in msg_vals['partner_ids'] and pdata['id'] != self.partner_id.id,
+                {
+                    'has_button_access': True,
+                    'notification_is_customer': True,
+                }
+            )
+
+        return [recipient_group] + groups if recipient_group else groups
 
     def _create_payment_transaction(self, vals):
         '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the

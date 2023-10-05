@@ -747,3 +747,40 @@ class TestSaleOrder(TestSaleCommon):
         })
         so_no_analytic_account.action_confirm()
         self.assertFalse(sol_no_analytic_account.analytic_tag_ids.id, "The compute should not overwrite what the user has set.")
+
+
+    def test_sale_order_sent_to_additional_partner(self):
+        """
+        Make sure that when a SO is deliberately sent to a partner who is not
+        the invoiced customer, they receive a link containing an access token,
+        allowing them to view the SO without needing to log in.
+        """
+        self.partner_b.email = "partner_b@example.com"
+        self.sale_order.message_subscribe(self.partner_b.ids)
+
+        additional_partner = self.env['res.partner'].create({
+            'name': "Additional Partner",
+            'email': "additional@example.com",
+        })
+
+        email_ctx = self.sale_order.action_quotation_send().get('context', {})
+        composer = self.env['mail.compose.message'].with_context(email_ctx).create({})
+        composer.partner_ids |= additional_partner
+        composer.template_id.auto_delete = False
+
+        composer.send_mail()
+
+        additional_partner_mail = self.env['mail.mail'].search([
+            ('res_id', '=', self.sale_order.id),
+            ('recipient_ids', '=', additional_partner.id)
+        ])
+
+        self.assertIn('access_token=', additional_partner_mail.body_html,
+                        "The additional partner should be sent the link including the token")
+
+        additional_partner_mail = self.env['mail.mail'].search([
+            ('res_id', '=', self.sale_order.id),
+            ('recipient_ids', '=', self.partner_b.id)
+        ])
+        self.assertNotIn('access_token=', additional_partner_mail.body_html,
+                        "The followers should not bet sent the access token by default")
