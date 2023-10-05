@@ -84,7 +84,7 @@ class IrTranslation(models.Model):
                     'project': project,
                     'lang': lang_code,
                     'module': translation.module,
-                    'src': "text:'" + werkzeug.url_quote_plus(
+                    'src': "text:'" + werkzeug.urls.url_quote_plus(
                                translation.source[:50].replace("\n", "").replace("'", "")
                            ) + "'",
                 }

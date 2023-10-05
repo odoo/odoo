@@ -140,7 +140,7 @@ class ResPartnerBank(models.Model):
     @api.model
     def build_qr_code_url(self, amount, comment):
         qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR',
-            werkzeug.url_quote_plus(self.build_qr_code_vals(amount, comment)), 128, 128)
+            werkzeug.urls.url_quote_plus(self.build_qr_code_vals(amount, comment)), 128, 128)
         return qr_code_url
 
     @api.model

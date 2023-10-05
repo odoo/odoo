@@ -154,7 +154,7 @@ class WebsiteMembership(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search': "?%s" % werkzeug.url_encode(post),
+            'search': "?%s" % werkzeug.urls.url_encode(post),
             'search_count': count_members,
             'google_maps_api_key': google_maps_api_key,
         }

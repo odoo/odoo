@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from werkzeug import url_encode
+from werkzeug.urls import url_encode
 
 class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 

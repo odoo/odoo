@@ -7,10 +7,6 @@ from odoo import api, fields, models
 from odoo.tools.pycompat import izip
 
 
-def urlplus(url, params):
-    return werkzeug.Href(url)(params or None)
-
-
 class Partner(models.Model):
     _inherit = "res.partner"
 
@@ -28,7 +24,7 @@ class Partner(models.Model):
             'sensor': 'false',
             'key': google_maps_api_key,
         }
-        return urlplus('//maps.googleapis.com/maps/api/staticmap', params)
+        return '//maps.googleapis.com/maps/api/staticmap?'+werkzeug.urls.url_encode(params)
 
     @api.multi
     def google_map_link(self, zoom=10):
@@ -36,7 +32,7 @@ class Partner(models.Model):
             'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
             'z': zoom,
         }
-        return urlplus('https://maps.google.com/maps', params)
+        return 'https://maps.google.com/maps' + werkzeug.urls.url_encode(params)
 
     @api.multi
     def _get_name(self):
