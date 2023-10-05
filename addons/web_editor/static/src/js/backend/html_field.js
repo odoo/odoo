@@ -156,6 +156,13 @@ export class HtmlField extends Component {
             })();
         });
         onWillUnmount(() => {
+            if (!this.props.readonly && this._isDirty()) {
+                // If we still have uncommited changes, commit them with the
+                // urgent flag to avoid losing them. Urgent flag is used to be
+                // able to save the changes before the component is destroyed
+                // by the owl component manager.
+                this.commitChanges({ urgent: true });
+            }
             if (this._qwebPlugin) {
                 this._qwebPlugin.destroy();
             }
@@ -373,18 +380,16 @@ export class HtmlField extends Component {
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
             let saveModifiedImagesPromise, toInlinePromise;
-            if (this.wysiwyg) {
+            if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
                 saveModifiedImagesPromise = this.wysiwyg.saveModifiedImages();
                 if (this.props.isInlineStyle) {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
                 }
-            }
-            if (urgent) {
-                await this.updateValue();
-            }
-            if (this.wysiwyg) {
+                if (urgent) {
+                    await this.updateValue();
+                }
                 await saveModifiedImagesPromise;
                 if (this.props.isInlineStyle) {
                     await toInlinePromise;
