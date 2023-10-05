@@ -923,7 +923,7 @@ class PaymentTransaction(models.Model):
         - `provider_name`: The name of the provider.
         - `reference`: The reference of the transaction.
         - `amount`: The rounded amount of the transaction.
-        - `currency_code`: The currency of the transaction, as a `res.currency` id.
+        - `currency_id`: The currency of the transaction, as a `res.currency` id.
         - `state`: The transaction state: `draft`, `pending`, `authorized`, `done`, `cancel`, or
           `error`.
         - `state_message`: The information message about the state.
@@ -951,7 +951,7 @@ class PaymentTransaction(models.Model):
             'provider_name': self.provider_id.name,
             'reference': self.reference,
             'amount': self.amount,
-            'currency_code': self.currency_id.name,
+            'currency_id': self.currency_id.id,
             'state': self.state,
             'state_message': self.state_message,
             'display_message': display_message,

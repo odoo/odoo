@@ -3,6 +3,7 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { renderToElement } from '@web/core/utils/render';
 import { markup } from "@odoo/owl";
+import { formatCurrency } from "@web/core/currency";
 import { _t } from '@web/core/l10n/translation';
 import { ConnectionLostError, RPCError } from '@web/core/network/rpc_service';
 
@@ -39,7 +40,9 @@ publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
                 if (display_message) {
                     postProcessingValues.display_message = markup(display_message);
                 }
-                this._renderTemplate('payment.transactionDetails', postProcessingValues);
+                this._renderTemplate(
+                    'payment.transactionDetails', {...postProcessingValues, formatCurrency}
+                );
 
                 // Redirect the user to the landing route if the transaction reached a final state.
                 if (self._getFinalStates(postProcessingValues['provider_code']).includes(state)) {
