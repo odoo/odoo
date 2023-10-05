@@ -16,7 +16,7 @@
                         class="o_self_order_main_desc flex-grow-1 pb-3 mb-3 bg-view text-muted "
                         t-esc="product.description_sale"
                     />
-                    <span class="fs-3 fw-bolder" t-esc="selfOrder.formatMonetary(product.prices)"/>
+                    <span class="fs-3 fw-bolder" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(product))"/>
                 </div>
             </div>
 

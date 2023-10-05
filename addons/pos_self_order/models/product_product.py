@@ -97,16 +97,34 @@ class ProductProduct(models.Model):
                 self, qty, currency=pos_config.currency_id
             )
 
-        price_info = pos_config.default_fiscal_position_id.map_tax(self.taxes_id).compute_all(
+        # Declare variables, will be the return values.
+        display_price_default = price
+        display_price_alternative = price
+
+        taxes_default = pos_config.default_fiscal_position_id.map_tax(self.taxes_id)
+        taxes_alternative = pos_config.self_ordering_alternative_fp_id.map_tax(self.taxes_id)
+
+        all_prices_default = taxes_default.compute_all(
+            price, pos_config.currency_id, qty, product=self
+        )
+        all_prices_alternative = taxes_alternative.compute_all(
             price, pos_config.currency_id, qty, product=self
         )
 
-        display_price = price_info["total_included"] if pos_config.iface_tax_included == "total" else price_info["total_excluded"]
-        display_price = self.lst_price if self.combo_ids else display_price
+        if self.combo_ids:
+            display_price_default = self.lst_price
+            display_price_alternative = self.lst_price
+        else:
+            if pos_config.iface_tax_included == 'total':
+                display_price_default = all_prices_default["total_included"]
+                display_price_alternative = all_prices_alternative["total_included"]
+            else:
+                display_price_default = all_prices_default["total_excluded"]
+                display_price_alternative = all_prices_alternative["total_excluded"]
 
         return {
-            "display_price": display_price,
-            "lst_price": self.lst_price
+            'display_price_default': display_price_default,
+            'display_price_alternative': display_price_alternative,
         }
 
     def _get_product_for_ui(self, pos_config):
