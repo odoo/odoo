@@ -14,6 +14,7 @@ class HrPlan(models.Model):
     department_id = fields.Many2one('hr.department', check_company=True)
     plan_activity_type_ids = fields.One2many(
         'hr.plan.activity.type', 'plan_id',
+        copy=True,
         string='Activities',
         check_company=True)
     active = fields.Boolean(default=True)
