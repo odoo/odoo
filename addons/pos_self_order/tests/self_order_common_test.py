@@ -31,18 +31,29 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'country_id': self.env.ref('base.us').id,
         })
 
-        new_tax = self.env['account.tax'].with_company(new_company).create({
-            'name': 'Tax that should not be used',
-            'amount': 50,
-            'amount_type': 'percent',
-            'tax_group_id': self.env['account.tax.group'].with_company(new_company).create({
-                'name': 'Tax Group that should not be used',
-            }).id,
-            'company_id': new_company.id,
-        })
+        self.other_company_tax = (
+            self.env["account.tax"]
+            .with_company(new_company)
+            .create(
+                {
+                    "name": "Tax that should not be used",
+                    "amount": 50,
+                    "amount_type": "percent",
+                    "tax_group_id": self.env["account.tax.group"]
+                    .with_company(new_company)
+                    .create(
+                        {
+                            "name": "Tax Group that should not be used",
+                        }
+                    )
+                    .id,
+                    "company_id": new_company.id,
+                }
+            )
+        )
 
         self.env['product.product'].search([]).with_company(new_company).write({
-            'taxes_id': [Command.link(id) for id in new_tax.ids],
+            'taxes_id': [Command.link(id) for id in self.other_company_tax.ids],
         })
 
     def setUp(self):
@@ -52,18 +63,22 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
                 "name": "BarTest",
                 "self_ordering_default_user_id": self.pos_user.id,
                 "module_pos_restaurant": True,
-                "self_ordering_mode": 'consultation',
+                "self_ordering_mode": "consultation",
                 "floor_ids": self.env["restaurant.floor"].search([]),
+            }
+        )
+
+        self.default_tax15 = self.env["account.tax"].create(
+            {
+                "name": "Default Tax for Self Order",
+                "amount": 15,
+                "amount_type": "percent",
             }
         )
 
         # we need a default tax fixed at 15% to all product because in the test prices are based on this tax.
         # some time with the localization this may not be the case. So we force it.
-        self.env['product.product'].search([]).taxes_id = self.env['account.tax'].create({
-            'name': 'Default Tax for Self Order',
-            'amount': 15,
-            'amount_type': 'percent',
-        })
+        self.env["product.product"].search([]).taxes_id = self.default_tax15
 
         # A new tax is added to each product and this tax is from a different company.
         # This is important in the test because the added tax should not be used in the tour.
