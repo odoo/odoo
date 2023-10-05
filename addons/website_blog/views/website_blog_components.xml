@@ -128,22 +128,41 @@ Options:
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
-                <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a t-if="website.social_twitter" t-att-href="website.social_twitter" t-att-class="classes"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
-                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" t-att-class="classes"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-                <a t-if="website.social_youtube" t-att-href="website.social_youtube" t-att-class="classes"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
-                <a t-if="website.social_github" t-att-href="website.social_github" t-att-class="classes"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
-                <a t-if="website.social_instagram" t-att-href="website.social_instagram" t-att-class="classes"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
-                <a t-if="website.social_tiktok" t-att-href="website.social_tiktok" t-att-class="classes"><i class="fa fa-tiktok text-tiktok" aria-label="TikTok" title="TikTok"/></a>
-                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
+            <div>
+                <div class="s_social_media o_no_link_popover o_not_editable d-flex flex-wrap mx-n1" data-snippet="s_social_media" data-name="Social Media">
+                    <a href="/website/social/facebook" title="Facebook" class="s_social_media_facebook text-decoration-none" target="_blank">
+                        <i class="fa fa-facebook-square text-facebook rounded-circle shadow-sm o_editable_media" aria-label="Facebook"/>
+                    </a>
+                    <a href="/website/social/twitter" title="Twitter" class="s_social_media_twitter text-decoration-none" target="_blank">
+                        <i class="fa fa-twitter text-twitter rounded-circle shadow-sm o_editable_media" aria-label="Twitter"/>
+                    </a>
+                    <a href="/website/social/linkedin" title="LinkedIn" class="s_social_media_linkedin text-decoration-none" target="_blank">
+                        <i class="fa fa-linkedin text-linkedin rounded-circle shadow-sm o_editable_media" aria-label="LinkedIn"/>
+                    </a>
+                    <a href="/website/social/youtube" title="Youtube" class="s_social_media_youtube text-decoration-none" target="_blank">
+                        <i class="fa fa-youtube-play text-youtube rounded-circle shadow-sm o_editable_media" aria-label="Youtube"/>
+                    </a>
+                    <a href="/website/social/github" title="Github" class="s_social_media_github text-decoration-none" target="_blank">
+                        <i class="fa fa-github text-github rounded-circle shadow-sm o_editable_media" aria-label="Github"/>
+                    </a>
+                    <a href="/website/social/instagram" title="Instagram" class="s_social_media_instagram text-decoration-none" target="_blank">
+                        <i class="fa fa-instagram text-instagram rounded-circle shadow-sm o_editable_media" aria-label="Instagram"/>
+                    </a>
+                    <a href="/website/social/tiktok" title="TikTok" class="s_social_media_tiktok text-decoration-none" target="_blank">
+                        <i class="fa fa-tiktok text-tiktok rounded-circle shadow-sm o_editable_media" aria-label="TikTok"/>
+                    </a>
+                </div>
             </div>
-            <t t-call="website_mail.follow" t-if="blog">
-                <t t-set="email" t-value="user_id.email"/>
-                <t t-set="object" t-value="blog"/>
-                <t t-set="div_class" t-value="'pt-2'"/>
-            </t>
+            <div class="d-flex align-items-center">
+                <a t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" class="text-decoration-none mx-2 pt-2">
+                    <i class="o_wblog_rss_icon fa fa-rss-square text-black" aria-label="RSS" title="RSS"/>
+                </a>
+                <t t-call="website_mail.follow" t-if="blog">
+                    <t t-set="email" t-value="user_id.email"/>
+                    <t t-set="object" t-value="blog"/>
+                    <t t-set="div_class" t-value="'pt-2'"/>
+                </t>
+            </div>
         </div>
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_3"/>
     </xpath>
@@ -221,11 +240,25 @@ Display a sidebar beside the post content.
         <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
 
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
-                <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a href="#" aria-label="Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a href="#" aria-label="Twitter" title="Share on Twitter" t-attf-class="o_twitter #{classes}"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
-                <a href="#" aria-label="LinkedIn" title="Share on LinkedIn" t-attf-class="o_linkedin #{classes}"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
+            <div class="s_share o_no_link_popover o_not_editable d-flex flex-wrap mx-n1" data-snippet="s_share" data-name="Share">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={url}" title="Share on Facebook" class="s_share_facebook text-decoration-none" target="_blank">
+                    <i class="fa fa-facebook-square rounded shadow-sm o_editable_media" aria-label="Facebook"/>
+                </a>
+                <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" title="Share on Twitter" class="s_share_twitter text-decoration-none" target="_blank">
+                    <i class="fa fa-twitter rounded shadow-sm o_editable_media" aria-label="Twitter"/>
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" title="Share on LinkedIn" class="s_share_linkedin text-decoration-none" target="_blank">
+                    <i class="fa fa-linkedin rounded shadow-sm o_editable_media" aria-label="LinkedIn"/>
+                </a>
+                <a href="https://wa.me/?text={title}" title="Share on Whatsapp" class="s_share_whatsapp text-decoration-none" target="_blank">
+                    <i class="fa fa-whatsapp rounded shadow-sm o_editable_media" aria-label="Whatsapp"/>
+                </a>
+                <a href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}" title="Share on Pinterest" class="s_share_pinterest text-decoration-none" target="_blank">
+                    <i class="fa fa-pinterest rounded shadow-sm o_editable_media" aria-label="Pinterest"/>
+                </a>
+                <a href="mailto:?body={url}&amp;subject={title}" title="Share by email" class="s_share_email text-decoration-none">
+                    <i class="fa fa-envelope rounded shadow-sm o_editable_media" aria-label="Email"/>
+                </a>
             </div>
         </div>
 
