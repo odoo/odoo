@@ -153,7 +153,7 @@ export function parseMultipleTextualSelection(testContainer) {
  *
  * @param selection
  */
-export function setTestSelection(selection, doc = document) {
+export async function setTestSelection(selection, doc = document) {
     const domRange = doc.createRange();
     if (selection.direction === Direction.FORWARD) {
         domRange.setStart(selection.anchorNode, selection.anchorOffset);
@@ -172,7 +172,7 @@ export function setTestSelection(selection, doc = document) {
         // with contentEditable=false for no valid reason since non-editable
         // content are selectable by the user anyway.
     }
-    triggerEvent(selection.anchorNode, 'selectionchange');
+    await nextTick(); // Wait a tick for selectionchange events.
 }
 
 /**
@@ -316,7 +316,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     testNode.innerHTML = spec.contentBefore;
     // Setting a selection in the DOM before initializing the editor to ensure
     // every test is run with the same preconditions.
-    setTestSelection({
+    await setTestSelection({
         anchorNode: testNode.parentElement, anchorOffset: 0,
         focusNode: testNode.parentElement, focusOffset: 0,
     });
@@ -328,7 +328,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         editor.keyboardType = 'PHYSICAL';
         editor.testMode = true;
         if (selection) {
-            setTestSelection(selection);
+            await setTestSelection(selection);
             editor._recordHistorySelection();
         } else {
             document.getSelection().removeAllRanges();
@@ -346,7 +346,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
                 customErrorMessage('contentBeforeEdit', beforeEditValue, spec.contentBeforeEdit));
             const selection = parseTextualSelection(testNode);
             if (selection) {
-                setTestSelection(selection);
+                await setTestSelection(selection);
             }
         }
 
@@ -369,7 +369,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
                 customErrorMessage('contentAfterEdit', afterEditValue, spec.contentAfterEdit));
             const selection = parseTextualSelection(testNode);
             if (selection) {
-                setTestSelection(selection);
+                await setTestSelection(selection);
             }
         }
     } catch (err) {
