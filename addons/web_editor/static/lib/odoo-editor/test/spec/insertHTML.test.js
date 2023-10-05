@@ -20,8 +20,8 @@ describe('insert HTML', () => {
                     await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
                 },
                 contentAfterEdit:
-                    '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
-                contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
+                    '<p><br><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                contentAfter: '<p><br><i class="fa fa-pastafarianism"></i>[]</p>',
             });
         });
         it('should insert html between two letters', async () => {
