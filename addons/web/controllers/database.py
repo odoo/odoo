@@ -75,7 +75,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
+                raise Exception(_('Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you\'ll be golden.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
@@ -94,7 +94,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, new_name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
+                raise Exception(_('Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you\'ll be golden.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name, neutralize_database])
             if request.db == name:
                 request.env.cr.close()  # duplicating a database leads to an unusable cursor
