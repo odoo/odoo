@@ -617,6 +617,16 @@ class Environment(Mapping):
         """
         return self.context.get('lang')
 
+    @property
+    def ocb(self):
+        """Allow to flag OCB environment so we can easily address compatibility issues
+        when making backports or improvements that aren't present in the current Odoo
+        version.
+
+        :rtype bool
+        """
+        return True
+
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
