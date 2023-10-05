@@ -56,9 +56,49 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
+<<<<<<< HEAD
         for order in self:
             order.tasks_ids = self.env['project.task'].search(['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
+||||||| parent of 9fbbc759983 (temp)
+        tasks_per_so = self.env['project.task']._read_group(
+            domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            groupby=['sale_order_id'],
+            aggregates=['id:recordset', '__count']
+        )
+        so_with_tasks = self.env['sale.order']
+        for order, tasks_ids, tasks_count in tasks_per_so:
+            order.tasks_ids = tasks_ids
+            order.tasks_count = tasks_count
+            so_with_tasks += order
+        remaining_orders = self - so_with_tasks
+        if remaining_orders:
+            remaining_orders.tasks_ids = [Command.clear()]
+            remaining_orders.tasks_count = 0
+=======
+        tasks_per_so = self.env['project.task']._read_group(
+            domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            groupby=['sale_order_id'],
+            aggregates=['id:recordset', '__count']
+        )
+        so_with_tasks = self.env['sale.order']
+        for order, tasks_ids, tasks_count in tasks_per_so:
+            if order:
+                order.tasks_ids = tasks_ids
+                order.tasks_count = tasks_count
+                so_with_tasks += order
+            else:
+                # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
+                for task in tasks_ids:
+                    task_so = task.sale_line_id.order_id
+                    task_so.tasks_ids = [Command.link(task.id)]
+                    task_so.tasks_count += 1
+                    so_with_tasks += task_so
+        remaining_orders = self - so_with_tasks
+        if remaining_orders:
+            remaining_orders.tasks_ids = [Command.clear()]
+            remaining_orders.tasks_count = 0
+>>>>>>> 9fbbc759983 (temp)
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
