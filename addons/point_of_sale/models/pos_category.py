@@ -30,7 +30,7 @@ class PosCategory(models.Model):
     def _get_hierarchy(self) -> List[str]:
         """ Returns a list representing the hierarchy of the categories. """
         self.ensure_one()
-        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [self.name]
+        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [self.name or ""]
 
     @api.depends('parent_id')
     def _compute_display_name(self):
