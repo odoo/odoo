@@ -491,6 +491,13 @@ class Slide(models.Model):
             values['is_preview'] = True
             values['is_published'] = True
 
+        # if the slide type is changed, remove the existing url or html_content
+        if values.get('slide_type'):
+            if self.url:
+                self.url = False
+            elif self.html_content:
+                self.html_content = False
+
         res = super(Slide, self).write(values)
         if values.get('is_published'):
             self.date_published = datetime.datetime.now()
