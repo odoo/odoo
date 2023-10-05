@@ -62,9 +62,17 @@ class SaleOrder(models.Model):
         )
         so_with_tasks = self.env['sale.order']
         for order, tasks_ids, tasks_count in tasks_per_so:
-            order.tasks_ids = tasks_ids
-            order.tasks_count = tasks_count
-            so_with_tasks += order
+            if order:
+                order.tasks_ids = tasks_ids
+                order.tasks_count = tasks_count
+                so_with_tasks += order
+            else:
+                # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
+                for task in tasks_ids:
+                    task_so = task.sale_line_id.order_id
+                    task_so.tasks_ids = [Command.link(task.id)]
+                    task_so.tasks_count += 1
+                    so_with_tasks += task_so
         remaining_orders = self - so_with_tasks
         if remaining_orders:
             remaining_orders.tasks_ids = [Command.clear()]
