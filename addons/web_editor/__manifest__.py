@@ -48,8 +48,6 @@ Odoo Web Editor widget.
 
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
-
-            'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/jquery/jquery.js',
@@ -74,15 +72,38 @@ Odoo Web Editor widget.
             'web/static/lib/select2/select2.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            'web/static/src/legacy/js/core/class.js',
-            'web/static/src/legacy/js/core/dialog.js',
-            'web/static/src/legacy/xml/dialog.xml',
-            'web/static/src/legacy/js/core/dom.js',
-            'web/static/src/legacy/js/core/mixins.js',
-            'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/widget.js',
-            ('include', 'web_editor.assets_wysiwyg'),
-            ('include', 'web_editor.assets_legacy_wysiwyg'),
+            'web/static/src/core/registry.js',
+
+            # odoo-editor
+            'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/utils/constants.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/align.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/commands.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/deleteBackward.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/deleteForward.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/enter.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/shiftEnter.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/shiftTab.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/tab.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/commands/toggleList.js',
+
+            # odoo utils
+            'web_editor/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web_editor/static/src/js/editor/odoo-editor/src/style.scss',
+
+            # integration
+            'web_editor/static/src/scss/wysiwyg.scss',
+            'web_editor/static/src/scss/wysiwyg_iframe.scss',
+            'web_editor/static/src/scss/wysiwyg_snippets.scss',
+
+            'web_editor/static/src/xml/editor.xml',
+            'web_editor/static/src/xml/commands.xml',
+            'web_editor/static/src/xml/grid_layout.xml',
+            'web_editor/static/src/xml/snippets.xml',
+            'web_editor/static/src/xml/wysiwyg.xml',
+            'web_editor/static/src/xml/wysiwyg_colorpicker.xml',
         ],
         'web_editor.assets_media_dialog': [
             'web_editor/static/src/components/**/*',
