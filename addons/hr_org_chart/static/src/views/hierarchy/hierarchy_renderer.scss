@@ -4,10 +4,16 @@ $o-chart-line-color: #ababb1;
     .o_hierarchy_container {
         gap: 25px;
 
-        .o_hierarchy_row.o_hierarchy_hover {
-            background-color: $hierarchy_element_hover-background;
-            box-shadow: -1px -1px 0px 0px $hierarchy_element_hover-border inset,
-                1px 1px 0px 0px $hierarchy_element_hover-border inset;
+        .o_hierarchy_row {
+            &.o_hierarchy_hover {
+                background-color: $hierarchy_element_hover-background;
+                box-shadow: -1px -1px 0px 0px $hierarchy_element_hover-border inset,
+                    1px 1px 0px 0px $hierarchy_element_hover-border inset;
+            }
+
+            &:has(.o_hierarchy_node_unfolded) .o_hierarchy_node_container:not(.o_hierarchy_node_unfolded) {
+                opacity: 50%;
+            }
         }
 
         .o_hierarchy_separator {
