@@ -319,41 +319,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 window.location = '/web#action=point_of_sale.action_client_pos_menu';
             }
 
-            if (this.env.pos.db.get_orders().length) {
-                // If there are orders in the db left unsynced, we try to sync.
-                // If sync successful, close without asking.
-                // Otherwise, ask again saying that some orders are not yet synced.
-                try {
-                    await this.env.pos.push_orders();
-                    window.location = '/web#action=point_of_sale.action_client_pos_menu';
-                } catch (error) {
-                    console.warn(error);
-                    const reason = this.env.pos.failed
-                        ? this.env._t(
-                              'Some orders could not be submitted to ' +
-                                  'the server due to configuration errors. ' +
-                                  'You can exit the Point of Sale, but do ' +
-                                  'not close the session before the issue ' +
-                                  'has been resolved.'
-                          )
-                        : this.env._t(
-                              'Some orders could not be submitted to ' +
-                                  'the server due to internet connection issues. ' +
-                                  'You can exit the Point of Sale, but do ' +
-                                  'not close the session before the issue ' +
-                                  'has been resolved.'
-                          );
-                    const { confirmed } = await this.showPopup('ConfirmPopup', {
-                        title: this.env._t('Offline Orders'),
-                        body: reason,
-                    });
-                    if (confirmed) {
-                        this.state.uiState = 'CLOSING';
-                        this.state.loadingSkipButtonIsShown = false;
-                        window.location = '/web#action=point_of_sale.action_client_pos_menu';
-                    }
-                }
-            }
+            // If there are orders in the db left unsynced, we try to sync.
+            await this.env.pos.push_orders_with_closing_popup();
+            window.location = '/web#action=point_of_sale.action_client_pos_menu';
         }
         _toggleDebugWidget() {
             this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
