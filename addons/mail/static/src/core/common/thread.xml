@@ -114,7 +114,7 @@
         'mt-2': prevMsg and !prevMsg.isNotification,
     }" t-ref="root">
         <i t-if="msg.notificationIcon" t-attf-class="{{ msg.notificationIcon }} me-1"/>
-        <span class="o-mail-NotificationMessage-author d-inline mx-1" t-if="msg.author and !msg.body.includes(escape(msg.author.name))" t-esc="msg.author.name"/> <t t-out="msg.body"/>
+        <span class="o-mail-NotificationMessage-author d-inline" t-if="msg.author and !msg.body.includes(escape(msg.author.name)) and !msg.body.includes('o_hide_author')" t-esc="msg.author.name"/> <t t-out="msg.body"/>
     </div>
 </t>
 
