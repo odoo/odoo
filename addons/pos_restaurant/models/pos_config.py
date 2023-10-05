@@ -107,7 +107,7 @@ class PosConfig(models.Model):
                 ], limit=1)
                 if not cash_journal:
                     cash_journal = self.env['account.journal'].create({
-                        'name': 'Cash %s' % journal_counter,
+                        'name': _('Cash %s', journal_counter),
                         'code': 'RCSH%s' % journal_counter,
                         'type': 'cash',
                         'company_id': company.id
