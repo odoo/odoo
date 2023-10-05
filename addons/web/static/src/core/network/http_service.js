@@ -18,7 +18,14 @@ export async function get(route, readMethod = "json") {
 export async function post(route, params = {}, readMethod = "json") {
     const formData = new FormData();
     for (const key in params) {
-        formData.append(key, params[key]);
+        const value = params[key];
+        if (Array.isArray(value) && value.length) {
+            for (const val of value) {
+                formData.append(key, val);
+            }
+        } else {
+            formData.append(key, value);
+        }
     }
     const response = await browser.fetch(route, {
         body: formData,
