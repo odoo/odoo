@@ -109,14 +109,16 @@ class MicrosoftCalendarService():
         return MicrosoftEvent(events), next_sync_token
 
     @requires_auth_token
-    def _get_occurrence_details(self, serieMasterId, token=None, timeout=TIMEOUT):
+    def _get_occurrence_details(self, serieMasterId, token=None, timeout=TIMEOUT, last_modified_dt=None):
         """
         Get all occurrences details from a serie master.
         See: https://docs.microsoft.com/en-us/graph/api/event-list-instances?view=graph-rest-1.0&tabs=http
         """
         url = f"/v1.0/me/events/{serieMasterId}/instances"
 
-        events, _ = self._get_events_from_paginated_url(url, token=token, timeout=timeout)
+        print("Getting occurrences from ", serieMasterId)
+        events, _ = self._get_events_from_paginated_url(url, token=token, timeout=timeout, last_modified_dt=last_modified_dt)
+        print("Got: ", len(events))
         return MicrosoftEvent(events)
 
     @requires_auth_token
@@ -131,7 +133,7 @@ class MicrosoftCalendarService():
 
         # get occurences details for all serie masters
         for master in filter(lambda e: e.type == 'seriesMaster', events):
-            events |= self._get_occurrence_details(master.id, token=token, timeout=timeout)
+            events |= self._get_occurrence_details(master.id, token=token, timeout=timeout, last_modified_dt=last_modified_dt)
 
         return events, next_sync_token
 
