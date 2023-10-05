@@ -51,5 +51,5 @@ export function constructFullProductName(line, attribute_value_by_id, display_na
         attributeString = `(${attributeString})`;
     }
 
-    return `${display_name} ${attributeString}`;
+    return attributeString !== "" ? `${display_name} ${attributeString}` : display_name;
 }
