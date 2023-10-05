@@ -2078,7 +2078,7 @@ export class Wysiwyg extends Component {
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
-        if (isInMedia) {
+        if (isInMedia && !this.options.onDblClickEditableMedia) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
             this.tooltipTimeouts.push(setTimeout(() => {
