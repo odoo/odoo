@@ -241,19 +241,14 @@ export class PaymentScreen extends Component {
         }
         this.currentOrder.finalized = true;
 
-        // 1. Save order to server.
         this.env.services.ui.block()
-        const syncOrderResult = await this.pos.push_single_order(this.currentOrder);
-        this.env.services.ui.unblock()
-
-        if (syncOrderResult instanceof ConnectionLostError) {
-            this.pos.showScreen(this.nextScreen);
-            return;
-        } else if (!syncOrderResult) {
-            return;
-        }
-
+        let syncOrderResult;
         try {
+            // 1. Save order to server.
+            syncOrderResult = await this.pos.push_single_order(this.currentOrder);
+            if (!syncOrderResult) {
+                return;
+            }
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                 if (syncOrderResult[0]?.account_move) {
@@ -270,11 +265,14 @@ export class PaymentScreen extends Component {
             }
         } catch (error) {
             if (error instanceof ConnectionLostError) {
+                this.pos.showScreen(this.nextScreen);
                 Promise.reject(error);
                 return error;
             } else {
                 throw error;
             }
+        } finally {
+            this.env.services.ui.unblock()
         }
 
         // 3. Post process.
