@@ -4179,7 +4179,7 @@ class AccountMove(models.Model):
             ('mode', '=', 'done'),
             '&',
             ('mode', '=', 'invoice_single'),
-            ('create_date', '<=', fields.Date.context_today(self) - relativedelta(days=1)),
+            ('create_date', '<=', fields.Datetime.now() - relativedelta(hours=24)),
         ]).unlink()
 
         # Process.
