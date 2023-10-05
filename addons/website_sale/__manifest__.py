@@ -22,6 +22,7 @@
         'report/sale_report_views.xml',
 
         'views/account_move_views.xml',
+        'views/checkout_templates.xml',
         'views/crm_team_views.xml',
         'views/digest_views.xml',
         'views/product_attribute_views.xml',

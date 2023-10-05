@@ -9,7 +9,9 @@
 
     <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
-            <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
+            <t t-set="show_promotion_input"
+               t-value="True if show_promotion_input is None else not show_promotion_input"/>
+            <tr t-if="show_promotion_input" class="oe_website_sale_gift_card">
                 <td colspan="3" class="text-center text-xl-end border-0 p-0">
                     <span class=''>
                         <t t-if="request.params.get('code_not_available')">
@@ -158,6 +160,7 @@
         </xpath>
     </template>
 
+    <!-- Inheritance to remove the link for reward lines. -->
     <template id="cart_line_product_no_link" inherit_id="website_sale.cart_line_product_link">
         <xpath expr="//a" position="replace">
             <t t-if="line.is_reward_line">
