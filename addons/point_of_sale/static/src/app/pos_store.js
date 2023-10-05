@@ -3,7 +3,6 @@
 import { PosGlobalState } from "@point_of_sale/js/models";
 
 import { registry } from "@web/core/registry";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { Reactive } from "@point_of_sale/utils";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _t } from "@web/core/l10n/translation";
@@ -130,35 +129,9 @@ export class PosStore extends Reactive {
         }
 
         // If there are orders in the db left unsynced, we try to sync.
-        // If sync successful, close without asking.
-        // Otherwise, ask again saying that some orders are not yet synced.
-        try {
-            await this.globalState.push_orders();
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
-        } catch (error) {
-            console.warn(error);
-            const reason = this.globalState.failed
-                ? _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to configuration errors. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  )
-                : _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to internet connection issues. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  );
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: _t("Offline Orders"),
-                body: reason,
-            });
-            if (confirmed) {
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
-            }
+        const syncSuccess = await this.globalState.push_orders_with_closing_popup();
+        if (syncSuccess) {
+            window.location = '/web#action=point_of_sale.action_client_pos_menu';
         }
     }
     async selectPartner() {
