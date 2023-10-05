@@ -34,6 +34,14 @@ export class HierarchyCard extends Component {
         this.templates = useViewCompiler(this.constructor.Compiler, templates);
     }
 
+    get classNames() {
+        const classNames = [this.props.classNames];
+        if (this.props.node.nodes.length) {
+            classNames.push("o_hierarchy_node_unfolded");
+        }
+        return classNames.join(" ");
+    }
+
     getRenderingContext(data) {
         const record = getFormattedRecord(data.record);
         return {
