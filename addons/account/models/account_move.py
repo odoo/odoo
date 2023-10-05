@@ -944,7 +944,8 @@ class AccountMove(models.Model):
                                 new_pmt_state = invoice._get_invoice_in_payment_state()
 
                         else:
-                            new_pmt_state = 'paid'
+                            if currency.is_zero(invoice.amount_total) or reconciliation_vals:
+                                new_pmt_state = 'paid'
 
                             reverse_move_types = set()
                             for x in reconciliation_vals:
