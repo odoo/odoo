@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 import { HrPresenceStatus, hrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
+import { HrPresenceStatusPrivate, hrPresenceStatusPrivate } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
 
-patch(HrPresenceStatus.prototype, {
+const patchHrPresenceStatus = () => ({
     get color() {
         if (this.location) {
             let color = "text-muted";
@@ -31,13 +31,6 @@ patch(HrPresenceStatus.prototype, {
         return super.icon;
     },
 
-    get label() {
-        if (this.location) {
-            return _t("Working from %s", this.location);
-        }
-        return super.label;
-    },
-
     get location() {
         let location = this.value?.split("_")[1] || "";
         if (location && !['home', 'office', 'other'].includes(location)) {
@@ -45,10 +38,22 @@ patch(HrPresenceStatus.prototype, {
         }
         return location;
     },
+
+    get label() {
+        if (this.location) {
+            return this.props.record.data.name_work_location_display;
+        }
+        return super.label;
+    },
 });
+
+// for the both components: first applies the common patch and then applies patch for label
+patch(HrPresenceStatus.prototype, patchHrPresenceStatus());
+patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 
 const additionalFieldDependencies = [
     { name: "hr_presence_state", type: "selection" },
+    { name: "name_work_location_display", type: "char" }
 ];
 if (typeof hrPresenceStatus.fieldDependencies === "function") {
     const oldFieldDependencies = hrPresenceStatus.fieldDependencies;
@@ -63,3 +68,7 @@ if (typeof hrPresenceStatus.fieldDependencies === "function") {
         ...additionalFieldDependencies,
     ];
 }
+hrPresenceStatusPrivate.fieldDependencies = [
+    ...(hrPresenceStatusPrivate.fieldDependencies || []),
+    ...additionalFieldDependencies,
+];
