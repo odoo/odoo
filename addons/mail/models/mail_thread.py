@@ -4034,6 +4034,7 @@ class MailThread(models.AbstractModel):
             domain = expression.AND([domain, [
                 ('subtype_ids', '=', subtype_id),
                 ('partner_id', '!=', self.env.user.partner_id.id),
+                ("partner_id.active", "=", True),
             ]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
@@ -4214,6 +4215,7 @@ class MailThread(models.AbstractModel):
                 ("res_model", "=", self._name),
                 ('partner_id', '!=', self.env.user.partner_id.id),
                 ('subtype_ids', '=', subtype_id),
+                ("partner_id.active", "=", True)
             ])
             res['recipients'] = self.message_get_followers(filter_recipients=True)
         if 'suggestedRecipients' in request_list:
