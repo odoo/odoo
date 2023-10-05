@@ -728,9 +728,10 @@ class ProductTemplate(models.Model):
                         current_variants_to_activate += existing_variants[combination]
                     else:
                         current_variants_to_create.append(tmpl_id._prepare_variant_values(combination))
-                        if len(current_variants_to_create) > 1000:
+                        variant_limit = self.env['ir.config_parameter'].sudo().get_param('product.dynamic_variant_limit', 1000)
+                        if len(current_variants_to_create) > int(variant_limit):
                             raise UserError(_(
-                                'The number of variants to generate is too high. '
+                                'The number of variants to generate is above allowed limit. '
                                 'You should either not generate variants for each combination or generate them on demand from the sales order. '
                                 'To do so, open the form view of attributes and change the mode of *Create Variants*.'))
                 variants_to_create += current_variants_to_create
