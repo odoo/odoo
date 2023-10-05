@@ -16,7 +16,7 @@ patch(SuggestionService.prototype, {
     /**
      * @override
      */
-    searchSuggestions({ delimiter, term }, { thread } = {}, sort = false) {
+    searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
         if (delimiter === "/") {
             return this.searchChannelCommand(cleanTerm(term), thread, sort);
         }

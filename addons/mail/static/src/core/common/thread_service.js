@@ -697,7 +697,13 @@ export class ThreadService {
             if (parentId) {
                 tmpData.parentMessage = this.store.Message.get(parentId);
             }
-            const prettyContent = await prettifyMessageContent(body, params.validMentions);
+            const prettyContent = await prettifyMessageContent(
+                body,
+                this.messageService.getMentionsFromText(body, {
+                    mentionedChannels,
+                    mentionedPartners,
+                })
+            );
             const { emojis } = await loadEmoji();
             const recentEmojis = JSON.parse(
                 browser.localStorage.getItem("web.emoji.frequent") || "{}"

@@ -46,7 +46,7 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
         return ref;
     }
     // LEGACY
-    if (isMobileOS()) {
+    if (!mobile && isMobileOS()) {
         return ref;
     }
     // LEGACY

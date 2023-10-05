@@ -133,11 +133,10 @@ export function useSuggestion() {
             if (!self.search.delimiter) {
                 return;
             }
-            const suggestions = suggestionService.searchSuggestions(
-                self.search,
-                { thread: self.thread },
-                true
-            );
+            const suggestions = suggestionService.searchSuggestions(self.search, {
+                thread: self.thread,
+                sort: true,
+            });
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             if (!mainSuggestions.length && !extraSuggestions.length) {
                 self.state.items = undefined;
