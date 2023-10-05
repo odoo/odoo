@@ -356,7 +356,7 @@
                  t-if="o.company_id.currency_id != o.currency_id and o.amount_tax != 0 and o.move_type in ['out_invoice', 'out_refund']">
                 <table class="table table-sm table-borderless mb-0">
                     <p class="tax_computation_company_currency">
-                        Tax computation in <span t-field="o.company_currency_id"/>
+                        Taxes <span t-field="o.company_currency_id"/>
                     </p>
                     <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                         <tr class="border-black o_subtotal">
