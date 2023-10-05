@@ -10,32 +10,16 @@ export class RtcSession extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Object} data
-     * @returns {number, import("models").RtcSession}
-     */
+    /** @returns {number, import("models").RtcSession} */
     static insert(data) {
         /** @type {import("models").RtcSession} */
-        const session = this.preinsert(data);
-        const { channelMember, ...remainingData } = data;
-        for (const key in remainingData) {
-            session[key] = remainingData[key];
-        }
-        if (channelMember?.channel) {
-            session.channelId = channelMember.channel.id;
-        }
-        if (channelMember) {
-            const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
-            channelMemberRecord.rtcSession = session;
-            session.channelMemberId = channelMemberRecord.id;
-            channelMemberRecord.thread?.rtcSessions.add(session);
-        }
+        const session = super.insert(data);
+        session.channel?.rtcSessions.add(session);
         return session;
     }
 
     // Server data
-    channelId;
-    channelMemberId;
+    channelMember = Record.one("ChannelMember", { inverse: "rtcSession" });
     isCameraOn;
     id;
     isDeaf;
@@ -73,12 +57,8 @@ export class RtcSession extends Record {
     iceGatheringState;
     logStep;
 
-    get channelMember() {
-        return this._store.ChannelMember.get(this.channelMemberId);
-    }
-
     get channel() {
-        return this._store.Thread.get({ model: "discuss.channel", id: this.channelId });
+        return this.channelMember?.thread;
     }
 
     get isMute() {

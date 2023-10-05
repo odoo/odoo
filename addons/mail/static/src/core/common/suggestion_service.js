@@ -50,12 +50,7 @@ export class SuggestionService {
             [],
             kwargs
         );
-        suggestedPartners.map((data) => {
-            this.store.Persona.insert({ ...data, type: "partner" });
-            if (data.persona?.channelMembers) {
-                this.store.ChannelMember.insert(...data.persona.channelMembers);
-            }
-        });
+        suggestedPartners.forEach((data) => this.store.Persona.insert(data));
     }
 
     /**
@@ -68,12 +63,7 @@ export class SuggestionService {
             [],
             { search: term }
         );
-        suggestedThreads.map((data) => {
-            this.store.Thread.insert({
-                model: "discuss.channel",
-                ...data,
-            });
-        });
+        suggestedThreads.forEach((data) => this.store.Thread.insert(data));
     }
 
     /**

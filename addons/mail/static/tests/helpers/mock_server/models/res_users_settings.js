@@ -86,8 +86,9 @@ patch(MockServer.prototype, {
         const [relatedPartner] = this.pyEnv["res.partner"].searchRead([
             ["id", "=", relatedUser.partner_id[0]],
         ]);
-        this.pyEnv["bus.bus"]._sendone(relatedPartner, "mail.record/insert", {
-            "res.users.settings": { ...changedSettings, id },
+        this.pyEnv["bus.bus"]._sendone(relatedPartner, "res.users.settings", {
+            ...changedSettings,
+            id,
         });
     },
 });

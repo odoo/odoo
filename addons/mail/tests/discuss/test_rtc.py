@@ -49,7 +49,7 @@ class TestChannelInternals(MailCommon):
                             'id': channel_member.rtc_session_ids.id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
-                                "channel": {"id": channel_member.channel_id.id},
+                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                                 "persona": {
                                     "id": channel_member.partner_id.id,
                                     "name": channel_member.partner_id.name,
@@ -74,7 +74,7 @@ class TestChannelInternals(MailCommon):
                     'id': channel_member.rtc_session_ids.id,
                     'channelMember': {
                         "id": channel_member.id,
-                        "channel": {"id": channel_member.channel_id.id},
+                        "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                         "persona": {
                             "id": channel_member.partner_id.id,
                             "name": channel_member.partner_id.name,
@@ -122,7 +122,7 @@ class TestChannelInternals(MailCommon):
                             'id': last_rtc_session_id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
-                                "channel": {"id": channel_member.channel_id.id},
+                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                                 "persona": {
                                     "id": channel_member.partner_id.id,
                                     "name": channel_member.partner_id.name,
@@ -145,7 +145,7 @@ class TestChannelInternals(MailCommon):
                             'model': 'discuss.channel',
                             'invitedMembers': [('ADD', [{
                                 'id': channel_member_test_user.id,
-                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                                 'persona': {
                                     'id': channel_member_test_user.partner_id.id,
                                     'name': channel_member_test_user.partner_id.name,
@@ -162,7 +162,7 @@ class TestChannelInternals(MailCommon):
         self.assertIn('invitedMembers', res)
         self.assertEqual(res['invitedMembers'], [('ADD', [{
             'id': channel_member_test_user.id,
-            'channel': {'id': channel_member_test_user.channel_id.id},
+            'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
             'persona': {
                 'id': channel_member_test_user.partner_id.id,
                 'name': channel_member_test_user.partner_id.name,
@@ -205,7 +205,7 @@ class TestChannelInternals(MailCommon):
                             'id': last_rtc_session_id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
-                                "channel": {"id": channel_member.channel_id.id},
+                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                                 "persona": {
                                     "id": channel_member.partner_id.id,
                                     "name": channel_member.partner_id.name,
@@ -228,7 +228,7 @@ class TestChannelInternals(MailCommon):
                             'id': last_rtc_session_id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
-                                "channel": {"id": channel_member.channel_id.id},
+                                "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                                 "persona": {
                                     "id": channel_member.partner_id.id,
                                     "name": channel_member.partner_id.name,
@@ -252,7 +252,7 @@ class TestChannelInternals(MailCommon):
                             'invitedMembers': [('ADD', [
                                 {
                                     'id': channel_member_test_user.id,
-                                    'channel': {'id': channel_member_test_user.channel_id.id},
+                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                                     'persona': {
                                         'id': channel_member_test_user.partner_id.id,
                                         'name': channel_member_test_user.partner_id.name,
@@ -262,7 +262,7 @@ class TestChannelInternals(MailCommon):
                                 },
                                 {
                                     'id': channel_member_test_guest.id,
-                                    'channel': {'id': channel_member_test_guest.channel_id.id},
+                                    'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
                                     'persona': {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
@@ -281,7 +281,7 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(res['invitedMembers'], [('ADD', [
             {
                 'id': channel_member_test_user.id,
-                'channel': {'id': channel_member_test_user.channel_id.id},
+                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                 'persona': {
                     'id': channel_member_test_user.partner_id.id,
                     'name': channel_member_test_user.partner_id.name,
@@ -291,7 +291,7 @@ class TestChannelInternals(MailCommon):
             },
             {
                 'id': channel_member_test_guest.id,
-                'channel': {'id': channel_member_test_guest.channel_id.id},
+                'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
                 'persona': {
                     'id': channel_member_test_guest.guest_id.id,
                     'name': channel_member_test_guest.guest_id.name,
@@ -338,7 +338,7 @@ class TestChannelInternals(MailCommon):
                             'model': 'discuss.channel',
                             'invitedMembers': [('DELETE', [{
                                 'id': channel_member_test_user.id,
-                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                                 'persona': {
                                     'id': channel_member_test_user.partner_id.id,
                                     'name': channel_member_test_user.partner_id.name,
@@ -358,7 +358,7 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member.rtc_session_ids.id + 1,
                                 'channelMember': {
                                     "id": channel_member_test_user.id,
-                                    "channel": {"id": channel_member_test_user.channel_id.id},
+                                    "thread": {"id": channel_member_test_user.channel_id.id, "model": "discuss.channel"},
                                     "persona": {
                                         "id": channel_member_test_user.partner_id.id,
                                         "name": channel_member_test_user.partner_id.name,
@@ -405,7 +405,7 @@ class TestChannelInternals(MailCommon):
                             'model': 'discuss.channel',
                             'invitedMembers': [('DELETE', [{
                                 'id': channel_member_test_guest.id,
-                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
                                 'persona': {
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
@@ -425,7 +425,7 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member.rtc_session_ids.id + 2,
                                 'channelMember': {
                                     "id": channel_member_test_guest.id,
-                                    "channel": {"id": channel_member_test_guest.channel_id.id},
+                                    "thread": {"id": channel_member_test_guest.channel_id.id, "model": "discuss.channel"},
                                     "persona": {
                                         "id": channel_member_test_guest.guest_id.id,
                                         "name": channel_member_test_guest.guest_id.name,
@@ -481,7 +481,7 @@ class TestChannelInternals(MailCommon):
                             'model': 'discuss.channel',
                             'invitedMembers': [('DELETE', [{
                                 'id': channel_member_test_user.id,
-                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                                 'persona': {
                                     'id': channel_member_test_user.partner_id.id,
                                     'name': channel_member_test_user.partner_id.name,
@@ -522,7 +522,7 @@ class TestChannelInternals(MailCommon):
                             'model': 'discuss.channel',
                             'invitedMembers': [('DELETE', [{
                                 'id': channel_member_test_guest.id,
-                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
                                 'persona': {
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
@@ -594,7 +594,7 @@ class TestChannelInternals(MailCommon):
                             'invitedMembers': [('DELETE', [
                                 {
                                     'id': channel_member_test_user.id,
-                                    'channel': {'id': channel_member_test_user.channel_id.id},
+                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                                     'persona': {
                                         'id': channel_member_test_user.partner_id.id,
                                         'name': channel_member_test_user.partner_id.name,
@@ -604,7 +604,7 @@ class TestChannelInternals(MailCommon):
                                 },
                                 {
                                     'id': channel_member_test_guest.id,
-                                    'channel': {'id': channel_member_test_guest.channel_id.id},
+                                    'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
                                     'persona': {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
@@ -668,7 +668,7 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member.rtc_session_ids.id,
                                 'channelMember': {
                                     "id": channel_member.id,
-                                    "channel": {"id": channel_member.channel_id.id},
+                                    "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                                     "persona": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
@@ -694,7 +694,7 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_member.rtc_session_ids.id,
                                 'channelMember': {
                                     "id": channel_member.id,
-                                    "channel": {"id": channel_member.channel_id.id},
+                                    "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
                                     "persona": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
@@ -719,7 +719,7 @@ class TestChannelInternals(MailCommon):
                             'invitedMembers': [('ADD', [
                                 {
                                     'id': channel_member_test_user.id,
-                                    'channel': {'id': channel_member_test_user.channel_id.id},
+                                    'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
                                     'persona': {
                                         'id': channel_member_test_user.partner_id.id,
                                         'name': channel_member_test_user.partner_id.name,
@@ -729,7 +729,7 @@ class TestChannelInternals(MailCommon):
                                 },
                                 {
                                     'id': channel_member_test_guest.id,
-                                    'channel': {'id': channel_member_test_guest.channel_id.id},
+                                    'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
                                     'persona': {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,

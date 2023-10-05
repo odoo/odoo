@@ -20,11 +20,10 @@ export class LivechatCoreWeb {
             if (data.current_user_settings?.is_discuss_sidebar_category_livechat_open) {
                 this.store.discuss.livechat.isOpen = true;
             }
-            this.busService.subscribe("mail.record/insert", (payload) => {
-                const { "res.users.settings": settings } = payload;
-                if (settings) {
+            this.busService.subscribe("res.users.settings", (payload) => {
+                if (payload) {
                     this.store.discuss.livechat.isOpen =
-                        settings.is_discuss_sidebar_category_livechat_open ??
+                        payload.is_discuss_sidebar_category_livechat_open ??
                         this.store.discuss.livechat.isOpen;
                 }
             });

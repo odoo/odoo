@@ -36,12 +36,12 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                     'country_id': belgium.id,
                 },
             )
-        self.assertEqual(channel_info['channel']['anonymous_name'], "Visitor 22")
-        self.assertEqual(channel_info['channel']['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
+        self.assertEqual(channel_info['anonymous_name'], "Visitor 22")
+        self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
 
         # ensure member info are hidden (in particular email and real name when livechat username is present)
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self.assertEqual(sorted((m['persona'] for m in channel_info['channel']['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
+        self.assertEqual(sorted((m['persona'] for m in channel_info['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
             'id': self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.id,
             'name': 'Visitor',
             'im_status': 'offline',
@@ -64,11 +64,11 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             'user_id': test_user.id,
             'channel_id': self.livechat_channel.id,
         })
-        self.assertFalse(channel_info['channel']['anonymous_name'])
-        self.assertEqual(channel_info['channel']['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
-        self.assertEqual(channel_info['channel']['channelMembers'], [['ADD', [
+        self.assertFalse(channel_info['anonymous_name'])
+        self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
+        self.assertEqual(channel_info['channelMembers'], [['ADD', [
             {
-                'channel': {'id': channel_info['id']},
+                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
                 'persona': {
                     'active': True,
@@ -81,7 +81,7 @@ class TestGetDiscussChannel(TestImLivechatCommon):
                 },
             },
             {
-                'channel': {'id': channel_info['id']},
+                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', test_user.partner_id.id)]).id,
                 'persona': {
                     'active': True,
@@ -109,11 +109,11 @@ class TestGetDiscussChannel(TestImLivechatCommon):
             'channel_id': self.livechat_channel.id,
         })
         self.assertEqual(channel_info['operator_pid'], [operator.partner_id.id, "Michel Operator"])
-        self.assertFalse(channel_info['channel']['anonymous_name'])
-        self.assertEqual(channel_info['channel']['anonymous_country'], False)
-        self.assertEqual(channel_info['channel']['channelMembers'], [['ADD', [
+        self.assertFalse(channel_info['anonymous_name'])
+        self.assertEqual(channel_info['anonymous_country'], False)
+        self.assertEqual(channel_info['channelMembers'], [['ADD', [
             {
-                'channel': {'id': channel_info['id']},
+                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
                 'persona': {
                     'active': True,

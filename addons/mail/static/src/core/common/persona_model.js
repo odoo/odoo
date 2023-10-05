@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { AND, Record } from "@mail/core/common/record";
-import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -21,16 +20,13 @@ export class Persona extends Record {
     static get(data) {
         return super.get(data);
     }
-    /**
-     * @param {Data} data
-     * @returns {import("models").Persona}
-     */
+    /** @returns {import("models").Persona} */
     static insert(data) {
         return super.insert(data);
     }
 
     update(data) {
-        assignDefined(this, data);
+        super.update(data);
         if (
             this.type === "partner" &&
             this.im_status !== "im_partner" &&
@@ -41,6 +37,7 @@ export class Persona extends Record {
         }
     }
 
+    channelMembers = Record.many("ChannelMember");
     /** @type {number} */
     id;
     /** @type {boolean | undefined} */

@@ -2,7 +2,7 @@
 
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
-import { assignDefined } from "@mail/utils/common/misc";
+import { assignIn } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -10,9 +10,7 @@ patch(Thread, {
     insert(data) {
         const thread = super.insert(data);
         if (thread.type === "livechat") {
-            if (data?.channel) {
-                assignDefined(thread, data.channel, ["anonymous_name"]);
-            }
+            assignIn(thread, data, ["anonymous_name", "anonymous_country"]);
             if (data?.operator_pid) {
                 thread.operator = {
                     type: "partner",
@@ -69,10 +67,8 @@ patch(Thread.prototype, {
         if (!this.correspondent.is_public && this.correspondent.country) {
             return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
         }
-        if (this.channel?.anonymous_country) {
-            return `${this.getMemberName(this.correspondent)} (${
-                this.channel.anonymous_country.name
-            })`;
+        if (this.anonymous_country) {
+            return `${this.getMemberName(this.correspondent)} (${this.anonymous_country.name})`;
         }
         return this.getMemberName(this.correspondent);
     },

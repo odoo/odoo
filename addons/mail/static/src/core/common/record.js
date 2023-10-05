@@ -9,6 +9,7 @@ const MANY_SYM = Symbol("many");
 const ONE_SYM = Symbol("one");
 const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
+const IS_RECORD_SYM = Symbol("isRecord");
 
 export function AND(...args) {
     return [AND_SYM, ...args];
@@ -27,14 +28,14 @@ export function OR(...args) {
 export function preinsert(val, record, fname, fn) {
     /** @type {R} */
     let r3;
-    if (!(val instanceof Record)) {
+    if (!Record.isRecord(val)) {
         const { targetModel } = record.Model.__rels__.get(fname);
         r3 = record.Model.store[targetModel].preinsert(val);
     } else {
         r3 = val;
     }
     fn(r3);
-    if (!(val instanceof Record)) {
+    if (!Record.isRecord(val)) {
         // was preinserted, fully insert now
         const { targetModel } = record.Model.__rels__.get(fname);
         record.Model.store[targetModel].insert(val);
@@ -89,6 +90,12 @@ export class RecordInverses {
  * @template {Record} R
  */
 export class RecordList extends Array {
+    static isOne(list) {
+        return Boolean(list[ONE_SYM]);
+    }
+    static isMany(list) {
+        return Boolean(list[MANY_SYM]);
+    }
     /** @type {Record} */
     owner;
     /** @type {string} */
@@ -107,8 +114,10 @@ export class RecordList extends Array {
     /** @type {string[]} */
     __list__ = [];
 
-    constructor() {
+    /** @param {ONE_SYM|MANY_SYM} SYM */
+    constructor(SYM) {
         super();
+        this[SYM] = true;
         return new Proxy(this, {
             /** @param {RecordList<R>} receiver */
             get(target, name, receiver) {
@@ -132,13 +141,23 @@ export class RecordList extends Array {
                         if (r2 && r2.notEq(r3)) {
                             receiver.__deleteInverse__(r2);
                         }
-                        const { onDelete } = receiver.owner.Model.__rels__.get(receiver.name);
+                        const { inverse, onDelete } = receiver.owner.Model.__rels__.get(
+                            receiver.name
+                        );
                         onDelete?.call(receiver.owner, r2);
+                        if (inverse) {
+                            r2.__rels__.get(inverse).delete(receiver);
+                        }
                         receiver.__list__[index] = r3?.localId;
                         if (r3) {
                             receiver.__addInverse__(r3);
-                            const { onAdd } = receiver.owner.Model.__rels__.get(receiver.name);
+                            const { inverse, onAdd } = receiver.owner.Model.__rels__.get(
+                                receiver.name
+                            );
                             onAdd?.call(receiver.owner, r3);
+                            if (inverse) {
+                                r3.__rels__.get(inverse).add(receiver);
+                            }
                         }
                     });
                 } else if (name === "length") {
@@ -159,6 +178,11 @@ export class RecordList extends Array {
      * @param {(R) => void} fn
      */
     _preinsert(val, fn) {
+        const { inverse } = this.owner.Model.__rels__.get(this.name);
+        if (inverse) {
+            // special command to call __addNoinv, to prevent infinite loop
+            val[inverse] = [["ADD.noinv", this.owner]];
+        }
         return preinsert(val, this.owner, this.name, fn);
     }
     /**
@@ -175,8 +199,11 @@ export class RecordList extends Array {
                 this.__list__.push(r3.localId);
                 this.__addInverse__(r3);
             });
-            const { onAdd } = this.owner.Model.__rels__.get(this.name);
+            const { inverse, onAdd } = this.owner.Model.__rels__.get(this.name);
             onAdd?.call(this.owner, r);
+            if (inverse) {
+                r.__rels__.get(inverse).add(this.owner);
+            }
         }
         return this.__list__.length;
     }
@@ -186,8 +213,11 @@ export class RecordList extends Array {
         if (r2) {
             this.__deleteInverse__(r2);
         }
-        const { onDelete } = this.owner.Model.__rels__.get(this.name);
+        const { inverse, onDelete } = this.owner.Model.__rels__.get(this.name);
         onDelete?.call(this.owner, r2);
+        if (inverse) {
+            r2.__rels__.get(inverse).delete(this.owner);
+        }
         return r2;
     }
     /** @returns {R} */
@@ -196,8 +226,11 @@ export class RecordList extends Array {
         if (r2) {
             this.__deleteInverse__(r2);
         }
-        const { onDelete } = this.owner.Model.__rels__.get(this.name);
+        const { inverse, onDelete } = this.owner.Model.__rels__.get(this.name);
         onDelete?.call(this.owner, r2);
+        if (inverse) {
+            r2.__rels__.get(inverse).delete(this.owner);
+        }
         return r2;
     }
     /** @param {R[]} records */
@@ -207,8 +240,11 @@ export class RecordList extends Array {
                 this.__list__.unshift(r3.localId);
                 this.__addInverse__(r3);
             });
-            const { onAdd } = this.owner.Model.__rels__.get(this.name);
+            const { inverse, onAdd } = this.owner.Model.__rels__.get(this.name);
             onAdd?.call(this.owner, r);
+            if (inverse) {
+                r.__rels__.get(inverse).add(this.owner);
+            }
         }
         return this.__list__.length;
     }
@@ -279,13 +315,19 @@ export class RecordList extends Array {
         this.__list__.splice(start, deleteCount, ...newRecords.map((r) => r.localId));
         for (const r of oldRecords) {
             this.__deleteInverse__(r);
-            const { onDelete } = this.owner.Model.__rels__.get(this.name);
+            const { inverse, onDelete } = this.owner.Model.__rels__.get(this.name);
             onDelete?.call(this.owner, r);
+            if (inverse) {
+                r.__rels__.get(inverse).delete(this.owner);
+            }
         }
         for (const r of newRecords) {
             this.__addInverse__(r);
-            const { onAdd } = this.owner.Model.__rels__.get(this.name);
+            const { inverse, onAdd } = this.owner.Model.__rels__.get(this.name);
             onAdd?.call(this.owner, r);
+            if (inverse) {
+                r.__rels__.get(inverse).add(this.owner);
+            }
         }
     }
     /** @param {(a: R, b: R) => boolean} func */
@@ -300,10 +342,59 @@ export class RecordList extends Array {
     }
     /** @param {...R}  */
     add(...records) {
+        if (RecordList.isOne(this)) {
+            const last = records.at(-1);
+            if (Record.isRecord(last) && last.in(this)) {
+                return;
+            }
+            this._preinsert(last, (r) => {
+                if (r.notEq(this[0])) {
+                    this.splice(0, 1, r);
+                }
+            });
+            return;
+        }
         for (const val of records) {
+            if (Record.isRecord(val) && val.in(this)) {
+                continue;
+            }
             this._preinsert(val, (r) => {
                 if (this.indexOf(r) === -1) {
                     this.push(r);
+                }
+            });
+        }
+    }
+    /**
+     * Version of add() that does not update the inverse.
+     * This is internally call when assigning on relational field with inverse,
+     * to prevent infinite loops.
+     *
+     * @param {...R}
+     */
+    __addNoinv(...records) {
+        if (RecordList.isOne(this)) {
+            const last = records.at(-1);
+            if (Record.isRecord(last) && last.in(this)) {
+                return;
+            }
+            this._preinsert(last, (r) => {
+                if (r.notEq(this[0])) {
+                    this.splice(0, 1);
+                    this.__list__.push(r.localId);
+                    this.__addInverse__(r);
+                }
+            });
+            return;
+        }
+        for (const val of records) {
+            if (Record.isRecord(val) && val.in(this)) {
+                continue;
+            }
+            this._preinsert(val, (r) => {
+                if (this.indexOf(r) === -1) {
+                    this.__list__.push(r.localId);
+                    this.__addInverse__(r);
                 }
             });
         }
@@ -344,6 +435,9 @@ export class Record {
      * @type {Map<string, any>}
      */
     static __rels__ = new Map();
+    static isRecord(record) {
+        return Boolean(record?.[IS_RECORD_SYM]);
+    }
     static get(data) {
         return this.records[this.localId(data)];
     }
@@ -365,6 +459,18 @@ export class Record {
     static _localId(expr, data, { brackets = false } = {}) {
         if (!Array.isArray(expr)) {
             if (this.__rels__.has(expr)) {
+                if (RecordList.isMany(this.__rels__.get(expr))) {
+                    throw new Error("Using a Record.Many() as id is not (yet) supported");
+                }
+                if (this.isCommand(data[expr])) {
+                    // Note: only Record.one() is supported
+                    const [cmd, data2] = data[expr].at(-1);
+                    if (cmd === "DELETE") {
+                        return undefined;
+                    } else {
+                        return `(${data2?.localId})`;
+                    }
+                }
                 // relational field (note: optional when OR)
                 return `(${data[expr]?.localId})`;
             }
@@ -384,6 +490,17 @@ export class Record {
         const res = {};
         function _deepRetrieve(expr2) {
             if (typeof expr2 === "string") {
+                if (Record.isCommand(data[expr2])) {
+                    // Note: only Record.one() is supported
+                    const [cmd, data2] = data[expr2].at(-1);
+                    if (cmd === "DELETE") {
+                        return Object.assign(res, { [expr2]: undefined });
+                    } else if (cmd === "ADD.noinv") {
+                        return Object.assign(res, { [expr2]: [["ADD.noinv", data2]] });
+                    } else {
+                        return Object.assign(res, { [expr2]: data2 });
+                    }
+                }
                 return Object.assign(res, { [expr2]: data[expr2] });
             }
             if (expr2 instanceof Array) {
@@ -399,6 +516,15 @@ export class Record {
             return res;
         }
         if (typeof this.id === "string") {
+            if (Record.isCommand(data[this.id])) {
+                // Note: only Record.one() is supported
+                const [cmd, data2] = data[this.id].at(-1);
+                if (cmd === "DELETE") {
+                    return { [this.id]: undefined };
+                } else {
+                    return { [this.id]: data2 };
+                }
+            }
             return { [this.id]: data[this.id] };
         }
         for (const expr of this.id) {
@@ -428,7 +554,12 @@ export class Record {
     static new(data) {
         const obj = new this.Class();
         const ids = this._retrieveIdFromData(data);
-        let record = Object.assign(obj, { Model: this, localId: this.localId(data), ...ids });
+        let record = Object.assign(obj, {
+            [IS_RECORD_SYM]: true,
+            Model: this,
+            localId: this.localId(data),
+            ...ids,
+        });
         Object.assign(record, { _store: this.store });
         this.records[record.localId] = record;
         // return reactive version
@@ -438,31 +569,30 @@ export class Record {
     /**
      * @template {keyof import("model ").Models} M
      * @param {M} targetModel
-     * @param {(r) => void} [onAdd] function that is called when a record is added
+     * @param {string} [inverse] if set, the name of field in targetModel that acts as the inverse.
+     * @param {(r: M) => void} [onAdd] function that is called when a record is added
      *   in the relation.
-     * @param {(r) => void} [onDelete] function that is called when a record is removed
+     * @param {(r: M) => void} [onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M]}
      */
-    static one(targetModel, { onAdd, onDelete } = {}) {
-        return [ONE_SYM, { targetModel, onAdd, onDelete }];
+    static one(targetModel, { inverse, onAdd, onDelete } = {}) {
+        return [ONE_SYM, { targetModel, inverse, onAdd, onDelete }];
     }
     /**
      * @template {keyof import("model").Models} M
      * @param {M} targetModel
-     * @param {(r) => void} [onAdd] function that is called when a record is added
+     * @param {string} [inverse] if set, the name of field in targetModel that acts as the inverse.
+     * @param {(r: M) => void} [onAdd] function that is called when a record is added
      *   in the relation.
-     * @param {(r) => void} [onDelete] function that is called when a record is removed
+     * @param {(r: M) => void} [onDelete] function that is called when a record is removed
      *   from the relation.
      * @returns {import("models").Models[M][]}
      */
-    static many(targetModel, { onAdd, onDelete } = {}) {
-        return [MANY_SYM, { targetModel, onAdd, onDelete }];
+    static many(targetModel, { inverse, onAdd, onDelete } = {}) {
+        return [MANY_SYM, { targetModel, inverse, onAdd, onDelete }];
     }
-    /**
-     * @param {Object} data
-     * @returns {Record}
-     */
+    /** @returns {Record} */
     static insert(data) {
         const res = this.preinsert(data);
         res.update(data);
@@ -476,7 +606,7 @@ export class Record {
         return this.get(data) ?? this.new(data);
     }
     static isCommand(data) {
-        return ["ADD", "DELETE"].includes(data?.[0]?.[0]);
+        return ["ADD", "DELETE", "ADD.noinv"].includes(data?.[0]?.[0]);
     }
 
     /**
@@ -484,13 +614,14 @@ export class Record {
      * rather than the record(s). This allows data in store and models being normalized,
      * which eases handling relations notably in when a record gets deleted.
      *
-     * @type {Map<string, string|RecordList>}
+     * @type {Map<string, RecordList>}
      */
     __rels__ = new Map();
     /** @type {Map<string, { targetModel: string }>} */
     __invs__ = new RecordInverses();
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
+    get _store() {
+        return this.Model.store;
+    }
     /**
      * Technical attribute, contains the Model entry in the store.
      * This is almost the same as the class, except it's an object
@@ -515,7 +646,9 @@ export class Record {
 
     setup() {}
 
-    update(data) {}
+    update(data) {
+        Object.assign(this, data);
+    }
 
     delete() {
         const r1 = this;
@@ -531,7 +664,7 @@ export class Record {
                     continue;
                 }
                 const l2 = r2.__rels__.get(name2);
-                if (l2 instanceof RecordList) {
+                if (RecordList.isMany(l2)) {
                     for (let c = 0; c < count; c++) {
                         r2[name2].delete(r1);
                     }
@@ -540,10 +673,7 @@ export class Record {
                 }
             }
         }
-        if (this.Model) {
-            delete this.Model.records[r1.localId];
-            delete this.Model;
-        }
+        delete this.Model.records[r1.localId];
     }
 
     /** @param {Record} record */
@@ -571,6 +701,31 @@ export class Record {
     /** @param {Record[]|RecordList} collection */
     notIn(collection) {
         return !this.in(collection);
+    }
+
+    toData() {
+        const data = { ...this };
+        for (const [name, val] of this.__rels__.entries()) {
+            if (RecordList.isMany(val)) {
+                data[name] = val.map((r) => r.toIdData());
+            } else {
+                data[name] = this[name]?.toIdData();
+            }
+        }
+        delete data._store;
+        delete data.__rels__;
+        delete data.__invs__;
+        delete data.Model;
+        return data;
+    }
+    toIdData() {
+        const data = this.constructor._retrieveIdFromData(this);
+        for (const [name, val] of Object.entries(data)) {
+            if (Record.isRecord(val)) {
+                data[name] = val.toIdData();
+            }
+        }
+        return data;
     }
 }
 

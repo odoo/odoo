@@ -295,9 +295,10 @@ class Channel(models.Model):
         if 'image_128' in vals:
             for channel in self:
                 notifications.append([channel, 'mail.record/insert', {
-                    'Channel': {
+                    'Thread': {
                         'avatarCacheKey': channel._get_avatar_cache_key(),
                         'id': channel.id,
+                        'model': "discuss.channel",
                     }
                 }])
         self.env['bus.bus']._sendmany(notifications)
@@ -355,10 +356,11 @@ class Channel(models.Model):
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Channel': {
+            'Thread': {
                 'channelMembers': [('DELETE', {'id': member_id})],
                 'id': self.id,
                 'memberCount': self.member_count,
+                'model': "discuss.channel",
             }
         })
 
@@ -431,10 +433,11 @@ class Channel(models.Model):
                         'channel': member.channel_id.sudo()._channel_info()[0],
                     }))
             notifications.append((channel, 'mail.record/insert', {
-                'Channel': {
+                'Thread': {
                     'channelMembers': [('ADD', list(new_members._discuss_channel_member_format().values()))],
                     'id': channel.id,
                     'memberCount': channel.member_count,
+                    'model': "discuss.channel",
                 }
             }))
             if existing_members:
@@ -442,10 +445,11 @@ class Channel(models.Model):
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
                 notifications.append((current_partner or current_guest, 'mail.record/insert', {
-                    'Channel': {
+                    'Thread': {
                         'channelMembers': [('ADD', list(existing_members._discuss_channel_member_format().values()))],
                         'id': channel.id,
                         'memberCount': channel.member_count,
+                        'model': "discuss.channel",
                     }
                 }))
         if invite_to_rtc_call:
@@ -690,7 +694,7 @@ class Channel(models.Model):
                     allowed_company_ids=user_id.company_ids.ids
                 )
                 for channel_info in user_channels._channel_info():
-                    notifications.append((partner, 'discuss.channel/legacy_insert', channel_info))
+                    notifications.append((partner, 'mail.record/insert', {"Thread": channel_info}))
         return notifications
 
     def _channel_message_notifications(self, message, message_format=False):
@@ -809,7 +813,6 @@ class Channel(models.Model):
             return []
         channel_infos = []
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel()
-        channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.env['discuss.channel'].flush_model()
         self.env['discuss.channel.member'].flush_model()
@@ -843,13 +846,10 @@ class Channel(models.Model):
             if (current_partner and member.partner_id == current_partner) or (current_guest and member.guest_id == current_guest):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
-            channel_data = {
+            info = {
                 'avatarCacheKey': channel._get_avatar_cache_key(),
                 'channel_type': channel.channel_type,
-                'id': channel.id,
                 'memberCount': channel.member_count,
-            }
-            info = {
                 'id': channel.id,
                 'name': channel.name,
                 'defaultDisplayMode': channel.default_display_mode,
@@ -862,20 +862,19 @@ class Channel(models.Model):
                 'create_uid': channel.create_uid.id,
                 'authorizedGroupFullName': channel.group_public_id.full_name,
                 'allow_public_upload': channel.allow_public_upload,
+                'model': "discuss.channel",
             }
-            # add last message preview (only used in mobile)
-            info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
-                    channel_data['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
+                    info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'
-                    channel_data['message_unread_counter'] = member.message_unread_counter
+                    info['message_unread_counter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
                     info['seen_message_id'] = member.seen_message_id.id
-                    channel_data['custom_channel_name'] = member.custom_channel_name
+                    info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
                     info['last_interest_dt'] = member.last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     if member.rtc_inviting_session_id:
@@ -885,7 +884,7 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                channel_data['channelMembers'] = [('ADD', list(members_by_channel[channel]._discuss_channel_member_format().values()))]
+                info['channelMembers'] = [('ADD', list(members_by_channel[channel]._discuss_channel_member_format().values()))]
                 info['seen_partners_info'] = sorted([{
                     'id': cp.id,
                     'partner_id': cp.partner_id.id,
@@ -897,9 +896,6 @@ class Channel(models.Model):
                 'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))],
                 'rtcSessions': [('ADD', rtc_sessions_by_channel.get(channel, []))],
             })
-
-            info['channel'] = channel_data
-
             channel_infos.append(info)
         return channel_infos
 
@@ -925,6 +921,7 @@ class Channel(models.Model):
             data = {}
             if 'id' in fields:
                 data['id'] = channel.id
+                data['model'] = "discuss.channel"
             channels_formatted_data[channel] = data
         return channels_formatted_data
 
@@ -1012,13 +1009,11 @@ class Channel(models.Model):
                 vals['is_minimized'] = is_minimized
             if vals:
                 session_state.write(vals)
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {
-                'Thread': {
-                    'foldStateCount': state_count,
-                    'id': session_state.channel_id.id,
-                    'model': 'discuss.channel',
-                    'fold_state': state,
-                }
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.Thread/fold_state', {
+                'foldStateCount': state_count,
+                'id': session_state.channel_id.id,
+                'model': 'discuss.channel',
+                'fold_state': state,
             })
 
     def channel_pin(self, pinned=False):
@@ -1030,7 +1025,7 @@ class Channel(models.Model):
         if not pinned:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/legacy_insert', self._channel_info()[0])
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
 
     def _channel_seen(self, last_message_id=None, allow_older=False):
         """
@@ -1119,9 +1114,10 @@ class Channel(models.Model):
         member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         member.write({'custom_channel_name': name})
         self.env['bus.bus']._sendone(member.partner_id, 'mail.record/insert', {
-            'Channel': {
+            'Thread': {
                 'custom_channel_name': name,
                 'id': self.id,
+                'model': "discuss.channel",
             }
         })
 
@@ -1160,7 +1156,7 @@ class Channel(models.Model):
         }
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel._channel_info()[0]
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/legacy_insert', channel_info)
+        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
         return channel_info
 
     @api.model
@@ -1196,10 +1192,8 @@ class Channel(models.Model):
         channels = self.search(domain, limit=limit)
         return [{
             'authorizedGroupFullName': channel.group_public_id.full_name,
-            'channel': {
-                'channel_type': channel.channel_type,
-                'id': channel.id,
-            },
+            'channel_type': channel.channel_type,
+            'model': "discuss.channel",
             'id': channel.id,
             'name': channel.name,
         } for channel in channels]

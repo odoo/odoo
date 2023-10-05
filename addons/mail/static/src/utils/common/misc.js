@@ -11,6 +11,15 @@ export function assignDefined(obj, data, keys = Object.keys(data)) {
     return obj;
 }
 
+export function assignIn(obj, data, keys = Object.keys(data)) {
+    for (const key of keys) {
+        if (key in data) {
+            obj[key] = data[key];
+        }
+    }
+    return obj;
+}
+
 // todo: move this some other place in the future
 export function isDragSourceExternalFile(dataTransfer) {
     const dragDataType = dataTransfer.types;

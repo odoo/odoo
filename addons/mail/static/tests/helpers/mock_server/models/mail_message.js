@@ -69,7 +69,7 @@ patch(MockServer.prototype, {
         ])[0];
         const result = {
             id: messageId,
-            messageReactionGroups: [
+            reactions: [
                 [
                     reactions.length > 0 ? "ADD" : "DELETE",
                     {
@@ -301,7 +301,7 @@ patch(MockServer.prototype, {
                 });
             }
             const response = Object.assign({}, message, {
-                attachment_ids: formattedAttachments,
+                attachments: formattedAttachments,
                 author,
                 history_partner_ids: historyPartnerIds,
                 default_subject:
@@ -311,13 +311,13 @@ patch(MockServer.prototype, {
                         message.res_id
                     ),
                 linkPreviews: linkPreviewsFormatted,
-                messageReactionGroups: reactionGroups,
+                reactions: reactionGroups,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
                 parentMessage: message.parent_id
                     ? this._mockMailMessageMessageFormat([message.parent_id])[0]
                     : false,
-                recipients: partners.map((p) => ({ id: p.id, name: p.name })),
+                recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
                 trackingValues: formattedTrackingValues,

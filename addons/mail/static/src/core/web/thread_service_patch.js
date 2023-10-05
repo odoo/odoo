@@ -63,7 +63,7 @@ patch(ThreadService.prototype, {
             }
         }
         if ("attachments" in result) {
-            thread.update({
+            Object.assign(thread, {
                 areAttachmentsLoaded: true,
                 attachments: result.attachments,
                 isLoadingAttachments: false,
@@ -99,21 +99,17 @@ patch(ThreadService.prototype, {
         }
         return result;
     },
-    getThread(resModel, resId) {
-        let thread = this.store.Thread.get({ model: resModel, id: resId });
+    getThread(model, id) {
+        let thread = this.store.Thread.get({ model, id });
         if (thread) {
-            if (resId === false) {
+            if (id === false) {
                 return thread;
             }
             // to force a reload
             thread.status = "new";
         }
-        thread = this.store.Thread.insert({
-            id: resId,
-            model: resModel,
-            type: "chatter",
-        });
-        if (resId === false) {
+        thread = this.store.Thread.insert({ id, model, type: "chatter" });
+        if (id === false) {
             thread.messages.push({
                 id: this.messageService.getNextTemporaryId(),
                 author: { id: this.store.self.id },

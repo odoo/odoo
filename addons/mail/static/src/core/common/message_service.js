@@ -191,18 +191,6 @@ export class MessageService {
         );
     }
 
-    updateStarred(message, isStarred) {
-        message.isStarred = isStarred;
-        const starred = this.store.discuss.starred;
-        if (isStarred) {
-            starred.counter++;
-            starred.messages.add(message);
-        } else {
-            starred.counter--;
-            removeFromArrayWithPredicate(starred.messages, (msg) => msg.eq(message));
-        }
-    }
-
     scheduledDateSimple(message) {
         return message.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE, {
             locale: this.userService.lang?.replace("_", "-"),

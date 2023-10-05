@@ -108,8 +108,7 @@ class ResPartner(models.Model):
         }
         partners_format = partners.mail_partner_format()
         for partner in partners:
-            partners_format.get(partner)["persona"] = {
-                "channelMembers": [
+            partners_format.get(partner)["channelMembers"] = [
                     (
                         "ADD",
                         member_by_partner.get(partner)
@@ -122,6 +121,5 @@ class ResPartner(models.Model):
                         )
                         .get(member_by_partner.get(partner)),
                     )
-                ],
-            }
+            ]
         return list(partners_format.values())
