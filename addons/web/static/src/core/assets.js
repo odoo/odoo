@@ -4,6 +4,7 @@ import { memoize } from "./utils/functions";
 import { browser } from "./browser/browser";
 import { registry } from "./registry";
 import { session } from "@web/session";
+import { Component, xml, onWillStart, App } from "@odoo/owl";
 
 /**
  * This export is done only in order to modify the behavior of the exported
@@ -236,15 +237,12 @@ registry.category("xml_templates").addEventListener("UPDATE", (ev) => {
         for (const element of doc.querySelectorAll("templates > [t-name]")) {
             templates.documentElement.appendChild(element);
         }
-        // eslint-disable-next-line no-undef
-        const apps = __OWL_DEVTOOLS__.apps;
-        for (const app of apps) {
+        for (const app of App.apps) {
             app.addTemplates(templates, app);
         }
     }
 });
 
-import { Component, xml, onWillStart } from "@odoo/owl";
 /**
  * Utility component that loads an asset bundle before instanciating a component
  */
