@@ -1667,9 +1667,15 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_assign()
         action = mo.button_mark_done()
         self.assertEqual(action.get('res_model'), 'stock.assign.serial')
-        mass_pro_wizard = Form(self.env[action['res_model']].with_context(action['context']), view='mrp.view_assign_serial_numbers_production')
-        mass_pro_wizard.lot_numbers = "main_pro1"
-        mass_pro_wizard.save().apply()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']), view='mrp.view_assign_serial_numbers_production')
+        # Let the wizard generate all serial numbers
+        wizard.next_serial_number = "main_pro1"
+        wizard.next_serial_count = 1
+        action = wizard.save().generate_serial_numbers_production()
+        # Reload the wizard to create backorder (applying generated serial numbers)
+        wizard = Form(self.env['stock.assign.serial'].browse(action['res_id']))
+
+        wizard.save().apply()
         self.assertEqual(mo.qty_producing, 1)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [1, 1])
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)

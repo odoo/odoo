@@ -685,7 +685,7 @@ class MrpProduction(models.Model):
     def _compute_show_serial_mass_produce(self):
         self.show_serial_mass_produce = False
         for order in self:
-            if order.state in ['confirmed', 'progress', 'to_close'] and (order.product_id.tracking in ['serial', 'lot']) and \
+            if order.state in ['confirmed', 'progress', 'to_close'] and order.product_id.tracking == 'serial' and \
                     float_compare(order.product_qty, 1, precision_rounding=order.product_uom_id.rounding) > 0 and \
                     float_compare(order.qty_producing, order.product_qty, precision_rounding=order.product_uom_id.rounding) < 0:
                 order.show_serial_mass_produce = True
@@ -1702,7 +1702,7 @@ class MrpProduction(models.Model):
             'orderpoint_id': self.orderpoint_id.id,
         }
 
-    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False, sml_create=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -1809,104 +1809,103 @@ class MrpProduction(models.Model):
         # However it could be slower (due to `stock.quant` update) and could
         # create inconsistencies in mass production if a new lot higher in a
         # FIFO strategy arrives between the reservation and the backorder creation
-        if not sml_create:
-            for move, backorder_move in zip(moves, backorder_moves):
-                move_to_backorder_moves[move] |= backorder_move
+        for move, backorder_move in zip(moves, backorder_moves):
+            move_to_backorder_moves[move] |= backorder_move
 
-            move_lines_vals = []
-            assigned_moves = set()
-            partially_assigned_moves = set()
-            move_lines_to_unlink = set()
+        move_lines_vals = []
+        assigned_moves = set()
+        partially_assigned_moves = set()
+        move_lines_to_unlink = set()
 
-            for initial_move, backorder_moves in move_to_backorder_moves.items():
-                # Create `stock.move.line` for consumed but non-reserved components
-                if initial_move.raw_material_production_id and not initial_move.move_line_ids and set_consumed_qty:
-                    ml_vals = initial_move._prepare_move_line_vals()
-                    backorder_move_to_ignore = backorder_moves[-1] if has_backorder_to_ignore[initial_move.raw_material_production_id] else self.env['stock.move']
-                    for move in list(initial_move + backorder_moves - backorder_move_to_ignore):
+        for initial_move, backorder_moves in move_to_backorder_moves.items():
+            # Create `stock.move.line` for consumed but non-reserved components
+            if initial_move.raw_material_production_id and not initial_move.move_line_ids and set_consumed_qty:
+                ml_vals = initial_move._prepare_move_line_vals()
+                backorder_move_to_ignore = backorder_moves[-1] if has_backorder_to_ignore[initial_move.raw_material_production_id] else self.env['stock.move']
+                for move in list(initial_move + backorder_moves - backorder_move_to_ignore):
+                    new_ml_vals = dict(
+                        ml_vals,
+                        qty_done=move.product_uom_qty,
+                        move_id=move.id
+                    )
+                    move_lines_vals.append(new_ml_vals)
+
+        for initial_move, backorder_moves in move_to_backorder_moves.items():
+            ml_by_move = []
+            product_uom = initial_move.product_id.uom_id
+            for move_line in initial_move.move_line_ids:
+                available_qty = move_line.product_uom_id._compute_quantity(move_line.reserved_uom_qty, product_uom)
+                if float_compare(available_qty, 0, precision_rounding=move_line.product_uom_id.rounding) <= 0:
+                    continue
+                ml_by_move.append((available_qty, move_line, move_line.copy_data()[0]))
+
+            initial_move.move_line_ids.with_context(bypass_reservation_update=True).write({'reserved_uom_qty': 0})
+            moves = list(initial_move | backorder_moves)
+
+            move = moves and moves.pop(0)
+            move_qty_to_reserve = move.product_qty
+
+            for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
+                taken_qty = min(quantity, move_qty_to_reserve, move_line.product_uom_id._compute_quantity(move_line.qty_done, product_uom))
+                taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
+                if float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
+                    continue
+                move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
+                move_qty_to_reserve -= taken_qty
+                ml_by_move[index] = (quantity - taken_qty, move_line, ml_vals)
+
+                if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                    assigned_moves.add(move.id)
+                    move = moves and moves.pop(0)
+                    move_qty_to_reserve = move and move.product_qty or 0
+
+            for quantity, move_line, ml_vals in ml_by_move:
+                while float_compare(quantity, 0, precision_rounding=product_uom.rounding) > 0 and move:
+                    # Do not create `stock.move.line` if there is no initial demand on `stock.move`
+                    taken_qty = min(move_qty_to_reserve, quantity)
+                    taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
+                    if move == initial_move:
+                        move_line.with_context(bypass_reservation_update=True).reserved_uom_qty += taken_qty_uom
+                        if set_consumed_qty:
+                            move_line.qty_done += taken_qty_uom
+                    elif not float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
                         new_ml_vals = dict(
                             ml_vals,
-                            qty_done=move.product_uom_qty,
+                            reserved_uom_qty=taken_qty_uom,
                             move_id=move.id
                         )
+                        if set_consumed_qty:
+                            new_ml_vals['qty_done'] = taken_qty_uom
                         move_lines_vals.append(new_ml_vals)
-
-            for initial_move, backorder_moves in move_to_backorder_moves.items():
-                ml_by_move = []
-                product_uom = initial_move.product_id.uom_id
-                for move_line in initial_move.move_line_ids:
-                    available_qty = move_line.product_uom_id._compute_quantity(move_line.reserved_uom_qty, product_uom)
-                    if float_compare(available_qty, 0, precision_rounding=move_line.product_uom_id.rounding) <= 0:
-                        continue
-                    ml_by_move.append((available_qty, move_line, move_line.copy_data()[0]))
-
-                initial_move.move_line_ids.with_context(bypass_reservation_update=True).write({'reserved_uom_qty': 0})
-                moves = list(initial_move | backorder_moves)
-
-                move = moves and moves.pop(0)
-                move_qty_to_reserve = move.product_qty
-
-                for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
-                    taken_qty = min(quantity, move_qty_to_reserve, move_line.product_uom_id._compute_quantity(move_line.qty_done, product_uom))
-                    taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
-                    if float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
-                        continue
-                    move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
+                    quantity -= taken_qty
                     move_qty_to_reserve -= taken_qty
-                    ml_by_move[index] = (quantity - taken_qty, move_line, ml_vals)
 
                     if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
                         assigned_moves.add(move.id)
                         move = moves and moves.pop(0)
                         move_qty_to_reserve = move and move.product_qty or 0
 
-                for quantity, move_line, ml_vals in ml_by_move:
-                    while float_compare(quantity, 0, precision_rounding=product_uom.rounding) > 0 and move:
-                        # Do not create `stock.move.line` if there is no initial demand on `stock.move`
-                        taken_qty = min(move_qty_to_reserve, quantity)
-                        taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
-                        if move == initial_move:
-                            move_line.with_context(bypass_reservation_update=True).reserved_uom_qty += taken_qty_uom
-                            if set_consumed_qty:
-                                move_line.qty_done += taken_qty_uom
-                        elif not float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
-                            new_ml_vals = dict(
-                                ml_vals,
-                                reserved_uom_qty=taken_qty_uom,
-                                move_id=move.id
-                            )
-                            if set_consumed_qty:
-                                new_ml_vals['qty_done'] = taken_qty_uom
-                            move_lines_vals.append(new_ml_vals)
-                        quantity -= taken_qty
-                        move_qty_to_reserve -= taken_qty
+                # Unreserve the quantity removed from initial `stock.move.line` and
+                # not assigned to a move anymore. In case of a split smaller than initial
+                # quantity and fully reserved
+                if quantity and not move_line.move_id._should_bypass_reservation():
+                    self.env['stock.quant']._update_reserved_quantity(
+                        move_line.product_id, move_line.location_id, -quantity,
+                        lot_id=move_line.lot_id, package_id=move_line.package_id,
+                        owner_id=move_line.owner_id, strict=True)
 
-                        if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
-                            assigned_moves.add(move.id)
-                            move = moves and moves.pop(0)
-                            move_qty_to_reserve = move and move.product_qty or 0
+            if move and move_qty_to_reserve != move.product_qty:
+                partially_assigned_moves.add(move.id)
 
-                    # Unreserve the quantity removed from initial `stock.move.line` and
-                    # not assigned to a move anymore. In case of a split smaller than initial
-                    # quantity and fully reserved
-                    if quantity and not move_line.move_id._should_bypass_reservation():
-                        self.env['stock.quant']._update_reserved_quantity(
-                            move_line.product_id, move_line.location_id, -quantity,
-                            lot_id=move_line.lot_id, package_id=move_line.package_id,
-                            owner_id=move_line.owner_id, strict=True)
+            move_lines_to_unlink.update(initial_move.move_line_ids.filtered(
+                lambda ml: not ml.reserved_uom_qty and not ml.qty_done).ids)
 
-                if move and move_qty_to_reserve != move.product_qty:
-                    partially_assigned_moves.add(move.id)
-
-                move_lines_to_unlink.update(initial_move.move_line_ids.filtered(
-                    lambda ml: not ml.reserved_uom_qty and not ml.qty_done).ids)
-
-            self.env['stock.move'].browse(assigned_moves).write({'state': 'assigned'})
-            self.env['stock.move'].browse(partially_assigned_moves).write({'state': 'partially_available'})
-            # Avoid triggering a useless _recompute_state
-            self.env['stock.move.line'].browse(move_lines_to_unlink).write({'move_id': False})
-            self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
-            self.env['stock.move.line'].with_context(bypass_reservation_update=True).create(move_lines_vals)
+        self.env['stock.move'].browse(assigned_moves).write({'state': 'assigned'})
+        self.env['stock.move'].browse(partially_assigned_moves).write({'state': 'partially_available'})
+        # Avoid triggering a useless _recompute_state
+        self.env['stock.move.line'].browse(move_lines_to_unlink).write({'move_id': False})
+        self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
+        self.env['stock.move.line'].with_context(bypass_reservation_update=True).create(move_lines_vals)
 
         workorders_to_cancel = self.env['mrp.workorder']
         for production in self:
@@ -2754,7 +2753,3 @@ class MrpProduction(models.Model):
         else:
             placeholder_value = ""
         return placeholder_value
-
-    def action_generate_lot_for_finish_product(self, first_lot, count):
-        generated_serial_numbers = "\n".join(lot['lot_name'] for lot in self.env['stock.lot'].generate_lot_names(first_lot, count))
-        return generated_serial_numbers

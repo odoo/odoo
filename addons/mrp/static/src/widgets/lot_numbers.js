@@ -3,8 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Field } from "@web/views/fields/field";
-
-const { onWillStart } = owl;
+import { onWillStart } from "@odoo/owl";
 
 
 export class LotNumbers extends Field {

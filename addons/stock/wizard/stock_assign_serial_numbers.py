@@ -18,9 +18,9 @@ class StockAssignSerialNumbers(models.TransientModel):
     product_id = fields.Many2one('product.product', 'Product',
         related='move_id.product_id')
     move_id = fields.Many2one('stock.move')
-    next_serial_number = fields.Char('First SN')
+    next_serial_number = fields.Char('First SN', required=True)
     next_serial_count = fields.Integer('Number of SN',
-        default=_default_next_serial_count)
+        default=_default_next_serial_count, required=True)
 
     @api.constrains('next_serial_count')
     def _check_next_serial_count(self):

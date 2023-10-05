@@ -33,26 +33,14 @@ class StockAssignSerialNumbers(models.TransientModel):
         return action
 
     def _get_serial_numbers(self):
-        if self.lot_numbers: #Need to remove when mass produce btn remove
-            spilt_per_bo = self.lot_numbers.split('\n')
-            take_index = 2 if self.production_id.product_id.tracking == 'lot' and not self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial') else 1
-            expected_length = take_index + (sum(self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial').mapped('product_uom_qty')) / self.production_id.product_qty) + len(self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'lot'))
-            if self.production_id.product_id.tracking == 'lot' and self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial') and \
-                    any(len(lot_and_qty.split(',')) != expected_length and len(lot_and_qty.split(',')) != 1
-                        for lot_and_qty in spilt_per_bo):
-                raise UserError("You can not enter Quantity when any components is track by sr!")
-            if any(len(lot_and_qty.split(',')) != expected_length for lot_and_qty in spilt_per_bo) and any(len(lot_and_qty.split(',')) not in [1, 2] for lot_and_qty in spilt_per_bo):
+        if self.lot_numbers:
+            spilt_per_bo = self.lot_numbers.strip().split('\n')
+            expected_length = 1 + (sum(self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial').mapped('product_uom_qty')) / self.production_id.product_qty) + len(self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'lot'))
+            if any(len(lot_and_qty.split(',')) != expected_length for lot_and_qty in spilt_per_bo) and any(len(lot_and_qty.split(',')) != 1 for lot_and_qty in spilt_per_bo):
                 raise UserError("You have entered a some extra or some less component detail!!")
 
-        if self.lot_numbers and self.production_id.product_id.tracking != 'lot':
             sn_for_backorders = [count.split(',')[0] for count in spilt_per_bo]
             return sn_for_backorders
-        elif self.lot_numbers and self.production_id.product_id.tracking == 'lot':
-            pair_of_qty_lotname = "\n".join(
-                lot_and_qty.replace(',', ';', 1).split(',')[0]
-                for lot_and_qty in spilt_per_bo
-            )
-            return pair_of_qty_lotname.split('\n')
         return []
 
 <<<<<<< HEAD
@@ -111,37 +99,20 @@ class StockAssignSerialNumbers(models.TransientModel):
         self.show_apply = bool(self.lot_numbers)
 
     def _assign_serial_numbers(self, cancel_remaining_quantity=False):
+        lot_numbers = self._get_serial_numbers()
         if self._context.get('make_mo_done'):
             self.mark_as_done = True
-        lot_numbers = self._get_serial_numbers()
 
         split_component = self.lot_numbers and self.lot_numbers.split('\n')
         total_lot_count = len(split_component[0].split(',')) if split_component else 0
-        grep_index = 2 if self.production_id.product_id.tracking == 'lot' and not self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial') else 1
         components_lots = []
-        if total_lot_count > grep_index:
-            components_lots = [sc.split(',')[grep_index:] for sc in split_component]
+        if total_lot_count > 1:
+            components_lots = [sc.split(',')[1:] for sc in split_component]
 
-        # if components_lots:
         self.production_id.do_unreserve()
 
-        if self.production_id.product_id.tracking == 'lot' and not self.production_id.move_raw_ids.filtered(lambda m: m.product_id.tracking == 'serial'):
-            amounts = []
-            for mo_qty in lot_numbers:
-                try:
-                    if ';' in mo_qty:
-                        amounts.append(float(mo_qty.split(';')[1]))
-                    else:
-                        raise UserError(_("Quantity must be defined for the manufacturing order (MO) when finished product is track by lot."))
-                except ValueError:
-                    if mo_qty.split(';')[1] == '':
-                        amounts.append(1)
-                    else:
-                        raise UserError(_("Mo quantity should be decimal"))
-        else:
-            amounts = [1] * len(lot_numbers)
         productions = self.production_id._split_productions(
-            {self.production_id: amounts}, cancel_remaining_quantity, set_consumed_qty=False, sml_create=True)
+            {self.production_id: [1] * len(lot_numbers)}, cancel_remaining_quantity, set_consumed_qty=False)
 
         if components_lots and not all(null_list == [''] for null_list in components_lots):
             # user enter components formate : lot_numbers
@@ -208,8 +179,7 @@ class StockAssignSerialNumbers(models.TransientModel):
                 line.qty_done = line.reserved_uom_qty
 
         production_lots_vals = []
-        lot_names_for_backorders = [mo_name.split(',')[0] for mo_name in self.lot_numbers.split('\n')]
-        for serial_name in lot_names_for_backorders:
+        for serial_name in lot_numbers:
             production_lots_vals.append({
                 'product_id': self.production_id.product_id.id,
                 'company_id': self.production_id.company_id.id,
