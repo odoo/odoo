@@ -1854,14 +1854,14 @@ class AccountMoveLine(models.Model):
                     if not debit_vals['currency'].is_zero(debit_exchange_amount):
                         if debit_vals.get('record'):
                             exchange_lines_to_fix += debit_vals['record']
-                        amounts_list.append({'amount_residual_currency': debit_exchange_amount})
+                        amounts_list.append({'amount_residual_currency': debit_exchange_amount, 'currency': recon_currency})
                         remaining_debit_amount_curr -= debit_exchange_amount
                 if credit_fully_matched:
                     credit_exchange_amount = remaining_credit_amount_curr + partial_credit_amount_currency
                     if not credit_vals['currency'].is_zero(credit_exchange_amount):
                         if credit_vals.get('record'):
                             exchange_lines_to_fix += credit_vals['record']
-                        amounts_list.append({'amount_residual_currency': credit_exchange_amount})
+                        amounts_list.append({'amount_residual_currency': credit_exchange_amount, 'currency': recon_currency})
                         remaining_credit_amount_curr += credit_exchange_amount
 
             else:
@@ -1871,7 +1871,7 @@ class AccountMoveLine(models.Model):
                     if not company_currency.is_zero(debit_exchange_amount):
                         if debit_vals.get('record'):
                             exchange_lines_to_fix += debit_vals['record']
-                        amounts_list.append({'amount_residual': debit_exchange_amount})
+                        amounts_list.append({'amount_residual': debit_exchange_amount, 'currency': company_currency})
                         remaining_debit_amount -= debit_exchange_amount
                         if debit_vals['currency'] == company_currency:
                             remaining_debit_amount_curr -= debit_exchange_amount
@@ -1883,7 +1883,7 @@ class AccountMoveLine(models.Model):
                     if company_currency.compare_amounts(debit_exchange_amount, 0.0) > 0:
                         if debit_vals.get('record'):
                             exchange_lines_to_fix += debit_vals['record']
-                        amounts_list.append({'amount_residual': debit_exchange_amount})
+                        amounts_list.append({'amount_residual': debit_exchange_amount, 'currency': company_currency})
                         remaining_debit_amount -= debit_exchange_amount
                         if debit_vals['currency'] == company_currency:
                             remaining_debit_amount_curr -= debit_exchange_amount
@@ -1894,7 +1894,7 @@ class AccountMoveLine(models.Model):
                     if not company_currency.is_zero(credit_exchange_amount):
                         if credit_vals.get('record'):
                             exchange_lines_to_fix += credit_vals['record']
-                        amounts_list.append({'amount_residual': credit_exchange_amount})
+                        amounts_list.append({'amount_residual': credit_exchange_amount, 'currency': company_currency})
                         remaining_credit_amount -= credit_exchange_amount
                         if credit_vals['currency'] == company_currency:
                             remaining_credit_amount_curr -= credit_exchange_amount
@@ -1906,7 +1906,7 @@ class AccountMoveLine(models.Model):
                     if company_currency.compare_amounts(credit_exchange_amount, 0.0) < 0:
                         if credit_vals.get('record'):
                             exchange_lines_to_fix += credit_vals['record']
-                        amounts_list.append({'amount_residual': credit_exchange_amount})
+                        amounts_list.append({'amount_residual': credit_exchange_amount, 'currency': company_currency})
                         remaining_credit_amount -= credit_exchange_amount
                         if credit_vals['currency'] == company_currency:
                             remaining_credit_amount_curr -= credit_exchange_amount
@@ -2049,8 +2049,9 @@ class AccountMoveLine(models.Model):
 
             if 'amount_residual' in amounts:
                 amount_residual = amounts['amount_residual']
+                currency = amounts['currency']
                 amount_residual_currency = 0.0
-                if line.currency_id == line.company_id.currency_id:
+                if currency == line.company_id.currency_id:
                     amount_residual_currency = amount_residual
                 amount_residual_to_fix = amount_residual
                 if line.company_currency_id.is_zero(amount_residual):
@@ -2058,6 +2059,7 @@ class AccountMoveLine(models.Model):
             elif 'amount_residual_currency' in amounts:
                 amount_residual = 0.0
                 amount_residual_currency = amounts['amount_residual_currency']
+                currency = amounts['currency']
                 amount_residual_to_fix = amount_residual_currency
                 if line.currency_id.is_zero(amount_residual_currency):
                     continue
@@ -2077,7 +2079,7 @@ class AccountMoveLine(models.Model):
                     'credit': amount_residual if amount_residual > 0.0 else 0.0,
                     'amount_currency': -amount_residual_currency,
                     'account_id': line.account_id.id,
-                    'currency_id': line.currency_id.id,
+                    'currency_id': currency.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence,
                 }),
@@ -2087,7 +2089,7 @@ class AccountMoveLine(models.Model):
                     'credit': -amount_residual if amount_residual < 0.0 else 0.0,
                     'amount_currency': amount_residual_currency,
                     'account_id': exchange_line_account.id,
-                    'currency_id': line.currency_id.id,
+                    'currency_id': currency.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence + 1,
                 }),
@@ -2443,10 +2445,10 @@ class AccountMoveLine(models.Model):
                 for line in involved_lines:
                     if not line.company_currency_id.is_zero(line.amount_residual):
                         exchange_lines_to_fix += line
-                        amounts_list.append({'amount_residual': line.amount_residual})
+                        amounts_list.append({'amount_residual': line.amount_residual, 'currency': line.company_currency_id})
                     elif not line.currency_id.is_zero(line.amount_residual_currency):
                         exchange_lines_to_fix += line
-                        amounts_list.append({'amount_residual_currency': line.amount_residual_currency})
+                        amounts_list.append({'amount_residual_currency': line.amount_residual_currency, 'currency': line.currency_id})
                     exchange_max_date = max(exchange_max_date, line.date)
                 exchange_diff_vals = exchange_lines_to_fix._prepare_exchange_difference_move_vals(
                     amounts_list,
