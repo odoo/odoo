@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import split_every
 from werkzeug.urls import url_unquote
 
@@ -28,7 +28,12 @@ class ResConfigSettings(models.TransientModel):
             user_id = self.pos_self_ordering_default_user_id
 
             if not user_id.has_group("point_of_sale.group_pos_user") and not user_id.has_group("point_of_sale.group_pos_manager"):
-                raise UserError(_("The user must be a POS user"))
+                raise ValidationError(_("The user must be a POS user"))
+
+    @api.onchange("pos_self_ordering_service_mode")
+    def _onchange_pos_self_order_service_mode(self):
+        if self.pos_self_ordering_service_mode == 'counter':
+            self.pos_self_ordering_pay_after = "each"
 
     @api.onchange("pos_self_ordering_default_language_id", "pos_self_ordering_available_language_ids")
     def _onchange_pos_self_order_kiosk_default_language(self):
@@ -37,45 +42,47 @@ class ResConfigSettings(models.TransientModel):
         if not self.pos_self_ordering_default_language_id and self.pos_self_ordering_available_language_ids:
             self.pos_self_ordering_default_language_id = self.pos_self_ordering_available_language_ids[0]
 
-    @api.onchange("pos_self_ordering_mode")
+    @api.onchange("pos_self_ordering_mode", "pos_module_pos_restaurant")
     def _onchange_pos_self_order_kiosk(self):
         if self.pos_self_ordering_mode == 'kiosk':
             self.is_kiosk_mode = True
+            self.pos_module_pos_restaurant = False
             self.pos_self_ordering_pay_after = "each"
-
-        elif self.pos_self_ordering_mode == 'mobile' and not self.pos_module_pos_restaurant:
-            raise UserError(_("In Self-Order mode, you must have the Restaurant module"))
         else:
             self.is_kiosk_mode = False
 
-    @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
-    def _onchange_service_and_ordering(self):
-        if self.pos_self_ordering_pay_after == "meal" and self.pos_self_ordering_mode == 'mobile':
-            self.pos_self_ordering_service_mode = 'table'
+            if not self.pos_module_pos_restaurant:
+                self.pos_self_ordering_service_mode = 'counter'
 
     @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
     def _onchange_pos_self_order_pay_after(self):
         if self.pos_self_ordering_pay_after == "meal" and self.pos_self_ordering_mode == 'kiosk':
-            raise UserError(_("Only pay after each is available with kiosk mode."))
+            raise ValidationError(_("Only pay after each is available with kiosk mode."))
+
+        if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
+            self.pos_self_ordering_pay_after = "each"
 
         if self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
             self.module_pos_preparation_display = True
 
-    @api.onchange("pos_self_ordering_service_mode")
-    def _onchange_pos_self_ordering_service_mode(self):
-        table_ids = self.pos_floor_ids.table_ids
-        if self.pos_self_ordering_service_mode == 'table' and self.pos_self_ordering_mode == 'mobile' and not table_ids:
-            raise UserError(_("In Self-Order mode, you must have at least one table to use the table service mode"))
+    def custom_link_action(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "pos_self_order.custom_link",
+            "views": [[False, "tree"]],
+            "domain": [['pos_config_ids', 'in', self.pos_config_id.id]],
+        }
 
     def generate_qr_codes_page(self):
         """
         Generate the data needed to print the QR codes page
         """
-        if self.pos_self_ordering_mode == 'mobile':
+        if self.pos_self_ordering_mode == 'mobile' and self.pos_module_pos_restaurant:
             table_ids = self.pos_config_id.floor_ids.table_ids
 
             if not table_ids:
-                raise UserError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
+                raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
             url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
             name = table_ids[0].name
@@ -94,7 +101,8 @@ class ResConfigSettings(models.TransientModel):
                     }
                     for floor in self.pos_config_id._get_qr_code_data()
                 ],
-                'table_mode': self.pos_self_ordering_mode,
+                'table_mode': self.pos_self_ordering_mode and self.pos_module_pos_restaurant and self.pos_self_ordering_service_mode == 'table',
+                'self_order': self.pos_self_ordering_mode == 'mobile',
                 'table_example': {
                     'name': name,
                     'decoded_url': url or "",

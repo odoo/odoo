@@ -15,7 +15,7 @@ export class CartPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-
+        this.sendInProgress = false;
         this.state = useState({
             selectTable: false,
             cancelConfirmation: false,
@@ -49,6 +49,10 @@ export class CartPage extends Component {
     }
 
     async pay() {
+        if (this.sendInProgress) {
+            return;
+        }
+
         const orderingMode = this.selfOrder.config.self_ordering_service_mode;
         const type = this.selfOrder.config.self_ordering_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;

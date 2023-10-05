@@ -23,24 +23,18 @@ export class PaymentPage extends Component {
         });
 
         onWillStart(async () => {
+            if (this.selfOrder.currentOrder.lines.length === 0) {
+                this.router.navigate("default");
+                return;
+            }
+
             const type = this.selfOrder.config.self_ordering_mode;
             const paymentMethods = this.selfOrder.pos_payment_methods.filter(
                 (p) => !p.is_online_payment
             );
 
             if (paymentMethods.length === 0 && type === "kiosk") {
-                try {
-                    const order = await this.rpc("/pos-self-order/process-new-order/kiosk", {
-                        order: this.selfOrder.currentOrder,
-                        access_token: this.selfOrder.access_token,
-                        table_identifier: null,
-                    });
-
-                    this.selfOrder.updateOrderFromServer(order);
-                } catch (error) {
-                    this.selfOrder.handleErrorNotification(error);
-                }
-
+                this.selfOrder.sendDraftOrderToServer();
                 this.router.navigate("payment_success");
             } else if (paymentMethods.length === 1 && type === "kiosk") {
                 this.selectMethod(this.selfOrder.pos_payment_methods[0].id);
