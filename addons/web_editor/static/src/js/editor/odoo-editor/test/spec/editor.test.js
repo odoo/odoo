@@ -18,6 +18,7 @@ import {
     triggerEvent,
     nextTickFrame,
     nextTick,
+    setTestSelection,
 } from '../utils.js';
 
 async function twoDeleteForward(editor) {
@@ -6163,6 +6164,72 @@ X[]
                     // Final state: '<p>ab<span class="a">\u200B</span>c[]d</p>'
                 });
             });
+            it('should move into a link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]<a href="#">cd</a>ef</p>',
+                    contentBeforeEdit: '<p>ab[]' +
+                        '<a href="#">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            'cd' + // content
+                            // end zws is only there if the selection is in the link
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'ef</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight' });
+                        // Set the selection to mimick that which keydown would
+                        // have set, were it not blocked when triggered
+                        // programmatically.
+                        const cd = editor.editable.querySelector('a').childNodes[1];
+                        await setTestSelection({
+                            anchorNode: cd, anchorOffset: 0,
+                            focusNode: cd, focusOffset: 0,
+                        }, editor.document);
+                    },
+                    contentAfterEdit: '<p>ab' +
+                        '<a href="#" class="o_link_in_selection">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            '[]cd' + // content
+                            '<span data-o-link-zws="end">\u200B</span>' + // end zws
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'ef</p>',
+                    contentAfter: '<p>ab<a href="#">[]cd</a>ef</p>',
+                });
+            });
+            it('should move out of a link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<a href="#">cd[]</a>ef</p>',
+                    contentBeforeEdit: '<p>ab' +
+                        '<a href="#" class="o_link_in_selection">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            'cd[]' + // content
+                            '<span data-o-link-zws="end">\u200B</span>' + // end zws
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'ef</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowRight' });
+                        // Set the selection to mimick that which keydown would
+                        // have set, were it not blocked when triggered
+                        // programmatically.
+                        const endZws = editor.editable.querySelector('a > span[data-o-link-zws="end"]');
+                        await setTestSelection({
+                            anchorNode: endZws, anchorOffset: 1,
+                            focusNode: endZws, focusOffset: 1,
+                        }, editor.document);
+                    },
+                    contentAfterEdit: '<p>ab' +
+                        '<a href="#" class="">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            'cd' + // content
+                            // end zws is only there if the selection is in the link
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    '[]ef</p>',
+                    contentAfter: '<p>ab<a href="#">cd</a>[]ef</p>',
+                });
+            });
         });
         describe('ArrowLeft', () => {
             it('should move past a zws (collapsed)', async () => {
@@ -6285,6 +6352,72 @@ X[]
                     },
                     contentAfter: '<p>a[b<span class="a">]\u200B</span>cd</p>',
                     // Final state: '<p>a[]b<span class="a">\u200B</span>cd</p>'
+                });
+            });
+            it('should move out of a link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<a href="#">[]cd</a>ef</p>',
+                    contentBeforeEdit: '<p>ab' +
+                        '<a href="#" class="o_link_in_selection">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            '[]cd' + // content
+                            '<span data-o-link-zws="end">\u200B</span>' + // end zws
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'ef</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowLeft' });
+                        // Set the selection to mimick that which keydown would
+                        // have set, were it not blocked when triggered
+                        // programmatically.
+                        const ab = editor.editable.querySelector('p').firstChild;
+                        await setTestSelection({
+                            anchorNode: ab, anchorOffset: 2,
+                            focusNode: ab, focusOffset: 2,
+                        }, editor.document);
+                    },
+                    contentAfterEdit: '<p>ab[]' +
+                        '<a href="#" class="">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            'cd' + // content
+                            // end zws is only there if the selection is in the link
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'ef</p>',
+                    contentAfter: '<p>ab[]<a href="#">cd</a>ef</p>',
+                });
+            });
+            it('should move into a link', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab<a href="#">cd</a>[]ef</p>',
+                    contentBeforeEdit: '<p>ab' +
+                        '<a href="#">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            'cd' + // content
+                            // end zws is only there if the selection is in the link
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    '[]ef</p>',
+                    stepFunction: async editor => {
+                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowLeft' });
+                        // Set the selection to mimick that which keydown would
+                        // have set, were it not blocked when triggered
+                        // programmatically.
+                        const cd = editor.editable.querySelector('a').childNodes[1];
+                        await setTestSelection({
+                            anchorNode: cd, anchorOffset: 2,
+                            focusNode: cd, focusOffset: 2,
+                        }, editor.document);
+                    },
+                    contentAfterEdit: '<p>ab' +
+                        '<a href="#" class="o_link_in_selection">' +
+                            '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                            'cd[]' + // content
+                            '<span data-o-link-zws="end">\u200B</span>' + // end zws
+                        '</a>' +
+                        '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'ef</p>',
+                    contentAfter: '<p>ab<a href="#">cd[]</a>ef</p>',
                 });
             });
         });
