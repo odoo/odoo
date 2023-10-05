@@ -434,6 +434,14 @@ export class SelfOrder extends Reactive {
 
         return result;
     }
+
+    getProductDisplayPrice(product) {
+        if (this.currentOrder.take_away) {
+            return product.price_info.display_price_alternative;
+        } else {
+            return product.price_info.display_price_default;
+        }
+    }
 }
 
 export const selfOrderService = {
