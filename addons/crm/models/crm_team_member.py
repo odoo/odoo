@@ -131,7 +131,6 @@ class TeamMember(models.Model):
                     ('user_id', '=', False),
                     ('date_open', '=', False),
                     ('team_id', '=', team.id),
-                    ('type', '=', 'lead'),
                 ], order='probability DESC, id')
             for lead in leads:
                 if not team_members:

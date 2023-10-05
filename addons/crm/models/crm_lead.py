@@ -344,7 +344,8 @@ class Lead(models.Model):
     @api.depends('user_id')
     def _compute_date_open(self):
         for lead in self:
-            lead.date_open = self.env.cr.now() if lead.user_id else False
+            if not lead.date_open:
+                lead.date_open = self.env.cr.now() if lead.user_id else False
 
     @api.depends('stage_id')
     def _compute_date_last_stage_update(self):
@@ -1414,6 +1415,8 @@ class Lead(models.Model):
                 merged_data['stage_id'] = team_stage_ids[0].id if team_stage_ids else False
 
         # write merged data into first opportunity
+        if 'user_id' in merged_data and opportunities_head.user_id.id == merged_data['user_id']:
+            merged_data.pop('user_id')
         opportunities_head.write(merged_data)
 
         # delete tail opportunities
