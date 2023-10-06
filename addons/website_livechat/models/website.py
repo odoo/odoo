@@ -54,7 +54,7 @@ class Website(models.Model):
                         # linked to another guest in the meantime. We need to
                         # update the channel to link it to the current guest.
                         channel_guest_member = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id == current_guest)
-                        chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member), Command.link(current_guest)]})
+                        chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member), Command.create({'guest_id': current_guest.id})]})
                     if not current_guest:
                         channel_guest._set_auth_cookie()
                 return {
