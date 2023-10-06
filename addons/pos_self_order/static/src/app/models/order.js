@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import { Reactive } from "@web/core/utils/reactive";
 import { Line } from "./line";
+import { random5Chars } from "@point_of_sale/utils";
 
 export class Order extends Reactive {
     constructor({
@@ -15,6 +16,7 @@ export class Order extends Reactive {
         amount_tax,
         lastChangesSent,
         take_away,
+        tax_details,
     }) {
         super();
         this.setup(...arguments);
@@ -32,6 +34,8 @@ export class Order extends Reactive {
         this.amount_tax = order.amount_tax || 0;
         this.lines = order.lines || [];
         this.take_away = typeof order.take_away === "boolean" ? order.take_away : null;
+        this.ticket_code = random5Chars(); // 5-digits alphanum code shown on the receipt
+        this.tax_details = order.tax_details || [];
 
         // data
         this.lastChangesSent = order.lastChangesSent || {};
