@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from contextlib import ExitStack
 from markupsafe import Markup
 from urllib.parse import urlparse
 
@@ -53,6 +54,11 @@ except Exception:
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
 
+
+def _get_wkhtmltoimage_bin():
+    return find_in_path('wkhtmltoimage')
+
+
 def _split_table(tree, max_rows):
     """
     Walks through the etree and splits tables with more than max_rows rows into
@@ -103,6 +109,23 @@ else:
         _logger.info('Wkhtmltopdf seems to be broken.')
         wkhtmltopdf_state = 'broken'
 
+wkhtmltoimage_version = None
+try:
+    process = subprocess.Popen(
+        [_get_wkhtmltoimage_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+except OSError:
+    _logger.info('You need Wkhtmltoimage to generate images from html.')
+else:
+    _logger.info('Will use the Wkhtmltoimage binary at %s', _get_wkhtmltoimage_bin())
+    out, err = process.communicate()
+    match = re.search(b'([0-9.]+)', out)
+    if match:
+        wkhtmltoimage_version = parse_version(match.group(0).decode('ascii'))
+        if config['workers'] == 1:
+            _logger.info('You need to start Odoo with at least two workers to convert images to html.')
+    else:
+        _logger.info('Wkhtmltoimage seems to be broken.')
 
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
@@ -412,6 +435,51 @@ class IrActionsReport(models.Model):
         })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
+
+    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg"):
+        """
+        :bodies str: valid html documents as strings
+        :param width int: width in pixels
+        :param height int: height in pixels
+        :param image_format union['jpg', 'png']: format of the image
+        :return list[bytes|None]:
+        """
+        if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_image_rendering'):
+            return [None] * len(bodies)
+        if not wkhtmltoimage_version or wkhtmltoimage_version < parse_version('0.12.0'):
+            raise UserError(_('wkhtmltoimage 0.12.0^ is required in order to render images from html'))
+        command_args = [
+            '--disable-local-file-access', '--disable-javascript',
+            '--quiet',
+            '--width', str(width), '--height', str(height),
+            '--format', image_format,
+        ]
+        with ExitStack() as stack:
+            files = []
+            for body in bodies:
+                input_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report_image_html_input.tmp.'))
+                output_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix=f'.{image_format}', prefix='report_image_output.tmp.'))
+                input_file.write(body.encode())
+                files.append((input_file, output_file))
+            output_images = []
+            for input_file, output_file in files:
+                # smaller bodies may be held in a python buffer until close, force flush
+                input_file.flush()
+                wkhtmltoimage = [_get_wkhtmltoimage_bin()] + command_args + [input_file.name, output_file.name]
+                # start and block, no need for parallelism for now
+                process = subprocess.Popen(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+                _dummy, err = process.communicate()
+                if err:
+                    message = _(
+                        'Wkhtmltoimage failed (error code: %(error_code)s). Message: %(error_message_end)s',
+                        error_code=process.returncode,
+                        error_message_end=err[-1000:],
+                    )
+                    _logger.warning(message)
+                    output_images.append(None)
+                else:
+                    output_images.append(output_file.read())
+        return output_images
 
     @api.model
     def _run_wkhtmltopdf(
