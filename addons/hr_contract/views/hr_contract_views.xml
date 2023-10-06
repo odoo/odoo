@@ -368,7 +368,7 @@
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="view_mode">tree,kanban,form,activity</field>
-            <field name="domain">[('employee_id', '!=', False)]</field>
+            <field name="domain">[('employee_id.active', '=', True)]</field>
             <field name="context">{'search_default_group_by_state': 1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
             <field name="help" type="html">
