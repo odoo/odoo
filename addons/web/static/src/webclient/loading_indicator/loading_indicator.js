@@ -2,10 +2,10 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { Transition } from "@web/core/transition";
 
-import { Component, onWillDestroy, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 /**
  * Loading Indicator
@@ -28,12 +28,8 @@ export class LoadingIndicator extends Component {
         this.shouldUnblock = false;
         this.startShowTimer = null;
         this.blockUITimer = null;
-        this.env.bus.addEventListener("RPC:REQUEST", this.requestCall.bind(this));
-        this.env.bus.addEventListener("RPC:RESPONSE", this.responseCall.bind(this));
-        onWillDestroy(() => {
-            this.env.bus.removeEventListener("RPC:REQUEST", this.requestCall.bind(this));
-            this.env.bus.removeEventListener("RPC:RESPONSE", this.responseCall.bind(this));
-        });
+        useBus(this.env.bus, "RPC:REQUEST", this.requestCall);
+        useBus(this.env.bus, "RPC:RESPONSE", this.responseCall);
     }
 
     requestCall({ detail: rpcId }) {
