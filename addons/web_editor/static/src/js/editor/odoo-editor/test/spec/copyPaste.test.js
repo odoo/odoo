@@ -9,6 +9,7 @@ import {
     pasteText,
     pasteHtml,
     pasteOdooEditorHtml,
+    unformat,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
@@ -1869,6 +1870,45 @@ describe('Paste', () => {
                         await pasteHtml(editor, '<ul><li>123</li><li>456</li></ul>');
                     },
                     contentAfter: '<ul><li>123</li><li>456[]abc</li><li>def</li><li>ghi</li></ul>',
+                });
+            });
+            it('should correctly paste nested UL or OL elements copied from GDocs', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>[]<br></p>`,
+                    stepFunction:  async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <ul>
+                                <li>abc</li>
+                                <li>def</li>
+                                <ul>
+                                    <li>ghi</li>
+                                    <li>jkl</li>
+                                </ul>
+                                <ol>
+                                    <li>mno</li>
+                                    <li>pqr</li>
+                                </ol>
+                            </ul>
+                        `));
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>abc</li>
+                            <li>def</li>
+                            <li class="oe-nested">
+                                <ul>
+                                    <li>ghi</li>
+                                    <li>jkl</li>
+                                </ul>
+                            </li>
+                            <li class="oe-nested">
+                                <ol>
+                                    <li>mno</li>
+                                    <li>pqr[]</li>
+                                </ol>
+                            </li>
+                        </ul>
+                    `),
                 });
             });
         });
