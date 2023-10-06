@@ -73,7 +73,7 @@ class Query(object):
         self._where_clauses = []
 
         # order, limit, offset
-        self.order = None
+        self._order = None
         self.limit = None
         self.offset = None
 
@@ -141,6 +141,14 @@ class Query(object):
         return rhs_alias
 
     @property
+    def order(self) -> SQL | None:
+        return self._order
+
+    @order.setter
+    def order(self, value: SQL | str | None):
+        self._order = SQL(value) if value is not None else None
+
+    @property
     def table(self) -> str:
         """ Return the query's main table, i.e., the first one in the FROM clause. """
         return next(iter(self._tables))
@@ -176,7 +184,7 @@ class Query(object):
             SQL("SELECT %s", SQL(", ").join(sql_args)),
             SQL(" FROM %s", self.from_clause),
             SQL(" WHERE %s", self.where_clause) if self._where_clauses else SQL(),
-            SQL(" ORDER BY %s", SQL(self.order)) if self.order else SQL(),
+            SQL(" ORDER BY %s", self._order) if self._order else SQL(),
             SQL(" LIMIT %s", self.limit) if self.limit else SQL(),
             SQL(" OFFSET %s", self.offset) if self.offset else SQL(),
         )

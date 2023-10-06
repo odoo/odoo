@@ -5103,98 +5103,122 @@ class BaseModel(metaclass=MetaModel):
         if domain:
             expression.expression(domain, self.sudo(), self._table, query)
 
-    @api.model
-    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen):
+    def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
+                      reverse: bool = False) -> SQL:
+        """ Return an :class:`SQL` object that represents the given ORDER BY
+        clause, without the ORDER BY keyword.
         """
-        Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
-        either native m2o fields or function/related fields that are stored, including
-        intermediate JOINs for inheritance if required.
-
-        :return: the qualified field name to use in an ORDER BY clause to sort by ``order_field``
-        """
-        field = self._fields[order_field]
-        if field.inherited:
-            # also add missing joins for reaching the table containing the m2o field
-            qualified_field = self._inherits_join_calc(alias, order_field, query)
-            alias, order_field = qualified_field.replace('"', '').split('.', 1)
-            field = field.base_field
-
-        assert field.type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
-        if not field.store:
-            _logger.debug("Many2one function/related fields must be stored "
-                          "to be used as ordering fields! Ignoring sorting for %s.%s",
-                          self._name, order_field)
+        order = order or self._order
+        if not order:
             return []
+        self._check_qorder(order)
 
-        # figure out the applicable order_by for the m2o
-        dest_model = self.env[field.comodel_name]
-        m2o_order = dest_model._order
-        if not regex_order.match(m2o_order):
-            # _order is complex, can't use it here, so we default to _rec_name
-            m2o_order = dest_model._rec_name
+        alias = alias or self._table
 
-        # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
-        # as we don't want to exclude results that have NULL values for the m2o
-        dest_alias = query.left_join(alias, order_field, dest_model._table, 'id', order_field)
-        return dest_model._generate_order_by_inner(dest_alias, m2o_order, query,
-                                                   reverse_direction, seen)
-
-    @api.model
-    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None):
-        if seen is None:
-            seen = set()
-        self._check_qorder(order_spec)
-
-        order_by_elements = []
-        for order_part in order_spec.split(','):
+        terms = []
+        for order_part in order.split(','):
             order_match = regex_order.match(order_part)
-            order_field = order_match['field']
-            order_direction = (order_match['direction'] or '').upper()
-            order_nulls = (order_match['nulls'] or '').upper()
-            if reverse_direction:
-                order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
-                if order_nulls:
-                    order_nulls = 'NULLS LAST' if order_nulls == 'NULLS FIRST' else 'NULLS FIRST'
-            do_reverse = order_direction == 'DESC'
-
-            field = self._fields.get(order_field)
-            if not field:
-                raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
+            field_name = order_match['field']
 
             property_name = order_match['property']
             if property_name:
-                check_property_field_value_name(property_name)
-                if field.type != 'properties':
-                    raise ValueError(f'Order a property ({property_name!r}) on a non-properties field ({field.name!r})')
+                field_name = f"{field_name}.{property_name}"
 
-            if order_field == 'id':
-                order_by_elements.append(f'"{alias}"."{order_field}" {order_direction} {order_nulls}')
-            else:
-                if field.inherited:
-                    field = field.base_field
-                if field.store and field.type == 'many2one':
-                    key = (field.model_name, field.comodel_name, order_field)
-                    if order_nulls:
-                        qname = self._inherits_join_calc(alias, order_field, query)
-                        if order_nulls == 'NULLS LAST':
-                            order_by_elements.append(f"{qname} IS NULL")
-                        elif order_nulls == 'NULLS FIRST':
-                            order_by_elements.append(f"{qname} IS NOT NULL")
-                    if key not in seen:
-                        seen.add(key)
-                        order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
-                elif field.store and field.column_type:
-                    qualifield_name = self._inherits_join_calc(alias, order_field, query)
-                    if field.type == 'boolean':
-                        qualifield_name = "COALESCE(%s, false)" % qualifield_name
-                    elif field.type == 'properties' and property_name:
-                        qualifield_name = f"({qualifield_name} -> '{property_name}')"
-                    order_by_elements.append(f"{qualifield_name} {order_direction} {order_nulls}")
-                else:
-                    _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
-                    continue  # ignore non-readable or "non-joinable" fields
+            direction = (order_match['direction'] or '').upper()
+            nulls = (order_match['nulls'] or '').upper()
+            if reverse:
+                direction = 'ASC' if direction == 'DESC' else 'DESC'
+                if nulls:
+                    nulls = 'NULLS LAST' if nulls == 'NULLS FIRST' else 'NULLS FIRST'
 
-        return order_by_elements
+            sql_direction = SQL(direction) if direction in ('ASC', 'DESC') else SQL()
+            sql_nulls = SQL(nulls) if nulls in ('NULLS FIRST', 'NULLS LAST') else SQL()
+
+            term = self._order_field_to_sql(alias, field_name, sql_direction, sql_nulls, query)
+            if term:
+                terms.append(term)
+
+        return SQL(", ").join(terms)
+
+    def _order_field_to_sql(self, alias: str, field_name: str, direction: SQL,
+                            nulls: SQL, query: Query) -> SQL:
+        """ Return an :class:`SQL` object that represents the ordering by the
+        given field.
+
+        :param direction: one of ``SQL("ASC")``, ``SQL("DESC")``, ``SQL()``
+        :param nulls: one of ``SQL("NULLS FIRST")``, ``SQL("NULLS LAST")``, ``SQL()``
+        """
+        full_name = field_name
+        property_name = None
+        if '.' in field_name:
+            field_name, property_name = field_name.split('.', 1)
+
+        field = self._fields.get(field_name)
+        if not field:
+            raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+
+        if property_name and field.type != 'properties':
+            raise ValueError(f'Order a property ({property_name!r}) on a non-properties field ({field_name!r})')
+
+        if field.inherited:
+            # delegate to the parent model via a join
+            parent_model = self.env[field.related_field.model_name]
+            parent_fname = field.related.split('.')[0]
+            parent_alias = query.make_alias(alias, parent_fname)
+            query.add_join('LEFT JOIN', parent_alias, parent_model._table, SQL(
+                "%s = %s",
+                self._field_to_sql(alias, parent_fname, query),
+                SQL.identifier(parent_alias, 'id'),
+            ))
+            return parent_model._order_field_to_sql(parent_alias, full_name, direction, nulls, query)
+
+        if not (field.store and field.column_type):
+            _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, field_name)
+            return
+
+        if field.type == 'many2one':
+            seen = self.env.context.get('__m2o_order_seen', ())
+            if field in seen:
+                return
+            self = self.with_context(__m2o_order_seen=frozenset((field, *seen)))
+
+            # instead of ordering by the field's raw value, use the comodel's
+            # order on many2one values
+            terms = []
+            if nulls.code == 'NULLS FIRST':
+                terms.append(SQL("%s IS NOT NULL", self._field_to_sql(alias, field_name, query)))
+            elif nulls.code == 'NULLS LAST':
+                terms.append(SQL("%s IS NULL", self._field_to_sql(alias, field_name, query)))
+
+            # LEFT JOIN the comodel table, in order to include NULL values, too
+            comodel = self.env[field.comodel_name]
+            coalias = query.make_alias(alias, field_name)
+            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+                "%s = %s",
+                self._field_to_sql(alias, field_name, query),
+                SQL.identifier(coalias, 'id'),
+            ))
+
+            # figure out the applicable order_by for the m2o
+            coorder = comodel._order
+            if not regex_order.match(coorder):
+                # _order is complex, can't use it here, so we default to _rec_name
+                coorder = comodel._rec_name
+
+            # delegate the order to the comodel
+            reverse = direction.code == 'DESC'
+            term = comodel._order_to_sql(coorder, query, alias=coalias, reverse=reverse)
+            if term:
+                terms.append(term)
+            return SQL(", ").join(terms)
+
+        sql_field = self._field_to_sql(alias, field_name, query)
+        if field.type == 'boolean':
+            sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
+        elif field.type == 'properties' and property_name:
+            sql_field = SQL("(%s -> %s)", sql_field, property_name)
+
+        return SQL("%s %s %s", sql_field, direction, nulls)
 
     @api.model
     def _generate_order_by(self, order_spec, query):
@@ -5203,14 +5227,13 @@ class BaseModel(metaclass=MetaModel):
         a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
 
         :raise ValueError in case order_spec is malformed
-        """
-        order_by_clause = ''
-        order_spec = order_spec or self._order
-        if order_spec:
-            order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
-            if order_by_elements:
-                order_by_clause = ",".join(order_by_elements)
 
+        .. deprecated:: 17.0
+            Deprecated method, use _order_to_sql() instead
+        """
+        warnings.warn("Deprecated method _generate_order_by(), _order_to_sql() instead", DeprecationWarning, 2)
+        sql = self._order_to_sql(order_spec, query)
+        order_by_clause = self.env.cr.mogrify(sql).decode()
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
@@ -5339,7 +5362,7 @@ class BaseModel(metaclass=MetaModel):
         self._apply_ir_rules(query, 'read')
 
         if order:
-            query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
+            query.order = self._order_to_sql(order, query)
         query.limit = limit
         query.offset = offset
 

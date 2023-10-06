@@ -1281,7 +1281,7 @@ class TestQueries(TransactionCase):
             SELECT "res_partner_title"."id"
             FROM "res_partner_title"
             WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>'en_US') like %s)
-            ORDER BY COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US')
+            ORDER BY COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>'en_US')
         ''']):
             Model.search([('name', 'like', 'foo')])
 
