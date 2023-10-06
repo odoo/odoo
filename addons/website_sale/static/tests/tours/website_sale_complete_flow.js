@@ -239,7 +239,7 @@
     },
     {
         content: "Add new shipping address",
-        trigger: '.all_shipping .one_kanban form[action^="/shop/address"] a:contains("Add address")',
+        trigger: '.all_shipping a[href^="/shop/address"]:contains("Add address")',
     },
     {
         content: "Fulfill shipping address form",

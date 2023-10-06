@@ -1743,8 +1743,9 @@
             </div>
             <t t-call="website_sale.row_addresses">
                 <t t-set="order" t-value="order"/>
-                <t t-set="is_invoice" t-value="1"/>
+                <t t-set="is_invoice" t-value="True"/>
                 <t t-set="addresses" t-value="billings"/>
+                <t t-set="selected_address" t-value="order.partner_invoice_id"/>
             </t>
             <t t-if="not only_services" groups="account.group_delivery_invoice_address">
                 <div class="row">
@@ -1754,8 +1755,9 @@
                 </div>
                 <t t-call="website_sale.row_addresses">
                     <t t-set="order" t-value="order"/>
-                    <t t-set="is_invoice" t-value="0"/>
+                    <t t-set="is_invoice" t-value="False"/>
                     <t t-set="addresses" t-value="shippings"/>
+                    <t t-set="selected_address" t-value="order.partner_shipping_id"/>
                 </t>
             </t>
         </t>
@@ -1766,50 +1768,53 @@
             <div t-foreach="addresses" t-as="addr"
                     class="one_kanban col-md">
                 <t t-call="website_sale.address_kanban">
-                    <t t-set="is_invoice" t-value="is_invoice"/>
                     <t t-set="contact" t-value="addr"/>
-                    <t t-set="order" t-value="order"/>
-                    <t t-if="not is_invoice" t-set="selected" t-value="order.partner_shipping_id==addr or len(addresses)==1"/>
-                    <t t-if="is_invoice" t-set="selected" t-value="order.partner_invoice_id==addr or len(addresses)==1"/>
-                    <t t-set="readonly" t-value="bool(len(addresses)==1)"/>
-                    <t t-set="allow_edit"
-                       t-value="(website.is_public_user() or order.partner_id.id == addr.id or (addr.id in order.partner_id.commercial_partner_id.child_ids.ids))
-                            and is_invoice or addr.type=='delivery'"
-                    />
+                    <t t-set="selected" t-value="len(addresses) == 1 or addr == selected_address"/>
                 </t>
             </div>
-            <div class="one_kanban col-md">
-                <form action="/shop/address" method="post" class="h-100">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                    <t t-if="is_invoice">
-                        <input type="hidden" name="is_invoice" t-att-value="is_invoice" />
-                        <input type="hidden" name="callback" value="/shop/checkout" />
-                    </t>
-                    <a role="button" href="#" class="o_wsale_add_address a-submit d-flex align-items-center justify-content-center h-100 px-4 border rounded mx-auto no-decoration">
-                        <i class="fa fa-plus me-md-2"/><span class="d-none d-md-inline">Add address</span>
-                    </a>
-                </form>
+            <div t-if="not is_invoice or not order.website_id.is_public_user()" class="one_kanban col-md">
+                <!-- We do not allow public users to have multiple billing addresses -->
+                <t t-if="is_invoice">
+                    <t t-set="new_address_href" t-valuef="/shop/address?mode=billing"/>
+                </t>
+                <t t-else="">
+                    <t t-set="new_address_href" t-valuef="/shop/address?mode=shipping"/>
+                </t>
+                <a role="button" t-att-href="new_address_href" class="o_wsale_add_address d-flex align-items-center justify-content-center h-100 px-4 border rounded mx-auto no-decoration">
+                    <i class="fa fa-plus me-md-2"/><span class="d-none d-md-inline">Add address</span>
+                </a>
             </div>
         </div>
     </template>
 
     <!-- Card view of addresses. Called in `website_sale.checkout`. -->
     <template id="address_kanban" name="Kanban address">
-            <form action="/shop/checkout" method="POST" class="d-none">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                <input type="hidden" name="partner_id" t-att-value="contact.id" />
-                <t t-if="is_invoice">
-                    <input type="hidden" name="is_invoice" t-att-value="is_invoice"/>
-                    <input type="hidden" name="callback" value="/shop/checkout"/>
+        <t t-set="mode" t-value="is_invoice and 'billing' or 'shipping'"/>
+        <form action="/shop/cart/update_address" method="POST" class="d-none">
+            <input type="hidden"
+                   name="csrf_token"
+                   t-att-value="request.csrf_token()"
+                   t-nocache="The csrf token must always be up to date."/>
+            <input type="hidden" name="partner_id" t-att-value="contact.id"/>
+            <input type="hidden" name="mode" t-att-value="mode"/>
+            <input type="submit"/>
+        </form>
+        <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_shipping'}">
+            <div class="card-body d-flex flex-column align-items-start">
+                <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
+                <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, mode)">
+                    <t t-set="new_address_href" t-value="'/shop/address?mode=' + mode"/>
+                    <a
+                        t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
+                        class="js_edit_address btn btn-link p-0 mt-auto"
+                        role="button"
+                        title="Edit this address"
+                        aria-label="Edit this address">
+                        <i class="fa fa-pencil me-1"/>Edit
+                    </a>
                 </t>
-                <input type="submit"/>
-            </form>
-            <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_shipping'}">
-                <div class='card-body d-flex flex-column align-items-start'>
-                    <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
-                    <a t-if="allow_edit" href="#" class="js_edit_address btn btn-link p-0 mt-auto" role="button" title="Edit this address" aria-label="Edit this address"><i class="fa fa-pencil me-1"/>Edit</a>
-                </div>
             </div>
+        </div>
     </template>
 
     <!-- /shop/address route -->
@@ -1955,10 +1960,9 @@
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="submitted" value="1" />
                                     <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
+                                    <input type="hidden" name="mode" t-att-value="mode[1]"/>
                                     <input type="hidden" name="callback" t-att-value="callback" />
-                                    <t t-if="mode[1] == 'billing'">
-                                        <input type="hidden" name="is_invoice" value="1" />
-                                    </t>
+
                                     <!-- Example -->
                                     <input type="hidden" name="field_required" t-att-value="'phone,name'" />
 

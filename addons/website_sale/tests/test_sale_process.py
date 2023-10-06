@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import Forbidden
+
 import odoo.tests
 
 from odoo import api, Command
@@ -140,15 +142,21 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
     '''
 
     def setUp(self):
-        super(TestWebsiteSaleCheckoutAddress, self).setUp()
-        self.website = self.env.ref('website.default_website')
-        self.country_id = self.env.ref('base.be').id
+        super().setUp()
         self.WebsiteSaleController = WebsiteSale()
         self.default_address_values = {
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
             'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
         }
-        self.default_billing_address_values = self.default_address_values | {'is_invoice': 1}
+        self.default_billing_address_values = self.default_address_values | {'mode': 'billing'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
+        cls.country_id = cls.env.ref('base.be').id
+        cls.country_us = cls.env.ref('base.us')
+        cls.country_us_state = cls.env.ref('base.state_us_39')
 
     def _create_so(self, partner_id=None, company_id=None):
         values = {
@@ -490,3 +498,179 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             # 5. Check that invoice/shipping address of so changed
             self.assertEqual(new_billing_use_same, so.partner_invoice_id)
             self.assertEqual(new_billing_use_same, so.partner_shipping_id)
+
+    def test_09_update_cart_address(self):
+        self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+        user = self.env['res.users'].create({
+            'name': 'test',
+            'login': 'test',
+            'password': 'test',
+        })
+        user_partner = user.partner_id
+        partner_company = self.env['res.partner'].create({
+            'name': 'My company',
+            'is_company': True,
+            'child_ids': [Command.link(user_partner.id)],
+        })
+        colleague = self.env['res.partner'].create({
+            'parent_id': partner_company.id,
+            'name': 'whatever',
+        })
+        colleague_shipping = self.env['res.partner'].create({
+            'parent_id': colleague.id,
+            'name': 'whatever',
+            'type': 'delivery',
+        })
+
+        self.assertEqual(partner_company.commercial_partner_id, partner_company)
+        self.assertEqual(user_partner.commercial_partner_id, partner_company)
+
+        invoicing, shipping, bad_invoicing, bad_shipping = self.env['res.partner'].create([
+            {
+                'name': 'Invoicing',
+                'street': '215 Vine St',
+                'city': 'Scranton',
+                'zip': '18503',
+                'country_id': self.country_us.id,
+                'state_id': self.country_us_state.id,
+                'phone': '+1 555-555-5555',
+                'email': 'admin@yourcompany.example.com',
+                'type': 'invoice',
+                'parent_id': user_partner.id,
+            },
+            {
+                'name': 'Shipping',
+                'street': '215 Vine St',
+                'city': 'Scranton',
+                'zip': '18503',
+                'country_id': self.country_us.id,
+                'state_id': self.country_us_state.id,
+                'phone': '+1 555-555-5555',
+                'email': 'admin@yourcompany.example.com',
+                'type': 'delivery',
+                'parent_id': user_partner.id,
+            },
+            {
+                'name': 'Invalid billing', # missing email
+                'street': '215 Vine St',
+                'city': 'Scranton',
+                'zip': '18503',
+                'country_id': self.country_us.id,
+                'state_id': self.country_us_state.id,
+                'phone': '+1 555-555-5555',
+                'type': 'invoice',
+                'parent_id': user_partner.id,
+            },
+            {
+                'name': 'Invalid Shipping',
+                'type': 'delivery',
+                'parent_id': user_partner.id,
+            },
+        ])
+
+        so = self._create_so(user_partner.id)
+        self.assertNotEqual(so.partner_shipping_id, shipping)
+        self.assertNotEqual(so.partner_invoice_id, invoicing)
+        self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'billing'))
+        self.assertFalse(colleague._can_be_edited_by_current_customer(so, 'shipping'))
+
+        env = api.Environment(self.env.cr, user.id, {})
+        # change also website env for `sale_get_order` to not change order partner_id
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id):
+
+            # Invalid addresses unaccesible to current customer
+            with self.assertRaises(Forbidden):
+                self.WebsiteSaleController.update_cart_address(partner_id=colleague.id)
+            with self.assertRaises(Forbidden):
+                self.WebsiteSaleController.update_cart_address(partner_id=self.env.user.partner_id.id)
+
+            # Good addresses
+            self.WebsiteSaleController.update_cart_address(
+                partner_id=colleague_shipping.id, mode='shipping')
+            self.assertEqual(so.partner_shipping_id, colleague_shipping)
+            self.WebsiteSaleController.update_cart_address(partner_id=shipping.id, mode='shipping')
+            self.assertEqual(so.partner_shipping_id, shipping)
+
+            self.WebsiteSaleController.update_cart_address(partner_id=invoicing.id, mode='billing')
+            self.assertEqual(so.partner_shipping_id, shipping)
+            self.assertEqual(so.partner_invoice_id, invoicing)
+
+            # Using invalid addresses --> change and the customer is forced to update the address
+            self.WebsiteSaleController.update_cart_address(
+                partner_id=bad_invoicing.id, mode='billing')
+            self.assertEqual(so.partner_invoice_id, bad_invoicing)
+            redirection = self.WebsiteSaleController.checkout_check_address(so)
+            self.assertTrue(redirection is not None)
+            self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_invoicing.id}&mode=billing')
+
+            # reset to valid one
+            self.WebsiteSaleController.update_cart_address(partner_id=invoicing.id, mode='billing')
+
+            self.WebsiteSaleController.update_cart_address(
+                partner_id=bad_shipping.id, mode='shipping')
+            self.assertEqual(so.partner_shipping_id, bad_shipping)
+            redirection = self.WebsiteSaleController.checkout_check_address(so)
+            self.assertTrue(redirection is not None)
+            self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_shipping.id}&mode=shipping')
+
+            # reset to valid one
+            self.WebsiteSaleController.update_cart_address(partner_id=shipping.id, mode='shipping')
+
+            # Using commercial partner address
+            self.WebsiteSaleController.update_cart_address(
+                partner_id=partner_company.id, mode='billing')
+            self.assertEqual(so.partner_invoice_id, partner_company)
+            self.WebsiteSaleController.update_cart_address(
+                partner_id=partner_company.id, mode='shipping')
+            self.assertEqual(so.partner_shipping_id, partner_company)
+
+    def test_10_addresses_updates(self):
+        # TODO dispatch test to sale & account
+        partner_company = self.env['res.partner'].create({
+            'name': 'My company',
+            'is_company': True,
+            'child_ids': [
+                Command.create({
+                    'name': 'partner_1',
+                }),
+                Command.create({
+                    'name': 'partner_2',
+                }),
+                Command.create({
+                    'name': 'partner_3',
+                }),
+            ],
+        })
+        partner_1, _partner_2, _partner_3 = partner_company.child_ids
+        self.assertTrue(partner_company.can_edit_vat())
+        self.assertTrue(partner_company._can_edit_name())
+        self.assertTrue(all(not p.can_edit_vat() for p in partner_company.child_ids))
+        self.assertTrue(all(p._can_edit_name() for p in partner_company.child_ids))
+
+        dumb_product = self.env['product.product'].create({'name': 'test'})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_company.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': dumb_product.id,
+                })
+            ],
+        })
+        invoice.action_post()
+
+        self.assertEqual(invoice.state, 'posted')
+        self.assertFalse(partner_company.can_edit_vat())
+        self.assertFalse(partner_company._can_edit_name())
+        self.assertTrue(all(p._can_edit_name() for p in partner_company.child_ids))
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_1.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': dumb_product.id,
+                })
+            ],
+        })
+        invoice.action_post()
+        self.assertFalse(partner_1._can_edit_name())
