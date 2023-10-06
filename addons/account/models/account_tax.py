@@ -21,7 +21,7 @@ TYPE_TAX_USE = [
 class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
     _description = 'Tax Group'
-    _order = 'sequence asc'
+    _order = 'sequence asc, id'
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
