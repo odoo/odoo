@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
 
 import odoo.tests
 
@@ -63,3 +64,38 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         check_asset()
         self.url_open(domain_1 + '/web')
         check_asset()
+
+    def test_02_t_cache_invalidation(self):
+        self.authenticate(None, None)
+        page = self.url_open('/').text # add to cache
+        public_assets_links = re.findall(r'(/web/assets/.+/web.assets_frontend\..+)"/>', page)
+        self.assertTrue(public_assets_links)
+        self.authenticate('admin', 'admin')
+        page = self.url_open('/').text
+        admin_assets_links = re.findall(r'(/web/assets/.+/web.assets_frontend\..+)"/>', page)
+        self.assertTrue(admin_assets_links)
+
+        self.assertEqual(public_assets_links, admin_assets_links)
+
+        snippets = self.env['ir.asset'].search([
+            ('path', '=like', 'website/static/src/snippets/s_social_media/000.scss'), # arbitrary, a unused css one that doesn't make the page fail when archived.
+            ('bundle', '=', 'web.assets_frontend'),
+        ])
+        self.assertTrue(snippets)
+        write_dates = snippets.mapped('write_date')
+        snippets.write({'active': False})
+        snippets.flush_recordset()
+        self.assertNotEqual(write_dates, snippets.mapped('write_date'))
+
+        page = self.url_open('/').text
+        new_admin_assets_links = re.findall(r'(/web/assets/.+/web.assets_frontend\..+)"/>', page)
+        self.assertTrue(new_admin_assets_links)
+
+        self.assertEqual(public_assets_links, admin_assets_links)
+        self.assertNotEqual(new_admin_assets_links, admin_assets_links, "we expect a change since ir_assets were written")
+
+        self.authenticate(None, None)
+        page = self.url_open('/').text
+
+        new_public_assets_links = re.findall(r'(/web/assets/.+/web.assets_frontend\..+)"/>', page)
+        self.assertEqual(new_admin_assets_links, new_public_assets_links, "t-cache should have been invalidated for public user too")
