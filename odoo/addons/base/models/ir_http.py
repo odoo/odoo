@@ -44,7 +44,7 @@ class RequestUID(object):
 class ModelConverter(werkzeug.routing.BaseConverter):
 
     def __init__(self, url_map, model=False):
-        super(ModelConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
         self.regex = r'([0-9]+)'
 
@@ -60,7 +60,7 @@ class ModelConverter(werkzeug.routing.BaseConverter):
 class ModelsConverter(werkzeug.routing.BaseConverter):
 
     def __init__(self, url_map, model=False):
-        super(ModelsConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
         self.regex = r'([0-9,]+)'

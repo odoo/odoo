@@ -10,7 +10,7 @@ class IrHttp(models.AbstractModel):
 
     def session_info(self):
         user = self.env.user
-        result = super(IrHttp, self).session_info()
+        result = super().session_info()
         if self.env.user._is_internal():
             result['notification_type'] = user.notification_type
         guest = self.env['mail.guest']._get_guest_from_context()

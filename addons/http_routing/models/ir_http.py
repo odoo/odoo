@@ -246,7 +246,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
 class ModelConverter(ir_http.ModelConverter):
 
     def __init__(self, url_map, model=False, domain='[]'):
-        super(ModelConverter, self).__init__(url_map, model)
+        super().__init__(url_map, model)
         self.domain = domain
         self.regex = _UNSLUG_ROUTE_PATTERN
 
@@ -277,7 +277,7 @@ class IrHttp(models.AbstractModel):
             match Rule. This override adds the website ones.
         """
         return dict(
-            super(IrHttp, cls)._get_converters(),
+            super()._get_converters(),
             model=ModelConverter,
         )
 
@@ -290,7 +290,7 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def get_frontend_session_info(self):
-        session_info = super(IrHttp, self).get_frontend_session_info()
+        session_info = super().get_frontend_session_info()
 
         IrHttpModel = request.env['ir.http'].sudo()
         modules = IrHttpModel.get_translation_frontend_modules()
