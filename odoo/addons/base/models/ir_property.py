@@ -113,9 +113,9 @@ class Property(models.Model):
         if self._ids:
             self.env.cr.execute(
                 'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id IS NULL)', [self._ids])
-            default_set = self.env.cr.rowcount == 1 or any(
-                v.get('res_id') is False
-                for v in values
+            default_set = self.env.cr.rowcount == 1 and self.env.cr.fetchone()[0] or any(
+                v.res_id is False
+                for v in self
             )
         r = super(Property, self).write(self._update_values(values))
         if default_set:
