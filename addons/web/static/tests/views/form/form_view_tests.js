@@ -12836,6 +12836,44 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("help on field is shown without debug mode -- form", async (assert) => {
+        serverData.models.partner.fields.bar.help = "bar tooltip";
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => { },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <label for="foo"/>
+                        <div><field name="foo" help="foo xml tooltip"/></div>
+                        <label for="bar"/>
+                        <div><field name="bar" help="bar xml tooltip"/></div>
+                    </group>
+                </form>`,
+        });
+
+        await mouseEnter(target.querySelector(".o_form_label[for=foo] sup"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip .o-tooltip--help").textContent,
+            "foo xml tooltip"
+        );
+
+        await mouseEnter(target.querySelector(".o_form_label[for=bar] sup"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip .o-tooltip--help").textContent,
+            "bar xml tooltip"
+        );
+    });
+
     QUnit.test("onSave/onDiscard props", async function (assert) {
         await makeView({
             type: "form",
