@@ -141,11 +141,14 @@ patch(ThreadService.prototype, {
         }
         thread.suggestedRecipients = recipients;
     },
-    async leaveChannel(channel) {
+    closeChatWindow(channel) {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(channel));
         if (chatWindow) {
-            await this.chatWindowService.close(chatWindow);
+            this.chatWindowService.close(chatWindow, { notifyState: false });
         }
+    },
+    async leaveChannel(channel) {
+        this.closeChatWindow(channel);
         super.leaveChannel(...arguments);
     },
     /** @param {import("models").Thread} thread */
