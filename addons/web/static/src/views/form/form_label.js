@@ -33,7 +33,7 @@ export class FormLabel extends Component {
 
     get tooltipHelp() {
         const field = this.props.record.fields[this.props.fieldName];
-        let help = field.help || "";
+        let help = this.props.fieldInfo.help || field.help || "";
         if (field.company_dependent && session.display_switch_company_menu) {
             help += (help ? "\n\n" : "") + this.env._t("Values set here are company-specific.");
         }
