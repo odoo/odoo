@@ -85,7 +85,10 @@ class AccountMoveSend(models.Model):
         results = super().default_get(fields_list)
 
         if 'move_ids' in fields_list and 'move_ids' not in results:
-            results['move_ids'] = [Command.set(self._context.get('active_ids', []))]
+            move_ids = self._context.get('active_ids', [])
+            if any(move.state == 'draft' for move in self.env['account.move'].browse(move_ids)):
+                raise UserError(_("You can't send invoice(s) in draft state."))
+            results['move_ids'] = [Command.set(move_ids)]
 
         return results
 
