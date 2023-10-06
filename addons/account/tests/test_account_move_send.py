@@ -938,3 +938,13 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print(allow_fallback_pdf=True)
         message = self.env['mail.message'].search([('model', '=', invoice._name), ('res_id', '=', invoice.id)], limit=1)
         self.assertRecordValues(message, [{'subject': custom_subject}])
+
+    def test_with_draft_invoices(self):
+        """ Use Send & Print wizard on draft invoice(s) should raise an error. """
+        invoice_posted = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        invoice_draft = self.init_invoice("out_invoice", amounts=[1000], post=False)
+
+        with self.assertRaises(UserError):
+            self.create_send_and_print(invoice_draft)
+        with self.assertRaises(UserError):
+            self.create_send_and_print(invoice_posted + invoice_draft)
