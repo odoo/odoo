@@ -18,7 +18,6 @@ import { makeEnv, startServices } from "@web/env";
 import { loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
-import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
 import { App, Component, whenReady } from "@odoo/owl";
 
@@ -341,7 +340,6 @@ export async function createPublicRoot(RootWidget) {
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });
-    renderToString.app = app;
     const language = lang || browser.navigator.language;
     const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
     Settings.defaultLocale = locale;

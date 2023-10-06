@@ -155,7 +155,6 @@ Featuring
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
-            'web/static/src/libs/owl.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/popper/popper.js',

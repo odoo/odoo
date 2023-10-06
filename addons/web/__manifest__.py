@@ -200,7 +200,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
-            'web/static/src/libs/owl.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/popper/popper.js',
@@ -363,7 +362,6 @@ This module provides the core of the Odoo Web Client.
             # libs
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
-            'web/static/src/libs/owl.js',
             'web/static/lib/owl/odoo_module.js',
             # core
             'web/static/src/env.js',
