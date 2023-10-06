@@ -861,7 +861,7 @@ export class MockServer {
 
         const onchanges = this.models[modelName].onchanges || {};
         const firstOnChange = !fields.length;
-        const fieldsFromView = Object.keys(specification);
+        const fieldsFromView = new Set(Object.keys(specification));
 
         let serverValues = {};
         const onchangeValues = {};
@@ -874,17 +874,17 @@ export class MockServer {
             }
         }
         if (resId) {
-            serverValues = this.mockRead(modelName, [args[0], fieldsFromView], kwargs)[0];
+            serverValues = this.mockRead(modelName, [args[0], [...fieldsFromView]], kwargs)[0];
         } else if (firstOnChange) {
             // It is the new semantics: no field in arguments means we are in
             // a default_get + onchange situation
-            fields = fieldsFromView;
+            fields = [...fieldsFromView];
             fields
                 .filter((fName) => !Object.keys(serverValues).includes(fName) && fName !== "id")
                 .forEach((fName) => {
                     onchangeValues[fName] = false;
                 });
-            const defaultValues = this.mockDefaultGet(modelName, [fieldsFromView], kwargs);
+            const defaultValues = this.mockDefaultGet(modelName, [[...fieldsFromView]], kwargs);
             for (const fieldName in defaultValues) {
                 const fieldType = this.models[modelName].fields[fieldName].type;
                 if (["one2many", "many2many"].includes(fieldType)) {
@@ -913,6 +913,11 @@ export class MockServer {
                 onchanges[field](new Proxy(target, handler));
             }
         });
+        for (const fieldName in onchangeValues) {
+            if (!fieldsFromView.has(fieldName)) {
+                delete onchangeValues[fieldName];
+            }
+        }
 
         return {
             value: this.convertToOnChange(modelName, onchangeValues, specification),
