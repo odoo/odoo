@@ -4,6 +4,8 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
 from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
+from odoo.fields import Command
+
 
 @tagged('post_install', '-at_install')
 class WebsiteSaleCart(TransactionCase):
@@ -110,3 +112,23 @@ class WebsiteSaleCart(TransactionCase):
 
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=0)
             self.assertEqual(sale_order.order_line, SaleOrderLine)
+
+    def test_unpublished_accessory_product_visibility(self):
+        # Check if unpublished product is shown to public user
+        accessory_product = self.env['product.product'].create({
+            'name': 'Access Product',
+            'is_published': False,
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+            'accessory_product_ids': [Command.link(accessory_product.id)]
+        })
+
+        website = self.website.with_user(self.public_user)
+        with MockRequest(product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            sale_order = website.sale_get_order()
+            self.assertEqual(len(sale_order._cart_accessories()), 0)
