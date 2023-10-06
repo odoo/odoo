@@ -1,5 +1,6 @@
 from odoo import http
 from odoo.http import request
+
 from datetime import datetime
 
 
@@ -36,7 +37,7 @@ class AccountBalanceController(http.Controller):
                         'account_name': account_name,
                         'balance': balance,
                         'account_root_id': account_root_id,
-                        'movement_date': account_date.strftime('%Y-%m-%d'),
+                        'account_date': account_date.strftime('%Y-%m-%d'),
                     }
                 else:
                     account_data[account_id]['balance'] += balance
@@ -54,3 +55,18 @@ class AccountBalanceController(http.Controller):
             'message': 'Success',
         }
         return data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
