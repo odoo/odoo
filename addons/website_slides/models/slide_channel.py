@@ -426,10 +426,10 @@ class Channel(models.Model):
     has_requested_access = fields.Boolean(string='Access Requested', compute='_compute_has_requested_access', compute_sudo=False)
     is_member = fields.Boolean(
         string='Is Enrolled Attendee', help='Is the attendee actively enrolled.',
-        compute='_compute_membership_values', compute_sudo=False)
+        compute='_compute_membership_values', search="_search_is_member")
     is_member_invited = fields.Boolean(
         string='Is Invited Attendee', help='Is the invitation for this attendee pending.',
-        compute='_compute_membership_values', compute_sudo=False)
+        compute='_compute_membership_values', search="_search_is_member_invited")
     partner_has_new_content = fields.Boolean(compute='_compute_partner_has_new_content', compute_sudo=False)
     # karma generation
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
@@ -532,26 +532,43 @@ class Channel(models.Model):
         for channel in self:
             channel.has_requested_access = channel.id in requested_cids
 
-    @api.depends('channel_partner_all_ids.partner_id', 'channel_partner_all_ids.member_status')
+    @api.depends('channel_partner_all_ids.partner_id', 'channel_partner_all_ids.member_status', 'channel_partner_all_ids.active')
     @api.depends_context('uid')
-    @api.model
     def _compute_membership_values(self):
         if self.env.user._is_public():
             self.is_member = False
             self.is_member_invited = False
             return
-
-        channel_partners = self.env['slide.channel.partner'].sudo().search([
-            ('channel_id', 'in', self.ids),
-            ('partner_id', '=', self.env.user.partner_id.id),
-        ])
-        active_channel_partners = channel_partners.filtered(
-            lambda channel_partner: channel_partner.member_status != 'invited')
-        invitation_pending_channels = (channel_partners - active_channel_partners).channel_id
-        active_channels = active_channel_partners.channel_id
+        data = {
+            member_status: channel_ids
+            for member_status, channel_ids in self.env['slide.channel.partner'].sudo()._read_group(
+                [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', 'in', self.ids), ('active', '=', True)],
+                ['member_status'], ['channel_id:array_agg']
+            )
+        }
+        active_channels_ids = data.get('joined', []) + data.get('ongoing', []) + data.get('completed', [])
+        invitation_pending_channels_ids = data.get('invited', [])
         for channel in self:
-            channel.is_member = channel in active_channels
-            channel.is_member_invited = channel in invitation_pending_channels
+            channel.is_member = channel.id in active_channels_ids
+            channel.is_member_invited = channel.id in invitation_pending_channels_ids
+
+    def _search_is_member(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise NotImplementedError(_('Operation not supported'))
+        check_has_access = operator == '=' and value or operator == '!=' and not value
+        return [('id', 'in' if check_has_access else 'not in', self._search_is_member_channel_ids())]
+
+    def _search_is_member_invited(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise NotImplementedError(_('Operation not supported'))
+        check_has_access = operator == '=' and value or operator == '!=' and not value
+        return [('id', 'in' if check_has_access else 'not in', self._search_is_member_channel_ids(invited=True))]
+
+    def _search_is_member_channel_ids(self, invited=False):
+        return self.env['slide.channel.partner'].sudo()._read_group(
+            [('partner_id', '=', self.env.user.partner_id.id), ('member_status', '=' if invited else '!=', 'invited'), ('active', '=', True)],
+            aggregates=['channel_id:array_agg']
+        )[0][0]
 
     @api.depends('slide_ids.is_category')
     def _compute_category_and_slide_ids(self):
