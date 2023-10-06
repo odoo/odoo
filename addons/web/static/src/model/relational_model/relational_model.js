@@ -510,8 +510,10 @@ export class RelationalModel extends Model {
      * @param {Object} [params={}]
      * @returns Promise<Object>
      */
-    _loadNewRecord(config, params = {}) {
-        return this._onchange(config, params);
+    async _loadNewRecord(config, params = {}) {
+        const record = await this._onchange(config, params);
+        applyProperties([record], config.activeFields, config.fields);
+        return record;
     }
 
     /**
