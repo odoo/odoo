@@ -699,6 +699,16 @@ class Environment(Mapping):
         # because 'env.lang' may be injected in SQL queries
         return lang if lang and self['res.lang']._lang_get_id(lang) else None
 
+    @property
+    def ocb(self):
+        """Allow to flag OCB environment so we can easily address compatibility issues
+        when making backports or improvements that aren't present in the current Odoo
+        version.
+
+        :rtype bool
+        """
+        return True
+
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
