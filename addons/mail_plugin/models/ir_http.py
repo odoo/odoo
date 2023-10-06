@@ -9,8 +9,7 @@ from odoo.http import request
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _auth_method_outlook(cls):
+    def _auth_method_outlook(self):
         access_token = request.httprequest.headers.get('Authorization')
         if not access_token:
             raise BadRequest('Access token missing')

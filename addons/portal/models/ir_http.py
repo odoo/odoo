@@ -7,13 +7,11 @@ from odoo.http import request
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _get_translation_frontend_modules_name(cls):
+    def _get_translation_frontend_modules_name(self):
         mods = super()._get_translation_frontend_modules_name()
         return mods + ['portal']
 
-    @classmethod
-    def _get_frontend_langs(cls):
+    def _get_frontend_langs(self):
         # _get_frontend_langs() is used by @http_routing:IrHttp._match
         # where is_frontend is not yet set and when no backend endpoint
         # matched. We have to assume we are going to match a frontend

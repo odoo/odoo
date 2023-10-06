@@ -10,8 +10,7 @@ from odoo.http import request
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _auth_method_calendar(cls):
+    def _auth_method_calendar(self):
         token = request.get_http_params().get('token', '')
 
         error_message = False
@@ -27,4 +26,4 @@ class IrHttp(models.AbstractModel):
         if error_message:
             raise BadRequest(error_message)
 
-        cls._auth_method_public()
+        self._auth_method_public()

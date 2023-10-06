@@ -8,8 +8,7 @@ from odoo.http import request
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _pre_dispatch(cls, rule, args):
+    def _pre_dispatch(self, rule, args):
         super()._pre_dispatch(rule, args)
 
         # add signup token or login to the session if given

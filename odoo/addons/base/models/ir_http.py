@@ -123,38 +123,31 @@ class IrHttp(models.AbstractModel):
     # Routing map
     #------------------------------------------------------
 
-    @classmethod
-    def _get_converters(cls):
+    def _get_converters(self):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
-    @classmethod
-    def _match(cls, path_info):
+    def _match(self, path_info):
         routing_map = request.env['ir.http']._routing_map()
         routing_map = routing_map.bind_to_environ(request.httprequest.environ)
         rule, args = routing_map.match(path_info=path_info, return_rule=True)
         return rule, args
 
-    @classmethod
-    def _get_public_users(cls):
+    def _get_public_users(self):
         return [request.env['ir.model.data']._xmlid_to_res_model_res_id('base.public_user')[1]]
 
-    @classmethod
-    def _auth_method_user(cls):
-        if request.env.uid in [None] + cls._get_public_users():
+    def _auth_method_user(self):
+        if request.env.uid in [None] + self._get_public_users():
             raise http.SessionExpiredException("Session expired")
 
-    @classmethod
-    def _auth_method_none(cls):
+    def _auth_method_none(self):
         request.env = api.Environment(request.env.cr, None, request.env.context)
 
-    @classmethod
-    def _auth_method_public(cls):
+    def _auth_method_public(self):
         if request.env.uid is None:
             public_user = request.env.ref('base.public_user')
             request.update_env(user=public_user.id)
 
-    @classmethod
-    def _authenticate(cls, endpoint):
+    def _authenticate(self, endpoint):
         auth = 'none' if http.is_cors_preflight(request, endpoint) else endpoint.routing['auth']
 
         try:
@@ -162,19 +155,17 @@ class IrHttp(models.AbstractModel):
                 if not security.check_session(request.session, request.env):
                     request.session.logout(keep_db=True)
                     request.env = api.Environment(request.env.cr, None, request.session.context)
-            getattr(cls, f'_auth_method_{auth}')()
+            getattr(self, f'_auth_method_{auth}')()
         except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)
             raise AccessDenied()
 
-    @classmethod
-    def _geoip_resolve(cls):
+    def _geoip_resolve(self):
         return request._geoip_resolve()
 
-    @classmethod
-    def _pre_dispatch(cls, rule, args):
+    def _pre_dispatch(self, rule, args):
         request.dispatcher.pre_dispatch(rule, args)
 
         # Replace uid placeholder by the current request.env.uid
@@ -205,34 +196,28 @@ class IrHttp(models.AbstractModel):
                     raise werkzeug.exceptions.NotFound() from e
                 raise
 
-    @classmethod
-    def _dispatch(cls, endpoint):
+    def _dispatch(self, endpoint):
         result = endpoint(**request.params)
         if isinstance(result, Response) and result.is_qweb:
             result.flatten()
         return result
 
-    @classmethod
-    def _post_dispatch(cls, response):
+    def _post_dispatch(self, response):
         request.dispatcher.post_dispatch(response)
 
-    @classmethod
-    def _post_logout(cls):
+    def _post_logout(self):
         pass
 
-    @classmethod
-    def _handle_error(cls, exception):
+    def _handle_error(self, exception):
         return request.dispatcher.handle_error(exception)
 
-    @classmethod
-    def _serve_fallback(cls):
+    def _serve_fallback(self):
         model = request.env['ir.attachment']
         attach = model.sudo()._get_serve_attachment(request.httprequest.path)
         if attach:
             return Stream.from_attachment(attach).get_response()
 
-    @classmethod
-    def _redirect(cls, location, code=303):
+    def _redirect(self, location, code=303):
         return werkzeug.utils.redirect(location, code=code, Response=Response)
 
     def _generate_routing_rules(self, modules, converters):
@@ -246,7 +231,7 @@ class IrHttp(models.AbstractModel):
         if tools.config['test_enable'] and odoo.modules.module.current_test:
             installed.add(odoo.modules.module.current_test)
         mods = sorted(installed)
-        # Note : when routing map is generated, we put it on the class `cls`
+        # Note : when routing map is generated, we put it on the class `self`
         # to make it available for all instance. Since `env` create an new instance
         # of the model, each instance will regenared its own routing map and thus
         # regenerate its EndPoint. The routing map should be static.
@@ -308,6 +293,5 @@ class IrHttp(models.AbstractModel):
         }
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()
 
-    @classmethod
-    def _is_allowed_cookie(cls, cookie_type):
+    def _is_allowed_cookie(self, cookie_type):
         return True

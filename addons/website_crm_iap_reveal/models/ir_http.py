@@ -12,8 +12,7 @@ _logger = logging.getLogger(__name__)
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _serve_page(cls):
+    def _serve_page(self):
         response = super()._serve_page()
         if response and getattr(response, 'status_code', 0) == 200 and request.env.user._is_public():
             visitor_sudo = request.env['website.visitor']._get_visitor_from_request()

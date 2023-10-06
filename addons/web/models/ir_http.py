@@ -32,15 +32,13 @@ class Http(models.AbstractModel):
 
     bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram"]
 
-    @classmethod
-    def _is_a_bot(cls):
+    def _is_a_bot(self):
         user_agent = request.httprequest.user_agent.string.lower()
         # We don't use regexp and ustr voluntarily
         # timeit has been done to check the optimum method
-        return any(bot in user_agent for bot in cls.bots)
+        return any(bot in user_agent for bot in self.bots)
 
-    @classmethod
-    def _handle_debug(cls):
+    def _handle_debug(self):
         debug = request.httprequest.args.get('debug')
         if debug is not None:
             request.session.debug = ','.join(
@@ -50,13 +48,11 @@ class Http(models.AbstractModel):
                 for mode in (debug or '').split(',')
             )
 
-    @classmethod
-    def _pre_dispatch(cls, rule, args):
+    def _pre_dispatch(self, rule, args):
         super()._pre_dispatch(rule, args)
-        cls._handle_debug()
+        self._handle_debug()
 
-    @classmethod
-    def _post_logout(cls):
+    def _post_logout(self):
         super()._post_logout()
         request.future_response.set_cookie('cids', max_age=0)
 

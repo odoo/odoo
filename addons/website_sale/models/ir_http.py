@@ -7,8 +7,7 @@ from odoo.http import request
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _pre_dispatch(cls, rule, args):
+    def _pre_dispatch(self, rule, args):
         super()._pre_dispatch(rule, args)
         affiliate_id = request.httprequest.args.get('affiliate_id')
         if affiliate_id:

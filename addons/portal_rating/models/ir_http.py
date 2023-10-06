@@ -7,7 +7,6 @@ from odoo import models
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def _get_translation_frontend_modules_name(cls):
+    def _get_translation_frontend_modules_name(self):
         mods = super()._get_translation_frontend_modules_name()
         return mods + ['portal_rating']

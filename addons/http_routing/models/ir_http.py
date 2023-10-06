@@ -271,8 +271,7 @@ class IrHttp(models.AbstractModel):
 
     rerouting_limit = 10
 
-    @classmethod
-    def _get_converters(cls):
+    def _get_converters(self):
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
@@ -281,8 +280,7 @@ class IrHttp(models.AbstractModel):
             model=ModelConverter,
         )
 
-    @classmethod
-    def _get_default_lang(cls):
+    def _get_default_lang(self):
         lang_code = request.env['ir.default'].sudo()._get('res.partner', 'lang')
         if lang_code:
             return request.env['res.lang']._lang_get(lang_code)
@@ -318,41 +316,36 @@ class IrHttp(models.AbstractModel):
             extra_modules_name += new
         return extra_modules_name
 
-    @classmethod
-    def _get_translation_frontend_modules_domain(cls):
+    def _get_translation_frontend_modules_domain(self):
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
         return []
 
-    @classmethod
-    def _get_translation_frontend_modules_name(cls):
+    def _get_translation_frontend_modules_name(self):
         """ Return a list of module name where web-translations and
             dynamic resources may be used in frontend views
         """
         return ['web']
 
-    @classmethod
-    def _get_frontend_langs(cls):
+    def _get_frontend_langs(self):
         return [code for code, _ in request.env['res.lang'].get_installed()]
 
-    @classmethod
-    def _get_nearest_lang(cls, lang_code):
+    def _get_nearest_lang(self, lang_code):
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
         """
         if not lang_code:
             return None
 
-        lang_codes = cls._get_frontend_langs()
+        lang_codes = self._get_frontend_langs()
         if lang_code in lang_codes:
             return lang_code
 
         short = lang_code.partition('_')[0]
         return next((code for code in lang_codes if code.startswith(short)), None)
 
-    @classmethod
-    def _match(cls, path):
+    def _match(self, path):
         """
         Grant multilang support to URL matching by using http 3xx
         redirections and URL rewrite. This method also grants various
@@ -433,10 +426,10 @@ class IrHttp(models.AbstractModel):
         real_env = request.env
         try:
             request.registry['ir.http']._auth_method_public()  # it calls update_env
-            nearest_url_lang = cls._get_nearest_lang(request.env['res.lang']._lang_get_code(url_lang_str))
-            cookie_lang = cls._get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
-            context_lang = cls._get_nearest_lang(real_env.context.get('lang'))
-            default_lang = cls._get_default_lang()
+            nearest_url_lang = self._get_nearest_lang(request.env['res.lang']._lang_get_code(url_lang_str))
+            cookie_lang = self._get_nearest_lang(request.httprequest.cookies.get('frontend_lang'))
+            context_lang = self._get_nearest_lang(real_env.context.get('lang'))
+            default_lang = self._get_default_lang()
             request.lang = request.env['res.lang']._lang_get(
                 nearest_url_lang or cookie_lang or context_lang or default_lang._get_cached('code')
             )
@@ -492,7 +485,7 @@ class IrHttp(models.AbstractModel):
         elif url_lang_str == request_url_code:
             # Rewrite the URL to remove the lang
             _logger.debug("%r (lang: %r) valid lang in url, rewrite url and continue", path, request_url_code)
-            cls._reroute(path_no_lang)
+            self._reroute(path_no_lang)
             path = path_no_lang
 
         else:
@@ -511,8 +504,7 @@ class IrHttp(models.AbstractModel):
             request.is_frontend_multilang = True
             raise
 
-    @classmethod
-    def _reroute(cls, path, query_string=None):
+    def _reroute(self, path, query_string=None):
         """
         Rewrite the current request URL using the new path and query
         string. This act as a light redirection, it does not return a
@@ -535,12 +527,11 @@ class IrHttp(models.AbstractModel):
         threading.current_thread().url = httprequest.url
         request.httprequest = httprequest
 
-    @classmethod
-    def _pre_dispatch(cls, rule, args):
+    def _pre_dispatch(self, rule, args):
         super()._pre_dispatch(rule, args)
 
         if request.is_frontend:
-            cls._frontend_pre_dispatch()
+            self._frontend_pre_dispatch()
 
         # update the context of "<model(...):...>" args
         for key, val in list(args.items()):
@@ -565,19 +556,17 @@ class IrHttp(models.AbstractModel):
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
                 if generated_path != current_path:
-                    if request.lang != cls._get_default_lang():
+                    if request.lang != self._get_default_lang():
                         path = f'/{request.lang.url_code}{path}'
                     redirect = request.redirect_query(path, request.httprequest.args, code=301)
                     werkzeug.exceptions.abort(redirect)
 
-    @classmethod
-    def _frontend_pre_dispatch(cls):
+    def _frontend_pre_dispatch(self):
         request.update_context(lang=request.lang._get_cached('code'))
         if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
             request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'))
 
-    @classmethod
-    def _get_exception_code_values(cls, exception):
+    def _get_exception_code_values(self, exception):
         """ Return a tuple with the error code following by the values matching the exception"""
         code = 500  # default code
         values = dict(
@@ -611,17 +600,14 @@ class IrHttp(models.AbstractModel):
 
         return (code, values)
 
-    @classmethod
-    def _get_values_500_error(cls, env, values, exception):
+    def _get_values_500_error(self, env, values, exception):
         values['view'] = env["ir.ui.view"]
         return values
 
-    @classmethod
-    def _get_error_html(cls, env, code, values):
+    def _get_error_html(self, env, code, values):
         return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
 
-    @classmethod
-    def _handle_error(cls, exception):
+    def _handle_error(self, exception):
         response = super()._handle_error(exception)
 
         is_frontend_request = bool(getattr(request, 'is_frontend', False))
@@ -631,32 +617,32 @@ class IrHttp(models.AbstractModel):
 
         # minimal setup to serve frontend pages
         if not request.uid:
-            cls._auth_method_public()
-        cls._handle_debug()
-        cls._frontend_pre_dispatch()
+            self._auth_method_public()
+        self._handle_debug()
+        self._frontend_pre_dispatch()
         request.params = request.get_http_params()
 
-        code, values = cls._get_exception_code_values(exception)
+        code, values = self._get_exception_code_values(exception)
 
         request.cr.rollback()
         if code in (404, 403):
             try:
-                response = cls._serve_fallback()
+                response = self._serve_fallback()
                 if response:
-                    cls._post_dispatch(response)
+                    self._post_dispatch(response)
                     return response
             except werkzeug.exceptions.Forbidden:
                 # Rendering does raise a Forbidden if target is not visible.
                 pass # Use default error page handling.
         elif code == 500:
-            values = cls._get_values_500_error(request.env, values, exception)
+            values = self._get_values_500_error(request.env, values, exception)
         try:
-            code, html = cls._get_error_html(request.env, code, values)
+            code, html = self._get_error_html(request.env, code, values)
         except Exception:
             code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
 
         response = Response(html, status=code, content_type='text/html;charset=utf-8')
-        cls._post_dispatch(response)
+        self._post_dispatch(response)
         return response
 
     @api.model

@@ -66,8 +66,7 @@ class Http(models.AbstractModel):
             key = request.website_routing
         return super()._routing_map(key=key)
 
-    @classmethod
-    def _slug_matching(cls, adapter, endpoint, **kw):
+    def _slug_matching(self, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):
                 kw[arg] = kw[arg].with_context(slug_matching=True)
@@ -114,8 +113,7 @@ class Http(models.AbstractModel):
             else:
                 yield url, endpoint
 
-    @classmethod
-    def _get_converters(cls):
+    def _get_converters(self):
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
@@ -124,16 +122,14 @@ class Http(models.AbstractModel):
             model=ModelConverter,
         )
 
-    @classmethod
-    def _get_public_users(cls):
+    def _get_public_users(self):
         public_users = super()._get_public_users()
         website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
         if website:
             public_users.append(website._get_cached('user_id'))
         return public_users
 
-    @classmethod
-    def _auth_method_public(cls):
+    def _auth_method_public(self):
         """ If no user logged, set the public user of current website, or default
             public user as request uid.
         """
@@ -145,8 +141,7 @@ class Http(models.AbstractModel):
         if not request.uid:
             super()._auth_method_public()
 
-    @classmethod
-    def _register_website_track(cls, response):
+    def _register_website_track(self, response):
         if request.env['ir.http']._is_a_bot():
             return False
         if getattr(response, 'status_code', 0) != 200 or request.httprequest.headers.get('X-Disable-Tracking') == '1':
@@ -166,16 +161,14 @@ class Http(models.AbstractModel):
 
         return False
 
-    @classmethod
-    def _match(cls, path):
+    def _match(self, path):
         if not hasattr(request, 'website_routing'):
             website = request.env['website'].get_current_website()
             request.website_routing = website.id
 
         return super()._match(path)
 
-    @classmethod
-    def _pre_dispatch(cls, rule, arguments):
+    def _pre_dispatch(self, rule, arguments):
         super()._pre_dispatch(rule, arguments)
 
         for record in arguments.values():
@@ -190,15 +183,13 @@ class Http(models.AbstractModel):
                     # low level.
                     raise werkzeug.exceptions.Forbidden()
 
-    @classmethod
-    def _get_web_editor_context(cls):
+    def _get_web_editor_context(self):
         ctx = super()._get_web_editor_context()
-        if request.is_frontend_multilang and request.lang == cls._get_default_lang():
+        if request.is_frontend_multilang and request.lang == self._get_default_lang():
             ctx['edit_translations'] = False
         return ctx
 
-    @classmethod
-    def _frontend_pre_dispatch(cls):
+    def _frontend_pre_dispatch(self):
         super()._frontend_pre_dispatch()
 
         if not request.context.get('tz'):
@@ -225,19 +216,17 @@ class Http(models.AbstractModel):
         request.update_context(
             allowed_company_ids=allowed_company_ids,
             website_id=website.id,
-            **cls._get_web_editor_context(),
+            **self._get_web_editor_context(),
         )
 
         request.website = website.with_context(request.context)
 
-    @classmethod
-    def _dispatch(cls, endpoint):
+    def _dispatch(self, endpoint):
         response = super()._dispatch(endpoint)
-        cls._register_website_track(response)
+        self._register_website_track(response)
         return response
 
-    @classmethod
-    def _get_frontend_langs(cls):
+    def _get_frontend_langs(self):
         # _get_frontend_langs() is used by @http_routing:IrHttp._match
         # where is_frontend is not yet set and when no backend endpoint
         # matched. We have to assume we are going to match a frontend
@@ -250,21 +239,18 @@ class Http(models.AbstractModel):
         else:
             return super()._get_frontend_langs()
 
-    @classmethod
-    def _get_default_lang(cls):
+    def _get_default_lang(self):
         if getattr(request, 'is_frontend', True):
             website = request.env['website'].sudo().get_current_website()
             return request.env['res.lang'].browse([website._get_cached('default_lang_id')])
         return super()._get_default_lang()
 
-    @classmethod
-    def _get_translation_frontend_modules_name(cls):
+    def _get_translation_frontend_modules_name(self):
         mods = super()._get_translation_frontend_modules_name()
         installed = request.registry._init_modules.union(odoo.conf.server_wide_modules)
         return mods + [mod for mod in installed if mod.startswith('website')]
 
-    @classmethod
-    def _serve_page(cls):
+    def _serve_page(self):
         req_page = request.httprequest.path
 
         def _search_page(comparator='='):
@@ -285,7 +271,7 @@ class Http(models.AbstractModel):
         if not page and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
-            if request.lang != cls._get_default_lang():
+            if request.lang != self._get_default_lang():
                 path = '/' + request.lang.url_code + path
             if request.httprequest.query_string:
                 path += '?' + request.httprequest.query_string.decode('utf-8')
@@ -299,8 +285,7 @@ class Http(models.AbstractModel):
             return response
         return False
 
-    @classmethod
-    def _serve_redirect(cls):
+    def _serve_redirect(self):
         req_page = request.httprequest.path
         domain = [
             ('redirect_type', 'in', ('301', '302')),
@@ -310,8 +295,7 @@ class Http(models.AbstractModel):
         domain += request.website.website_domain()
         return request.env['website.rewrite'].sudo().search(domain, limit=1)
 
-    @classmethod
-    def _serve_fallback(cls):
+    def _serve_fallback(self):
         # serve attachment before
         parent = super()._serve_fallback()
         if parent:  # attachment
@@ -319,27 +303,26 @@ class Http(models.AbstractModel):
 
         # minimal setup to serve frontend pages
         if not request.uid:
-            cls._auth_method_public()
-        cls._frontend_pre_dispatch()
-        cls._handle_debug()
+            self._auth_method_public()
+        self._frontend_pre_dispatch()
+        self._handle_debug()
         request.params = request.get_http_params()
 
-        website_page = cls._serve_page()
+        website_page = self._serve_page()
         if website_page:
             website_page.flatten()
-            cls._register_website_track(website_page)
-            cls._post_dispatch(website_page)
+            self._register_website_track(website_page)
+            self._post_dispatch(website_page)
             return website_page
 
-        redirect = cls._serve_redirect()
+        redirect = self._serve_redirect()
         if redirect:
             return request.redirect(
                 _build_url_w_params(redirect.url_to, request.params),
                 code=redirect.redirect_type,
                 local=False)  # safe because only designers can specify redirects
 
-    @classmethod
-    def _get_exception_code_values(cls, exception):
+    def _get_exception_code_values(self, exception):
         code, values = super()._get_exception_code_values(exception)
         if isinstance(exception, werkzeug.exceptions.NotFound) and request.env.user.has_group('website.group_website_designer'):
             code = 'page_404'
@@ -350,8 +333,7 @@ class Http(models.AbstractModel):
             values['path'] = request.httprequest.path
         return (code, values)
 
-    @classmethod
-    def _get_values_500_error(cls, env, values, exception):
+    def _get_values_500_error(self, env, values, exception):
         View = env["ir.ui.view"]
         values = super()._get_values_500_error(env, values, exception)
         if 'qweb_exception' in values:
@@ -379,8 +361,7 @@ class Http(models.AbstractModel):
         values['editable'] = request.uid and request.env.user.has_group('website.group_website_designer')
         return values
 
-    @classmethod
-    def _get_error_html(cls, env, code, values):
+    def _get_error_html(self, env, code, values):
         if code in ('page_404', 'protected_403'):
             return code.split('_')[1], env['ir.ui.view']._render_template('website.%s' % code, values)
         return super()._get_error_html(env, code, values)
@@ -404,8 +385,7 @@ class Http(models.AbstractModel):
         session_info['bundle_params']['website_id'] = request.website.id
         return session_info
 
-    @classmethod
-    def _is_allowed_cookie(cls, cookie_type):
+    def _is_allowed_cookie(self, cookie_type):
         result = super()._is_allowed_cookie(cookie_type)
         if result and cookie_type == 'optional':
             if not request.env['website'].get_current_website().cookies_bar:
