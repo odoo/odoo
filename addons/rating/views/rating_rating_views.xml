@@ -201,7 +201,7 @@
                 <pivot string="Ratings" display_quantity="1" sample="1">
                     <field name="rated_partner_id" type="row"/>
                     <field name="create_date" type="col"/>
-                    <field name="rating" type="measure" string="Rating Value (/5)"/>
+                    <field name="rating" type="measure" string="Rating (/5)"/>
                     <field name="parent_res_id" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                 </pivot>
@@ -214,7 +214,7 @@
            <field name="arch" type="xml">
                 <graph string="Ratings" sample="1">
                     <field name="create_date"/>
-                    <field name="rating" type="measure" string="Rating Value (/5)"/>
+                    <field name="rating" type="measure" string="Rating (/5)"/>
                     <field name="parent_res_id" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                 </graph>
