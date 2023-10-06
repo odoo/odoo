@@ -1720,6 +1720,7 @@ class WebsiteSale(http.Controller):
         attribute = request.env['product.attribute'].browse(attribute_id)
         if 'display_type' in options:
             attribute.write({'display_type': options['display_type']})
+            request.env.registry.clear_cache('templates')
 
     @http.route(['/shop/config/website'], type='json', auth='user')
     def _change_website_config(self, **options):
