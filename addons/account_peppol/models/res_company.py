@@ -66,6 +66,7 @@ class ResCompany(models.Model):
         string='PEPPOL Purchase Journal',
         domain=[('type', '=', 'purchase')],
         compute='_compute_peppol_purchase_journal_id', store=True, readonly=False,
+        inverse='_inverse_peppol_purchase_journal_id',
     )
 
     # -------------------------------------------------------------------------
@@ -151,6 +152,17 @@ class ResCompany(models.Model):
                 ], limit=1)
             else:
                 company.peppol_purchase_journal_id = False
+
+    def _inverse_peppol_purchase_journal_id(self):
+        for company in self:
+            # This avoid having 2 or more journals from the same company with
+            # `is_peppol_journal` set to True (which could occur after changes).
+            journals_to_reset = self.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('is_peppol_journal', '=', True),
+            ])
+            journals_to_reset.is_peppol_journal = False
+            company.peppol_purchase_journal_id.is_peppol_journal = True
 
     @api.depends('email')
     def _compute_account_peppol_contact_email(self):
