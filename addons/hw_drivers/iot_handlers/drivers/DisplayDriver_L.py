@@ -63,7 +63,7 @@ class DisplayDriver(Driver):
         return len(displays) and iot_devices[displays[0]]
 
     def run(self):
-        while self.device_identifier != 'distant_display' and not self._stopped.isSet():
+        while self.device_identifier != 'distant_display' and not self._stopped.is_set():
             time.sleep(60)
             if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier:
                 # Refresh the page every minute
