@@ -13,7 +13,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.model
     def _default_location_id(self):
-        return self.env.ref('hr.home_work_office')
+        return self.env.ref('hr.home_work_office', raise_if_not_found=False)
 
     monday_location_id = fields.Many2one('hr.work.location', string='Monday', default=lambda self: self._default_location_id())
     tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday', default=lambda self: self._default_location_id())
@@ -81,9 +81,9 @@ class HrEmployeeBase(models.AbstractModel):
     def _get_worklocation(self, start_date, end_date):
         work_locations_by_employee = defaultdict(dict)
         for employee in self:
-            work_locations_by_employee[employee.id]["user_id"] = employee["user_id"].id
+            work_locations_by_employee[employee.id]["user_id"] = employee.user_id.id
             work_locations_by_employee[employee.id]["employee_id"] = employee.id
-            work_locations_by_employee[employee.id]["partner_id"] = employee["user_partner_id"].id
+            work_locations_by_employee[employee.id]["partner_id"] = employee.user_partner_id.id
             work_locations_by_employee[employee.id]["employee_name"] = employee.name
 
             for day in DAYS:

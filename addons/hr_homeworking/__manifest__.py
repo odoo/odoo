@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Homeworking',
+    'name': 'Remote Work',
     'version': '1.0',
-    'category': 'Human Resources/Homeworking',
+    'category': 'Human Resources/Remote Work',
     'depends': ['hr', 'calendar'],
     'data': [
         'security/security.xml',
