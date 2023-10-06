@@ -13,6 +13,7 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
 
     init: function () {
         this._super.apply(this, arguments);
+        this.rpc = this.bindService("rpc");
     },
 
     willStart() {
@@ -60,13 +61,11 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
             return;
         }
         const job_id = $('#recruitment7').val();
-        const data = await this._rpc({
-            route: '/website_hr_recruitment/check_recent_application',
-            params: {
+        const data = await this.rpc('/website_hr_recruitment/check_recent_application',
+            {
                 email: email,
                 job_id: job_id,
-            }
-        });
+            });
         if (data.applied_same_job)  {
             $('#email-message').removeClass('alert-warning').hide();
             $(ev.currentTarget).addClass('border-warning');
