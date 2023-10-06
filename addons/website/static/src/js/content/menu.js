@@ -6,6 +6,10 @@ export const extraMenuUpdateCallbacks = [];
 import dom from "@web/legacy/js/core/dom";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
+// The header height may vary with sections hidden on scroll (see the class
+// `o_header_hide_on_scroll`). To avoid scroll jumps, we cache the value.
+let headerHeight;
+
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
     effects: [{
@@ -35,6 +39,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
+        this.hiddenOnScrollEl = this.el.querySelector(".o_header_hide_on_scroll");
         this.$navbarCollapses = this.$el.find('.navbar-collapse');
 
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
@@ -164,13 +169,13 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _updateMainPaddingTop: function () {
-        this.headerHeight = this.$el.outerHeight();
+        headerHeight ||= this.el.getBoundingClientRect().height;
         this.topGap = this._computeTopGap();
 
         if (this.isOverlayHeader) {
             return;
         }
-        this.$main.css('padding-top', this.fixedHeader ? this.headerHeight : '');
+        this.$main.css('padding-top', this.fixedHeader ? headerHeight : '');
     },
     /**
      * Checks if the size of the header will decrease by adding the
@@ -196,7 +201,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         clonedHeader.classList.add('o_header_is_scrolled', 'o_header_affixed', 'o_header_no_transition');
         const endHeaderHeight = clonedHeader.offsetHeight;
         clonedHeader.remove();
-        const heightDiff = this.headerHeight - endHeaderHeight;
+        const heightDiff = headerHeight - endHeaderHeight;
         return heightDiff > 0 ? remainingScroll <= heightDiff : false;
     },
 
@@ -273,7 +278,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
      * @override
      */
     start: function () {
-        this.headerHeight = this.$el.outerHeight();
+        headerHeight ||= this.el.getBoundingClientRect().height;
         return this._super.apply(this, arguments);
     },
     /**
@@ -303,7 +308,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     _updateHeaderOnScroll: function (scroll) {
         this._super(...arguments);
 
-        const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
+        const mainPosScrolled = (scroll > headerHeight + this.topGap);
         const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap) && !this.scrollHeightTooShort;
         const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
         const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
@@ -319,6 +324,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         }
 
         this.fixedHeaderShow = reachPosScrolled;
+        this.hiddenOnScrollEl?.classList.toggle("hidden", mainPosScrolled);
 
         if (fixedUpdate) {
             this._toggleFixedHeader(mainPosScrolled);
@@ -352,6 +358,28 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
             this._toggleFixedHeader(false);
             void this.$el[0].offsetWidth; // Force a paint refresh
             this.$el.css('transform', '');
+        }
+
+        if (this.hiddenOnScrollEl) {
+            const scrollDelta = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches ?
+                scroll : Math.floor(scroll / 4);
+            const elHeight = Math.max(0, this.hiddenOnScrollEl.scrollHeight - scrollDelta);
+            this.hiddenOnScrollEl.classList.toggle("hidden", elHeight === 0);
+            if (elHeight === 0) {
+                this.hiddenOnScrollEl.removeAttribute("style");
+            } else {
+                this.hiddenOnScrollEl.style.overflow = "hidden";
+                this.hiddenOnScrollEl.style.height = `${elHeight}px`;
+                let elPadding = parseInt(getComputedStyle(this.hiddenOnScrollEl).paddingBlock);
+                if (elHeight < elPadding * 2) {
+                    const heightDifference = elPadding * 2 - elHeight;
+                    elPadding = Math.max(0, elPadding - Math.floor(heightDifference / 2));
+                    this.hiddenOnScrollEl.style
+                        .setProperty("padding-block", `${elPadding}px`, "important");
+                } else {
+                    this.hiddenOnScrollEl.style.paddingBlock = "";
+                }
+            }
         }
     },
 });
