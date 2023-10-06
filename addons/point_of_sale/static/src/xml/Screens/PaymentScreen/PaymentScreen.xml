@@ -75,6 +75,7 @@
                             </div>
                             <div class="payment-controls">
                                 <div class="button js_invoice"
+                                    t-if="env.pos.config.has_cash_move_permission"
                                     t-att-class="{ highlight: currentOrder.is_to_invoice() }"
                                     t-on-click="toggleIsToInvoice">
                                     <i class="fa fa-file-text-o" /> Invoice
