@@ -279,6 +279,7 @@ patch(MockServer.prototype, {
                         user: mainUser
                             ? {
                                   id: mainUser.id,
+                                  isInternalUser: !mainUser.share,
                               }
                             : false,
                     },

@@ -19,4 +19,8 @@ patch(Thread.prototype, {
         }
         return super.imgUrl;
     },
+    update(data) {
+        super.update(data);
+        assignDefined(this, data, ["allow_public_upload"]);
+    },
 });

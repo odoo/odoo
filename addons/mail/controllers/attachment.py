@@ -47,7 +47,9 @@ class AttachmentController(http.Controller):
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        env = request.env["ir.attachment"]._get_upload_env(thread_model, thread_id)
+        thread = request.env[thread_model]._get_from_context_or_raise(int(thread_id))
+        if thread_model == "discuss.channel" and not thread.allow_public_upload and not request.env.user._is_internal():
+            raise AccessError(_("You are not allowed to upload attachments on this channel."))
         vals = {
             "name": ufile.filename,
             "raw": ufile.read(),
@@ -63,11 +65,11 @@ class AttachmentController(http.Controller):
                     "res_model": "mail.compose.message",
                 }
             )
-        if env.user.share:
+        if thread.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
-            vals["access_token"] = env["ir.attachment"]._generate_access_token()
+            vals["access_token"] = thread.env["ir.attachment"]._generate_access_token()
         try:
-            attachment = env["ir.attachment"].create(vals)
+            attachment = thread.env["ir.attachment"].create(vals)
             attachment._post_add_create(**kwargs)
             attachmentData = attachment._attachment_format()[0]
             if attachment.access_token:

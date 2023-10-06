@@ -9,4 +9,4 @@ class WebClient(WebclientController):
     @route("/im_livechat/cors/init_messaging", methods=["POST"], type="json", auth="public", cors="*")
     def livechat_init_messaging(self, guest_token):
         force_guest_env(guest_token)
-        return super().mail_init_messaging()
+        return self.mail_init_messaging()

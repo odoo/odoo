@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 const componentRegistry = registry.category("main_components");
 
 let id = 1;
-export function useDropzone(targetRef, onDrop, extraClass) {
+export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
     const dropzoneId = `mail.dropzone_${id++}`;
     let dragCount = 0;
     let hasTarget = false;
@@ -26,7 +26,7 @@ export function useDropzone(targetRef, onDrop, extraClass) {
     });
 
     function updateDropzone() {
-        const shouldDisplayDropzone = dragCount && hasTarget;
+        const shouldDisplayDropzone = dragCount && hasTarget && isDropzoneEnabled();
         const hasDropzone = componentRegistry.contains(dropzoneId);
         if (shouldDisplayDropzone && !hasDropzone) {
             componentRegistry.add(dropzoneId, {

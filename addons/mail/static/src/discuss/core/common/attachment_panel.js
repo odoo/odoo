@@ -6,7 +6,7 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { useVisible } from "@mail/utils/common/hooks";
+import { useSequential, useVisible } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Props
@@ -18,6 +18,9 @@ export class AttachmentPanel extends Component {
     static template = "mail.AttachmentPanel";
 
     setup() {
+        this.sequential = useSequential();
+        this.store = useService("mail.store");
+        this.ormService = useService("orm");
         this.threadService = useService("mail.thread");
         this.attachmentUploadService = useService("mail.attachment_upload");
         onWillStart(() => {
@@ -46,5 +49,21 @@ export class AttachmentPanel extends Component {
             attachmentsByDate[attachment.monthYear] = attachments;
         }
         return attachmentsByDate;
+    }
+
+    get hasToggleAllowPublicUpload() {
+        return (
+            this.props.thread.model !== "mail.box" &&
+            this.props.thread.type !== "chat" &&
+            this.store.user?.user?.isInternalUser
+        );
+    }
+
+    toggleAllowPublicUpload() {
+        this.sequential(() =>
+            this.ormService.write("discuss.channel", [this.props.thread.id], {
+                allow_public_upload: !this.props.thread.allow_public_upload,
+            })
+        );
     }
 }

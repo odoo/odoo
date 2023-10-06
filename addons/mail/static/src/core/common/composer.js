@@ -81,12 +81,10 @@ export class Composer extends Component {
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
         this.store = useState(useService("mail.store"));
-        if (this.allowUpload) {
-            this.attachmentUploader = useAttachmentUploader(
-                this.thread ?? this.props.composer.message.originThread,
-                { composer: this.props.composer }
-            );
-        }
+        this.attachmentUploader = useAttachmentUploader(
+            this.thread ?? this.props.composer.message.originThread,
+            { composer: this.props.composer }
+        );
         this.messageService = useState(useService("mail.message"));
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
@@ -117,8 +115,13 @@ export class Composer extends Component {
         this.suggestion = this.store.user ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
-        if (this.props.dropzoneRef && this.allowUpload) {
-            useDropzone(this.props.dropzoneRef, this.onDropFile, "o-mail-Composer-dropzone");
+        if (this.props.dropzoneRef) {
+            useDropzone(
+                this.props.dropzoneRef,
+                this.onDropFile,
+                "o-mail-Composer-dropzone",
+                () => this.allowUpload
+            );
         }
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;

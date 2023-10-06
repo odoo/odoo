@@ -124,6 +124,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/libs/pdfjs.js',
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
+            'web/static/src/scss/mimetypes.scss',
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',

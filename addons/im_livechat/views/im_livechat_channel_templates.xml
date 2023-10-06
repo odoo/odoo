@@ -89,7 +89,9 @@
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
                 if (!window.odoo) {
-                    window.odoo = {};
+                    window.odoo = {
+                        csrf_token: "<t t-out="request.csrf_token(None)"/>",
+                    };
                 }
                 odoo.__session_info__ = Object.assign(odoo.__session_info__ || {}, {
                     livechatData: {

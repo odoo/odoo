@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import models, fields
 
 
 class IrAttachment(models.Model):
@@ -16,19 +16,6 @@ class IrAttachment(models.Model):
         if self.env.user._is_public() and guest:
             return guest
         return super()._bus_notification_target()
-
-    @api.model
-    def _get_upload_env(self, thread_model, thread_id):
-        """Overriden to allow guests and (portal) users to upload attachments to channels they have
-        access to. The base method returns the env of the current request, which is not sudo and
-        relies on access rights. Guests or (portal) users need sudo to upload attachments."""
-        if thread_model == "discuss.channel":
-            return (
-                self.env["discuss.channel.member"]
-                ._get_as_sudo_from_context_or_raise(channel_id=int(thread_id))
-                .env
-            )
-        return super()._get_upload_env(thread_model, thread_id)
 
     def _attachment_format(self):
         attachment_format = super()._attachment_format()
