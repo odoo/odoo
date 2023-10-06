@@ -21,7 +21,7 @@ TYPE_TAX_USE = [
 class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
     _description = 'Tax Group'
-    _order = 'sequence asc'
+    _order = 'sequence asc, id'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
