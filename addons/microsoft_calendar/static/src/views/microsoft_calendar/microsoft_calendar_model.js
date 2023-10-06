@@ -44,7 +44,9 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
             "/microsoft_calendar/sync_data",
             {
                 model: this.resModel,
-                fromurl: window.location.href
+                fromurl: window.location.href,
+                rangeStart: this.data.range.start,
+                rangeEnd: this.data.range.end,
             },
             {
                 silent,
