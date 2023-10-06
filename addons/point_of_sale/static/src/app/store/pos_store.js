@@ -489,10 +489,7 @@ export class PosStore extends Reactive {
      * @returns true if the POS app (not only this POS config) has at least one valid product.
      */
     posHasValidProduct() {
-        return (
-            this.pos_has_valid_product ||
-            Object.values(this.db.product_by_id).some((p) => p.available_in_pos && p.lst_price > 0)
-        );
+        return this.pos_has_valid_product;
     }
 
     setSelectedCategoryId(categoryId) {

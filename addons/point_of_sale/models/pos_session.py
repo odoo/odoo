@@ -2206,24 +2206,27 @@ class PosSession(models.Model):
         self.message_post(body=body, author_id=partner_id)
 
     def _pos_has_valid_product(self):
-        return self.env['product.product'].sudo().search_count(['&', ('available_in_pos', '=', True), ('list_price', '>', 0)], limit=1) > 0
+        return self.env['product.product'].sudo().search_count([('available_in_pos', '=', True), ('list_price', '>', 0), '|', ('active', '=', False), ('active', '=', True)], limit=1) > 0
 
     @api.model
     def _load_onboarding_data(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
-        shop_config = self.env.ref('point_of_sale.pos_config_main')
-        if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
-            self.env['pos.session'].create({
-                'config_id': shop_config.id,
-                'user_id': self.env.ref('base.user_admin').id,
-            })
+        shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        if shop_config:
+            convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', kind='data')
+            if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
+                self.env['pos.session'].create({
+                    'config_id': shop_config.id,
+                    'user_id': self.env.ref('base.user_admin').id,
+                })
 
     def _after_load_onboarding_data(self):
         config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
-        config.with_context(bypass_categories_forbidden_change=True).write({
-            'limit_categories': True,
-            'iface_available_categ_ids': [Command.link(self.env.ref('point_of_sale.pos_category_miscellaneous').id), Command.link(self.env.ref('point_of_sale.pos_category_desks').id), Command.link(self.env.ref('point_of_sale.pos_category_chairs').id)]
-        })
+        if config:
+            config.with_context(bypass_categories_forbidden_change=True).write({
+                'limit_categories': True,
+                'iface_available_categ_ids': [Command.link(self.env.ref('point_of_sale.pos_category_miscellaneous').id), Command.link(self.env.ref('point_of_sale.pos_category_desks').id), Command.link(self.env.ref('point_of_sale.pos_category_chairs').id)]
+            })
 
     def load_product_frontend(self):
         allowed = not self._pos_has_valid_product()

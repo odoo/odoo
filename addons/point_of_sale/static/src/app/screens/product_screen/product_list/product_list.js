@@ -66,9 +66,7 @@ export class ProductsWidget extends Component {
         }
         return false;
     }
-    get posHasValidProduct() {
-        return this.pos.posHasValidProduct();
-    }
+
     get selectedCategoryId() {
         return this.pos.selectedCategoryId;
     }

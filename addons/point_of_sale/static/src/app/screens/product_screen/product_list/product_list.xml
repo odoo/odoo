@@ -16,7 +16,7 @@
                     debounceMillis="100" />
             </div>
             <div class="product-list-container flex-grow-1 overflow-y-auto">
-                <div t-if="productsToDisplay.length != 0 and posHasValidProduct" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                         <ProductCard
                             class="pos.productViewMode"
@@ -35,7 +35,7 @@
                         <p>No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
                     </t>
                     <t t-else="">
-                        <t t-if="posHasValidProduct">
+                        <t t-if="pos.posHasValidProduct()">
                             <p>There are no products in this category.</p>
                         </t>
                         <t t-else="">
