@@ -54,6 +54,7 @@ const DEFAULT_FIELD_VALUES = {
     text: false,
     selection: false,
     reference: false,
+    properties: [],
 };
 
 // -----------------------------------------------------------------------------

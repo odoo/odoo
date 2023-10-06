@@ -4788,7 +4788,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`calendar render properties`, async (assert) => {
+    QUnit.test(`calendar render properties in popover`, async (assert) => {
         serverData.models.event.fields.properties = {
             string: "Properties",
             type: "properties",
@@ -4831,7 +4831,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" mode="week" attendee="partner_ids" color="partner_id" date_delay="duration">
+                <calendar quick_add="false" event_open_popup="1" date_start="start">
                     <field name="event_type_id" />
                     <field name="properties" />
                 </calendar>
@@ -4850,6 +4850,51 @@ QUnit.module("Views", ({ beforeEach }) => {
             ),
             ["My Charhello", "My SelectionB"]
         );
+    });
+
+    QUnit.test(`calendar create record with default properties`, async (assert) => {
+        serverData.models.event.fields.properties = {
+            string: "Properties",
+            type: "properties",
+            definition_record: "event_type_id",
+            definition_record_field: "definitions",
+            default: [{ name: "event_prop", string: "Hello", type: "char" }],
+        };
+        serverData.models.event_type.fields.definitions = {
+            string: "Definitions",
+            type: "properties_definition",
+        };
+
+        serverData.views["event,false,form"] = `
+            <form>
+                <group>
+                    <field name="name" />
+                    <field name="event_type_id" />
+                    <field name="properties" />
+                </group>
+            </form>
+        `;
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar quick_add="False" event_open_popup="1" date_start="start">
+                    <field name="event_type_id" />
+                    <field name="properties" />
+                </calendar>
+            `,
+            async mockRPC(route, args) {
+                if (args.method === "check_access_rights") {
+                    return true;
+                }
+            },
+        });
+
+        await selectTimeRange(target, "2016-12-15 06:00:00", "2016-12-15 08:00:00");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal [name='properties']").textContent, "Hello");
     });
 
     QUnit.module("CalendarView - DatePicker", ({ beforeEach }) => {
