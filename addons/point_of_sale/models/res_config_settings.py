@@ -150,7 +150,7 @@ class ResConfigSettings(models.TransientModel):
         # STEP: Finally, we write the value of 'pos' fields to 'pos_config_id'.
         for pos_config_id, pos_fields_vals in pos_config_id_to_fields_vals_map.items():
             pos_config = self.env['pos.config'].browse(pos_config_id)
-            pos_config.write(pos_fields_vals)
+            pos_config.with_context(from_settings_view=True).write(pos_fields_vals)
 
         return result
 
