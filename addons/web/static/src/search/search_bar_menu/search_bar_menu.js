@@ -203,7 +203,8 @@ export class SearchBarMenu extends Component {
             title: _t("Warning"),
             body: userId
                 ? _t("Are you sure that you want to remove this filter?")
-                : _t("This filter is global and will be removed for everybody if you continue."),
+                : _t("This filter is global and will be removed for everyone."),
+            confirmLabel: _t("Delete Filter"),
             confirm: () => this.env.searchModel.deleteFavorite(itemId),
             cancel: () => {},
         };

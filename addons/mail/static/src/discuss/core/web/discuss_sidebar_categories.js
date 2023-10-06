@@ -66,6 +66,7 @@ export class DiscussSidebarCategories extends Component {
         return new Promise((resolve) => {
             this.dialogService.add(ConfirmationDialog, {
                 body: body,
+                confirmLabel: _t("Leave Conversation"),
                 confirm: resolve,
                 cancel: () => {},
             });

@@ -28,6 +28,9 @@ patch(AttendeeCalendarController.prototype, {
                     title: _t("Configuration"),
                     body: _t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"),
                     confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
+                    confirmLabel: _t("Configure"),
+                    cancel: () => {},
+                    cancelLabel: _t("Discard"),
                 });
             } else {
                 this.dialog.add(AlertDialog, {
@@ -43,6 +46,7 @@ patch(AttendeeCalendarController.prototype, {
     async onStopMicrosoftSynchronization() {
         this.dialog.add(ConfirmationDialog, {
             body: _t("You are about to stop the synchronization of your calendar with Outlook. Are you sure you want to continue?"),
+            confirmLabel: _t("Stop Synchronization"),
             confirm: async () => {
                 await this.orm.call(
                     "res.users",
