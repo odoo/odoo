@@ -13,7 +13,7 @@ from base64 import b64decode, b64encode
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
 
@@ -230,15 +230,19 @@ class Web_Editor(http.Controller):
                 ('url', '=like', src),
                 ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
             ], limit=1)
-        if not attachment:
-            return {
-                'attachment': False,
-                'original': False,
-            }
-        return {
-            'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+        res = {
+            'attachment': False,
+            'original': False,
         }
+        if attachment:
+            try:
+                res.update({
+                    'attachment': attachment.read(['id'])[0],
+                    'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+                })
+            except AccessError:
+                pass
+        return res
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', generate_access_token=False):
         """Create and return a new attachment."""
