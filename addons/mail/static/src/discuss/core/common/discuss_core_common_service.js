@@ -77,6 +77,38 @@ export class DiscussCoreCommon {
                     { type: "info" }
                 );
             });
+            this.busService.subscribe("discuss.channel/delete", (payload) => {
+                const thread = this.threadService.insert({
+                    id: payload.id,
+                    model: "discuss.channel",
+                });
+                const filteredStarredMessages = [];
+                let starredCounter = 0;
+                for (const msg of this.store.discuss.starred.messages) {
+                    if (msg.resModel !== thread.model || msg.resId !== thread.id) {
+                        filteredStarredMessages.push(msg);
+                    } else {
+                        starredCounter++;
+                    }
+                }
+                this.store.discuss.starred.messages = filteredStarredMessages;
+                this.store.discuss.starred.counter -= starredCounter;
+                this.store.discuss.inbox.messages = this.store.discuss.inbox.messages.filter(
+                    (msg) => msg.resModel !== thread.model || msg.resId !== thread.id
+                );
+                this.store.discuss.inbox.counter -= thread.message_needaction_counter;
+                this.store.discuss.history.messages = this.store.discuss.history.messages.filter(
+                    (msg) => msg.resModel !== thread.model || msg.resId !== thread.id
+                );
+                for (const message of thread.messages) {
+                    delete this.store.messages[message.id];
+                }
+                this.threadService.removeChatWindow?.(thread);
+                this.threadService.remove(thread);
+                if (thread.localId === this.store.discuss.threadLocalId) {
+                    this.threadService.setDiscussThread(this.store.discuss.inbox);
+                }
+            });
             this.busService.subscribe("discuss.channel/legacy_insert", (payload) => {
                 this.threadService.insert({
                     id: payload.channel.id,
