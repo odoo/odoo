@@ -472,7 +472,7 @@ class PosGlobalState extends PosModel {
                 }
             }
         }
-        if(!missingProductIds.length) return;
+        if(!missingProductIds.size) return;
         const products = await this.env.services.rpc({
             model: 'pos.session',
             method: 'get_pos_ui_product_product_by_params',
