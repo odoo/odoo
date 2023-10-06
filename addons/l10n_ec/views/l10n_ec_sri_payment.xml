@@ -11,6 +11,7 @@
                     <group>
                           <field name="code"/>
                           <field name="name"/>
+                          <field name="active"/>
                     </group>
                 </sheet>
             </form>
@@ -25,6 +26,7 @@
             <tree string="Payment Method" create="0" edit="0">
                 <field name="code"/>
                 <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
             </tree>
         </field>
     </record>
@@ -34,6 +36,7 @@
         <field name="res_model">l10n_ec.sri.payment</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_payment_method_tree"/>
+        <field name="context">{'active_test': False}</field>
     </record>
 
     <menuitem id="menu_action_account_l10n_ec_sri_payment" action="action_account_l10n_ec_sri_payment_tree"
