@@ -11,3 +11,4 @@ class SriPayment(models.Model):
 
     name = fields.Char("Name", translate=True)
     code = fields.Char("Code")
+    active = fields.Boolean("Active", default=True)
