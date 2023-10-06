@@ -9,7 +9,7 @@ const viewRegistry = registry.category("views");
 
 const MEASURE_STRINGS = {
     parent_res_id: _t("Project"),
-    rating: _t("Rating Value (/5)"),
+    rating: _t("Rating (/5)"),
     res_id: _t("Task"),
 };
 
