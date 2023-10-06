@@ -64,6 +64,18 @@ class AccountEdiProxyClientUser(models.Model):
         return super()._get_server_url(proxy_type, edi_mode)
 
     # -------------------------------------------------------------------------
+    # CRONS
+    # -------------------------------------------------------------------------
+
+    def _cron_peppol_get_new_documents(self):
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active')])
+        edi_users._peppol_get_new_documents()
+
+    def _cron_peppol_get_message_status(self):
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active')])
+        edi_users._peppol_get_message_status()
+
+    # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
@@ -75,12 +87,8 @@ class AccountEdiProxyClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
-    def _cron_peppol_get_new_documents(self):
-        # Retrieve all new Peppol documents for every edi user in the database
-        edi_users = self.env['account_edi_proxy_client.user'].search(
-            [('company_id.account_peppol_proxy_state', '=', 'active')])
-
-        for edi_user in edi_users:
+    def _peppol_get_new_documents(self):
+        for edi_user in self:
             proxy_acks = []
             try:
                 # request all messages that haven't been acknowledged
@@ -186,11 +194,8 @@ class AccountEdiProxyClientUser(models.Model):
                     {'message_uuids': proxy_acks},
                 )
 
-    def _cron_peppol_get_message_status(self):
-        edi_users = self.env['account_edi_proxy_client.user'].search(
-            [('company_id.account_peppol_proxy_state', '=', 'active')])
-
-        for edi_user in edi_users:
+    def _peppol_get_message_status(self):
+        for edi_user in self:
             edi_user_moves = self.env['account.move'].search([
                 ('peppol_move_state', '=', 'processing'),
                 ('company_id', '=', edi_user.company_id.id),
