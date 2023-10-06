@@ -163,6 +163,14 @@ class TestMrpOrder(TestMrpCommon):
         # check sub product availability state is assigned
         self.assertEqual(production_2.reservation_state, 'assigned', 'Production order should be availability for assigned state')
 
+    @freeze_time('2022-06-28 08:00')
+    def test_end_date(self):
+        """ End date must be the day the MO is done (regardless of lead times)"""
+        mo, bom_id, _p_final, _p1, _p2 = self.generate_mo(qty_base_1=10, qty_final=1, qty_base_2=1)
+        bom_id.produce_delay = 5
+        mo.button_mark_done()
+        self.assertEqual(mo.date_finished.day, 28)
+
     def test_over_consumption(self):
         """ Consume more component quantity than the initial demand. No split on moves.
         """

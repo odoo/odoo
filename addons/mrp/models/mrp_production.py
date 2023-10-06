@@ -697,7 +697,7 @@ class MrpProduction(models.Model):
     @api.depends('company_id', 'date_start', 'is_planned', 'product_id')
     def _compute_date_finished(self):
         for production in self:
-            if not production.date_start or production.is_planned:
+            if not production.date_start or production.is_planned or production.state == 'done':
                 continue
             days_delay = production.bom_id.produce_delay
             date_finished = production.date_start + relativedelta(days=days_delay)
