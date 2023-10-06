@@ -1491,6 +1491,45 @@ header {
     }
 }
 
+// Step wizard used in /shop, /event, appointment
+.o_wizard {
+    $o_wizard_circle_progress_size: 64px;
+
+    .o_wizard_step_active {
+        @include media-breakpoint-up(md) {
+            color: $body-color;
+        }
+    }
+
+    .o_wizard_circle_progress {
+        &, &:before {
+            width: $o_wizard_circle_progress_size;
+            height: $o_wizard_circle_progress_size;
+            line-height: $o_wizard_circle_progress_size;
+        }
+
+        &:before {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 map-get($border-widths, 5) currentColor;
+            opacity: .2;
+            content: "";
+        }
+    }
+
+    .o_wizard_circle_progress_left .progress-bar {
+        border-radius: 0 ($o_wizard_circle_progress_size * .5) ($o_wizard_circle_progress_size * .5) 0;
+        transform-origin: center left;
+        transform: rotate(var(--leftProgress));
+    }
+
+    .o_wizard_circle_progress_right .progress-bar {
+        border-radius: ($o_wizard_circle_progress_size * .5) 0 0 ($o_wizard_circle_progress_size * .5);
+        transform-origin: center right;
+        transform: rotate(var(--rightProgress));
+    }
+}
+
 // Language selector
 .js_language_selector {
     .dropdown-menu {

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _, _lt
+
 from odoo.http import request
 from odoo.osv import expression
 
@@ -563,6 +564,69 @@ class Website(models.Model):
 
         return self.is_view_active('website_sale.address_b2b')
 
+    def _get_checkout_steps(self, current_step=None):
+        """ Return an ordered list of steps according to the current template rendered.
+
+        Note: self.ensure_one()
+
+        :rtype: list
+        :return: A list with the following structure:
+            [
+                [xmlid],
+                {
+                    'name': str,
+                    'current_href': str,
+                    'main_button': str,
+                    'main_button_href': str,
+                    'back_button': str,
+                    'back_button_href': str
+                }
+            ]
+        """
+        def _is_current_step(step):
+            return current_step in step[0]
+
+        self.ensure_one()
+        is_extra_step_active = self.viewref('website_sale.extra_info').active
+        redirect_to_sign_in = self.account_on_checkout == 'mandatory' and self.is_public_user()
+
+        res = [(
+            ['website_sale.cart'], {
+            'name': _lt("Review Order"),
+            'current_href': '/shop/cart',
+            'main_button': _lt("Sign In") if redirect_to_sign_in else _lt("Checkout"),
+            'main_button_href': f'{"/web/login?redirect=" if redirect_to_sign_in else ""}/shop/checkout?express=1',
+            'back_button':  _lt("Continue shopping"),
+            'back_button_href': '/shop',
+        }), (
+            ['website_sale.checkout', 'website_sale.address'], {
+            'name': _lt("Shipping"),
+            'current_href': '/shop/checkout',
+            'main_button': _lt("Confirm"),
+            'main_button_href': f'{"/shop/extra_info" if is_extra_step_active else "/shop/confirm_order"}',
+            'back_button':  _lt("Back to cart"),
+            'back_button_href': '/shop/cart',
+        })]
+        if is_extra_step_active:
+            res.append((['website_sale.extra_info'], {
+                'name': _lt("Extra Info"),
+                'current_href': '/shop/extra_info',
+                'main_button': _lt("Continue checkout"),
+                'main_button_href': '/shop/confirm_order',
+                'back_button':  _lt("Return to shipping"),
+                'back_button_href': '/shop/checkout',
+            }))
+        res.append((['website_sale.payment'], {
+            'name': _lt("Payment"),
+            'current_href': '/shop/payment',
+            'back_button':  _lt("Back to cart"),
+            'back_button_href': '/shop/cart',
+        }))
+
+        if current_step:
+            return next(iter(filter(_is_current_step, res)))[1]
+        else:
+            return res
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

@@ -30,7 +30,7 @@
         tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
+        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:propValue(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
     ...tourUtils.assertCartAmounts({
@@ -57,12 +57,12 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h2:contains("Shipping Address")',
+        extra_trigger: 'h3:contains("My details")',
         run: function () {
             $('input[name="name"]').val('def');
             $('input[name="phone"]').val('8888888888');
@@ -74,7 +74,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Save address")',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
@@ -97,7 +97,7 @@
     {
         content: "Change billing address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h2:contains("Your Address")',
+        extra_trigger: 'h3:contains("Your address")',
         run: function () {
             $('input[name="name"]').val('abcd');
             $('input[name="phone"]').val('11111111');
@@ -107,7 +107,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Save address")',
     },
     {
         content: "Confirm Address",
@@ -216,7 +216,7 @@
         tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
-        extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
+        extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:propValue(2)',
         trigger: 'a[href*="/shop/checkout"]',
     },
     ...tourUtils.assertCartAmounts({
@@ -239,7 +239,7 @@
     },
     {
         content: "Add new shipping address",
-        trigger: '.one_kanban form[action^="/shop/address"] .btn',
+        trigger: '.one_kanban form[action^="/shop/address"] a:contains("Add address")',
     },
     {
         content: "Fulfill shipping address form",
@@ -255,7 +255,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Save address")',
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -312,7 +312,7 @@
         steps: () => [
     {
         content: "Open Dropdown for logout",
-        extra_trigger: '.progress-wizard-step:contains("Extra Info")',
+        extra_trigger: '.o_wizard:contains("Extra Info")',
         trigger: '#top_menu li.dropdown:visible a:contains("Mitchell Admin")',
     },
     {
@@ -342,13 +342,10 @@
         trigger: '#add_to_cart',
     },
         tourUtils.goToCart(),
+        tourUtils.goToCheckout(),
     {
-        content: "Proceed to checkout",
-        trigger: 'a[href*="/shop/checkout"]',
-    },
-    {
-        content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        content: "Click on 'Continue checkout' button",
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
@@ -360,15 +357,7 @@
         trigger: '#shipping_and_billing:contains(SO2New Shipping Street, 5):contains(SO2NewShipping):contains(Afghanistan)',
         run: function () {}, // it's a check
     },
-    {
-        content: "Select `Wire Transfer` payment method",
-        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
-    },
-    {
-        content: "Pay Now",
-        extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
-        trigger: 'button[name="o_payment_submit_button"]:visible',
-    },
+    ...tourUtils.payWithTransfer(),
     {
         content: "Check payment status confirmation window",
         trigger: ".oe_website_sale_tx_status[data-order-tracking-info]",

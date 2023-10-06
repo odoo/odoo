@@ -49,10 +49,7 @@ wsTourUtils.fillAdressForm({
     street: "Cheesy Crust Street, 42",
     city: "CheeseCity",
     zip: "8888",
-}), {
-    content: "Next",
-    trigger: '.oe_cart .btn:contains("Next")',
-},
+}),
 ...wsTourUtils.payWithDemo(),
 ];
 

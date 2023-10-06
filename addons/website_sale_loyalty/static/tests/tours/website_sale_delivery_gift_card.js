@@ -9,20 +9,10 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
     steps: () => [
         ...wsTourUtils.addToCart({productName: "Acoustic Bloc Screens"}),
         wsTourUtils.goToCart(1),
-        {
-            content: "go to checkout",
-            trigger: 'a[href="/shop/checkout?express=1"]',
-            run: 'click'
-        },
+        wsTourUtils.goToCheckout(),
         {
             content: "select delivery method 1",
             trigger: "li label:contains(delivery1)",
-            run: 'click'
-        },
-        {
-            content: "click on 'Pay with gift card'",
-            trigger: '.show_coupon',
-            run: 'click'
         },
         {
             content: "Enter gift card code",
@@ -32,7 +22,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         {
             content: "click on 'Pay'",
             trigger: "a[role='button'].a-submit:contains(Apply)",
-            run: 'click'
         },
         ...wsTourUtils.assertCartAmounts({
             total: '0.00',

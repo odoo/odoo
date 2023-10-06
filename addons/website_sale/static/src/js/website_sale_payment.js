@@ -18,7 +18,7 @@ const websiteSalePaymentMixin = {
     },
 
     prepareInputs() {
-        this.$checkbox = $(document.getElementById('checkbox_tc'));
+        this.$checkbox = $(document.getElementById('website_sale_tc_checkbox'));
         this.$submitButton = $(document.querySelector('[name="o_payment_submit_button"]'));
         this._adaptConfirmButton();
     },
@@ -93,7 +93,7 @@ publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend(
     Object.assign({}, websiteSalePaymentMixin, {
         selector: 'div[name="o_website_sale_free_cart"]',
         events: {
-            'change #checkbox_tc': '_onClickTCCheckbox',
+            'change #website_sale_tc_checkbox': '_onClickTCCheckbox',
         },
 
         // #=== WIDGET LIFECYCLE ===#

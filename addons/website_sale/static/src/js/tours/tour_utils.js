@@ -96,8 +96,8 @@ function fillAdressForm(adressParams = {
         }
     });
     steps.push({
-        content: "Next",
-        trigger: '.oe_cart .btn:contains("Next")',
+        content: "Continue checkout",
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     });
     return steps;
 }
@@ -114,7 +114,7 @@ function goToCart({quantity = 1, position = "bottom", backend = false} = {}) {
 function goToCheckout() {
     return {
         content: 'Checkout your order',
-        trigger: 'a[role="button"] span:contains("Process Checkout")',
+        trigger: 'a[href^="/shop/checkout"]',
         run: 'click',
     };
 }
