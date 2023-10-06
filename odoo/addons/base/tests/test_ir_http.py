@@ -19,12 +19,12 @@ class TestIrHttpPerformances(TransactionCase):
 
         self.env.registry.clear_cache('routing')
         start = time.time()
-        self.env['ir.http'].routing_map()
+        self.env['ir.http']._routing_map()
         duration = time.time() - start
         _logger.info('Routing map web generated in %.3fs', duration)
 
         # generate the routing map of another website, to check if we can benefit from anything computed by the previous routing map
         start = time.time()
-        self.env['ir.http'].routing_map(key=1)
+        self.env['ir.http']._routing_map(key=1)
         duration = time.time() - start
         _logger.info('Routing map website1 generated in %.3fs', duration)

@@ -2075,7 +2075,7 @@ class Application:
     def get_db_router(self, db):
         if not db:
             return self.nodb_routing_map
-        return request.env['ir.http'].routing_map()
+        return request.env['ir.http']._routing_map()
 
     @lazy_property
     def geoip_city_db(self):

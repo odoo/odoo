@@ -129,7 +129,9 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _match(cls, path_info):
-        rule, args = request.env['ir.http'].routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
+        routing_map = request.env['ir.http']._routing_map()
+        routing_map = routing_map.bind_to_environ(request.httprequest.environ)
+        rule, args = routing_map.match(path_info=path_info, return_rule=True)
         return rule, args
 
     @classmethod
@@ -237,7 +239,7 @@ class IrHttp(models.AbstractModel):
         return http._generate_routing_rules(modules, False, converters)
 
     @tools.ormcache('key', cache='routing')
-    def routing_map(self, key=None):
+    def _routing_map(self, key=None):
         _logger.info("Generating routing map for key %s", str(key))
         registry = Registry(threading.current_thread().dbname)
         installed = registry._init_modules.union(odoo.conf.server_wide_modules)

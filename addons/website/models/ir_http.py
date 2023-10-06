@@ -61,10 +61,10 @@ def get_request_website():
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
-    def routing_map(self, key=None):
+    def _routing_map(self, key=None):
         if not key and request:
             key = request.website_routing
-        return super().routing_map(key=key)
+        return super()._routing_map(key=key)
 
     @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
@@ -147,7 +147,7 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _register_website_track(cls, response):
-        if request.env['ir.http'].is_a_bot():
+        if request.env['ir.http']._is_a_bot():
             return False
         if getattr(response, 'status_code', 0) != 200 or request.httprequest.headers.get('X-Disable-Tracking') == '1':
             return False

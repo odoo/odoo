@@ -1209,7 +1209,7 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-        router = self.env['ir.http'].routing_map()
+        router = self.env['ir.http']._routing_map()
         url_set = set()
 
         sitemap_endpoint_done = set()
