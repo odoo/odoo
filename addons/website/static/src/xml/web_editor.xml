@@ -38,10 +38,22 @@
 
     <t t-inherit="web_editor.toolbar" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='this.isMobile()']//div[@id='list']" position="inside">
-            <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
+            <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text" data-text-selector=".o_animated_text"/>
         </xpath>
         <xpath expr="//t[@t-else]//div[@id='list']" position="inside">
-            <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
+            <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text" data-text-selector=".o_animated_text"/>
+        </xpath>
+
+        <xpath expr="//div[@id='strikethrough']" position="attributes">
+            <attribute name="t-if">!props.showTextHighlights</attribute>
+        </xpath>
+        <xpath expr="//div[@id='underline']" position="attributes">
+            <attribute name="t-if">!props.showTextHighlights</attribute>
+        </xpath>
+        <xpath expr="//div[@id='underline']" position="after">
+            <div t-if="props.showTextHighlights" title="Add Text Highlight Effects"
+                class="btn oi oi-text-effect oi-fw o_we_text_highlight"
+                data-text-selector=".o_text_highlight"/>
         </xpath>
     </t>
 </templates>

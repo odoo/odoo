@@ -415,7 +415,8 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
         });
     }
     steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`,
-        `we-select[data-name=${widgetName}] we-button:contains(${elementName})`));
+        `we-select[data-name="${widgetName}"] we-button:contains("${elementName}"), ` +
+        `we-select[data-name="${widgetName}"] we-button[data-select-label="${elementName}"]`));
     return steps;
 }
 

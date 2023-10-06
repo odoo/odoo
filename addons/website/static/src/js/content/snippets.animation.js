@@ -16,6 +16,11 @@ import wUtils from "@website/js/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+import {
+    applyTextHighlight,
+    switchTextHighlight,
+    getCurrentTextHighlight,
+} from "@website/js/text_processing";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -1796,6 +1801,132 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
                 resolve();
             };
         };
+    },
+});
+
+registry.TextHighlight = publicWidget.Widget.extend({
+    selector: '#wrapwrap',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    async start() {
+        // Text highlights are saved with a single wrapper that contains all
+        // information to build the effects, So we need to make the adaptation
+        // here to show the SVGs.
+        for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
+            applyTextHighlight(textEl, getCurrentTextHighlight(textEl));
+        }
+        // We need to adapt the text highlights on resize, mainly to take in
+        // consideration the rendered line breaks in text nodes...
+        this._adaptOnResize = throttleForAnimation(() => {
+            this.options.wysiwyg?.odooEditor.observerUnactive("textHighlightResize");
+            for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
+                // Remove old effect, normalize content, redraw SVGs...
+                switchTextHighlight(textEl, getCurrentTextHighlight(textEl));
+            }
+            this.options.wysiwyg?.odooEditor.observerActive("textHighlightResize");
+        });
+        if (!this.editableMode) {
+            this._adaptOnFontsLoading();
+        }
+        window.addEventListener("resize", this._adaptOnResize);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        window.removeEventListener("resize", this._adaptOnResize);
+        if (!this.editableMode) {
+            this.resizeObserver.disconnect();
+            this.observerLocked.clear();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Right after custom fonts loading, the text width can change (even after
+     * adapting the highlights), leading to a highlight SVG slightly longer or
+     * shorter than the text content... `document.fonts.ready` is resolved
+     * before the text width is updated, so we need to do the update manually
+     * here by adjusting the highlights if the text width changes using a
+     * `ResizeObserver`.
+     *
+     * @private
+     */
+    _adaptOnFontsLoading() {
+        this.observerLocked = new Map();
+        // The idea here is to adapt the highlights when a width change is
+        // detected, but after every adjustment, the `ResizeObserver` will
+        // unfortunately immediately notify a size change once new highlight
+        // items are observed leading to an infinite loop. To avoid that,
+        // we use a lock map (`observerLocked`) to block the callback on this
+        // first notification for observed items.
+        this.resizeObserver = new window.ResizeObserver(entries => {
+            window.requestAnimationFrame(() => {
+                const topTextEls = new Set();
+                entries.forEach(entry => {
+                    const target = entry.target;
+                    if (this.observerLocked.get(target)) {
+                        // Unlock the target, the next resize will trigger
+                        // highlight adaptation.
+                        return this.observerLocked.set(target, false);
+                    }
+                    const topTextEl = target.closest(".o_text_highlight");
+                    if (topTextEl) {
+                        topTextEls.add(topTextEl);
+                        // Unobserve the target (it will be replaced by a new
+                        // one after the update).
+                        this.resizeObserver.unobserve(target);
+                    }
+                });
+                // The `ResizeObserver` cannot detect the width change on the
+                // entire `.o_text_highlight` element, so we need to observe
+                // the highlight units (`.o_text_highlight_item`) and do the
+                // adjustment only once for the whole container.
+                topTextEls.forEach(async topTextEl => {
+                    // We don't need to track old items, they will be removed
+                    // after the adaptation.
+                    [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
+                        this.observerLocked.delete(unit);
+                    });
+                    // Adapt the highlight, lock new items and observe them.
+                    switchTextHighlight(topTextEl, getCurrentTextHighlight(topTextEl));
+                    this._lockHighlightObserver(topTextEl);
+                    this._observeHighlightResize(topTextEl);
+                });
+            });
+        });
+        this._observeHighlightResize();
+        this._lockHighlightObserver();
+    },
+    /**
+     * @private
+     * @param {HTMLElement} [container=this.el] the element where the "resize"
+     * should be observed.
+     */
+    _observeHighlightResize(container = this.el) {
+        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
+            this.resizeObserver.observe(unit);
+        });
+    },
+    /**
+     * Used to prevent the first callback triggered by `ResizeObserver` on new
+     * observed items.
+     *
+     * @private
+     * @param {HTMLElement} [container=this.el] the container of observed items.
+     */
+    _lockHighlightObserver(container = this.el) {
+        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
+            this.observerLocked.set(unit, true);
+        });
     },
 });
 
