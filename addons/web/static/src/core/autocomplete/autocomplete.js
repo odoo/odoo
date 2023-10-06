@@ -64,9 +64,7 @@ export class AutoComplete extends Component {
 
         // position and size
         if (this.props.dropdown) {
-            usePosition("sourcesList", () => this.targetDropdown, {
-                position: "bottom-start",
-            });
+            usePosition("sourcesList", () => this.targetDropdown, this.dropdownOptions);
         } else {
             this.open(false);
         }
@@ -74,6 +72,12 @@ export class AutoComplete extends Component {
 
     get targetDropdown() {
         return this.inputRef.el;
+    }
+
+    get dropdownOptions() {
+        return {
+            position: "bottom-start",
+        };
     }
 
     get isOpened() {
