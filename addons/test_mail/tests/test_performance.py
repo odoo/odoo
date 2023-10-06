@@ -56,7 +56,6 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         super(BaseMailPerformance, self).setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
-        self.flush_tracking()
 
     def _create_test_records(self):
         test_record_full = self.env['mail.test.ticket'].with_context(self._test_context).create({
@@ -854,14 +853,12 @@ class TestMailComplexPerformance(BaseMailPerformance):
                 'subtype_id': comment_subtype_id,
                 'tracking_value_ids': [
                     (0, 0, {
-                        'field': name_field.id,
-                        'field_desc': 'Name',
+                        'field_id': name_field.id,
                         'new_value_char': 'new 0',
                         'old_value_char': 'old 0',
                     }),
                     (0, 0, {
-                        'field': customer_id_field.id,
-                        'field_desc': 'Customer',
+                        'field_id': customer_id_field.id,
                         'new_value_char': 'new 1',
                         'new_value_integer': cls.partners[(record_idx * 5)].id,
                         'old_value_char': 'old 1',

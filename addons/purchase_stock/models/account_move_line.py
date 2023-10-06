@@ -70,7 +70,7 @@ class AccountMoveLine(models.Model):
             move = aml.move_id
             if move.state != 'posted':
                 continue
-            state_trackings = move.message_ids.tracking_value_ids.filtered(lambda t: t.field == am_state_field).sorted('id')
+            state_trackings = move.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
             time = state_trackings[-1:].create_date or move.create_date  # `or` in case it has been created in posted state
             history.append((time, aml, False))
         # Sort history based on the datetime. In case of equality, the prority is given to SVLs, then to IDs.

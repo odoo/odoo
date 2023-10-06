@@ -989,14 +989,14 @@ class Message(models.Model):
                         {
                             'changedField': "Customer",
                             'id': 2965,
+                            'fieldName': 'partner_id',
+                            'fieldType': 'char',
                             'newValue': {
                                 'currencyId': "",
-                                'fieldType': 'char',
                                 'value': "Axelor",
                             ],
                             'oldValue': {
                                 'currencyId': "",
-                                'fieldType': 'char',
                                 'value': "",
                             ],
                         }

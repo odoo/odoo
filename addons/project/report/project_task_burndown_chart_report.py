@@ -124,7 +124,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                                                 LEFT JOIN (
                                                     mail_message mm
                                                         JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
-                                                                                     AND mtv.field = %(field_id)s
+                                                                                     AND mtv.field_id = %(field_id)s
                                                                                      AND mm.model='project.task'
                                                                                      AND mm.message_type = 'notification'
                                                         JOIN project_task_type ptt ON ptt.id = mtv.old_value_integer
@@ -154,7 +154,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                                        SELECT mm.date
                                        FROM mail_message mm
                                        JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
-                                       AND mtv.field = %(field_id)s
+                                       AND mtv.field_id = %(field_id)s
                                        AND mm.model='project.task'
                                        AND mm.message_type = 'notification'
                                        AND mm.res_id = pt.id
