@@ -13,10 +13,6 @@ class ResPartner(models.Model):
         compute='_compute_slide_channel_values',
         search='_search_slide_channel_ids',
         groups="website_slides.group_website_slides_officer")
-    slide_channel_all_ids = fields.Many2many(
-        'slide.channel', 'slide_channel_partner', 'partner_id', 'channel_id',
-        string='eLearning Courses and Invitations',
-        groups="website_slides.group_website_slides_officer", copy=False)
     slide_channel_completed_ids = fields.One2many(
         'slide.channel', string='Completed Courses',
         compute='_compute_slide_channel_values',
