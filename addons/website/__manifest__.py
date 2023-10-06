@@ -142,6 +142,7 @@
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.share.xml',
+            'website/static/src/js/text_processing.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
@@ -178,6 +179,7 @@
             'website/static/src/scss/website_visitor_views.scss',
             'website/static/src/js/backend/**/*',
             'website/static/src/js/tours/tour_utils.js',
+            'website/static/src/js/text_processing.js',
             'website/static/src/client_actions/*/*',
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
@@ -256,6 +258,8 @@
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/link_popover_widget.js',
             'website/static/src/xml/website.cookies_bar.xml',
+            'website/static/src/js/editor/commands_overridden.js',
+            'website/static/src/js/editor/odoo_editor.js',
         ],
         'website.assets_all_wysiwyg': [
             ('include', 'web_editor.assets_wysiwyg'),

@@ -2539,6 +2539,30 @@ input[value*="data-oe-translation-initial-sha"] {
     transition-timing-function: ease-out;
 }
 
+//------------------------------------------------------------------------------
+// Website Text Highlight Effects
+//------------------------------------------------------------------------------
+
+.o_text_highlight {
+    --text-highlight-color: currentColor;
+
+    // Text highlight SVG container.
+    > .o_text_highlight_item {
+        position: relative;
+        display: inline-block;
+        line-height: normal;
+        white-space: pre-wrap;
+        z-index: 1;
+
+        > * {
+            text-decoration: none;
+        }
+        svg {
+            z-index: -1;
+        }
+    }
+}
+
 // Compatibility <= 13.0
 .o_anim_dur500 {
     animation-duration: 500ms;
