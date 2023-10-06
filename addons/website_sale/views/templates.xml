@@ -1446,7 +1446,7 @@
             Your cart is empty!
         </div>
         <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning" role="alert">
+            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning js_cart_lines" role="alert">
                 <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
             </div>
         </t>
