@@ -16,44 +16,51 @@ export class LeaveStatsComponent extends Component {
         this.state = useState({
             leaves: [],
             departmentLeaves: [],
+            multi_employee : false,
+            date : DateTime,
+            department : null,
+            employee : null,
+            type: null,
         });
 
-        this.date = this.props.record.data.date_from || DateTime.now();
-        this.department = this.props.record.data.department_id;
-        this.employee = this.props.record.data.employee_id;
+        this.state.date = this.props.record.data.date_from || DateTime.now();
+        this.state.department = this.props.record.data.department_id;
+        this.state.employee = this.props.record.data.employee_id;
+        this.state.holiday_type = this.props.record.data.holiday_type;
 
         onWillStart(async () => {
-            await this.loadLeaves(this.date, this.employee);
-            await this.loadDepartmentLeaves(this.date, this.department, this.employee);
+            await this.loadLeaves(this.state.date, this.state.employee);
+            await this.loadDepartmentLeaves(this.state.date, this.state.department, this.state.employee);
         });
 
         useRecordObserver(async (record) => {
             const dateFrom = record.data.date_from || DateTime.now();
-            const dateChanged = this.date !== dateFrom;
+            const dateChanged = this.state.date !== dateFrom;
             const employee = record.data.employee_id;
             const department = record.data.department_id;
-
+            const multi_employee = record.data.multi_employee;
             const proms = [];
-            if (dateChanged || (employee && (this.employee && this.employee[0]) !== employee[0])) {
+            if (multi_employee || dateChanged || (employee && (this.state.employee && this.state.employee[0]) !== employee[0])) {
                 proms.push(this.loadLeaves(dateFrom, employee));
             }
-
             if (
+                multi_employee ||
                 dateChanged ||
-                (department && (this.department && this.department[0]) !== department[0])
-            ) {
-                proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
-            }
+                (department && (this.state.department && this.state.department[0]) !== department[0])
+                ) {
+                    proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
+                }
+            this.state.multi_employee = multi_employee;
+            this.state.holiday_type = record.data.holiday_type;
             await Promise.all(proms);
-
-            this.date = dateFrom;
-            this.employee = employee;
-            this.department = department;
+            this.state.date = dateFrom;
+            this.state.employee = employee;
+            this.state.department = department;
         });
     }
 
     get thisYear() {
-        return this.date.toFormat("yyyy");
+        return this.state.date.toFormat("yyyy");
     }
 
     async loadDepartmentLeaves(date, department, employee) {
