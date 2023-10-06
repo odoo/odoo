@@ -9773,7 +9773,7 @@ QUnit.module("Views", (hooks) => {
 
         await editInput(target, '.o_field_widget[name="foo"] input', "test");
         await clickSave(target);
-        await clickSave(target);
+        assert.ok(target.querySelector(".o_form_button_save").disabled); // Save button is disabled, it can't be clicked
 
         def.resolve();
         await nextTick();
@@ -11111,8 +11111,7 @@ QUnit.module("Views", (hooks) => {
 
             await click(target.querySelector(".o_form_view .o_content button.btn-primary"));
             assert.verifySteps(["doActionButton"]);
-            await click(target.querySelector(".o_form_view button.mybutton"));
-            assert.verifySteps([]);
+            assert.ok(target.querySelector(".o_form_view button.mybutton").disabled);
         }
     );
 

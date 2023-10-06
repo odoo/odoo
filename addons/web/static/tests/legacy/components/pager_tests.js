@@ -136,7 +136,7 @@
         });
 
         QUnit.test('pager disabling', async function (assert) {
-            assert.expect(9);
+            assert.expect(10);
 
             const reloadPromise = testUtils.makeTestPromise();
             const pager = await createComponent(PagerController, {
@@ -157,9 +157,9 @@
             });
             const pagerButtons = pager.el.querySelectorAll('button');
 
-            // Click twice
+            // Click and check button is disabled
             await testUtils.controlPanel.pagerNext(pager);
-            await testUtils.controlPanel.pagerNext(pager);
+            assert.ok(pager.el.querySelector('button.o_pager_next').disabled);
             // Try to edit the pager value
             await testUtils.dom.click(pager.el.querySelector('.o_pager_value'));
 
