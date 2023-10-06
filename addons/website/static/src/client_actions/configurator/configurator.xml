@@ -51,8 +51,12 @@
                     <span t-attf-class="me-2 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}"> for my</span>
                 </div>
                 <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
-                    <label class="o_configurator_industry_wrapper me-2">
-                        <input t-on-blur="_blurIndustrySelection" t-ref="industrySelection"/>
+                    <label class="o_configurator_industry_wrapper me-2" t-ref="industrySelection">
+                        <AutoComplete
+                            value="state.selectedIndustry?.label ?? ''"
+                            sources="sources"
+                            onSelect.bind="_setSelectedIndustry"
+                        />
                     </label>
                     <span> business</span>
                     <span t-att-class="!state.selectedIndustry ? 'o_configurator_hide' : 'o_configurator_show'">,</span>

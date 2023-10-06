@@ -166,8 +166,10 @@
             .dropdown-menu, .custom-ui-autocomplete {
                 @include border-bottom-radius($border-radius);
                 font-size: inherit;
-                min-width: 100%;
                 overflow-y: auto;
+                &:not(.o_configurator_industry_dropdown) {
+                    min-width: 100%;
+                }
             }
 
             .dropdown-item, .fa-angle-down, .ui-menu-item a, .ui-menu-item a.ui-state-active {
