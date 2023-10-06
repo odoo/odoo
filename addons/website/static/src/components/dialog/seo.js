@@ -214,7 +214,7 @@ class MetaKeywords extends Component {
 
     onKeyup(ev) {
         // Add keyword on enter.
-        if (ev.keyCode === 13) {
+        if (ev.key === "Enter") {
             this.addKeyword(this.state.keyword);
         }
     }

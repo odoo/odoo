@@ -6,7 +6,6 @@ import { patch } from "@web/core/utils/patch";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 import options from "@web_editor/js/editor/snippets.options";
-import { range } from "@web/core/utils/numbers";
 import { TABLE_ATTRIBUTES, TABLE_STYLES } from '@web_editor/js/backend/convert_inline';
 
 const COLOR_PICKER_TEMPLATE = `
@@ -251,39 +250,6 @@ export function wysiwygData(data) {
 }
 
 /**
- * Char codes.
- */
-var keyboardMap = {
-    "8": "BACKSPACE",
-    "9": "TAB",
-    "13": "ENTER",
-    "16": "SHIFT",
-    "17": "CONTROL",
-    "18": "ALT",
-    "19": "PAUSE",
-    "20": "CAPS_LOCK",
-    "27": "ESCAPE",
-    "32": "SPACE",
-    "33": "PAGE_UP",
-    "34": "PAGE_DOWN",
-    "35": "END",
-    "36": "HOME",
-    "37": "LEFT",
-    "38": "UP",
-    "39": "RIGHT",
-    "40": "DOWN",
-    "45": "INSERT",
-    "46": "DELETE",
-    "91": "OS_KEY", // 'left command': Windows Key (Windows) or Command Key (Mac)
-    "93": "CONTEXT_MENU", // 'right command'
-};
-range(40, 127).forEach((keyCode) => {
-    if (!keyboardMap[keyCode]) {
-        keyboardMap[keyCode] = String.fromCharCode(keyCode);
-    }
-});
-
-/**
  * Perform a series of tests (`keyboardTests`) for using keyboard inputs.
  *
  * @see wysiwyg_keyboard_tests.js
@@ -316,13 +282,6 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
 
     function keydown(target, keypress) {
         var $target = $(target.tagName ? target : target.parentNode);
-        if (!keypress.keyCode) {
-            keypress.keyCode = +Object.keys(keyboardMap).find((key) => {
-                return key === keypress.key;
-            });
-        } else {
-            keypress.key = keyboardMap[keypress.keyCode] || String.fromCharCode(keypress.keyCode);
-        }
         var event = $.Event("keydown", keypress);
         $target.trigger(event);
 
@@ -417,12 +376,11 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
                 }
             }
             setTimeout(function () {
-                if (step.keyCode || step.key) {
+                if (step.key) {
                     var target = Wysiwyg.getRange().ec;
                     if (window.location.search.indexOf('notrycatch') !== -1) {
                         keydown(target, {
                             key: step.key,
-                            keyCode: step.keyCode,
                             ctrlKey: !!step.ctrlKey,
                             shiftKey: !!step.shiftKey,
                             altKey: !!step.altKey,
@@ -432,7 +390,6 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
                         try {
                             keydown(target, {
                                 key: step.key,
-                                keyCode: step.keyCode,
                                 ctrlKey: !!step.ctrlKey,
                                 shiftKey: !!step.shiftKey,
                                 altKey: !!step.altKey,
@@ -444,11 +401,10 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
                     }
                 }
                 setTimeout(function () {
-                    if (step.keyCode || step.key) {
+                    if (step.key) {
                         var $target = $(target.tagName ? target : target.parentNode);
                         $target.trigger($.Event('keyup', {
                             key: step.key,
-                            keyCode: step.keyCode,
                             ctrlKey: !!step.ctrlKey,
                             shiftKey: !!step.shiftKey,
                             altKey: !!step.altKey,
@@ -586,15 +542,7 @@ var select = (function () {
  */
 var keydown = function (key, $editable, options) {
     var keyPress = {};
-    if (typeof key === 'string') {
-        keyPress.key = key;
-        keyPress.keyCode = +Object.keys(keyboardMap).find((k) => {
-            return k === key;
-        });
-    } else {
-        keyPress.key = keyboardMap[key] || String.fromCharCode(key);
-        keyPress.keyCode = key;
-    }
+    keyPress.key = key;
     var range = Wysiwyg.getRange();
     if (!range) {
         console.error("Editor have not any range");

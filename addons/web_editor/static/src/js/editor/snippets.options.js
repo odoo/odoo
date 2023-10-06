@@ -1383,12 +1383,12 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         if (!params.unit && !params.step) {
             return;
         }
-        switch (ev.which) {
-            case $.ui.keyCode.ENTER:
+        switch (ev.key) {
+            case "Enter":
                 this._onUserValueChange(ev);
                 break;
-            case $.ui.keyCode.UP:
-            case $.ui.keyCode.DOWN: {
+            case "ArrowUp":
+            case "ArrowDown": {
                 const input = ev.currentTarget;
                 let value = parseFloat(input.value || input.placeholder);
                 if (isNaN(value)) {
@@ -1399,7 +1399,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
                     step = 1.0;
                 }
 
-                const increasing = ev.which === $.ui.keyCode.UP;
+                const increasing = ev.key === "ArrowUp";
                 const hasMin = ('min' in params);
                 const hasMax = ('max' in params);
 
@@ -2947,7 +2947,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     _onSearchKeydown(ev) {
-        if (ev.which !== $.ui.keyCode.ENTER) {
+        if (ev.key !== "Enter") {
             return;
         }
         const action = () => {

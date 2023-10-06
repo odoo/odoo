@@ -121,18 +121,12 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     /**
      * Listeners for keyboard arrow / spacebar keys.
      *
-     * - 39 = arrow-right
-     * - 32 = spacebar
-     * - 37 = arrow-left
-     *
      * @param {KeyboardEvent} ev
      */
     _onKeyDown: function (ev) {
-        var keyCode = ev.keyCode;
-
-        if (keyCode === 39 || keyCode === 32) {
+        if (ev.key === "ArrowRight" || ev.key === " ") {
             this._onNext(ev);
-        } else if (keyCode === 37) {
+        } else if (ev.key === "ArrowLeft") {
             this._onBack(ev);
         }
     },

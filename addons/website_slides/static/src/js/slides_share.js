@@ -28,7 +28,7 @@ export const ShareMail = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onKeypress: function (ev) {
-        if (ev.keyCode === $.ui.keyCode.ENTER) {
+        if (ev.key === "Enter") {
             ev.preventDefault();
             this._sendMail();
         }

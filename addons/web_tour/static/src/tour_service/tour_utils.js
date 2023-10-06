@@ -297,10 +297,10 @@ export class RunningTourActionHelper {
             values.$element.trigger("input");
         } else {
             values.$element.focusIn();
-            values.$element.trigger($.Event("keydown", { key: "_", keyCode: 95 }));
+            values.$element.trigger($.Event("keydown", { key: "_" }));
             values.$element.text(text).trigger("input");
             values.$element.focusInEnd();
-            values.$element.trigger($.Event("keyup", { key: "_", keyCode: 95 }));
+            values.$element.trigger($.Event("keyup", { key: "_" }));
         }
         values.$element[0].dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     }
@@ -403,8 +403,6 @@ export class RunningTourActionHelper {
                 eventOptions.key = keyCode;
             } else {
                 const code = parseInt(keyCode, 10);
-                eventOptions.keyCode = code;
-                eventOptions.which = code;
                 if (
                     code === 32 || // spacebar
                     (code > 47 && code < 58) || // number keys
@@ -571,8 +569,6 @@ export const stepUtils = {
                     cancelable: true,
                     key: "Enter",
                     code: "Enter",
-                    which: 13,
-                    keyCode: 13,
                 });
                 action.tip_widget.$anchor[0].dispatchEvent(keyEventEnter);
             },

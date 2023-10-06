@@ -36,13 +36,13 @@ const getChartData = () => {
 
 const nextScreen = () => {
     const e = $.Event('keydown');
-    e.keyCode = 39; // arrow-right
+    e.key = "ArrowRight";
     $(document).trigger(e);
 };
 
 const previousScreen = () => {
     const e = $.Event('keydown');
-    e.keyCode = 37; // arrow-left
+    e.key = "ArrowLeft";
     $(document).trigger(e);
 };
 

@@ -229,7 +229,7 @@ function prompt(options, _qweb) {
         });
         if (field.is('input[type="text"], select')) {
             field.keypress(function (e) {
-                if (e.which === 13) {
+                if (e.key === "Enter") {
                     e.preventDefault();
                     dialog.find('.btn-primary').trigger('click');
                 }

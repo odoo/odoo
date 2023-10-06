@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     trigger: 'h1',
     run: function () {
         var e = $.Event('keydown');
-        e.keyCode = 39; // arrow-right
+        e.key = "ArrowRight";
         $(document).trigger(e); // start session
     }
 }, {

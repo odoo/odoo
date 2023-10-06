@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
         trigger: 'div[name="invoice_line_ids"] tbody tr.o_data_row .o_list_number[name="quantity"] input',
         run: function (actions) {
             let keydownEvent = jQuery.Event('keydown');
-            keydownEvent.which = 13;
+            keydownEvent.key = "Enter";
             this.$anchor.trigger(keydownEvent);
         },
     },

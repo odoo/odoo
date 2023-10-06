@@ -20,7 +20,7 @@ export class BomOverviewControlPanel extends Component {
     }
 
     onKeyPress(ev) {
-        if (ev.keyCode === 13 || ev.which === 13) {
+        if (ev.key === "Enter") {
             ev.preventDefault();
             this.updateQuantity(ev);
         }

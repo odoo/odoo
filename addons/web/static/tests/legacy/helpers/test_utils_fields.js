@@ -11,13 +11,6 @@
 
     import testUtilsDom from "@web/../tests/legacy/helpers/test_utils_dom";
 
-    const ARROW_KEYS_MAPPING = {
-        down: 'ArrowDown',
-        left: 'ArrowLeft',
-        right: 'ArrowRight',
-        up: 'ArrowUp',
-    };
-
     //-------------------------------------------------------------------------
     // Public functions
     //-------------------------------------------------------------------------
@@ -67,31 +60,13 @@
      *
      * @param {string} type type of key event ('press', 'up' or 'down')
      * @param {jQuery} $el
-     * @param {number|string} keyCode used as number, but if string, it'll check if
-     *   the string corresponds to a key -otherwise it will keep only the first
-     *   char to get a letter key- and convert it into a keyCode.
+     * @param {string} key
      * @returns {Promise}
      */
-    function triggerKey(type, $el, keyCode) {
+    function triggerKey(type, $el, key) {
         type = 'key' + type;
         const params = {};
-        if (typeof keyCode === 'string') {
-            // Key (new API)
-            if (keyCode in ARROW_KEYS_MAPPING) {
-                params.key = ARROW_KEYS_MAPPING[keyCode];
-            } else {
-                params.key = keyCode[0].toUpperCase() + keyCode.slice(1).toLowerCase();
-            }
-            // KeyCode/which (jQuery)
-            if (keyCode.length > 1) {
-                keyCode = keyCode.toUpperCase();
-                keyCode = $.ui.keyCode[keyCode];
-            } else {
-                keyCode = keyCode.charCodeAt(0);
-            }
-        }
-        params.keyCode = keyCode;
-        params.which = keyCode;
+        params.key = key;
         return testUtilsDom.triggerEvent($el, type, params);
     }
 
@@ -99,11 +74,11 @@
      * Helper to trigger a keydown event on an element.
      *
      * @param {jQuery} $el
-     * @param {number|string} keyCode @see triggerKey
+     * @param {number|string} key @see triggerKey
      * @returns {Promise}
      */
-    function triggerKeydown($el, keyCode) {
-        return triggerKey('down', $el, keyCode);
+    function triggerKeydown($el, key) {
+        return triggerKey('down', $el, key);
     }
 
     export default {
