@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
@@ -94,6 +93,17 @@ class HolidaysType(models.Model):
     support_document = fields.Boolean(string='Supporting Document')
     accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
+    # negative time off
+    allows_negative = fields.Boolean(string='Allow Negative Cap',
+        help="If checked, users request can exceed the allocated days and balance can go in negative.")
+    max_allowed_negative = fields.Integer(string="Amount in Negative",
+        help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
+
+    _sql_constraints = [(
+        'check_negative',
+        'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
+        'The negative amount must be greater than 0. If you want to set 0, disable the negative cap instead.'
+    )]
 
     @api.model
     def _search_valid(self, operator, value):
@@ -143,9 +153,10 @@ class HolidaysType(models.Model):
                     ('date_to', '>=', date_to),
                     ('date_to', '=', False),
                 ])
+                allowed_excess = holiday_type.max_allowed_negative if holiday_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.allocation_type == 'accrual'
-                    or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > 0)
+                    or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
                 holiday_type.has_valid_allocation = bool(allocations)
             else:
@@ -207,8 +218,8 @@ class HolidaysType(models.Model):
     @api.depends_context('employee_id', 'default_employee_id', 'default_date_from')
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
-        date = self._context['default_date_from'] if 'default_date_from' in self._context else None
-        data_days = self.get_allocation_data(employee, date)[employee]
+        target_date = self._context['default_date_from'] if 'default_date_from' in self._context else None
+        data_days = self.get_allocation_data(employee, target_date)[employee]
         for holiday_status in self:
             result = [item for item in data_days if item[0] == holiday_status.name]
             leave_type_tuple = result[0] if result else ('', {})
@@ -349,7 +360,7 @@ class HolidaysType(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def get_allocation_data_request(self, date=None):
+    def get_allocation_data_request(self, target_date=None):
         leave_types = self.search([
             '|',
             ('company_id', 'in', self.env.context.get('allowed_company_ids')),
@@ -357,19 +368,19 @@ class HolidaysType(models.Model):
         ])
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
-            return leave_types.get_allocation_data(employee, date)[employee]
+            return leave_types.get_allocation_data(employee, target_date)[employee]
         return []
 
-    def get_allocation_data(self, employees, date=None):
+    def get_allocation_data(self, employees, target_date=None):
         allocation_data = defaultdict(list)
-        if date and isinstance(date, str):
-            date = datetime.fromisoformat(date).date()
-        elif date and isinstance(date, datetime):
-            date = date.date()
-        elif not date:
-            date = fields.Date.today()
+        if target_date and isinstance(target_date, str):
+            target_date = datetime.fromisoformat(target_date).date()
+        elif target_date and isinstance(target_date, datetime):
+            target_date = target_date.date()
+        elif not target_date:
+            target_date = fields.Date.today()
 
-        allocations_leaves_consumed, extra_data = employees._get_consumed_leaves(self, date)
+        allocations_leaves_consumed, extra_data = employees._get_consumed_leaves(self, target_date)
         leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
 
         for employee in employees:
@@ -390,14 +401,29 @@ class HolidaysType(models.Model):
                         'closest_allocation_remaining': 0,
                         'closest_allocation_expire': False,
                         'holds_changes': False,
-                        'excess_days': extra_data[employee][leave_type]['excess_days'],
+                        'total_virtual_excess': 0,
+                        'total_real_excess': 0,
                         'exceeding_duration': extra_data[employee][leave_type]['exceeding_duration'],
                         'request_unit': leave_type.request_unit,
                         'icon': leave_type.sudo().icon_id.url,
                         'has_accrual_allocation': False,
+                        'allows_negative': leave_type.allows_negative,
+                        'max_allowed_negative': leave_type.max_allowed_negative,
                     },
                     leave_type.requires_allocation,
                     leave_type.id)
+                for excess_days in extra_data[employee][leave_type]['excess_days'].values():
+                    amount = excess_days['amount']
+                    lt_info[1]['virtual_leaves_taken'] += amount
+                    lt_info[1]['virtual_remaining_leaves'] -= amount
+                    lt_info[1]['total_virtual_excess'] += amount
+                    if excess_days['is_virtual']:
+                        lt_info[1]['leaves_requested'] += amount
+                    else:
+                        lt_info[1]['leaves_approved'] += amount
+                        lt_info[1]['leaves_taken'] += amount
+                        lt_info[1]['remaining_leaves'] -= amount
+                        lt_info[1]['total_real_excess'] += amount
                 allocations_now = self.env['hr.leave.allocation']
                 allocations_date = self.env['hr.leave.allocation']
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
@@ -406,18 +432,18 @@ class HolidaysType(models.Model):
                     if allocation:
                         if allocation.allocation_type == 'accrual':
                             lt_info[1]['has_accrual_allocation'] = True
-                        today = date.today()
+                        today = fields.Date.today()
                         if allocation.date_from <= today and (not allocation.date_to or allocation.date_to >= today):
                             # we get each allocation available now to indicate visually if
                             # the future evaluation holds changes compared to now
                             allocations_now |= allocation
-                        if allocation.date_from <= date and (not allocation.date_to or allocation.date_to >= date):
+                        if allocation.date_from <= target_date and (not allocation.date_to or allocation.date_to >= target_date):
                             # we get each allocation available now to indicate visually if
                             # the future evaluation holds changes compared to now
                             allocations_date |= allocation
-                        if allocation.date_from > date:
+                        if allocation.date_from > target_date:
                             continue
-                        if allocation.date_to and allocation.date_to < date:
+                        if allocation.date_to and allocation.date_to < target_date:
                             continue
                     lt_info[1]['remaining_leaves'] += data['remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data['virtual_remaining_leaves']
@@ -425,7 +451,7 @@ class HolidaysType(models.Model):
                     lt_info[1]['accrual_bonus'] += data['accrual_bonus']
                     lt_info[1]['leaves_taken'] += data['leaves_taken']
                     lt_info[1]['virtual_leaves_taken'] += data['virtual_leaves_taken']
-                    lt_info[1]['leaves_requested'] += data['virtual_leaves_taken']
+                    lt_info[1]['leaves_requested'] += data['virtual_leaves_taken'] - data['leaves_taken']
                     lt_info[1]['leaves_approved'] += data['leaves_taken']
                     if data['virtual_remaining_leaves'] > 0:
                         allocations_with_remaining_leaves |= allocation
@@ -440,9 +466,9 @@ class HolidaysType(models.Model):
                     closest_allocation_duration =\
                         employee.resource_calendar_id._attendance_intervals_batch(
                             datetime.combine(closest_allocation.date_to, time.min).replace(tzinfo=pytz.UTC),
-                            datetime.combine(date, time.max).replace(tzinfo=pytz.UTC))\
+                            datetime.combine(target_date, time.max).replace(tzinfo=pytz.UTC))\
                         if leave_type.request_unit in ['hour']\
-                        else (closest_allocation.date_to - date).days + 1
+                        else (closest_allocation.date_to - target_date).days + 1
                 else:
                     closest_allocation_expire = False
                     closest_allocation_duration = False
@@ -451,7 +477,7 @@ class HolidaysType(models.Model):
                 holds_changes = (lt_info[1]['accrual_bonus'] > 0
                     or bool(allocations_date - allocations_now)
                     or bool(allocations_now - allocations_date))\
-                    and date != fields.Date.today()
+                    and target_date != fields.Date.today()
                 lt_info[1].update({
                     'closest_allocation_remaining': closest_allocation_remaining,
                     'closest_allocation_expire': closest_allocation_expire,
