@@ -473,14 +473,19 @@ export class MockServer {
             case "field": {
                 const fname = node.getAttribute("name");
                 const field = this.models[modelName].fields[fname];
+                const isFieldEditable = !field.readonly ||
+                    (field.states &&
+                        Object.values(field.states).some((item) =>
+                            item.includes("readonly")
+                        ));
+                const hasDynamicReadonly = "readonly" in evaluateExpr(node.getAttribute("attrs") || "{}")
+                const archReadonly = node.getAttribute("readonly")
+                const archIsReadonly = ["1", "True"].includes(archReadonly)
+                const archIsEditable = archReadonly && !archIsReadonly;
                 return (
-                    (!field.readonly ||
-                        (field.states &&
-                            Object.values(field.states).some((item) =>
-                                item.includes("readonly")
-                            ))) &&
-                    (!["1", "True"].includes(node.getAttribute("readonly")) ||
-                        !_.isEmpty(evaluateExpr(node.getAttribute("attrs") || "{}")))
+                    isFieldEditable && !archIsReadonly ||
+                    archIsEditable ||
+                    hasDynamicReadonly
                 );
             }
             default:

@@ -1362,9 +1362,15 @@ actual arch.
 
     def _editable_tag_field(self, node, name_manager):
         field = name_manager.model._fields.get(node.get('name'))
-        return field is None or field.is_editable() and (
-            node.get('readonly') not in ('1', 'True')
-            or get_dict_asts(node.get('attrs') or "{}")
+        has_dynamic_readonly = 'readonly' in get_dict_asts(node.get('attrs') or "{}")
+        arch_readonly = node.get('readonly')
+        arch_is_readonly = arch_readonly in ('1', 'True')
+        arch_is_editable = arch_readonly and not arch_is_readonly
+        return (
+            field is None or
+            field.is_editable() and not arch_is_readonly or
+            arch_is_editable or
+            has_dynamic_readonly
         )
 
     def _onchange_able_view(self, node):
