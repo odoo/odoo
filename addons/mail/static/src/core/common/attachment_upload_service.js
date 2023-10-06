@@ -121,6 +121,10 @@ export class AttachmentUploadService {
         );
     }
 
+    get uploadURL() {
+        return "/mail/attachment/upload";
+    }
+
     async unlink(attachment) {
         const abort = this.abortByAttachmentId.get(attachment.id);
         const def = this.deferredByAttachmentId.get(attachment.id);
@@ -138,7 +142,7 @@ export class AttachmentUploadService {
         this.hookersByTmpId.set(tmpId, hooker);
         this.uploadingAttachmentIds.add(tmpId);
         await this.fileUploadService
-            .upload("/mail/attachment/upload", [file], {
+            .upload(this.uploadURL, [file], {
                 buildFormData: (formData) => {
                     this._makeFormData(formData, file, hooker, tmpId, options);
                 },

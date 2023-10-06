@@ -735,6 +735,7 @@ patch(MockServer.prototype, {
                 ],
             ];
             res.channel = channelData;
+            res.allow_public_upload = channel.allow_public_upload;
             return res;
         });
     },

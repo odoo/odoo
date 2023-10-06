@@ -49,3 +49,23 @@ QUnit.test("Attachment panel sort by date", async () => {
         after: [".o-mail-DateSection", { text: "August, 2023" }],
     });
 });
+
+QUnit.test("Can toggle allow public upload", async () => {
+    const pyEnv = await startServer();
+    const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
+    const tab1 = await start({ asTab: true });
+    await tab1.openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: tab1.target });
+    const tab2 = await start({ asTab: true });
+    await tab2.openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: tab2.target });
+    await contains(".o-mail-ActionPanel", {
+        contains: ["label", { text: "File upload is disabled for external users" }],
+        target: tab2.target,
+    });
+    await click(".o-mail-ActionPanel input[type='checkbox']", { target: tab1.target });
+    await contains(".o-mail-ActionPanel", {
+        contains: ["label", { text: "File upload is enabled for external users" }],
+        target: tab2.target,
+    });
+});

@@ -16,15 +16,22 @@ patch(Thread, {
         const chatbotService = this.env.services["im_livechat.chatbot"];
         const messageService = this.env.services["mail.message"];
         if (thread.type === "livechat" && isUnknown) {
-            onChange(thread, ["state", "seen_message_id", "message_unread_counter"], () => {
-                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
-                    livechatService.updateSession({
-                        state: thread.state,
-                        seen_message_id: thread.seen_message_id,
-                        channel: thread.channel,
-                    });
+            onChange(
+                thread,
+                ["state", "seen_message_id", "message_unread_counter", "allow_public_upload"],
+                () => {
+                    if (
+                        ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)
+                    ) {
+                        livechatService.updateSession({
+                            state: thread.state,
+                            seen_message_id: thread.seen_message_id,
+                            channel: thread.channel,
+                            allow_public_upload: thread.allow_public_upload,
+                        });
+                    }
                 }
-            });
+            );
             if (chatbotService.isChatbotThread(thread)) {
                 thread.chatbotTypingMessage = {
                     id: messageService.getNextTemporaryId(),
