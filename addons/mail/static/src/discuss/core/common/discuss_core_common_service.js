@@ -63,6 +63,36 @@ export class DiscussCoreCommon {
                 });
                 thread.delete();
             });
+            this.busService.subscribe("discuss.channel/delete", (payload) => {
+                const thread = this.store.Thread.insert({
+                    id: payload.id,
+                    model: "discuss.channel",
+                });
+                const filteredStarredMessages = [];
+                let starredCounter = 0;
+                for (const msg of this.store.discuss.starred.messages) {
+                    if (!msg.originThread?.eq(thread)) {
+                        filteredStarredMessages.push(msg);
+                    } else {
+                        starredCounter++;
+                    }
+                }
+                this.store.discuss.starred.messages = filteredStarredMessages;
+                this.store.discuss.starred.counter -= starredCounter;
+                this.store.discuss.inbox.messages = this.store.discuss.inbox.messages.filter(
+                    (msg) => !msg.originThread?.eq(thread)
+                );
+                this.store.discuss.inbox.counter -= thread.message_needaction_counter;
+                this.store.discuss.history.messages = this.store.discuss.history.messages.filter(
+                    (msg) => !msg.originThread?.eq(thread)
+                );
+                this.threadService.closeChatWindow?.(thread);
+                if (thread.eq(this.store.discuss.thread)) {
+                    this.threadService.setDiscussThread(this.store.discuss.inbox);
+                }
+                thread.messages.splice(0, thread.messages.length);
+                thread.delete();
+            });
             this.busService.addEventListener("notification", ({ detail: notifications }) => {
                 // Do not handle new message notification if the channel was just left. This issue
                 // occurs because the "discuss.channel/leave" and the "discuss.channel/new_message"
