@@ -8,7 +8,7 @@
             <field name="priority">12</field>
             <field name="arch" type="xml">
                 <tree string="Tracking Value">
-                    <field name="field"/>
+                    <field name="field_id"/>
                     <field name="old_value_integer"/>
                     <field name="old_value_float"/>
                     <field name="old_value_char"/>
@@ -31,10 +31,7 @@
                 <form string="Tracking Value">
                     <sheet>
                         <group name="field_details" string="Field details">
-                            <field name="field"/>
-                            <field name="field_desc"/>
-                            <field name="field_type"/>
-                            <field name="tracking_sequence"/>
+                            <field name="field_id"/>
                         </group>
                         <group name="values">
                             <group name="old_values" string="Old values">

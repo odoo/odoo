@@ -261,7 +261,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         # tracking: is_move_sent
         self.assertEqual(track_msg.author_id, self.env.user.partner_id)
         self.assertEqual(track_msg.email_from, self.env.user.email_formatted)
-        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field.mapped('name'))
+        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field_id.mapped('name'))
         # sent email
         self.assertMailMail(
             test_customer,
@@ -348,7 +348,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         # tracking: is_move_sent
         self.assertEqual(track_msg.author_id, self.env.user.partner_id)
         self.assertEqual(track_msg.email_from, self.env.user.email_formatted)
-        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field.mapped('name'))
+        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field_id.mapped('name'))
         # sent email
         self.assertMailMail(
             test_customer,

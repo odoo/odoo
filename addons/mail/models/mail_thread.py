@@ -3333,15 +3333,22 @@ class MailThread(models.AbstractModel):
             )
         record_name = msg_vals.get('record_name') if 'record_name' in msg_vals else message.record_name
 
-        # tracking
+        # tracking: in case of missing value, perform search (skip only if sure we don't have any)
+        check_tracking = msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self)
         tracking = []
-        if msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self): # could be tracking
-            for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
-                groups = tracking_value.field_groups
-                if not groups or self.env.is_superuser() or self.user_has_groups(groups):
-                    tracking.append((tracking_value.field_desc,
-                                     tracking_value._get_old_display_value()[0],
-                                     tracking_value._get_new_display_value()[0]))
+        if check_tracking:
+            tracking_values = self.env['mail.tracking.value'].sudo().search(
+                [('mail_message_id', '=', message.id)]
+            ).filtered(
+                lambda track: not track.field_groups or self.env.is_superuser() or self.user_has_groups(track.field_groups)
+            )
+            tracking = [
+                (
+                    fmt_vals['changedField'],
+                    fmt_vals['oldValue']['value'],
+                    fmt_vals['newValue']['value'],
+                ) for fmt_vals in tracking_values._tracking_value_format()
+            ]
 
         subtype_id = msg_vals.get('subtype_id') if msg_vals and 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
@@ -4397,14 +4404,14 @@ class MailThread(models.AbstractModel):
             tracking_message = return_line + message.subtype_id.description + return_line
 
         for value in message.sudo().tracking_value_ids.filtered(lambda tracking: not tracking.field_groups):
-            if value.field_type == 'boolean':
+            if value.field_id.ttype == 'boolean':
                 old_value = str(bool(value.old_value_integer))
                 new_value = str(bool(value.new_value_integer))
             else:
                 old_value = value.old_value_char if value.old_value_char else str(value.old_value_integer)
                 new_value = value.new_value_char if value.new_value_char else str(value.new_value_integer)
 
-            tracking_message += value.field_desc + ': ' + old_value
+            tracking_message += value.field_id.field_description + ': ' + old_value
             if old_value != new_value:
                 tracking_message += ' → ' + new_value
             tracking_message += return_line

@@ -105,11 +105,11 @@ class TestPartner(MailCommon):
             self.assertEqual(len(change_messages), 1)
             tracking_values = change_messages.tracking_value_ids
             self.assertIn(f'{self.env.company.name}, Some Street Name, Some City Name CA 94134, United States',
-                          tracking_values._get_old_display_value())
+                          tracking_values.old_value_char)
             self.assertIn(f'{self.env.company.name}, Some Other Street Name, Some Other City Name CA 94134, United States',
-                          tracking_values._get_new_display_value())
+                          tracking_values.new_value_char)
             # none of the address fields are logged at the same time
-            self.assertEqual(set(), set(partner._address_fields()) & set(tracking_values.sudo().field.mapped('name')))
+            self.assertEqual(set(), set(partner._address_fields()) & set(tracking_values.sudo().field_id.mapped('name')))
 
     def test_discuss_mention_suggestions_priority(self):
         name = uuid4()  # unique name to avoid conflict with already existing users

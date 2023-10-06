@@ -63,7 +63,6 @@ class TestMailMCCommon(MailCommon, TestRecipients):
         super().setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
-        self.flush_tracking()
 
 
 @tagged('multi_company')

@@ -71,45 +71,70 @@ class BaseModel(models.AbstractModel):
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------
 
-    def _mail_track(self, tracked_fields, initial):
+    def _mail_track(self, tracked_fields, initial_values):
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a valid command to create tracking values.
 
-        :param tracked_fields: fields_get of updated fields on which tracking
-          is checked and performed;
-        :param initial: dict of initial values for each updated fields;
+        :param dict tracked_fields: fields_get of updated fields on which
+          tracking is checked and performed;
+        :param dict initial_values: dict of initial values for each updated
+          fields;
 
         :return: a tuple (changes, tracking_value_ids) where
-          changes: set of updated column names;
+          changes: set of updated column names; contains onchange tracked fields
+          that changed;
           tracking_value_ids: a list of ORM (0, 0, values) commands to create
           ``mail.tracking.value`` records;
 
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
         self.ensure_one()
-        changes = set()  # contains onchange tracked fields that changed
+        updated = set()
         tracking_value_ids = []
 
-        # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in tracked_fields.items():
-            if col_name not in initial:
+        fields_track_info = self._mail_track_order_fields(tracked_fields)
+        for col_name, _sequence in fields_track_info:
+            if col_name not in initial_values:
                 continue
-            initial_value = initial[col_name]
-            new_value = self[col_name]
+            initial_value, new_value = initial_values[col_name], self[col_name]
+            if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
+                continue
 
-            if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                tracking_sequence = getattr(self._fields[col_name], 'tracking',
-                                            getattr(self._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
-                if tracking_sequence is True:
-                    tracking_sequence = 100
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
-                if tracking:
-                    if tracking['field_type'] == 'monetary':
-                        tracking['currency_id'] = self[col_info['currency_field']].id
-                    tracking_value_ids.append([0, 0, tracking])
-                changes.add(col_name)
+            updated.add(col_name)
+            tracking_value_ids.append(
+                [0, 0, self.env['mail.tracking.value']._create_tracking_values(
+                    initial_value, new_value,
+                    col_name, tracked_fields[col_name],
+                    self
+                )])
 
-        return changes, tracking_value_ids
+        return updated, tracking_value_ids
+
+    def _mail_track_order_fields(self, tracked_fields):
+        """ Order tracking, based on sequence found on field definition. When
+        having several identical sequences, field name is used. """
+        fields_track_info = [
+            (col_name, self._mail_track_get_field_sequence(col_name))
+            for col_name in tracked_fields.keys()
+        ]
+        # sorting: sequence ASC, name ASC (higher sequence -> displayed last, then
+        # order by name). Model order being id DESC (aka: first insert -> last
+        # displayed) insert should be done by descending sequence then descending
+        # name.
+        fields_track_info.sort(key=lambda item: (item[1], item[0]), reverse=True)
+        return fields_track_info
+
+    def _mail_track_get_field_sequence(self, fname):
+        """ Find tracking sequence of a given field, given their name. Current
+        parameter 'tracking' should be an integer, but attributes with True
+        are still supported; old naming 'track_sequence' also. """
+        sequence = getattr(
+            self._fields[fname], 'tracking',
+            getattr(self._fields[fname], 'track_sequence', 100)
+        )
+        if sequence is True:
+            sequence = 100
+        return sequence
 
     def _message_get_default_recipients(self):
         """ Generic implementation for finding default recipient to mail on
