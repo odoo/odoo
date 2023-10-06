@@ -749,7 +749,7 @@ class MassMailing(models.Model):
         if self.contact_list_ids:
             action['context'] = {
                 'default_mailing_list_ids': self.contact_list_ids[0].ids,
-                'default_subscription_list_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
+                'default_subscription_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
             }
         action['domain'] = [('list_ids', 'in', self.contact_list_ids.ids)]
         return action
@@ -784,25 +784,6 @@ class MassMailing(models.Model):
         )
 
         return values_list
-
-    def update_opt_out(self, email, list_ids, value):
-        if len(list_ids) > 0:
-            model = self.env['mailing.contact'].with_context(active_test=False)
-            records = model.search([('email_normalized', '=', tools.email_normalize(email))])
-            opt_out_records = self.env['mailing.contact.subscription'].search([
-                ('contact_id', 'in', records.ids),
-                ('list_id', 'in', list_ids),
-                ('opt_out', '!=', value)
-            ])
-
-            opt_out_records.write({'opt_out': value})
-            message = Markup(_('The recipient <strong>unsubscribed from %s</strong> mailing list(s)')) \
-                if value else Markup(_('The recipient <strong>subscribed to %s</strong> mailing list(s)'))
-            for record in records:
-                # filter the list_id by record
-                record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
-                if len(record_lists) > 0:
-                    record.sudo().message_post(body=message % ', '.join(str(list.name) for list in record_lists.mapped('list_id')))
 
     # ------------------------------------------------------
     # A/B Test
@@ -1019,9 +1000,9 @@ class MassMailing(models.Model):
             self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
-                    'res_id': res_id,
+                    'document_id': res_id,
                     'email': email_to,
-                    'token': self._generate_mailing_recipient_token(res_id, email_to),
+                    'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
@@ -1032,9 +1013,9 @@ class MassMailing(models.Model):
             self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
-                    'res_id': res_id,
+                    'document_id': res_id,
                     'email': email_to,
-                    'token': self._generate_mailing_recipient_token(res_id, email_to),
+                    'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )

@@ -291,23 +291,33 @@ class MassMailCommon(MailCommon, MassMailCase):
     def _create_mailing_list(cls):
         """ Shortcut to create mailing lists. Currently hardcoded, maybe evolve
         in a near future. """
-        cls.mailing_list_1 = cls.env['mailing.list'].with_context(cls._test_context).create({
-            'name': 'List1',
-            'contact_ids': [
-                (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
-                (0, 0, {'name': 'Gorramts', 'email': 'gorramts@example.com'}),
-                (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
-            ]
-        })
-        cls.mailing_list_2 = cls.env['mailing.list'].with_context(cls._test_context).create({
-            'name': 'List2',
-            'contact_ids': [
-                (0, 0, {'name': 'Gilberte', 'email': 'gilberte@example.com'}),
-                (0, 0, {'name': 'Gilberte En Mieux', 'email': 'gilberte@example.com'}),
-                (0, 0, {'name': 'Norbert', 'email': 'norbert@example.com'}),
-                (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
-            ]
-        })
+        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4 = cls.env['mailing.list'].with_context(cls._test_context).create([
+            {
+                'contact_ids': [
+                    (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
+                    (0, 0, {'name': 'Gorramts', 'email': 'gorramts@example.com'}),
+                    (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
+                ],
+                'name': 'List1',
+            }, {
+                'contact_ids': [
+                    (0, 0, {'name': 'Gilberte', 'email': 'gilberte@example.com'}),
+                    (0, 0, {'name': 'Gilberte En Mieux', 'email': 'gilberte@example.com'}),
+                    (0, 0, {'name': 'Norbert', 'email': 'norbert@example.com'}),
+                    (0, 0, {'name': 'Ybrant', 'email': 'ybrant@example.com'}),
+                ],
+                'name': 'List2',
+            }, {
+                'contact_ids': [
+                    (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
+                ],
+                'name': 'List3',
+            }, {
+                'is_public': False,
+                'name': 'List4',
+            }
+        ])
+        cls.mailing_list_3.subscription_ids[0].opt_out = True
 
     @classmethod
     def _create_mailing_list_of_x_contacts(cls, contacts_nbr):
@@ -316,7 +326,10 @@ class MassMailCommon(MailCommon, MassMailCase):
         return cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'Test List',
             'contact_ids': [
-                (0, 0, {'name': 'Contact %s' % i, 'email': 'contact%s@example.com' % i})
-                for i in range(contacts_nbr)
+                (0, 0, {
+                    'name': f'Contact %{idx}',
+                    'email': f'contact%{idx}@example.com'
+                })
+                for idx in range(contacts_nbr)
             ],
         })

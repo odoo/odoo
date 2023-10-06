@@ -29,7 +29,7 @@
     'demo': [
         'demo/utm.xml',
         'demo/mailing_list_contact.xml',
-        'demo/mailing_contact_subscription.xml',
+        'demo/mailing_subscription.xml',
         'demo/mailing_mailing.xml',
         'demo/mailing_trace.xml',
     ],
