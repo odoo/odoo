@@ -2050,6 +2050,8 @@ class IrModelAccess(models.Model):
             }
             operation_error = msg_heads[mode]
 
+            import traceback
+            traceback.print_stack()
             if groups:
                 group_info = _("This operation is allowed for the following groups:\n%(groups_list)s", groups_list=groups)
             else:

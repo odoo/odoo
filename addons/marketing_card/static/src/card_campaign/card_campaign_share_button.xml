@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="card.ShareBar">
+        <div class="d-flex flex-column align-items-center">
+            <h4>Select where to share</h4>
+            <div class="text-start o_no_link_popover">
+                <div>
+                    <a class="fa fa-2x fa-facebook rounded m-2" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{encodedUrl}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-twitter rounded m-2" t-attf-href="https://twitter.com/intent/tweet?url={{encodedUrl}}{{postText ? `&amp;text=${postText}` : ''}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-linkedin rounded m-2" t-attf-href="https://www.linkedin.com/sharing/share-offsite/?url={{encodedUrl}}{{postText ? `&amp;summary=${postText}` : ''}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-whatsapp rounded m-2" t-attf-href="https://wa.me/?text={{encodedUrl}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-pinterest rounded m-2" t-attf-href="https://pinterest.com/pin/create/button/?url={{encodedUrl}}{{postText ? `&amp;description=${postText}` : ''}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
