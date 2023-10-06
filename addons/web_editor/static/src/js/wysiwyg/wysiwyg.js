@@ -1458,9 +1458,7 @@ export class Wysiwyg extends Component {
             }
             this.linkToolsInfos.removeHintClasses();
             if (anchorNode) {
-                this.linkToolsInfos.onDestroy = () => {
-                    setSelection(anchorNode, anchorOffset, focusNode, focusOffset, false);
-                }
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, false);
             }
             this.state.linkToolProps = undefined;
         }
