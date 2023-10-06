@@ -6,7 +6,6 @@ import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
-import { attributeFormatter } from "@pos_self_order/app/utils";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -186,11 +185,5 @@ export class CartPage extends Component {
                 type: "danger",
             });
         }
-    }
-
-    getSelectedAttributes(line) {
-        const attributeValues = line.attribute_value_ids;
-        const customAttr = line.custom_attribute_value_ids;
-        return attributeFormatter(this.selfOrder.attributeById, attributeValues, customAttr);
     }
 }

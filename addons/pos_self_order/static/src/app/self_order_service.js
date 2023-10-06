@@ -7,13 +7,16 @@ import { Product } from "@pos_self_order/app/models/product";
 import { Combo } from "@pos_self_order/app/models/combo";
 import { session } from "@web/session";
 import { getColor } from "@web/core/colors/colors";
-import { categorySorter } from "@pos_self_order/app/utils";
+import { categorySorter, attributeFormatter } from "@pos_self_order/app/utils";
 import { Order } from "@pos_self_order/app/models/order";
 import { batched } from "@web/core/utils/timing";
 import { useState, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
+import { formatDateTime } from "@web/core/l10n/dates";
+import { printerService } from "@point_of_sale/app/printer/printer_service";
+import { qrCodeSrc } from "@point_of_sale/utils";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -21,12 +24,13 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { rpc, notification, router }) {
+    async setup(env, { rpc, notification, router, printer }) {
         // services
         this.notification = notification;
         this.router = router;
         this.env = env;
         this.rpc = rpc;
+        this.printer = printer;
 
         // data
         Object.assign(this, {
@@ -48,7 +52,7 @@ export class SelfOrder extends Reactive {
         this.comboByIds = {};
         this.ordering = false;
         this.orders = [];
-        this.color = getColor(this.company_color);
+        this.color = getColor(this.company.color);
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -390,7 +394,7 @@ export class SelfOrder extends Reactive {
     }
 
     handleProductChanges(payload) {
-        const product = new Product(payload.product, this.show_prices_with_tax_included);
+        const product = new Product(payload.product, this.config.iface_tax_included);
         this.productByIds[payload.product.id] = product;
         for (const categ_name of payload.product.pos_categ_ids) {
             if (!this.pos_category.map((c) => c.name).includes(categ_name)) {
@@ -448,15 +452,70 @@ export class SelfOrder extends Reactive {
             return product.price_info.display_price_default;
         }
     }
+    getLinePrice(line) {
+        return this.config.iface_tax_included ? line.price_subtotal_incl : line.price_subtotal;
+    }
+    getSelectedAttributes(line) {
+        const attributeValues = line.attribute_value_ids;
+        const customAttr = line.custom_attribute_value_ids;
+        return attributeFormatter(this.attributeById, attributeValues, customAttr);
+    }
+    getFullProductName(line) {
+        const attrs = this.getSelectedAttributes(line);
+        const attrsStr = " (" + attrs.map((a) => a.value).join(", ") + ")";
+        return line.full_product_name + (attrs.length ? attrsStr : "");
+    }
+    getLineDisplayData(line) {
+        return {
+            productName: this.getFullProductName(line),
+            price: this.formatMonetary(this.getLinePrice(line)),
+            qty: line.qty.toString(),
+            unitPrice: this.formatMonetary(this.getLinePrice(line) / line.qty),
+            comboParent: line.combo_parent_uuid
+                ? this.currentOrder.lines.find((l) => l.uuid === line.combo_parent_uuid)
+                      .full_product_name
+                : "",
+            customerNote: line.customer_note,
+        };
+    }
+    export_for_printing(order) {
+        order.receiptDate ||= formatDateTime(luxon.DateTime.now());
+        return {
+            orderlines: order.lines.map(this.getLineDisplayData.bind(this)),
+            amount_total: order.amount_total,
+            amount_tax: order.amount_tax,
+            total_without_tax: order.amount_total - order.amount_tax,
+            total_paid: order.amount_paid,
+            paymentlines: [{ name: "Bank", amount: order.amount_total }],
+            change: 0,
+            tax_details: order.tax_details,
+            name: order.pos_reference,
+            date: order.receiptDate,
+            ticket_code: this.company.point_of_sale_ticket_unique_code && order.ticketCode,
+            base_url: this.base_url,
+            footer: this.config.receipt_footer,
+            headerData: {
+                header: this.config.receipt_header,
+                company: this.company,
+                trackingNumber: order.trackingNumber,
+            },
+            pos_qr_code:
+                this.company.point_of_sale_use_ticket_qr_code &&
+                qrCodeSrc(
+                    `${this.base_url}/pos/ticket/validate?access_token=${order.access_token}`
+                ),
+        };
+    }
 }
 
 export const selfOrderService = {
-    dependencies: ["rpc", "notification", "router"],
-    async start(env, { rpc, notification, router }) {
-        return new SelfOrder(env, { rpc, notification, router }).ready;
+    dependencies: ["rpc", "notification", "router", "printer"],
+    async start(env, { rpc, notification, router, printer }) {
+        return new SelfOrder(env, { rpc, notification, router, printer }).ready;
     },
 };
 
+registry.category("services").add("printer", printerService);
 registry.category("services").add("self_order", selfOrderService);
 
 export function useSelfOrder() {
