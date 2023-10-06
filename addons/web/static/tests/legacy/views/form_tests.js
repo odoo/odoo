@@ -7688,7 +7688,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('multiple clicks on save should reload only once', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var def = testUtils.makeTestPromise();
 
@@ -7720,7 +7720,7 @@ QUnit.module('Views', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name="foo"]'), "test");
         await testUtils.form.clickSave(form);
-        await testUtils.form.clickSave(form);
+        assert.ok(form.$buttons.find('.o_form_button_save').get(0).disabled);
 
         def.resolve();
         await testUtils.nextTick();
