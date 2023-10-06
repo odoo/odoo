@@ -3,6 +3,7 @@
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer"
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
+const { DateTime } = luxon;
 patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_renderer", {
     get options(){
         let a = Object.assign(this._super(), {
@@ -95,10 +96,10 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
         };
     },
     onDayRender(info){
+        const parsedDate = DateTime.fromJSDate(info.date).toISODate();
         if (this.props.model.scale === 'week' || this.props.model.scale === 'day'){
-            var ParseDate = (date) => date.getFullYear() + "-" +(date.getMonth() <10 ? "0" + (date.getMonth() + 1) : (date.getMonth()+1)) + "-" + (date.getDate() <10 ?"0" + date.getDate() : date.getDate());
-            let button = info.view.context.calendar.el.querySelector(".fc-day-header[data-date='" + ParseDate(info.date) + "']  .o_month")
-            let line = info.view.context.calendar.el.querySelector(".fc-day-header[data-date='" + ParseDate(info.date) + "']  .line")
+            const button = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_month`)
+            const line = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .line`)
             if (!button || !line)
                 return;
             info.homework = true;
@@ -106,8 +107,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, "hr_homeworking_calendar_common_
             line.onclick = () =>this.onDateClick(info)
         }
         if (this.props.model.scale === 'month'){
-            var ParseDate = (date) => date.getFullYear() + "-" +(date.getMonth() <10 ? "0" + (date.getMonth() + 1) : (date.getMonth()+1)) + "-" + (date.getDate() <10 ?"0" + date.getDate() : date.getDate());
-            let box = info.view.el.querySelector(".fc-day-top[data-date='" + ParseDate(info.date) + "']")
+            let box = info.view.el.querySelector(`.fc-day-top[data-date='${parsedDate}']`)
             if (!box)
                 return;
             const content = renderToString(this.constructor.ButtonWorklocationTemplate, {})
