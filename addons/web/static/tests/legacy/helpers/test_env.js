@@ -2,7 +2,6 @@
 
     import Bus from "@web/legacy/js/core/bus";
     import { templates } from "@web/core/assets";
-    import { renderToString } from "@web/core/utils/render";
     import { App, Component } from "@odoo/owl";
 
     let app;
@@ -19,7 +18,6 @@
     function makeTestEnvironment(env = {}, providedRPC = null) {
         if (!app) {
             app = new App(null, { templates, test: true });
-            renderToString.app = app;
         }
 
         function rpc(route, params, options) {
