@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
@@ -92,12 +93,25 @@ Object.assign(WelcomeScreen, {
     template: 'website.Configurator.WelcomeScreen',
 });
 
+class IndustrySelectionAutoComplete extends AutoComplete {
+    static timeout = 400;
+
+    get dropdownOptions() {
+        return {
+            ...super.dropdownOptions,
+            position: "bottom-fit",
+        }
+    }
+
+    get ulDropdownClass() {
+        return `${super.ulDropdownClass} custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown`
+    }
+}
+
 class DescriptionScreen extends Component {
     setup() {
         this.industrySelection = useRef('industrySelection');
         this.state = useStore();
-        this.labelToId = {};
-        this.autocompleteHasResults = true;
         this.orm = useService('orm');
 
         onMounted(() => this.onMounted());
@@ -105,42 +119,29 @@ class DescriptionScreen extends Component {
 
     onMounted() {
         this.selectWebsitePurpose();
-        $(this.industrySelection.el).autocomplete({
-            appendTo: '.o_configurator_industry_wrapper',
-            delay: 400,
-            minLength: 1,
-            source: this._autocompleteSearch.bind(this),
-            select: this._selectIndustry.bind(this),
-            classes: {
-                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown',
-            },
-        });
-        if (this.state.selectedIndustry) {
-            this.industrySelection.el.value = this.state.selectedIndustry.label;
-            this.industrySelection.el.parentNode.dataset.value = this.state.selectedIndustry.label;
-            this.labelToId[this.state.selectedIndustry.label] = this.state.selectedIndustry.id;
-        }
     }
-
     /**
      * Set the input's parent label value to automatically adapt input size
      * and update the selected industry.
      *
      * @private
-     * @param {String} label an industry label
+     * @param {Object} suggestion an industry
      */
-    _setSelectedIndustry(label) {
-        this.industrySelection.el.parentNode.dataset.value = label;
-        if (!this.autocompleteHasResults) {
-            // Unknown industry.
-            this.state.selectIndustry(label, -1);
-        } else {
-            const id = this.labelToId[label];
-            this.state.selectIndustry(label, id);
-        }
+    _setSelectedIndustry(suggestion) {
+        const { label, id } = Object.getPrototypeOf(suggestion);
+        this.state.selectIndustry(label, id);
         this.checkDescriptionCompletion();
     }
 
+    get sources() {
+        return [
+            {
+                options: (request) => {
+                    return request.length < 1 ? [] : this._autocompleteSearch(request);
+                },
+            },
+        ];
+    }
     /**
      * Called each time the autocomplete input's value changes. Only industries
      * having a label or a synonym containing all terms of the input value are
@@ -150,13 +151,10 @@ class DescriptionScreen extends Component {
      * sorted alphabetically.
      * The result size is limited to 30.
      *
-     * @param {Object} request object with a single 'term' property which is the
-     *      input current value
-     * @param {function} response callback which takes the data to suggest as
-     *      argument
+     * @param {String} term input current value
      */
-    _autocompleteSearch(request, response) {
-        const terms = request.term.toLowerCase().split(/[|,\n]+/);
+    _autocompleteSearch(term) {
+        const terms = term.toLowerCase().split(/[|,\n]+/);
         const limit = 30;
         const sortLimit = 7;
         // `this.state.industries` is already sorted by hit count (from IAP).
@@ -178,52 +176,17 @@ class DescriptionScreen extends Component {
                              .slice(0, limit)
                              .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         }
-        this.labelToId = {};
-        let labels;
-        this.autocompleteHasResults = !!matches.length;
-        if (this.autocompleteHasResults) {
-            if (matches.length <= sortLimit) {
-                // Sort results by ascending label if few of them.
-                matches.sort((x, y) => x.label < y.label ? -1 : x.label > y.label ? 1 : 0);
-            }
-            labels = matches.map(val => val.label);
-            matches.forEach(r => {
-                this.labelToId[r.label] = r.id;
-            });
-        } else {
-            labels = [request.term];
+        if (matches.length <= sortLimit) {
+            // Sort results by ascending label if few of them.
+            matches = matches.sort((x, y) => (x.label < y.label ? -1 : x.label > y.label ? 1 : 0));
         }
-        response(labels);
-    }
-
-    /**
-     * Called when a menu option is selected. Update the selected industry.
-     *
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui an object with label and value properties for
-     *      the selected option.
-     */
-    _selectIndustry(ev, ui) {
-        this._setSelectedIndustry(ui.item.label);
-    }
-
-    /**
-     * Called on industrySelection input blur. Updates the selected industry.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _blurIndustrySelection(ev) {
-        // Check if the input is known by the server.
-        this.autocompleteHasResults = !!this.labelToId[ev.target.value];
-        this._setSelectedIndustry(ev.target.value);
+        return matches.length ? matches : [{ label: term, id: -1 }];
     }
 
     selectWebsiteType(id) {
         this.state.selectWebsiteType(id);
         setTimeout(() => {
-            this.industrySelection.el.focus();
+            this.industrySelection.el.querySelector("input").focus();
         });
         this.checkDescriptionCompletion();
     }
@@ -238,7 +201,7 @@ class DescriptionScreen extends Component {
         if (selectedType && selectedPurpose && selectedIndustry) {
             // If the industry name is not known by the server, send it to the
             // IAP server.
-            if (!this.autocompleteHasResults) {
+            if (selectedIndustry.id === -1) {
                 this.orm.call('website', 'configurator_missing_industry', [], {
                     'unknown_industry': selectedIndustry.label,
                 });
@@ -249,7 +212,7 @@ class DescriptionScreen extends Component {
 }
 
 Object.assign(DescriptionScreen, {
-    components: {SkipButton},
+    components: { SkipButton, AutoComplete: IndustrySelectionAutoComplete },
     template: 'website.Configurator.DescriptionScreen',
 });
 
