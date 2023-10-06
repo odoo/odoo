@@ -14,8 +14,7 @@ class HrPlan(models.Model):
     department_id = fields.Many2one('hr.department', check_company=True)
     plan_activity_type_ids = fields.One2many(
         'hr.plan.activity.type', 'plan_id',
-        string='Activities',
-        check_company=True)
+        string='Activities')
     active = fields.Boolean(default=True)
     steps_count = fields.Integer(compute='_compute_steps_count')
 
