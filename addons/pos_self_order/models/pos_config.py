@@ -339,8 +339,12 @@ class PosConfig(models.Model):
         return {
             "pos_config_id": self.id,
             "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,
-            "company_name": self.company_id.name,
-            "company_color": self.company_id.color,
+            "company": {
+                **self.company_id.read(["name", "color", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
+                "partner_id": [None, self.company_id.partner_id.contact_address],
+                "country": self.company_id.country_id.read(["vat_label"])[0],
+            },
+            "base_url": self.get_base_url(),
             "custom_links": self._get_self_order_custom_links(),
             "currency_id": self.currency_id.id,
             "pos_payment_methods": payment_methods if self.self_ordering_mode == "kiosk" else [],
@@ -358,6 +362,8 @@ class PosConfig(models.Model):
                 "self_ordering_image_home_ids": self._get_self_ordering_attachment(self.self_ordering_image_home_ids),
                 "self_ordering_image_brand": self._get_self_ordering_image(self.self_ordering_image_brand),
                 "self_ordering_pay_after": self.self_ordering_pay_after,
+                "receipt_header": self.receipt_header,
+                "receipt_footer": self.receipt_footer,
             },
         }
 

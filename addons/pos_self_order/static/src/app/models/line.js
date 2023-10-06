@@ -43,7 +43,6 @@ export class Line extends Reactive {
 
         this.initCustomAttribute();
     }
-
     initCustomAttribute() {
         this.custom_attribute_value_ids = this.custom_attribute_value_ids.map(
             (customAttribute) => new ProductCustomAttribute(customAttribute)

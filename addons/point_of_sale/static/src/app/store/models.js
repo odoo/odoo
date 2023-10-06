@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { qrCodeSrc, uuidv4, constructFullProductName } from "@point_of_sale/utils";
+import { random5Chars, uuidv4, qrCodeSrc, constructFullProductName } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import {
@@ -2683,15 +2683,7 @@ export class Order extends PosModel {
             return true;
         }
     }
-    /**
-     * Returns a random 5 digits alphanumeric code
-     * @returns {string}
-     */
     _generateTicketCode() {
-        let code = "";
-        while (code.length != 5) {
-            code = Math.random().toString(36).slice(2, 7);
-        }
-        return code;
+        return random5Chars();
     }
 }

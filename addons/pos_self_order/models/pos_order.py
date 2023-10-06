@@ -45,6 +45,28 @@ class PosOrder(models.Model):
     table_stand_number = fields.Char(string="Table Stand Number")
     take_away = fields.Boolean(string="Take Away", default=False)
 
+    def _compute_tax_details(self):
+        self.ensure_one()
+        taxes = sum([line.tax_ids.compute_all(line.price_unit, quantity=line.qty, product=line.product_id)['taxes']
+               for line in self.lines], [])
+        tax_percetanges = {tax['id']: tax['amount'] for tax in self.env['account.tax'].search([]).read(['amount'])}
+        merged_tax_details = {}
+        for tax_obj in taxes:
+            tax_id = tax_obj['id']
+            if tax_id not in merged_tax_details:
+                merged_tax_details[tax_id] = {
+                    'tax': {
+                        'id': tax_id,
+                        'amount': tax_percetanges[tax_id]
+                    },
+                    'name': tax_obj['name'],
+                    'amount': 0.0,
+                    'base': 0.0,
+                }
+            merged_tax_details[tax_id]['amount'] += tax_obj['amount']
+            merged_tax_details[tax_id]['base'] += tax_obj['base']
+        return list(merged_tax_details.values())
+
     @api.model
     def create_from_ui(self, orders, draft=False):
         orders = super().create_from_ui(orders, draft)
@@ -112,6 +134,7 @@ class PosOrder(models.Model):
                 }
                 for line in self.lines
             ],
+            "tax_details": self._compute_tax_details(),
         }
 
     def _send_order(self):

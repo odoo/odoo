@@ -28,14 +28,14 @@
 
                                     <div class="small">
                                         <div t-if="childLines.length === 0" class="product-info d-flex flex-column flex-grow-1 text-muted">
-                                            <div t-foreach="getSelectedAttributes(line)" t-as="attribute" t-key="attribute.name">
+                                            <div t-foreach="selfOrder.getSelectedAttributes(line)" t-as="attribute" t-key="attribute.name">
                                                 - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
                                             </div>
                                         </div>
                                         <div t-foreach="childLines" t-as="cline" t-key="cline.uuid" class="text-muted">
                                             - <span t-esc="selfOrder.productByIds[cline.product_id].name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
                                             <div class="product-info d-flex flex-column flex-grow-1 ms-3">
-                                                <div t-foreach="getSelectedAttributes(cline)" t-as="attribute" t-key="attribute.name">
+                                                <div t-foreach="selfOrder.getSelectedAttributes(cline)" t-as="attribute" t-key="attribute.name">
                                                     - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
                                                 </div>
                                             </div>

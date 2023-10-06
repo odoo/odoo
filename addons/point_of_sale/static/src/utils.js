@@ -53,6 +53,17 @@ export function constructFullProductName(line, attribute_value_by_id, display_na
 
     return attributeString !== "" ? `${display_name} ${attributeString}` : display_name;
 }
+/**
+ * Returns a random 5 digits alphanumeric code
+ * @returns {string}
+ */
+export function random5Chars() {
+    let code = "";
+    while (code.length != 5) {
+        code = Math.random().toString(36).slice(2, 7);
+    }
+    return code;
+}
 
 export function qrCodeSrc(url, { size = 200 } = {}) {
     return `/report/barcode/QR/${encodeURIComponent(url)}?width=${size}&height=${size}`;

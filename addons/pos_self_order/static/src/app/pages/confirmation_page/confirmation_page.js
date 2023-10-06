@@ -4,6 +4,7 @@ import { Component, onMounted, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -12,6 +13,7 @@ export class ConfirmationPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+        this.printer = useService("printer");
         this.confirmedOrder = {};
         this.changeToDisplay = [];
         this.state = useState({
@@ -25,6 +27,12 @@ export class ConfirmationPage extends Component {
                     this.setDefautLanguage();
                 }, 5000);
             }
+            setTimeout(() => {
+                this.printer.print(OrderReceipt, {
+                    data: this.selfOrder.export_for_printing(this.selfOrder.currentOrder),
+                    formatCurrency: this.selfOrder.formatMonetary,
+                });
+            }, 500);
         });
 
         this.initOrder();
