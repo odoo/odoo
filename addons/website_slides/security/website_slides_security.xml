@@ -49,7 +49,9 @@
                     ('website_published', '=', True),
                     '|',
                         ('visibility', 'in', ('public', 'connected')),
-                        ('partner_all_ids', '=', user.partner_id.id),
+                        '|',
+                            ('is_member_invited', '=', True),
+                            ('is_member', '=', True),
                 ]
             </field>
             <field name="perm_unlink" eval="0"/>
@@ -142,11 +144,11 @@
                         '&amp;',
                             '|',
                                 ('channel_id.visibility', 'in', ('public','connected')),
-                                ('channel_id.partner_all_ids', 'in', user.partner_id.ids),
+                                ('channel_id.is_member_invited', '=', True),
                             '|',
                                 ('is_category', '=', True),
                                 ('is_preview', '=', True),
-                        ('channel_id.partner_ids', 'in', user.partner_id.ids),
+                        ('channel_id.is_member', '=', True),
                 ]
             </field>
             <field name="perm_unlink" eval="0"/>
@@ -238,7 +240,7 @@
         <record id="rule_slide_slide_resource_downloadable" model="ir.rule">
             <field name="name">Resource: read restricted to channel members and channel responsible</field>
             <field name="model_id" ref="model_slide_slide_resource"/>
-            <field name="domain_force">[('slide_id.channel_id.partner_ids', '=', user.partner_id.id)]</field>
+            <field name="domain_force">[('slide_id.channel_id.is_member', '=', True)]</field>
             <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
