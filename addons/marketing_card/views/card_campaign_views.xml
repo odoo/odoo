@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="card_campaign_view_form" model="ir.ui.view">
+        <field name="name">card.campaign.view.form</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign" class="o_card_campaign_form">
+                <header invisible="not active" class="mb-2">
+                    <button name="action_share" type="object" class="btn-primary">Send</button>
+                </header>
+                <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button icon="fa-mouse-pointer">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Clicks
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="target_url_click_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button name="action_view_cards" type="object" icon="fa-paper-plane">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Sent
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="card_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button name="action_view_cards_clicked" type="object" icon="fa-eye">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Opened
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="card_click_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button name="action_view_cards_shared" type="object" icon="fa-share">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Shared
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="card_share_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                </div>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" placeholder="e.g. Odoo Experience Talks"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="res_model" string="Recipients" readonly="preview_record_ref"/>
+                        <field name="preview_record_ref" string="Preview Target"
+                        placeholder="Select a preview record..." options="{'no_create': True}"/>
+                        <field name="target_url" placeholder="Your Home Page"/>
+                        <field name="post_suggestion" placeholder="Join me at this event!" widget="text_emojis"/>
+                    </group>
+                    <group>
+                        <field name="user_id" widget="many2one_avatar"/>
+                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page name="Card Layout">
+                        <group>
+                        <group>
+                            <field name="card_element_ids" nolabel="1" colspan="2">
+                                <tree create="0" delete="0" open_form_view="1">
+                                    <field name="card_element_role"/>
+                                    <field name="card_element_text_value"/>
+                                    <!--fetch and save defaults so the modal form view saves the right values in unsaved new records-->
+                                    <field name="render_type" column_invisible="1" force_save="1"/><!--fetch and save in new records-->
+                                    <field name="value_type" column_invisible="1" force_save="1"/><!--fetch and save in new records-->
+                                    <field name="campaign_id" column_invisible="1" force_save="1"/><!--necessary to properly update res_model-->
+                                    <field name="res_model" column_invisible="1" force_save="1"/><!--necessary to properly update in the o2m form-->
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="card_template_id" required="1" nolabel="1" colspan="2"
+                            widget="selection_badge" options="{'size': 'sm'}"/>
+                            <field name="image_preview" class="o_marketing_card_image_preview" nolabel="1" colspan="2"
+                            invisible="not card_template_id" widget="image" options="{'size': [0, 500]}"/>
+                            <field name="preview_record_url" widget="CopyClipboardChar" nolabel="1" colspan="2"
+                            invisible="not preview_record_url or not card_template_id"/>
+                        </group>
+                        </group>
+                    </page>
+                    <page name="Share Reward">
+                        <group>
+                            <group>
+                            <field name="reward_target_url" placeholder='e.g. "https://www.mycompany.com/reward"'/>
+                            <field name="reward_message" placeholder="Thanks for sharing, here is your reward!"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="card_campaign_view_kanban" model="ir.ui.view">
+        <field name="name">card.campaign.view.kanban</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <templates>
+                    <t t-name='kanban-box'>
+                        <div class='oe_kanban_content oe_kanban_global_click o_marketing_card_campaign_kanban'>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <a data-type="object" data-name="action_view_cards_shared" href="#" class="oe_kanban_action oe_kanban_action_a me-1">
+                                             <span class="badge rounded-pill">
+                                                 <i class="fa fa-fw fa-share" aria-label="Shares" role="img" title="Shares"/>
+                                                 <field name="card_share_count"/>
+                                             </span>
+                                         </a>
+                                         <a data-type="object" data-name="action_view_cards_clicked" href="#" class="oe_kanban_action oe_kanban_action_a me-1">
+                                            <span class="badge rounded-pill">
+                                                <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img" title="Clicks"/>
+                                                <field name="target_url_click_count"/>
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="card_campaign_view_tree" model="ir.ui.view">
+        <field name="name">card.campaign.view.tree</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar"/>
+                <field name="res_model" string="Target"/>
+                <field name="target_url"/>
+                <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="card_campaign_view_search" model="ir.ui.view">
+        <field name="name">card.campaign.view.search</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <search string="Search Share Campaign">
+                <filter string="My Campaigns" name="my_campaigns" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <field name="tag_ids"/>
+                <field name="active"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="by_responsible" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Tags" name="by_tags" domain="[]" context="{'group_by': 'tag_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="card_campaign_action" model="ir.actions.act_window">
+        <field name="name">Card Campaign</field>
+        <field name="res_model">card.campaign</field>
+        <field name="search_view_id" ref="card_campaign_view_search"/>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a Sharing Campaign!</p>
+            <p>Prepare a design and some content and let your community spread the word!</p>
+        </field>
+    </record>
+
+</odoo>
