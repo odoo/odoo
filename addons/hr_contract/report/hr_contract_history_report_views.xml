@@ -114,6 +114,7 @@
         <field name="name">Employees</field>
         <field name="res_model">hr.contract.history</field>
         <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('contract_id.active', '=', True)]</field>
         <field name="search_view_id" ref="hr_contract_history_view_search"/>
         <field name="context">
             {
