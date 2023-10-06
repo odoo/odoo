@@ -7,7 +7,7 @@ except ImportError:
     from PyPDF2.utils import PdfStreamError, PdfReadError
 
 from odoo import _, models
-from odoo.tools import format_amount, format_date, pdf
+from odoo.tools import format_amount, format_date, format_datetime, pdf
 
 
 class IrActionsReport(models.Model):
@@ -59,7 +59,7 @@ class IrActionsReport(models.Model):
                     result[order.id].update({'stream': stream})
                 except (ValueError, PdfStreamError, PdfReadError, TypeError, zlib_error,
                         NotImplementedError):
-                    record._message_log(body=_(
+                    order._message_log(body=_(
                         "There was an error when trying to merge headers and footers to the "
                         "original PDF.\n Please make sure the source file are valid."
                     ))
@@ -77,17 +77,18 @@ class IrActionsReport(models.Model):
         Note: order.ensure_one()
         """
         order.ensure_one()
-        tz = order.partner_id.tz or self.env.user.tz or 'UTC'
         env = self.with_context(use_babel=True).env
         currency_id = order.currency_id
+        tz = order.partner_id.tz or self.env.user.tz or 'UTC'
+        lang_code = order.partner_id.lang or self.env.user.lang
         form_fields_mapping = {
             'name': order.name,
             'partner_id__name': order.partner_id.name,
             'user_id__name': order.user_id.name,
             'amount_untaxed': format_amount(env, order.amount_untaxed, currency_id),
             'amount_total': format_amount(env, order.amount_total, currency_id),
-            'commitment_date': format_date(env, order.commitment_date, tz=tz),
-            'validity_date': format_date(env, order.validity_date, tz=tz),
+            'commitment_date': format_datetime(env, order.commitment_date, tz=tz),
+            'validity_date': format_date(env, order.validity_date, lang_code=lang_code),
             'client_order_ref': order.client_order_ref or '',
         }
         return form_fields_mapping
