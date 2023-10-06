@@ -28,5 +28,6 @@ class OnboardingController(http.Controller):
                     'html': request.env['ir.qweb']._render(
                         'onboarding.onboarding_panel', onboarding._prepare_rendering_values())
                 }
+            #test test
 
         return {}
