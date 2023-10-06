@@ -5821,6 +5821,17 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             // above the original format one of the same size.
             widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
         }
+        const currentMimetype = this._getImageMimetype(img);
+        if (currentMimetype !== "image/webp" &&
+            (!widths[img.naturalWidth] || widths[img.naturalWidth][1] !== currentMimetype)) {
+            // The format of the saved image is not already listed.
+            if (widths[img.naturalWidth]) {
+                // Avoid a key collision by subtracting 0.1 -  putting the webp
+                // above the original format one of the same size.
+                widths[img.naturalWidth - 0.1] = widths[img.naturalWidth];
+            }
+            widths[img.naturalWidth] = [_t("%spx (Saved)", img.naturalWidth), currentMimetype];
+        }
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
