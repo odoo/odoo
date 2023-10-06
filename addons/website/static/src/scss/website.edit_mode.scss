@@ -276,6 +276,12 @@ body.editor_enable {
             pointer-events: none;
         }
     }
+
+    // Some dropdown links are not deactivated in edit, so we prevent clicks.
+    #o_logout,
+    .js_change_lang {
+        pointer-events: none;
+    }
 }
 .o_homepage_editor_welcome_message {
     padding-top: 128px;
