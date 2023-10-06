@@ -657,22 +657,31 @@ class ResPartner(models.Model):
 
         return action_vals
 
-    def _has_invoice(self):
+    def _has_invoice(self, partner_domain):
         self.ensure_one()
-        invoice = self.env['account.move'].sudo().search([
-            ('move_type', 'in', ['out_invoice', 'out_refund']),
-            ('partner_id', 'child_of', self.commercial_partner_id.id),
-            ('state', '=', 'posted')
-        ], limit=1)
+        invoice = self.env['account.move'].sudo().search(
+            expression.AND([
+                partner_domain,
+                [
+                    ('move_type', 'in', ['out_invoice', 'out_refund']),
+                    ('state', '=', 'posted'),
+                ]
+            ]),
+            limit=1
+        )
         return bool(invoice)
 
     def _can_edit_name(self):
         """ Can't edit `name` if there is (non draft) issued invoices. """
-        return super()._can_edit_name() and not self._has_invoice()
+        return super()._can_edit_name() and not self._has_invoice(
+            [('partner_id', '=', self.id)]
+        )
 
     def can_edit_vat(self):
         """ Can't edit `vat` if there is (non draft) issued invoices. """
-        return super().can_edit_vat() and not self._has_invoice()
+        return super().can_edit_vat() and not self._has_invoice(
+            [('partner_id', 'child_of', self.commercial_partner_id.id)]
+        )
 
     @api.model_create_multi
     def create(self, vals_list):

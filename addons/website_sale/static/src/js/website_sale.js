@@ -827,6 +827,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         $new.removeClass(cardClass);
         $new.addClass('bg-primary border border-primary');
 
+        // TODO this should not be a form, but a clean rpc to /shop/cart/update_address
         var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');
     },
@@ -835,8 +836,9 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickEditAddress: function (ev) {
-        ev.preventDefault();
-        $(ev.currentTarget).closest('div.one_kanban').find('form.d-none').attr('action', '/shop/address').submit();
+        // Do not trigger _onClickChangeBilling or _onClickChangeShipping when customer
+        // clicks on the pencil to update the address
+        ev.stopPropagation();
     },
     /**
      * @private

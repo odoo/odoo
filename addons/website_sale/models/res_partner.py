@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+
 from odoo.addons.website.models import ir_http
 
 
@@ -44,3 +44,23 @@ class ResPartner(models.Model):
                     "Also, the cart might not be visible for the customer until you update the pricelist of that cart."
                 ),
             }}
+
+    def _can_be_edited_by_current_customer(self, sale_order, mode):
+        self.ensure_one()
+        children_partner_ids = self.env['res.partner']._search([
+            ('id', 'child_of', sale_order.partner_id.commercial_partner_id.id),
+            ('type', 'in', ('invoice', 'delivery', 'other')),
+        ])
+        if (
+            self == sale_order.partner_id
+            or self.id in children_partner_ids
+        ):
+            # address belongs to the customer
+            if mode == 'billing':
+                # All addresses are editable as billing
+                return True
+            elif mode == 'shipping' and self.type == 'delivery':
+                # Only delivery addresses are editable as delivery
+                return True
+
+        return False
