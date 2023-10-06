@@ -10,17 +10,8 @@
     var triggerEvent = testUtils.dom.triggerEvent;
 
     function triggerKeyDown(char, target = document.body) {
-        let keycode;
-        if (char === 'Enter') {
-            keycode = $.ui.keyCode.ENTER;
-        } else if (char === "Tab") {
-            keycode = $.ui.keyCode.TAB;
-        } else {
-            keycode = char.charCodeAt(0);
-        }
         triggerEvent(target, 'keydown', {
             key: char,
-            keyCode: keycode,
         });
     }
 

@@ -123,7 +123,7 @@ wTourUtils.dragNDrop({
         actionHelper.text('translated Parseltongue text');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.$anchor.contents()[0], 22);
-        this.$anchor.trigger($.Event("keyup", {key: '_', keyCode: 95}));
+        this.$anchor.trigger($.Event("keyup", {key: '_'}));
         this.$anchor.trigger('input');
     },
 }, {
@@ -134,7 +134,7 @@ wTourUtils.dragNDrop({
         this.$anchor.prepend('&lt;{translated}&gt;');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.$anchor.contents()[0], 0);
-        this.$anchor.trigger($.Event("keyup", {key: '_', keyCode: 95}));
+        this.$anchor.trigger($.Event("keyup", {key: '_'}));
         this.$anchor.trigger('input');
     },
 }, {

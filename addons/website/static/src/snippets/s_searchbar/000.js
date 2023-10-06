@@ -239,24 +239,24 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
      * @private
      */
     _onKeydown: function (ev) {
-        switch (ev.which) {
-            case $.ui.keyCode.ESCAPE:
+        switch (ev.key) {
+            case "Escape":
                 this._render();
                 break;
-            case $.ui.keyCode.UP:
-            case $.ui.keyCode.DOWN:
+            case "ArrowUp":
+            case "ArrowDown":
                 ev.preventDefault();
                 if (this.$menu) {
                     const focusableEls = [this.$input[0], ...this.$menu[0].children];
                     const focusedEl = document.activeElement;
                     const currentIndex = focusableEls.indexOf(focusedEl) || 0;
-                    const delta = ev.which === $.ui.keyCode.UP ? focusableEls.length - 1 : 1;
+                    const delta = ev.key === "ArrowUp" ? focusableEls.length - 1 : 1;
                     const nextIndex = (currentIndex + delta) % focusableEls.length;
                     const nextFocusedEl = focusableEls[nextIndex];
                     nextFocusedEl.focus();
                 }
                 break;
-            case $.ui.keyCode.ENTER:
+            case "Enter":
                 this.limit = 0; // prevent autocomplete
                 break;
         }

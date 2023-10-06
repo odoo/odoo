@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0" 
             t-attf-class="{{props.class}} product position-relative btn btn-light d-flex align-items-stretch p-0 m-0 text-start cursor-pointer overflow-hidden transition-base" 
-            t-on-keypress="(event) => event.which === 32 ? props.onClick(event) : ()=>{}" 
+            t-on-keypress="(event) => event.code === 'Space' ? props.onClick(event) : ()=>{}"
             t-on-click="props.onClick" 
             t-att-data-product-id="props.productId" 
             t-attf-aria-labelledby="article_product_{{props.productId}}">

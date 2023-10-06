@@ -968,7 +968,7 @@ export class ColorPalette extends Component {
      * @param {Event} ev
      */
     _onGradientInputKeyPress(ev) {
-        if (ev.charCode === $.ui.keyCode.ENTER) {
+        if (ev.key === "Enter") {
             ev.preventDefault();
             this._onGradientInputChange();
         }

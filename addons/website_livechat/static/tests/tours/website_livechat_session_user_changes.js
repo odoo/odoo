@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
             trigger: ".o-mail-Composer-input",
             run: function () {
                 $("o-mail-Composer-input").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+                    $.Event("keydown", { key: "Enter" })
                 );
             },
         },
@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             trigger: ".o-mail-Composer-input",
             run: function () {
                 $(".o-mail-Composer-input").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+                    $.Event("keydown", { key: "Enter" })
                 );
             },
         },

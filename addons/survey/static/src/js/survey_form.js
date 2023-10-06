@@ -108,12 +108,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      */
     _onKeyDown: function (event) {
         var self = this;
-        var keyCode = event.keyCode;
 
         // If user is answering a text input, do not handle keydown
         // CTRL+enter will force submission (meta key for Mac)
         if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) &&
-            (!(event.ctrlKey || event.metaKey) || keyCode !== 13)) {
+            (!(event.ctrlKey || event.metaKey) || event.key !== "Enter")) {
             return;
         }
         // If in session mode and question already answered, do not handle keydown
@@ -121,22 +120,22 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             return;
         }
         // Disable all navigation keys when zoom modal is open, except the ESC.
-        if ((this.imgZoomer && !this.imgZoomer.isDestroyed()) && keyCode !== 27) {
+        if ((this.imgZoomer && !this.imgZoomer.isDestroyed()) && event.key !== "Escape") {
             return;
         }
 
-        var letter = String.fromCharCode(keyCode).toUpperCase();
+        var letter = event.key.toUpperCase();
 
         // Handle Start / Next / Submit
-        if (keyCode === 13 || keyCode === 39) {  // Enter or arrow-right: go Next
+        if (event.key === "Enter" || event.key === "ArrowRight") {  // Enter or arrow-right: go Next
             event.preventDefault();
             if (!this.preventEnterSubmit) {
                 this._submitForm({
                     isFinish: this.el.querySelectorAll('button[value="finish"]').length !== 0,
-                    nextSkipped: this.el.querySelectorAll('button[value="next_skipped"]').length !== 0 ? keyCode === 13 : false,
+                    nextSkipped: this.el.querySelectorAll('button[value="next_skipped"]').length !== 0 ? event.key === "Enter" : false,
                 });
             }
-        } else if (keyCode === 37) {  // arrow-left: previous (if available)
+        } else if (event.key === "ArrowLeft") {  // arrow-left: previous (if available)
             // It's easier to actually click on the button (if in the DOM) as it contains necessary
             // data that are used in the event handler.
             // Again, global selector necessary since the navigation is outside of the form.

@@ -61,10 +61,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: function (actions) {
                 var $input = this.$anchor.find("input");
                 actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
-                // fake keydown to trigger search
-                var keyDownEvent = jQuery.Event("keydown");
-                keyDownEvent.which = 42;
-                this.$anchor.trigger(keyDownEvent);
                 var $descriptionElement = $('.o_form_editable textarea[name="name"]');
                 // when description changes, we know the product has been created
                 $descriptionElement.change(function () {
