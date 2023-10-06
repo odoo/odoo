@@ -1102,7 +1102,6 @@ export class ListRenderer extends Component {
             // row might have changed record after resequence
             record = this.props.list.records[recordIndex] || record;
         };
-
         if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
             if (record.isInEdition && this.props.list.editedRecord === record) {
                 const cell = this.tableRef.el.querySelector(

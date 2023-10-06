@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_social_share_url_list">
+        <field name="name">social.share.url.list</field>
+        <field name="model">social.share.url</field>
+        <field name="arch" type="xml">
+            <tree string="Share URL">
+                <field name="model_id" readonly="1"/>
+                <field name="record_name" readonly="1"/>
+                <field name="campaign_id" readonly="1" optional="hidden"/>
+                <field name="visited" readonly="1"/>
+                <field name="shared" readonly="1"/>
+                <field name="uuid" readonly="1" optional="hidden"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_social_share_url_search" model="ir.ui.view">
+        <field name="name">social.share.url.search</field>
+        <field name="model">social.share.url</field>
+        <field name="arch" type="xml">
+            <search string="Search Share URLs">
+                <group expand="0" string="Filter By">
+                    <field name="shared"/>
+                    <field name="visited"/>
+                    <filter string="Shared" name="filter_shared" domain="[('shared', '=', True)]"/>
+                    <filter string="Visited" name="filter_visited" domain="[('visited', '=', True)]"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <field name="campaign_id"/>
+                    <filter string="Campaign" name="by_campaign" context="{'group_by': 'campaign_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_social_share_url">
+        <field name="name">Share URL</field>
+        <field name="res_model">social.share.url</field>
+        <field name="search_view_id" ref="view_social_share_url_search"></field>
+        <field name="context">{'search_default_by_campaign': True, 'search_default_filter_visited': True}</field>
+        <field name="view_mode">tree</field>
+    </record>
+</data></odoo>

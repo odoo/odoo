@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem name="Social Share"
+        id="social_share_menu_main"
+        web_icon="social_share,static/description/icon.png"
+        sequence="270"/>
+
+    <menuitem name="Campaigns"
+        id="social_share_message_menu"
+        parent="social_share_menu_main"
+        sequence="0"
+        action="action_social_share_campaign"
+        groups="social_share.group_social_share_user"
+    />
+
+    <menuitem name="Configuration"
+        id="social_share_configuration_menu"
+        parent="social_share_menu_main"
+        groups="social_share.group_social_share_manager,base.group_no_one"
+        sequence="10"
+    />
+
+    <menuitem name="Template Allowed Models"
+        id="social_share_model_allow_menu"
+        parent="social_share_configuration_menu"
+        action="action_social_share_model_allow"
+        groups="base.group_no_one"
+        sequence="10"
+    />
+
+    <menuitem name="Template Allowed Fields"
+        id="social_share_field_allow_menu"
+        parent="social_share_configuration_menu"
+        action="action_social_share_field_allow"
+        groups="base.group_no_one"
+        sequence="11"
+    />
+
+    <menuitem name="Text Fonts"
+        id="social_share_text_font_menu"
+        parent="social_share_configuration_menu"
+        action="action_social_share_text_font"
+        groups="base.group_no_one"
+        sequence="15"
+    />
+
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="social_share.Sharecampaign">
+        <ShareBar shareUrl="props.shareUrl" postText="props.postText"/>
+    </t>
+
+    <t t-name="social_share.ThankMessage">
+        <p t-if="message" t-out="message"/>
+        <p t-if="rewardUrl"><a t-att-href="rewardUrl">Click here for your reward!</a></p>
+    </t>
+</templates>
