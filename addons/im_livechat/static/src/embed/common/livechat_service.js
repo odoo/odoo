@@ -91,7 +91,6 @@ export class LivechatService {
                 (this.sessionCookie && visitorUid !== userId)
             ) {
                 this.leaveSession();
-                this.state = SESSION_STATE.NONE;
             }
             browser.localStorage.setItem(ODOO_VERSION_KEY, currOdooVersion);
         }
@@ -132,7 +131,7 @@ export class LivechatService {
     async leaveSession({ notifyServer = true } = {}) {
         const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
         try {
-            if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
+            if (session?.uuid && notifyServer) {
                 this.busService.deleteChannel(session.uuid);
                 await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
             }
