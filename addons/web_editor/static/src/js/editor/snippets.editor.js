@@ -218,6 +218,17 @@ var SnippetEditor = Widget.extend({
             return option.cleanForSave();
         });
         await Promise.all(proms);
+        await this.cleanUI();
+    },
+    /**
+     * Notifies all the associated snippet options that the snippet UI needs to
+     * be cleaned.
+     */
+    async cleanUI() {
+        const proms = Object.values(this.styles).map((option) => {
+            return option.cleanUI();
+        });
+        await Promise.all(proms);
     },
     /**
      * Closes all widgets of all options.
@@ -630,6 +641,13 @@ var SnippetEditor = Widget.extend({
      */
     clone: async function (recordUndo) {
         this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
+
+        await new Promise(resolve => {
+            this.trigger_up("clean_ui_request", {
+                targetEl: this.$target[0],
+                onSuccess: resolve,
+            });
+        });
 
         var $clone = this.$target.clone(false);
 
@@ -1723,6 +1741,7 @@ var SnippetsMenu = Widget.extend({
         'activate_snippet': '_onActivateSnippet',
         'call_for_each_child_snippet': '_onCallForEachChildSnippet',
         'clone_snippet': '_onCloneSnippet',
+        "clean_ui_request": "_onCleanUIRequest",
         'cover_update': '_onOverlaysCoverUpdate',
         'deactivate_snippet': '_onDeactivateSnippet',
         'drag_and_drop_stop': '_onSnippetDragAndDropStop',
@@ -3723,6 +3742,20 @@ var SnippetsMenu = Widget.extend({
         if (ev.data.onSuccess) {
             ev.data.onSuccess();
         }
+    },
+    /**
+     * Called when a child editor asks to clean the UI of a snippet.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onCleanUIRequest(ev) {
+        const targetEditors = this.snippetEditors.filter(editor => {
+            return ev.data.targetEl.contains(editor.$target[0]);
+        });
+        Promise.all(targetEditors.map(editor => editor.cleanUI())).then(() => {
+            ev.data.onSuccess();
+        });
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
