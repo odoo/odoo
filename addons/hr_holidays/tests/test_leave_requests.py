@@ -874,13 +874,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             # The holidays count only takes into account the valid allocations at that date
             self._check_holidays_count(
-                self.holidays_type_2.get_allocation_data(self.employee_emp, date=date(2021, 12, 1))[self.employee_emp][0][1],
+                self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
                 ml=10, lt=5, rl=5, vrl=5, vlt=5,
             )
 
             # Days remaining before the allocation ends is equal to 1 because there is only one day remaining in the allocation based on its validity
             self.assertEqual(
-                self.holidays_type_2.get_allocation_data(self.employee_emp, date=date(2021, 12, 31))[self.employee_emp][0][1]['closest_allocation_duration'],
+                self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 31))[self.employee_emp][0][1]['closest_allocation_duration'],
                 1,
                 "Only one day should remain before the allocation expires"
             )
@@ -903,7 +903,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             # The holidays count in 2021 is not affected by the leave taken in 2022
             self._check_holidays_count(
-                self.holidays_type_2.get_allocation_data(self.employee_emp, date=date(2021, 12, 1))[self.employee_emp][0][1],
+                self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
                 ml=10, lt=5, rl=5, vrl=5, vlt=5,
             )
 
@@ -919,11 +919,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 # If the allocation is archived, the leaves taken are not taken into account anymore
                 # As there is no valid allocation, then there is no upcoming one (closest_allocation_to_expire)
                 self._check_holidays_count(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp, date=date(2021, 12, 1))[self.employee_emp][0][1],
+                    self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
                     ml=0, lt=0, rl=0, vrl=0, vlt=0,
                 )
                 self.assertEqual(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp, date=date(2021, 12, 1))[self.employee_emp][0][1]['closest_allocation_expire'],
+                    self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1]['closest_allocation_expire'],
                     False,
                 )
 
@@ -937,7 +937,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
                 # The holidays count in 2021 is back to what it was when the allocation was active
                 self._check_holidays_count(
-                    self.holidays_type_2.get_allocation_data(self.employee_emp, date=date(2021, 12, 1))[self.employee_emp][0][1],
+                    self.holidays_type_2.get_allocation_data(self.employee_emp, target_date=date(2021, 12, 1))[self.employee_emp][0][1],
                     ml=10, lt=5, rl=5, vrl=5, vlt=5,
                 )
 

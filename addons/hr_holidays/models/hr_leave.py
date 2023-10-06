@@ -712,9 +712,10 @@ class HolidaysRequest(models.Model):
                 continue
             employee = leave.employee_id
             date_from = leave.date_from.date()
-            leave_data = leave_type.get_allocation_data(employee, date=date_from)
-            if leave_data[employee][0][1]['excess_days']:
-                raise ValidationError(_('The allocation configuration does not allow you to take this leave.'))
+            leave_data = leave_type.get_allocation_data(employee, date_from)
+            max_excess = leave_type.max_allowed_negative if leave_type.allows_negative else 0
+            if leave_data[employee][0][1]['total_virtual_excess'] > max_excess:
+                raise ValidationError(_("You don't have a valid allocation to cover that request."))
 
     ####################################################
     # ORM Overrides methods

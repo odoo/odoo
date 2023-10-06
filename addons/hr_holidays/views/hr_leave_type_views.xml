@@ -63,6 +63,15 @@
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="active" invisible="1"/>
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
+                        </group>
+                        <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
+                            <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
+                            <field name="employee_requests" widget="radio" invisible="requires_allocation == 'no'"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="requires_allocation == 'no'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="configuration" id="configuration" string="Configuration">
                             <field name="responsible_ids"
                                 widget="many2many_tags"
                                 placeholder="Nobody will be notified"
@@ -72,10 +81,15 @@
                             <field name="time_type" required="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
-                            <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
-                            <field name="employee_requests" widget="radio" invisible="requires_allocation == 'no'"/>
-                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="requires_allocation == 'no'"/>
+                        <group name="negative_cap" id="negative_cap"
+                            string="Negative Cap"
+                            invisible="requires_allocation == 'no'">
+                            <field name="allows_negative"/>
+                            <field name="max_allowed_negative"
+                                widget="char"
+                                class="o_hr_narrow_field"
+                                invisible="not allows_negative"
+                                required="requires_allocation == 'yes' and allows_negative"/>
                         </group>
                     </group>
                     <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
