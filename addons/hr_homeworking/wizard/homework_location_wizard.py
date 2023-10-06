@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
-from odoo.addons.resource.models.utils import string_to_datetime
 
 
 class HomeworkLocationWizard(models.TransientModel):
@@ -32,7 +31,7 @@ class HomeworkLocationWizard(models.TransientModel):
             ('date', '=', self.date),
             ('employee_id', '=', employee_id.id)
         ])
-        date_week_name = string_to_datetime(self.date).date().strftime("%A").lower()  # convert Tuesday to tuesday
+        date_week_name = self.day_week_string.lower()  # convert Tuesday to tuesday
         default_location_for_current_date = f"{date_week_name}_location_id"
         if self.weekly:
             # delete any exceptions on the current date

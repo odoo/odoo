@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='managers']" position="after">
-                    <group name="Homeworking" string="Homeworking">
+                    <group name="Homeworking" string="Remote Work">
                         <span class="text-muted fst-italic oe_inline" colspan="2">Specify your default work location for each day of the week. This schedule will repeat itself each week.</span>
                         <field name="monday_location_id"  placeholder="Unspecified"/>
                         <field name="tuesday_location_id"  placeholder="Unspecified"/>
