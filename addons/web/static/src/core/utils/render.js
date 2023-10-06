@@ -1,14 +1,16 @@
 /** @odoo-module **/
 
-import { blockDom, markup } from "@odoo/owl";
+import { App, blockDom, Component, markup } from "@odoo/owl";
+import { templates } from "@web/core/assets";
+import { _t } from "@web/core/l10n/translation";
 
 export function renderToElement(template, context = {}) {
     const el = render(template, context).firstElementChild;
     if (el?.nextElementSibling) {
         throw new Error(
             `The rendered template '${template}' contains multiple root ` +
-            `nodes that will be ignored using renderToElement, you should ` +
-            `consider using renderToFragment or refactoring the template.`
+                `nodes that will be ignored using renderToElement, you should ` +
+                `consider using renderToFragment or refactoring the template.`
         );
     }
     el?.remove();
@@ -33,12 +35,23 @@ export function renderToFragment(template, context = {}) {
 export function renderToString(template, context = {}) {
     return render(template, context).innerHTML;
 }
+let app;
+Object.defineProperty(renderToString, "app", {
+    get: () => {
+        if (!app) {
+            app = new App(Component, {
+                name: "renderToString",
+                templates,
+                translatableAttributes: ["data-tooltip"],
+                translateFn: _t,
+            });
+        }
+        return app;
+    },
+});
 
 function render(template, context = {}) {
     const app = renderToString.app;
-    if (!app) {
-        throw new Error("an app must be configured before using renderToString");
-    }
     const templateFn = app.getTemplate(template);
     const bdom = templateFn(context, {});
     const div = document.createElement("div");
