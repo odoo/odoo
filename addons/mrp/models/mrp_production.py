@@ -691,7 +691,7 @@ class MrpProduction(models.Model):
                 continue
             days_delay = production.product_id.produce_delay
             date_planned_finished = production.date_planned_start + relativedelta(days=days_delay)
-            if date_planned_finished == production.date_planned_start:
+            if production._should_postpone_date_finished(date_planned_finished):
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
             production.date_planned_finished = date_planned_finished
 
@@ -1085,6 +1085,10 @@ class MrpProduction(models.Model):
 
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
             move._set_quantity_done(new_qty)
+
+    def _should_postpone_date_finished(self, date_planned_finished):
+        self.ensure_one()
+        return date_planned_finished == self.date_planned_start
 
     def _update_raw_moves(self, factor):
         self.ensure_one()
@@ -1620,7 +1624,7 @@ class MrpProduction(models.Model):
             if diff > 0 and not cancel_remaining_qty:
                 amounts[production].append(production.product_qty - total_amount)
                 has_backorder_to_ignore[production] = True
-            elif diff < 0 or production.state in ['done', 'cancel']:
+            elif not self.env.context.get('allow_more') and (diff < 0 or production.state in ['done', 'cancel']):
                 raise UserError(_("Unable to split with more than the quantity to produce."))
 
         backorder_vals_list = []

@@ -119,7 +119,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'invoice_date': '2016-01-01',
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
-                'price_unit': 100.0,
+                'price_unit': 150.0,
                 'tax_ids': []
             })]
         })
@@ -138,8 +138,8 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         self.assertEqual(stub_pages, [[{
             'due_date': '01/01/2016',
             'number': invoice.name,
-            'amount_total': f'${NON_BREAKING_SPACE}100.00',
-            'amount_residual': f'${NON_BREAKING_SPACE}50.00',
+            'amount_total': f'${NON_BREAKING_SPACE}150.00',
+            'amount_residual': f'${NON_BREAKING_SPACE}75.00',
             'amount_paid': f'150.000{NON_BREAKING_SPACE}☺',
             'currency': invoice.currency_id,
         }]])
