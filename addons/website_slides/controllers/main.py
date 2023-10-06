@@ -1451,11 +1451,6 @@ class WebsiteSlides(WebsiteProfile):
         # create slide itself
         try:
             values['user_id'] = request.env.uid
-            # Hack, to remove when reworking create method of website.published.mixin
-            # We cannot create slide with is_published in values and can_publish = False
-            if 'is_published' in values:
-                if not values.get('is_published') or not can_publish:
-                    del values['is_published']
             slide = request.env['slide.slide'].sudo().create(values)
         except UserError as e:
             _logger.error(e)
