@@ -187,13 +187,6 @@ patch(ThreadService.prototype, "mail/core/web", {
         }
         thread.suggestedRecipients = recipients;
     },
-    async leaveChannel(channel) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
-        if (chatWindow) {
-            this.chatWindowService.close(chatWindow);
-        }
-        this._super(...arguments);
-    },
     async loadMoreFollowers(thread) {
         const followers = await this.orm.call(thread.model, "message_get_followers", [
             [thread.id],
@@ -244,6 +237,13 @@ patch(ThreadService.prototype, "mail/core/web", {
             return;
         }
         this._super(thread, replaceNewMessageChatWindow);
+    },
+    async remove(thread) {
+        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
+        if (chatWindow) {
+            this.chatWindowService.close(chatWindow, { notifyState: false });
+        }
+        this._super(...arguments);
     },
     /**
      * @param {import("@mail/core/common/follower_model").Follower} follower
