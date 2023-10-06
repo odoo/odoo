@@ -6,8 +6,8 @@ from datetime import datetime
 
 class AccountBalanceController(http.Controller):
 
-    @http.route('/get_balance_sum6', type='json', auth='none', csrf=False, cors='*')
-    def balance_sum6(self, db, login, password, start_date=None, end_date=None):
+    @http.route('/get_balance_sum', type='json', auth='user', csrf=False, cors='*')
+    def balance_sum(self, db, login, password, start_date=None, end_date=None):
         request.session.logout()
         request.session.authenticate(db, login, password)
 
@@ -37,7 +37,7 @@ class AccountBalanceController(http.Controller):
                         'account_name': account_name,
                         'balance': balance,
                         'account_root_id': account_root_id,
-                        'account_date': account_date.strftime('%Y-%m-%d'),
+                        'movement_date': account_date.strftime('%Y-%m-%d'),
                     }
                 else:
                     account_data[account_id]['balance'] += balance
