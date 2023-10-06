@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_social_share_post_template_elementform">
+        <field name="name">social.share.post.template.element.form</field>
+        <field name="model">social.share.post.template.element</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign Template">
+                <sheet>
+                    <group>
+                        <group>
+                        <field name="name"/>
+                        <field name="role"/>
+                        <field name="type"/>
+                        <group invisible="type != 'field_txt'">
+                            <field name="model" invisible="1"/>
+                            <field name="text_val"
+                                widget="DynamicModelFieldSelectorChar"
+                                required="model and type == 'field_txt'" readonly="not model" invisible="not model"
+                                options="{'model': 'model', 'follow_relations': False}"/>
+                            <field name="text_align"/>
+                            <field name="text_align_vert"/>
+                            <field name="text_font"/>
+                            <field name="text_font_size"/>
+                            <field name="text_color"/>
+                        </group>
+                        <group invisible="type != 'txt'">
+                            <field name="text_val"/>
+                            <field name="text_align"/>
+                            <field name="text_align_vert"/>
+                            <field name="text_font"/>
+                            <field name="text_font_size"/>
+                            <field name="text_color"/>
+                        </group>
+                        <group invisible="type != 'img'">
+                            <field name="image" widget="image" nolabel="1"/>
+                        </group>
+                        <group invisible="type != 'color'">
+                            <field name="image_crop"/>
+                            <field name="text_val"/>
+                        </group>
+                        </group>
+
+                        <group>
+                            <field name="sequence" string="Depth"/>
+                            <field name="x_pos"/>
+                            <field name="y_pos"/>
+                            <field name="x_size"/>
+                            <field name="y_size"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_social_share_post_template_element">
+        <field name="name">Share Campaign Template element</field>
+        <field name="res_model">social.share.post.template.element</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</data></odoo>

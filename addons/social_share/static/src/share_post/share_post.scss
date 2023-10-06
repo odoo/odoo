@@ -1,0 +1,59 @@
+
+.fa {
+    font-family: "FontAwesome" !important;
+    $size: 3rem;
+
+    &.rounded-circle,
+    &.rounded,
+    &.rounded-0,
+    &.rounded-leaf,
+    &.img-thumbnail,
+    &.shadow {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        // fa-1x is not ouput
+        width: $size;
+        height: $size;
+        line-height: $size;
+        @for $i from 2 through 5 {
+            &.fa-#{$i}x {
+                width: $size + $i;
+                height: $size + $i;
+                line-height: $size + $i;
+            }
+        }
+        // Default, if no background-color already selected
+        background-color: #f8f9fa;
+    }
+    &.img-thumbnail {
+        padding: 0;
+    }
+    &.rounded-leaf {
+        border-top-left-radius: $size;
+        border-bottom-right-radius: $size;
+    }
+    &.rounded-empty-circle {
+        @extend .rounded-circle;
+        border-width: ceil(1.4 * 1px);
+        border-style: solid;
+        background: transparent;
+    }
+}
+.s_share {
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .s_share_title {
+        margin: 0 .4rem 0 0;
+    }
+    a {
+        i.fa {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        margin: .2rem;
+    }
+}

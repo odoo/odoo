@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="social_share.ShareBar">
+        <div class="d-flex flex-column align-items-center">
+            <h4>Select where to share</h4>
+            <div class="s_share text-start o_no_link_popover">
+                <div class="d-flex flex-row">
+                    <a class="fa fa-2x fa-facebook rounded shadow-sm m-2" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{url}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-twitter rounded shadow-sm m-2" t-attf-href="https://twitter.com/intent/tweet?url={{url}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-linkedin rounded shadow-sm m-2" t-attf-href="https://www.linkedin.com/sharing/share-offsite/?url={{url}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                </div>
+                <div class="d-flex flex-row">
+                    <a class="fa fa-2x fa-whatsapp rounded shadow-sm m-2" t-attf-href="https://wa.me/?text={{url}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-pinterest rounded shadow-sm m-2" t-attf-href="https://pinterest.com/pin/create/button/?url={{url}}" target="_blank" t-on-click="_onShareLinkClick"/>
+                    <a class="fa fa-2x fa-envelope rounded shadow-sm m-2" t-attf-href="mailto:?body={{url}}"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

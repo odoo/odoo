@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <record id="social_share_template_element_odoo_logo" model="social.share.post.template.element">
+        <field name="name">logo</field>
+        <field name="role">image-2</field>
+        <field name="x_pos">980</field>
+        <field name="y_pos">472</field>
+        <field name="image" type="base64" file="social_share/static/img/logo.png"/>
+    </record>
+    <record id="social_share_template_element_odoo_logo" model="social.share.post.template.element">
+        <field name="name">profile picture</field>
+        <field name="role">image-1</field>
+        <field name="image_crop">circ</field>
+        <field name="x_pos">80</field>
+        <field name="y_pos">470</field>
+        <field name="x_size">80</field>
+        <field name="y_size">80</field>
+        <field name="image" type="base64" file="social_share/static/img/profile.png"/>
+    </record>
+    <record id="social_share_template_card" model="social.share.post.template">
+        <field name="name">Card Template</field>
+        <field name="layers" eval="[
+        Command.clear(),
+        Command.create({'name': 'bg', 'role': 'background', 'type': 'color', 'text_val': '161315', 'x_size': 1200, 'y_size': 1200, 'sequence': 0}),
+        Command.create({'name': 'hd', 'role': 'header', 'type': 'txt', 'text_val': 'Header is a long title that will be on the media card', 'x_pos': 80, 'y_pos': 80, 'text_font': 'Montserrat-Bold.ttf', 'text_font_size': 64, 'text_align': 'center', 'x_size': 1040, 'y_size': 150}),
+        Command.create({'name': 'subheader', 'role': 'subheader', 'type': 'txt', 'text_val': 'Subtitle of the card', 'x_pos': 80, 'y_pos': 230, 'text_font': 'Montserrat-SemiBold.ttf', 'text_font_size': 32, 'text_align': 'center', 'x_size': 1040, 'y_size': 100}),
+        Command.create({'name': 'snm', 'role': 'section-1', 'type': 'txt', 'text_val': 'John Deer', 'x_pos': 184, 'y_pos': 470, 'text_font': 'Montserrat-Bold.ttf', 'text_font_size': 32}),
+        Command.create({'name': 'sps', 'role': 'subsection-1', 'type': 'txt', 'text_val': 'Technical Support - CEO', 'x_pos': 184, 'y_pos': 510, 'text_font': 'Montserrat-Bold.ttf', 'text_font_size': 32}),
+        Command.create({'name': 'button text', 'role': 'button', 'type': 'txt', 'text_val': 'Register now', 'x_pos': 450, 'y_pos': 350, 'x_size': 300, 'y_size': 70, 'text_font': 'Montserrat-Bold.ttf', 'text_font_size': 32, 'text_color': '000000', 'text_align': 'center'}),
+        Command.create({'name': 'button', 'type': 'color', 'text_val': 'F0F0F0', 'image_crop': 'roundrect', 'x_pos': 407, 'y_pos': 330, 'x_size': 386, 'y_size': 86}),
+        Command.create({'name': 'profile picture outline', 'type': 'color', 'text_val': 'F0F0F0', 'image_crop': 'circ', 'x_pos': 80, 'y_pos': 470, 'x_size': 80, 'y_size': 80}),
+        Command.link(ref('social_share.social_share_template_element_odoo_logo')),]"/>
+    </record>
+    <record id="social_share_template_card_red" model="social.share.post.template">
+        <field name="name">Card Template (Red)</field>
+        <field name="parent_variant_id" ref="social_share.social_share_template_card"/>
+        <field name="layers" eval="[Command.create({'name': 'bg', 'role': 'background', 'type': 'txt', 'text_val': '456'})]"></field>
+    </record>
+    <record id="social_share_template_card_blue" model="social.share.post.template">
+        <field name="name">Card Template (Blue)</field>
+        <field name="parent_variant_id" ref="social_share.social_share_template_card"/>
+        <field name="layers" eval="[Command.create({'name': 'bg', 'role': 'background', 'type': 'txt', 'text_val': '789'})]"></field>
+    </record>
+</data></odoo>

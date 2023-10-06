@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem name="Social Share"
+        id="social_share_menu_main"
+        web_icon="social_share,static/description/icon.png"
+        sequence="270"/>
+
+    <menuitem name="Posts"
+        id="social_share_message_menu"
+        parent="social_share_menu_main"
+        sequence="0"
+        action="action_social_share_post"
+        groups="social_share.group_social_share_user"/>
+
+    <menuitem name="Templates"
+        id="social_share_template_menu"
+        parent="social_share_menu_main"
+        sequence="1"
+        action="action_social_share_post_template"
+        groups="social_share.group_social_share_manager"/>
+
+    <menuitem name="Configuration"
+        id="social_share_configuration_menu"
+        parent="social_share_menu_main"
+        groups="social_share.group_social_share_manager,base.group_no_one"/>
+
+    <menuitem name="Social template Elements"
+        id="social_share_account_menu"
+        parent="social_share_configuration_menu"
+        action="action_social_share_post_template_element"
+        groups="base.group_no_one"/>
+
+
+</odoo>

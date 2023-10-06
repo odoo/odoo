@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_share_url_share_form">
+        <field name="name">social.share.url.share.form</field>
+        <field name="model">social.share.url.share</field>
+        <field name="arch" type="xml">
+            <form string="Share Url"><sheet>
+                <group>
+                    <field name="campaign_id" invisible="1"/>
+                    <field name="model_id" invisible="1"/>
+                    <field name="target_id" options="{'model_field': 'model_id'}"
+                           invisible="not model_id"/>
+                    <field name="url" widget="CopyClipboardChar"/>
+                </group>
+                <footer>
+                    <button string="Done" name="action_apply_to_url" type="object"/>
+                </footer>
+            </sheet></form>
+        </field>
+    </record>
+</data></odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="share_post_visitor" name="Share Post">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <t t-call-assets="social_share.assets_share_post" lazy_load="True"/>
+            </t>
+            <t t-set="title" t-value="target_name"/>
+            <t t-set="body_classname" t-value="'o_share_post_visitor_frontend'"/>
+            <t t-set="no_header" t-value="1"/>
+            <t t-set="no_footer" t-value="1"/>
+            <div class="d-flex flex-column align-items-center mb-5">
+                <h1>Share this design with your community!</h1>
+                <img t-att-src="image_url" style="max-width: 70%; height: auto;"/>
+            </div>
+            <owl-component name="social_share_post" t-att-props="json.dumps({
+                'shareUrl': share_link,
+                'targetId': target_id,
+                'linkSharedMessage': link_shared_message,
+            })"/>
+            <footer class="d-flex flex-column align-items-center fixed-bottom">
+                <span>Powered By <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo</a></span>
+            </footer>
+        </t>
+    </template>
+
+    <template id="share_post_crawler" name="Share Post Crawler View">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta property="og:image" t-att-content="image_url"/>
+                <meta property="og:image:alt" t-attf-content="{{ target_name }}"/>
+                <meta property="og:title" t-att-content="target_name"/>
+                <meta property="og:type" content="website"/>
+                <meta property="og:url" t-att-content="redirect_url"/>
+                <meta property="og:description" content="unsure yet"/>
+            </t>
+            <t t-set="title" t-value="target_name"/>
+            <t t-set="no_header" t-value="1"/>
+            <t t-set="no_footer" t-value="1"/>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_social_share_post_form">
+        <field name="name">social.share.post.form</field>
+        <field name="model">social.share.post</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign" class="o_share_post_form">
+                    <button name="action_open_url_share" type="object" class="btn-primary mb-2">Share</button>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_send" type="object">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Send Now</span>
+                            </div>
+                        </button>
+                        <button name="action_test" type="object">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Test</span>
+                            </div>
+                        </button>
+                        <button name="action_schedule" type="object">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Schedule</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id"/>
+                            <field name="target_url"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <label for="post_suggestion"/>
+                    <field name="post_suggestion"/>
+
+                    <notebook>
+                        <page name="Post Image">
+                            <group>
+                            <group>
+                                <field name="header" invisible="1"/>
+                                <group colspan="2" invisible="not header" class="o_share_post_form_inline_template_element">
+                                    <span class="d-block" style="width: 7rem;">Header: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="header_type" class="w-25 align-top px-2"/>
+                                        <field name="header_val" class="w-75 px-2" invisible="header_type != 'txt'"/>
+                                        <field name="header_val" class="w-75 px-2" widget="DynamicModelFieldSelectorChar" invisible="header_type != 'field_txt'"/>
+                                    </div>
+                                </group>
+                                <field name="subheader" invisible="1"/>
+                                <group colspan="2" invisible="not subheader" class="o_share_post_form_inline_template_element">
+                                    <span class="d-block" style="width: 7rem;">Sub-Header: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="subheader_type" class="w-25 align-top px-2"/>
+                                        <field name="subheader_val" class="w-75 px-2" invisible="subheader_type != 'txt'"/>
+                                        <field name="subheader_val" class="w-75 px-2" widget="DynamicModelFieldSelectorChar" invisible="subheader_type != 'field_txt'"/>
+                                    </div>
+                                </group>
+                                <field name="section_1" invisible="1"/>
+                                <group colspan="2" invisible="not section_1" class="o_share_post_form_inline_template_element">
+                                    <span class="d-block" style="width: 7rem;">Section 1: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="section_1_type" class="w-25 align-top px-2"/>
+                                        <field name="section_1_val" class="w-75 px-2" invisible="section_1_type != 'txt'"/>
+                                        <field name="section_1_val" class="w-75 px-2" widget="DynamicModelFieldSelectorChar" invisible="section_1_type != 'field_txt'"/>
+                                    </div>
+                                </group>
+                                <field name="subsection_1" invisible="1"/>
+                                <group colspan="2" invisible="not subsection_1" class="o_share_post_form_inline_template_element">
+                                    <span class="d-block" style="width: 7rem;">Sub-Section 1: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="subsection_1_type" class="w-25 align-top px-2"/>
+                                        <field name="subsection_1_val" class="w-75 px-2" invisible="subsection_1_type != 'txt'"/>
+                                        <field name="subsection_1_val" class="w-75 px-2" widget="DynamicModelFieldSelectorChar" invisible="subsection_1_type != 'field_txt'"/>
+                                    </div>
+                                </group>
+                                <field name="subsection_2" invisible="1"/>
+                                <group colspan="2" invisible="not subsection_2" class="o_share_post_form_inline_template_element">
+                                    <span class="d-block" style="width: 7rem;">Sub-Section 2: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="subsection_2_type" class="w-25 align-top px-2"/>
+                                        <field name="subsection_2_val" class="w-75 px-2" invisible="subsection_2_type != 'txt'"/>
+                                        <field name="subsection_2_val" class="w-75 px-2" widget="DynamicModelFieldSelectorChar" invisible="subsection_2_type != 'field_txt'"/>
+                                    </div>
+                                </group>
+                                <field name="button" invisible="1"/>
+                                <group colspan="2" invisible="not button">
+                                    <span class="d-block" style="width: 7rem;">Button Text: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="button_val"/>
+                                    </div>
+                                </group>
+                                <field name="background" invisible="1"/>
+                                <group colspan="2" invisible="not background">
+                                    <span class="d-block" style="width: 7rem;">Background: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="background_val" widget="image"/>
+                                    </div>
+                                </group>
+                                <field name="image_1" invisible="1"/>
+                                <group colspan="2" invisible="not image_1">
+                                    <span class="d-block" style="width: 7rem;">Image 1: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="image_1_val" widget="image"/>
+                                    </div>
+                                </group>
+                                <field name="image_2" invisible="1"/>
+                                <group colspan="2" invisible="not image_2">
+                                    <span class="d-block" style="width: 7rem;">Image 2: </span>
+                                    <div class="o_share_post_form_inline_template_element_fields">
+                                        <field name="image_2_val" widget="image"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                <field name="model_id"/>
+                                <field name="reference_share_template_id"/>
+                                <field name="share_template_variant_id" widget="radio" options="{'horizontal': True}"
+                                       invisible="not reference_share_template_id"/>
+                                <field name="share_template_id"/>
+                                </group>
+                                <field name="image" widget="image" options="{'size': [700, 366]}" nolabel="1"/>
+                            </group>
+                            </group>
+                        </page>
+                        <page name="Post-Share">
+                            <group>
+                                <field name="thanks_redirection"/>
+                                <field name="thanks_message"/>
+                            </group>
+                        </page>
+                    </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_social_share_post_tree">
+        <field name="name">social.share.post.tree</field>
+        <field name="model">social.share.post</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="target_url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_social_share_post_search" model="ir.ui.view">
+        <field name="name">social.share.post.search</field>
+        <field name="model">social.share.post</field>
+        <field name="arch" type="xml">
+            <search string="Search Share Campaign">
+                <filter string="My campaign" name="my_campaign" domain="[('user_id', '=', uid)]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <field name="tag_ids"/>
+                <field name="active"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="by_responsible" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Tags" name="by_tags" domain="[]" context="{'group_by': 'tag_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_social_share_post">
+        <field name="name">Share Campaign</field>
+        <field name="res_model">social.share.post</field>
+        <field name="search_view_id" ref="view_social_share_post_search"/>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+</data></odoo>
