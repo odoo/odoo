@@ -8,7 +8,6 @@
                 o_tour_pointer
                 o_{{ position }}
                 {{ isOpen ? 'o_open' : (props.bounce ? 'o_bouncing' : '') }}
-                {{ props.pointerState.fixed ? 'position-fixed' : 'position-absolute' }}
                 {{ props.pointerState.onClick ? 'cursor-pointer' : '' }}
             "
             t-attf-style="

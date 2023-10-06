@@ -60,7 +60,7 @@ QUnit.module("Tour service", (hooks) => {
             start() {
                 super.start(...arguments);
                 macroEngines.push(this);
-            }
+            },
         });
         registerCleanup(() => {
             macroEngines.forEach((e) => e.stop());
@@ -76,7 +76,7 @@ QUnit.module("Tour service", (hooks) => {
             .add("tour_service", tourService);
         patchWithCleanup(browser.console, {
             // prevent form logging "tour successful" which would end the qunit suite test
-            log: () => {}
+            log: () => {},
         });
     });
 
@@ -133,6 +133,60 @@ QUnit.module("Tour service", (hooks) => {
         await click(target, "button.inc");
         assert.containsNone(document.body, ".o_tour_pointer");
         assert.strictEqual(target.querySelector("span.value").textContent, "1");
+    });
+
+    QUnit.test("next step with new anchor at same position", async (assert) => {
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            steps: () => [{ trigger: "button.foo" }, { trigger: "button.bar" }],
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Dummy extends Component {
+            state = useState({ bool: true });
+            static template = xml/*html*/ `
+                <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
+                <button class="bar w-100" t-if="!state.bool">Bar</button>
+            `;
+        }
+        class Root extends Component {
+            static components = { OverlayContainer, Dummy };
+            static template = xml/*html*/ `
+                <t>
+                    <Dummy />
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        await mock.advanceTime(100);
+        assert.containsOnce(document.body, ".o_tour_pointer");
+
+        // check position of the pointer relative to the foo button
+        let pointerRect = document.body.querySelector(".o_tour_pointer").getBoundingClientRect();
+        let buttonRect = document.body.querySelector("button.foo").getBoundingClientRect();
+        const leftValue1 = pointerRect.left - buttonRect.left;
+        const bottomValue1 = pointerRect.bottom - buttonRect.bottom;
+        assert.ok(leftValue1 !== 0);
+        assert.ok(bottomValue1 !== 0);
+
+        await click(target, "button.foo");
+        await mock.advanceTime(100);
+        assert.containsOnce(document.body, ".o_tour_pointer");
+
+        // check position of the pointer relative to the bar button
+        pointerRect = document.body.querySelector(".o_tour_pointer").getBoundingClientRect();
+        buttonRect = document.body.querySelector("button.bar").getBoundingClientRect();
+        const leftValue2 = pointerRect.left - buttonRect.left;
+        const bottomValue2 = pointerRect.bottom - buttonRect.bottom;
+        assert.strictEqual(bottomValue1, bottomValue2);
+        assert.strictEqual(leftValue1, leftValue2);
     });
 
     QUnit.test("scroller pointer to reach next step", async function (assert) {
@@ -220,6 +274,92 @@ QUnit.module("Tour service", (hooks) => {
             document.body.querySelector(".o_tour_pointer").textContent,
             "Click to increment"
         );
+    });
+
+    QUnit.test("scrolling to next step should update the pointer's height", async (assert) => {
+        patchWithCleanup(Element.prototype, {
+            scrollIntoView(options) {
+                super.scrollIntoView({ ...options, behavior: "instant" });
+            },
+        });
+
+        // The fixture should be shown for this test
+        target.style.position = "fixed";
+        target.style.top = "200px";
+        target.style.left = "50px";
+
+        const stepContent = "Click this pretty button to increment this magnificent counter !";
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            steps: () => [
+                {
+                    trigger: "button.inc",
+                    content: stepContent,
+                },
+            ],
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Root extends Component {
+            static components = { OverlayContainer, Counter };
+            static template = xml/*html*/ `
+                <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
+                    <Counter />
+                    <div class="bottom-filler" style="height: 300px" />
+                </div>
+                <OverlayContainer t-props="props.overlayContainerProps" />
+            `;
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        await mock.advanceTime(100); // awaits the macro engine
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(document.body.querySelector(".o_tour_pointer").textContent, stepContent);
+
+        const pointer = document.body.querySelector(".o_tour_pointer");
+        assert.doesNotHaveClass(pointer, "o_open");
+        assert.strictEqual(pointer.style.height, "28px");
+        assert.strictEqual(pointer.style.width, "28px");
+
+        await triggerEvent(document.body, ".o_tour_pointer", "mouseenter");
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        assert.hasClass(pointer, "o_open");
+        const firstOpenHeight = pointer.style.height;
+        const firstOpenWidth = pointer.style.width;
+
+        await triggerEvent(document.body, ".o_tour_pointer", "mouseleave");
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        assert.doesNotHaveClass(pointer, "o_open");
+
+        document.querySelector(".scrollable-parent").scrollTop = 1000;
+        await nextTick(); // awaits the intersection observer to update after the scroll
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        // now the scroller pointer should be shown
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(
+            document.body.querySelector(".o_tour_pointer").textContent,
+            "Scroll up to reach the next step."
+        );
+
+        document.querySelector(".scrollable-parent").scrollTop = 0;
+        await nextTick(); // awaits the intersection observer to update after the scroll
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        // now the true step pointer should be shown again
+        assert.containsOnce(document.body, ".o_tour_pointer");
+        assert.equal(document.body.querySelector(".o_tour_pointer").textContent, stepContent);
+
+        await triggerEvent(document.body, ".o_tour_pointer", "mouseenter");
+        await mock.advanceTime(100); // awaits for the macro engine next check cycle
+        assert.hasClass(pointer, "o_open");
+        const secondOpenHeight = pointer.style.height;
+        const secondOpenWidth = pointer.style.width;
+        assert.strictEqual(firstOpenHeight, secondOpenHeight);
+        assert.strictEqual(firstOpenWidth, secondOpenWidth);
     });
 
     QUnit.test("perform edit on next step", async function (assert) {
