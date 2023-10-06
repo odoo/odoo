@@ -104,6 +104,8 @@ class ProductTemplate(models.Model):
 
     def _get_website_accessory_product(self):
         domain = self.env['website'].sale_product_domain()
+        if not self.env.user._is_internal():
+            domain = expression.AND([domain, [('is_published', '=', True)]])
         return self.accessory_product_ids.filtered_domain(domain)
 
     def _get_website_alternative_product(self):
