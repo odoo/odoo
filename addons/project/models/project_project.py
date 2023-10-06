@@ -8,10 +8,11 @@ from datetime import timedelta
 
 from odoo import api, Command, fields, models, _, _lt
 from odoo.addons.rating.models import rating_data
-from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
+from odoo.tools import get_lang, SQL
 from .project_update import STATUS_COLOR
 from .project_task import CLOSED_STATES
+
 
 class Project(models.Model):
     _name = "project.project"
@@ -551,29 +552,15 @@ class Project(models.Model):
         analytic_accounts_to_delete.unlink()
         return result
 
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
-        if not order:
-            return super()._search(domain, offset, limit, order, access_rights_uid)
-        new_order, item_index, desc = [], -1, False
-        for index, order_item in enumerate(order.split(',')):
-            order_item_list = order_item.strip().lower().split(' ')
-            if order_item_list[0] == 'is_favorite':
-                item_index = index
-                desc = order_item_list[-1] == 'desc'
-            else:
-                new_order.append(order_item)
-        query = super()._search(domain, offset, limit, ', '.join(new_order), access_rights_uid)
-        if item_index != -1:
-            query_order_list = query.order.split(',') if query.order else []
-            query_order_list.insert(item_index, f"""
-                "project_project"."id" IN (
-                    SELECT project_id
-                    FROM project_favorite_user_rel
-                    WHERE user_id = {self.env.uid}
-                ){" DESC" * desc}""")
-            query.order = ', '.join(query_order_list)
-        return query
+    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
+        if field_name == 'is_favorite':
+            sql_field = SQL(
+                "%s IN (SELECT project_id FROM project_favorite_user_rel WHERE user_id = %s)",
+                SQL.identifier(alias, 'id'), self.env.uid,
+            )
+            return SQL("%s %s %s", sql_field, direction, nulls)
+
+        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """

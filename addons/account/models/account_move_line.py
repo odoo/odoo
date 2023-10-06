@@ -686,7 +686,8 @@ class AccountMoveLine(models.Model):
 
         # get the where clause
         query = self._where_calc(list(self.env.context.get('domain_cumulated_balance') or []))
-        order_string = ", ".join(self._generate_order_by_inner(self._table, self.env.context.get('order_cumulated_balance'), query, reverse_direction=True))
+        sql_order = self._order_to_sql(self.env.context.get('order_cumulated_balance'), query, reverse=True)
+        order_string = self.env.cr.mogrify(sql_order).decode()
         from_clause, where_clause, where_clause_params = query.get_sql()
         sql = """
             SELECT account_move_line.id, SUM(account_move_line.balance) OVER (
