@@ -2616,8 +2616,7 @@ QUnit.module("Fields", (hooks) => {
         await click(buttons[0]);
         assert.verifySteps(["action"]);
 
-        await click(buttons[1]);
-        assert.verifySteps([]); // the second button is disabled, it can't be clicked
+        assert.ok(buttons[1].disabled); // the second button is disabled, it can't be clicked
 
         def.resolve();
         await nextTick();
