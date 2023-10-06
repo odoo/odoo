@@ -4766,7 +4766,7 @@ class Many2many(_RelationalMulti):
         comodel._flush_search(domain, order=comodel._order)
         query = comodel._where_calc(domain)
         comodel._apply_ir_rules(query, 'read')
-        query.order = comodel._generate_order_by(comodel._order, query).replace(' ORDER BY ', '')
+        query.order = comodel._order_to_sql(comodel._order, query)
 
         # join with many2many relation table
         sql_id1 = SQL.identifier(self.relation, self.column1)
