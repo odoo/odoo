@@ -528,11 +528,29 @@ export class PosGlobalState extends PosModel {
                 }
             }
         }
+<<<<<<< HEAD
         const products = await this.env.services.orm.call(
             "pos.session",
             "get_pos_ui_product_product_by_params",
             [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
         );
+||||||| parent of 48502e6b1a6 (temp)
+        if(!missingProductIds.length) return;
+        const products = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_pos_ui_product_product_by_params',
+            args: [odoo.pos_session_id, {domain: [['id', 'in', [...missingProductIds]]]}],
+        });
+        await this._loadMissingPricelistItems(products);
+=======
+        if(!missingProductIds.size) return;
+        const products = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_pos_ui_product_product_by_params',
+            args: [odoo.pos_session_id, {domain: [['id', 'in', [...missingProductIds]]]}],
+        });
+        await this._loadMissingPricelistItems(products);
+>>>>>>> 48502e6b1a6 (temp)
         this._loadProductProduct(products);
     }
     // load the partners based on the ids
