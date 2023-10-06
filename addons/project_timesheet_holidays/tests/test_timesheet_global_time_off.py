@@ -142,6 +142,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
     # This tests that timesheets are created/deleted for every employee with the same calendar
     # when a global time off has a calendar_id set/remove
+    @freeze_time('2021-01-01 08:00:00')
     def test_timesheet_creation_and_deletion_for_calendar_set_and_remove(self):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)  # This is a monday
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)  # This is a friday
@@ -175,3 +176,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # The standard calendar is for 8 hours/day from 8 to 12 and from 13 to 17.
         # So we need to check that the timesheets don't have more than 8 hours per day.
         self.assertEqual(leave_task.effective_hours, 80)
+
+        # Promote part time employee to full time and check his acces to the global leaves
+        self.part_time_employee.resource_calendar_id = self.test_company.resource_calendar_id
+        self.assertEqual(len(self.env['account.analytic.line'].search([('employee_id', '=', self.part_time_employee.id)])), 5)
