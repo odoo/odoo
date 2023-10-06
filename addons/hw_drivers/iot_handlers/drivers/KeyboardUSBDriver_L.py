@@ -127,7 +127,7 @@ class KeyboardUSBDriver(Driver):
     def run(self):
         try:
             for event in self.input_device.read_loop():
-                if self._stopped.isSet():
+                if self._stopped.is_set():
                     break
                 if event.type == evdev.ecodes.EV_KEY:
                     data = evdev.categorize(event)
