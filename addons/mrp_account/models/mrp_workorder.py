@@ -38,8 +38,10 @@ class MrpWorkorder(models.Model):
             'category': 'manufacturing_order',
         }
 
-    def _create_or_update_analytic_entry(self):
+    def _create_or_update_analytic_entry(self, bypass=False):
         for wo in self.filtered(lambda wo: wo.id and (wo.production_id.analytic_distribution or wo.workcenter_id.analytic_distribution or wo.wc_analytic_account_line_ids or wo.mo_analytic_account_line_ids)):
+            if wo.production_id.state != 'done' and wo.production_id.state != 'to_close' and not bypass:
+                continue
             hours = wo.duration / 60.0
             value = -hours * wo.workcenter_id.costs_hour
 
@@ -54,3 +56,8 @@ class MrpWorkorder(models.Model):
     def unlink(self):
         (self.mo_analytic_account_line_ids | self.wc_analytic_account_line_ids).unlink()
         return super().unlink()
+
+    def _get_wip_vals(self):
+        return {
+            _('workcenter usage'): sum([wo._compute_current_operation_cost() for wo in self]),
+        }

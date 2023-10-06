@@ -140,6 +140,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()
+        mo.button_mark_done()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -10.0)
@@ -149,16 +150,6 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 120.0
         mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
-
-        # mark as done
-        mo_form.qty_producing = 10.0
-        mo_form.save()
-        mo.button_mark_done()
-        self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
@@ -187,10 +178,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
 
         # Mark as done
         mo.button_mark_done()
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.state, 'done')
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 1)
 
@@ -215,39 +206,6 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.analytic_distribution = {str(self.analytic_account.id): 100.0}
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 1)
         self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_ids), 1)
-
-    def test_add_remove_wo_analytic_no_company(self):
-        """Test the addition and removal of work orders to a MO linked to
-        an analytic account that has no company associated
-        """
-        # Create an analytic account and remove the company
-        analytic_account_no_company = self.env['account.analytic.account'].create({
-            'name': 'test_analytic_account_no_company',
-            'plan_id': self.analytic_plan.id,
-        }).with_context(analytic_plan_id=self.analytic_plan.id)
-        analytic_account_no_company.company_id = False
-
-        # Create a mo linked to an analytic account with no associated company
-        mo_no_company = self.env['mrp.production'].create({
-            'product_id': self.product.id,
-            'analytic_distribution': {str(analytic_account_no_company.id): 100.0},
-            'product_uom_id': self.bom.product_uom_id.id,
-        })
-
-        mo_no_c_form = Form(mo_no_company)
-        wo = self.env['mrp.workorder'].create({
-            'name': 'Work_order',
-            'workcenter_id': self.workcenter.id,
-            'product_uom_id': self.bom.product_uom_id.id,
-            'production_id': mo_no_c_form.id,
-            'duration': 60,
-        })
-        mo_no_c_form.save()
-        self.assertTrue(mo_no_company.workorder_ids)
-        self.assertEqual(wo.production_id.analytic_account_ids, analytic_account_no_company)
-        self.assertEqual(len(analytic_account_no_company.line_ids), 1)
-        mo_no_company.workorder_ids.unlink()
-        self.assertEqual(len(analytic_account_no_company.line_ids), 0)
 
     def test_update_components_qty_to_0(self):
         """ Test that the analytic lines are deleted when the quantity of the component is set to 0.
