@@ -323,7 +323,7 @@
                 </li>
             </ul>
             <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile vh-100" id="top_menu_collapse_mobile">
-                <div class="offcanvas-header justify-content-end">
+                <div class="offcanvas-header justify-content-end o_not_editable">
                     <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
                 <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100">
@@ -1488,7 +1488,7 @@
 
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a href="/" t-attf-class="navbar-brand logo #{_link_class}">
+        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
             <!--
             Note: setting width *and* height attributes allows to reserve some
             space to avoid layout shift during page loading. Of course, CSS
@@ -2150,7 +2150,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="False">
     <xpath expr="." position="inside">
-        <li t-attf-class="#{_item_class}">
+        <li data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
             <t id="header_language_selector_call" t-call="portal.language_selector">
                 <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
             </t>
@@ -2199,9 +2199,9 @@
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
             <div t-attf-class="oe_structure oe_structure_solo #{_div_class}">
-                <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <section class="oe_unremovable oe_unmovable s_text_block" data-snippet="s_text_block" data-name="Text">
                     <div class="container">
-                        <a href="/contactus" class="btn btn-primary btn_cta">Contact Us</a>
+                        <a href="/contactus" class="oe_unremovable btn btn-primary btn_cta">Contact Us</a>
                     </div>
                 </section>
             </div>
@@ -2846,7 +2846,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
             <div t-attf-class="o_header_social_links #{_div_class}">
-                <div class="s_social_media o_not_editable" data-snippet="s_social_media" data-name="Social Media">
+                <div class="s_social_media o_not_editable oe_unmovable oe_unremovable" data-snippet="s_social_media" data-name="Social Media">
                     <h5 class="s_social_media_title d-none">Follow us</h5>
                     <a href="/website/social/facebook" class="s_social_media_facebook o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank">
                         <i class="fa fa-facebook fa-stack p-1 o_editable_media"/>
@@ -2949,14 +2949,29 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </small>
                 </t>
                 <t t-elif="_txt_elt_content == 'phone_mail'">
-                    <a href="tel:+1 (650) 555-0111" t-attf-class="nav-link o_nav-link_secondary #{_link_class}"><small><i class="fa fa-1x fa-fw fa-phone me-1"/> <span class="o_force_ltr">+1 (650) 555-0111</span></small></a>
-                    <a href="mailto:info@yourcompany.example.com" t-attf-class="nav-link o_nav-link_secondary #{_link_class}"><small><i class="fa fa-1x fa-fw fa-envelope me-1"/> info@yourcompany.example.com</small></a>
+                    <a href="tel:+1 (650) 555-0111" t-attf-class="nav-link o_nav-link_secondary #{_link_class}">
+                        <small>
+                            <i class="fa fa-1x fa-fw fa-phone me-1"/>&#847; <!-- Empty character needed to be able to delete the icon. -->
+                            <span class="o_force_ltr">+1 (650) 555-0111</span>
+                        </small>
+                    </a>
+                    <a href="mailto:info@yourcompany.example.com" t-attf-class="nav-link o_nav-link_secondary #{_link_class}">
+                        <small>
+                            <i class="fa fa-1x fa-fw fa-envelope me-1"/>
+                             info@yourcompany.example.com
+                        </small>
+                    </a>
                 </t>
                 <t t-elif="_txt_elt_content == 'mail'">
-                    <a href="mailto:info@yourcompany.example.com" t-attf-class="nav-link o_nav-link_secondary #{_link_class}"><small><i class="fa fa-1x fa-fw fa-envelope me-1"/> info@yourcompany.example.com</small></a>
+                    <a href="mailto:info@yourcompany.example.com" t-attf-class="nav-link o_nav-link_secondary #{_link_class}">
+                        <small><i class="fa fa-1x fa-fw fa-envelope me-1"/> info@yourcompany.example.com</small>
+                    </a>
                 </t>
                 <t t-else="">
-                    <a href="tel:+1 (650) 555-0111" t-attf-class="nav-link o_nav-link_secondary p-2 #{_link_class}"><i class="fa fa-1x fa-fw fa-phone me-1"/><span class="o_force_ltr"><small>+1 (650) 555-0111</small></span></a>
+                    <a href="tel:+1 (650) 555-0111" t-attf-class="nav-link o_nav-link_secondary p-2 #{_link_class}">
+                        <i class="fa fa-1x fa-fw fa-phone me-1"/>
+                        <span class="o_force_ltr"><small>+1 (650) 555-0111</small></span>
+                    </a>
                 </t>
             </div>
         </li>

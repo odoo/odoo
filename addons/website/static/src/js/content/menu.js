@@ -632,6 +632,7 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
+        "show.bs.modal #o_search_modal": "_onSearchModalShow",
         "shown.bs.modal #o_search_modal": "_onSearchModalShown",
     },
 
@@ -650,6 +651,14 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+    },
+    /**
+     * @private
+     */
+    _onSearchModalShow(ev) {
+        if (this.editableMode) {
+            ev.preventDefault();
+        }
     },
     /**
      * @private
