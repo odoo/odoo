@@ -42,6 +42,7 @@ export class PopoverController extends Component {
             !this.popoverRef.el.contains(target)
         ) {
             this.props.close();
+            ev.preventDefault();
         }
     }
 
