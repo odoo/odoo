@@ -367,8 +367,8 @@ var Dialog = Widget.extend({
      * @private
      */
     _onFooterButtonKeyDown: function (e) {
-        switch(e.which) {
-            case $.ui.keyCode.TAB:
+        switch(e.key) {
+            case "Tab":
                 if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
                     e.preventDefault();
                     var $primaryButton = $(e.target);

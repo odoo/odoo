@@ -243,7 +243,6 @@ const mapKeyboardEvent = (args) => ({
     ...args,
     bubbles: true,
     cancelable: true,
-    keyCode: args.which,
 });
 
 /**

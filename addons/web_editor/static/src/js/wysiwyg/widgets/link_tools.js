@@ -457,7 +457,7 @@ export class LinkTools extends Link {
      * @param {Event} ev
      */
     _onKeyPressCustomBorderWidth(ev) {
-        if (ev.keyCode === $.ui.keyCode.ENTER) {
+        if (ev.key === "Enter") {
             this._onChangeCustomBorderWidth(ev);
         }
     }

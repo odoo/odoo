@@ -16,7 +16,7 @@ import { delay } from "@web/core/utils/concurrency";
     //-------------------------------------------------------------------------
 
     // TriggerEvent helpers
-    const keyboardEventBubble = args => Object.assign({}, args, { bubbles: true, keyCode: args.which });
+    const keyboardEventBubble = args => Object.assign({}, args, { bubbles: true});
     const mouseEventMapping = args => Object.assign({}, args, {
         bubbles: true,
         cancelable: true,

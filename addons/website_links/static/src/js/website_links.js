@@ -420,7 +420,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onUrlKeyUp: function (ev) {
-        if (!$('#btn_shorten_url').hasClass('btn-copy') || ev.which === 13) {
+        if (!$('#btn_shorten_url').hasClass('btn-copy') || ev.key === "Enter") {
             return;
         }
 

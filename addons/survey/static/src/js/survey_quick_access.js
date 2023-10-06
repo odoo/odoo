@@ -56,7 +56,7 @@ publicWidget.registry.SurveyQuickAccessWidget = publicWidget.Widget.extend({
     },
 
     _onKeyPress: function (event) {
-        if (event.keyCode === 13) {  // Enter
+        if (event.key === "Enter") {
             event.preventDefault();
             this._submitCode();
         }

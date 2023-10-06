@@ -372,7 +372,7 @@ export class Colorpicker extends Component {
      * @param {Event} ev
      */
     _onKeypress(ev) {
-        if (ev.charCode === $.ui.keyCode.ENTER) {
+        if (ev.key === "Enter") {
             if (ev.target.tagName === "INPUT") {
                 this._onChangeInputs(ev);
             }

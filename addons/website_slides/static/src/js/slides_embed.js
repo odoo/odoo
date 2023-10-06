@@ -199,10 +199,10 @@ $(function () {
 
         // switching slide with keyboard
         $(document).keydown(function (ev) {
-            if (ev.keyCode === 37 || ev.keyCode === 38) {
+            if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") {
                 embeddedViewer.previous();
             }
-            if (ev.keyCode === 39 || ev.keyCode === 40) {
+            if (ev.key === "ArrowRight" || ev.key === "ArrowDown") {
                 embeddedViewer.next();
             }
         });

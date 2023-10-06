@@ -794,9 +794,6 @@ QUnit.module("Components", ({ beforeEach }) => {
             // Define the ArrowDown key with standard API (for hotkey_service)
             key: "ArrowDown",
             code: "ArrowDown",
-            // Define the ArrowDown key with deprecated API (for bootstrap)
-            keyCode: 40,
-            which: 40,
         });
         select.dispatchEvent(ev);
         await nextTick();
@@ -806,9 +803,6 @@ QUnit.module("Components", ({ beforeEach }) => {
             // Define the ESC key with standard API (for hotkey_service)
             key: "Escape",
             code: "Escape",
-            // Define the ESC key with deprecated API (for bootstrap)
-            keyCode: 27,
-            which: 27,
         });
         select.dispatchEvent(ev);
         await nextTick();
