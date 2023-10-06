@@ -502,7 +502,7 @@ class ProductTemplate(models.Model):
         # FIXME awa: this is really not performant at all but after discussing with the team
         # we don't see another way to do it
         tmpl_without_variant_ids = []
-        if not limit or len(searched_ids) < limit:
+        if self.env.user.has_group('product.group_product_variant') and (not limit or len(searched_ids) < limit):
             tmpl_without_variant_ids = self.env['product.template'].search(
                 [('id', 'not in', self.env['product.template']._search([('product_variant_ids.active', '=', True)]))]
             )
