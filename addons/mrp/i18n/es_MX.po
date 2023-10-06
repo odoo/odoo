@@ -7,8 +7,8 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4232,9 +4232,8 @@ msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
 "in its BoM or child BoMs!"
 msgstr ""
-"Se encontró un error en la recurrencia. Recuerde que un producto con una "
-"lista de materiales no puede incluirse a si mismo en su LdM o en la "
-"sublista."
+"Ocurrió un error de recurrencia. Recuerde que un producto con una lista de "
+"materiales no puede incluirse a si mismo en su LdM o en la sublista."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__code
@@ -4654,8 +4653,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
-"Algunos de sus subproductos están siendo rastreados, debe especificar una "
-"orden de fabricación para recuperar los subproductos correctos."
+"Algunos de sus subproductos están rastreados, debe especificar una orden de "
+"fabricación para recuperar los subproductos correctos."
 
 #. module: mrp
 #. odoo-python
@@ -4665,8 +4664,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
-"Se realiza un seguimiento de algunos de sus componentes, debe especificar "
-"una orden de fabricación para recuperar los componentes correctos."
+"Algunos de sus componentes están rastreados, debe especificar una orden de "
+"fabricación para recuperar los componentes correctos."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5707,6 +5706,18 @@ msgid "Validate"
 msgstr "Validar"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"No puede establecer y validar valores, debe especificar el número de serie o"
+" lote para un producto con trazabilidad que aumentó su cantidad consumida."
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -6435,13 +6446,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Debe proporcionar un lote para el producto terminado."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "Debe proporcionar un número de lote o de serie"
 
 #. module: mrp
 #. odoo-python

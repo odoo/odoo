@@ -2247,7 +2247,7 @@ msgstr "您不能删除费用中使用的解析账户。"
 msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
-msgstr ""
+msgstr "由于付款与费用报告相关联，因此无法进行此修改。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2258,6 +2258,12 @@ msgstr "您不能拒绝自己的费用。"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."

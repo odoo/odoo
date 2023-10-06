@@ -1047,6 +1047,41 @@ class TestBoM(TestMrpCommon):
         # Total quantity of components is 4, so shouldn't be able to produce a single one.
         self.assertEqual(report_values['lines']['producible_qty'], 0)
 
+    def test_bom_report_same_component(self):
+        """ Test report bom structure with duplicated components.
+        """
+        location = self.env.ref('stock.stock_location_stock')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'type': 'product'})
+        component_product = self.env['product.product'].create({'name': 'Compo 1', 'type': 'product'})
+
+        self.env['stock.quant']._update_available_quantity(component_product, location, 3.0)
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final_product_tmpl.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 3,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 3,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        line1_values = report_values['lines']['components'][0]
+        line2_values = report_values['lines']['components'][1]
+        self.assertEqual(line1_values['availability_state'], 'available', 'The first component should be available.')
+        self.assertEqual(line2_values['availability_state'], 'unavailable', 'The second component should be marked as unavailable')
+
     def test_validate_no_bom_line_with_same_product(self):
         """
         Cannot set a BOM line on a BOM with the same product as the BOM itself

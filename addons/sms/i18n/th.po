@@ -202,6 +202,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"เลือกวิธีการส่ง SMS:\n"
+"SMS: SMS จำนวนมาก\n"
+"โพสต์เป็นข้อความ: เข้าสู่ระบบเอกสาร\n"
+"โพสต์เป็นโน้ต: SMS จำนวนมากพร้อมไฟล์เก็บถาวร"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1011,13 +1015,13 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Send as"
-msgstr ""
+msgstr "ส่งเป็น"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "ส่งเป็น (SMS)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1180,6 +1184,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"ประเภทของการทำงานของเซิร์ฟเวอร์ ค่าต่อไปนี้มีอยู่:\n"
+"- 'การรันโค้ด Python': บล็อกของโค้ด Python ที่จะถูกดำเนินการ\n"
+"- 'สร้างบันทึกใหม่': สร้างบันทึกใหม่ด้วยค่าใหม่\n"
+"- 'อัปเดตบันทึก': อัปเดตค่าของบันทึก\n"
+"- 'ดำเนินการหลายการกระทำ': กำหนดการกระทำที่กระตุ้นให้เกิดการกระทำของเซิร์ฟเวอร์อื่น\n"
+"- 'ส่งอีเมล': โพสต์ข้อความ บันทึก หรือส่งอีเมล (แชท)\n"
+"- 'เพิ่มผู้ติดตาม': เพิ่มผู้ติดตามในบันทึก (แชท)\n"
+"- 'สร้างกิจกรรมถัดไป': สร้างกิจกรรม (แชท)\n"
+"- 'ส่งข้อความ SMS': ส่ง SMS บันทึกไว้ในเอกสาร (SMS)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc

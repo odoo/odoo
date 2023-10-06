@@ -2857,7 +2857,7 @@ msgstr "Allegato principale"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Su ordine (MTO)"
+msgstr "Produzione su ordine (MTO)"
 
 #. module: mrp
 #. odoo-python
@@ -5009,6 +5009,8 @@ msgid ""
 "The current configuration is incorrect because it would create a cycle "
 "between these products: %s."
 msgstr ""
+"La configurazione attuale non è corretta perché creerà un ciclo tra questi "
+"prodotti: %s."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
@@ -5690,6 +5692,18 @@ msgstr "Valido"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Validate"
 msgstr "Convalida"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"I valori non possono essere configurati e convalidati perché è necessario specificare un lotto/numero di serie per un prodotto tracciato per il quale è aumentata la quantità consumata:\n"
+"- "
 
 #. module: mrp
 #. odoo-javascript
@@ -6423,13 +6437,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Fornire un numero di lotto per il prodotto finito."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "È necessario fornire il lotto/numero seriale"
 
 #. module: mrp
 #. odoo-python

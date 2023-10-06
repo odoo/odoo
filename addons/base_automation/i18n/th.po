@@ -6,6 +6,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -174,6 +175,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"เลือกวิธีการส่ง SMS:\n"
+"SMS: SMS จำนวนมาก\n"
+"โพสต์เป็นข้อความ: เข้าสู่ระบบเอกสาร\n"
+"โพสต์เป็นโน้ต: SMS จำนวนมากพร้อมไฟล์เก็บถาวร"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -183,6 +188,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"เลือกวิธีการส่งอีเมล:\n"
+"อีเมล: ส่งอีเมลโดยตรง\n"
+"โพสต์เป็นข้อความ: โพสต์บนเอกสารและแจ้งเตือนผู้ติดตาม\n"
+"โพสต์เป็นโน้ต: บันทึกโน้ตลงในเอกสาร"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -206,6 +215,9 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"ความล่าช้าหลังจากวันที่ทริกเกอร์\n"
+"           คุณสามารถใส่จำนวนเป็นลบได้หากต้องการให้มีการหน่วงเวลาก่อน\n"
+"           วันที่เรียกใช้ เช่น การส่งการแจ้งเตือน 15 นาทีก่อนการประชุม"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -278,7 +290,7 @@ msgstr "ไอดีจากภายนอก"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr ""
+msgstr "ฟิลด์ที่ทริกเกอร์การเปลี่ยนแปลง"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -313,13 +325,14 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
+"หากมี ต้องปฏิบัติตามเงื่อนไขนี้ก่อนที่จะดำเนินการในส่วนของกฎการดำเนินการ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "หากมี จะต้องเป็นไปตามเงื่อนไขนี้ก่อนที่จะอัปเดตบันทึก"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
@@ -329,7 +342,7 @@ msgstr "แก้ไขครั้งล่าสุดเมื่อ"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr ""
+msgstr "รันครั้งสุดท้าย"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
@@ -344,7 +357,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr ""
+msgstr "ข้อความที่เกี่ยวกับความล่าช้าน้อยที่สุด"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
@@ -400,7 +413,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "เมื่อเปลี่ยนทริกเกอร์ฟิลด์"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -457,12 +470,12 @@ msgstr "เทมเพลต SMS"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "ส่งเป็น"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "ส่งเป็น (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -495,7 +508,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "สมัครสมาชิกผู้รับ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -526,6 +539,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
 msgstr ""
+"การดำเนินการจะถูกทริกเกอร์ หากมีการอัปเดตช่องใดช่องหนึ่งเหล่านี้เท่านั้น "
+"หากว่างเปล่า ระบบจะเฝ้าดูทุกช่อง"
 
 #. module: base_automation
 #. openerp-web
@@ -570,6 +585,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"ประเภทของการทำงานของเซิร์ฟเวอร์ ค่าต่อไปนี้มีอยู่:\n"
+"- 'การรันโค้ด Python': บล็อกของโค้ด Python ที่จะถูกดำเนินการ\n"
+"- 'สร้างบันทึกใหม่': สร้างบันทึกใหม่ด้วยค่าใหม่\n"
+"- 'อัปเดตบันทึก': อัปเดตค่าของบันทึก\n"
+"- 'ดำเนินการหลายการกระทำ': กำหนดการกระทำที่กระตุ้นให้เกิดการกระทำของเซิร์ฟเวอร์อื่น\n"
+"- 'ส่งอีเมล': โพสต์ข้อความ บันทึก หรือส่งอีเมล (แชท)\n"
+"- 'เพิ่มผู้ติดตาม': เพิ่มผู้ติดตามในบันทึก (แชท)\n"
+"- 'สร้างกิจกรรมถัดไป': สร้างกิจกรรม (แชท)\n"
+"- 'ส่งข้อความ SMS': ส่ง SMS บันทึกไว้ในเอกสาร (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -654,6 +678,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"เมื่อใดที่ควรทริกเกอร์เงื่อนไข\n"
+"ถ้ามีจะมีการตรวจสอบโดยผู้จัดตารางเวลา ถ้าหากว่างเปล่า จะถูกตรวจสอบเมื่อถูกสร้างและอัปเดต"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

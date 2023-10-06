@@ -53,14 +53,14 @@ msgstr "# ของคำสั่งขาย"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
-msgstr ""
+msgstr "%(line_description)s (ยกเลิก)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
-msgstr ""
+msgstr "%(line_description)s (ร่าง)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -89,6 +89,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>ยินดีด้วย</b>  "
+"ใบเสนอราคาแรกของคุณได้ถูกส่งไปแล้ว!<br>โปรดตรวจสอบอีเมลของคุณเพื่อตรวจสอบความถูกต้องใบเสนอราคา"
 
 #. module: sale
 #. odoo-javascript
@@ -348,6 +350,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        เรียน<t t-out=\"object.partner_id.name or ''\">ผู้ใช้</t>\n"
+"        <br><br>\n"
+"        โปรดทราบว่า\n"
+"        <t t-out=\"doc_name or ''\">ใบเสนอราคา</t> <strong t-out=\"object.name or ''\">S00052</strong> ของคุณ\n"
+"        <t t-if=\"object.origin\">\n"
+"            (อ้างอิง: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        ถูกยกเลิก ดังนั้น คุณจะไม่ถูกเรียกเก็บเงินเพิ่มเติมสำหรับคำสั่งซื้อนี้\n"
+"        หากจำเป็นต้องมีการคืนเงิน เราจะดำเนินการตามความสะดวกที่สุด\n"
+"        <br><br>\n"
+"        โปรดติดต่อเราหากคุณมีคำถาม\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -379,7 +399,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>ได้รับอนุญาต</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -472,7 +492,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">/ เดือน</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -523,6 +543,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อนี้ <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
+"                            ใบแจ้งหนี้ฉบับร่างสำหรับคำสั่งซื้อนี้จะถูกยกเลิก<br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -548,12 +572,12 @@ msgstr "<span>สำหรับจำนวนของ:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Payment</span>"
-msgstr ""
+msgstr "<span>การชำระเงิน</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Signature</span>"
-msgstr ""
+msgstr "<span>ลายเซ็น</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -572,6 +596,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            ที่อยู่จัดส่ง:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -670,6 +697,8 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"ใบแจ้งหนี้มาตรฐานจะออกพร้อมกับรายการใบสั่งซื้อทั้งหมดที่พร้อมสำหรับการออกใบแจ้งหนี้"
+" ตามนโยบายการออกใบแจ้งหนี้ (ตามปริมาณที่สั่งหรือจัดส่ง)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -700,14 +729,14 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "ยอมรับและชำระเงินใบเสนอราคา"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "ยอมรับและลงนามในใบเสนอราคา"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -836,6 +865,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"คำสั่งซื้อคือการขายเพิ่ม เมื่อปริมาณที่ส่งมอบสูงกว่าในตอนแรก\n"
+"           ปริมาณที่สั่ง และนโยบายการออกใบแจ้งหนี้จะขึ้นอยู่กับปริมาณที่สั่ง"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -902,6 +933,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"ตัวอย่างเช่น หากคุณขายการบริการแบบชำระเงินล่วงหน้า Odoo แนะนำให้คุณ\n"
+"           ขายชั่วโมงเพิ่มเติม เมื่อชั่วโมงที่สั่งซื้อถูกใช้หมดแล้ว"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -968,6 +1001,9 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"เพิ่มยอดขายของคุณด้วยโปรแกรมหลายประเภท: คูปอง โปรโมชั่น บัตรของขวัญ "
+"บัตรสมาชิก สามารถกำหนดเงื่อนไขเฉพาะได้ (สินค้า, ลูกค้า, จำนวนซื้อขั้นต่ำ, "
+"ระยะเวลา) รางวัลอาจเป็นส่วนลด (% หรือจำนวน) หรือแถมสินค้าฟรี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1001,7 +1037,7 @@ msgstr "ยกเลิก"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr ""
+msgstr "ยกเลิก %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1085,7 +1121,7 @@ msgstr "บริษัทเดียว"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Complete your company's data"
-msgstr ""
+msgstr "กรอกข้อมูลบริษัทของคุณให้สมบูรณ์"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1105,7 +1141,7 @@ msgstr "คํานวณค่าใช้จ่ายการขนส่ง
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "คำนวณค่าจัดส่งและจัดส่งด้วย Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1170,12 +1206,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "รหัสประเทศ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "คูปองและสมาชิก"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1262,7 +1298,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "บัตรเครดิตและเดบิต (ผ่าน Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1442,7 +1478,7 @@ msgstr "วิธีจัดส่ง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "ปริมาณการจัดส่ง"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1505,7 +1541,7 @@ msgstr "จำนวนส่วนลด"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "ส่วนลด บัตรสมาชิก และบัตรของขวัญ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
@@ -1588,7 +1624,7 @@ msgstr "เงินดาวน์"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr ""
+msgstr "เงินดาวน์"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1656,7 +1692,7 @@ msgstr "ตัวช่วยการเขียนอีเมล"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "อีเมลที่ส่งถึงลูกค้าเมื่อมีใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1690,7 +1726,7 @@ msgstr "สิ้นสุด"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "หมดอายุวันที่ %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1824,7 +1860,7 @@ msgstr "กลุ่มโดย"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "มีการเปลี่ยนแปลงสถานะทางการเงิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2097,7 +2133,7 @@ msgstr "ที่อยู่สำหรับจัดส่งและแจ
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr ""
+msgstr "เป็นเงินดาวน์"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2565,7 +2601,7 @@ msgstr "ลายเซ็นออนไลน์"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "การยืนยันออนไลน์"
 
 #. module: sale
 #. odoo-python
@@ -2641,12 +2677,12 @@ msgstr "วันที่สั่ง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "วันที่สั่ง:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "วันที่สั่งซื้อ: 365 วันที่ผ่านมา"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2767,7 +2803,7 @@ msgstr "ชำระด้วย"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "ชำระเงินกับผู้ให้บริการชำระเงินรายอื่น"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2838,7 +2874,7 @@ msgstr "ราคาที่ลดไม่รวมภาษี"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "ราคาลดราคาได้รวมภาษีแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2849,7 +2885,7 @@ msgstr "รายการราคา"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "รายการราคา"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2876,7 +2912,7 @@ msgstr "ใบแจ้งหนี้ Pro-Forma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "ใบแจ้งหนี้ Pro Forma #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2951,14 +2987,14 @@ msgstr "ตัวแปรสินค้า"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "ราคาสินค้าได้รับการคำนวณใหม่ตามรายการราคา %s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
+msgstr "ภาษีของสินค้าได้รับการคำนวณใหม่ตามสถานะทางบัญชี%s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3019,7 +3055,7 @@ msgstr "ปริมาณ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "ปริมาณในใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
@@ -3067,7 +3103,7 @@ msgstr "วันที่เสนอราคา"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "วันที่เสนอราคา:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3164,7 +3200,7 @@ msgstr "คำนวณราคาใหม่ทั้งหมดตามร
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "คำนวณภาษีทั้งหมดใหม่ตามสถานะทางบัญชีนี้"
 
 #. module: sale
 #. odoo-python
@@ -3176,7 +3212,7 @@ msgstr "การอ้างอิง"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "การอ้างอิงเอกสารที่สร้างคำขอใบสั่งขายนี้"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3209,6 +3245,8 @@ msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
 msgstr ""
+"ขอลายเซ็นออนไลน์ และ/หรือ ขอการชำระเงินกับลูกค้า "
+"เพื่อยืนยันคำสั่งซื้อโดยอัตโนมัติ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3285,7 +3323,7 @@ msgstr "คำสั่งขาย"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "โปรแกรมการเริ่มต้นใช้งานผู้ให้บริการชำระเงินการขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3453,6 +3491,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"รายการในใบสั่งขายที่จะใช้เวลาเพิ่มเพื่อออกใบแจ้งหนี้ให้กับลูกค้าของคุณ "
+"ลบรายการใบสั่งขายสำหรับรายการแผ่นเวลาที่ไม่สามารถเรียกเก็บเงินได้"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3462,17 +3502,17 @@ msgstr "ราคาขาย"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "การขาย: การยกเลิกคำสั่งซื้อ"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "การขาย: การยืนยันคำสั่งซื้อ"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "การขาย: ส่งใบเสนอราคา"
 
 #. module: sale
 #. odoo-python
@@ -3585,7 +3625,7 @@ msgstr "ส่งใบเสนอราคาเพื่อทดสอบพ
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "ส่งและยกเลิก"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3600,7 +3640,7 @@ msgstr "ส่งตัวอย่าง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "ตัวเชื่อมต่อ Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3616,12 +3656,12 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
-msgstr ""
+msgstr "ส่งให้กับลูกค้าโดยอัตโนมัติเมื่อคุณยกเลิกคำสั่งซื้อ"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "ส่งให้ลูกค้าตามการยืนยันการสั่งซื้อ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3679,7 +3719,7 @@ msgstr "แสดงอัตราส่วนบนคำสั่ง"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "เซ็น & ชำระใบเสนอราคา"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3840,7 +3880,7 @@ msgstr "ภาษีทั้งหมด"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "ภาษีทั้งหมด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3964,6 +4004,7 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"วันที่จัดส่งเร็วกว่าวันที่คาดไว้ คุณอาจไม่สามารถปฏิบัติตามวันที่จัดส่งได้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3990,6 +4031,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"ใบแจ้งหนี้จะถูกสร้างขึ้นโดยอัตโนมัติและพร้อมใช้งานในพอร์ทัลลูกค้า เมื่อธุรกรรมได้รับการยืนยันโดยผู้รับการชำระเงิน\n"
+"ใบแจ้งหนี้ถูกทำเครื่องหมายว่าชำระเงินแล้ว และการชำระเงินจะถูกลงทะเบียนในสมุดรายวันการชำระเงินที่กำหนดไว้ในการกำหนดค่าของผู้ให้บริการการชำระเงิน\n"
+"แนะนำให้ใช้โหมดนี้หากคุณออกใบแจ้งหนี้ครั้งสุดท้ายตามคำสั่งซื้อ ไม่ใช่หลังการจัดส่ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4043,6 +4087,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"สินค้าที่ใช้ในการออกใบแจ้งหนี้การชำระเงินดาวน์ควรมีการกำหนดนโยบายใบแจ้งหนี้เป็น"
+" \"จำนวนคำสั่งซื้อ\" "
+"โปรดอัปเดตเงินมัดจำสินค้าของคุณเพื่อให้สามารถสร้างใบแจ้งหนี้มัดจำได้"
 
 #. module: sale
 #. odoo-python
@@ -4081,6 +4128,11 @@ msgid ""
 "- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"ไม่มีรายการให้ออกใบแจ้งหนี้!\n"
+"\n"
+"สาเหตุของพฤติกรรมนี้อาจเป็น:\n"
+"- คุณควรส่งสินค้าของคุณก่อนที่จะออกใบแจ้งหนี้\n"
+"- คุณควรแก้ไขนโยบายการออกใบแจ้งหนี้ของสินค้าของคุณ: เปิดสินค้า ไปที่แท็บ \"การขาย\" และแก้ไขนโยบายการออกใบแจ้งหนี้จาก \"จำนวนที่จัดส่ง\" เป็น \"จำนวนคำสั่งซื้อ\" สำหรับบริการ คุณควรแก้ไขนโยบายการออกใบแจ้งหนี้บริการเป็น 'ชำระล่วงหน้า'"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4194,7 +4246,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
-msgstr ""
+msgstr "สิ่งนี้จะอัปเดตภาษีทั้งหมดตามสถานะทางบัญชีที่เลือกในปัจจุบัน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4400,7 +4452,7 @@ msgstr "อัปเดตราคา"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "อัปเดตภาษี"
 
 #. module: sale
 #. odoo-python
@@ -4419,6 +4471,7 @@ msgstr "เพิ่มโอกาสในการขายต่อยอด
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"ใช้โดยพนักงานขาย เมื่อส่งใบเสนอราคาหรือตัวอย่างไปยังผู้มีโอกาสเป็นลูกค้า"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4440,7 +4493,7 @@ msgstr "ตารางรายการตัวแปร"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Order"
-msgstr ""
+msgstr "ดูคำสั่งซื้อ"
 
 #. module: sale
 #. odoo-python
@@ -4543,6 +4596,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"คุณสามารถเลือกคำสั่งซื้อทั้งหมดและออกใบแจ้งหนี้เป็นชุด<br>\n"
+"           หรือตรวจสอบทุกคำสั่งซื้อและออกใบแจ้งหนี้ทีละรายการ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -4562,7 +4617,7 @@ msgstr ""
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
-msgstr ""
+msgstr "คุณไม่สามารถเปลี่ยนประเภทสินค้าได้เนื่องจากมีการใช้งานในใบสั่งขายแล้ว"
 
 #. module: sale
 #. odoo-python
@@ -4624,7 +4679,7 @@ msgstr ""
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้อัตโนมัติ: ส่งใบแจ้งหนี้ที่พร้อม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4683,3 +4738,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
+"object.name or 'n/a' }})"

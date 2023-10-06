@@ -29,13 +29,26 @@ class AccountEdiFormat(models.Model):
             return journal.company_id.country_id.code == 'IN'
         return super()._is_enabled_by_default_on_journal(journal)
 
+    def _get_l10n_in_base_tags(self):
+        return (
+           self.env.ref('l10n_in.tax_tag_base_sgst').ids
+           + self.env.ref('l10n_in.tax_tag_base_cgst').ids
+           + self.env.ref('l10n_in.tax_tag_base_igst').ids
+           + self.env.ref('l10n_in.tax_tag_base_cess').ids
+           + self.env.ref('l10n_in.tax_tag_zero_rated').ids
+           + self.env.ref("l10n_in.tax_tag_exempt").ids
+           + self.env.ref("l10n_in.tax_tag_nil_rated").ids
+           + self.env.ref("l10n_in.tax_tag_non_gst_supplies").ids
+        )
+
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
         if self.code != 'in_einvoice_1_03':
             return super()._get_move_applicability(move)
-
-        if move.is_sale_document() and move.country_code == 'IN' and move.l10n_in_gst_treatment in (
+        all_base_tags = self._get_l10n_in_base_tags()
+        is_under_gst = any(move_line_tag.id in all_base_tags for move_line_tag in move.line_ids.tax_tag_ids)
+        if move.is_sale_document(include_receipts=True) and move.country_code == 'IN' and is_under_gst and move.l10n_in_gst_treatment in (
             "regular",
             "composition",
             "overseas",
@@ -70,12 +83,18 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
+        all_base_tags = self._get_l10n_in_base_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
                 if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
                     raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
                                   "Please create a credit note instead."))
+            if line.display_type == 'product' and line.discount < 0:
+                error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
+            if not line.tax_tag_ids or not any(move_line_tag.id in all_base_tags for move_line_tag in line.tax_tag_ids):
+                error_message.append(_(
+                    """Set an appropriate GST tax on line "%s" (if it's zero rated or nil rated then select it also)""", line.product_id.name))
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:

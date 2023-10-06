@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr "イベント：リマインダ"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "イベントカテゴリのメール予約"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_reminder
@@ -81,3 +82,5 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: イベント {{ object.event_id.name }} へのご登録が完了しました。"

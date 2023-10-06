@@ -6,6 +6,7 @@
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    ไม่พบเหตุการณ์สำคัญ มาสร้างกันเถอะ!\n"
+"                </p><p>\n"
+"                    ติดตามคะแนนความก้าวหน้าที่สำคัญเพื่อให้ไปถึงความสำเร็จ\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
@@ -62,14 +70,14 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
-msgstr ""
+msgstr "โหลดรายการทั้งหมดแล้ว"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "ขึ้นอยู่กับปริมาณที่จัดส่ง (ด้วยตนเอง)"
 
 #. module: sale_project
 #. odoo-python
@@ -120,7 +128,7 @@ msgstr "คำอธิบาย"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "แสดงคำสั่งขาย"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -145,7 +153,7 @@ msgstr "มี SO เพื่อออกใบแจ้งหนี้"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
 msgid "Has a SO with an invoice status of No"
-msgstr ""
+msgstr "มี SO ที่มีสถานะใบแจ้งหนี้เป็นเลขที่"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
@@ -168,6 +176,8 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
+"ออกใบแจ้งหนี้ตามจำนวนที่สั่งทันทีที่มีการขายบริการนี้ "
+"สร้างโปรเจกต์สำหรับคำสั่งที่มีการระบุงานสำหรับแต่ละบรรทัดคำสั่งขายเพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_project
 #. odoo-python
@@ -177,6 +187,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
 msgstr ""
+"ออกใบแจ้งหนี้ทันทีที่ขายบริการนี้ "
+"สร้างงานในโปรเจกต์ที่มีอยู่เพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #. odoo-python
@@ -186,6 +198,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"ออกใบแจ้งหนี้ตามจำนวนที่สั่งทันทีที่มีการขายบริการนี้ "
+"สร้างโปรเจกต์ที่ว่างเปล่าสำหรับคำสั่งเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #. odoo-python
@@ -195,6 +209,8 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). "
 msgstr ""
+"ออกใบแจ้งหนี้บริการนี้เมื่อมีการจัดส่ง "
+"(ตั้งค่าปริมาณด้วยตนเองในรายการใบสั่งขายของคุณ)"
 
 #. module: sale_project
 #. odoo-python
@@ -205,6 +221,9 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"ออกใบแจ้งหนี้บริการนี้เมื่อมีการจัดส่ง "
+"(ตั้งค่าปริมาณด้วยตนเองในรายการใบสั่งขายของคุณ) "
+"สร้างโปรเจกต์สำหรับใบสั่งพร้อมงานสำหรับรายการใบสั่งขายแต่ละรายการเพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_project
 #. odoo-python
@@ -215,6 +234,9 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"ออกใบแจ้งหนี้บริการนี้เมื่อมีการจัดส่ง "
+"(ตั้งค่าปริมาณด้วยตนเองในรายการใบสั่งขายของคุณ) "
+"สร้างงานในโปรเจกต์ที่มีอยู่เพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_project
 #. odoo-python
@@ -225,13 +247,16 @@ msgid ""
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
 msgstr ""
+"ออกใบแจ้งหนี้บริการนี้เมื่อมีการจัดส่ง "
+"(ตั้งค่าปริมาณด้วยตนเองในรายการใบสั่งขายของคุณ) "
+"สร้างโปรเจกต์ว่างเปล่าสำหรับคำสั่งซื้อเพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "ออกใบแจ้งหนี้จากเหตุการณ์สำคัญของคุณเมื่อบรรลุเป้าหมายแล้ว"
 
 #. module: sale_project
 #. odoo-python
@@ -241,6 +266,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
+"ออกใบแจ้งหนี้เหตุการณ์สำคัญของคุณเมื่อบรรลุเป้าหมาย "
+"สร้างโปรเจกต์สำหรับคำสั่งพร้อมงานสำหรับรายการใบสั่งขายแต่ละรายการเพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_project
 #. odoo-python
@@ -250,6 +277,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"ออกใบแจ้งหนี้จากเหตุการณ์สำคัญของคุณเมื่อบรรลุเป้าหมายแล้ว "
+"สร้างงานในโปรเจกต์ที่มีอยู่เพื่อติดตามเวลาที่ใช้"
 
 #. module: sale_project
 #. odoo-python
@@ -259,6 +288,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
 msgstr ""
+"ออกใบแจ้งหนี้จากเหตุการณ์สำคัญของคุณเมื่อบรรลุเป้าหมายแล้ว "
+"สร้างโปรเจ็กต์ว่างเปล่าสำหรับคำสั่งซื้อเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -288,7 +319,7 @@ msgstr "นโยบายการแจ้งหนี้"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
 msgid "Is Product Milestone"
-msgstr ""
+msgstr "เป็นเหตุการณ์สำคัญของสินค้า"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -334,7 +365,7 @@ msgstr "วิธีการอัปเดตจำนวนที่จัด
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "จำนวนเหตุการณ์สำคัญ"
 
 #. module: sale_project
 #. odoo-python
@@ -343,7 +374,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "เหตุการณ์สำคัญ"
 
 #. module: sale_project
 #. odoo-python
@@ -355,7 +386,7 @@ msgstr "ใหม่"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order"
-msgstr ""
+msgstr "ไม่มีคำสั่งขาย"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
@@ -366,7 +397,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Non-billable"
-msgstr ""
+msgstr "ไม่สามารถเรียกเก็บเงินได้"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -390,6 +421,13 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "ไม่รองรับการดำเนินการ"
+
+#. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
@@ -408,6 +446,7 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+"เปอร์เซ็นต์ของปริมาณที่สั่งซื้อซึ่งจะถูกจัดส่งโดยอัตโนมัติเมื่อบรรลุเป้าหมายแล้ว"
 
 #. module: sale_project
 #. odoo-python
@@ -443,12 +482,12 @@ msgstr "โปรเจกต์และงาน"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "เหตุการณ์สำคัญของโปรเจกต์"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "เหตุการณ์สำคัญของโปรเจกต์"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -483,7 +522,7 @@ msgstr "ปริมาณ"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr ""
+msgstr "บรรลุเหตุการณ์สำคัญแล้ว"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -506,7 +545,7 @@ msgstr "การขาย"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "การขาย & การออกใบแจ้งหนี้"
 
 #. module: sale_project
 #. odoo-python
@@ -545,7 +584,7 @@ msgstr "รายการคำสั่งขาย"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "รายการใบสั่งขายที่จะมีการอัปเดตเมื่อบรรลุเหตุการณ์สำคัญ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -554,6 +593,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"เวลาที่ใช้ในงานของรายการใบสั่งขายนี้จะถูกเพิ่มเพื่อที่จะออกใบแจ้งหนี้ให้กับลูกค้าของคุณ\n"
+"ตามค่าเริ่มต้น รายการใบสั่งขายที่ตั้งค่าไว้ในโปรเจกต์จะถูกเลือก หากไม่มีรายการใดรายการหนึ่ง ระบบจะใช้รายการใบสั่งขายแบบชำระเงินล่วงหน้าล่าสุดที่มีเวลาคงเหลือ\n"
+"ลบรายการในใบสั่งขายเพื่อทำให้งานนี้ไม่สามารถเรียกเก็บเงินได้ คุณยังสามารถเปลี่ยนแปลงหรือลบรายการใบสั่งขายของแต่ละรายการในระบบบันทึกเวลาทีละรายการได้"
 
 #. module: sale_project
 #. odoo-javascript
@@ -582,6 +624,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"รายการในใบสั่งขายที่จะถูกเลือกตามค่าเริ่มต้นในงานและระบบบันทึกเวลาของโปรเจกต์นี้ ยกเว้นว่าพนักงานที่ตั้งค่าไว้ในระบบบันทึกเวลาจะเชื่อมโยงอย่างชัดเจนกับรายการในใบสั่งขายอื่นในโปรเจกต์\n"
+"สามารถแก้ไขได้ในแต่ละงานและรายการบันทึกเวลาจะแยกกันหากจำเป็น"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -644,7 +688,7 @@ msgstr "งาน"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
-msgstr ""
+msgstr "สร้างงานแล้ว (%s): %s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -700,7 +744,7 @@ msgstr "สินค้า %s ไม่ควรมีเทมเพลตโ�
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
-msgstr ""
+msgstr "งานนี้ถูกสร้างขึ้นจาก: %s (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice

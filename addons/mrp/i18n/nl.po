@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 " * Concept: de productieorder is nog niet bevestigd.\n"
 "* Bevestigd: de productieorder is bevestigd, de voorraadregels en de bestelling van de onderdelen worden getriggerd.\n"
-"* In uitvoering: De productie is gestart (op de productieorder of op de werkorder).\n"
+"* In behandeling: De productie is gestart (op de productieorder of op de werkorder).\n"
 "* Te sluiten: de productie is klaar, de productieorder moet worden gesloten.\n"
 "* Klaar: de productieorder is gesloten, de voorraadbewegingen zijn geboekt.\n"
 "* Geannuleerd: de productieorder is geannuleerd, kan niet meer worden bevestigd."
@@ -1950,12 +1950,12 @@ msgstr "Bewerken"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_type
 msgid "Effectiveness"
-msgstr "Doeltreffendheid"
+msgstr "Effectiviteit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_type
 msgid "Effectiveness Category"
-msgstr "Doeltreffendheidscategorie"
+msgstr "Effectiviteitscategorie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_finished
@@ -2105,7 +2105,7 @@ msgstr "Locatie eindproducten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 msgid "Flexible Consumption"
-msgstr "Soepele consumptie"
+msgstr "Flexibel verbruik"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_follower_ids
@@ -2471,7 +2471,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "In Progress"
-msgstr "In uitvoering"
+msgstr "In behandeling"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
@@ -3296,7 +3296,7 @@ msgstr "Geen werkorders te doen!"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
-"Er zijn geen werkorders in uitvoering. Klik om de werkplek om ze als "
+"Er zijn geen werkorders in behandeling. Klik om de werkplek om ze als "
 "geblokkeerd te markeren."
 
 #. module: mrp
@@ -5694,6 +5694,18 @@ msgid "Validate"
 msgstr "Bevestigen"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"Waarden kunnen niet worden ingesteld en gevalideerd omdat een partij/serienummer moet worden opgegeven voor een getraceerd product waarvan de verbruikte hoeveelheid wordt verhoogd:\n"
+"- "
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -6063,7 +6075,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr "Werkorders in uitvoering. Klik om een werkplek te blokkeren."
+msgstr "Werkorders in behandeling. Klik om een werkplek te blokkeren."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
@@ -6428,13 +6440,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Je dient een partijnummer in te voeren voor het eindproduct."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "Je moet een partij/serienummer opgeven"
 
 #. module: mrp
 #. odoo-python

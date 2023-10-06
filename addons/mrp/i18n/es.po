@@ -1313,6 +1313,10 @@ msgid ""
 "                                       Also note that purchase security lead"
 " times will be added when appropriate."
 msgstr ""
+"Calcula los días necesarios para reabastecer todos los componentes de la "
+"LdM, ya sea comprando o fabricando los componentes y/o subensamblajes."
+"                                       También tenga en cuenta que los "
+"plazos de seguridad de compra se agregarán cuando sea adecuado."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1510,6 +1514,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"Cree y confirme órdenes de producción con estos días de antelación, para tener tiempo suficiente para reabastecer componentes o fabricar productos semielaborados.\n"
+"Tenga en cuenta que los plazos de seguridad también se considerarán cuando sea adecuado."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -4618,7 +4624,7 @@ msgstr "Mostrar líneas de órdenes parciales"
 #: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
 #, python-format
 msgid "Slides viewer"
-msgstr ""
+msgstr "Visor de diapositivas"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -4702,13 +4708,14 @@ msgstr "Ubicación de origen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Specific Capacities"
-msgstr ""
+msgstr "Capacidades específicas"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
 msgid ""
 "Specific number of pieces that can be produced in parallel per product."
 msgstr ""
+"Número específico de piezas por producto que se pueden producir en paralelo."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -4719,40 +4726,40 @@ msgstr "Dividir"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
 msgid "Split #"
-msgstr ""
+msgstr "Nº de divisiones"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
 msgid "Split Details"
-msgstr ""
+msgstr "Detalles de división"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Production"
-msgstr ""
+msgstr "Dividir producción"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_line
 msgid "Split Production Detail"
-msgstr ""
+msgstr "Detalle de división de producción"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Productions"
-msgstr ""
+msgstr "Dividir producciones"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split
 msgid "Split production"
-msgstr ""
+msgstr "Dividir producción"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
-msgstr ""
+msgstr "Dividir producciones"
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
@@ -5079,6 +5086,8 @@ msgstr ""
 msgid ""
 "The quantity already produced awaiting allocation in the backorders chain."
 msgstr ""
+"La cantidad ya producida está en espera de asignación en la cadena de "
+"órdenes parciales."
 
 #. module: mrp
 #. odoo-python
@@ -5232,7 +5241,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "This production has been merge in %s"
-msgstr ""
+msgstr "Esta producción se fusionó en %s"
 
 #. module: mrp
 #. odoo-python
@@ -5256,6 +5265,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
+"Ésta debe ser la cantidad más pequeña que se puede producir de este "
+"producto. Si la LdM contiene operaciones, asegúrese de que la capacidad del "
+"centro de trabajo sea precisa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5287,12 +5299,12 @@ msgstr "Registro de tiempo: %(user)s"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Additional time in minutes for the cleaning."
-msgstr ""
+msgstr "Tiempo adicional en minutos para la limpieza. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Additional time in minutes for the setup."
-msgstr ""
+msgstr "Tiempo adicional en minutos para la configuración. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5646,12 +5658,12 @@ msgstr "URL"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
 msgid "Use Operation Dependencies"
-msgstr ""
+msgstr "Utilizar dependencias en las operaciones"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
-msgstr ""
+msgstr "Utilizar el informe de recepción con las órdenes de producción"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -5689,6 +5701,19 @@ msgid "Validate"
 msgstr "Validar"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+"Los valores no pueden ser establecidos y validados porque el número de "
+"serie/lote necesita ser especificado para un producto con trazabilidad que "
+"ha sido consumido."
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -5713,7 +5738,7 @@ msgstr "Ver y asignar cantidades fabricadas"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Visibility Days applied on the manufacturing routes."
-msgstr ""
+msgstr "Días de visibilidad aplicados a las rutas de fabricación."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -5831,6 +5856,8 @@ msgid ""
 "When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
+"Cuando se activa, el registro de consumo para ese componente se registra exclusivamente de forma manual.\n"
+"Si no se activa y el consumo de cualquier componente se edita manualmente en la orden de fabricación, Odoo asume también el consumo manual."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -5881,12 +5908,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
 msgid "Wizard to Split Multiple Productions"
-msgstr ""
+msgstr "Asistente para dividir múltiples producciones"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split
 msgid "Wizard to Split a Production"
-msgstr ""
+msgstr "Asistente para dividir una producción"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
@@ -5916,7 +5943,7 @@ msgstr "Centro de producción"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_capacity
 msgid "Work Center Capacity"
-msgstr ""
+msgstr "Capacidad del centro de trabajo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workcenter_load
@@ -5975,7 +6002,7 @@ msgstr "Orden de trabajo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
 msgid "Work Order Dependencies"
-msgstr ""
+msgstr "Dependencias de la orden de trabajo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -6188,6 +6215,8 @@ msgstr ""
 msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
 msgstr ""
+"Solo puede fusionar órdenes de producción de productos idénticos con la "
+"misma LdM."
 
 #. module: mrp
 #. odoo-python
@@ -6197,6 +6226,8 @@ msgid ""
 "You can only merge manufacturing orders with no additional components or by-"
 "products."
 msgstr ""
+"Solo puede fusionar órdenes de producción sin componentes adicionales o "
+"subproductos."
 
 #. module: mrp
 #. odoo-python
@@ -6204,13 +6235,14 @@ msgstr ""
 #, python-format
 msgid "You can only merge manufacturing with the same operation type"
 msgstr ""
+"Solo puede fusionar órdenes de producción con el mismo tipo de operación"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can only merge manufacturing with the same state."
-msgstr ""
+msgstr "Solo puede fusionar órdenes de producción con el mismo estado."
 
 #. module: mrp
 #. odoo-python
@@ -6362,7 +6394,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need at least two production orders to merge them."
-msgstr ""
+msgstr "Necesita al menos dos órdenes de producción para poder fusionarlas."
 
 #. module: mrp
 #. odoo-python
@@ -6409,13 +6441,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Debe proporcionar un lote para el producto terminado."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6505,7 +6530,7 @@ msgstr "orden de producción"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "merged"
-msgstr ""
+msgstr "fusionadas"
 
 #. module: mrp
 #. odoo-python
@@ -6552,7 +6577,7 @@ msgstr "duración real"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "split"
-msgstr ""
+msgstr "divididas"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

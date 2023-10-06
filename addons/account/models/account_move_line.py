@@ -483,7 +483,6 @@ class AccountMoveLine(models.Model):
                     values.append(product.description_purchase)
             line.name = '\n'.join(values)
 
-    @api.depends('display_type', 'company_id')
     def _compute_account_id(self):
         term_lines = self.filtered(lambda line: line.display_type == 'payment_term')
         if term_lines:

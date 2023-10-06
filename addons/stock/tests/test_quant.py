@@ -519,7 +519,7 @@ class StockQuant(TransactionCase):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'quantity': 3.0})
+        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'inventory_quantity': 3.0})
         with self.assertRaises(AccessError):
             quant.with_user(self.stock_user).unlink()
 
@@ -895,3 +895,25 @@ class StockQuant(TransactionCase):
         quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.lot_id.name, 'Michel')
+
+    def test_update_quant_with_forbidden_field(self):
+        """
+        Test that updating a quant with a forbidden field raise an error.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        sn1 = self.env['stock.lot'].create({
+            'name': 'SN1',
+            'product_id': product.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product, self.stock_subloc2, 1.0, lot_id=sn1)
+        self.assertEqual(len(product.stock_quant_ids), 1)
+        self.env['stock.quant']._update_available_quantity(product, self.stock_subloc3, 1.0, lot_id=sn1)
+        self.assertEqual(len(product.stock_quant_ids), 2)
+        quant_2 = product.stock_quant_ids[1]
+        self.assertEqual(quant_2.with_context(inventory_mode=True).sn_duplicated, True)
+        with self.assertRaises(UserError):
+            quant_2.with_context(inventory_mode=True).write({'location_id': self.stock_subloc2})

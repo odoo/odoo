@@ -193,7 +193,8 @@ class PosOrder(models.Model):
             order.add_payment(return_payment_vals)
 
     def _prepare_invoice_line(self, order_line):
-        name = order_line.product_id.get_product_multiline_description_sale()
+        #apply customer language on invoice
+        name = order_line.product_id.with_context(lang=order_line.order_id.partner_id.lang or self.env.user.lang).get_product_multiline_description_sale()
         return {
             'product_id': order_line.product_id.id,
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
@@ -271,7 +272,7 @@ class PosOrder(models.Model):
 
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
-        'Status', readonly=True, copy=False, default='draft')
+        'Status', readonly=True, copy=False, default='draft', index=True)
 
     account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index="btree_not_null")
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
@@ -779,8 +780,8 @@ class PosOrder(models.Model):
                     'name': f"{reversed_move_receivable_account_id.code} {reversed_move_receivable_account_id.code}",
                     'account_id': reversed_move_receivable_account_id.id,
                     'currency_id': self.currency_id.id,
-                    'amount_currency': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
-                    'balance': payment_id.amount,
+                    'amount_currency': payment_id.amount,
+                    'balance': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
                 })
 
         return aml_vals_list_per_nature
@@ -889,13 +890,45 @@ class PosOrder(models.Model):
         """
         order_ids = []
         for order in orders:
-            existing_order = False
-            if 'server_id' in order['data']:
-                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
-            if (existing_order and existing_order.state == 'draft') or not existing_order:
-                order_ids.append(self._process_order(order, draft, existing_order))
+            existing_draft_order = None
+
+            if 'server_id' in order['data'] and order['data']['server_id']:
+                # if the server id exists, it must only search based on the id
+                existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
+
+                # if there is no draft order, skip processing this order
+                if not existing_draft_order:
+                    continue
+
+            if not existing_draft_order:
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
+
+            if existing_draft_order:
+                order_ids.append(self._process_order(order, draft, existing_draft_order))
+            else:
+                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
+                if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                    order_ids.append(self._process_order(order, draft, False))
 
         return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+
+    def _is_the_same_order(self, data, existing_order):
+        received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]
+        existing_payments = [(p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
+
+        if not all(received_payment in existing_payments for received_payment in received_payments):
+            return False
+
+        if len(data['lines']) != len(existing_order.lines):
+            return False
+
+        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+
+        if received_lines != existing_lines:
+            return False
+
+        return True
 
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)

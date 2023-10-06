@@ -530,6 +530,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         await Promise.all(proms).then(() => {
             $allLinksIframe.remove();
         });
+
+        // TODO review naming in master (to not call an event handler like that)
+        this._onColorPreviewsUpdate();
+
         if (event.data.onSuccess) {
             return event.data.onSuccess();
         }

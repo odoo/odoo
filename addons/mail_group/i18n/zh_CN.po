@@ -7,6 +7,7 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                您好，<br><br>\n"
+"                您已申请订阅邮件列表<strong t-out=\"object.name or ''\"></strong>。\n"
+"                <br><br>\n"
+"                如需确认，请访问以下链接：<strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                如果操作有误，或您未进行此操作，请忽略此消息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -63,6 +73,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"</div>\n"
+"                您好，<br><br>\n"
+"                您已申请退订邮件列表<strong t-out=\"object.name or ''\"></strong>。\n"
+"                <br><br>\n"
+"                如需确认，请访问以下链接：<strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                如果操作有误，或您未进行此操作，请忽略此消息。\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -74,6 +93,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>您好<t t-out=\"object.partner_id.name or ''\"></t>，</p>\n"
+"                <p>以下是 {{ object.mail_group_id.name }} 邮件列表的指导原则。</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message

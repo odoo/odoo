@@ -170,7 +170,7 @@ msgstr "数量"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "FNC1 セパレータ代替は有効な正規表現ではありません:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -181,13 +181,16 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"GS1コンテンツタイプは、規則がバーコードをどのようなデータとして処理するかを定義します:　　 * 日付: "
+"バーコードはOdooの日時に変換されます。*値: バーコードの値は、特定の単位に関連しています。    *数値識別子:  "
+"特定のエンコーディングに従った固定長のバーコード。     *アルファ-数字名: 可変長のバーコード。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
-msgstr ""
+msgstr "規則パターン \"%s\" は有効な正規表現ではありません:"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -198,6 +201,9 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"ルールパターン \"%s\" は無効であり、2つのグループが必要です:\n"
+"\t- 1つ目はアプリケーション識別子用 (通常2から4桁);\n"
+"\t- 2つ目は値を捉える用"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -208,6 +214,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"バーコード規則の\"%s\"パターンが不適切です。\n"
+"この規則が10進数を使用している場合、アプリケーション識別子の最後の文字が数字以外になっていないか確認して下さい。\n"
+"また、一致する可能性のある値が数字のみであることも確認して下さい。そうでなければ、値を測定単位として型変換することができません。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -215,21 +224,21 @@ msgstr ""
 msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
-msgstr ""
+msgstr "この命名法はGS1仕様を使用しており、GS1-128エンコーディング規則のみがこの種の命名法として認められています。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr ""
+msgstr "このバーコードはどのバーコード規則でも解析できません。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."
-msgstr ""
+msgstr "このバーコードは一部または全部を解析できません。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

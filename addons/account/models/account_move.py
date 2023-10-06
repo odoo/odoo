@@ -2217,7 +2217,6 @@ class AccountMove(models.Model):
                     (command, _id, line_vals)
                     for command, _id, line_vals in data['line_ids']
                     if command == Command.CREATE
-                    and line_vals.get('display_type') not in ('payment_term', 'tax', 'rounding')
                 ]
             elif move.move_type == 'entry':
                 if 'partner_id' not in data:

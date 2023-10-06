@@ -41,14 +41,14 @@ msgstr "＃ウィッシュリスト"
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s from %(company)s"
-msgstr ""
+msgstr "%(name)s %(company)sから"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s, %(function)s at %(company)s"
-msgstr ""
+msgstr "%(name)s、%(function)s (%(company)sでの)"
 
 #. module: website_event_track
 #. odoo-python
@@ -102,17 +102,17 @@ msgstr "<b>提案者</b>:"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr ""
+msgstr "<b>スピーカーの経歴</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "<b>Speaker Profile</b>"
-msgstr ""
+msgstr "<b>スピーカーの経歴</b>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "<b>Talk Intro</b>"
-msgstr ""
+msgstr "<b>トーク紹介</b>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -140,6 +140,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"     <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t>様、<br>\n"
+"    提案<t t-out=\"object.name or ''\">イベントの全て</t>が承認され、  イベント<t t-out=\"object.event_id.name or ''\">OpenWoodコレクションオンライン発表会</t>用に確定しました。\n"
+"    <br>\n"
+"    詳細は以下よりご確認下さい。:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            トークを見る\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    宜しくお願い致します。\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -149,7 +166,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>未公開"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
+msgstr "<i class=\"fa fa-bell me-2 text-muted\"/>お気に入りトーク"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -166,7 +183,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -185,6 +202,10 @@ msgid ""
 "                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -192,6 +213,8 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
 "                                            <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">トーク紹介</span>\n"
+"                                            <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -199,6 +222,8 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
 "                                            <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">トーク題名</span>\n"
+"                                            <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -206,26 +231,28 @@ msgid ""
 "<span for=\"contact_name\">Name</span>\n"
 "                    <span>*</span>"
 msgstr ""
+"<span for=\"contact_name\">氏名</span>\n"
+"                    <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span>結果"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
 msgid "<span> at </span>"
-msgstr ""
+msgstr "<span> 以下にて:</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<span>New track proposal</span>"
-msgstr ""
+msgstr "<span>新規セッション提案</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -321,7 +348,7 @@ msgstr "タスクパイプラインに新しいステージを追加します"
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid ""
 "Add tags to your tracks to help your attendees browse your event web pages."
-msgstr ""
+msgstr "セッションにタグを追加して、参加者がイベントのウェブページを閲覧しやすくしましょう。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -355,7 +382,7 @@ msgstr "トラック提案を許可"
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Allow push notifications?"
-msgstr ""
+msgstr "プッシュ通知を許可しますか？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -393,6 +420,7 @@ msgid ""
 "As key track cannot be un-favorited, this field store the partner choice to "
 "remove the reminder for key tracks."
 msgstr ""
+"キーセッションをお気に入りから外すことはできないため、このフィールドには、キーセッションのリマインダを削除するパートナーの選択肢が保存されます。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -558,7 +586,7 @@ msgstr "コンフィグ設定"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr ""
+msgstr " {{ object.name }}の確認"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -594,7 +622,7 @@ msgstr "コンタクトの詳細"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
 #, python-format
 msgid "Contact Email"
-msgstr ""
+msgstr "連絡先Eメール"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
@@ -609,7 +637,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact me through a different email/phone"
-msgstr ""
+msgstr "別のEメール/電話から連絡をする"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
@@ -625,17 +653,17 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Create a Track"
-msgstr ""
+msgstr "セッションを作成"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
 msgid "Create a Track Location"
-msgstr ""
+msgstr "セッションロケーションを作成"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid "Create a Track Tag"
-msgstr ""
+msgstr "セッションタグを作成"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -685,12 +713,12 @@ msgstr "OpenWood家具の取り扱い"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Define labels explaining kanban state management."
-msgstr ""
+msgstr "かんばんステータス管理を説明するラベルを定義"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr " \"アジェンダ\" ページに表示されるロケーションの順番を定義します。"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -718,7 +746,7 @@ msgstr "説明"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
 msgid "Description of the partner (name, function and company name)"
-msgstr ""
+msgstr "パートナーの定義 (名前、職位、会社名)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -755,7 +783,7 @@ msgstr "表示名"
 msgid ""
 "Display a Call to Action button to your Attendees while they watch your "
 "Track."
-msgstr ""
+msgstr "セッション視聴中に行動を促すボタンを表示しましょう。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -892,7 +920,7 @@ msgstr "イベントのまとめ"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "イベント: セッション確認"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
@@ -967,7 +995,7 @@ msgstr "フォーマット"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
 msgid "Fully accessible"
-msgstr ""
+msgstr "フルアクセス可能"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1043,7 +1071,7 @@ msgstr "世界文化の家"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "How can our team get in touch with you?"
-msgstr ""
+msgstr "当社のチームからどのように連絡を取ればよろしいでしょうか？"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
@@ -1110,7 +1138,7 @@ msgstr "例外的なアクティビティを示唆するアイコン"
 msgid ""
 "If checked, automatically publish tracks so that access links to customers "
 "are provided."
-msgstr ""
+msgstr "チェックした場合、自動的にセッションを公開し、顧客へのアクセスリンクを提供します。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1126,7 +1154,7 @@ msgstr "チェックした場合、一部のメッセージで配信エラーが
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "If checked, the related tracks will be visible in the frontend."
-msgstr ""
+msgstr "チェックすると、関連するセッションがフロントエンドに表示されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -1140,7 +1168,7 @@ msgstr "設定すると、トラックがこのステップに到達したとき
 msgid ""
 "If set, the talk will be set as favorite for each attendee registered to the"
 " event."
-msgstr ""
+msgstr "設定された場合、イベントに登録された参加者ごとにトークがお気に入りに設定されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
@@ -1425,7 +1453,7 @@ msgstr "センターマーキングゲージの作成"
 msgid ""
 "Manage from here the places where you organize your tracks (e.g. Rooms, "
 "Channels, ...)."
-msgstr ""
+msgstr "セッションを整理する場所はここから管理できます (例:部屋、チャンネル、...)"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1538,19 +1566,19 @@ msgstr "次の活動タイプ"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid "No Track Visitors yet!"
-msgstr ""
+msgstr "まだ表示可能なセッションがありません！"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "No results found"
-msgstr ""
+msgstr "結果が見つかりません。"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
 msgid "No track favorited by this visitor"
-msgstr ""
+msgstr "この訪問者がお気に入りに登録したセッションはありません。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -1625,7 +1653,7 @@ msgstr "お気に入りのトークをウィッシュリストに追加して、
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please enter either a contact email address or a contact phone number."
-msgstr ""
+msgstr "連絡先Eメールアドレスまたは連絡先電話番号のいずれかを入力して下さい。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1783,14 +1811,14 @@ msgstr "輸送中の木材の保護"
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "Select categories"
-msgstr ""
+msgstr "カテゴリを選択"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "Sent to speakers whose track proposal is accepted (set the template on the "
 "right stage)"
-msgstr ""
+msgstr "セッション提案が受理されたスピーカーに送付 (右ステージにテンプレートを設定)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -1832,7 +1860,7 @@ msgstr "スピーカー"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker Bio"
-msgstr ""
+msgstr "スピーカー経歴"
 
 #. module: website_event_track
 #. odoo-python
@@ -1889,7 +1917,7 @@ msgstr "ステージ名"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "今始まります！"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -1922,7 +1950,7 @@ msgstr "提案を提出する"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
 msgid "Tag Line"
-msgstr ""
+msgstr "タグ明細"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
@@ -2036,7 +2064,7 @@ msgstr ""
 msgid ""
 "They will be created automatically once attendees start browsing your "
 "events."
-msgstr ""
+msgstr "参加者があなたのイベントを閲覧し始めると、自動的に作成されます。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2158,7 +2186,7 @@ msgstr "場所を追跡する"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Track Proposals Menu Item"
-msgstr ""
+msgstr "セッション提案メニュー項目"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
@@ -2227,7 +2255,7 @@ msgstr "トラック訪問者"
 msgid ""
 "Track Visitors store statistics on your events, including how many times "
 "tracks have been wishlisted."
-msgstr ""
+msgstr "ウィッシュリストに登録されたセッション数など、イベントに関する統計情報をセッション訪問者が保存します。"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2252,7 +2280,7 @@ msgstr "トラック"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Tracks Menu Item"
-msgstr ""
+msgstr "セッションメニュー項目"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
@@ -2318,7 +2346,7 @@ msgstr "トラックを見る"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "Visible in agenda"
-msgstr ""
+msgstr "アジェンダに表示"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
@@ -2349,7 +2377,7 @@ msgstr "お客様からの声"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
 msgid "Wait for visitors to add this track to their list of favorites"
-msgstr ""
+msgstr "訪問者がこのセッションをお気に入りリストに加えるのを待ちましょう"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -2373,6 +2401,13 @@ msgid ""
 "                            audience, it will be considered for\n"
 "                            inclusion in the programme."
 msgstr ""
+"学術的、商業的プロジェクトの\n"
+"　　　　　　　報告からチュートリアルや\n"
+"　　　　　　　ケーススタディまで、\n"
+"　　　　　　　幅広いプレゼンテーションを受け付けます。\n"
+"　　　　　　　プレゼンテーションの内容が\n"
+"　　　　　　　興味深く、聴衆の役に立つ可能性のあるものであれば\n"
+"　　　　　　　プログラムに含まれます。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2459,14 +2494,14 @@ msgstr "このイベントとは"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "What is your talk about?"
-msgstr ""
+msgstr "あなたのトークは何についてですか？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Who will give this talk? We will show this to attendees to showcase your "
 "talk."
-msgstr ""
+msgstr "このトークは誰が行うのですか？あなたのトークを紹介するために、参加者にこれをお見せします。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
@@ -2499,7 +2534,7 @@ msgstr "木工:どうやって始めたの'"
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "You cannot access this page."
-msgstr ""
+msgstr "このページにアクセスできません。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2508,7 +2543,7 @@ msgstr ""
 msgid ""
 "You have to enable push notifications to get reminders for your favorite "
 "tracks."
-msgstr ""
+msgstr "お気に入りのセッションのリマインダを受け取るには、プッシュ通知を有効にして下さい。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
@@ -2518,7 +2553,7 @@ msgstr "あなたはオフラインです'"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "数秒"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2528,13 +2563,13 @@ msgstr "前"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "例: \"ジョン・ドーの生まれは...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "例: \"このトークは以下についてです...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form

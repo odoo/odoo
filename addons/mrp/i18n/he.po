@@ -27,6 +27,7 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # NoaFarkash, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
+# yael terner, 2023
 # Roy Sayag, 2023
 # 
 msgid ""
@@ -1263,7 +1264,7 @@ msgstr "רכיבים"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability_state
 msgid "Components Availability State"
-msgstr ""
+msgstr "מצב זמינות רכיבים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
@@ -1458,6 +1459,8 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
+"צור הזמנה חוזרת אם אתה מצפה לעבד את המוצרים הנותרים מאוחר יותר. אל תיצור "
+"הזמנה חוזרת אם לא תעבד את המוצרים הנותרים."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
@@ -3082,7 +3085,7 @@ msgstr "שני"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_byproduct_ids
 msgid "Move Byproduct"
-msgstr ""
+msgstr "העבר תוצר לוואי"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_line_ids
@@ -3687,7 +3690,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__possible_bom_product_template_attribute_value_ids
 msgid "Possible Product Template Attribute Value"
-msgstr ""
+msgstr "ערך תכונה אפשרי של תבנית מוצר"
 
 #. module: mrp
 #. odoo-python
@@ -3895,7 +3898,7 @@ msgstr "ייצור"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_capacity
 msgid "Production Capacity"
-msgstr ""
+msgstr "קיבולת ייצור"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_date
@@ -4886,6 +4889,14 @@ msgstr "הרכיב %s לא צריך להיות זהה למוצר לייצור."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5524,6 +5535,16 @@ msgid "Validate"
 msgstr "אשר"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -6123,6 +6144,9 @@ msgid ""
 "                        Create a backorder if you expect to process the remaining quantities later.<br/>\n"
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
+"הזנת פחות מספרים סיראלים מאשר הכמות הצפויה לייצור.<br/>\n"
+"צור הזמנה חוזרת אם תרצה לעבד את המוצרים הנותרים מאוחר יותר.<br/>\n"
+"אל תיצור הזמנה חוזרת במידה ולא תרצה לעבד את שאר המוצרים."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -6192,13 +6216,6 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "אתה צריך לספק מספר אצווה עבור מוצר מוגמר."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr ""
 
 #. module: mrp
 #. odoo-python

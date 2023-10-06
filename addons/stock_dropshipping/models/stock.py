@@ -52,8 +52,8 @@ class StockPickingType(models.Model):
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 
-    def _compute_delivery_ids(self):
-        super()._compute_delivery_ids()
+    def _compute_last_delivery_partner_id(self):
+        super()._compute_last_delivery_partner_id()
         for lot in self:
             if lot.delivery_count > 0:
                 last_delivery = max(lot.delivery_ids, key=lambda d: d.date_done)

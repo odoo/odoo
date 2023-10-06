@@ -1785,7 +1785,7 @@ msgstr "Paramètres"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Setup your domain alias"
-msgstr "Configurer votre alias domain"
+msgstr "Configurer votre domaine d'alias"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__sheet_ids
@@ -2338,6 +2338,14 @@ msgstr "Vous ne pouvez pas refuser vos propres notes de frais"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr ""
+"Vous ne pouvez pas déclarer des notes de frais de différentes sociétés dans "
+"le même rapport."
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."

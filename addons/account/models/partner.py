@@ -667,3 +667,29 @@ class ResPartner(models.Model):
         :return: an array of ir.model.fields for which the user should provide values.
         """
         return []
+
+    def _merge_method(self, destination, source):
+        """
+        Prevent merging partners that are linked to already hashed journal items.
+        """
+        if self.env['account.move.line'].sudo().search([('move_id.inalterable_hash', '!=', False), ('partner_id', 'in', source.ids)], limit=1):
+            raise UserError(_('Partners that are used in hashed entries cannot be merged.'))
+        return super()._merge_method(destination, source)
+
+    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
+        """ Checks a VAT number syntactically to ensure its validity upon saving.
+        A first check is made by using the first two characters of the VAT as
+        the country code. If it fails, a second one is made using default_country instead.
+
+        :param vat_number: a string with the VAT number to check.
+        :param default_country: a res.country object
+        :param partner_is_company: True if the partner is a company, else False.
+            .. deprecated:: 16.0
+                Will be removed in 16.2
+
+        :return: The country code (in lower case) of the country the VAT number
+                 was validated for, if it was validated. False if it could not be validated
+                 against the provided or guessed country. None if no country was available
+                 for the check, and no conclusion could be made with certainty.
+        """
+        return default_country.code.lower()

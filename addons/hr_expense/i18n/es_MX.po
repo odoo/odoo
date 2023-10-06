@@ -3,11 +3,11 @@
 # 	* hr_expense
 # 
 # Translators:
-# Lucia Pacheco, 2022
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Lucia Pacheco, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-26 14:21+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,7 +203,7 @@ msgstr "Seudónimo"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
 msgid "All Approver"
-msgstr "Todos los aprobadores"
+msgstr "Aprobador total"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
@@ -2314,6 +2314,12 @@ msgstr "No puede rechazar sus propios gastos."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr "No puede incluir gastos de diferentes empresas en el mismo reporte."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
 "No puede reportar gastos para diferentes empleados en el mismo reporte."
@@ -2421,5 +2427,5 @@ msgid ""
 "The private address of the employee is required to post the expense report. "
 "Please add it on the employee form."
 msgstr ""
-"Se requiere de la dirección privada del empleado para publicar el reporte de"
-" gastos. Agréguela desde el formulario del empleado. "
+"La dirección privada del empleado es necesaria para publicar el reporte de "
+"gastos. Agréguela al formulario del empleado. "

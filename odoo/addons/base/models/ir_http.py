@@ -241,6 +241,8 @@ class IrHttp(models.AbstractModel):
             }
             lang_params['week_start'] = int(lang_params['week_start'])
             lang_params['code'] = lang
+            if lang_params["thousands_sep"]:
+                lang_params["thousands_sep"] = lang_params["thousands_sep"].replace(' ', '\N{NO-BREAK SPACE}')
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.

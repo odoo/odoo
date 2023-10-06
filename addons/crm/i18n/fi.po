@@ -11,12 +11,12 @@
 # Jukka Paulin <jukka.paulin@gmail.com>, 2022
 # Kimmo Lehtonen <leban@netzionale.com>, 2022
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
+# Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2022
 # artol <arto.leskinen@tek.fi>, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
 # Jussi Lehto <jussi@gulfeo.com>, 2022
 # Johanna Valkonen <miujohanna@gmail.com>, 2022
-# Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2022
 # Joni Winsten, 2022
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
@@ -24,11 +24,11 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -248,7 +248,7 @@ msgid ""
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
-"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> osoitteessa </span>"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> => </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -654,7 +654,7 @@ msgid ""
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
 "Koska et ole minkään myyntitiimin jäsen, sinulle näytetään <b>oletusarvoisesti ensimmäisen tiimin</b>myyntiputki.\n"
-"                                        Jotta voisit työskennellä CRM:n kanssa, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\">liityttävä tiimiin</a>."
+"                                        Jotta voisit työskennellä CRM:n kanssa, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\">liityttävä tiimiin</a>"
 
 #. module: crm
 #. odoo-python
@@ -877,7 +877,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
-msgstr "Valitse tämä hallinnoidaksesi esimyyntiprosessia mahdollisuuksilla"
+msgstr "Valitse tämä hallinnoidaksesi esimyyntiprosessia mahdollisuuksilla."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__city
@@ -1125,7 +1125,7 @@ msgstr "Maa"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Luo Liidejä/Mahdollisuuksia verkkosivusi liikenteestä."
+msgstr "Luo Liidejä/Myyntimahdollisuuksia verkkosivusi liikenteestä"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1515,7 +1515,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr "Arvio päivästä, jolloin mahdollisuus voitetaan"
+msgstr "Arvio päivästä, jolloin myyntimahdollisuus voitetaan."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1900,12 +1900,12 @@ msgstr "Onko kumppani näkyvissä"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
 msgid "Is Won Stage?"
-msgstr "Voitettu tila"
+msgstr "On Voitettu-tila?"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
 msgid "Is automated probability?"
-msgstr "Automaattinen todennäköisyys"
+msgstr "On Automaattinen todennäköisyys?"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -2205,7 +2205,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
-msgstr "Minulle vastuutetut liidit."
+msgstr "Minulle vastuutetut liidit"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2241,7 +2241,7 @@ msgstr "Liidien / myyntimahdollisuuksien määrä"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let's <b>Schedule an Activity.</b>"
-msgstr "<b>Suunnitellaan aktiviteetti</b>."
+msgstr "<b>Suunnitellaan aktiviteetti</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -2788,7 +2788,7 @@ msgstr "Avoimet mahdollisuudet"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Open Opportunity"
-msgstr "avoin mahdollisuus"
+msgstr "Avoin myyntimahdollisuus"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -2937,7 +2937,7 @@ msgstr "Yli 3 vuotta"
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_5_years
 msgid "Over 5 years "
-msgstr "Yli 5 vuotta"
+msgstr "Yli 5 vuotta "
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -3396,7 +3396,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr "Lisää uusi vaihe myyntiputkeen."
+msgstr "Lisää uusi vaihe myyntiputkeen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -3553,7 +3553,7 @@ msgstr ""
 "Tila aktiviteetin perusteella\n"
 "Myöhässä: Eräpäivä on menneisyydessä\n"
 "Tänään: Eräpäivä on tänään\n"
-"Suunniteltu: Tulevaisuudessa"
+"Suunniteltu: Tulevaisuudessa."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3764,7 +3764,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri."
+msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -3891,7 +3891,7 @@ msgstr "Tyyppiä käytetään erottamaan liidit ja mahdollisuudet toisistaan"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella"
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -4002,7 +4002,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
-msgstr ""
+msgstr "Käytä <i>Uusi-painiketta</i> tai lähetä sähköpostia osoitteeseen"
 
 #. module: crm
 #. odoo-python
@@ -4022,6 +4022,8 @@ msgstr ""
 msgid ""
 "Use the <i>New</i> button, or send an email to %s to test the email gateway."
 msgstr ""
+"Käytä <i>Uusi-painiketta</i> tai lähetä sähköpostiviesti osoitteeseen %s "
+"testataksesi sähköpostin välityspalvelinta."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4037,6 +4039,8 @@ msgstr ""
 msgid ""
 "Use the New button, or configure an email alias to test the email gateway."
 msgstr ""
+"Käytä Uusi-painiketta tai määritä sähköpostin alias-nimi "
+"sähköpostipalvelimen testaamista varten."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4266,4 +4270,4 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "unknown"
-msgstr "Tuntematon"
+msgstr "tuntematon"

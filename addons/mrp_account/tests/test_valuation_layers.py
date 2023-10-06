@@ -126,6 +126,28 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 2)
         self.assertEqual(byproduct.quantity_svl, 2)
 
+    def test_fifo_unbuild(self):
+        """ This test creates an MO and then creates an unbuild
+        orders and checks the stock valuation.
+        """
+        self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        # ---------------------------------------------------
+        #       MO
+        # ---------------------------------------------------
+        self._make_in_move(self.component, 1, 10)
+        self._make_in_move(self.component, 1, 20)
+        mo = self._make_mo(self.bom, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+        self.assertEqual(self.component.value_svl, 20)
+        # ---------------------------------------------------
+        #       Unbuild
+        # ---------------------------------------------------
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+        self.assertEqual(self.component.value_svl, 30)
+
     def test_fifo_avco_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'

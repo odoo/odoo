@@ -19,7 +19,7 @@ class StockMove(models.Model):
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
     analytic_account_line_id = fields.Many2one(
-        'account.analytic.line', copy=False)
+        'account.analytic.line', copy=False, index='btree_not_null')
 
     def _filter_anglo_saxon_moves(self, product):
         return self.filtered(lambda m: m.product_id.id == product.id)
@@ -591,11 +591,13 @@ class StockMove(models.Model):
                     cost = -1 * cost
                     am_vals.append(self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost))
             elif self._is_dropshipped_returned():
-                if cost > 0:
+                if cost > 0 and self.location_dest_id._should_be_valued():
                     am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
+                elif cost > 0:
+                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
                 else:
                     cost = -1 * cost
-                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
+                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
 
         return am_vals
 
