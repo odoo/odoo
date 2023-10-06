@@ -224,10 +224,10 @@ class AccountPayment(models.Model):
         super(AccountPayment, self - latam_checks)._compute_show_check_number()
 
     @api.constrains('check_number', 'journal_id')
-    def _constrains_check_number(self):
+    def _constrains_check_number_unique(self):
         """ Don't enforce uniqueness for third party checks"""
         third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-        return super(AccountPayment, self - third_party_checks)._constrains_check_number()
+        return super(AccountPayment, self - third_party_checks)._constrains_check_number_unique()
 
     @api.onchange('l10n_latam_check_id')
     def _onchange_check(self):
