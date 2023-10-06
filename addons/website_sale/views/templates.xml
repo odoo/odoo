@@ -1839,7 +1839,7 @@
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                                                 </div>
                                                 <div t-attf-class="mb-3 #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
-                                                    <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
+                                                    <label class="col-form-label fw-normal label-optional" for="vat">VAT</label>
                                                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                                                 </div>
