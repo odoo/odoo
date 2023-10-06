@@ -18,6 +18,7 @@ livechatRoutingMap
         "/discuss/channel/set_last_seen_message",
         "/im_livechat/cors/channel/set_last_seen_message"
     )
+    .add("/mail/attachment/delete", "/im_livechat/cors/attachment/delete")
     .add("/discuss/channel/ping", "/im_livechat/cors/channel/ping")
     .add("/mail/init_messaging", "/im_livechat/cors/init_messaging")
     .add("/mail/link_preview", "/im_livechat/cors/link_preview")

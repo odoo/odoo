@@ -131,6 +131,7 @@ class TestDiscussFullPerformance(HttpCase):
             'odoobotOnboarding': False,
             'channels': [
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': self.group_user.full_name,
                     'channel': {
                         'anonymous_country': False,
@@ -181,6 +182,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_general.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -231,6 +233,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_channel_public_1.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -281,6 +284,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_channel_public_2.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': self.group_user.full_name,
                     'channel': {
                         'anonymous_country': False,
@@ -331,6 +335,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_channel_group_1.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': self.group_user.full_name,
                     'channel': {
                         'anonymous_country': False,
@@ -381,6 +386,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_channel_group_2.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -467,6 +473,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_group_1.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -553,6 +560,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_chat_1.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -639,6 +647,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_chat_2.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -725,6 +734,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_chat_3.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': False,
@@ -811,6 +821,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_chat_4.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': {
@@ -896,6 +907,7 @@ class TestDiscussFullPerformance(HttpCase):
                     'uuid': self.channel_livechat_1.uuid,
                 },
                 {
+                    'allow_public_upload': False,
                     'authorizedGroupFullName': False,
                     'channel': {
                         'anonymous_country': {

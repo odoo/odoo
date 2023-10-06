@@ -22,6 +22,7 @@ from email.message import EmailMessage
 from email import message_from_string
 from lxml import etree
 from werkzeug import urls
+from werkzeug.exceptions import NotFound
 from xmlrpc import client as xmlrpclib
 from markupsafe import Markup, escape
 
@@ -480,7 +481,10 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _get_from_context_or_raise(self, thread_id):
-        return self.browse(thread_id).exists()
+        thread = self.search([["id", "=", thread_id]])
+        if not thread:
+            raise NotFound()
+        return thread
 
     # ------------------------------------------------------
     # TRACKING / LOG

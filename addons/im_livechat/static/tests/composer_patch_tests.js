@@ -5,42 +5,9 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, createFile, dragenterFiles, insertText } from "@web/../tests/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("composer (patch)");
-
-QUnit.test("No add attachments button", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "Livechat 1",
-        channel_type: "livechat",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Composer");
-    await contains("button[title='Attach files']", { count: 0 });
-});
-
-QUnit.test("Attachment upload via drag and drop disabled", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "Livechat 1",
-        channel_type: "livechat",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Composer");
-    const files = [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text3.txt",
-        }),
-    ];
-    await dragenterFiles(".o-mail-Composer-input", files);
-    // weak test: no guarantee that we waited long enough for the potential dropzone to show
-    await contains(".o-mail-Dropzone", { count: 0 });
-});
 
 QUnit.test("Can execute help command on livechat channels", async (assert) => {
     const pyEnv = await startServer();

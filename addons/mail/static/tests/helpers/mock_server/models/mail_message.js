@@ -220,7 +220,7 @@ patch(MockServer.prototype, {
                     type: "partner",
                 };
                 if (user) {
-                    author["user"] = { id: user.id };
+                    author["user"] = { id: user.id, isInternalUser: !user.share };
                 }
             } else {
                 author = false;
