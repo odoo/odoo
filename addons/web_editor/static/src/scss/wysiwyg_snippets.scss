@@ -1225,6 +1225,35 @@
                     object-fit: contain;
                 }
             }
+            // A modifier applied on `<we-select/>` to give it a grid appearance.
+            &.o_we_select_grid {
+                we-selection-items {
+                    we-button {
+                        padding: $o-we-sidebar-content-padding-base * 2 $o-we-sidebar-content-padding-base / 2;
+                        border: $o-we-item-border-width solid $o-we-bg-darkest;
+                        border-radius: 2px;
+                        justify-content: center;
+
+                        &.active {
+                            border: 2px solid $o-we-color-success !important;
+                        }
+                        // Text highlight related style.
+                        &[data-set-text-highlight] > div {
+                            flex: none;
+                            position: relative;
+                            width: 60%;
+                            font-size: $o-we-sidebar-font-size * 1.3;
+                            font-weight: bold;
+                            overflow: visible;
+
+                            > svg {
+                                stroke: currentColor;
+                                stroke-width: .15em;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         we-button.o_we_image_shape_remove {

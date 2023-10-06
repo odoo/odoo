@@ -7,6 +7,14 @@ import wSnippetOptions from "@website/js/editor/snippets.options";
 import wUtils from "@website/js/utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { renderToElement } from "@web/core/utils/render";
+import { throttleForAnimation } from "@web/core/utils/timing";
+import {
+    applyTextHighlight,
+    removeTextHighlight,
+    switchTextHighlight,
+    getCurrentTextHighlight
+} from "@website/js/text_processing";
+
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
@@ -17,6 +25,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
         'click .o_we_animate_text': '_onAnimateTextClick',
         'click .o_we_highlight_animated_text': '_onHighlightAnimatedTextClick',
+        "click .o_we_text_highlight": "_onTextHighlightClick",
     }),
     custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
@@ -51,7 +60,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         await this._super(...arguments);
 
         this.__onSelectionChange = ev => {
-            this._toggleAnimatedTextButton();
+            this._toggleTextOptionsButton(".o_we_animate_text");
+            this._toggleTextOptionsButton(".o_we_text_highlight");
         };
         this.$body[0].ownerDocument.addEventListener('selectionchange', this.__onSelectionChange);
 
@@ -77,6 +87,45 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this._hideBackendNavbarTimeout = setTimeout(() => {
             this.el.ownerDocument.body.classList.add('editor_has_snippets_hide_backend_navbar');
         }, 500);
+
+        this._adaptHighlightOnEdit = throttleForAnimation(this._adaptHighlightOnEdit.bind(this));
+
+        // Used to adjust highlight SVGs when the text is edited.
+        this.textHighlightObserver = new MutationObserver(mutations => {
+            // We only update SVGs when the mutation targets text content
+            // (including all mutations leads to infinite loop since the
+            // highlight adjustment will also trigger observed mutations).
+            let target = false;
+            let isSVGMutation = false;
+            for (const mutation of mutations) {
+                for (const addedNode of mutation.addedNodes) {
+                    if (addedNode.nodeName === "svg") {
+                        isSVGMutation = true;
+                    }
+                }
+                // Get the "text highlight" top element affected by mutations.
+                const mutationTarget = (mutation.target.parentElement
+                    && mutation.target.parentElement.closest(".o_text_highlight:not(.o_text_highlight_disabled)"))
+                    || (mutation.target.nodeType === Node.ELEMENT_NODE
+                    && mutation.target.querySelector(":scope .o_text_highlight:not(.o_text_highlight_disabled)"));
+                if (mutationTarget) {
+                    target = mutationTarget;
+                }
+            }
+            if (!isSVGMutation && target) {
+                const highlightID = getCurrentTextHighlight(target);
+                if (highlightID) {
+                    this._adaptHighlightOnEdit(target, highlightID);
+                }
+            }
+        });
+
+        this.textHighlightObserver.observe(this.options.editable[0], {
+            attributes: false,
+            childList: true,
+            characterData: true,
+            subtree: true,
+        });
     },
     /**
      * @override
@@ -243,15 +292,23 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this.$('.o_we_customize_theme_btn').toggleClass('active', tab === this.tabs.THEME);
     },
     /**
-     * Returns the animated text element wrapping the selection if it exists.
+     * Returns the text option element wrapping the selection if it exists.
      *
      * @private
+     * @param {String} selector
      * @return {Element|false}
      */
-    _getAnimatedTextElement() {
+    _getSelectedTextElement(selector) {
         const editable = this.options.wysiwyg.$editable[0];
-        const animatedTextNode = getTraversedNodes(editable).find(n => n.parentElement.closest(".o_animated_text"));
-        return animatedTextNode ? animatedTextNode.parentElement.closest('.o_animated_text') : false;
+        const textOptionNode = getTraversedNodes(editable).find(n => n.parentElement.closest(selector));
+        return textOptionNode ? textOptionNode.parentElement.closest(selector) : false;
+    },
+    /**
+     * @private
+     * @return {Selection|null}
+     */
+    _getSelection() {
+        return this.options.wysiwyg.odooEditor.document.getSelection();
     },
     /**
      * @override
@@ -264,26 +321,28 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 title="${_t('Highlight Animated Text')}"
                 aria-label="Highlight Animated Text"/>
         `));
-        this._toggleAnimatedTextButton();
+        this._toggleTextOptionsButton(".o_we_animate_text");
         this._toggleHighlightAnimatedTextButton();
+        this._toggleTextOptionsButton(".o_we_text_highlight");
 
         // As the toolbar displays css variable that are customizable by users,
         // we have the recompute the font size selector values.
         this.options.wysiwyg.odooEditor.computeFontSizeSelectorValues();
     },
     /**
-     * Activates the button to animate text if the selection is in an
-     * animated text element or deactivates the button if not.
+     * Activates & deactivates the button used to add text options, depending
+     * on the selected element.
      *
      * @private
      */
-    _toggleAnimatedTextButton() {
-        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
-        if (!this._isValidSelection(sel)) {
+    _toggleTextOptionsButton(selector) {
+        if (!this._isValidSelection(this._getSelection())) {
             return;
         }
-        const animatedText = this._getAnimatedTextElement();
-        this.$('.o_we_animate_text').toggleClass('active', !!animatedText);
+        const textOptionsButton = this.el.querySelector(selector);
+        if (textOptionsButton) {
+            textOptionsButton.classList.toggle("active", !!this._getSelectedTextElement(textOptionsButton.dataset.textSelector));
+        }
     },
     /**
      * Displays the button that allows to highlight the animated text if there
@@ -308,6 +367,129 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _isMobile() {
         return wUtils.isMobile(this);
+    },
+    /**
+     * This callback type is used to identify the function used to apply the
+     * text option on a selected text.
+     *
+     * @callback TextOptionCallback
+     * @param {HTMLElement} selectedTextEl The selected text element on which
+     * the option should be applied.
+     */
+    /**
+     * Used to handle "text options" button click according to whether the
+     * selected text has the option activated or not.
+     *
+     * @private
+     * @param {HTMLElement} targetEl
+     * @param {Array<String>} optionClassList
+     * @param {TextOptionCallback} applyTextOption callback function to set
+     * text option's classes, updates...
+     */
+    _handleTextOptions(targetEl, optionClassList, applyTextOption = () => {}) {
+        const classSelector = targetEl.dataset.textSelector;
+        const sel = this._getSelection();
+        if (!this._isValidSelection(sel)) {
+            return;
+        }
+        const editable = this.options.wysiwyg.$editable[0];
+        const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
+        // Check if the text has already the current option activated.
+        let selectedTextEl = this._getSelectedTextElement(classSelector);
+        if (selectedTextEl) {
+            const restoreCursor = OdooEditorLib.preserveCursor(this.$body[0].ownerDocument);
+            // Unwrap the selected text content and disable the option.
+            const selectedTextParent = selectedTextEl.parentNode;
+            while (selectedTextEl.firstChild) {
+                const child = selectedTextEl.firstChild;
+                // When the text highlight option is activated, the text wrapper
+                // may contain SVG elements. They should be removed too...
+                if (child.nodeType === Node.ELEMENT_NODE && child.className.includes("o_text_highlight_item")) {
+                    child.after(...[...child.childNodes].filter((node) => node.tagName !== "svg"));
+                    child.remove();
+                }
+                selectedTextParent.insertBefore(selectedTextEl.firstChild, selectedTextEl);
+            }
+            selectedTextParent.removeChild(selectedTextEl);
+            // Update the option's UI.
+            this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
+            this._disableTextOptions(targetEl);
+            this.options.wysiwyg.odooEditor.historyStep(true);
+            restoreCursor();
+        } else {
+            if (sel.getRangeAt(0).collapsed) {
+                return;
+            }
+            selectedTextEl = document.createElement("span");
+            selectedTextEl.classList.add(...optionClassList);
+            let $snippet = null;
+            try {
+                range.surroundContents(selectedTextEl);
+                $snippet = $(selectedTextEl);
+            } catch {
+                // This try catch is needed because 'surroundContents' may
+                // fail when the range has partially selected a non-Text node.
+                if (range.commonAncestorContainer.textContent === range.toString()) {
+                    const $commonAncestor = $(range.commonAncestorContainer);
+                    $commonAncestor.wrapInner(selectedTextEl);
+                    $snippet = $commonAncestor.find(classSelector);
+                }
+            }
+            if ($snippet) {
+                $snippet[0].normalize();
+                applyTextOption($snippet[0]);
+                this.trigger_up('activate_snippet', {
+                    $snippet: $snippet,
+                    previewMode: false,
+                });
+                this.options.wysiwyg.odooEditor.historyStep();
+            } else {
+                this.notification.add(
+                    _t("Cannot apply this option on current text selection. Try clearing the format and try again."),
+                    { type: 'danger', sticky: true }
+                );
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {HTMLElement} targetEl
+     */
+    _disableTextOptions(targetEl) {
+        if (targetEl.classList.contains('o_we_animate_text')) {
+            this._toggleHighlightAnimatedTextButton();
+        }
+        targetEl.classList.remove('active');
+    },
+    /**
+     * Used to adjust the highlight effect when the text content is edited.
+     *
+     * @private
+     * @param {HTMLElement} target
+     * @param {String} highlightID
+     */
+    _adaptHighlightOnEdit(target, highlightID) {
+        // Adapt the current highlight to the edited content.
+        switchTextHighlight(target, highlightID);
+
+        // Special use case: When applying the split on a node with text
+        // highlights, the `oEnter` command will split the node and its
+        // parents correctly, which leads to duplicated highlight items
+        // that the `textHighlightObserver` can't handle. The goal of
+        // this code is to force an adaptation on these elements too...
+        [...this.$body[0].ownerDocument.querySelectorAll(".o_text_highlight_item_dirty")].forEach(splitEl => {
+            const newTarget = splitEl.closest(".o_text_highlight");
+            if (newTarget) {
+                this._adaptHighlightOnEdit(newTarget, getCurrentTextHighlight(newTarget));
+            }
+        });
+    },
+    /**
+     * @private
+     * @param {HTMLElement} buttonEl
+     */
+    _getOptionTextClass(buttonEl) {
+        return buttonEl.dataset.textSelector.slice(1);
     },
 
     //--------------------------------------------------------------------------
@@ -420,54 +602,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     },
     /**
      * @private
+     * @param {Event} ev
      */
     _onAnimateTextClick(ev) {
-        const sel = this.options.wysiwyg.odooEditor.document.getSelection();
-        if (!this._isValidSelection(sel)) {
-            return;
-        }
-        const editable = this.options.wysiwyg.$editable[0];
-        const range = getDeepRange(editable, { splitText: true, select: true, correctTripleClick: true });
-        const animatedText = this._getAnimatedTextElement();
-        if (animatedText) {
-            $(animatedText).contents().unwrap();
-            this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
-            this._toggleHighlightAnimatedTextButton();
-            ev.target.classList.remove('active');
-            this.options.wysiwyg.odooEditor.historyStep();
-        } else {
-            if (sel.getRangeAt(0).collapsed) {
-                return;
-            }
-            const animatedTextEl = document.createElement('span');
-            animatedTextEl.classList.add('o_animated_text', 'o_animate', 'o_animate_preview', 'o_anim_fade_in');
-            let $snippet = null;
-            try {
-                range.surroundContents(animatedTextEl);
-                $snippet = $(animatedTextEl);
-            } catch {
-                // This try catch is needed because 'surroundContents' may
-                // fail when the range has partially selected a non-Text node.
-                if (range.commonAncestorContainer.textContent === range.toString()) {
-                    const $commonAncestor = $(range.commonAncestorContainer);
-                    $commonAncestor.wrapInner(animatedTextEl);
-                    $snippet = $commonAncestor.find('.o_animated_text');
-                }
-            }
-            if ($snippet) {
-                $snippet[0].normalize();
-                this.trigger_up('activate_snippet', {
-                    $snippet: $snippet,
-                    previewMode: false,
-                });
-                this.options.wysiwyg.odooEditor.historyStep();
-            } else {
-                this.notification.add(
-                    _t("The current text selection cannot be animated. Try clearing the format and try again."),
-                    { type: 'danger', sticky: true }
-                );
-            }
-        }
+        const target = ev.target;
+        this._handleTextOptions(target, [
+            this._getOptionTextClass(target),
+            "o_animate",
+            "o_animate_preview",
+            "o_anim_fade_in"
+        ]);
     },
     /**
      * @private
@@ -475,6 +619,25 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     _onHighlightAnimatedTextClick(ev) {
         this.$body.toggleClass('o_animated_text_highlighted');
         $(ev.target).toggleClass('fa-eye fa-eye-slash').toggleClass('text-success');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onTextHighlightClick(ev) {
+        const target = ev.target;
+        this._handleTextOptions(target, [
+            this._getOptionTextClass(target),
+            "o_text_highlight_underline",
+            "o_text_highlight_disabled"
+        ], selectedTextEl => {
+            const style = window.getComputedStyle(selectedTextEl);
+            // The default value for `--text-highlight-width` is 0.1em.
+            const widthPxValue = `${Math.round(parseFloat(style.fontSize) * 0.1)}px`;
+            selectedTextEl.style.setProperty("--text-highlight-width", widthPxValue);
+            applyTextHighlight(selectedTextEl, "underline");
+            selectedTextEl.classList.remove("o_text_highlight_disabled");
+        });
     },
     /**
      * On reload bundles, when it's from the theme tab, destroy any
@@ -516,11 +679,52 @@ weSnippetEditor.SnippetEditor.include({
     /**
      * @override
      */
+    async start() {
+        await this._super(...arguments);
+        this._adaptOnOptionResize = throttleForAnimation(this._adaptOnOptionResize.bind(this));
+        this.editorResizeObserver = new window.ResizeObserver(entries => {
+            // In addition to window resizing, every editor's option that
+            // changes the content size has an effect on text highlights.
+            // The idea here is to observe the size changes in the editor's
+            // target and adapt the text highlights (if they exist)
+            // accordingly.
+            if (!this.observerLock) {
+                this._adaptOnOptionResize();
+            } else {
+                this.observerLock = false;
+            }
+        });
+        this._highlightResizeObserve();
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.editorResizeObserver.disconnect();
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     getName() {
         if (this.$target[0].closest('[data-oe-field=logo]')) {
             return _t("Logo");
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     * @returns {Promise}
+     */
+    async updateOptionsUIVisibility() {
+        await this._super(...arguments);
+        // TODO improve this: some website text options (like text animations,
+        // text highlights...) are moved to the toolbar, which leads to an empty
+        // "options section". The goal of this override is to hide options
+        // sections with no option elements.
+        if (!this.$optionsSection[0].querySelector(":scope > we-customizeblock-option")) {
+            this.$optionsSection[0].classList.add("d-none");
+        }
     },
     /**
      * Changes some behaviors before the drag and drop.
@@ -544,6 +748,24 @@ weSnippetEditor.SnippetEditor.include({
             };
         }
         return restore;
+    },
+    /**
+     * @private
+     */
+    _highlightResizeObserve() {
+        // The callback of `this.editorResizeObserver` will fire automatically
+        // when observation starts, which triggers a useless highlight
+        // adjustment. We use `this.observerLock` to prevent it.
+        this.observerLock = true;
+        this.editorResizeObserver.observe(this.$target[0]);
+    },
+    /**
+     * @private
+     */
+    _adaptOnOptionResize() {
+        [...this.$target[0].querySelectorAll(".o_text_highlight:not(.o_text_highlight_disabled)")].forEach(textEl => {
+            switchTextHighlight(textEl, getCurrentTextHighlight(textEl));
+        });
     },
 });
 
@@ -586,6 +808,7 @@ wSnippetMenu.include({
      * @override
      */
     async cleanForSave() {
+        this.textHighlightObserver.disconnect();
         const getFromEditable = selector => this.options.editable[0].querySelectorAll(selector);
         // Clean unstyled translations
         return this._super(...arguments).then(() => {
@@ -608,6 +831,11 @@ wSnippetMenu.include({
                     });
                 }
                 optionsEl.remove();
+            }
+            // We only save the highlight information on the main text wrapper,
+            // the full structure will be restaured on page load.
+            for (const textHighlightEl of getFromEditable(".o_text_highlight")) {
+                removeTextHighlight(textHighlightEl);
             }
         });
     },

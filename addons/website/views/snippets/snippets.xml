@@ -1660,6 +1660,38 @@
                   data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
     </div>
 
+    <!-- Text highlight effects -->
+    <div data-js="TextHighlight"
+        data-selector=".o_text_highlight">
+        <!-- Text highlight style -->
+        <we-select string="Highlight" data-name="text_highlight_opt" class="o_we_select_grid">
+            <div class="grid gap-0">
+                <we-button class="g-col-4" data-select-class="o_text_highlight_underline" data-set-text-highlight="underline" data-select-label="Underline"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_freehand" data-set-text-highlight="freehand" data-select-label="Freehand"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_double" data-set-text-highlight="double" data-select-label="Double"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_wavy" data-set-text-highlight="wavy" data-select-label="Wavy"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_circle" data-set-text-highlight="circle" data-select-label="Circle"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_over_underline" data-set-text-highlight="over_underline" data-select-label="Over And Underline"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_scribble" data-set-text-highlight="scribble" data-select-label="Scribble"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_jagged" data-set-text-highlight="jagged" data-select-label="Jagged"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_cross" data-set-text-highlight="cross" data-select-label="Cross"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_diagonal" data-set-text-highlight="diagonal" data-select-label="Diagonal"/>
+                <we-button class="g-col-4" data-select-class="o_text_highlight_strikethrough" data-set-text-highlight="strikethrough" data-select-label="Strikethrough"/>
+            </div>
+        </we-select>
+        <!-- Text highlight color -->
+        <we-colorpicker string="Color" class="o_we_sublevel_1"
+            data-dependencies="text_highlight_opt"
+            data-css-property="--text-highlight-color"
+            data-select-style=""/>
+        <!-- Text highlight thickness -->
+        <we-input string="Thickness" class="o_we_sublevel_1 o_we_small_input"
+            data-dependencies="text_highlight_opt"
+            data-css-property="--text-highlight-width"
+            data-select-style=""
+            data-unit="px"/>
+    </div>
+
     <!-- Theme options -->
     <div data-js="ThemeColors" data-selector="theme-colors" data-no-check="true">
         <we-alert class="o_old_color_system_warning d-none mt-2">

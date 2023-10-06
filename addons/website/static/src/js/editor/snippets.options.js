@@ -19,6 +19,11 @@ import {
     convertHslToRgb,
  } from '@web/core/utils/colors';
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
+import {
+    applyTextHighlight,
+    removeTextHighlight,
+    drawTextHighlightSVG,
+} from "@website/js/text_processing";
 
 import { markup } from "@odoo/owl";
 
@@ -3468,6 +3473,10 @@ options.registry.WebsiteAnimate = options.Class.extend({
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
+        if (this.isAnimatedText) {
+            this.$overlay[0].querySelectorAll(".o_handle")
+                .forEach(handle => handle.classList.add("pe-none"));
+        }
     },
     /**
      * @override
@@ -3718,6 +3727,135 @@ options.registry.WebsiteAnimate = options.Class.extend({
             } else {
                 imgEl.loading = 'eager';
             }
+        }
+    },
+});
+
+/**
+ * Allows edition of text "Highlight Effects" following this generic structure:
+ * `<span class="o_text_highlight">
+ *      <span class="o_text_highlight_item">
+ *          line1-textNode1 [line1-textNode2,...]
+ *          <svg.../>
+ *      </span>
+ *      [<br/>]
+ *      <span class="o_text_highlight_item">
+ *          line2-textNode1 [line2-textNode2,...]
+ *          <svg.../>
+ *      </span>
+ *      ...
+ * </span>`
+ * To correctly adapt each highlight unit when the text content is changed.
+ */
+options.registry.TextHighlight = options.Class.extend({
+    custom_events: Object.assign({}, options.Class.prototype.custom_events, {
+        "user_value_widget_opening": "_onWidgetOpening",
+    }),
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.leftPanelEl = this.$overlay.data("$optionsSection")[0];
+        // Reduce overlay opacity for more highlight visibility on small text.
+        this.$overlay[0].style.opacity = "0.25";
+        this.$overlay[0].querySelectorAll(".o_handle")
+            .forEach(handle => handle.classList.add("pe-none"));
+    },
+    /**
+     * Move "Text Effect" options to the editor's toolbar.
+     *
+     * @override
+     */
+    onFocus() {
+        this.options.wysiwyg.toolbarEl.append(this.$el[0]);
+    },
+    /**
+     * @override
+     */
+    onBlur() {
+        this.leftPanelEl.appendChild(this.el);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Activates & deactivates the text highlight effect.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setTextHighlight(previewMode, widgetValue, params) {
+        return widgetValue ? this._addTextHighlight(widgetValue)
+            : removeTextHighlight(this.$target[0]);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Used to add a highlight SVG element to the targeted text node(s).
+     * This should also take in consideration a situation where many text nodes
+     * are separate e.g. `<p>first text content<br/>second text content...</p>`.
+     * To correctly handle those situations, every set of text nodes will be
+     * wrapped in a `.o_text_highlight_item` that contains its highlight SVG.
+     *
+     * @param {String} highlightID
+     * @private
+     */
+    _addTextHighlight(highlightID) {
+        const highlightEls = [...this.$target[0].querySelectorAll(".o_text_highlight_item svg")];
+        if (highlightEls.length) {
+            // If the text element has a highlight effect, we only need to
+            // change the SVG.
+            highlightEls.forEach(svg => {
+                svg.after(drawTextHighlightSVG(svg.parentElement, highlightID));
+                svg.remove();
+            });
+        } else {
+            applyTextHighlight(this.$target[0], highlightID);
+        }
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const value = await this._super(...arguments);
+        if (methodName === "selectStyle" && value === "currentColor") {
+            const style = window.getComputedStyle(this.$target[0]);
+            // The highlight default color is the text's "currentColor".
+            // This value should be handled correctly by the option.
+            return style.color;
+        }
+        return value;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * To draw highlight SVGs for `<we-select/>` preview, we need to open the
+     * widget (we need correct size values from `getBoundingClientRect()`).
+     * This code will build the highlight preview the first time we open the
+     * `<we-select/>`.
+     *
+     * @private
+     */
+    _onWidgetOpening(ev) {
+        const target = ev.target;
+        // Only when there is no highlight SVGs.
+        if (target.getName() === "text_highlight_opt" && !target.el.querySelector("svg")) {
+            const weToggler = target.el.querySelector("we-toggler");
+            weToggler.classList.add("active");
+            [...target.el.querySelectorAll("we-button[data-set-text-highlight] div")].forEach(weBtnEl => {
+                weBtnEl.textContent = "Text";
+                // Get the text highlight linked to each `<we-button/>`
+                // and apply it to its text content.
+                weBtnEl.append(drawTextHighlightSVG(weBtnEl, weBtnEl.parentElement.dataset.setTextHighlight));
+            });
         }
     },
 });

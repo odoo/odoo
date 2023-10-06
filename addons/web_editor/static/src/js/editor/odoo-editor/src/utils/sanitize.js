@@ -26,6 +26,9 @@ import {
 
 const NOT_A_NUMBER = /[^\d]/g;
 
+// In some cases, we want to prevent merging identical elements.
+export const UNMERGEABLE_SELECTORS = [];
+
 function hasPseudoElementContent (node, pseudoSelector) {
     const content = getComputedStyle(node, pseudoSelector).getPropertyValue('content');
     return content && content !== 'none';
@@ -136,7 +139,9 @@ function sanitizeNode(node, root) {
         !(
             node.attributes?.length === 1 &&
             node.hasAttribute('data-oe-zws-empty-inline') &&
-            (node.textContent === '\u200B' || node.previousSibling.textContent === '\u200B'))
+            (node.textContent === '\u200B' || node.previousSibling.textContent === '\u200B')
+        ) &&
+        !UNMERGEABLE_SELECTORS.some(selectorClass => node.classList?.contains(selectorClass))
     ) {
         // Merge identical elements together.
         getDeepRange(root, { select: true });
