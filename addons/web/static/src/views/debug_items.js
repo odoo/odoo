@@ -24,17 +24,17 @@ debugRegistry.category("view").add("viewSeparator", viewSeparator);
 // Get view
 //------------------------------------------------------------------------------
 
-class GetViewDialog extends Component {}
-GetViewDialog.template = xml`
-<Dialog title="this.constructor.title">
-    <pre t-esc="props.arch.outerHTML"/>
-</Dialog>`;
+class GetViewDialog extends Component {
+    setup() {
+        this.title = _t("Get View");
+    }
+}
+GetViewDialog.template = "web.DebugMenu.GetViewDialog";
 GetViewDialog.components = { Dialog };
 GetViewDialog.props = {
     arch: { type: Element },
     close: { type: Function },
 };
-GetViewDialog.title = _t("Get View");
 
 export function getView({ component, env }) {
     return {

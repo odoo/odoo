@@ -8,6 +8,7 @@ import { Component } from "@odoo/owl";
 
 export default class ToursDialog extends Component {
     setup() {
+        this.title = _t("Tours");
         this.tourService = useService("tour_service");
         this.onboardingTours = this.tourService.getSortedTours().filter(tour => !tour.test);
         this.testingTours = this.tourService.getSortedTours().filter(tour => tour.test);
@@ -40,4 +41,3 @@ export default class ToursDialog extends Component {
 }
 ToursDialog.template = "web_tour.ToursDialog";
 ToursDialog.components = { Dialog };
-ToursDialog.title = _t("Tours");

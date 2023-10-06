@@ -491,7 +491,7 @@ export class PropertiesField extends Component {
         event.preventDefault();
         if (!(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _t("You need to be able to edit parent first to configure property fields"),
+                _t("You need edit access on the parent document to update these property fields"),
                 { type: "warning" }
             );
             return;
@@ -582,7 +582,7 @@ export class PropertiesField extends Component {
     async onPropertyCreate() {
         if (!(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _t("You need to be able to edit parent first to configure property fields"),
+                _t("You need edit access on the parent document to update these property fields"),
                 { type: "warning" }
             );
             return;
