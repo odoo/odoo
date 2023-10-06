@@ -53,14 +53,17 @@ class AccountPayment(models.Model):
                 and payment.check_number
             )
 
-    @api.constrains('check_number', 'journal_id')
+    @api.constrains('check_number')
     def _constrains_check_number(self):
+        for payment_check in self.filtered('check_number'):
+            if not payment_check.check_number.isdecimal():
+                raise ValidationError(_('Check numbers can only consist of digits'))
+
+    @api.constrains('check_number', 'journal_id')
+    def _constrains_check_number_unique(self):
         payment_checks = self.filtered('check_number')
         if not payment_checks:
             return
-        for payment_check in payment_checks:
-            if not payment_check.check_number.isdecimal():
-                raise ValidationError(_('Check numbers can only consist of digits'))
         self.env.flush_all()
         self.env.cr.execute("""
             SELECT payment.check_number, move.journal_id
