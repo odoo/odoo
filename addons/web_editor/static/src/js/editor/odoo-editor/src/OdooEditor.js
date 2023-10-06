@@ -4674,8 +4674,8 @@ export class OdooEditor extends EventTarget {
                 const container = link.parentElement;
                 const offset = childNodeIndex(link) + 1;
                 setSelection(container, offset, container, offset, false);
+                selection.collapseToEnd();
             }
-            selection.collapseToEnd();
         }
     }
 
