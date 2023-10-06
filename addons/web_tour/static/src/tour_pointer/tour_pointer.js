@@ -19,7 +19,6 @@ export class TourPointer extends Component {
             shape: {
                 anchor: { type: HTMLElement, optional: true },
                 content: { type: String, optional: true },
-                fixed: { type: Boolean, optional: true },
                 isOpen: { type: Boolean, optional: true },
                 isVisible: { type: Boolean, optional: true },
                 onClick: { type: [Function, { value: null }], optional: true },
@@ -54,6 +53,7 @@ export class TourPointer extends Component {
         let dimensions = null;
         let lastMeasuredContent = null;
         let lastOpenState = this.isOpen;
+        let lastAnchor;
         let [anchorX, anchorY] = [0, 0];
 
         useEffect(
@@ -90,7 +90,7 @@ export class TourPointer extends Component {
 
                     if (!this.isOpen) {
                         const { anchor } = this.props.pointerState;
-                        if (anchor) {
+                        if (anchor === lastAnchor) {
                             const { x, y, width } = anchor.getBoundingClientRect();
                             const [lastAnchorX, lastAnchorY] = [anchorX, anchorY];
                             [anchorX, anchorY] = [x, y];
@@ -104,35 +104,38 @@ export class TourPointer extends Component {
                             const wouldOverflow =
                                 window.innerWidth - x - width / 2 < dimensions?.width;
                             el.classList.toggle("o_expand_left", wouldOverflow);
-                            reposition(anchor, el, null, {
-                                position: this.position,
-                                margin: 6,
-                                onPositioned: (popper, position) => {
-                                    const popperRect = popper.getBoundingClientRect();
-                                    const { top, left, direction } = position;
-                                    if (direction === "top") {
-                                        popper.style.bottom = `${
-                                            window.innerHeight - top - popperRect.height
-                                        }px`;
-                                        popper.style.removeProperty("top");
-                                    } else {
-                                        popper.style.top = `${top}px`;
-                                    }
-                                    if (direction === "left") {
-                                        popper.style.right = `${
-                                            window.innerWidth - left - popperRect.width
-                                        }px`;
-                                        popper.style.removeProperty("left");
-                                    } else {
-                                        popper.style.left = `${left}px`;
-                                    }
-                                },
-                            });
                         }
+                        lastAnchor = anchor;
+                        el.style.bottom = "";
+                        el.style.right = "";
+                        reposition(anchor, el, null, {
+                            position: this.position,
+                            margin: 6,
+                            onPositioned: (popper, position) => {
+                                const popperRect = popper.getBoundingClientRect();
+                                const { top, left, direction } = position;
+                                if (direction === "top") {
+                                    // position from the bottom instead of the top as it is needed
+                                    // to ensure the expand animation is properly done
+                                    popper.style.bottom = `${
+                                        window.innerHeight - top - popperRect.height
+                                    }px`;
+                                    popper.style.removeProperty("top");
+                                } else if (direction === "left") {
+                                    // position from the right instead of the left as it is needed
+                                    // to ensure the expand animation is properly done
+                                    popper.style.right = `${
+                                        window.innerWidth - left - popperRect.width
+                                    }px`;
+                                    popper.style.removeProperty("left");
+                                }
+                            },
+                        });
                     }
                 } else {
                     lastMeasuredContent = null;
                     lastOpenState = false;
+                    lastAnchor = null;
                     dimensions = null;
                 }
             },
