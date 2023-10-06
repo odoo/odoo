@@ -3256,6 +3256,15 @@ const SnippetOptionWidget = Widget.extend({
      */
     cleanForSave: async function () {},
     /**
+     * Called when the associated snippet UI needs to be cleaned (e.g. from
+     * visual effects like previews).
+     * TODO this function will replace `cleanForSave` in the future.
+     *
+     * @abstract
+     * @return {Promise|undefined}
+     */
+    cleanUI: async function () {},
+    /**
      * Adds the given widget to the known list of user value widgets
      *
      * @param {UserValueWidget} widget
