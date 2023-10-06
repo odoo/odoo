@@ -1425,4 +1425,19 @@ QUnit.module("MockServer", (hooks) => {
         assert.strictEqual(data.models.bar.records.find((r) => r.id === 7).foo, "A");
         assert.strictEqual(data.models.bar.records.find((r) => r.id === 8).foo, "B");
     });
+
+    QUnit.test("performRPC: trigger onchange for new record", async function (assert) {
+        data.models.bar.onchanges = {
+            foo: (obj) => {
+                obj.bool = true;
+            },
+        };
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "onchange",
+            args: [[], {}, [], { foo: {} }],
+        });
+        assert.deepEqual(result.value, { foo: 0 });
+    });
 });
