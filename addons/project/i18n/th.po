@@ -54,12 +54,12 @@ msgstr ""
 #: code:addons/project/static/src/views/project_calendar/project_calendar_controller.js:0
 #, python-format
 msgid " - Tasks by Deadline"
-msgstr ""
+msgstr "- งานตามกำหนดเวลา"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr ""
+msgstr "# ผู้ร่วมงาน"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -87,41 +87,43 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
+"#{record.milestone_count_reached.value} ถึงเหตุการณ์สำคัญ "
+"#{record.milestone_count.value}"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s"
-msgstr ""
+msgstr "%(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Burndown Chart"
-msgstr ""
+msgstr "%(name)s's Burndown Chart"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr ""
+msgstr "%(name)s ของเหตุการณ์สำคัญ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr ""
+msgstr "%(name)sของ คะแนน"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
+msgstr "การวิเคราะห์งานของ %(name)s"
 
 #. module: project
 #. odoo-python
@@ -135,7 +137,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Updates"
-msgstr ""
+msgstr "อัปเดตของ %(name)s"
 
 #. module: project
 #. odoo-python
@@ -162,17 +164,17 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(ครบกำหนด"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(อัปเดตโปรเจกต์ล่าสุด)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
-msgstr ""
+msgstr "- ถึงเมื่อ"
 
 #. module: project
 #. odoo-javascript
@@ -320,7 +322,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr ""
+msgstr "<b>ลาก &amp; วาง</b> การ์ดเพื่อเปลี่ยนงานของคุณจากขั้นตอน"
 
 #. module: project
 #. odoo-javascript
@@ -331,6 +333,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>บันทึกโน๊ต</b> สำหรับการสื่อสารภายใน <i>(บุคคลที่ติดตามงานนี้จะไม่ได้รับแจ้งเตือนถึง \n"
+"    โน๊ตที่คุณกำลังบันทึก เว้นแต่คุณจะแท็กพวกเขาโดยเฉพาะ)</i> ใช้ @ <b>mentions</b> เพื่อส่งแจ้งเตือนไปยังเพื่อนร่วมงาน \n"
+"    หรือ # <b>mentions</b> เพื่อเข้าถึงทั้งทีม"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -413,6 +418,16 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    เรียน <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t><br>\n"
+"    เรามีความยินดีอย่างยิ่งที่จะแจ้งให้คุณทราบว่าเราได้ทำโปรเจกต์ \"<strong t-out=\"object.name or ''\">การปรับปรุงใหม่</strong>\" นี้เสร็จสิ้นแล้ว\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">คุณได้รับอีเมลนี้เนื่องจากโปรเจกต์ของคุณถูกย้ายไปยังขั้นตอน <b t-out=\"object.stage_id.name or ''\">เสร็จสิ้น</b> แล้ว</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -430,6 +445,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    เรียน<t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t><br>\n"
+"    ขอขอบคุณสำหรับคำถามของคุณ<br>\n"
+"    โปรดแจ้งให้เราทราบหากคุณมีคำถามใด\n"
+"    <br><br>\n"
+"    ขอบคุณอย่างสูง,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -443,16 +470,19 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '<', 3.66)]}\" title=\"พึงพอใจ\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '<', 2.33), ('rating_avg', '>=', 3.66)]}\" title=\"โอเค\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '>=', 2.33)]}\" title=\"ไม่พึงพอใจ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> ส่วนตัว"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -467,11 +497,13 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"Customer disabled on "
+"projects\"/><b>การให้คะแนนของลูกค้า</b> ถูกปิดใช้งานในโปรเจกต์ต่อไปนี้:<br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 
 #. module: project
 #. odoo-python
@@ -483,7 +515,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-end\">Stage:</small>"
-msgstr ""
+msgstr "<small class=\"text-end\">ขั้นตอน:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -495,7 +527,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"วันที่\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -503,6 +535,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"นามแฝงโดเมน\" "
+"title=\"นามแฝงโดเมน\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -517,7 +551,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"พาร์ทเนอร์\" title=\"พาร์ทเนอร์\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -526,6 +560,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    ผู้ทำงานร่วมกัน\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -535,7 +572,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">คะแนนล่าสุด</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -566,7 +603,7 @@ msgstr "<span>มุมมอง</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">ไฟล์แนบ</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_planned_hours_template
@@ -576,7 +613,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>ผู้รับมอบหมาย</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -586,7 +623,7 @@ msgstr "<strong>ลูกค้า</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>วันครบกำหนด:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -601,22 +638,22 @@ msgstr "<strong>ข้อความและประวัติการส�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr ""
+msgstr "<strong>เหตุการณ์สำคัญ:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>โปรเจกต์:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr ""
+msgstr "<u>เหตุการณ์สำคัญ</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -633,6 +670,8 @@ msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
 msgstr ""
+"ไม่สามารถเลือกผู้ทำงานร่วมกันได้มากกว่าหนึ่งครั้งในการเข้าถึงการแชร์โปรเจกต์"
+" โปรดลบรายการที่ซ้ำกันออกแล้วลองอีกครั้ง"
 
 #. module: project
 #. odoo-python
@@ -649,16 +688,18 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"ขั้นตอนส่วนบุคคลไม่สามารถเชื่อมโยงกับโปรเจกต์ได้ "
+"เนื่องจากมีเพียงผู้ใช้ที่เกี่ยวข้องเท่านั้นที่สามารถมองเห็นได้"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
-msgstr ""
+msgstr "มีแท็กที่มีชื่อเดียวกันนี้อยู่แล้ว"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
-msgstr ""
+msgstr "งานสามารถมีขั้นตอนส่วนตัวได้เพียงขั้นตอนเดียวต่อผู้ใช้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -668,12 +709,12 @@ msgstr "ยอมรับฟอร์มอีเมล"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
 msgid "Access Instruction Message"
-msgstr ""
+msgstr "ข้อความคำแนะนำในการเข้าถึง"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
 msgid "Access Mode"
-msgstr ""
+msgstr "โหมดการเข้าถึง"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
@@ -739,7 +780,7 @@ msgstr "ประเภทกิจกรรม"
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "เพิ่มเหตุการณ์สำคัญ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -761,23 +802,25 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"เพิ่มคอลัมน์เพื่อจัดระเบียบงานของคุณเป็น <b>ขั้นตอน</b> <i>เช่น ใหม่ - "
+"อยู่ระหว่างดำเนินการ - เสร็จสิ้น</i>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add contacts to share the project..."
-msgstr ""
+msgstr "เพิ่มผู้ติดต่อเพื่อแชร์โปรเจกต์..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr ""
+msgstr "เพิ่มเนื้อหาเพิ่มเติมเพื่อแสดงในอีเมล"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr ""
+msgstr "เพิ่มงานของคุณเมื่อพร้อม"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -789,7 +832,7 @@ msgstr "ผู้ดูแลระบบ"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "Agile Scrum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -831,7 +874,7 @@ msgstr "ทั้งหมด"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "ผู้ใช้ภายในทั้งหมด"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
@@ -846,7 +889,7 @@ msgstr "จัดสรรชั่วโมง"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
 msgid "Allow Customer Ratings"
-msgstr ""
+msgstr "อนุญาตการให้คะแนนลูกค้า"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
@@ -869,6 +912,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"บัญชีการวิเคราะห์ที่เชื่อมโยงโปรเจกต์นี้ งาน และระบบบันทึกเวลาของโปรเจกต์นี้\n"
+"ติดตามต้นทุนและรายได้ของโปรเจกต์ของคุณโดยการตั้งค่าบัญชีการวิเคราะห์นี้ในเอกสารที่เกี่ยวข้องของคุณ (เช่น ใบสั่งขาย ใบแจ้งหนี้ ใบสั่งซื้อ ใบเรียกเก็บเงินของผู้ขาย ค่าใช้จ่าย และอื่นๆ)\n"
+"บัญชีการวิเคราะห์นี้สามารถเปลี่ยนแปลงได้ในแต่ละงานแยกกันหากจำเป็น\n"
+"จำเป็นต้องมีบัญชีการวิเคราะห์เพื่อใช้ระบบบันทึกเวลา"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -877,6 +924,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
+"บัญชีการวิเคราะห์ที่เชื่อมโยงงานนี้และระบบบันทึกเวลา\n"
+"ติดตามต้นทุนและรายได้ของงานของคุณโดยการตั้งค่าบัญชีการวิเคราะห์ในเอกสารที่เกี่ยวข้องของคุณ (เช่น ใบสั่งขาย ใบแจ้งหนี้ ใบสั่งซื้อ ใบเรียกเก็บเงินของผู้ขาย ค่าใช้จ่าย และอื่นๆ)\n"
+"ตามค่าเริ่มต้น บัญชีการวิเคราะห์ของโปรเจกต์จะถูกตั้งค่าไว้ อย่างไรก็ตาม สามารถเปลี่ยนแปลงได้ในแต่ละงานแยกกันได้หากจำเป็น"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -890,12 +940,14 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is progressing according to plan."
 msgstr ""
+"วิเคราะห์ว่าทีมของคุณทำงานในโปรเจกต์เสร็จเร็วแค่ไหน "
+"และตรวจสอบว่าทุกอย่างคืบหน้าตามแผนที่วางไว้หรือไม่"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
+msgstr "วิเคราะห์ความคืบหน้าของโปรเจกต์และประสิทธิภาพของพนักงานของคุณ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ancestor_id
@@ -922,7 +974,7 @@ msgstr "เก็บถาวร"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr ""
+msgstr "ขั้นตอนการเก็บถาวร"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -949,7 +1001,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -959,26 +1011,26 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "ลูกศร"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow icon"
-msgstr ""
+msgstr "ไอคอนลูกศร"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "การประกอบ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Assign a responsible to your task"
-msgstr ""
+msgstr "มอบหมายผู้รับผิดชอบงานของคุณ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1008,7 +1060,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "งานที่ได้รับมอบหมาย"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1031,12 +1083,12 @@ msgstr "มอบหมายให้"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr ""
+msgstr "ผู้รับมอบหมาย"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "วันที่มอบหมาย"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_assign
@@ -1049,7 +1101,7 @@ msgstr "วันที่มอบหมาย"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "At Risk"
-msgstr ""
+msgstr "มีความเสี่ยง"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -1069,7 +1121,7 @@ msgstr "จำนวนสิ่งที่แนบมา"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message."
-msgstr ""
+msgstr "สิ่งที่แนบมาที่ไม่ได้มาจากข้อความ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__august
@@ -1086,12 +1138,12 @@ msgstr "ผู้เขียน"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr ""
+msgstr "สร้างงานอัตโนมัติสำหรับกิจกรรมปกติ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic Kanban Status"
-msgstr ""
+msgstr "สถานะคัมบังอัตโนมัติ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -1118,25 +1170,25 @@ msgstr "คะแนนเฉลี่ย"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "คะแนนเฉลี่ย (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "คะแนนเฉลี่ย: ไม่พอใจ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "คะแนนเฉลี่ย: โอเค"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "คะแนนเฉลี่ย: พึงพอใจ"
 
 #. module: project
 #. odoo-javascript
@@ -1144,7 +1196,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "งานค้าง"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
@@ -1199,19 +1251,19 @@ msgstr "ถูกบล็อคโดย"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Blocking"
-msgstr ""
+msgstr "การปิดกั้น"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "ระดมความคิด"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "บัก"
 
 #. module: project
 #. odoo-python
@@ -1223,7 +1275,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Burndown Chart"
 
 #. module: project
 #: model:project.task.type,legend_done:project.project_stage_1
@@ -1233,7 +1285,7 @@ msgstr "บัซหรือตั้งค่าว่าเสร็จแล
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
 msgid "Can Be Marked As Done"
-msgstr ""
+msgstr "สามารถทำเครื่องหมายว่าเสร็จสิ้นได้"
 
 #. module: project
 #. odoo-python
@@ -1271,6 +1323,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"เลือก <b>ชื่อ</b> สำหรับโปรเจกต์ของคุณ <i>อาจเป็นอะไรก็ได้ที่คุณต้องการ: ชื่อลูกค้า\n"
+"     ของสินค้า ทีมงาน สถานที่ก่อสร้าง ฯลฯ</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1278,7 +1332,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
-msgstr ""
+msgstr "เลือก <b>ชื่อ</b> งาน <i>(เช่น ออกแบบเว็บไซต์ ซื้อสินค้า...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -1290,7 +1344,7 @@ msgstr "เมือง"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr ""
+msgstr "รีวิวลูกค้า"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1314,7 +1368,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Closed Tasks"
-msgstr ""
+msgstr "งานที่ปิดแล้ว"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
@@ -1330,12 +1384,14 @@ msgid ""
 "Kanban view of your tasks. Collaborators will be able to edit parts of tasks"
 " and send messages."
 msgstr ""
+"ทำงานร่วมกันอย่างมีประสิทธิภาพกับผู้มีส่วนได้ส่วนเสียหลักโดยแชร์มุมมองคัมบังของงานของคุณกับพวกเขา"
+" ผู้ทำงานร่วมกันจะสามารถแก้ไขงานบางส่วนและส่งข้อความได้"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_id
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
 msgid "Collaborator"
-msgstr ""
+msgstr "ผู้ทำงานร่วมกัน"
 
 #. module: project
 #. odoo-python
@@ -1343,7 +1399,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_ids
 #, python-format
 msgid "Collaborators"
-msgstr ""
+msgstr "ผู้ทำงานร่วมกัน"
 
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
@@ -1357,6 +1413,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"รวบรวมคำติชมจากลูกค้าของคุณโดยส่งคำขอให้คะแนนเมื่องานเข้าสู่ขั้นตอนหนึ่ง ในการทำเช่นนั้น ให้กำหนดเท็มเพลตอีเมลการให้คะแนนในขั้นตอนที่เกี่ยวข้อง\n"
+"การให้คะแนนเมื่อเปลี่ยนขั้นตอน: อีเมลจะถูกส่งโดยอัตโนมัติเมื่องานถึงขั้นตอนที่ตั้งค่าเทมเพลตอีเมลการให้คะแนนไว้\n"
+"การให้คะแนนตามระยะเวลา: อีเมลจะถูกส่งโดยอัตโนมัติตามช่วงเวลาปกติ ตราบที่งานยังคงอยู่ในขั้นตอนที่มีการตั้งค่าเทมเพลตอีเมลการให้คะแนน"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1410,7 +1469,7 @@ msgstr "การกำหนดค่า"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr ""
+msgstr "กำหนดค่าขั้นตอน"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1430,7 +1489,7 @@ msgstr "การยืนยัน"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Congratulations, you are now a master of project management."
-msgstr ""
+msgstr "ยินดีด้วย ตอนนี้คุณเป็นผู้เชี่ยวชาญด้านการจัดการโปรเจกต์แล้ว"
 
 #. module: project
 #. odoo-javascript
@@ -1478,7 +1537,7 @@ msgstr "ภาพหน้าปก"
 #, python-format
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
-msgstr ""
+msgstr "สร้าง <b>กิจกรรม</b> เพื่อกำหนดสิ่งที่ต้องทำหรือกำหนดเวลาการประชุม"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1488,17 +1547,17 @@ msgstr "วันที่สร้าง"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "สร้างโปรเจกต์"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "สร้างขั้นตอนใหม่ในไปป์ไลน์งาน"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Create project"
-msgstr ""
+msgstr "สร้างโปรเจกต์"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1506,6 +1565,7 @@ msgid ""
 "Create projects to organize your tasks and define a different workflow for "
 "each project."
 msgstr ""
+"สร้างโปรเจกต์เพื่อจัดระเบียบงานของคุณและกำหนดขั้นตอนการทำงานที่แตกต่างกันสำหรับแต่ละโปรเจกต์"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -1513,17 +1573,19 @@ msgid ""
 "Create projects to organize your tasks. Define a different workflow for each"
 " project."
 msgstr ""
+"สร้างโปรเจกต์เพื่อจัดระเบียบงานของคุณ "
+"กำหนดขั้นตอนการทำงานที่แตกต่างกันสำหรับแต่ละโปรเจกต์"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "สร้างงานโดยการส่งอีเมลไปที่"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr ""
+msgstr "สร้างงานโดยส่งอีเมลไปยังที่อยู่อีเมลของโปรเจกต์ของคุณ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1575,7 +1637,7 @@ msgstr "สกุลเงิน"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Current project of the task"
-msgstr ""
+msgstr "โปรเจกต์ปัจจุบันของงาน"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -1585,7 +1647,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "ขั้นตอนปัจจุบันของงานนี้"
 
 #. module: project
 #. odoo-javascript
@@ -1595,6 +1657,7 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"ขณะนี้เปิดให้ทุกคนที่ดูเอกสารนี้ คลิกเพื่อจำกัดเฉพาะพนักงานภายในเท่านั้น"
 
 #. module: project
 #. odoo-javascript
@@ -1604,6 +1667,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"ขณะนี้จำกัดเฉพาะพนักงานภายในเท่านั้น "
+"คลิกเพื่อให้ทุกคนที่ดูเอกสารนี้สามารถใช้ได้"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
@@ -1640,7 +1705,7 @@ msgstr "อีเมลลูกค้า"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "ความคิดเห็นของลูกค้า"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -1659,7 +1724,7 @@ msgstr "การให้คะแนนลูกค้า"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
+msgstr "สถานะการให้คะแนนของลูกค้า"
 
 #. module: project
 #. odoo-javascript
@@ -1675,7 +1740,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Customers will be added to the followers of their project and tasks."
-msgstr ""
+msgstr "ลูกค้าจะถูกเพิ่มเข้าไปในผู้ติดตามโปรเจกต์และงานของพวกเขา"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1708,7 +1773,7 @@ msgstr "วันที่"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "Date and Stage"
-msgstr ""
+msgstr "วันที่และขั้นตอน"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
@@ -1735,6 +1800,8 @@ msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
 msgstr ""
+"วันที่โปรเจกต์นี้สิ้นสุด "
+"กรอบเวลาที่กำหนดไว้ในโปรเจกต์จะถูกนำมาพิจารณาเมื่อดูการวางแผน"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
@@ -1742,6 +1809,8 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
+"วันที่มอบหมายงานนี้ครั้งล่าสุด (หรือยังไม่ได้มอบหมาย) จากข้อมูลนี้ "
+"คุณจะได้รับสถิติเกี่ยวกับเวลาที่ใช้ในการมอบหมายงานตามปกติ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -1771,7 +1840,7 @@ msgstr "วัน"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "Days to Deadline"
-msgstr ""
+msgstr "วันถึงกำหนด"
 
 #. module: project
 #. odoo-python
@@ -1809,13 +1878,13 @@ msgstr "ธันวาคม"
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan"
-msgstr ""
+msgstr "แผนเริ่มต้น"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr ""
+msgstr "แผนเริ่มต้นสำหรับบัญชีการวิเคราะห์ใหม่สำหรับโปรเจกต์"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1830,17 +1899,22 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"กำหนดขั้นตอนที่จะใช้ในโปรเจกต์จาก\n"
+"                 การสร้างงานจนเสร็จสิ้นงานหรือประเด็นปัญหา\n"
+"                 คุณจะใช้ขั้นตอนเหล่านี้เพื่อติดตามความคืบหน้า\n"
+"                 การแก้ปัญหาของงานหรือประเด็นปัญหา"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Define the steps your projects move through from creation to completion."
 msgstr ""
+"กำหนดขั้นตอนที่โปรเจกต์ของคุณดำเนินการ ตั้งแต่การสร้างงานจนเสร็จสมบูรณ์"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
-msgstr ""
+msgstr "กำหนดขั้นตอนที่งานของคุณดำเนินการ ตั้งแต่การสร้างงานจนถึงเสร็จสิ้น"
 
 #. module: project
 #. odoo-javascript
@@ -1856,7 +1930,7 @@ msgstr "ลบ"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "ลบเหตุการณ์สำคัญ"
 
 #. module: project
 #. odoo-python
@@ -1866,7 +1940,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "ลบขั้นตอน"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1874,6 +1948,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"ส่งมอบบริการของคุณโดยอัตโนมัติ "
+"เมื่อถึงเหตุการณ์สำคัญโดยเชื่อมโยงกับรายการในใบสั่งขาย"
 
 #. module: project
 #. odoo-javascript
@@ -1889,7 +1965,7 @@ msgstr "จัดส่งแล้ว"
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 #, python-format
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "งานที่ขึ้นต่อกัน"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1906,7 +1982,7 @@ msgstr "คำอธิบาย"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
-msgstr ""
+msgstr "คำอธิบายเพื่อให้ข้อมูลเพิ่มเติมและบริบทเกี่ยวกับโปรเจกต์นี้"
 
 #. module: project
 #. odoo-javascript
@@ -1921,7 +1997,7 @@ msgstr "ออกแบบ"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "กำหนดลำดับในการปฏิบัติงาน"
 
 #. module: project
 #. odoo-javascript
@@ -1940,12 +2016,12 @@ msgstr "ไดเจส"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "การตลาดดิจิทัล"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
 msgid "Disabled Rating Warning"
-msgstr ""
+msgstr "คำเตือนการให้คะแนนที่ถูกปิดใช้งาน"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1959,7 +2035,7 @@ msgstr "ละทิ้ง"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
 msgid "Display Access Mode"
-msgstr ""
+msgstr "โหมดการเข้าถึงการแสดงผล"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -1995,7 +2071,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Dissatisfied"
-msgstr ""
+msgstr "ไม่พอใจ"
 
 #. module: project
 #. odoo-python
@@ -3420,7 +3496,7 @@ msgstr "ไม่มีหัวเรื่อง"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
 msgid "No activity types found. Let's create one!"
-msgstr ""
+msgstr "ไม่พบประเภทกิจกรรม มาสร้างกันเถอะ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -3886,7 +3962,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
 msgid "Privacy Visibility Warning"
-msgstr ""
+msgstr "คำเตือนการเปิดเผยข้อมูลส่วนบุคคล"
 
 #. module: project
 #. odoo-javascript
@@ -4553,7 +4629,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Satisfied"
-msgstr ""
+msgstr "พึงพอใจ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sat
@@ -4734,6 +4810,7 @@ msgid ""
 "Set this template on a project's stage to automate email when tasks reach "
 "stages"
 msgstr ""
+"ตั้งค่าเทมเพลตนี้บนขั้นตอนของโปรเจกต์เพื่อส่งอีเมลอัตโนมัติเมื่องานถึงขั้นตอนนั้น"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4881,12 +4958,12 @@ msgstr "การเปลี่ยนแปลงสถานะ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "ขั้นตอนที่ใช้งานอยู่"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "ขั้นตอนในการลบ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -5464,6 +5541,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
 msgstr ""
+"สิ่งเหล่านี้แสดงถึงหมวดหมู่ต่างๆ ของสิ่งที่คุณต้องทำ (เช่น \"โทร\" หรือ "
+"\"ส่งอีเมล\")"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -5900,13 +5979,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "ชั่วโมงการทำงานที่จะกำหนด"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "ชั่วโมงการทำงานเพื่อปิด"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
