@@ -294,7 +294,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-auto">
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 pe-lg-2 pb-lg-5 ps-2 overflow-y-auto">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -308,18 +308,18 @@
                             <t t-call="website_sale.products_breadcrumb">
                                 <t t-set="_classes" t-valuef="d-none d-lg-flex w-100 p-0 small"/>
                             </t>
-                            <div class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between mb-3">
+                            <div class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-3 mb-3">
                                 <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="original_search or search"/>
                                     <t t-set="_form_classes" t-valuef="d-lg-inline {{'d-inline' if not category else 'd-none'}}"/>
                                 </t>
 
                                 <t t-call="website_sale.pricelist_list" t-cache="pricelist">
-                                    <t t-set="_classes" t-valuef="d-none d-lg-inline {{'ms-3' if is_view_active('website_sale.search') else ''}}"/>
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline"/>
                                 </t>
 
                                 <t t-if="is_view_active('website_sale.sort')" t-call="website_sale.sort">
-                                    <t t-set="_classes" t-valuef="d-none d-lg-inline-block ms-3"/>
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline-block"/>
                                 </t>
 
                                 <div t-if="category" class="d-flex align-items-center d-lg-none me-auto">
@@ -333,7 +333,7 @@
                                 </div>
 
                                 <t t-if="is_view_active('website_sale.add_grid_or_list_option')" t-call="website_sale.add_grid_or_list_option">
-                                    <t t-set="_classes" t-valuef="d-flex ms-3 ms-auto"/>
+                                    <t t-set="_classes" t-valuef="d-flex"/>
                                 </t>
 
                                 <button t-if="is_view_active('website_sale.sort') or opt_wsale_categories or opt_wsale_attributes or opt_wsale_attributes_top"
@@ -341,7 +341,7 @@
                                         data-bs-toggle="offcanvas"
                                         data-bs-target="#o_wsale_offcanvas">
                                     <i class="fa fa-sliders"/>
-                                    <span t-if="isFilteringByPrice or attrib_set or tags" t-attf-class="position-absolute top-0 start-100 translate-middle badge border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
+                                    <span t-if="isFilteringByPrice or attrib_set or tags" t-attf-class="position-absolute top-0 start-100 translate-middle border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
                                 </button>
                             </div>
 
@@ -456,7 +456,7 @@
     </template>
 
     <template id="website_sale.sort" name="Sort-by Template">
-        <div t-attf-class="o_sortby_dropdown dropdown dropdown_sorty_by ms-lg-3 {{_classes}}">
+        <div t-attf-class="o_sortby_dropdown dropdown dropdown_sorty_by {{_classes}}">
             <small class="d-none d-lg-inline text-muted">Sort By:</small>
             <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
                 <span class="d-none d-lg-inline">
@@ -477,7 +477,7 @@
 
     <template id="website_sale.add_grid_or_list_option" active="True" name="Grid or List button">
         <t t-set="_activeClasses">border-primary</t>
-        <div t-attf-class="o_wsale_apply_layout btn-group ms-3 {{_classes}}" t-att-data-active-classes="_activeClasses">
+        <div t-attf-class="o_wsale_apply_layout btn-group {{_classes}}" t-att-data-active-classes="_activeClasses">
             <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
             <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode != 'list' else None} o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid">
                 <i class="fa fa-th-large"/>
@@ -509,7 +509,7 @@
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
                 <div class="d-block d-lg-none accordion-item" t-if="hasPricelistDropdown">
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#o_wsale_offcanvas_pricelist"
@@ -528,7 +528,7 @@
                                     role="menuitem"
                                     rel="noindex,nofollow"
                                     t-att-href="'/shop/change_pricelist/%s' % pl.id"
-                                    class="list-group-item border-0 ps-0 pb-0"
+                                    class="list-group-item border-0 ps-0 pb-0 bg-transparent"
                                     >
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
@@ -548,7 +548,7 @@
                     <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
                     <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_orderby"
@@ -566,7 +566,7 @@
                                    role="menuitem"
                                    rel="noindex,nofollow"
                                    t-att-href="keep('/shop', order=sortby[0])"
-                                   class="list-group-item border-0 ps-0 pb-0">
+                                   class="list-group-item border-0 ps-0 pb-0 bg-transparent">
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
                                                t-attf-onclick="location.href='#{keep('/shop', order=sortby[0])}';"
@@ -584,7 +584,7 @@
                 <div t-if="opt_wsale_categories"
                      class="accordion-item">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_categories"
@@ -617,9 +617,9 @@
                         <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
 
                         <div t-if="a.value_ids and len(a.value_ids) &gt; 1"
-                             t-attf-class="accordion-item {{(_status == 'active') and 'order-1' or 'order-2'}}">
+                             t-attf-class="accordion-item border-top-0 {{(_status == 'active') and 'order-1' or 'order-2'}}">
                             <h2 class="accordion-header mb-0" t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header">
-                                <button t-attf-class="o_wsale_offcanvas_title accordion-button border-top rounded-0 {{ not attrib_values and 'collapsed'}}"
+                                <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{ not attrib_values and 'collapsed'}}"
                                         type="button"
                                         t-att-data-status="_status"
                                         data-bs-toggle="collapse"
@@ -637,7 +637,7 @@
                                 <div class="accordion-body pt-0">
                                     <div class="list-group list-group-flush"
                                          t-if="a.display_type == 'radio' or a.display_type == 'pills' or a.display_type == 'select'">
-                                        <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                                        <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0 bg-transparent">
                                             <div class="form-check mb-1">
                                                 <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
                                                 <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
@@ -846,7 +846,7 @@
                         <i class="oi oi-close"/>
                     </a>
                     <t t-foreach="attributes" t-as="a">
-                        <div class="accordion-item nav-item mb-1" t-if="a.value_ids and len(a.value_ids) &gt; 1">
+                        <div class="accordion-item nav-item mb-1 border-0" t-if="a.value_ids and len(a.value_ids) &gt; 1">
                             <h6 class="mb-3">
                                 <b class="o_products_attributes_title d-none d-lg-block" t-field="a.name"/>
                             </h6>
