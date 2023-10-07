@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tree_application" model="ir.ui.view">
+        <field name="name">Application List</field>
+        <field name="model">application</field>
+        <field name="arch" type="xml">
+            <tree create="1" delete="1" multi_edit="0" sample="1">
+                <field name='flag_status' invisible='1'/>
+                <field name="year"/>
+                <field name="project_name"/>
+                <field name="main_focuses"/>
+                <field name="application_institution"/>
+                <field name="pi"/>
+                <field name="signature"/>
+                <field name="status" widget="badge" decoration-primary="flag_status == 'to_submit'" decoration-info="flag_status == 'submitted'" decoration-success="flag_status == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_application" model="ir.ui.view">
+        <field name="name">Application Form</field>
+        <field name="model">application</field>
+        <field name="arch" type="xml">
+            <form string="application - Form" duplicate="0">
+                <header>
+                    <field name="status" widget="statusbar" readonly="1"/>
+                    <button string="Submit" name="action_submit_application" type="object" class="btn-primary" attrs="{'invisible': [('flag_status', '!=', 'to_submit')]}" groups="application.application_scientist"/>
+                    <button string="Approve" name="action_approve_application" type="object" class="btn-primary" attrs="{'invisible': [('flag_status', '!=', 'submitted')]}" groups="application.application_appraiser"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="TO SUBMIT" bg_color="bg-primary" attrs="{'invisible':[('flag_status', '!=', 'to_submit')]}"/>
+                    <widget name="web_ribbon" title="SUBMITTED" bg_color="bg-info" attrs="{'invisible':[('flag_status', '!=', 'submitted')]}"/>
+                    <widget name="web_ribbon" title="APPROVED" bg_color="bg-success" attrs="{'invisible':[('flag_status', '!=', 'approved')]}"/>
+                    <sheet>
+                        <group>
+                            <group name="group_left">
+                                <field name="year"/>
+                                <field name="project_name"/>
+                                <field name="main_focuses"/>
+                                <field name="date"/>
+                            </group>
+                            <group name="group_right">
+                                <field name="application_institution"/>
+                                <field name="pi"/>
+                                <field name="signature"/>
+                                <field name="flag_status" invisible="1"/>
+                            </group>
+                        </group>
+                        <separator string="Articles to be produced:"/>
+                        <field name="atticles" nolable="1"/>
+                    </sheet>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="application_action" model="ir.actions.act_window">
+        <field name="name">Application</field>
+        <field name="res_model">application</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="search_view_id" ref="view_request_service_tree"/> -->
+        <field name="groups_id" eval="[(4, ref('application.application_scientist')), (4, ref('application.application_appraiser'))]"/>
+    </record>
+</odoo>

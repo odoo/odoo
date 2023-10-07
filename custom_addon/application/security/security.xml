@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+
+        <record id="application_access" model="ir.module.category">
+            <field name="name">Application</field>
+        </record>
+
+        <record id="application_scientist" model="res.groups">
+            <field name="name">Scientist</field>
+            <field name="category_id" ref="application_access"/>
+        </record>
+
+        <record id="application_appraiser" model="res.groups">
+            <field name="name">Appraiser</field>
+            <field name="category_id" ref="application_access"/>
+        </record>
+
+        <record model="ir.rule" id="application_scientist_rule">
+            <field name="name">Application scientist: Only then can see self</field>
+            <field name="model_id" ref="model_application"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4,ref('application_scientist'))]"/>
+        </record>
+
+        <record model="ir.rule" id="application_appraiser_rule">
+            <field name="name">Application appraiser</field>
+            <field name="model_id" ref="model_application"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4,ref('application_appraiser'))]"/>
+        </record>
+
+    </data>
+</odoo>
