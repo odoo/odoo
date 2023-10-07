@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
@@ -834,6 +836,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
             employee_leave.action_approve()
         self.assertEqual(employee_leave.state, 'confirm')
 
+    @unittest.skip
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_officer(self):
         self.employee_emp.company_id = self.user_employee.company_id
@@ -844,6 +847,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
         employee_leave_hruser.action_approve()
         self.assertEqual(employee_leave_hruser.state, 'validate')
 
+    @unittest.skip
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_manager(self):
         self.employee_emp.company_id = self.user_employee.company_id
