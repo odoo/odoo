@@ -528,7 +528,7 @@
                                     role="menuitem"
                                     rel="noindex,nofollow"
                                     t-att-href="'/shop/change_pricelist/%s' % pl.id"
-                                    class="list-group-item border-0 ps-0 pb-0"
+                                    class="list-group-item border-0 ps-0 pb-0 bg-transparent"
                                     >
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
@@ -566,7 +566,7 @@
                                    role="menuitem"
                                    rel="noindex,nofollow"
                                    t-att-href="keep('/shop', order=sortby[0])"
-                                   class="list-group-item border-0 ps-0 pb-0">
+                                   class="list-group-item border-0 ps-0 pb-0 bg-transparent">
                                     <div class="form-check d-inline-block">
                                         <input type="radio"
                                                t-attf-onclick="location.href='#{keep('/shop', order=sortby[0])}';"
@@ -637,7 +637,7 @@
                                 <div class="accordion-body pt-0">
                                     <div class="list-group list-group-flush"
                                          t-if="a.display_type == 'radio' or a.display_type == 'pills' or a.display_type == 'select'">
-                                        <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                                        <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0 bg-transparent">
                                             <div class="form-check mb-1">
                                                 <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
                                                 <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
