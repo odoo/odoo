@@ -327,11 +327,18 @@ $-seen-urls: ();
         --HeaderSeparator-bg-color: #{rgba($navbar-dark-active-color, .15)};
 
         @extend .navbar-dark;
+    }
 
-        .btn-close {
+    .btn-close {
+        // As $btn-close-color: $body-color, we only need the filter to be active in this case
+        @if (color-contrast($-menu-color) != color-contrast($body-bg)) {
+            // As btn-close icon is an svg, we change it's color via a filter
+            // Note that this filter will invert the color and not always make it white
+            // dark background -> white filter, light background -> black filter
             filter: $btn-close-white-filter;
         }
     }
+
     @include o-add-gradient('menu-gradient');
 }
 
