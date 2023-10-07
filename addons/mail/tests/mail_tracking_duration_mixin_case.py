@@ -37,7 +37,8 @@ class MailTrackingDurationMixinCase(MailCommon):
 
         cls.mock_start_time = datetime(2023, 2, 15, 12, 0, 0)
 
-        with patch.object(cls.env.cr, 'now', return_value=cls.mock_start_time):
+        cls.env.cr.cache
+        with patch.object(cls.env.cr._cursor, 'now', return_value=cls.mock_start_time):
             cls.rec_1, cls.rec_2, cls.rec_3, cls.rec_4 = cls.env[tested_model].create(
                 [record_values for i in range(4)])
         cls.flush_tracking(cls)
@@ -76,7 +77,7 @@ class MailTrackingDurationMixinCase(MailCommon):
         Moves a record's many2one field through several values and asserts the duration spent in that value each time
         """
 
-        with patch.object(self.env.cr, 'now', return_value=self.mock_start_time) as now:
+        with patch.object(self.env.cr._cursor, 'now', return_value=self.mock_start_time) as now:
 
             track_duration_tracking = defaultdict(lambda: 0)
             record = self.rec_1
@@ -127,7 +128,7 @@ class MailTrackingDurationMixinCase(MailCommon):
         spent in that value each time.
         """
 
-        with patch.object(self.env.cr, 'now', return_value=self.mock_start_time) as now:
+        with patch.object(self.env.cr._cursor, 'now', return_value=self.mock_start_time) as now:
 
             track_duration_tracking1 = defaultdict(lambda: 0)
             track_duration_tracking2 = defaultdict(lambda: 0)

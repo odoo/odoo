@@ -54,5 +54,5 @@ class TestImLivechatReport(TestImLivechatCommon):
 
     @classmethod
     def _create_message(cls, channel, author, date):
-        with patch.object(cls.env.cr, 'now', lambda: date):
+        with patch.object(cls.env.cr._cursor, 'now', lambda: date):
             return channel.message_post(author_id=author.id, body=f'Message {date}')

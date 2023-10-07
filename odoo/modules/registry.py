@@ -144,7 +144,7 @@ class Registry(Mapping):
         self.loaded_xmlids = set()
 
         self.db_name = db_name
-        self._db = odoo.sql_db.db_connect(db_name)
+        self._db = odoo.sql_db.db_lazy_connect(db_name)
 
         # cursor for test mode; None means "normal" mode
         self.test_cr = None

@@ -505,6 +505,40 @@ class Cursor(BaseCursor):
         return self._now
 
 
+class LazyCursor(BaseCursor):
+    def __init__(self, pool, dbname, dsn):
+        self._cursor = None
+        self.__pool = pool
+        self.dbname = dbname
+        self.__dsn = dsn
+        super().__init__()
+
+    def __getattr__(self, name):
+        if not self._cursor:
+            # we can predict readonly/write from the threading local (default readonly)
+            self._cursor = Cursor(self.__pool, self.dbname, self.__dsn)
+            self._cursor.precommit = self.precommit
+            self._cursor.postcommit = self.postcommit
+            self._cursor.prerollback = self.prerollback
+            self._cursor.postrollback = self.postrollback
+            # By default a cursor has no transaction object.  A transaction object
+            # for managing environments is instantiated by registry.cursor().  It
+            # is not done here in order to avoid cyclic module dependencies.
+            self._cursor.transaction = self.transaction
+        return getattr(self._cursor, name)
+
+    def __setattr__(self, name, value):
+        if name == '_cursor':
+            return super().__setattr__(name, value)
+        if name == 'transaction' and self._cursor:
+            self._cursor.transaction = value
+        if name in ('precommit', 'postcommit', 'prerollback', 'postrollback', 'transaction', '_LazyCursor__pool', '_LazyCursor__dsn', 'dbname'):
+            return super().__setattr__(name, value)
+        if self._cursor:
+            return self._cursor.__setattr__(name, value)
+        raise NotImplementedError
+
+
 class TestCursor(BaseCursor):
     """ A pseudo-cursor to be used for tests, on top of a real cursor. It keeps
         the transaction open across requests, and simulates committing, rolling
@@ -755,6 +789,30 @@ class Connection(object):
         raise NotImplementedError()
     __nonzero__ = __bool__
 
+class LazyConnection:
+    def __init__(self, pool, dbname, dsn):
+        self.__dbname = dbname
+        self.__dsn = dsn
+        self.__pool = pool
+
+    @property
+    def dsn(self):
+        dsn = dict(self.__dsn)
+        dsn.pop('password', None)
+        return dsn
+
+    @property
+    def dbname(self):
+        return self.__dbname
+
+    def cursor(self):
+        _logger.debug('create cursor to %r', self.dsn)
+        return LazyCursor(self.__pool, self.__dbname, self.__dsn)
+
+    def __bool__(self):
+        raise NotImplementedError()
+    __nonzero__ = __bool__
+
 def connection_info_for(db_or_uri):
     """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)
 
@@ -804,6 +862,20 @@ def db_connect(to, allow_uri=False):
     if not allow_uri and db != to:
         raise ValueError('URI connections not allowed')
     return Connection(_Pool, db, info)
+
+def db_lazy_connect(to):
+    global _Pool
+    if _Pool is None:
+        _Pool = ConnectionPool(int(
+            odoo.evented and tools.config['db_maxconn_gevent']
+            or tools.config['db_maxconn']
+        ))
+
+    db, info = connection_info_for(to)
+    if db != to:
+        raise ValueError('URI connections not allowed')
+    return LazyConnection(_Pool, db, info)
+
 
 def close_db(db_name):
     """ You might want to call odoo.modules.registry.Registry.delete(db_name) along this function."""

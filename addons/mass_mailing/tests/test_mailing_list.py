@@ -106,7 +106,7 @@ class TestMailingListMerge(MassMailCommon):
             self.assertFalse(any(contact.opt_out for contact in new))
 
         with freeze_time('2022-01-01 12:00'), \
-             patch.object(self.env.cr, 'now', lambda: datetime(2022, 1, 1, 12, 0, 0)):
+             patch.object(self.env.cr._cursor, 'now', lambda: datetime(2022, 1, 1, 12, 0, 0)):
             contact_form = Form(self.env['mailing.contact'])
             contact_form.name = 'Contact_test'
             with contact_form.subscription_ids.new() as subscription:

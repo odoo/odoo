@@ -1755,6 +1755,10 @@ class Request:
         self._set_request_dispatcher(rule)
         ir_http._authenticate(rule.endpoint)
         ir_http._pre_dispatch(rule, args)
+        if isinstance(self.env.cr, odoo.sql_db.LazyCursor) and self.env.cr._cursor:
+            self.env.cr.commit()
+            self.env.cr.close()
+            self.env.cr._cursor = None
         response = self.dispatcher.dispatch(rule.endpoint, args)
         # the registry can have been reniewed by dispatch
         self.registry['ir.http']._post_dispatch(response)

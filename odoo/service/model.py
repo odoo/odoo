@@ -138,6 +138,8 @@ def retrying(func, env):
                 if env.cr._closed:
                     raise
                 env.cr.rollback()
+                if isinstance(env.cr, odoo.sql_db.LazyCursor):
+                    env.cr._cursor = None
                 env.registry.reset_changes()
                 if request:
                     request.session = request._get_session_and_dbname()[0]
