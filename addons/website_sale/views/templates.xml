@@ -294,7 +294,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-auto">
+                            <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 pe-lg-2 pb-lg-5 ps-2 overflow-y-auto">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -308,18 +308,18 @@
                             <t t-call="website_sale.products_breadcrumb">
                                 <t t-set="_classes" t-valuef="d-none d-lg-flex w-100 p-0 small"/>
                             </t>
-                            <div class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between mb-3">
+                            <div class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-3 mb-3">
                                 <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="original_search or search"/>
                                     <t t-set="_form_classes" t-valuef="d-lg-inline {{'d-inline' if not category else 'd-none'}}"/>
                                 </t>
 
                                 <t t-call="website_sale.pricelist_list" t-cache="pricelist">
-                                    <t t-set="_classes" t-valuef="d-none d-lg-inline {{'ms-3' if is_view_active('website_sale.search') else ''}}"/>
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline"/>
                                 </t>
 
                                 <t t-if="is_view_active('website_sale.sort')" t-call="website_sale.sort">
-                                    <t t-set="_classes" t-valuef="d-none d-lg-inline-block ms-3"/>
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline-block"/>
                                 </t>
 
                                 <div t-if="category" class="d-flex align-items-center d-lg-none me-auto">
@@ -333,15 +333,15 @@
                                 </div>
 
                                 <t t-if="is_view_active('website_sale.add_grid_or_list_option')" t-call="website_sale.add_grid_or_list_option">
-                                    <t t-set="_classes" t-valuef="d-flex ms-3 ms-auto"/>
+                                    <t t-set="_classes" t-valuef="d-flex"/>
                                 </t>
 
                                 <button t-if="is_view_active('website_sale.sort') or opt_wsale_categories or opt_wsale_attributes or opt_wsale_attributes_top"
-                                        t-attf-class="btn btn-{{navClass}} position-relative ms-3 {{not opt_wsale_attributes_top and 'd-lg-none'}}"
+                                        t-attf-class="btn btn-{{navClass}} position-relative {{not opt_wsale_attributes_top and 'd-lg-none'}}"
                                         data-bs-toggle="offcanvas"
                                         data-bs-target="#o_wsale_offcanvas">
                                     <i class="fa fa-sliders"/>
-                                    <span t-if="isFilteringByPrice or attrib_set or tags" t-attf-class="position-absolute top-0 start-100 translate-middle badge border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
+                                    <span t-if="isFilteringByPrice or attrib_set or tags" t-attf-class="position-absolute top-0 start-100 translate-middle border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
                                 </button>
                             </div>
 
@@ -456,7 +456,7 @@
     </template>
 
     <template id="website_sale.sort" name="Sort-by Template">
-        <div t-attf-class="o_sortby_dropdown dropdown dropdown_sorty_by ms-lg-3 {{_classes}}">
+        <div t-attf-class="o_sortby_dropdown dropdown dropdown_sorty_by {{_classes}}">
             <small class="d-none d-lg-inline text-muted">Sort By:</small>
             <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
                 <span class="d-none d-lg-inline">
@@ -477,7 +477,7 @@
 
     <template id="website_sale.add_grid_or_list_option" active="True" name="Grid or List button">
         <t t-set="_activeClasses">active</t>
-        <div t-attf-class="o_wsale_apply_layout btn-group ms-3 {{_classes}}" t-att-data-active-classes="_activeClasses">
+        <div t-attf-class="o_wsale_apply_layout btn-group {{_classes}}" t-att-data-active-classes="_activeClasses">
             <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
             <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode != 'list' else None} o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid">
                 <i class="fa fa-th-large"/>
