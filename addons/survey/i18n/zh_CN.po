@@ -242,6 +242,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- 我们使用公司的标志创建调查（处理多公司案例）。 -->\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    认证：<t t-out=\"object.survey_id.display_name or ''\">反馈表</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>尊敬的<span t-out=\"object.partner_id.name or 'participant'\">参与者</span></p>\n"
+"                <p>\n"
+"                    随函附上您的\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">家具制作</strong>\n"
+"                    证书\n"
+"                </p>\n"
+"                <p>祝贺您通过测试！您的得分为<strong t-out=\"object.scoring_percentage\"></strong>%！</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -278,6 +304,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的<t t-out=\"object.partner_id.name or 'participant'\">用户</t><br><br>，\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            您已受邀参加一项新认证。 \n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            我们正在进行一项调查，希望您能给予答复。\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    开始认证\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    开始调查\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            请回答 <t t-out=\"format_date(object.deadline) or ''\">2021 年 5 月 5 日</t>的调查。<br><br>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            祝您好运！\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            感谢您的参与。\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -508,6 +565,8 @@ msgid ""
 "<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">Start</span>\n"
 "                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 msgstr ""
+"<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">开始</span>\n"
+"                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -618,12 +677,12 @@ msgstr "<span>剩余尝试数量</span>："
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader!</span>"
-msgstr ""
+msgstr "<span>我们大名鼎鼎的领导！</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it!</span>"
-msgstr ""
+msgstr "<span>我们的销售人员有优势，但你也能做到！</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -641,6 +700,8 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr ""
+"<span>此证书颁发给</span>\n"
+"                                <br/>"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -679,6 +740,8 @@ msgid ""
 "<span>for successfully completing</span>\n"
 "                                <br/>"
 msgstr ""
+"<span>成功完成了</span>\n"
+"                                <br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q4
@@ -828,7 +891,7 @@ msgstr "非洲"
 msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
-msgstr ""
+msgstr "看完这段视频后，您会发誓今年不再拖延修剪树篱的时间吗？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -855,6 +918,8 @@ msgid ""
 "All conditional display questions need a triggering question.\n"
 "Please disable \"Conditional Display\" or specify a triggering question."
 msgstr ""
+"所有条件显示问题都需要一个触发问题。\n"
+"请禁用 \"条件显示\" 或指定一个触发问题。"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -867,6 +932,8 @@ msgid ""
 "All questions triggered by another need a triggering answer.\n"
 "Please disable \"Conditional Display\" or specify a triggering answer."
 msgstr ""
+"所有由其他问题触发的问题都需要一个触发答案。\n"
+"请禁用 \"条件显示\" 或指定一个触发答案。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -876,7 +943,7 @@ msgstr "所有调查"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "允许触发问题"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -1392,7 +1459,7 @@ msgstr "条件显示"
 #, python-format
 msgid ""
 "Conditional display is not available when questions are randomly picked."
-msgstr ""
+msgstr "随机抽取问题时，无法使用条件显示。"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1534,7 +1601,7 @@ msgstr "创建在线会话"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Create a custom survey from scratch"
-msgstr ""
+msgstr "从头开始创建自定义调查问卷"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1723,7 +1790,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "当输入的答案无效时显示。"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1733,7 +1800,7 @@ msgstr "我们是否出售声学Bloc屏风？"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q3
 msgid "Do you have any other comments, questions, or concerns?"
-msgstr ""
+msgstr "您还有其他意见、问题或关切吗？"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
@@ -1748,7 +1815,7 @@ msgstr "狗"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q1
 msgid "Dogwood is from which family of trees?"
-msgstr ""
+msgstr "山茱萸属于哪个树科？"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q2
@@ -1768,7 +1835,7 @@ msgstr "抽屉"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "复制问题"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -1807,7 +1874,7 @@ msgstr "结束日期和时间"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "End of Survey"
-msgstr ""
+msgstr "调查结束"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -1927,7 +1994,7 @@ msgstr "自由文本答案"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q4
 msgid "From which continent is native the Scots pine (pinus sylvestris)?"
-msgstr ""
+msgstr "苏格兰松（欧洲赤松）原产于哪个大洲？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug1
@@ -2064,7 +2131,7 @@ msgstr "历史"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q3
 msgid "How frequently do you buy products online?"
-msgstr ""
+msgstr "您多久进行一次网购？"
 
 #. module: survey
 #. odoo-python
@@ -2113,7 +2180,7 @@ msgstr "在过去6个月中，您通过了多少个订单？"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q4
 msgid "How many times did you order products on our website?"
-msgstr ""
+msgstr "您在我们的网站上订购过多少次产品？"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_4
@@ -2123,7 +2190,7 @@ msgstr "我们有多少个转角桌的版本？"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q3
 msgid "How many years did the 100 years war last?"
-msgstr ""
+msgstr "百年战争持续了多少年？"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_1
@@ -2336,7 +2403,7 @@ msgstr "在下面的列表中，选择所有针叶树。"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q2
 msgid "In which country did the bonsai technique develop?"
-msgstr ""
+msgstr "盆景技术起源于哪个国家？"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_scored_question
@@ -2419,12 +2486,12 @@ msgstr "该用户输入是否是调查会话的一部分。"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q3
 msgid "Is the wood of a coniferous hard or soft?"
-msgstr ""
+msgstr "针叶树的木质是硬还是软？"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before its trigger question?"
-msgstr ""
+msgstr "该问题是否放在了触发性问题之前？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -2510,7 +2577,7 @@ msgstr "加入会话"
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
 msgid "Just to categorize your answers, don't worry."
-msgstr ""
+msgstr "只是将您的答案归类，问题不大。"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -2668,7 +2735,7 @@ msgstr "在线会话"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__live_session
 msgid "Live session"
-msgstr ""
+msgstr "在现会话"
 
 #. module: survey
 #. odoo-javascript
@@ -4617,7 +4684,7 @@ msgstr "此讯息将会在调查结束后显示"
 #, python-format
 msgid ""
 "This question is positioned before its trigger (\"%s\") and will be skipped."
-msgstr ""
+msgstr "该问题位于触发器（\"%s\"）之前，将被跳过。"
 
 #. module: survey
 #. odoo-python
@@ -4645,7 +4712,7 @@ msgstr "本部分涉及您的常规信息。回答这些问题有助于确定您
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
 msgid "This section is about our eCommerce experience itself."
-msgstr ""
+msgstr "本节介绍我们的电子商务体验本身。"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
@@ -5236,7 +5303,7 @@ msgstr "您可以通过不同的方式共享您的链接：电子邮件，邀请
 msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
-msgstr ""
+msgstr "在线会话进行时，无法删除调查表 \"%(survey_names)s\" 中的问题。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -5466,4 +5533,4 @@ msgstr "到"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
-msgstr ""
+msgstr "⚠️ 该问题位于触发器之前，将被跳过。"
