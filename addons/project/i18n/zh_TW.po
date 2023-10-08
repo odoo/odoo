@@ -63,7 +63,7 @@ msgstr "# 截止剩餘天數"
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
 #: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
-msgstr "# 任務"
+msgstr "任務數目"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
@@ -78,7 +78,7 @@ msgstr "# 工作日結束"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
-msgstr "#  任務"
+msgstr "任務數目"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
@@ -247,6 +247,9 @@ msgid ""
 "    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>記錄備註</b>，作為內部通訊方式（關注此任務的人，不會因為你記錄備註\n"
+"    而收到通知，除非你特別標記他們）。使用「@提及」以特別指明某位同事，\n"
+"    或使用「#提及」接觸整個團隊。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -538,7 +541,7 @@ msgstr "添加描述"
 msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
-msgstr "添加列以將您的任務組織成<b>階段，</b><i>例如 New-In Progress-Done</i> 。"
+msgstr "加入不同直欄，將你的任務分類整理成不同<b>階段</b>，例如：新任務、進行中、已完成。"
 
 #. module: project
 #. openerp-web
@@ -679,7 +682,7 @@ msgstr "確定要刪除這些階段？"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "組裝"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -920,6 +923,8 @@ msgid ""
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 " %s"
 msgstr ""
+"使用電子郵件閘道，與客戶就任務進行溝通。將標誌設計附加至任務中，以便訊息能夠從設計師傳達給印製 T 恤的工人。使用該圖示，整理 %s "
+"不同訂單之間的優先級別。 %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1393,7 +1398,7 @@ msgstr "信件來自"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "電子郵件範本"
+msgstr "電郵範本"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -1831,7 +1836,7 @@ msgstr "公司"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "議題版本"
+msgstr "發行版本"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -1979,14 +1984,14 @@ msgstr "最近評分：滿意"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr "建立您的第一個 <b>專案</b>。"
+msgstr "讓我們一起創建你的第一個<b>專案</b>。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr "建立您的第一個 <b>任務</b>。"
+msgstr "讓我們一起創建你的第一個<b>任務</b>。"
 
 #. module: project
 #. openerp-web
@@ -2013,14 +2018,14 @@ msgstr "讓我們等待您的客戶表現出來。"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr "來自傳入電子郵件的 cc 清單。"
+msgstr "收到電郵的副本寄送地址清單。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Live"
-msgstr "Live"
+msgstr "直播"
 
 #. module: project
 #. openerp-web
@@ -2374,7 +2379,7 @@ msgstr "確定"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr "已完成的 Sprint"
+msgstr "舊有已完成衝刺"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2950,7 +2955,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "重複單位"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
@@ -3181,21 +3186,21 @@ msgstr "分錄您的任務在子里程碑中組織您的工作"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr "Sprint 待辦清單"
+msgstr "衝刺待辦清單"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr "Sprint 完成"
+msgstr "衝刺完成"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr "Sprint 執行中"
+msgstr "衝刺進行中"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3318,7 +3323,7 @@ msgstr "週日"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr "T-shirt 列印中"
+msgstr "列印 T 恤"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
