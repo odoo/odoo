@@ -439,7 +439,7 @@ msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr ""
+msgstr "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -508,11 +508,13 @@ msgid ""
 "<span title=\"See Subtasks\" class=\"subtask_list_button fa fa-check-"
 "square-o me-1\"/>"
 msgstr ""
+"<span title=\"See Subtasks\" class=\"subtask_list_button fa fa-check-"
+"square-o me-1\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<span title=\"e\" class=\"fa fa-check-square-o me-1\"/>"
-msgstr ""
+msgstr "<span title=\"e\" class=\"fa fa-check-square-o me-1\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -611,7 +613,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "Una sub-attività non può essere ricorrente."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -1058,6 +1060,9 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"Modifica automaticamente lo stato quando il cliente esprime un'opinione su questa fase.\n"
+" * Un feedback positivo da parte del cliente aggiornerà lo stato in 'Approvato' (pallino verde).\n"
+" * Un feedback neutro o negativo farà sì che lo stato kanban diventi 'Cambiamenti richiesti' (pallino arancione).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1199,7 +1204,7 @@ msgstr "Impossibile aggregare il campo %r."
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 #, python-format
 msgid "Changes Requested"
-msgstr ""
+msgstr "Cambiamenti richiesti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
@@ -1247,12 +1252,12 @@ msgstr "Chiuso il"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 msgid "Closed State"
-msgstr ""
+msgstr "Stato chiuso"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
 msgid "Closed Sub-tasks Count"
-msgstr ""
+msgstr "Numero di sub-attività chiuse"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1656,6 +1661,8 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"Data dell'ultima modifica dello stadio della tua attività.\n"
+"Basandoti su questo dato, puoi individuare le attività in stallo e ottenere statistiche sul tempo impiegato di solito per il passaggio da uno stadio all'altro."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1781,7 +1788,7 @@ msgstr "Elimina Milestone"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #, python-format
 msgid "Delete Project Stage"
-msgstr ""
+msgstr "Elimina fase progetto"
 
 #. module: project
 #. odoo-python
@@ -2274,7 +2281,7 @@ msgstr "Cronologia"
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "Ristrutturazione casa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3098,7 +3105,7 @@ msgstr "Nessuna milestone"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "Nessun progetto"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__none
@@ -3721,7 +3728,7 @@ msgstr "Etichette progetto"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "Procedura guidata eliminazione fase attività progetto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3731,7 +3738,7 @@ msgstr "Lavori progetto"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "Titolo progetto"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -4292,7 +4299,7 @@ msgstr "Imposta priorità su %s"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "Imposta stato come..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4593,13 +4600,13 @@ msgstr "Attività del lavoro"
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "Attività approvata"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "Attività annullata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4642,7 +4649,7 @@ msgstr "Lavoro completato"
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "Attività in corso"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -4702,17 +4709,17 @@ msgstr "Titolo del lavoro..."
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "Attività in attesa"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "Attività approvata"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task canceled"
-msgstr ""
+msgstr "Attività annullata"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4722,7 +4729,7 @@ msgstr "Descrizione attività..."
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr ""
+msgstr "Attività completata"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4974,7 +4981,7 @@ msgstr "Questa settimana"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "L'attività è bloccata da un'altra attività non completata"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5150,7 +5157,7 @@ msgstr "Tipo di attività eccezione sul record."
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "Annulla archiviazione progetti"
 
 #. module: project
 #. odoo-python
@@ -5311,6 +5318,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Usa queste parole chiave nel titolo per configurare nuove attività:\n"
+"\n"
+"        30h Assegna 30 ore all'attività\n"
+"        #tags Configura tag per l'attività\n"
+"        @user Assegna l'attivià ad un utente\n"
+"        ! Configura la priorità dell'attività come elevata\n"
+"\n"
+"        Assicurati di utilizzare il formato e l'ordine giusti ad es. Migliora lo schermo di configurazione 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5454,6 +5469,7 @@ msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
 msgstr ""
+"Vuoi annullare l'archiviazione di tutti i progetti presenti in queste fasi?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
@@ -5514,6 +5530,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
+"Non è possibile eliminare fasi che contengono progetti. È possibile "
+"archiviarle oppure eliminare i progetti corrispondenti."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5521,6 +5539,8 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
+"Non è possibile eliminare fasi che contengono progetti. Elimina prima tutti "
+"i progetti corrispondenti."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard

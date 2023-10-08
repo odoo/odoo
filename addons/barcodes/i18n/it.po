@@ -27,6 +27,8 @@ msgstr ""
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
 msgstr ""
+"\"*\" non è uno modello di espressione regolare valido per un codice a "
+"barre. Intendevi \".*\"?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -217,13 +219,19 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"I modelli possono anche definire il modo in cui i valori numerici come il peso e il prezzo possono essere\n"
+"                                codificati nel codice a barre. I valori sono indicati da <code>{NNN}</code> dove i caratteri N\n"
+"                                definiscono dove sono codificate le cifre del numero. Sono supportati anche i numeri a virgola mobile\n"
+"                                con i decimali indicati dai caratteri D, come <code>{NNNDD}</code>. In questi casi,\n"
+"                                il campo codice a barre nei record associati <i>deve</i> mostrare queste cifre come\n"
+"                                zeri."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Per favore, scansiona di nuovo!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
