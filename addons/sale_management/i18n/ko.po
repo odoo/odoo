@@ -69,12 +69,12 @@ msgstr "메모 추가"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
-msgstr "품목 추가하기"
+msgstr "품목 추가"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
-msgstr "영역 추가"
+msgstr "줄 추가"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -125,7 +125,7 @@ msgstr "회사"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경 설정"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
@@ -208,12 +208,12 @@ msgstr "요약"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Disc.%"
-msgstr "할인 %"
+msgstr "할인율"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
 msgid "Discount (%)"
-msgstr "할인(%)"
+msgstr "할인 (%)"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__display_name
@@ -305,7 +305,7 @@ msgstr "선"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Lines"
-msgstr "명세"
+msgstr "내용"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
@@ -316,12 +316,12 @@ msgstr "회계용 판매 주문 내역에 필수 상품 및 단위가 없습니�
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Note"
-msgstr "노트"
+msgstr "메모"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr "견적의 유효 날짜 계산 일 수"
+msgstr "날짜로 계산한 견적서 유효 기간입니다."
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
@@ -348,7 +348,7 @@ msgstr "온라인 승인"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Optional Products"
-msgstr "선택 품목"
+msgstr "별도 선택 품목"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
@@ -413,7 +413,7 @@ msgstr "견적 서식 명세"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr "견적 서식 명세"
+msgstr "견적서 양식 항목"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
@@ -438,7 +438,7 @@ msgstr "견적서 양식"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr "다음 이후에 견적 만료"
+msgstr "견적서 유효 기간"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -534,7 +534,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Terms & Conditions"
-msgstr "내용 및 조건"
+msgstr "이용 약관"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -546,14 +546,16 @@ msgstr "이용 약관"
 msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
-msgstr "관리자는 판매 설정에서 기본 이용 약관을 설정할 수 있습니다. 이 견적 서식을 선택하면 여기에 설정된 용어가 표시됩니다."
+msgstr ""
+"판매 설정 메뉴에 있는 이용 약관 기본값을 사용하도록 관리자가 설정할 수 있습니다. 이 견적서 양식을 사용할 경우에는 여기에 입력한 "
+"약관이 표시됩니다."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
-msgstr "이 이메일 서식은 확인시 전송됩니다. 아무 것도 보내지 않으려면 비워 두십시오."
+msgstr "승인이 완료되면 해당 이메일 서식을 발송합니다. 비워둘 경우 발송을 하지 않습니다."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present

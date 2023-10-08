@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -531,6 +531,7 @@ msgstr "친애하는"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
 msgstr "경비에 대한 기본 별칭 이름"
 
@@ -542,12 +543,14 @@ msgstr "기본 범주"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
 msgstr "기본 경비 카테고리"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_journal_id
 msgid "Default Expense Journal"
 msgstr "기본 경비 분개장"
 
@@ -1194,6 +1197,7 @@ msgstr "지연된 활동"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr "직원들이 이메일로 비용을 기록하게 하십시오."
 
@@ -1509,6 +1513,7 @@ msgstr "회사에서 지불하는 비용에 대해 허용되는 결제 수단입
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
 msgstr "회사에서 지불하는 비용에 대해 사용 가능한 결제 방법"
 
@@ -1675,6 +1680,7 @@ msgstr "결제 등록"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
 msgstr "급여 명세서에서 비용을 상환합니다."
 
@@ -1786,6 +1792,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
 msgstr "청구서를 OCR로 전송하여 비용 생성"
 
@@ -1952,6 +1959,7 @@ msgstr "팀 승인자"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_test__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr "직원 경비를 생성할 때 사용되는 회사의 기본 전표입니다."
@@ -2006,6 +2014,15 @@ msgstr "여기에서 현재 모든 비용의 상태를 확인할 수 있습니�
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr "분할 후의 합계는 동일하게 유지됩니다."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The work email of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2319,7 +2336,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
-msgstr ""
+msgstr "회사가 다를 경우 같은 보고서 내에서 비용을 보고할 수 없습니다."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

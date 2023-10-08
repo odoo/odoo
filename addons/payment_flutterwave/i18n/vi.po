@@ -3,7 +3,6 @@
 # 	* payment_flutterwave
 # 
 # Translators:
-# Dung Nguyen Thi <dungnt@trobz.com>, 2023
 # Wil Odoo, 2023
 # Thi Huong Nguyen, 2023
 # 
@@ -29,6 +28,8 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
+"Đã xảy ra lỗi trong quá trình xử lý khoản thanh toán của bạn (trạng thái "
+"%s). Vui lòng thử lại."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -50,22 +51,22 @@ msgstr "Flutterwave"
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr ""
+msgstr "Flutterwave Email khách hàng"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Flutterwave Mã khoá công khai"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Flutterwave Mã khoá bí mật"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Flutterwave Bí mật Webhook"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -92,19 +93,19 @@ msgstr "Giao dịch thanh toán"
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Public Key"
-msgstr "Public Key"
+msgstr "Mã khóa công khai"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu mã."
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Secret Key"
-msgstr "Secret Key"
+msgstr "Mã khóa bí mật"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -114,16 +115,18 @@ msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
 msgstr ""
+"Giao tiếp với API không thành công. Flutterwave đã cung cấp cho chúng tôi "
+"thông tin sau: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr ""
+msgstr "Email của khách hàng tại thời điểm token được tạo."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
-msgstr ""
+msgstr "Mã khoá chỉ được sử dụng để xác định tài khoản với Flutterwave."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
@@ -142,9 +145,9 @@ msgstr "Giao dịch không được liên kết với token."
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown payment status: %s"
-msgstr ""
+msgstr "Trạng thái thanh toán không xác định: %s"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Bí mật Webhook"

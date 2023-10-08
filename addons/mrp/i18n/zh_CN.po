@@ -271,7 +271,7 @@ msgstr "<span class=\"o_stat_text\">性能</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">产品移动</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -287,7 +287,7 @@ msgstr "<span class=\"o_stat_text\">源生产订单（MO）</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">追踪</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3156,7 +3156,7 @@ msgstr "新建"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "New BoM from %(mo_name)s"
-msgstr ""
+msgstr "来自%(mo_name)s的新BoM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3267,7 +3267,7 @@ msgstr "不可用"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr ""
+msgstr "请注意，该 BOM 还有另一个版本。"
 
 #. module: mrp
 #. odoo-python
@@ -3508,7 +3508,7 @@ msgstr "原始生产数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
 msgid "Outdated BoM"
-msgstr ""
+msgstr "过时的 BoM"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -3688,6 +3688,13 @@ msgid "Plastic Laminate"
 msgstr "塑料层压材料"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Please set the first Serial Number or a default sequence"
+msgstr ""
+
+#. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
 msgid "Ply Layer"
 msgstr "帘布层"
@@ -3753,7 +3760,7 @@ msgstr "工艺缺陷"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr ""
+msgstr "通过条形码应用程序处理生产订单"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3798,6 +3805,8 @@ msgid ""
 "Produce: Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"生产： 将部件直接移至生产地点，开始生产流程。\n"
+"拣选/生产：先从\"库存到输入\" 位置卸下部件，然后将其转移到 \"生产\" 位置。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4164,7 +4173,7 @@ msgstr "生产准备就绪"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Ready to Start"
-msgstr ""
+msgstr "准备开始"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
@@ -4973,7 +4982,7 @@ msgstr "文本"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr ""
+msgstr "自创建 MO 以来，BoM 已经更新"
 
 #. module: mrp
 #. odoo-python
@@ -5093,7 +5102,7 @@ msgstr "待生产数量须为正数！"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
 msgid "The quantity to unbuild must be positive!"
-msgstr ""
+msgstr "要拆解的数量必须是正数！"
 
 #. module: mrp
 #. odoo-python
@@ -5688,12 +5697,16 @@ msgstr "验证"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__mark_as_done
 msgid "Valide all the productions after the split"
-msgstr ""
+msgstr "验证拆分后的所有产品"
 
 #. module: mrp
+#. odoo-python
+#. module: mrp
 #. odoo-javascript
+#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#, python-format
+#, python-format, python-format
 msgid "Variant:"
 msgstr "变体："
 
@@ -6349,13 +6362,6 @@ msgstr "需在“绩效”类别中规定至少一个未启用的生产力损失
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "需提供成品批次。"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "需提供批号/序列号"
 
 #. module: mrp
 #. odoo-python

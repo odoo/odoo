@@ -686,7 +686,7 @@ msgstr "생산 파견을 위해 대체할 수 있는 대체 작업장"
 msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
-msgstr "완성된 제품을 부품으로 분해하기 위해 해체 지시서가 사용됩니다."
+msgstr "완제품을 다시 부품으로 분해하는 작업을 진행하려면 해체지시서를 생성해 주세요."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -1634,14 +1634,14 @@ msgstr "월별 날짜"
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid ""
 "Date you expect to finish production or actual date you finished production."
-msgstr "생산 완료 예정 날짜 또는 실제 생산 완료 날짜."
+msgstr "생산 완료 예정 날짜 또는 실제 생산이 완료된 날짜입니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid ""
 "Date you plan to start production or date you actually started production."
-msgstr "생산을 시작하려는 날짜 또는 실제로 생산을 시작한 날짜."
+msgstr "생산을 시작하려는 날짜 또는 실제로 생산을 시작한 날짜입니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2435,7 +2435,7 @@ msgstr "자재명세서 서식 가져오기"
 msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
-msgstr "작업 지시를 계획할 수 없습니다. 작업장의 가용성을 확인하십시오."
+msgstr "작업지시를 계획할 수 없습니다. 작업장의 가용성을 확인하세요."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2685,17 +2685,17 @@ msgstr "위치"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr "해체하려는 상품이 있는 위치입니다."
+msgstr "해체를 위한 완제품이 보관되어 있는 위치입니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
 msgid "Location where the system will look for components."
-msgstr "시스템이 부품을 찾는 장소입니다."
+msgstr "시스템 상 부품이 저장되어 있는 위치입니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "시스템이 완제품을 보관하는 위치입니다."
+msgstr "완제품을 보관하도록 저장된 시스템상 위치입니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_dest_id
@@ -3693,7 +3693,7 @@ msgstr "계획됨"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
-msgstr "%s에서 다른 작업 지시와 동시에 계획됨"
+msgstr "%s에서 다른 작업지시와 동시에 계획됨"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -3705,6 +3705,13 @@ msgstr "일정 관리"
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
 msgid "Plastic Laminate"
 msgstr "플라스틱 라미네이트"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Please set the first Serial Number or a default sequence"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -4185,7 +4192,7 @@ msgstr "생산 준비 완료"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Ready to Start"
-msgstr "시작 준비 완료"
+msgstr "작업 준비 완료"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
@@ -4398,7 +4405,7 @@ msgstr "예정일"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr "지연되지 않도록 제조 주문을 미리 계획합니다."
+msgstr "일정이 지연되지 않도록 제조 주문을 미리 계획합니다."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6039,7 +6046,7 @@ msgstr "작업 지시 실적"
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 msgid "Work Orders Planning"
-msgstr "작업 지시 계획"
+msgstr "작업지시 계획"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -6314,7 +6321,7 @@ msgid ""
 msgstr ""
 "다음 품목에 대해 실제 소비된 수량이 예측 수량과 일치하지 않습니다.\n"
 "                        <b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
-"                            목적에 맞게 소비된 것인지 확인해주세요.\n"
+"                            부품이 목적에 맞게 소비되었는지 다시 한번 확인해주세요.\n"
 "                        </b>\n"
 "                        <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
 "                            부품의 소비량을 재검토하거나 관리자에게 확인을 요청할 수 있습니다.\n"
@@ -6528,4 +6535,4 @@ msgstr "분할"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "작업지시서"
+msgstr "작업지시"

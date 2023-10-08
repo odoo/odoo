@@ -3,8 +3,8 @@
 # 	* payment_ogone
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
@@ -24,12 +24,12 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
-msgstr "API User ID"
+msgstr "ID người dùng API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
-msgstr "API User Password"
+msgstr "Mật khẩu người dùng API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
@@ -51,7 +51,7 @@ msgstr "Thẻ tín dụng (cung cấp bởi Ogone)"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
 msgid "Hash function"
-msgstr ""
+msgstr "Tính năng hash"
 
 #. module: payment_ogone
 #. odoo-python
@@ -86,17 +86,17 @@ msgstr "Giao dịch thanh toán"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Dữ liệu đã nhận với trạng thái thanh toán không hợp lệ: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr "SHA Key IN"
+msgstr "Mã khoá SHA VÀO"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr "SHA Key OUT"
+msgstr "Mã khoá SHA RA"
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
@@ -118,17 +118,17 @@ msgstr "SHA512"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
-msgstr ""
+msgstr "Cần lưu trữ thông tin thanh toán của bạn để sử dụng trong tương lai."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "ID chỉ được sử dụng để xác định người dùng API với Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "ID chỉ được sử dụng để xác định tài khoản với Ogone"
 
 #. module: payment_ogone
 #. odoo-python
@@ -142,7 +142,7 @@ msgstr "Giao tiếp với API không thành công."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "Thanh toán đã bị từ chối: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
@@ -162,25 +162,26 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Stripe</strong>."
 msgstr ""
+"Nhà cung cấp này đã bị ngừng sử dụng.\n"
+"                    Hãy cân nhắc vô hiệu hoá nhà cung cấp đó và chuyển sang <strong>Stripe</strong>."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been authorized."
-msgstr "Thanh toán của bạn đã được chứng thực."
+msgstr "Thanh toán của bạn đã được uỷ quyền."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been cancelled."
-msgstr "Your payment has been cancelled."
+msgstr "Thanh toán của bạn đã bị hủy."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
-"Your payment has been successfully processed but is waiting for approval."
+msgstr "Thanh toán của bạn đã được xử lý thành công nhưng đang chờ phê duyệt."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr "Your payment has been successfully processed. Thank you!"
+msgstr "Thanh toán của bạn đã được xử lý thành công. Cảm ơn bạn!"

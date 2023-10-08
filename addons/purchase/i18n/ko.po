@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr "# 공급업체 청구서"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
-msgstr "# 내역"
+msgstr "라인 수"
 
 #. module: purchase
 #. odoo-python
@@ -193,7 +193,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        발주서 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>를 첨부해 드립니다.\n"
+"        구매주문서 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>를 첨부해 드립니다.\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            참조 번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -393,7 +393,7 @@ msgstr "<span>일 이내</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Ask confirmation</span>"
-msgstr "<span>확인 요청</span>"
+msgstr "<span>예상 입고일</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -563,7 +563,7 @@ msgstr "품목 또는 고객에게 경고를 설정할 수 있습니다 (구매)
 msgid ""
 "Ability to select a package type in purchase orders and to force a quantity "
 "that is a multiple of the number of units per package."
-msgstr "구매 발주 시 포장 유형을 선택하고 포장 수량을 단위 수 기준 배수로 지정 할 수 있습니다."
+msgstr "구매 발주 시 패키지 유형을 선택하고 패키지 당 단위 수의 배수로 수량을 지정할 수 있습니다."
 
 #. module: purchase
 #. odoo-python
@@ -636,7 +636,7 @@ msgstr "영역 추가"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr "그리드에서 구매 발주서로 세부선택 품목 추가"
+msgstr "그리드에서 구매 발주서에 제품의 세부선택 사항을 추가합니다."
 
 #. module: purchase
 #. odoo-javascript
@@ -796,7 +796,7 @@ msgstr "거래처에 입고일 미리 알림을 자동으로 전송합니다."
 msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
-msgstr "정확한 날짜를 확정하도록 예상 입고일 X일 전 공급업체에 자동으로 이메일을 보냅니다."
+msgstr "정확한 날짜를 확정하도록 예상 입고일 전 공급업체에 자동으로 이메일을 보냅니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -951,7 +951,7 @@ msgstr "이메일 작성"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경 설정"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -1354,14 +1354,14 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"해당 기능을 사용하면 업체 청구서에서 3단계 매칭을 활성화합니다. 청구서 금액을 지불하려면 주문한 상품 수령이 완료되어야 합니다."
+"이 기능을 선택하면 거래처 청구서에 3단계 매칭을 활성화합니다. 청구서 금액을 지불하려면 주문한 상품의 수령이 완료되어야 합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr "설치된 경우, 파생 품목이 그리드 항목을 통해 발주서에 추가됩니다."
+msgstr "이 기능을 선택하면, 그리드 항목을 통해 제품의 세부선택 사항이 발주서에 추가됩니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1512,7 +1512,7 @@ msgstr "잠김"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
-msgstr "주문한 상품이 배송되었는지 확인한 후 청구서를 결제해 주세요."
+msgstr "주문한 상품이 배송되었는지 확인한 후 청구서를 결제합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1888,7 +1888,7 @@ msgstr "포털 접근 URL"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr "미리 알림 이메일을 본인에게 전송하여 미리 확인합니다."
+msgstr "거래처에 이메일을 보내기 전, 본인에게 전송하여 미리 확인합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2058,7 +2058,7 @@ msgstr "구매 리드타임"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 #, python-format
 msgid "Purchase Order"
-msgstr "발주서"
+msgstr "구매 주문"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -2133,7 +2133,7 @@ msgstr "발주서 수정은 승인후 편집가능한 발주서를 수정하고�
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 #, python-format
 msgid "Purchase Orders"
-msgstr "발주서"
+msgstr "구매 주문"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -2166,7 +2166,7 @@ msgstr "청구서 미발행 내역을 포함한 구매 발주서"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase products by multiple of unit # per package"
-msgstr "패키지 당 #의 배수로 품목을 매입합니다"
+msgstr "패키지 당 #의 배수로 품목을 매입합니다."
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2176,7 +2176,7 @@ msgstr "구매 알림"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr "사이즈, 색상 등을 추가하여 제품의 세부사항을 선택할 수 있습니다."
+msgstr "사이즈, 색상 등을 추가하여 제품의 세부사항을 선택할 수 있도록 합니다."
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -3235,8 +3235,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"판매 또는 구매하는 모든 품목을 정의해야 합니다.\n"
-"                저장 가능 품목이나 소모품, 서비스 등이 있습니다. "
+"판매 또는 구매할 품목을 반드시 모두 지정해야 합니다.\n"
+"                저장 가능 품목이나 소모품, 서비스 중에서 지정하세요."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -3266,7 +3266,7 @@ msgstr "닫기"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "day(s) before"
-msgstr "다음의 기간 전"
+msgstr "일 전 확인 요청"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase

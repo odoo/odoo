@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
@@ -29,12 +28,12 @@ msgstr "Mã"
 #. module: payment_payumoney
 #: model:payment.provider,display_as:payment_payumoney.payment_provider_payumoney
 msgid "Credit Card (powered by PayUmoney)"
-msgstr "Credit Card (powered by PayUmoney)"
+msgstr "Thẻ tín dụng (cung cấp bởi PayUmoney)"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_provider__payumoney_merchant_key
 msgid "Merchant Key"
-msgstr "Merchant Key"
+msgstr "Mã khoá người bán"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_provider__payumoney_merchant_salt
@@ -69,19 +68,19 @@ msgstr "Giao dịch thanh toán"
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference (%s)"
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu mã (%s)"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_provider__payumoney_merchant_key
 msgid "The key solely used to identify the account with PayU money"
-msgstr ""
+msgstr "Mã khoá chỉ được sử dụng để xác định tài khoản với PayUmoney."
 
 #. module: payment_payumoney
 #. odoo-python
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "The payment encountered an error with code %s"
-msgstr ""
+msgstr "Thanh toán gặp lỗi với mã %s"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_provider__code
@@ -94,25 +93,26 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Razorpay</strong>."
 msgstr ""
+"Nhà cung cấp này đã bị ngừng sử dụng.\n"
+"                    Hãy cân nhắc vô hiệu hoá nhà cung cấp đó và chuyển sang <strong>Razorpay</strong>."
 
 #. module: payment_payumoney
 #: model_terms:payment.provider,auth_msg:payment_payumoney.payment_provider_payumoney
 msgid "Your payment has been authorized."
-msgstr "Thanh toán của bạn đã được chứng thực."
+msgstr "Thanh toán của bạn đã được uỷ quyền."
 
 #. module: payment_payumoney
 #: model_terms:payment.provider,cancel_msg:payment_payumoney.payment_provider_payumoney
 msgid "Your payment has been cancelled."
-msgstr "Your payment has been cancelled."
+msgstr "Thanh toán của bạn đã bị hủy."
 
 #. module: payment_payumoney
 #: model_terms:payment.provider,pending_msg:payment_payumoney.payment_provider_payumoney
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
-"Your payment has been successfully processed but is waiting for approval."
+msgstr "Thanh toán của bạn đã được xử lý thành công nhưng đang chờ phê duyệt."
 
 #. module: payment_payumoney
 #: model_terms:payment.provider,done_msg:payment_payumoney.payment_provider_payumoney
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr "Your payment has been successfully processed. Thank you!"
+msgstr "Thanh toán của bạn đã được xử lý thành công. Cảm ơn bạn!"

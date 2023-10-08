@@ -788,7 +788,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products?</strong>"
-msgstr ""
+msgstr "<strong>Dove inviare i prodotti?</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -798,7 +798,7 @@ msgstr "? Ciò potrebbe portare a incongruenze nel magazzino."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type!"
-msgstr ""
+msgstr "Un codice a barre può essere assegnato ad un solo tipo di prodotto!"
 
 #. module: stock
 #. odoo-python
@@ -1249,7 +1249,7 @@ msgstr "Automatico"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
-msgstr ""
+msgstr "Automatizza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -2490,7 +2490,7 @@ msgstr "Consegne"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
-msgstr ""
+msgstr "Le consegne ti permettono di inviare prodotti dallo stock al partner."
 
 #. module: stock
 #. odoo-javascript
@@ -3291,7 +3291,7 @@ msgstr "Giacenza libera"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Stock libero in transito"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3990,6 +3990,8 @@ msgstr ""
 msgid ""
 "Internal transfers allow you to move products from one location to another."
 msgstr ""
+"I trasferimenti interni ti permettono di spostare i prodotti da "
+"un'ubicazione all'altra."
 
 #. module: stock
 #. odoo-python
@@ -4000,17 +4002,19 @@ msgstr "Operando sinistro %s non valido per il dominio"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Operatore %s non valido per il dominio"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Operando destro %s non valido per il dominio"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Operando destro \"%s\" non valido per il dominio. Deve essere di tipo "
+"intero/virgola mobile"
 
 #. module: stock
 #. odoo-python
@@ -5189,12 +5193,12 @@ msgstr "Nessun bisogno di assegnazione trovato."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "No delivery found. Let's create one!"
-msgstr ""
+msgstr "Nessuna consegna trovata. Creiamone una!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr ""
+msgstr "Nessun trasferimento interno trovato. Creiamone uno!"
 
 #. module: stock
 #. odoo-python
@@ -5213,7 +5217,7 @@ msgstr "Nessuna operazione eseguita sul lotto."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr ""
+msgstr "Nessun'operazione trovata. Creiamo un trasferimento!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5239,7 +5243,7 @@ msgstr "Nessuna regola di stoccaggio trovata. Creane una!"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "No receipt found. Let's create one!"
-msgstr ""
+msgstr "Nessuna ricevuta trovata. Creiamone una!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -6871,7 +6875,7 @@ msgstr "Ricezioni"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr ""
+msgstr "Le ricevute ti permetto di ricevere prodotti da un partner."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7924,7 +7928,7 @@ msgstr "Mostra operazioni"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr ""
+msgstr "Mostra tipo prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
@@ -8147,7 +8151,7 @@ msgstr "Assegnazione numeri di serie magazzino"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Stock in transito"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8487,6 +8491,7 @@ msgstr "L'ordine arretrato %s è stato creato."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr ""
+"Il codice a barre di un'ubicazione deve essere unico per ogni azienda!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -10769,7 +10774,7 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "reserved"
-msgstr ""
+msgstr "prenotato"
 
 #. module: stock
 #. odoo-javascript

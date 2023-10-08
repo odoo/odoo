@@ -38,21 +38,35 @@ msgid ""
 "                        </option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                        <option value=\"done\" title=\"Thanh toán thành công\">\n"
+"                            Thành công\n"
+"                        </option>\n"
+"                        <option value=\"pending\" title=\"Đang xử lý thanh toán\">\n"
+"                            Đang treo\n"
+"                        </option>\n"
+"                        <option value=\"cancel\" title=\"Thanh toán bị huỷ bởi khách hàng\">\n"
+"                            Đã huỷ\n"
+"                        </option>\n"
+"                        <option value=\"error\" title=\"Lỗi xử lý\">\n"
+"                            Lỗi\n"
+"                        </option>\n"
+"                    </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Details (test data)</b></small>"
-msgstr ""
+msgstr "<small><b>Thông tin thanh toán (dữ liệu kiểm thử)</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Status</b></small>"
-msgstr ""
+msgstr "<small><b>Trạng thái thanh toán</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
-msgstr ""
+msgstr "Ủy quyền"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -67,7 +81,7 @@ msgstr "Đã huỷ"
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Ghi số tiền theo cách thủ công"
+msgstr "Thu hồi số tiền theo cách thủ công"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_transaction__capture_manually
@@ -76,7 +90,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Ghi nhận số tiền từ Odoo, khi giao hàng hoàn tất.\n"
+"Thu hồi số tiền ngay từ Odoo, khi giao hàng hoàn tất.\n"
 "Dùng tính năng này nếu bạn muốn tính phí khách hàng chỉ khi\n"
 "bạn chắc chắn có thể giao hàng cho họ."
 
@@ -105,7 +119,7 @@ msgstr "Demo"
 #: code:addons/payment_demo/models/payment_provider.py:0
 #, python-format
 msgid "Demo providers should never be enabled."
-msgstr ""
+msgstr "Không thể bật nhà cung cấp demo."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -138,6 +152,8 @@ msgstr "Giao dịch thanh toán"
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
 msgstr ""
+"Các khoản thanh toán được tiến hành bằng phương thức thanh toán này sẽ "
+"<b>thành công</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -145,11 +161,15 @@ msgid ""
 "Payments made with this payment method will be automatically "
 "<b>canceled</b>."
 msgstr ""
+"Các khoản thanh toán được tiến hành bằng phương thức thanh toán này sẽ tự "
+"động <b>bị huỷ</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
+"Các khoản thanh toán được tiến hành bằng phương thức thanh toán này sẽ tiếp "
+"tục <b>bị treo</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -157,6 +177,8 @@ msgid ""
 "Payments made with this payment method will simulate a processing "
 "<b>error</b>."
 msgstr ""
+"Các khoản thanh toán được tiến hành bằng phương thức thanh toán này sẽ tạo "
+"ra <b>lỗi</b> xử lý."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -166,17 +188,17 @@ msgstr "Đang chờ"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr ""
+msgstr "Đặt là Lỗi"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
-msgstr ""
+msgstr "Trạng thái đã hình thành"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
-msgstr ""
+msgstr "Trạng thái nên thiết lập cho các giao dịch được tạo từ token này."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -193,11 +215,11 @@ msgstr "Giao dịch không được liên kết với token."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Bạn đã chọn trạng thái thanh toán demo sau: %s"

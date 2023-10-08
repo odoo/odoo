@@ -210,9 +210,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
-"<strong>경고</strong> : 특성을 추가하거나 삭제하면 \n"
-"                        기존 파생품 및 영업제안이 삭제되고 재생성되어 \n"
-"                        사용자 정의한 내용이 손실될 수 있습니다."
+"<strong>경고</strong>: 속성을 추가하거나 삭제하면 \n"
+"                        기존에 설정한 세부선택 사항이 삭제 및 재생성되어\n"
+"                        사용자 지정한 내용이 손실될 수 있습니다."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
@@ -671,7 +671,7 @@ msgstr "회의실 테이블"
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경 설정"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -731,12 +731,12 @@ msgstr "포함된 수량"
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr "코너 데스크 왼쪽 시트"
+msgstr "L자형 코너 책상"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr "코너 데스크 오른쪽 시트"
+msgstr "ㄱ자형 코너 책상"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
@@ -910,7 +910,7 @@ msgstr "설명"
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr "책상 조합"
+msgstr "책상 세트"
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
@@ -920,7 +920,7 @@ msgstr "스크린이 있는 데스크 스탠드"
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer."
-msgstr "책상 조합, 블랙 브라운 : 의자 + 책상 + 서랍."
+msgstr "책상 세트, 다크 브라운 : 의자 + 책상 + 서랍."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1102,7 +1102,7 @@ msgstr "고정 가격"
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
-msgstr "뒤집기"
+msgstr "플립 차트"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__message_follower_ids
@@ -1275,7 +1275,7 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr "설정하지 않는 경우, 공급업체 가격이 해당 제품의 모든 품목 세부선택사항에 적용됩니다."
+msgstr "설정하지 않는 경우, 공급업체 가격은 해당 제품의 모든 세부선택사항에 적용됩니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1349,7 +1349,7 @@ msgstr "비활성"
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
-msgstr "개별 작업위치"
+msgstr "개별 작업장"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
@@ -1474,7 +1474,8 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "발주서 확인과 창고로의 품목 입고 간의 여유일. 발주서 계획의 자동 계산을 위해 계획표에서 사용합니다."
+msgstr ""
+"구매주문 확인 후 창고로 제품이 입고될 때까지의 리드타임입니다. 계획서에서 구매 주문 계획을 자동으로 계산하는 데 사용됩니다."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1704,7 +1705,7 @@ msgstr "사무용 의자"
 #. module: product
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
-msgstr "사무용 의자 검정색"
+msgstr "검정색 사무용 의자"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2241,7 +2242,7 @@ msgstr "구매 설명"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr "단위 구매"
+msgstr "구매 단위"
 
 #. module: product
 #. odoo-javascript
@@ -2635,7 +2636,8 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"가격에서 혜택을 받기 위해 이 공급업체로부터 구매할 수량. 공급업체 상품 단위로 표시되고, 그렇지 않으면 품목의 기본 단위로 표시됩니다."
+"가격 혜택을 받기 위해 이 공급업체로부터 구매해야 하는 수량입니다. 공급업체의 제품 단위가 표시되며, 공급업체에서 사용하는 측정 단위가 "
+"없는 경우 제품의 기본 측정 단위로 표시됩니다."
 
 #. module: product
 #. odoo-python
@@ -2734,14 +2736,14 @@ msgstr ""
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "이 공급업체의 품목 코드는 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
+msgstr "이 공급업체의 품목 코드는 견적요청서를 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "이 공급업체의 품목 이름은 견적 요청을 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
+msgstr "이 공급업체의 품목명은 견적요청서를 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
@@ -2841,7 +2843,7 @@ msgstr "유효한 품목 사양 내역"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "유효함"
+msgstr "유효 기간"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -3265,8 +3267,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"판매 또는 구매하는 모든 품목을 정의해야 합니다.\n"
-"                저장 가능 품목이나 소모품, 서비스 등이 있습니다. "
+"판매 또는 구매할 품목을 반드시 모두 지정해야 합니다.\n"
+"                저장 가능 품목이나 소모품, 서비스 중에서 지정하세요."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -3276,10 +3278,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"판매 또는 구매하는 모든 품목을 정의해야합니다. \n"
-"                 저장 가능한 품목이든 소모품이든 서비스든 상관 없습니다. \n"
-"                 품목 양식에는 판매 절차를 단순화하기 위한 정보가 포함되어 있습니다 : \n"
-"                 가격, 견적서에 포함된 노트, 회계 데이터, 조달 방법 등."
+"판매 또는 구매할 품목을 반드시 모두 지정해야 합니다.\n"
+"                 저장 가능 품목이나 소모품, 서비스 중에서 지정하세요. \n"
+"                 판매 프로세스를 간소화할 수 있는 품목 양식 정보는 다음과 같습니다: \n"
+"                 가격, 견적서 메모, 회계 정보, 조달 방식 등을 활용해 보세요."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -3360,4 +3362,4 @@ msgstr "품목 양식."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr "종료"
+msgstr "부터"

@@ -1178,7 +1178,7 @@ msgstr "Unità di codifica foglio ore"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Timesheet Report"
-msgstr ""
+msgstr "Rendiconto fogli ore"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
@@ -1283,7 +1283,7 @@ msgstr "Consente di registrare i fogli ore per questo lavoro."
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets cannot be created on a private task."
-msgstr ""
+msgstr "I fogli ore non possono essere creati per un'attività privata."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1293,6 +1293,8 @@ msgid ""
 "Timesheets must be created on a project or a task with an active analytic "
 "account."
 msgstr ""
+"I fogli ore devono essere creati in un progetto o attività con un conto "
+"analitico attivo."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1404,6 +1406,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Usa queste parole chiave nel titolo per configurare nuove attività:\n"
+"\n"
+"        30h Assegna 30 ore all'attività\n"
+"        #tags Configura tag per l'attività\n"
+"        @user Assegna l'attivià ad un utente\n"
+"        ! Configura la priorità dell'attività come elevata\n"
+"\n"
+"        Assicurati di utilizzare il formato e l'ordine giusti ad es. Migliora lo schermo di configurazione 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id

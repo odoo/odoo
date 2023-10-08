@@ -34,21 +34,21 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is not from your department"
-msgstr ""
+msgstr "%s: Це не з вашого відділу"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is your own expense"
-msgstr ""
+msgstr "%s: Це ваші власні витрати"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: Your are not a Manager or HR Officer"
-msgstr ""
+msgstr "%s: Ви не менеджер чи керівник HR"
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -79,7 +79,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense Report</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Звіт витрат</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -204,12 +204,12 @@ msgstr "Усі звіти"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "All expenses in an expense report must have the same \"paid by\" criteria."
-msgstr ""
+msgstr "Усі витрати у звіті про витрати повинні мати ті ж критерії \"оплачено\"."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "All payment methods allowed"
-msgstr ""
+msgstr "Дозволені усі способи оплати"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
@@ -283,7 +283,7 @@ msgstr "Дата затвердження"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_state
 msgid "Approval State"
-msgstr ""
+msgstr "Статус затвердження"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -386,7 +386,7 @@ msgstr "Скасувати"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "Причина неможливості затвердження"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -437,7 +437,7 @@ msgstr "Компанія"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Company payment methods available"
-msgstr ""
+msgstr "Доступні способи оплати компанії"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -537,6 +537,7 @@ msgstr "Шановний"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
 msgstr "Псевдонім витрат за замовчуванням"
 
@@ -548,12 +549,14 @@ msgstr "Категорія за замовчуванням "
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
-msgstr ""
+msgstr "Типова категорія витрат"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_journal_id
 msgid "Default Expense Journal"
 msgstr "Типовий журнал витрат"
 
@@ -565,7 +568,7 @@ msgstr "Типовий бухгалтерський журнал для витр
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default expense categories for uploaded expenses"
-msgstr ""
+msgstr "Типові категорії витрат для завантажених витрат"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -665,7 +668,7 @@ msgstr "Співробітник (до відшкодування)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "Журнал витрат співробітника"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -684,6 +687,8 @@ msgid ""
 "Enable users to choose default category for automatically generated "
 "expenses."
 msgstr ""
+"Дозвольте користувачам вибирати категорію за замовчуванням для автоматично "
+"згенерованих витрат."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -836,7 +841,7 @@ msgstr "Категорії витрат можуть бути виставлен
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Expense entry created from: %s"
-msgstr ""
+msgstr "Запис витрат створений з: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -861,7 +866,7 @@ msgstr "Відхилений звіт про витрати"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "Звіт про витрати скинуто до Чернетки"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -927,6 +932,7 @@ msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
 msgstr ""
+"Витрати, звіт про які подано до затверджувача та очікує на затвердження."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -939,14 +945,14 @@ msgstr "Витрати члена вашої команди"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses paid by employee that are approved but not paid yet."
-msgstr ""
+msgstr "Витрати, сплачені працівником, затверджені, але ще не оплачені."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses that need to be submitted to the approver."
-msgstr ""
+msgstr "Витрати, які необхідно подати до затверджувача."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
@@ -1151,7 +1157,7 @@ msgstr "Запис у журналі"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "Запис журналу видалено"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1163,12 +1169,12 @@ msgstr "Запис у журналі"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Journal entries"
-msgstr ""
+msgstr "Записи журналу"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "Запис журналу видалено"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
@@ -1203,6 +1209,7 @@ msgstr "Останні дії"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr "Нехай ваші співробітники записують витрати по електронній пошті"
 
@@ -1227,7 +1234,7 @@ msgstr "Поверніться до ваших витрат."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Lunch with customer $12.32"
-msgstr ""
+msgstr "Обід з клієнтом $12.32"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1377,12 +1384,12 @@ msgstr "Звіт про витрати не знайдено. Давайте с�
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "No work contact found for the employee %s, please configure one."
-msgstr ""
+msgstr "Для працівника не знайдено робочого контакту %s, налаштуйте його."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Not Refused"
-msgstr ""
+msgstr "Не відмовлено"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1408,7 +1415,7 @@ msgstr "Кількість витрат"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__nb_account_move
 msgid "Number of Journal Entries"
-msgstr ""
+msgstr "Кількість записів у журналі"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1474,7 +1481,7 @@ msgstr "Або"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Or send your receipts at"
-msgstr ""
+msgstr "Або надішліть ваші квитанції на"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1523,13 +1530,14 @@ msgstr "Платіж створений для: %s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr ""
+msgstr "Спосіб оплати дозволений для витрат, оплачених компанією."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr ""
+msgstr "Доступні способи оплати витрат, оплачених компанією"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1694,6 +1702,7 @@ msgstr "Зареєструвати платіж"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
 msgstr "Відшкодування витрат у розрахунковому листі"
 
@@ -1778,7 +1787,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
 msgid "Selectable Payment Method Line"
-msgstr ""
+msgstr "Рядок способу оплати, який можна вибрати"
 
 #. module: hr_expense
 #. odoo-python
@@ -1808,6 +1817,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
 msgstr "Надішліть рахунки в OCR, щоб створити витрати"
 
@@ -1931,7 +1941,7 @@ msgstr "Підсумок"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Subtotal In Currency"
-msgstr ""
+msgstr "Підсумок у валюті"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
@@ -1976,6 +1986,7 @@ msgstr "Затверджуючий команди "
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_test__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr ""
@@ -2017,7 +2028,7 @@ msgstr "Журнал повинен бути встановлений за оп�
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr ""
+msgstr "Журнал, який використовується, коли витрати оплачуються працівником."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
@@ -2035,6 +2046,17 @@ msgstr "Звідси видно стан усіх ваших поточних в
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr "Сума після розділеного закриття залишається незмінною"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The work email of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Щоб опублікувати звіт про витрати, потрібна робоча електронна адреса "
+"працівника. Будь ласка, додайте її до форми працівника."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2287,6 +2309,8 @@ msgid ""
 "You cannot approve:\n"
 " %s"
 msgstr ""
+"Ви не можете затвердити:\n"
+" %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2318,6 +2342,8 @@ msgid ""
 "You cannot delete only some entries linked to an expense report. All entries"
 " must be deleted at the same time."
 msgstr ""
+"Ви не можете видалити лише деякі записи, пов’язані зі звітом про витрати. "
+"Всі записи повинні бути видалені одночасно."
 
 #. module: hr_expense
 #. odoo-python
@@ -2327,6 +2353,8 @@ msgid ""
 "You cannot delete only some payments linked to an expense report. All "
 "payments must be deleted at the same time."
 msgstr ""
+"Ви не можете видалити лише деякі платежі, пов’язані зі звітом про витрати. "
+"Всі платежі повинні бути видалені одночасно."
 
 #. module: hr_expense
 #. odoo-python
@@ -2347,9 +2375,17 @@ msgid ""
 "You cannot refuse:\n"
 " %s"
 msgstr ""
+"Ви не можете відхилити:\n"
+" %s"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr "Ви не можете звітувати про витрати різних компаній в одному звіті."
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2398,7 +2434,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr ""
+msgstr "Ваш звіт про витрати"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2437,7 +2473,7 @@ msgstr "підлягає відшкодуванню"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to submit"
-msgstr ""
+msgstr "надати"
 
 #. module: hr_expense
 #. odoo-python

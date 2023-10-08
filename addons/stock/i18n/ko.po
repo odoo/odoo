@@ -6,8 +6,8 @@
 # Linkup <link-up@naver.com>, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -279,13 +279,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* 공급업체 위치 : 공급업체에서 제공하는 제품의 원본 위치를 나타내는 가상 위치\n"
-"* 화면 : 창고의 계층 구조를 작성하고 하위 위치를 집계하는 데 사용되는 가상 위치. 제품을 직접 포함할 수 없음\n"
-"* 내부 위치 : 자신의 창고 내부의 실제 위치\n"
-"* 고객 위치 : 고객에게 보낸 제품의 대상 위치를 나타내는 가상 위치\n"
-"* 재고 손실 : 재고 수준을 수정하는 데 사용되는 재고 작업에 대응하는 가상 위치 (물리적 재고)\n"
-"* 생산 : 생산 작업을 위한 가상 상대 위치 : 이 위치는 부품을 소비하고 완제품을 생산합니다.\n"
-"* 운송 위치 : 회사 간 또는 창고 간 작업에 사용해야 하는 상대방 위치"
+"* 공급업체 위치: 공급업체에서 제공하는 제품의 기본 위치를 나타내는 가상 위치입니다.\n"
+"* 화면: 창고의 구조를 생성하고 하위 위치를 집계하는 데 사용되는 가상 위치로 제품을 직접 포함하지 않습니다.\n"
+"* 내부 위치: 자체 창고 내부의 실제 위치입니다.\n"
+"* 고객 위치: 고객에게 보낸 제품의 목적지 위치를 나타내는 가상 위치입니다.\n"
+"* 재고 손실: 물리적인 재고 수준을 수정하여 재고 작업에 사용되는 가상 위치입니다.\n"
+"* 생산: 생산 작업을 위한 가상 대응 위치: 이 위치는 부품을 소비하고 완제품을 생산합니다.\n"
+"* 운송 위치: 회사 간 또는 창고 간 작업에 사용하는 파트너 창고 위치입니다."
 
 #. module: stock
 #. odoo-python
@@ -1224,7 +1224,7 @@ msgstr "자동"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
-msgstr "자동화"
+msgstr "자동 주문"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1364,7 +1364,7 @@ msgstr "대량 콘텐츠"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
-msgstr "로트별"
+msgstr "LOT별"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__serial
@@ -3875,7 +3875,7 @@ msgstr "하위 항목 간의 내부 위치"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
-msgstr "제조자의 LOT/일련번호와 다른 경우의 내부 참조 번호"
+msgstr "제조자의 LOT/일련번호와 다른 경우 내부 참조 번호를 사용합니다."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
@@ -3892,17 +3892,17 @@ msgstr "잘못된 도메인 왼쪽 피연산자 %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "잘못된 도메인 피연산자 %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "잘못된 도메인 오른쪽 피연산자 %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -4458,7 +4458,7 @@ msgstr "위치 유형"
 #: model:ir.model.fields,help:stock.field_stock_import_lot__move_location_dest_id
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "시스템이 완제품을 보관하는 위치입니다."
+msgstr "완제품을 보관하도록 저장된 시스템상 위치입니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -6892,7 +6892,7 @@ msgstr "재주문 규칙 검색"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Replenish"
-msgstr "보충"
+msgstr "보충하기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
@@ -7370,7 +7370,7 @@ msgid ""
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
 "품목을 폐기하면 재고에서 해당 품목이 제거됩니다. 폐기된 품목은 보고 목적으로 \n"
-"사용할 수 있는 폐기 공간으로 이동합니다."
+"사용하기 위해 폐기 공간으로 이동됩니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7854,7 +7854,7 @@ msgstr "선택한 항목 일부에 이미 수량이 설정되어 있으므로, �
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid ""
 "Some selected lines don't have any quantities set, they will be ignored."
-msgstr "선택한 항목 일부에 설정한 수량이 없으므로, 해당 내용을 적용하지 않습니다."
+msgstr "선택 항목 일부에 설정된 수량이 없으므로, 해당 내용을 적용할 수 없습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -8345,7 +8345,7 @@ msgstr "순서의 첫 번째가 기본입니다."
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
-msgstr "예상재고"
+msgstr "다음"
 
 #. module: stock
 #. odoo-python
@@ -10370,7 +10370,7 @@ msgstr "분류"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "is"
-msgstr "같음"
+msgstr "기준 예상 재고"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_least_packages

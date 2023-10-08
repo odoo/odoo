@@ -64,7 +64,7 @@ msgstr "\"%(activity_name)s: %(summary)s\" 항목이 나에게 배정"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "\"%(hostname)s\" requires microphone access"
-msgstr "\"%(hostname)s\" 항목은 마이크 사용 필요"
+msgstr "\"%(hostname)s\"에 마이크 액세스를 허용해야 합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -179,7 +179,7 @@ msgstr "%s 일 기한 초과"
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #, python-format
 msgid "%s has a request"
-msgstr "%s에서 요청을 받았습니다"
+msgstr "%s에서 받은 요청이 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -325,9 +325,9 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 "<br><br>\n"
-"            <b>@username</b>을 입력하시면 다른 사람에 대해 멘션하여 관심을 가질 수 있도록 합니다.<br>\n"
-"            <b>#channel</b>을 입력하시면 채널에 대해 멘션합니다.<br>\n"
-"            <b>/command</b>를 입력하시면 명령을 실행할 수 있습니다.<br>"
+"            <b>@username</b>을 입력하면 특정 사용자를 멘션해서 연락합니다.<br>\n"
+"            <b>#channel</b>을 입력하면 채널을 멘션합니다.<br>\n"
+"            <b>/command</b>를 입력하면 명령어를 실행합니다.<br>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -355,9 +355,9 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
-"<p>여기 채널의 참여자에게<b>메시지를 쓰세요.</b></p> <p><i>'@'</i>를 사용하여 다른 사용자에게 알리거나 "
-"<i>'#'</i>를 사용하여 다른 채널을 연결할 수 있습니다. 가능한 명령 목록을 보려면 <i>'/'</i>를 사용하여 메시지를 "
-"시작하십시오.</p>"
+"<p>여기에 채널 사용자들에게 전달할 <b>메시지를 작성하세요</b></p> <p><i>'@'</i>로 특정 사용자를 멘션하거나 "
+"<i>'#'</i>를 붙여서 다른 채널로 링크할 수 있습니다. 메시지 앞에 <i>'/'</i>를 입력하면 사용할 수 있는 명령어 목록이 "
+"표시됩니다.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -368,8 +368,8 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>채널을 통해 서로 다른 주제와 그룹에서 정보를 쉽게 구성할 수 있습니다.</p> <p><b>첫 번째 채널을 만드십시오</b>(예: "
-"영업, 마케팅, 제품 XYZ, 업무용 파티 등).</p>"
+"<p>주제나 그룹별로 다양한 채널을 만들어 간편하게 정보를 관리합니다.</p> <p><b>첫 번째 채널을 만들어 보세요</b> (예: "
+"영업, 마케팅, XX 제품, 저녁 회식 등).</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -383,7 +383,7 @@ msgstr "<p>여기서 채널을 만듭니다.</p>"
 #: code:addons/mail/static/src/discuss/core/web/discuss_tour.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr "<p>공개 또는 비공개 채널을 만듭니다.</p>"
+msgstr "<p>공개 또는 비공개 채널을 생성합니다.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -531,7 +531,7 @@ msgstr "협력사나 게스트만 채널 구성원이 될 수 있습니다."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "A channel of type 'chat' cannot have more than two users."
-msgstr "'채팅' 유형의 채널에서는 사용자가 두 명을 초과할 수 없습니다."
+msgstr "'채팅' 채널에서는 사용자 수가 두 명을 넘을 수 없습니다."
 
 #. module: mail
 #. odoo-python
@@ -540,7 +540,7 @@ msgstr "'채팅' 유형의 채널에서는 사용자가 두 명을 초과할 수
 msgid ""
 "A chat should not be created with more than 2 persons. Create a group "
 "instead."
-msgstr "사용자가 두 명을 초과하는 채팅은 생성할 수 없습니다. 대신 그룹을 생성하십시오."
+msgstr "채팅 사용자 수는 두 명을 넘을 수 없습니다. 대신 그룹을 생성하세요."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
@@ -1222,7 +1222,7 @@ msgstr "작성자 아바타"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__group_public_id
 msgid "Authorized Group"
-msgstr "인증 그룹"
+msgstr "그룹 권한"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
@@ -1322,7 +1322,7 @@ msgstr "자리 비움"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Background blur intensity"
-msgstr "배경 흐림도 설정"
+msgstr "배경 흐림도"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -1748,7 +1748,7 @@ msgstr "다시 시도하려면 여기를 클릭하세요"
 #: code:addons/mail/static/src/discuss/core/web/discuss_tour.js:0
 #, python-format
 msgid "Click on your message"
-msgstr "메세지를 클릭하세요"
+msgstr "메시지를 클릭하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -1902,14 +1902,14 @@ msgstr "축하합니다, 활동을 완료하셨습니다."
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr "축하합니다, 받은편지함에서 처리할 내용이 없습니다"
+msgstr "축하합니다, 받은편지함이 비어 있습니다."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/discuss.js:0
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr "축하합니다, 받은편지함에서 처리할 내용이 없습니다"
+msgstr "축하합니다, 받은편지함이 비어 있습니다."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_smtp
@@ -2363,7 +2363,7 @@ msgstr "지연 유형"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Delay after releasing push-to-talk"
-msgstr "PTT (push-to-talk)  해제 후 지연"
+msgstr "PTT (push-to-talk) 사용 중 딜레이"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
@@ -2696,7 +2696,7 @@ msgstr "동적 보고서"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Edge blur intensity"
-msgstr "가장자리 흐림도 설정"
+msgstr "가장자리 흐림도"
 
 #. module: mail
 #. odoo-javascript
@@ -2950,7 +2950,7 @@ msgstr "주문 추적 사용"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
-msgstr "PTT (push-to-talk) 활성화"
+msgstr "PTT (push-to-talk) 기능 사용"
 
 #. module: mail
 #. odoo-javascript
@@ -3663,7 +3663,7 @@ msgstr "높음"
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 #, python-format
 msgid "History"
-msgstr "기록"
+msgstr "이전 기록"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
@@ -4182,7 +4182,7 @@ msgstr "팔로워 초대"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Invite people"
-msgstr "사람들 초대"
+msgstr "초대하기"
 
 #. module: mail
 #. odoo-javascript
@@ -4328,7 +4328,7 @@ msgstr "이동"
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "Jump to Present"
-msgstr "현재로 이동"
+msgstr "현재 메시지로 이동"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__attach
@@ -4534,7 +4534,7 @@ msgstr "링크를 복사하였습니다!"
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 #, python-format
 msgid "List users in the current channel"
-msgstr "현재 채널의 사용자 목록"
+msgstr "현재 채널 사용자 목록 보기"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -4599,7 +4599,7 @@ msgstr "RTC 행사 불러오기"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
-msgstr "로그 기록..."
+msgstr "메모 기록"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4947,7 +4947,7 @@ msgstr "구성원 목록"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Members"
-msgstr "회원"
+msgstr "참여자"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -5155,7 +5155,7 @@ msgstr "메시지에 <b>별표를 표시</b>하여 나중에 다시 확인하도
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "Messages marked as read will appear in the history."
-msgstr "읽은 것으로 표시된 메시지가 이력에 나타납니다."
+msgstr "읽은 것으로 표시된 메시지가 이전 기록에 표시됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -5328,14 +5328,14 @@ msgstr "새 메시지"
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "New messages"
-msgstr "새 메시지"
+msgstr "새로운 메시지"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "New messages appear here."
-msgstr "여기에 새 메시지가 나타납니다."
+msgstr "여기에 새 메시지가 표시됩니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -5438,7 +5438,7 @@ msgstr "아직 대화가 없습니다 ..."
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "No history messages"
-msgstr "메시지 이력이 없습니다"
+msgstr "이전 메시지 내역이 없습니다."
 
 #. module: mail
 #. odoo-python
@@ -5497,7 +5497,7 @@ msgstr "사용자를 찾을 수 없습니다."
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 #, python-format
 msgid "No user found that is not already a member of this channel."
-msgstr "아직 이 채널의 구성원이 아닌 사용자를 찾을 수 없습니다."
+msgstr "채널에서 사용자를 찾을 수 없습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -5634,7 +5634,7 @@ msgstr "알림"
 #: code:addons/mail/static/src/core/common/notification_permission_service.js:0
 #, python-format
 msgid "Notifications allowed"
-msgstr "허용된 알림"
+msgstr "알림 확인"
 
 #. module: mail
 #. odoo-javascript
@@ -6174,7 +6174,7 @@ msgstr "핀고정"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__pinned_message_ids
 #, python-format
 msgid "Pinned Messages"
-msgstr "핀고정한 메시지"
+msgstr "핀 고정한 메시지"
 
 #. module: mail
 #. odoo-javascript
@@ -6280,7 +6280,7 @@ msgstr "문서에 게시"
 #: code:addons/mail/static/src/discuss/core/web/discuss_tour.js:0
 #, python-format
 msgid "Post your message on the thread"
-msgstr "스레드에 메시지 게시"
+msgstr "스레드에 메시지를 게시합니다."
 
 #. module: mail
 #. odoo-python
@@ -6346,7 +6346,7 @@ msgstr "시작하려면 엔터키를 누르세요."
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Press a key to register it as the push-to-talk shortcut."
-msgstr "PTT (push-to-talk) 바로가기를 등록하려면 a 키를 누르세요."
+msgstr "PTT (push-to-talk) 바로가기를 등록할 키를 누르세요."
 
 #. module: mail
 #. odoo-javascript
@@ -6520,7 +6520,7 @@ msgstr "수령함"
 #: model:ir.model.fields,field_description:mail.field_mail_notification__res_partner_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Recipient"
-msgstr "수신인"
+msgstr "대상자"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
@@ -7363,7 +7363,7 @@ msgstr "원본 이메일을 표시합니다."
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 #, python-format
 msgid "Show a helper message"
-msgstr "도우미 메시지 보기"
+msgstr "도움말 보기"
 
 #. module: mail
 #. odoo-javascript
@@ -7414,7 +7414,7 @@ msgstr "사이드바 보기"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Show video participants only"
-msgstr "동영상 참가자만 보기"
+msgstr "동영상 참가자만 표시"
 
 #. module: mail
 #. odoo-javascript
@@ -7502,7 +7502,7 @@ msgstr "대화 시작"
 #: code:addons/mail/static/src/discuss/call/web/discuss_sidebar_patch.xml:0
 #, python-format
 msgid "Start a meeting"
-msgstr "미팅 시작"
+msgstr "회의 시작하기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -8065,7 +8065,7 @@ msgstr "채널 구성원 당 RTC 세션은 하나만 허용합니다."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr "This"
+msgstr "해당"
 
 #. module: mail
 #. odoo-python
@@ -8086,7 +8086,7 @@ msgstr "이 채널에는 핀고정된 메시지가 없습니다."
 #: code:addons/mail/static/src/discuss/message_pin/common/pinned_messages_panel.js:0
 #, python-format
 msgid "This conversation doesn't have any pinned messages."
-msgstr "이 대화에는 핀고정된 메시지가 없습니다."
+msgstr "이 대화에는 핀 고정한 메시지가 없습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -8276,7 +8276,7 @@ msgstr "내일:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Topics discussed in this group..."
-msgstr "이 그룹에서 업무 협의한 주제..."
+msgstr "그룹에서 논의할 주제 등을 기록합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__track_recipients
@@ -8402,7 +8402,7 @@ msgstr "레코드에 있는 예외 활동의 유형입니다."
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 #, python-format
 msgid "Type the name of a person"
-msgstr "해당하는 사람의 이름을 입력하세요."
+msgstr "이름을 입력하세요."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__uri
@@ -9025,7 +9025,7 @@ msgstr "이 채널에서 모두 나갔습니다."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
-msgstr "<b>@%s</b>와(과) 비공개 대화를 하고 있습니다."
+msgstr "<b>@%s</b> 사용자와 비공개 대화 중입니다."
 
 #. module: mail
 #. odoo-python
@@ -9062,7 +9062,7 @@ msgstr "현재 이 채널의 관리자입니다. 정말로 탈퇴하시겠습니
 #, python-format
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
-msgstr "메시지에 '별표' 표시하는 경우 이 편지함에 나타납니다."
+msgstr "'별표' 표시된 메시지가 이 메일함에 표시됩니다."
 
 #. module: mail
 #. odoo-python
@@ -9203,7 +9203,7 @@ msgstr "미팅에 초대되었습니다!"
 #: code:addons/mail/static/src/core/web/messaging_menu.xml:0
 #, python-format
 msgid "You:"
-msgstr "귀하 :"
+msgstr "나:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
@@ -9447,7 +9447,7 @@ msgstr "예. 회의 예약하기"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "e.g. support"
-msgstr "예. 지원 서비스"
+msgstr "예: 고객 지원"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form

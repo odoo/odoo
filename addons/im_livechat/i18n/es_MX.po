@@ -64,7 +64,7 @@ msgstr "% de satisfacción"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
 msgid "% of Happiness"
-msgstr "% de felicidad"
+msgstr "% de satisfacción"
 
 #. module: im_livechat
 #. odoo-python
@@ -115,7 +115,7 @@ msgid ""
 "ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 msgstr ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Porcentaje de calificaciones"
-" felices\" role=\"img\" aria-label=\"Happy face\"/>"
+" positivas\" role=\"img\" aria-label=\"Carita feliz\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -199,12 +199,12 @@ msgid ""
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
 "Una sesión no tiene respuesta si el operador no respondió. \n"
-"                                       Si el visitante es también el operador, siempre se responderá la sesión"
+"                                       Si el visitante es también el operador, siempre se responderá la sesión."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
@@ -300,12 +300,13 @@ msgstr "Mensaje promedio"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Average time in seconds to give the first answer to the visitor"
 msgstr ""
-"Tiempo promedio en segundos para dar la primera respuesta al visitante."
+"Tiempo promedio en segundos para proporcionar la primera respuesta al "
+"visitante."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__time_to_answer
 msgid "Average time to give the first answer to the visitor"
-msgstr "Tiempo promedio para dar la primera respuesta al visitante"
+msgstr "Tiempo promedio para proporcionar la primera respuesta al visitante"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -389,8 +390,8 @@ msgid ""
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "El chat es privado y único entre 2 personas. El grupo es privado entre las "
-"personas invitadas, pero cualquiera puede unirse al grupo (dependiendo de la"
-" configuración)."
+"personas invitadas, pero cualquiera puede unirse (dependiendo de la "
+"configuración)."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -574,7 +575,7 @@ msgstr "Fecha de creación (hora)"
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
 #: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
 msgid "Customer Ratings"
-msgstr "Calificación de clientes"
+msgstr "Calificaciones de clientes"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
@@ -693,7 +694,7 @@ msgstr "Duración de la conversación (en segundos)"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
 msgid "Duration of the session in hours"
-msgstr "Duración de la sesión (en horas)"
+msgstr "Duración de la sesión en horas"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_email
@@ -750,9 +751,9 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add to your "
 "website."
 msgstr ""
-"Para sitios web creados con Odoo CMS, diríjase a Sitio web &gt; "
+"Para sitios web creados con el CMS de Odoo, vaya a Sitio web &gt; "
 "configuración &gt; ajustes y seleccione Chat en vivo del Sitio web que desea"
-" agregar a su sitio web"
+" agregar a su sitio web."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
@@ -1090,9 +1091,7 @@ msgstr "Pruebas externas de chat en vivo"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_operator_id
 msgid "Livechat Operator ID is required for a channel of type livechat."
-msgstr ""
-"Se requiere la identificación del operador del chat para un canal de tipo "
-"chat."
+msgstr "Se requiere el ID del operador del chat para un canal de tipo chat."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -1354,7 +1353,7 @@ msgstr "Contácteme por:"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
 msgid "Please do! If there is anything we can help with, let us know"
-msgstr "Díganos si hay algo en lo que podamos ayudarlo."
+msgstr "Díganos si hay algo en lo que podamos ayudarle."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -1452,7 +1451,7 @@ msgstr "Mensaje de correo relacionado"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Reportar"
+msgstr "Reportes"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1547,7 +1546,7 @@ msgstr "Buscar reporte"
 #: code:addons/im_livechat/static/src/composer/channel_commands_patch.js:0
 #, python-format
 msgid "See 15 last visited pages"
-msgstr "Ver últimas 15 páginas visitadas"
+msgstr "Ver las últimas 15 páginas visitadas"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1705,7 +1704,7 @@ msgid ""
 msgstr ""
 "Esta regla solo se aplicará a estos países. Por ejemplo, si seleccionó "
 "\"Bélgica\" y \"Estados Unidos\" y estableció la acción como \"Ocultar\", el"
-" botón de chat se ocultará en el URL específico de los visitantes que se "
+" botón de chat se ocultará en la URL específica de los visitantes que se "
 "ubican en estos 2 países. Esta función requiere que instale GeoIP en su "
 "servidor."
 
@@ -1874,7 +1873,7 @@ msgstr "Visitante"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
-msgstr "El visitante está feliz"
+msgstr "El visitante está satisfecho"
 
 #. module: im_livechat
 #. odoo-python
@@ -1916,7 +1915,7 @@ msgstr "Mensaje de bienvenida"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
 msgid "Welcome to CompanyName! 👋"
-msgstr "Bienvenido a NombreDeEmpresa! 👋"
+msgstr "¡Le damos la bienvenida a NombreDeEmpresa! 👋"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
@@ -2004,7 +2003,7 @@ msgstr "correo@ejemplo.com"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
-"o copie este URL y envíelo por correo electrónico a sus clientes y "
+"o copie esta URL y envíela por correo electrónico a sus clientes o "
 "proveedores:"
 
 #. module: im_livechat

@@ -425,7 +425,7 @@ msgstr "Geheel naar waarheid ingevuld,<br/>(Datum en handtekening).<br/><br/>"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
 msgid "Communication"
-msgstr "Kenmerk"
+msgstr "Communicatie"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_company
@@ -545,6 +545,7 @@ msgstr "Beste"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
 msgstr "Standaard aliasnaam voor declaraties"
 
@@ -556,12 +557,14 @@ msgstr "Standaard categorie"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
 msgstr "Standaard declaratiecategorie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_journal_id
 msgid "Default Expense Journal"
 msgstr "Standaard declaratiedagboek"
 
@@ -1220,6 +1223,7 @@ msgstr "Te late activiteiten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr "Laat je werknemers declaraties declareren via e-mail"
 
@@ -1543,6 +1547,7 @@ msgstr "Betaalmethode toegestaan voor door het bedrijf betaalde declaraties"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
 msgstr "Betaalmethodes toegestaan voor door het bedrijf betaalde declaraties"
 
@@ -1710,6 +1715,7 @@ msgstr "Betaling registreren"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
 msgstr "Declaraties terugbetalen via loonstrook"
 
@@ -1825,6 +1831,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_test__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
 msgstr "Verstuur rekeningen naar de OCR om een declaratie te genereren"
 
@@ -1993,6 +2000,7 @@ msgstr "Goedkeurder team"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_test__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
 msgstr ""
@@ -2054,6 +2062,17 @@ msgstr "De status van al je lopende declaraties is hier zichtbaar."
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
 msgstr "De som van na split-shut blijft hetzelfde"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The work email of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Het zakelijk e-mailadres van de werknemer is vereist om de "
+"onkostendeclaratie te kunnen maken. Voeg dit toe op het werknemersformulier."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2378,7 +2397,7 @@ msgid ""
 "You cannot refuse:\n"
 " %s"
 msgstr ""
-"Je kan neit weigeren:\n"
+"Je kunt niet weigeren:\n"
 " %s"
 
 #. module: hr_expense

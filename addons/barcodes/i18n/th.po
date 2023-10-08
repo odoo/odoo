@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr "'*' ไม่ใช่รูปแบบบาร์โค้ด Regex ที่ถูกต้อง คุณหมายถึง '.*' ใช่หรือไม่?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -125,7 +125,7 @@ msgstr "สแกนบาร์โค้ดแล้ว"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
-msgstr ""
+msgstr "บาร์โค้ด: "
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -213,6 +213,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"รูปแบบยังสามารถกำหนดวิธีการเข้ารหัสค่าตัวเลข เช่น น้ำหนักหรือราคา\n"
+"                                ลงในบาร์โค้ดได้ ระบุด้วย <code>{NNN}</code> โดยที่ N's\n"
+"                                กำหนดตำแหน่งที่เข้ารหัสตัวเลข นอกจากนี้ยังรองรับทศนิยม\n"
+"                                ด้วยทศนิยมที่ระบุด้วย D เช่น <code>{NNNDD}</code> ในกรณีเหล่านี้\n"
+"                                ข้อมูลของบาร์โค้ดในบันทึกที่เกี่ยวข้อง <i>จำเป็นต้อง</i> แสดงตัวเลขเหล่านี้เป็น\n"
+"                                ศูนย์"
 
 #. module: barcodes
 #. odoo-javascript
@@ -342,7 +348,7 @@ msgstr "หน่วยสินค้า"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "คำสั่งบาร์โค้ดที่ไม่รู้จัก"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence

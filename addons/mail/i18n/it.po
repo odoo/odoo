@@ -457,7 +457,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Archiviato</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -473,22 +473,22 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was done by you:</span><br/>"
-msgstr ""
+msgstr "<span>Se l'hai fatto tu:</span><br/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was not done by you:</span>"
-msgstr ""
+msgstr "<span>Se non l'hai fatto tu:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr ""
+msgstr "<span>Apri record</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>We suggest you start by</span>"
-msgstr ""
+msgstr "<span>Ti consigliamo di iniziare da</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -981,7 +981,7 @@ msgstr "Tutti"
 #: code:addons/mail/wizard/mail_resend_message.py:0
 #, python-format
 msgid "All partners must belong to the same message"
-msgstr ""
+msgstr "Tutti i partner devono appartenere allo stesso messaggio"
 
 #. module: mail
 #. odoo-python
@@ -1159,7 +1159,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "At this point lang should be correctly set"
-msgstr ""
+msgstr "In questa fase, la lingua dovrebbe essere configurata correttamente"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1373,7 +1373,7 @@ msgstr "Modelli di base"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_batch
 msgid "Batch composition"
-msgstr ""
+msgstr "Composizione lotto"
 
 #. module: mail
 #. odoo-python
@@ -1383,6 +1383,8 @@ msgid ""
 "Batch log cannot support attachments or tracking values on more than 1 "
 "document"
 msgstr ""
+"Il registro del lotto non può supportare gli allegati o i valori del "
+"tracciamento su più di 1 documento"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1749,7 +1751,7 @@ msgstr "Chat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Check Exclusion List"
-msgstr ""
+msgstr "Controlla la lista d'esclusione"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -1988,7 +1990,7 @@ msgstr "Contatto"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Contact your administrator"
-msgstr ""
+msgstr "Contatta l'amministratore"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_activity
@@ -2444,7 +2446,7 @@ msgstr "Errore nella consegna"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
-msgstr ""
+msgstr "Uso obsoleto di 'default_res_id', utilizzare 'default_res_ids'."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -4026,6 +4028,10 @@ msgid ""
 "if sent, send emails after that date. This date is considered as being in "
 "UTC timezone."
 msgstr ""
+"In modalità commento: se l'opzione è selezionata, è possibile rimandare "
+"l'invio di notifiche. In modalità e-mail di massa: se configurata, le e-mail"
+" verranno inviate dopo la data selezionata. Questa data è considerata nel "
+"fuso orario UTC."
 
 #. module: mail
 #. odoo-python
@@ -4135,7 +4141,7 @@ msgstr "Non valido"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Invalid domain %(domain)r (type %(domain_type)s)"
-msgstr ""
+msgstr "Dominio non valido %(domain)r (tipo %(domain_type)s)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
@@ -4174,7 +4180,7 @@ msgstr "Campo e-mail principale non valido nel modello %s"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Invalid res_ids %(res_ids_str)s (type %(res_ids_type)s)"
-msgstr ""
+msgstr "res_ids non valido %(res_ids_str)s (tipo %(res_ids_type)s)"
 
 #. module: mail
 #. odoo-python
@@ -4184,6 +4190,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"Nome server non valido!\n"
+" %s"
 
 #. module: mail
 #. odoo-python
@@ -4193,6 +4201,8 @@ msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
 msgstr ""
+"Modello o visualizza sorgente non valido %(svalue)s (tipo %(stype)s), deve "
+"essere un record in un XMLID"
 
 #. module: mail
 #. odoo-python
@@ -4201,6 +4211,7 @@ msgstr ""
 msgid ""
 "Invalid template or view source Xml ID %(source_ref)s does not exist anymore"
 msgstr ""
+"Modello o vista origine Xml ID non valido %(source_ref)s non esiste più"
 
 #. module: mail
 #. odoo-python
@@ -4209,6 +4220,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
+"Modello o registrazione origine vista %(svalue)s non valido, è %(model)s "
+"invece"
 
 #. module: mail
 #. odoo-python
@@ -4217,6 +4230,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
+"Modello o riferimento origine vista %(svalue)s non valido, è %(model)s "
+"invece"
 
 #. module: mail
 #. odoo-python
@@ -4341,7 +4356,7 @@ msgstr "È una chat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_is_log
 msgid "Is a log"
-msgstr ""
+msgstr "È un registro"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -4424,7 +4439,7 @@ msgstr "Conservare allegati"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
 msgid "Keep Message Copy"
-msgstr ""
+msgstr "Mantieni copia messaggio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__original
@@ -4436,6 +4451,8 @@ msgstr "Conservare originale"
 msgid ""
 "Keep a copy of the email content if emails are removed (mass mailing only)"
 msgstr ""
+"Mantieni una copia del contenuto dell'e-mail se le e-mail vengono eliminate "
+"(solo e-mail di massa)"
 
 #. module: mail
 #. odoo-python
@@ -4809,7 +4826,7 @@ msgstr "Layout e-mail"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_main_attachment
 msgid "Mail Main Attachment management"
-msgstr ""
+msgstr "Gestione allegati principali e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
@@ -5960,6 +5977,8 @@ msgid ""
 "Only users belonging to the \"%(group_name)s\" group can modify dynamic "
 "templates."
 msgstr ""
+"Solo gli utenti che appartengono al gruppo \"%(group_name)s\" possono "
+"modificare i modelli dinamici."
 
 #. module: mail
 #. odoo-javascript
@@ -6749,7 +6768,7 @@ msgstr "ID documento collegato"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_ids
 msgid "Related Document IDs"
-msgstr ""
+msgstr "ID documenti correlati"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model
@@ -6921,7 +6940,7 @@ msgstr "Reinviare"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_partner_action
 msgid "Resend Email"
-msgstr ""
+msgstr "Reinvia e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -7184,26 +7203,26 @@ msgstr "Cerca: %s"
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Email Changed"
-msgstr ""
+msgstr "Aggiornamento sicurezza: e-mail modificats"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Login Changed"
-msgstr ""
+msgstr "Aggiornamento sicurezza: login modificato"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Password Changed"
-msgstr ""
+msgstr "Aggiornamento sicurezza: password modificata"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "See Error Details"
-msgstr ""
+msgstr "Vedi dettagli errore"
 
 #. module: mail
 #. odoo-python
@@ -7309,7 +7328,7 @@ msgstr "Invia email"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__force_send
 msgid "Send mailing or notifications directly"
-msgstr ""
+msgstr "Invia e-mail o notifiche in maniera diretta"
 
 #. module: mail
 #. odoo-javascript
@@ -8801,7 +8820,7 @@ msgstr "Utilizza il server Outlook"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Use message_notify to send a notification to an user."
-msgstr ""
+msgstr "Utilizza message_notify per inviare una notifica ad un utente."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -9264,7 +9283,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "You can safely ignore this message"
-msgstr ""
+msgstr "Puoi ignorare il messaggio"
 
 #. module: mail
 #. odoo-python
@@ -9401,20 +9420,22 @@ msgstr "Il tuo"
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
+"L'indirizzo e-mail del tuo account è stato modificato da %(old_email)s a "
+"%(new_email)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Your account login has been updated"
-msgstr ""
+msgstr "Il login del tuo account è stato aggiornato"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Your account password has been updated"
-msgstr ""
+msgstr "La password del tuo account è stata aggiornata"
 
 #. module: mail
 #. odoo-javascript

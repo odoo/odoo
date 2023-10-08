@@ -3,8 +3,8 @@
 # 	* payment_payulatam
 # 
 # Translators:
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
@@ -29,14 +29,14 @@ msgstr "Mã"
 #. module: payment_payulatam
 #: model:payment.provider,display_as:payment_payulatam.payment_provider_payulatam
 msgid "Credit Card (powered by PayU Latam)"
-msgstr "Credit Card (powered by PayU Latam)"
+msgstr "Thẻ tín dụng (cung cấp bởi PayU Latam)"
 
 #. module: payment_payulatam
 #. odoo-python
 #: code:addons/payment_payulatam/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid payment status."
-msgstr ""
+msgstr "Trạng thái thanh toán không hợp lệ."
 
 #. module: payment_payulatam
 #. odoo-python
@@ -54,17 +54,17 @@ msgstr "PayU Latam"
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_api_key
 msgid "PayU Latam API Key"
-msgstr "PayU Latam API Key"
+msgstr "Mã khoá API PayU Latam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_account_id
 msgid "PayU Latam Account ID"
-msgstr "PayU Latam Account ID"
+msgstr "ID tài khoản PayU Latam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_merchant_id
 msgid "PayU Latam Merchant ID"
-msgstr "PayU Latam Merchant ID"
+msgstr "ID người bán PayU Latam"
 
 #. module: payment_payulatam
 #: model:ir.model,name:payment_payulatam.model_payment_provider
@@ -79,13 +79,13 @@ msgstr "Giao dịch thanh toán"
 #. module: payment_payulatam
 #: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_merchant_id
 msgid "The ID solely used to identify the account with PayULatam"
-msgstr ""
+msgstr "ID chỉ được sử dụng để xác định tài khoản với PayULatam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_account_id
 msgid ""
 "The ID solely used to identify the country-dependent shop with PayULatam"
-msgstr ""
+msgstr "ID chỉ được sử dụng để xác định cửa hàng theo quốc gia với PayULatam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,help:payment_payulatam.field_payment_provider__code
@@ -98,25 +98,26 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Mercado Pago</strong>."
 msgstr ""
+"Nhà cung cấp này đã bị ngừng sử dụng.\n"
+"                    Hãy cân nhắc vô hiệu hoá nhà cung cấp đó và chuyển sang <strong>Mercado Pago</strong>."
 
 #. module: payment_payulatam
 #: model_terms:payment.provider,auth_msg:payment_payulatam.payment_provider_payulatam
 msgid "Your payment has been authorized."
-msgstr "Thanh toán của bạn đã được chứng thực."
+msgstr "Thanh toán của bạn đã được uỷ quyền."
 
 #. module: payment_payulatam
 #: model_terms:payment.provider,cancel_msg:payment_payulatam.payment_provider_payulatam
 msgid "Your payment has been cancelled."
-msgstr "Your payment has been cancelled."
+msgstr "Thanh toán của bạn đã bị hủy."
 
 #. module: payment_payulatam
 #: model_terms:payment.provider,pending_msg:payment_payulatam.payment_provider_payulatam
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
-"Your payment has been successfully processed but is waiting for approval."
+msgstr "Thanh toán của bạn đã được xử lý thành công nhưng đang chờ phê duyệt."
 
 #. module: payment_payulatam
 #: model_terms:payment.provider,done_msg:payment_payulatam.payment_provider_payulatam
 msgid "Your payment has been successfully processed. Thank you!"
-msgstr "Your payment has been successfully processed. Thank you!"
+msgstr "Thanh toán của bạn đã được xử lý thành công. Cảm ơn bạn!"

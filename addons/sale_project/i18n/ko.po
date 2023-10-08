@@ -123,7 +123,7 @@ msgstr "전체 항목 불러오기가 완료되었습니다."
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Delivered Quantity (Manual)"
-msgstr "배송 수량 기준 (수기)"
+msgstr "납품 수량 (수기)"
 
 #. module: sale_project
 #. odoo-python
@@ -149,7 +149,7 @@ msgstr "취소됨"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정 구성"
+msgstr "환경 설정"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -209,7 +209,7 @@ msgstr "완료"
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Down Payments"
-msgstr "계약금"
+msgstr "선결제 금액"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -248,7 +248,7 @@ msgstr "청구서 수"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr "이 서비스 판매 후 즉시 주문 수량에 대해 청구서를 발행하십시오."
+msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요!"
 
 #. module: sale_project
 #. odoo-python
@@ -258,9 +258,7 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a project"
 " for the order with a task for each sales order line to track the time "
 "spent."
-msgstr ""
-"이 서비스 판매 후 즉시 주문 수량에 대해 청구서를 발행하십시오. 각 판매주문서 내역의 작업으로 주문에 대한 프로젝트를 생성하여 소요 "
-"시간을 추적합니다."
+msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요 판매주문서 내역별로 작업 프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -269,7 +267,7 @@ msgstr ""
 msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
-msgstr "이 서비스 판매 후 즉시 주문 수량에 대해 청구서를 발행하십시오. 기존 프로젝트에서 작업을 생성하여 소요 시간을 추적합니다."
+msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요. 기존 프로젝트에서 작업을 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -278,9 +276,7 @@ msgstr "이 서비스 판매 후 즉시 주문 수량에 대해 청구서를 발
 msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
-msgstr ""
-"이 서비스 판매 후 즉시 주문 수량에 대해 청구서를 발행하십시오. 주문 관련하여 내용을 비워 둔 프로젝트를 생성하여 소요 시간을 "
-"추적합니다."
+msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요 주문서에 내용 없는 프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -469,7 +465,7 @@ msgstr "청구되지 않음"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
 msgid "Nothing"
-msgstr "아무 것도 없음"
+msgstr "하지 않음"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
@@ -483,8 +479,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
-"판매 오더 확인시 이 제품은 프로젝트 및 작업을 생성할 수 있습니다. 이를 통해 판매중인 서비스를 추적 할 수 있습니다. \n"
-"         '판매 주문 프로젝트' : 정의된 경우 판매 주문의 구성된 프로젝트를 사용하거나 선택한 서식을 기반으로 새 프로젝트를 만드는 데 대체합니다."
+"판매주문서를 승인하면 프로젝트 및/또는 작업을 해당 품목에서 생성될 수 있습니다.         여기에서 판매하는 서비스를 추적할 수 있습니다.\n"
+"         '판매 주문서 프로젝트': 지정된 판매주문서를 사용하거나 차선책으로         서식 중에서 선택하여 새로운 프로젝트를 생성합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -505,7 +501,7 @@ msgstr "주문 수량 중 마일스톤에 도달할 경우 자동으로 배송�
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Prepaid/Fixed Price"
-msgstr "선불/고정가"
+msgstr "선불/고정 가격"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
