@@ -273,6 +273,7 @@ class Cursor(BaseCursor):
         self._closed = False   # real initialization value
         # See the docstring of this class.
         self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
+        self.connection.set_session(readonly=pool.readonly)
 
         self.cache = {}
         self._now = None
@@ -331,7 +332,7 @@ class Cursor(BaseCursor):
             params = params or None
             res = self._obj.execute(query, params)
         except Exception as e:
-            if log_exceptions:
+            if log_exceptions and e is not psycopg2.errors.ReadOnlySqlTransaction:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
             raise
         finally:
@@ -504,19 +505,28 @@ class Cursor(BaseCursor):
             self._now = self.fetchone()[0]
         return self._now
 
+    @property
+    def readonly(self):
+        return self.__pool.readonly
+
 
 class LazyCursor(BaseCursor):
-    def __init__(self, pool, dbname, dsn):
+    def __init__(self, pool_readonly, pool_readwrite, dbname, dsn):
         self._cursor = None
-        self.__pool = pool
+
+        self.__pool_readonly = pool_readonly
+        self.__pool_readwrite = pool_readwrite
         self.dbname = dbname
         self.__dsn = dsn
+        self.connectionTypePrediction = 'read/write'
+        self.connectionTypePrediction_key = None
         super().__init__()
 
     def __getattr__(self, name):
         if not self._cursor:
             # we can predict readonly/write from the threading local (default readonly)
-            self._cursor = Cursor(self.__pool, self.dbname, self.__dsn)
+            pool = self.__pool_readonly if self.connectionTypePrediction == 'readonly' else self.__pool_readwrite
+            self._cursor = Cursor(pool, self.dbname, self.__dsn)
             self._cursor.precommit = self.precommit
             self._cursor.postcommit = self.postcommit
             self._cursor.prerollback = self.prerollback
@@ -528,15 +538,19 @@ class LazyCursor(BaseCursor):
         return getattr(self._cursor, name)
 
     def __setattr__(self, name, value):
-        if name == '_cursor':
+        if name in ('_cursor', 'connectionTypePrediction', 'connectionTypePrediction_key'):
             return super().__setattr__(name, value)
         if name == 'transaction' and self._cursor:
             self._cursor.transaction = value
-        if name in ('precommit', 'postcommit', 'prerollback', 'postrollback', 'transaction', '_LazyCursor__pool', '_LazyCursor__dsn', 'dbname'):
+        if name in ('precommit', 'postcommit', 'prerollback', 'postrollback', 'transaction', '_LazyCursor__pool_readonly', '_LazyCursor__pool_readwrite', '_LazyCursor__dsn', 'dbname'):
             return super().__setattr__(name, value)
         if self._cursor:
             return self._cursor.__setattr__(name, value)
         raise NotImplementedError
+
+    def write_happen(self):
+        if self.connectionTypePrediction_key:
+            odoo.api.readonly_cache.write_happen(self.connectionTypePrediction_key)
 
 
 class TestCursor(BaseCursor):
@@ -565,20 +579,20 @@ class TestCursor(BaseCursor):
         super().__init__()
         self._now = None
         self._closed = False
-        self._cursor = cursor
+        self._lz_cursor = cursor
         # we use a lock to serialize concurrent requests
         self._lock = lock
         self._lock.acquire()
         self._cursors_stack.append(self)
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit, the savepoint is created lazily
-        self._savepoint = self._cursor.savepoint(flush=False)
+        self._savepoint = self._lz_cursor.savepoint(flush=False)
 
     def execute(self, *args, **kwargs):
         if not self._savepoint:
-            self._savepoint = self._cursor.savepoint(flush=False)
+            self._savepoint = self._lz_cursor.savepoint(flush=False)
 
-        return self._cursor.execute(*args, **kwargs)
+        return self._lz_cursor.execute(*args, **kwargs)
 
     def close(self):
         if not self._closed:
@@ -614,7 +628,7 @@ class TestCursor(BaseCursor):
         self.postrollback.run()
 
     def __getattr__(self, name):
-        return getattr(self._cursor, name)
+        return getattr(self._lz_cursor, name)
 
     def now(self):
         """ Return the transaction's timestamp ``datetime.now()``. """
@@ -637,7 +651,7 @@ class PsycoConnection(psycopg2.extensions.connection):
             return PsycoConnectionInfo(self)
 
 
-class ConnectionPool(object):
+class ConnectionPool:
     """ The pool of connections to database(s)
 
         Keep a set of connections to pg databases open, and reuse them
@@ -646,15 +660,21 @@ class ConnectionPool(object):
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """
-    def __init__(self, maxconn=64):
+    def __init__(self, maxconn=64, readonly=False):
         self._connections = []
         self._maxconn = max(maxconn, 1)
+        self._readonly = readonly
         self._lock = threading.Lock()
 
     def __repr__(self):
         used = len([1 for c, u, _ in self._connections[:] if u])
         count = len(self._connections)
-        return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
+        mode = 'read-only' if self._readonly else 'read/write'
+        return f"ConnectionPool({mode};used={used}/count={count}/max={self._maxconn})"
+
+    @property
+    def readonly(self):
+        return self._readonly
 
     def _debug(self, msg, *args):
         _logger_conn.debug(('%r ' + msg), self, *args)
@@ -790,10 +810,11 @@ class Connection(object):
     __nonzero__ = __bool__
 
 class LazyConnection:
-    def __init__(self, pool, dbname, dsn):
+    def __init__(self, pool_readonly, pool_readwrite, dbname, dsn):
         self.__dbname = dbname
         self.__dsn = dsn
-        self.__pool = pool
+        self.__pool_readonly = pool_readonly
+        self.__pool_readwrite = pool_readwrite
 
     @property
     def dsn(self):
@@ -807,7 +828,7 @@ class LazyConnection:
 
     def cursor(self):
         _logger.debug('create cursor to %r', self.dsn)
-        return LazyCursor(self.__pool, self.__dbname, self.__dsn)
+        return LazyCursor(self.__pool_readonly, self.__pool_readwrite, self.__dbname, self.__dsn)
 
     def __bool__(self):
         raise NotImplementedError()
@@ -848,7 +869,9 @@ def connection_info_for(db_or_uri):
 
     return db_or_uri, connection_info
 
-_Pool = None
+_Pool = None  # readwrite
+_PoolReadonly = None  # readonly
+
 
 def db_connect(to, allow_uri=False):
     global _Pool
@@ -864,26 +887,30 @@ def db_connect(to, allow_uri=False):
     return Connection(_Pool, db, info)
 
 def db_lazy_connect(to):
-    global _Pool
+    global _Pool, _PoolReadonly
+    maxconn = odoo.evented and tools.config['db_maxconn_gevent'] or tools.config['db_maxconn']
     if _Pool is None:
-        _Pool = ConnectionPool(int(
-            odoo.evented and tools.config['db_maxconn_gevent']
-            or tools.config['db_maxconn']
-        ))
+        _Pool = ConnectionPool(int(maxconn), readonly=False)
+    if _PoolReadonly is None:
+        _PoolReadonly = ConnectionPool(int(maxconn), readonly=True)
 
     db, info = connection_info_for(to)
     if db != to:
         raise ValueError('URI connections not allowed')
-    return LazyConnection(_Pool, db, info)
+    return LazyConnection(_PoolReadonly, _Pool, db, info)
 
 
 def close_db(db_name):
     """ You might want to call odoo.modules.registry.Registry.delete(db_name) along this function."""
-    global _Pool
+    global _Pool, _PoolReadonly
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])
+    if _PoolReadonly:
+        _PoolReadonly.close_all(connection_info_for(db_name)[1])
 
 def close_all():
-    global _Pool
+    global _Pool, _PoolReadonly
     if _Pool:
         _Pool.close_all()
+    if _PoolReadonly:
+        _PoolReadonly.close_all()

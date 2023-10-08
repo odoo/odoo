@@ -456,6 +456,13 @@ def _call_kw_multi(method, self, args, kwargs):
 
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
+    cr = model.env.cr
+    # forcely override readonly prediction
+    if isinstance(cr, LazyCursor) and cr._cursor is None:
+        # override connection type prediction if the real cursor has been created
+        key = model._name + '.' + name
+        cr.connectionTypePrediction = 'readonly' if readonly_cache.never_write(key) else 'read/write'
+        cr.connectionTypePrediction_key = key
     method = getattr(type(model), name)
     api = getattr(method, '_api', None)
     if api == 'model':
@@ -466,6 +473,16 @@ def call_kw(model, name, args, kwargs):
         result = _call_kw_multi(method, model, args, kwargs)
     model.env.flush_all()
     return result
+
+
+class ReadonlyCache(set):
+    def never_write(self, key):
+        return key not in self
+
+    def write_happen(self, key):
+        return self.add(key)
+
+readonly_cache = ReadonlyCache()
 
 
 class Environment(Mapping):
@@ -1300,4 +1317,5 @@ class Starred:
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from odoo import SUPERUSER_ID
+from odoo.sql_db import LazyCursor
 from odoo.modules.registry import Registry

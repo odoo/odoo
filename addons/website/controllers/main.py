@@ -107,7 +107,7 @@ class Website(Home):
         # Check for controller
         if homepage_url and homepage_url != '/':
             try:
-                return request._serve_ir_http()
+                return request._serve_ir_http(multi_transactions=False)
             except (AccessError, NotFound, SessionExpiredException):
                 pass
 

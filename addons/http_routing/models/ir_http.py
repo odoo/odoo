@@ -440,6 +440,7 @@ class IrHttp(models.AbstractModel):
             request.lang = request.env['res.lang']._lang_get(
                 nearest_url_lang or cookie_lang or context_lang or default_lang._get_cached('code')
             )
+            request.model_names.add('lang')
             request_url_code = request.lang._get_cached('url_code')
         finally:
             request.env = real_env
@@ -455,6 +456,7 @@ class IrHttp(models.AbstractModel):
         elif not url_lang_str and request.env['ir.http'].is_a_bot():
             _logger.debug("%r (lang: %r) missing lang in url but user-agent is a bot, continue", path, request_url_code)
             request.lang = default_lang
+            request.model_names.add('lang')
 
         # See /4, no lang in url and should not redirect (e.g. POST), continue
         elif not url_lang_str and not allow_redirect:

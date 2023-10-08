@@ -1303,6 +1303,7 @@ class Request:
         self.geoip = GeoIP(httprequest.remote_addr)
         self.registry = None
         self.env = None
+        self.model_names = set()
 
     def _post_init(self):
         self.session, self.db = self._get_session_and_dbname()
@@ -1724,45 +1725,78 @@ class Request:
             else:
                 return self._serve_nodb()
 
-        with contextlib.closing(self.registry.cursor()) as cr:
-            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
-            threading.current_thread().uid = self.env.uid
-            try:
-                return service_model.retrying(self._serve_ir_http, self.env)
-            except Exception as exc:
-                if isinstance(exc, HTTPException) and exc.code is None:
-                    raise  # bubble up to odoo.http.Application.__call__
-                exc.error_response = self.registry['ir.http']._handle_error(exc)
-                raise
+        if self.registry.test_cr is None:
+            return self._serve_ir_http(multi_transactions=True)
+        else:
+            return self._transactioning(functools.partial(self._serve_ir_http, multi_transactions=False), mode='read/write')
 
-    def _serve_ir_http(self):
-        """
-        Delegate most of the processing to the ir.http model that is
-        extensible by applications.
-        """
+    def _serve_ir_http(self, multi_transactions=True):
+        if multi_transactions:
+            wrapper = self._transactioning
+        else:
+            def wrapper(func, *args, mode=None):
+                return func(*args)
         ir_http = self.registry['ir.http']
-
         try:
-            rule, args = ir_http._match(self.httprequest.path)
+            rule, args = wrapper(ir_http._match, self.httprequest.path, mode='read-only')
         except NotFound:
             self.params = self.get_http_params()
-            response = ir_http._serve_fallback()
-            if response:
-                self.dispatcher.post_dispatch(response)
-                return response
-            raise
-
-        self._set_request_dispatcher(rule)
-        ir_http._authenticate(rule.endpoint)
-        ir_http._pre_dispatch(rule, args)
-        if isinstance(self.env.cr, odoo.sql_db.LazyCursor) and self.env.cr._cursor:
-            self.env.cr.commit()
-            self.env.cr.close()
-            self.env.cr._cursor = None
-        response = self.dispatcher.dispatch(rule.endpoint, args)
-        # the registry can have been reniewed by dispatch
-        self.registry['ir.http']._post_dispatch(response)
+            response = wrapper(ir_http._serve_fallback, mode='read-only')
+            if not response:
+                raise
+        else:
+            wrapper(self._pre_serve, rule, args, mode='read-only')
+            # keep the business relevant part in a new transaction when multi_transactions is True
+            # so that the lazy cursor can create transaction after the connection type prediction
+            response = wrapper(self._serve, rule, args)
+        ir_http = self.registry['ir.http']  # the registry can have been reniewed by dispatch
+        wrapper(ir_http._post_dispatch, response, mode='read/write')
         return response
+
+    def _pre_serve(self, rule, args):
+        self._set_request_dispatcher(rule)
+        self.registry['ir.http']._authenticate(rule.endpoint)
+        self.registry['ir.http']._pre_dispatch(rule, args)
+
+    def _serve(self, rule, args):
+        key = '.'.join(rule.endpoint.routing['routes'])
+        # readonly routing means the route is usually read-only, but may read-write in some cases
+        # e.g. everything will be cached in the first call, and the future calls are all read-only
+        if odoo.api.readonly_cache.never_write(key) or rule.endpoint.routing['readonly']:
+            cr = self.env.cr
+            cr.connectionTypePrediction = 'readonly'
+            cr.connectionTypePrediction_key = key
+        return self.dispatcher.dispatch(rule.endpoint, args)
+
+    def _transactioning(self, func, *args, mode=None):
+        modes = ('unknown', 'read/write') if mode is None else (mode,)
+        for mode in modes:
+            with contextlib.closing(self.registry.cursor()) as cr:
+                if mode == 'readonly':
+                    cr.connectionTypePrediction = 'readonly'
+                if self.env is None:
+                    self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
+                    threading.current_thread().uid = self.env.uid
+                else:
+                    self.env = self.env(cr=cr)
+                for model_name in self.model_names:
+                    # request.lang and request.website 's env should be updated
+                    setattr(self, model_name, getattr(self, model_name).with_env(self.env))
+                try:
+                    return service_model.retrying(functools.partial(func, *args), env=self.env)
+                except psycopg2.errors.ReadOnlySqlTransaction as exc:
+                    if mode == modes[-1]:
+                        raise
+                    cr.write_happen()
+                    _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip())
+                    continue
+                except Exception as exc:
+                    if isinstance(exc, HTTPException) and exc.code is None:
+                        raise  # bubble up to odoo.http.Application.__call__
+                    if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
+                        raise  # bubble up to werkzeug.debug.DebuggedApplication
+                    exc.error_response = self.registry['ir.http']._handle_error(exc)
+                    raise
 
 
 # =========================================================
