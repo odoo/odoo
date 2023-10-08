@@ -29,7 +29,7 @@ msgstr "Mã"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Kết nối Stripe"
 
 #. module: payment_stripe
 #. odoo-python
@@ -48,17 +48,17 @@ msgstr "Giao hàng"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
-msgstr ""
+msgstr "Bật Apple Pay"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Tạo webhook của bạn"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Lấy khóa bí mật và có thể hiển thị của bạn"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
@@ -66,6 +66,8 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Nếu webhook được bật trên tài khoản Stripe của bạn, chữ ký bí mật này phải "
+"được thiết lập để xác thực các thông báo được gửi từ Stripe đến Odoo."
 
 #. module: payment_stripe
 #. odoo-python
@@ -100,25 +102,26 @@ msgstr "Giao dịch thanh toán"
 #, python-format
 msgid "Please use live credentials to enable Apple Pay."
 msgstr ""
+"Vui lòng dùng thông tin đăng nhập đang sử dụng để kích hoạt Apple Pay."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Mã khóa có thể hiển thị "
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "Dữ liệu đã nhận với trạng thái mục đích không hợp lệ: %s"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Dữ liệu đã nhận bị thiếu trạng thái mục đích."
 
 #. module: payment_stripe
 #. odoo-python
@@ -145,28 +148,28 @@ msgstr "Stripe Payment Intent ID"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "ID phương thức thanh toán Stripe"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "Lỗi proxy Stripe: %(error)s"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Proxy Stripe: Đã xảy ra lỗi khi liên lạc với proxy."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "Proxy Stripe: Không thể thiết lập kết nối."
 
 #. module: payment_stripe
 #. odoo-python
@@ -178,18 +181,21 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"Giao tiếp với API không thành công.\n"
+"Stripe đã cung cấp cho chúng tôi thông tin sau:\n"
+"'%s'"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Khách hàng đã rời khỏi trang thanh toán."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "Mã khoá chỉ được sử dụng để xác định tài khoản với Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -199,6 +205,9 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"Hoàn tiền không được thực hiện. Vui lòng đăng nhập vào Trang tổng quan "
+"Stripe của bạn để biết thêm thông tin về vấn đề đó và xử lý các chênh lệch "
+"về kế toán."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -217,19 +226,19 @@ msgstr "Giao dịch không được liên kết với token."
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "Không thể chuyển đổi token thanh toán sang API mới."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Chữ ký bí mật Webhook"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "Stripe Webhook của bạn đã được thiết lập thành công!"
 
 #. module: payment_stripe
 #. odoo-python
@@ -238,6 +247,7 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Bạn không thể tạo Webhook Stripe nếu không thiết lập Mã khóa bí mật Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -247,6 +257,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe"
 " is completed."
 msgstr ""
+"Bạn không thể đặt trạng thái nhà cung cấp thành Đã bật cho đến khi quá trình"
+" hướng dẫn Stripe của bạn hoàn tất."
 
 #. module: payment_stripe
 #. odoo-python
@@ -256,13 +268,15 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
+"Bạn không thể đặt nhà cung cấp ở Chế độ kiểm thử khi nhà cung cấp đó được "
+"liên kết với tài khoản Stripe của bạn."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Webhook Stripe của bạn đã được thiết lập."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -276,4 +290,4 @@ msgstr "Đơn hàng của bạn"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your web domain was successfully verified."
-msgstr ""
+msgstr "Miền trang web của bạn đã được xác minh thành công."
