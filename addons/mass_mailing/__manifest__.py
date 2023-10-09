@@ -127,6 +127,7 @@
             'mass_mailing/static/src/js/mailing_m2o_filter.js',
             'mass_mailing/static/src/js/mass_mailing_design_constants.js',
             'mass_mailing/static/src/js/mass_mailing_mobile_preview.js',
+            'mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml',
             'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',

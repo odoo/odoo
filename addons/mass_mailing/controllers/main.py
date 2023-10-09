@@ -481,3 +481,16 @@ class MassMailController(http.Controller):
                 f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'
             ) if document_id else '',
         }
+
+    # ------------------------------------------------------------
+    # PREVIEW
+    # ------------------------------------------------------------
+
+    @http.route('/mailing/preview/mobile/assets', type='json', auth='user')
+    def mass_mailing_preview_mobile_assets(self):
+        files = request.env["ir.qweb"]._get_asset_nodes("mass_mailing.iframe_css_assets_edit", js=False, css=True, debug=request.session.debug)
+        return [{
+            "type": tag,
+            "src": attrs.get("src") or attrs.get("data-src") or attrs.get('href'),
+            "content": content,
+        } for tag, attrs, content in files]
