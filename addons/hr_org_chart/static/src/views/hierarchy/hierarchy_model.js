@@ -651,7 +651,12 @@ export class HierarchyModel extends Model {
         if ("domain" in params) {
             config.domain = params.domain;
             if (!params.domain.length) {
-                config.domain = this.defaultDomain;
+                if (config.context.hierarchy_res_id) {
+                    config.domain = [["id", "=", config.context.hierarchy_res_id]];
+                    delete config.context.hierarchy_res_id; // just needed for the first load.
+                } else {
+                    config.domain = this.defaultDomain;
+                }
             }
         }
         return config;
