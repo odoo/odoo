@@ -33,7 +33,6 @@ const useControlledInput = (initialValue, validate) => {
 
 export class MenuDialog extends Component {
     setup() {
-        this.rpc = useService('rpc');
         this.website = useService('website');
         this.title = _t("Add a menu item");
         useAutofocus();
@@ -42,20 +41,23 @@ export class MenuDialog extends Component {
         this.url = useControlledInput(this.props.url, value => !!value);
         this.urlInputRef = useRef('url-input');
 
-        useEffect(() => {
-            const $input = $(this.urlInputRef.el);
+        useEffect((input) => {
+            if (!input) {
+                return;
+            }
             const options = {
                 body: this.website.pageDocument.body,
+                position: "bottom-fit",
                 classes: {
                     'ui-autocomplete': 'o_edit_menu_autocomplete'
                 },
                 urlChosen: () => {
-                    this.url.input.value = this.urlInputRef.el.value;
+                    this.url.input.value = input.value;
                 },
             };
-            wUtils.autocompleteWithPages(this.rpc.bind(this), $input, options);
-            return () => $input.urlcomplete('destroy');
-        }, () => []);
+            const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(input, options);
+            return () => unmountAutocompleteWithPages();
+        }, () => [this.urlInputRef.el]);
     }
 
     onClickOk() {

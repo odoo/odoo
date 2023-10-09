@@ -14,7 +14,11 @@
         border-bottom: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
         border-radius: $o-we-sidebar-content-field-border-radius;
         background-color: $o-we-sidebar-content-field-clickable-bg;
-        color: $o-we-sidebar-content-field-clickable-color;
+        > .dropdown-item,
+        > .dropdown-item:focus,
+        > .dropdown-item.ui-state-active {
+            color: $o-we-sidebar-content-field-clickable-color;
+        }
         &.ui-menu-item {
             > div {
                 white-space: nowrap;
@@ -29,6 +33,9 @@
         }
         &.ui-autocomplete-category {
             background-color: $o-we-bg-lighter;
+            a:hover > {
+                color: $o-we-sidebar-content-field-clickable-color;
+            }
         }
     }
 }
@@ -156,5 +163,14 @@
 .o_w_wysiwyg_transition {
     #oe_snippets {
         transition: transform ease 400ms;
+    }
+}
+
+.ui-widget.ui-autocomplete.o_website_ui_autocomplete .ui-menu-item {
+    > a:hover {
+        color: $o-we-sidebar-content-field-clickable-color;
+    }
+    &.ui-autocomplete-category > a:hover {
+        cursor: default;
     }
 }

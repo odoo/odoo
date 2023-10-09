@@ -20,10 +20,7 @@
             />
             <t t-if="displayOptions">
                 <ul class="o-autocomplete--dropdown-menu ui-widget show"
-                    t-att-class="{
-                        'dropdown-menu ui-autocomplete': props.dropdown,
-                        'list-group': !props.dropdown
-                     }"
+                    t-att-class="ulDropdownClass"
                     t-on-mousedown.prevent="" t-ref="sourcesList">
                     <t t-foreach="sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
