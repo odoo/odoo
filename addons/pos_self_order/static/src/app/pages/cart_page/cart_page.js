@@ -71,11 +71,14 @@ export class CartPage extends Component {
         if (mode === "meal" && !order.isSavedOnServer) {
             this.sendInProgress = true;
             await this.selfOrder.sendDraftOrderToServer();
-            this.sendInProgress = false;
-
             if (type !== "kiosk") {
+                this.router.navigate("confirmation", {
+                    orderAccessToken: order.access_token,
+                    screenMode: "order",
+                });
                 return;
             }
+            this.sendInProgress = false;
         }
         if (orderingMode === "table" && !takeAway) {
             if (type === "kiosk") {
@@ -95,10 +98,7 @@ export class CartPage extends Component {
         }
 
         this.state.selectTable = false;
-
-        if (this.selfOrder.config.self_ordering_pay_after === "each") {
-            this.pay();
-        }
+        this.pay();
     }
 
     getChildLines(line) {

@@ -12,7 +12,7 @@ import { ComboPage } from "@pos_self_order/app/pages/combo_page/combo_page";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page";
-import { PaymentSuccessPage } from "@pos_self_order/app/pages/payment_success_page/payment_success_page";
+import { ConfirmationPage } from "@pos_self_order/app/pages/confirmation_page/confirmation_page";
 import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
 import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/stand_number_page";
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
@@ -27,7 +27,7 @@ class selfOrderIndex extends Component {
         OrdersHistoryPage,
         ComboPage,
         PaymentPage,
-        PaymentSuccessPage,
+        ConfirmationPage,
         ProductListPage,
         EatingLocationPage,
         StandNumberPage,

@@ -22,9 +22,14 @@
                 <t t-if="showMyOrderBtn()">
                     <a
                         type="button"
-                        t-on-click="() => this.router.navigate('orderHistory')"
+                        t-on-click="clickMyOrder"
                         class="btn btn-lg btn-primary">
-                        My Orders
+                        <t t-if="draftOrder.length > 0">
+                            My Order
+                        </t>
+                        <t t-else="">
+                            My Orders
+                        </t>
                     </a>
                 </t>
             </div>
@@ -32,7 +37,7 @@
                 <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
                     <a type="button"
                         t-on-click="(event) => this.clickCustomLink(link)"
-                        t-attf-class="btn btn-lg btn-{{link.style}}">
+                        t-attf-class="btn btn-lg btn-{{link.style}} {{ hideBtn(link) ? 'd-none' : ''}}">
                         <t t-esc="link.name"/>
                     </a>
                 </t>

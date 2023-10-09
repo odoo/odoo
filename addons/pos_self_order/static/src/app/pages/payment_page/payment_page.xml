@@ -16,21 +16,15 @@
                 </div>
             </div>
         </div>
-        <div t-else="" class="h-100">
-            <div class="d-flex flex-column gap-5 justify-content-center align-items-center h-100">
-                <t t-if="!this.selfOrder.paymentError">
-                    <h1 class="text-center">Follow instructions<br/>on the terminal</h1>
-                    <i class="fa fa-credit-card-alt fs-1" aria-hidden="true"></i>
-                </t>
-                <t t-else="">
-                    <h1 class="text-center">The payment has failed<br/>please retry</h1>
-                    <i class="fa fa-exclamation-circle fs-1" aria-hidden="true"></i>
-                </t>
+        <div class="d-flex justify-content-center align-items-center flex-column h-100 px-3 text-center">
+            <h1 class="mb-4">Follow instructions on the terminal</h1>
+            <div class="d-inline-flex flex-column border rounded p-4 bg-view mb-3">
+                <i class="fa fa-credit-card-alt fs-1" aria-hidden="true"></i>
             </div>
         </div>
-        <div class="d-flex h-100 w-100">
-            <button t-attf-class="{{ this.selfOrder.paymentError ? 'w-50' : 'w-100' }} h-100 btn btn-info p-0 m-0 rounded-0 fs-2 text-uppercase" t-on-click="() => this.router.back()">Back</button>
-            <button t-attf-class="{{ this.selfOrder.paymentError ? 'w-50' : 'w-0' }} h-100 btn btn-success p-0 m-0 rounded-0 fs-2 text-uppercase" t-on-click="startPayment">Retry</button>
+        <div t-if="showFooterBtn" class="px-3 py-4 d-flex gap-1 justify-content-center">
+            <button class="btn btn-primary btn-lg" t-on-click="() => this.router.back()">Back</button>
+            <button class="btn btn-info btn-lg" t-on-click="startPayment">Retry</button>
         </div>
     </t>
 </templates>

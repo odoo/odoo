@@ -57,6 +57,29 @@ export class LandingPage extends Component {
         return "";
     }
 
+    get draftOrder() {
+        return this.selfOrder.orders.filter((o) => o.access_token && o.state === "draft");
+    }
+
+    hideBtn(link) {
+        const arrayLink = link.url.split("/");
+        const routeName = arrayLink[arrayLink.length - 1];
+
+        if (routeName !== "products") {
+            return;
+        }
+
+        return (
+            routeName === "products" &&
+            this.draftOrder.length > 0 &&
+            this.selfOrder.config.self_ordering_pay_after === "each"
+        );
+    }
+
+    clickMyOrder() {
+        this.router.navigate(this.draftOrder.length > 0 ? "cart" : "orderHistory");
+    }
+
     clickCustomLink(link) {
         const arrayLink = link.url.split("/");
         const routeName = arrayLink[arrayLink.length - 1];

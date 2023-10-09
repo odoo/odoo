@@ -216,7 +216,7 @@ export class SelfOrder extends Reactive {
 
     async sendDraftOrderToServer() {
         if (this.currentOrder.isSavedOnServer || this.currentOrder.lines.length === 0) {
-            return true;
+            return this.currentOrder;
         }
 
         try {
@@ -236,10 +236,6 @@ export class SelfOrder extends Reactive {
 
             if (this.config.self_ordering_pay_after === "each") {
                 this.editedOrder = null;
-            }
-
-            if (this.config.self_ordering_mode !== "kiosk") {
-                this.notification.add(_t("Your order has been placed!"), { type: "success" });
             }
 
             return order;

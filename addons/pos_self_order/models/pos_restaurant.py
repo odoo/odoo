@@ -20,7 +20,11 @@ class RestaurantTable(models.Model):
 
     def _get_self_order_data(self) -> Dict:
         self.ensure_one()
-        return self.read(["name", "identifier"])[0]
+        return {
+            'name': self.name,
+            'identifier': self.identifier,
+            'floor_name': self.floor_id.name
+        }
 
     @staticmethod
     def _get_identifier():

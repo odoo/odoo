@@ -19,26 +19,35 @@ patch(CartPage.prototype, {
         const service = this.selfOrder.config.self_ordering_service_mode;
         const takeAway = this.selfOrder.currentOrder.take_away;
 
+        if (this.sendInProgress) {
+            return;
+        }
+
         if (!this.selfOrder.table && service === "table" && !takeAway) {
             this.state.selectTable = true;
             return;
         }
 
-        if (mode === "meal" && isOnlinePayment) {
+        if (mode === "meal" && isOnlinePayment && order.isSavedOnServer) {
             if (!order) {
                 this.selfOrder.notification.add(_t("The current order is invalid."), {
                     type: "danger",
                 });
                 return;
             }
-            if (!order.isSavedOnServer) {
-                this.sendInProgress = true;
-                await this.selfOrder.sendDraftOrderToServer();
-                this.sendInProgress = false;
-            } else {
-                this.checkAndOpenPaymentPage(order);
-            }
+
+            this.checkAndOpenPaymentPage(order);
+        } else if (mode === "meal" && !isOnlinePayment && order.isSavedOnServer) {
+            this.router.navigate("confirmation", {
+                orderAccessToken: order.access_token,
+                screenMode: "pay",
+            });
+            return;
         } else if (mode === "each") {
+            this.sendInProgress = true;
+            const order = await this.selfOrder.sendDraftOrderToServer();
+            this.sendInProgress = false;
+
             this.checkAndOpenPaymentPage(order);
         } else {
             return super.pay(...arguments);
@@ -50,10 +59,11 @@ patch(CartPage.prototype, {
         if (order) {
             if (order.state === "draft") {
                 if (!isOnlinePayment) {
-                    this.selfOrder.notification.add(
-                        _t("The current order cannot be paid (no online payment method)."),
-                        { type: "danger" }
-                    );
+                    // if no payment method is available -> pay at cashier
+                    this.router.navigate("confirmation", {
+                        orderAccessToken: order.access_token,
+                        screenMode: "pay",
+                    });
                     return;
                 }
 
