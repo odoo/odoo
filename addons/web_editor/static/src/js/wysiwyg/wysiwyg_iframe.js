@@ -147,6 +147,9 @@ patch(Wysiwyg.prototype, {
                     .write(`<!DOCTYPE html><html${
                         self.options.iframeHtmlClass ? ' class="' + self.options.iframeHtmlClass +'"' : ''
                     }>${iframeContent}</html>`);
+                // Closing the document might trigger a new 'load' event.
+                self.$iframe.off('load', onLoad);
+                self.$iframe[0].contentWindow.document.close();
             });
             self.options.document = self.$iframe[0].contentWindow.document;
         });
