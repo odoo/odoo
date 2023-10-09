@@ -702,6 +702,7 @@
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager" readonly="not is_editable"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report" readonly="not is_editable"/>
+                    <field name="department_id" optional="hide"/>
                     <field name="payment_mode" optional="hide"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state != 'draft'"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="state != 'draft'"/>

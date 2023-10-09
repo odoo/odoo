@@ -29,7 +29,7 @@
                 <field name="salary_expected" optional="hide"/>
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
-                <field name="department_id" readonly="1" column_invisible="context.get('invisible_department', True)"/>
+                <field name="department_id" readonly="1" column_invisible="context.get('invisible_department', True)" optional="hide"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
             </tree>
@@ -489,10 +489,11 @@
     <record id="hr_applicant_action_from_department" model="ir.actions.act_window">
         <field name="name">New Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field>
+        <field name="view_mode">tree,kanban,form,graph,calendar,pivot</field>
         <field name="context">{
             'search_default_department_id': active_id,
-            'default_department_id': active_id}
+            'default_department_id': active_id,
+            'invisible_department': False}
         </field>
         <field name="domain">[('stage_id.sequence','&lt;=','1')]</field>
     </record>
