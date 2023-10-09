@@ -39,7 +39,7 @@ export class InvoiceButton extends Component {
                 { load: false }
             );
             if (orderWithInvoice?.account_move) {
-                await this.report.download("account.account_invoices", [
+                await this.report.doAction("account.account_invoices", [
                     orderWithInvoice.account_move,
                 ]);
             }
