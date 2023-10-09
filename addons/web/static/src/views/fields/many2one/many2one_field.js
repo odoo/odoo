@@ -354,7 +354,7 @@ export const many2OneField = {
     supportedTypes: ["many2one"],
     extractProps({ attrs, context, decorations, options, string }, dynamicInfo) {
         const canCreate =
-            attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !options.no_create;
+            options.no_create ? false : attrs.can_create && Boolean(JSON.parse(attrs.can_create));
         return {
             placeholder: attrs.placeholder,
             canOpen: !options.no_open,
