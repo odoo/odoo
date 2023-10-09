@@ -703,8 +703,13 @@ class Environment(Mapping):
 
     def _recompute_all(self):
         """ Process all pending computations. """
-        for field in list(self.fields_to_compute()):
-            self[field.model_name]._recompute_field(field)
+        for _i in range(3):  # arbitrary number of tries
+            fields = list(self.fields_to_compute())
+            if not fields:
+                return
+            for field in fields:
+                self[field.model_name]._recompute_field(field)
+        _logger.error("Could not recompute_all fields, probably due to an invalidation loop")
 
     def flush_all(self):
         """ Flush all pending computations and updates to the database. """
