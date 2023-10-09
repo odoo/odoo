@@ -64,12 +64,16 @@ export class AutoComplete extends Component {
 
         // position and size
         if (this.props.dropdown) {
-            usePosition("sourcesList", () => this.inputRef.el, {
+            usePosition("sourcesList", () => this.targetDropdown, {
                 position: "bottom-start",
             });
         } else {
             this.open(false);
         }
+    }
+
+    get targetDropdown() {
+        return this.inputRef.el;
     }
 
     get isOpened() {
@@ -263,6 +267,7 @@ export class AutoComplete extends Component {
         this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
         this.props.onFocus(ev);
     }
+
     get autoCompleteRootClass() {
         let classList = "";
         if (this.props.class) {
@@ -270,6 +275,16 @@ export class AutoComplete extends Component {
         }
         if (this.props.dropdown) {
             classList += " dropdown";
+        }
+        return classList;
+    }
+
+    get ulDropdownClass() {
+        let classList = "";
+        if (this.props.dropdown) {
+            classList += " dropdown-menu ui-autocomplete";
+        } else {
+            classList += " list-group";
         }
         return classList;
     }
