@@ -146,6 +146,8 @@ export class LunchDashboard extends Component {
         await this._fetchLunchInfos();
     }
 
+    async onUpdateQuantityDonT() {}
+
     async onUpdateUser(value) {
         if (!value) {
             return;
