@@ -32,7 +32,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
  */
 export function useEmojiPicker(ref, props, options = {}) {
     const targets = [];
-    const popover = usePopover(EmojiPicker, { ...options, popoverClass: "o-fast-popover" });
+    const popover = usePopover(EmojiPicker, { ...options, animation: false });
     props.storeScroll = {
         scrollValue: 0,
         set: (value) => {

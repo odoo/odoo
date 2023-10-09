@@ -65,7 +65,8 @@ export class Picker extends Component {
             fixedPosition: true,
             onClose: () => this.close(),
             closeOnClickAway: false,
-            popoverClass: "o-fast-popover",
+            animation: false,
+            arrow: false,
         });
         useExternalListener(
             browser,

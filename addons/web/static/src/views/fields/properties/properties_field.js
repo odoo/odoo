@@ -45,6 +45,7 @@ export class PropertiesField extends Component {
             position: "top",
             onClose: () => this.onCloseCurrentPopover?.(),
             fixedPosition: true,
+            arrow: false,
         });
         this.propertiesRef = useRef("properties");
 
@@ -753,11 +754,6 @@ export class PropertiesField extends Component {
         );
 
         reposition(popover, target, { position: "top", margin: 10 });
-
-        const arrow = popover.querySelector(".popover-arrow");
-        if (arrow) {
-            arrow.classList.add("d-none");
-        }
     }
 
     /**
