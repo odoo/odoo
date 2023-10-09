@@ -30,6 +30,7 @@ export class CalendarArchParser {
         let canCreate = true;
         let canDelete = true;
         let quickCreate = true;
+        let quickCreateViewId = null;
         let hasEditDialog = false;
         let showUnusualDays = false;
         let isDateHidden = false;
@@ -85,12 +86,11 @@ export class CalendarArchParser {
                     }
                     if (node.hasAttribute("quick_add")) {
                         quickCreate = archParseBoolean(node.getAttribute("quick_add"), true);
-                        // quick_add could contain either false, true or an id for a form view
-                        if (quickCreate) {
-                            const viewId = parseInt(node.getAttribute("quick_add"), 10);
-                            if (viewId > 1) {
-                                quickCreate = viewId;
-                            }
+                        if (quickCreate && node.hasAttribute("quick_create_view_id")) {
+                            quickCreateViewId = parseInt(
+                                node.getAttribute("quick_create_view_id"),
+                                10
+                            );
                         }
                     }
                     if (node.hasAttribute("event_open_popup")) {
@@ -191,6 +191,7 @@ export class CalendarArchParser {
             formViewId,
             hasEditDialog,
             quickCreate,
+            quickCreateViewId,
             isDateHidden,
             isTimeHidden,
             popoverFieldNodes,

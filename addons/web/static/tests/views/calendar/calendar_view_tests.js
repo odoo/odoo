@@ -4703,7 +4703,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(target, ".fc-dayGridMonth-view");
     });
 
-    QUnit.test("calendar rendering with form view id being passed in quick_add", async (assert) => {
+    QUnit.test("calendar with custom quick create view", async (assert) => {
         serviceRegistry.add(
             "dialog",
             makeFakeDialogService((className, props) => {
@@ -4717,7 +4717,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" quick_add="2">
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" quick_add="1" quick_create_view_id="2">
                     <field name="name"/>
                 </calendar>
             `,
