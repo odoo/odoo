@@ -54,7 +54,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown").outerHTML,
-            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle" tabindex="0" aria-expanded="false"></button></div>'
+            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button type="button" class="dropdown-toggle" tabindex="0" aria-expanded="false"></button></div>'
         );
         assert.containsOnce(target, "button.dropdown-toggle");
         assert.containsNone(target, ".dropdown-menu");
@@ -1352,7 +1352,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await mount(Parent, target, { env });
         assert.strictEqual(
             target.querySelector(".dropdown").outerHTML,
-            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle" disabled="" tabindex="0" aria-expanded="false"></button></div>'
+            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button type="button" class="dropdown-toggle" disabled="" tabindex="0" aria-expanded="false"></button></div>'
         );
     });
 });

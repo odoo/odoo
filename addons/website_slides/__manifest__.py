@@ -145,7 +145,6 @@ Featuring
             'web/static/src/views/fields/signature/signature_field.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
-            'web/static/src/legacy/scss/name_and_signature.scss',
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
@@ -194,8 +193,6 @@ Featuring
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/common_env.js',
-            'web/static/src/legacy/js/widgets/name_and_signature.js',
-            'web/static/src/legacy/xml/name_and_signature.xml',
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
             'web/static/src/libs/pdfjs.js',

@@ -738,19 +738,19 @@
             - {number} signature_ratio: ratio of the signature area
             - {string} signature_type: 'signature' or 'initial'
 
-        For the default values and more information, see init() of the widgets
-        SignatureForm and NameAndSignature.
+        For default values and more information, see components SignatureForm and NameAndSignature.
     -->
     <template id="portal.signature_form" name="Ask Signature">
-        <div class="o_portal_signature_form"
-            t-att-data-call-url="call_url"
-            t-att-data-default-name="default_name"
-            t-att-data-mode="mode"
-            t-att-data-send-label="send_label"
-            t-att-data-signature-ratio="signature_ratio"
-            t-att-data-signature-type="signature_type"
-            t-att-data-font-color="font_color"
-            />
+        <t t-set="signature_form_props" t-value="{
+            'callUrl': call_url,
+            'defaultName': default_name,
+            'mode': mode,
+            'sendLabel': send_label,
+            'signatureRatio': signature_ratio,
+            'signatureType': signature_type,
+            'fontColor': font_color
+        }"/>
+        <owl-component name="portal.signature_form" t-att-props="json.dumps(signature_form_props)"/>
     </template>
 
     <template id="portal_sidebar" name="Sidebar">

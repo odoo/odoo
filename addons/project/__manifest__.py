@@ -106,7 +106,6 @@
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/views/fields/translation_dialog.scss',
-            'web/static/src/legacy/scss/name_and_signature.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
@@ -154,8 +153,6 @@
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/common_env.js',
-            'web/static/src/legacy/js/widgets/name_and_signature.js',
-            'web/static/src/legacy/xml/name_and_signature.xml',
             ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
