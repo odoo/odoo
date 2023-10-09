@@ -10,14 +10,15 @@
 # Alexander Bigga, 2023
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2023-09-15 09:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1778,7 +1779,7 @@ msgstr "Abwesenheiten im Kalender anzeigen"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Dropdown menu"
-msgstr "Dropdownmenu"
+msgstr "Drop-down-Menü"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2136,8 +2137,8 @@ msgid "Hour to"
 msgstr "Endzeit"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
@@ -3030,6 +3031,13 @@ msgid "Open"
 msgstr "Offen"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Vorgang nicht unterstützt"
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
@@ -3113,8 +3121,18 @@ msgid "Public"
 msgstr "Öffentlich"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Public Holiday"
+msgstr "Gesetzlicher Feiertag"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#, python-format
 msgid "Public Holidays"
 msgstr "Gesetzliche Feiertage"
 
@@ -3503,14 +3521,20 @@ msgstr ""
 "Geplant: anstehende Aktivitäten."
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.model,name:hr_holidays.model_hr_leave_stress_day
+#, python-format
 msgid "Stress Day"
 msgstr "Tag mit Anwesenheitspflicht"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_stress_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_stress_day_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#, python-format
 msgid "Stress Days"
 msgstr "Tage mit Anwesenheitspflicht"
 
@@ -3777,8 +3801,8 @@ msgid ""
 "This color will be used in the time off summary located in Reporting > Time "
 "off by Department."
 msgstr ""
-"Diese Farbe wird in der Zusammenfassung der Fehlzeiten verwendet unter "
-"Berichte > Fehlzeiten nach Abteilung."
+"Diese Farbe wird in der Zusammenfassung der Abwesenheiten verwendet unter "
+"Berichtswesen > Abwesenheiten nach Abteilung."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3881,7 +3905,7 @@ msgstr "Abwesenheitskalender"
 #: code:addons/hr_holidays/models/hr_employee.py:0
 #, python-format
 msgid "Time Off Dashboard"
-msgstr "Abwesenheits-Dashboard"
+msgstr "Abwesenheitsdashboard"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
@@ -4086,7 +4110,7 @@ msgstr "Bis"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 #, python-format
 msgid "To Approve"
-msgstr "Zur genehmigen"
+msgstr "Zu genehmigen"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -4670,8 +4694,8 @@ msgid "day(s)"
 msgstr "Tag(e)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4699,8 +4723,8 @@ msgstr ""
 "Begrenzung)"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0

@@ -76,11 +76,11 @@ class MailBlackListMixin(models.AbstractModel):
                     ON m.email_normalized = bl.email AND bl.active
                     WHERE bl.id IS NULL
             """
-        self._cr.execute(query % self._table)
+        self._cr.execute((query + " FETCH FIRST ROW ONLY") % self._table)
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
-        return [('id', 'in', [r[0] for r in res])]
+        return [('id', 'inselect', (query % self._table, []))]
 
     @api.depends('email_normalized')
     def _compute_is_blacklisted(self):

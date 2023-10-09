@@ -589,19 +589,23 @@ class AccountReportExpression(models.Model):
             domains = []
 
             for candidate_expr in to_expand:
-                labels_by_code = candidate_expr._get_aggregation_terms_details()
+                if candidate_expr.formula == 'sum_children':
+                    result |= candidate_expr.report_line_id.children_ids.expression_ids.filtered(lambda e: e.label == candidate_expr.label)
+                else:
+                    labels_by_code = candidate_expr._get_aggregation_terms_details()
 
-                cross_report_domain = []
-                if candidate_expr.subformula != 'cross_report':
-                    cross_report_domain = [('report_line_id.report_id', '=', candidate_expr.report_line_id.report_id.id)]
+                    cross_report_domain = []
+                    if candidate_expr.subformula != 'cross_report':
+                        cross_report_domain = [('report_line_id.report_id', '=', candidate_expr.report_line_id.report_id.id)]
 
-                for line_code, expr_labels in labels_by_code.items():
-                    dependency_domain = [('report_line_id.code', '=', line_code), ('label', 'in', tuple(expr_labels))] + cross_report_domain
-                    domains.append(dependency_domain)
+                    for line_code, expr_labels in labels_by_code.items():
+                        dependency_domain = [('report_line_id.code', '=', line_code), ('label', 'in', tuple(expr_labels))] + cross_report_domain
+                        domains.append(dependency_domain)
 
-            sub_expressions = self.env['account.report.expression'].search(osv.expression.OR(domains))
-            to_expand = sub_expressions.filtered(lambda x: x.engine == 'aggregation' and x not in result)
-            result |= sub_expressions
+            if domains:
+                sub_expressions = self.env['account.report.expression'].search(osv.expression.OR(domains))
+                to_expand = sub_expressions.filtered(lambda x: x.engine == 'aggregation' and x not in result)
+                result |= sub_expressions
 
         return result
 
@@ -690,7 +694,10 @@ class AccountReportExpression(models.Model):
 
         return auto_chosen_target
 
-    def action_view_carryover_lines(self, options):
+    def action_view_carryover_lines(self, options, column_group_key=None):
+        if column_group_key:
+            options = self.report_line_id.report_id._get_column_group_options(options, column_group_key)
+
         date_from, date_to, dummy = self.report_line_id.report_id._get_date_bounds_info(options, self.date_scope)
 
         return {

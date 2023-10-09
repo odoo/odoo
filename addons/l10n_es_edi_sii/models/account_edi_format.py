@@ -286,11 +286,8 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-
-                if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02' if export_exempts else '01'
             else:
                 info['IDFactura']['IDEmisorFactura'] = partner_info
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
@@ -305,11 +302,11 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                country_code = com_partner.country_id.code
-                if not country_code or country_code == 'ES' or country_code not in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' # For Intra-Com
+                mod_303_10 = self.env.ref('l10n_es.mod_303_10')
+                mod_303_11 = self.env.ref('l10n_es.mod_303_11')
+                tax_tags = invoice.line_ids.tax_tag_ids
+                intracom = mod_303_10 in tax_tags or mod_303_11 in tax_tags
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' if intracom else '01'
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'

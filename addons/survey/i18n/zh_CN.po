@@ -279,6 +279,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的<t t-out=\"object.partner_id.name or 'participant'\">用户</t><br><br>，\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            您已受邀参加一项新认证。 \n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            我们正在进行一项调查，希望您能给予答复。\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    开始认证\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    开始调查\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            请回答 <t t-out=\"format_date(object.deadline) or ''\">2021 年 5 月 5 日</t>的调查。<br><br>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            祝您好运！\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            感谢您的参与。\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -853,7 +884,7 @@ msgstr "非多项选择题的答案分数不能为负！"
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3
 msgid "An apple a day keeps the doctor away."
-msgstr ""
+msgstr "一天一苹果，医生远离我。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -2427,7 +2458,7 @@ msgstr "加入会话"
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
 msgid "Just to categorize your answers, don't worry."
-msgstr ""
+msgstr "只是将您的答案归类，问题不大。"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug2
@@ -4515,7 +4546,7 @@ msgstr "本部分涉及您的常规信息。回答这些问题有助于确定您
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
 msgid "This section is about our eCommerce experience itself."
-msgstr ""
+msgstr "本节介绍我们的电子商务体验本身。"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
@@ -5110,7 +5141,7 @@ msgstr "您可以通过不同的方式共享您的链接：电子邮件，邀请
 msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
-msgstr ""
+msgstr "在线会话进行时，无法删除调查表 \"%(survey_names)s\" 中的问题。"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

@@ -840,7 +840,7 @@ class WebsocketConnectionHandler:
         return Response(status=101, headers={
             'Upgrade': 'websocket',
             'Connection': 'Upgrade',
-            'Sec-WebSocket-Accept': accept_header,
+            'Sec-WebSocket-Accept': accept_header.decode(),
         })
 
     @classmethod

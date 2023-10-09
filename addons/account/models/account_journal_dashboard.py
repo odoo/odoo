@@ -553,6 +553,7 @@ class account_journal(models.Model):
                               AND move.state != 'cancel'
                               AND move.journal_id = journal.id
                               AND stl.internal_index >= COALESCE(statement.first_line_index, '')
+                            LIMIT 1
                    ) without_statement ON TRUE
              WHERE journal.id = ANY(%s)
         """, [(self.ids)])

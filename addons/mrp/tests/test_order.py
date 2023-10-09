@@ -296,20 +296,26 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 2
         mo = mo_form.save()
 
-        mo._post_inventory()
+        # Produce & backorder
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(mo_backorder.product_qty, 1)
 
         update_quantity_wizard = self.env['change.production.qty'].create({
-            'mo_id': mo.id,
-            'product_qty': 5,
+            'mo_id': mo_backorder.id,
+            'product_qty': 3,
         })
         update_quantity_wizard.change_prod_qty()
-        mo_form = Form(mo)
-        mo_form.qty_producing = 5
-        mo = mo_form.save()
-        mo.button_mark_done()
+        mo_back_form = Form(mo_backorder)
+        mo_back_form.qty_producing = 3
+        mo_backorder = mo_back_form.save()
+        mo_backorder.button_mark_done()
 
-        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 20)
-        self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 5)
+        productions = mo | mo_backorder
+        self.assertEqual(sum(productions.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 20)
+        self.assertEqual(sum(productions.move_finished_ids.mapped('quantity_done')), 5)
 
     def test_update_quantity_3(self):
         bom = self.env['mrp.bom'].create({
@@ -3448,6 +3454,10 @@ class TestMrpOrder(TestMrpCommon):
                 self.assertEqual(move.product_uom_qty, 4, "expected qty was not correctly set")
                 self.assertEqual(move.quantity_done, 4, "expected qty was not applied as qty to be done (UoM was possibly not correctly converted)")
         self.assertEqual(mo2.state, 'done')
+        # double check that backorder qtys are also correct
+        mo2_backorder = mo2.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(len(mo2_backorder.move_raw_ids), 1, "missing line should NOT have been added in")
+        self.assertEqual(mo2_backorder.move_raw_ids[0].product_uom_qty, 12, "backorder values are based on original MO, not current bom")
 
         #### scenario 3 - repeated comp move ####
         # bom.bom_line_ids[0]/product_id = p2

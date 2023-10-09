@@ -104,6 +104,44 @@ describe('applyColor', () => {
             `),
         });
     });
+    it('should remove font tag after removing font color', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="color: rgb(255, 0, 0);">[abcabc]</font></p>',
+            stepFunction: setColor('', 'color'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-400">[abcabc]</font></p>',
+            stepFunction: setColor('', 'color'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+    });
+    it('should remove font tag after removing background color applied as style', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-color: rgb(255, 0, 0);">[abcabc]</font></p>',
+            stepFunction: setColor('', 'backgroundColor'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="bg-200">[abcabc]</font></p>',
+            stepFunction: setColor('', 'backgroundColor'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+    });
+    it('should remove font tag if font-color and background-color both are removed one by one', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="color: rgb(255, 0, 0);" class="bg-200">[abcabc]</font></p>',
+            stepFunction: setColor('','backgroundColor'),
+            stepFunction: setColor('','color'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-color: rgb(255, 0, 0);" class="text-900">[abcabc]</font></p>',
+            stepFunction: setColor('','color'),
+            stepFunction: setColor('','backgroundColor'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {

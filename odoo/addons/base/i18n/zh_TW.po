@@ -1359,7 +1359,7 @@ msgid ""
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
 "\n"
-"如果在一個已售產品上啟用按訂單生產 (MTO)，則增加銷售訂單和採購訂單之間的關係訊息.\n"
+"若出售產品已啟用特別訂製（MTO），會加入銷售訂單與採購訂單之間的關係資訊。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -15330,6 +15330,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "無效的「分組」參數"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -16563,7 +16569,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
 msgid "MRR, Churn, Recurring payments"
-msgstr ""
+msgstr "MRR、客戶流失、經常付款"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
@@ -21903,7 +21909,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_expense
 msgid "Project Expenses"
-msgstr "專案費用"
+msgstr "專案開支"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mail_plugin
@@ -22185,7 +22191,7 @@ msgstr "專案採購"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_expense
 msgid "Project expenses"
-msgstr "專案費用"
+msgstr "專案開支"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -26387,7 +26393,7 @@ msgstr "特克斯和凱科斯群島"
 msgid ""
 "Turn emails received in your mailbox into leads and log their content as "
 "internal notes."
-msgstr "將您郵箱中收到的電子郵件轉化為潛在客戶，並將其內容記錄為內部紀錄."
+msgstr "將郵箱中收到的電子郵件轉換為潛在客戶，並將郵件內容記錄為內部備註。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_mail_plugin
@@ -26448,6 +26454,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"伺服器操作類型。可使用以下的值：\n"
+"- 「執行 Python 程式碼」：將執行的一段 Python 程式碼\n"
+"- 「建立新記錄」：使用新的值建立新記錄\n"
+"- 「更新記錄」：更新記錄的值\n"
+"- 「執行多個操作」：定義一個操作以觸發多個其他伺服器操作\n"
+"- 「發送電郵」：張貼訊息、備註或發送電子郵件（聊天應用程式）\n"
+"- 「加入關注者」：將關注者加至記錄（聊天應用程式）\n"
+"- 「建立下一活動」：建立一個活動（聊天應用程式）\n"
+"- 「發送 SMS 簡訊」：發送 SMS 文字短訊，將其記錄在文件上（短訊應用程式）"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type

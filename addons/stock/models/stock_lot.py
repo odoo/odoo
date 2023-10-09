@@ -1,12 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from operator import attrgetter
 from re import findall as regex_findall, split as regex_split
+
+import operator as py_operator
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+
+OPERATORS = {
+    '<': py_operator.lt,
+    '>': py_operator.gt,
+    '<=': py_operator.le,
+    '>=': py_operator.ge,
+    '=': py_operator.eq,
+    '!=': py_operator.ne
+}
 
 
 class StockLot(models.Model):
@@ -27,13 +37,13 @@ class StockLot(models.Model):
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
-    product_qty = fields.Float('Quantity', compute='_product_qty')
+    product_qty = fields.Float('Quantity', compute='_product_qty', search='_search_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
-    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
+    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id')
 
     @api.model
     def generate_lot_names(self, first_lot, count):
@@ -124,10 +134,16 @@ class StockLot(models.Model):
         for lot in self:
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
-            lot.last_delivery_partner_id = False
-            # If lot is serial, keep track of the latest delivery's partner
-            if lot.product_id.tracking == 'serial' and lot.delivery_count > 0:
-                lot.last_delivery_partner_id = lot.delivery_ids.sorted(key=attrgetter('date_done'), reverse=True)[0].partner_id
+
+    def _compute_last_delivery_partner_id(self):
+        serial_products = self.filtered(lambda l: l.product_id.tracking == 'serial')
+        delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot()
+        (self - serial_products).last_delivery_partner_id = False
+        for lot in serial_products:
+            if lot.product_id.tracking == 'serial' and len(delivery_ids_by_lot[lot.id]) > 0:
+                lot.last_delivery_partner_id = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True)[0].partner_id
+            else:
+                lot.last_delivery_partner_id = False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -162,6 +178,22 @@ class StockLot(models.Model):
             # We only care for the quants in internal or transit locations.
             quants = lot.quant_ids.filtered(lambda q: q.location_id.usage == 'internal' or (q.location_id.usage == 'transit' and q.location_id.company_id))
             lot.product_qty = sum(quants.mapped('quantity'))
+
+    def _search_product_qty(self, operator, value):
+        domain = [
+            ('lot_id', '!=', False),
+            '|', ('location_id.usage', '=', 'internal'),
+            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', '!=', False)
+        ]
+        lots_w_qty = {
+            id: qty for id, qty in map(lambda l: (l['lot_id'][0], l['quantity']), self.env['stock.quant'].read_group(domain=domain, fields=['quantity:sum'], groupby=['lot_id']))
+        }
+        all_lots = self.env['stock.lot'].search([])
+        ids = []
+        for lot in all_lots:
+            if OPERATORS[operator](lots_w_qty.get(lot.id, 0), value):
+                ids.append(lot.id)
+        return [('id', 'in', ids)]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)

@@ -3,7 +3,6 @@
 # 	* stock
 # 
 # Translators:
-# Daniel Löfgren, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
 # Daniel Osser <danielosser@gmail.com>, 2022
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
@@ -21,6 +20,7 @@
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Lasse L, 2023
+# Levi Siuzdak (sile), 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Levi Siuzdak (sile), 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -198,7 +198,7 @@ msgstr "&gt;"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr "’Räkningsblad’"
+msgstr "'Räkningsblad'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -215,7 +215,7 @@ msgstr "'Plats - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
 msgid "'Lot-Serial - %s' % object.name"
-msgstr "’Parti-Serial - %s' % object.name"
+msgstr "'Parti-Serial - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
@@ -254,7 +254,7 @@ msgstr ""
 "* Ny: När en lagerflytt har skapats och ännu inte bekräftats.\n"
 "* Väntar på en annan flytt: Detta tillstånd kan visas när en flytt väntar på en annan, till exempel i ett kedjeflöde.\n"
 "* Väntar på tillgänglighet: Detta tillstånd uppnås när anskaffningen inte är enkel. Det kan vara nödvändigt att schemaläggaren körs, att en komponent tillverkas osv.\n"
-"* Tillgänglig: När produkter är reserverade sätts det till ”Tillgänglig”.\n"
+"* Tillgänglig: När produkter är reserverade sätts det till \"Tillgänglig\".\n"
 "* Klar: När försändelsen har behandlats är tillståndet \"Klar\"."
 
 #. module: stock
@@ -461,8 +461,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
 "title=\"Unfold\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=”Öppna” "
-"title=”Öppna”/>"
+"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Öppna\" "
+"title=\"Öppna\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -1356,8 +1356,7 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"Genom att avmarkera fältet ””aktiv kan du dölja en plats utan att ta bort "
-"den."
+"Genom att avmarkera fältet aktiv kan du dölja en plats utan att ta bort den."
 
 #. module: stock
 #: model:product.template,name:stock.product_cable_management_box_product_template
@@ -1835,7 +1834,7 @@ msgid ""
 "button to handle the reservation manually."
 msgstr ""
 "Det gick inte att reservera alla begärda produkter. Använd knappen \"Markera"
-" som Att göra” för att hantera bokningen manuellt."
+" som Att göra\" för att hantera bokningen manuellt."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
@@ -2853,8 +2852,8 @@ msgstr ""
 "Njut av en snabb upplevelse med Odoo-appen för streckkoder. Den är "
 "supersnabb och fungerar även utan en stabil internetuppkoppling. Den stöder "
 "alla flöden: lagerjusteringar, batchplockning, flyttning av partier eller "
-"pallar, kontroll av lågt lager osv. Gå till menyn \"Appa”r för att aktivera "
-"streckkodssnittet."
+"pallar, kontroll av lågt lager osv. Gå till menyn \"Appar\" för att aktivera"
+" streckkodssnittet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3821,17 +3820,17 @@ msgstr "Ogiltig domän vänster operand %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Ogiltig domänoperatör %s"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Ogiltig domän höger operand %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -4689,7 +4688,7 @@ msgstr "mars"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Markera som Todo"
+msgstr "Markera som Att göra"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -7658,7 +7657,7 @@ msgstr "Visa text om partier"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr "Visa Markera som ”Att göra”"
+msgstr "Visa Markera som Att göra"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -8177,8 +8176,8 @@ msgid ""
 "Technical field used to compute whether the button \"Mark as Todo\" should "
 "be displayed."
 msgstr ""
-"Tekniskt fält som används för att beräkna om knappen \"Markera som ”Att "
-"göra”” ska visas."
+"Tekniskt fält som används för att beräkna om knappen \"Markera som Att "
+"göra\" ska visas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_validate

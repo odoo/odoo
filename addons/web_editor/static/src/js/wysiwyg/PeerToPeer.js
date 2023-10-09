@@ -41,7 +41,11 @@ const baseNotificationMethods = {
     },
 
     ptp_join: async function (notification) {
-        this._createClient(notification.fromClientId);
+        const clientId = notification.fromClientId;
+        if (this.clientsInfos[clientId] && this.clientsInfos[clientId].peerConnection) {
+            return this.clientsInfos[clientId];
+        }
+        this._createClient(clientId);
     },
 
     rtc_signal_icecandidate: async function (notification) {

@@ -184,6 +184,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"Chọn phương thức gửi email:\n"
+"Email: gửi email trực tiếp\n"
+"Gửi dưới dạng thông báo: đăng trên tài liệu và thông báo cho người theo dõi\n"
+"Gửi dưới dạng ghi chú: ghi lại ghi chú trên tài liệu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -207,6 +211,9 @@ msgid ""
 "        You can put a negative number if you need a delay before the\n"
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Trì hoãn sau ngày kích hoạt.\n"
+"            Bạn có thể đặt số âm nếu bạn cần trì hoãn trước\n"
+"            ngày kích hoạt, như gửi lời nhắc 15 phút trước cuộc họp."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -274,6 +281,8 @@ msgid ""
 "Email, followers or activities action types cannot be used when deleting "
 "records."
 msgstr ""
+"Không thể sử dụng các loại hành động email, người theo dõi hoặc hoạt động "
+"khi xóa tập dữ liệu."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
@@ -291,6 +300,8 @@ msgstr "Các trường kích hoạt sự thay đổi."
 msgid ""
 "Form Modification based actions can only be used with code action type."
 msgstr ""
+"Hành động dựa trên Sửa đổi biểu mẫu chỉ có thể được sử dụng với loại hành "
+"động mã."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -403,6 +414,7 @@ msgstr "Ghi chú"
 msgid ""
 "Note that this action can be triggered up to %d minutes after its schedule."
 msgstr ""
+"Lưu ý là hành động này có thể được kích hoạt lên tới %d phút sau lịch trình."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
@@ -465,7 +477,7 @@ msgstr "Mẫu SMS"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "Gửi dưới dạng"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
@@ -503,7 +515,7 @@ msgstr "Thiết lập tự động hóa mới"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "Đăng ký người nhận"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -536,6 +548,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is updated. "
 "If empty, all fields are watched."
 msgstr ""
+"Hành động này sẽ được kích hoạt nếu và chỉ nếu một trong các trường này được"
+" cập nhật. Nếu để trống, mọi trường sẽ được theo dõi. "
 
 #. module: base_automation
 #. openerp-web
@@ -681,6 +695,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Khi nào thì điều kiện sẽ được kích hoạt.\n"
+"             Nếu có, sẽ được kiểm tra bởi công cụ lập kế hoạch. Nếu trống, sẽ được kiểm tra khi tạo và cập nhật. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

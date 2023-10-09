@@ -30,12 +30,12 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
-msgstr ""
+msgstr "ออกแล้ว"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" title=\"วันที่\" role=\"รูปภาพ\" aria-label=\"วันที่\"/>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -86,12 +86,12 @@ msgstr "ไอคอนประเภทกิจกรรม"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr ""
+msgstr "ค่าใช้จ่ายเพิ่มเติม"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "ต้นทุนแฝงเพิ่มเตม"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
@@ -170,13 +170,13 @@ msgstr "ต้นทุน"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_line_id
 msgid "Cost Line"
-msgstr ""
+msgstr "รายการต้นทุน"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
-msgstr ""
+msgstr "รายการต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
@@ -184,17 +184,17 @@ msgstr ""
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
-msgstr ""
+msgstr "รายการต้นทุนและการปรับไม่ตรงกัน คุณควรคำนวณต้นทุนแฝงใหม่"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 msgid "Create Landed Costs"
-msgstr ""
+msgstr "สร้างต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "สร้างต้นทุนแฝงใหม่"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -227,19 +227,19 @@ msgstr "วันที่"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "สมุดรายวันเริ่มต้น"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "วิธีการแยกเริ่มต้น"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "วิธีการแยกเริ่มต้นเมื่อใช้กับต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -347,6 +347,9 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"ระบุว่าสินค้าเป็นต้นทุนแฝงรือไม่: "
+"เมื่อได้รับใบเรียกเก็บเงินของผู้จำหน่ายแล้ว "
+"คุณสามารถปันส่วนต้นทุนนี้ในใบเสร็จรับเงินก่อนหน้าได้"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -356,18 +359,18 @@ msgstr "เป็นผู้ติดตาม"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "เป็นรายการต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "เป็นต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
 msgid "Item Description"
-msgstr ""
+msgstr "รายละเอียดสินค้า"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -391,7 +394,7 @@ msgstr "รายการบันทึก"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost"
-msgstr ""
+msgstr "ต้นทุนแฝง"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -412,12 +415,12 @@ msgstr "Landed Costs"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "ต้นทุนแฝงที่มองเห็นได้"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr ""
+msgstr "ต้นทุนแฝงถูกตรวจสอบความถูกต้องแล้ว"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -448,7 +451,7 @@ msgstr "กิจกรรมล่าสุด"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "สมุดรายวัน Lc"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
@@ -487,7 +490,7 @@ msgstr "ใหม่"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "ค่าใหม่"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
@@ -533,7 +536,7 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "สามารถตรวจสอบความถูกต้องของต้นทุนแฝงแบบร่างได้เท่านั้น"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
@@ -549,13 +552,13 @@ msgstr "การรับ"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr ""
+msgstr "กรุณากำหนดค่าบัญชีค่าใช้จ่ายสต็อกสำหรับสินค้า:%s"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "โปรดกำหนด %s ว่าควรใช้ค่าใช้จ่ายเพิ่มเติมใด"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -635,7 +638,7 @@ msgstr "ต้นทุนแฝงสต๊อก"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "รายการต้นทุนแฝงสต็อก"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
@@ -646,7 +649,7 @@ msgstr "ย้ายสต๊อก"
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "ชั้นการประเมินมูลค่าสต็อก"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -681,6 +684,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"ต้นทุนแฝงที่ตรวจสอบแล้วไม่สามารถยกเลิกได้ "
+"แต่คุณสามารถสร้างต้นทุนแฝงที่เป็นลบเพื่อทำการย้อนกลับได้"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -690,13 +695,13 @@ msgstr "การประเมินมูลค่า"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "รายการปรับการประเมินค่า"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "ปรับการประเมินมูลค่า"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
@@ -730,6 +735,8 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
+"คุณไม่สามารถใช้ต้นทุนแฝงกับ %s ที่เลือกได้ "
+"ต้นทุนแฝงสามารถใช้ได้กับสินค้าที่มีวิธี FIFO หรือวิธีคิดต้นทุนเฉลี่ยเท่านั้น"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/product.py:0
@@ -738,3 +745,4 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนชนิดสินค้าหรือปิดใช้งานตัวเลือกต้นทุนแฝงได้เนื่องจากสินค้าถูกใช้ในบรรทัดการย้ายบัญชี"

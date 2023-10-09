@@ -71,20 +71,20 @@ msgstr "アクセストークン"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
 msgid "Access Token Expiration Timestamp"
-msgstr ""
+msgstr "アクセストークン期限切れタイムスタンプ"
 
 #. module: google_gmail
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process."
-msgstr ""
+msgstr "認証処理中にエラーが発生しました"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "アクセストークンを取得する際にエラーが発生しました。 "
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -110,6 +110,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
+"OAuth認証プロセスでGmailアカウントに接続します。\n"
+"Gmailのログインページにリダイレクトされますので、許可を承諾して下さい。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -118,27 +120,29 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"OAuth認証プロセスでGmailアカウントを接続します。 \n"
+"デフォルトでは、一致するメールアドレスを持つユーザのみがこのサーバを使用できます。使用範囲を広げるには、\"mail.default.from \"システムパラメータを設定する必要があります。"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "GmailクライアントID"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Gmailクライアントシークレット"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "Gmail OAuth認証"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google Gmail ミキシン"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -148,7 +152,7 @@ msgstr "ID"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "GoogleアプリのID"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
@@ -161,7 +165,7 @@ msgstr "受信メールサーバ"
 msgid ""
 "Incorrect Connection Security for Gmail mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
-msgstr ""
+msgstr "Gmailメールサーバ %r用の不正な接続セキュリティ。 \"TLS (STARTTLS)\"にセットして下さい。"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -172,13 +176,13 @@ msgstr "メールサーバ"
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "Gmailメールサーバにリンクできるのは管理者のみです。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "Gmailの認証情報を設定して下さい。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -188,6 +192,8 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"\"ユーザ名\"の欄には、Gmailのユーザ名(メールアドレス)を入力して下さい。これはGmail "
+"OAuthenticationトークンに使用したものと同じアカウントでなければなりません。"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -195,7 +201,7 @@ msgstr ""
 msgid ""
 "Please leave the password field empty for Gmail mail server %r. The OAuth "
 "process does not require it"
-msgstr ""
+msgstr "Gmail mail サーバ%rのパスワードフィールドは空欄にして下さい。OAuth処理はそれを必要としません。"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -217,7 +223,7 @@ msgstr "シークレット"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "Googleアプリのシークレット"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
@@ -230,7 +236,7 @@ msgstr "サーバタイプ"
 msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
-msgstr ""
+msgstr "一般設定でGmail API認証情報を設定し、Gmailアカウントをリンクします。"
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -245,7 +251,7 @@ msgstr "Googleの許可コードを生成するためのURL"
 msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
-msgstr ""
+msgstr "サーバ %rは個人メールアドレスのみに使用可能です。\"from_filter\" フィールドに%rを入力して下さい。"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

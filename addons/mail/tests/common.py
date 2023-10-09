@@ -38,6 +38,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                     ('cancel', 'Cancelled')
     """
 
+    @classmethod
+    def setUpClass(cls):
+        super(MockEmail, cls).setUpClass()
+        cls._mc_enabled = False
+
     # ------------------------------------------------------------
     # GATEWAY MOCK
     # ------------------------------------------------------------
@@ -90,7 +95,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
-        cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', '%s@%s' % (cls.alias_bounce, cls.alias_domain)))
+        cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', f'{cls.alias_bounce}@{cls.alias_domain}'))
 
     @classmethod
     def _init_outgoing_gateway(cls):
@@ -569,7 +574,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         direct_check = ['body_alternative', 'email_from', 'references', 'reply_to', 'subject']
         content_check = ['body_alternative_content', 'body_content', 'references_content']
         list_check = ['email_bcc', 'email_cc', 'email_to']
-        other_check = ['attachments', 'attachments_info', 'body']
+        other_check = ['attachments', 'attachments_info', 'body', 'headers']
 
         expected = {}
         for fname in direct_check + content_check + list_check + other_check:
@@ -633,6 +638,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.assertEqual(len(expected['attachments_info']), len(attachments))
         if 'body' in expected:
             self.assertHtmlEqual(expected['body'], sent_mail['body'], 'Value for %s: expected %s, received %s' % ('body', expected['body'], sent_mail['body']))
+
         # beware to avoid list ordering differences (but Falsy values -> compare directly)
         for val in list_check:
             if expected.get(val):
@@ -642,6 +648,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 self.assertEqual(expected[val], sent_mail[val],
                                  'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
 
+        # (partial) content check
         for val in content_check:
             if val in expected:
                 self.assertIn(
@@ -649,6 +656,12 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                     'Value for %s: %s does not contain %s' % (val, sent_mail[val[:-8]], expected[val])
                 )
 
+        if 'headers' in expected:
+            for key, value in expected['headers'].items():
+                self.assertTrue(key in sent_mail['headers'], f'Missing key {key}')
+                found = sent_mail['headers'][key]
+                self.assertEqual(found, value,
+                                 f'Header value for {key} invalid, found {found} instead of {value}')
         return sent_mail
 
 
@@ -856,27 +869,46 @@ class MailCase(MockEmail):
         """ Check bus notifications content. Mandatory and basic check is about
         channels being notified. Content check is optional.
 
-        GNERATED INPUT
-        :param messages: generated messages to check;
+        GENERATED INPUT
+        :param <mail.message> messages: generated messages to check, coming
+          notably from the 'self._new_msgs' filled during the mock;
 
         EXPECTED
-        :param recipients_info: list of data dict: [
-          {'content': message content,
-           'message_type': message_type (default: 'comment'),
-           'subtype': xml id of message subtype (default: 'mail.mt_comment'),
-           'notif': list of notified recipients: [
-             {'partner': res.partner record (may be empty),
-              'email': NOT SUPPORTED YET,
-              'status': notification_status to check,
-              'type': notification_type to check,
-              'is_read': is_read to check,
-              'check_send': whether outgoing stuff has to be checked;
-              'failure_type': optional: one of failure_type key
-             }, { ... }]
-          }, {...}]
+        :param list recipients_info: list of data dict: [
+          {
+            # message values
+            'content': message content that should be present in message 'body'
+              field;
+            'message_type': 'message_type' value (default: 'comment'),
+            'subtype': xml id of message subtype (default: 'mail.mt_comment'),
+            # notifications values
+            'email_values': values to check in outgoing emails, check 'assertMailMail'
+              and 'assertSentEmail';
+            'mail_mail_values': values to check in generated <mail.mail>, check
+              'assertMailMail'. 'fields_values' is supported for compabitility
+              with other asserts;
+            'message_values': values to check in found <mail.message>, check
+              'assertMessageFields';
+            'notif': list of notified recipients: [
+              {
+                'check_send': whether outgoing stuff has to be checked;
+                'email': NOT SUPPORTED YET,
+                'failure_reason': failure_reason on mail.notification;
+                'failure_type': 'failure_type' on mail.notification;
+                'is_read': 'is_read' on mail.notification;
+                'partner': res.partner record (may be empty),
+                'status': 'notification_status' on mail.notification;
+                'type': 'notification_type' on mail.notification;
+              },
+              { ... }
+            ],
+          },
+          {...}
+        ]
 
         PARAMETERS
-        :param unlink_sent: to know whether to compute
+        :param mail_unlink_sent: mock parameter, tells if mails are unlinked
+          and therefore we are able to check outgoing emails;
         """
         partners = self.env['res.partner'].sudo().concat(*list(p['partner'] for i in recipients_info for p in i['notif'] if p.get('partner')))
         base_domain = [('res_partner_id', 'in', partners.ids)]
@@ -888,15 +920,41 @@ class MailCase(MockEmail):
         done_notifs = self.env['mail.notification'].sudo()
 
         for message_info in recipients_info:
+            # sanity check
+            extra_keys = set(message_info.keys()) - {
+                'content',
+                'email_values',
+                'fields_values',
+                'mail_mail_values',
+                'message_type',
+                'message_values',
+                'notif',
+                'subtype',
+            }
+            if extra_keys:
+                raise ValueError(f'Unsupported values: {extra_keys}')
+
             mbody, mtype = message_info.get('content', ''), message_info.get('message_type', 'comment')
             msubtype = self.env.ref(message_info.get('subtype', 'mail.mt_comment'))
 
             # find message
             if messages:
-                message = messages.filtered(lambda message: mbody in message.body and message.message_type == mtype and message.subtype_id == msubtype)
+                message = messages.filtered(lambda message: (
+                    mbody in message.body and message.message_type == mtype and
+                    message.subtype_id == msubtype
+                ))
             else:
-                message = self.env['mail.message'].sudo().search([('body', 'ilike', mbody), ('message_type', '=', mtype), ('subtype_id', '=', msubtype.id)], limit=1, order='id DESC')
+                message = self.env['mail.message'].sudo().search([
+                    ('body', 'ilike', mbody),
+                    ('message_type', '=', mtype),
+                    ('subtype_id', '=', msubtype.id)
+                ], limit=1, order='id DESC')
             self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype.name))
+
+            # check message values
+            message_values = message_info.get('message_values', {})
+            if message_values:
+                self.assertMessageFields(message, message_values)
 
             # check notifications and prepare assert data
             email_groups = defaultdict(list)
@@ -915,12 +973,17 @@ class MailCase(MockEmail):
                 partner_notif = notifications.filtered(
                     lambda n: n.mail_message_id == message and
                     n.res_partner_id == partner and
-                    n.notification_type == ntype and
-                    n.notification_status == nstatus and
-                    n.is_read == nis_read
+                    n.notification_type == ntype
                 )
-                self.assertTrue(partner_notif, 'Mail: not found notification for %s (type: %s, state: %s, message: %s)' % (partner, ntype, nstatus, message.id))
-                self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id, 'Mail: Message and notification should have the same author')
+                self.assertEqual(len(partner_notif), 1,
+                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})')
+                self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id)
+                self.assertEqual(partner_notif.is_read, nis_read)
+                if 'failure_reason' in recipient:
+                    self.assertEqual(partner_notif.failure_reason, recipient['failure_reason'])
+                if 'failure_type' in recipient:
+                    self.assertEqual(partner_notif.failure_type, recipient['failure_type'])
+                self.assertEqual(partner_notif.notification_status, nstatus)
 
                 # prepare further asserts
                 if ntype == 'email':
@@ -952,8 +1015,10 @@ class MailCase(MockEmail):
                 self.assertMessageBusNotifications(message)
 
             # check emails that should be sent (hint: mail.mail per group, email par recipient)
-            email_values = {'body_content': mbody,
-                            'references_content': message.message_id}
+            email_values = {
+                'body_content': mbody,
+                'references_content': message.message_id,
+            }
             if message_info.get('email_values'):
                 email_values.update(message_info['email_values'])
             for recipients in email_groups.values():
@@ -970,7 +1035,7 @@ class MailCase(MockEmail):
                         author=message_info.get('fields_values', {}).get('author_id') or message.author_id or message.email_from,
                         mail_message=message,
                         email_values=email_values,
-                        fields_values=message_info.get('fields_values'),
+                        fields_values=message_info.get('fields_values') or message_info.get('mail_mail_values'),
                     )
                 else:
                     for recipient in partners:
@@ -1167,12 +1232,19 @@ class MailCommon(common.TransactionCase, MailCase):
         """ Create another company, add it to admin and create an user that
         belongs to that new company. It allows to test flows with users from
         different companies. """
+        cls._mc_enabled = True
+
+        # new company
         cls.company_2 = cls.env['res.company'].create({
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
             'name': 'Company 2',
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
+        cls.company_3 = cls.env['res.company'].create({
+            'email': 'company_3@test.example.com',
+            'name': 'Company 3',
+        })
 
         cls.user_employee_c2 = mail_new_test_user(
             cls.env, login='employee_c2',
