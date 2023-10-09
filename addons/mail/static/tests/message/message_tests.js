@@ -1594,3 +1594,28 @@ QUnit.test("Message should display attachments in order", async () => {
     await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "C.txt" });
 });
+
+QUnit.test("Can edit a message only containing an attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "Blah.jpg",
+        mimetype: "image/jpeg",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        author_id: pyEnv.currentPartnerId,
+        body: "",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message-editable .o-mail-Composer-input");
+});

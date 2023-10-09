@@ -72,7 +72,7 @@
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
-                                    <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
+                                    <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription or state.isEditing)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
