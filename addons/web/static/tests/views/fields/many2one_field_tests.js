@@ -3215,6 +3215,30 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("no_create option on a many2one when can_create is absent", async function (assert) {
+        serverData.models.partner.fields.product_id.readonly = true;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" options="{'no_create': 1}" readonly="0" />
+                    </sheet>
+                </form>`,
+        });
+        await editInput(target, ".o_field_many2one input", "new partner");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+
+        assert.containsNone(target, ".modal", "should not display the create modal");
+        assert.strictEqual(
+            target.querySelector(".o_field_many2one input").value,
+            "",
+            "many2one value should cleared on focusout if many2one is no_create"
+        );
+    });
+
     QUnit.test("can_create and can_write option on a many2one", async function (assert) {
         serverData.models.product.options = {
             can_create: "false",
