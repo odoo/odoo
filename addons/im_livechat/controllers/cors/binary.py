@@ -31,3 +31,25 @@ class LivechatBinaryController(BinaryController):
     def livechat_fetch_image(self, guest_token, channel_id, attachment_id, width=0, height=0, **kwargs):
         force_guest_env(guest_token)
         return self.fetch_image(channel_id, attachment_id, width, height, **kwargs)
+
+    @route(
+        "/im_livechat/cors/channel/<int:channel_id>/partner/<int:partner_id>/avatar_128",
+        methods=["GET"],
+        type="http",
+        auth="public",
+        cors="*",
+    )
+    def livechat_channel_partner_avatar_128(self, guest_token, channel_id, partner_id, **kwargs):
+        force_guest_env(guest_token)
+        return self.discuss_channel_partner_avatar_128(channel_id, partner_id, **kwargs)
+
+    @route(
+        "/im_livechat/cors/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128",
+        methods=["GET"],
+        type="http",
+        auth="public",
+        cors="*",
+    )
+    def livechat_channel_guest_avatar_128(self, guest_token, channel_id, guest_id, **kwargs):
+        force_guest_env(guest_token)
+        return self.discuss_channel_guest_avatar_128(channel_id, guest_id, **kwargs)

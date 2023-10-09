@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { ThreadService } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
@@ -66,16 +65,5 @@ patch(ThreadService.prototype, {
         }
         this.chatWindowService.focus(chatWindow);
         return true;
-    },
-
-    /**
-     * @param {import("models").Persona} persona
-     * @param {import("models").Thread} thread
-     */
-    avatarUrl(author, thread) {
-        if (thread?.type === "livechat" && author?.type === "guest") {
-            return DEFAULT_AVATAR;
-        }
-        return super.avatarUrl(author, thread);
     },
 });
