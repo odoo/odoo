@@ -68,7 +68,7 @@ functionRegistry
         computeFormat: function (pivotId, measureName, ...domain) {
             pivotId = toString(pivotId.value);
             const measure = toString(measureName.value);
-            const field = this.getters.getPivotDataSource(pivotId).getReportMeasures()[measure];
+            const field = this.getters.getPivotDataSource(pivotId).getField(measure);
             if (!field) {
                 return undefined;
             }
