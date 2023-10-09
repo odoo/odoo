@@ -9,9 +9,6 @@
                 <xpath expr="//field[@name='email']" position="after">
                   <field name="l10n_sg_unique_entity_number" attrs="{'invisible': [('country_code', '!=', 'SG')]}"/>
                 </xpath>
-                <xpath expr="//field[@name='vat']" position="attributes">
-                  <attribute name="string" >GST No.</attribute>
-                </xpath>
             </field>
         </record>
     </data>
