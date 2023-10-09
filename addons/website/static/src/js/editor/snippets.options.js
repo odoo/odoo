@@ -104,16 +104,23 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this.el.classList.add('o_we_large');
         this.inputEl.classList.add('text-start');
         const options = {
-            position: {
-                collision: 'flip flipfit',
-            },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
             body: this.getParent().$target[0].ownerDocument.body,
             urlChosen: this._onWebsiteURLChosen.bind(this),
         };
-        wUtils.autocompleteWithPages(this.rpc.bind(this), $(this.inputEl), options);
+        this.unmountAutocompleteWithPages = wUtils.autocompleteWithPages(this.inputEl, options);
+    },
+
+    open() {
+        this._super(...arguments);
+        document.querySelector(".o_website_ui_autocomplete")?.classList?.remove("d-none");
+    },
+
+    close() {
+        this._super(...arguments);
+        document.querySelector(".o_website_ui_autocomplete")?.classList?.add("d-none");
     },
 
     //--------------------------------------------------------------------------
@@ -140,6 +147,11 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
             window.open(this._value, '_blank');
         }
     },
+    destroy() {
+        this.unmountAutocompleteWithPages?.();
+        this.unmountAutocompleteWithPages = null;
+        this._super(...arguments);
+    }
 });
 
 const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
