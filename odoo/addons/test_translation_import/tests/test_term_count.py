@@ -5,7 +5,7 @@ import io
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import TranslationModuleReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
+from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -386,3 +386,35 @@ class TestTranslationFlow(common.TransactionCase):
             'with spaces',
             'hello \\"world\\"',
         })
+
+    def test_export_records(self):
+        self.env["base.language.install"].create({
+            'overwrite': True,
+            'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
+        }).lang_install()
+
+        model1_ids = self.env.ref('test_translation_import.test_translation_import_model1_record1').ids
+        po_reader = TranslationRecordReader(self.env.cr, 'test.translation.import.model1', model1_ids, lang='fr_FR')
+        translations = {line[4]: line[5] for line in po_reader}
+        self.assertDictEqual(
+            translations,
+            {
+                'Fork': 'Fourchette',
+                'Knife': 'Couteau',
+                'Spoon': 'Cuillère',
+                'Tableware': 'Vaisselle',
+            }
+        )
+
+        model2_ids = self.env.ref('test_translation_import.test_translation_import_model2_record1').ids
+        po_reader = TranslationRecordReader(self.env.cr, 'test.translation.import.model2', model2_ids, lang='fr_FR')
+        translations = {line[4]: line[5] for line in po_reader}
+        self.assertDictEqual(
+            translations,
+            {
+                'Fork': 'Fourchette',
+                'Knife': 'Couteau',
+                'Spoon': 'Cuillère',
+                'Tableware': 'Vaisselle',
+            }
+        )
