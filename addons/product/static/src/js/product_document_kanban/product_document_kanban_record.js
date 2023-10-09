@@ -7,7 +7,7 @@ import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 export class ProductDocumentKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
-        this.attachmentService = useService("mail.attachment");
+        this.store = useService("mail.store");
         this.fileViewer = useFileViewer();
     }
     /**
@@ -19,7 +19,7 @@ export class ProductDocumentKanbanRecord extends KanbanRecord {
         if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
             return;
         } else if (ev.target.closest(".o_kanban_previewer")) {
-            const attachment = this.attachmentService.insert({
+            const attachment = this.store.Attachment.insert({
                 id: this.props.record.data.ir_attachment_id[0],
                 filename: this.props.record.data.name,
                 name: this.props.record.data.name,
