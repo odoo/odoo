@@ -3,7 +3,9 @@
 import { intersection } from "@web/core/utils/arrays";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-
+import { App, Component } from "@odoo/owl";
+import { templates } from "@web/core/assets";
+import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 
 /**
  * Allows to load anchors from a page.
@@ -45,77 +47,30 @@ function loadAnchors(url, body) {
 /**
  * Allows the given input to propose existing website URLs.
  *
- * @param {Function} rpc
- * @param {jQuery} $input
+ * @param {HTMLInputElement} input
  */
-function autocompleteWithPages(rpc, $input, options) {
-    $.widget("website.urlcomplete", $.ui.autocomplete, {
-        options: options || {},
-        _create: function () {
-            this._super();
-            this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+function autocompleteWithPages(input, options= {}) {
+    const owlApp = new App(UrlAutoComplete, {
+        env: Component.env,
+        dev: Component.env.debug,
+        templates,
+        props: {
+            options,
+            loadAnchors,
+            targetDropdown: input,
         },
-        _renderMenu: function (ul, items) {
-            const self = this;
-            items.forEach(item => {
-                if (item.separator) {
-                    self._renderSeparator(ul, item);
-                }
-                else {
-                    self._renderItem(ul, item);
-                }
-            });
-        },
-        _renderSeparator: function (ul, item) {
-            return $("<li class='ui-autocomplete-category fw-bold text-capitalize p-2'>")
-                   .append(`<div>${item.separator}</div>`)
-                   .appendTo(ul);
-        },
-        _renderItem: function (ul, item) {
-            return $("<li>")
-                   .data('ui-autocomplete-item', item)
-                   .append(`<div>${item.label}</div>`)
-                   .appendTo(ul);
-        },
+        translatableAttributes: ["data-tooltip"],
+        translateFn: _t,
     });
-    $input.urlcomplete({
-        source: function (request, response) {
-            if (request.term[0] === '#') {
-                loadAnchors(request.term, options && options.body).then(function (anchors) {
-                    response(anchors);
-                });
-            } else if (request.term.startsWith('http') || request.term.length === 0) {
-                // avoid useless call to /website/get_suggested_links
-                response();
-            } else {
-                if (options.isDestroyed?.()) {
-                    return;
-                }
-                return rpc('/website/get_suggested_links', {
-                    needle: request.term,
-                    limit: 15,
-                }).then(function (res) {
-                    let choices = res.matching_pages;
-                    res.others.forEach(other => {
-                        if (other.values.length) {
-                            choices = choices.concat(
-                                [{separator: other.title}],
-                                other.values,
-                            );
-                        }
-                    });
-                    response(choices);
-                });
-            }
-        },
-        select: function (ev, ui) {
-            // choose url in dropdown with arrow change ev.target.value without trigger_up
-            // so cannot check here if value has been updated
-            ev.target.value = ui.item.value;
-            options.urlChosen?.();
-            ev.preventDefault();
-        },
-    });
+
+    const container = document.createElement("div");
+    container.classList.add("ui-widget","ui-autocomplete", "ui-widget-content");
+    document.body.appendChild(container);
+    owlApp.mount(container)
+    return () => {
+        owlApp.destroy();
+        container.remove();
+    }
 }
 
 /**
