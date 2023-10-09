@@ -41,4 +41,8 @@ FilterValue.components = { RecordsSelector, DateFilterValue };
 FilterValue.props = {
     filter: Object,
     model: Object,
+    context: {
+        optional: true,
+        type: Object,
+    },
 };

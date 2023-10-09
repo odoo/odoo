@@ -18,7 +18,8 @@
                 <RecordsSelector placeholder="' ' + translate(filter.label)"
                     resModel="filter.modelName"
                     resIds="filterValue"
-                    onValueChanged="(value) => this.onTagSelected(filter.id, value)" />
+                    onValueChanged="(value) => this.onTagSelected(filter.id, value)"
+                    context="props.context" />
             </span>
             <div t-if="filter.type === 'date'" class="w-100">
                 <DateFilterValue t-if="filter.rangeType !== 'relative'"
