@@ -226,6 +226,59 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         # Test: country updated
         self.assertEqual(self.test_country.name_position, 'after')
 
+    def test_36_crud_write_m2m_ops(self):
+        """ Test that m2m operations work as expected """
+        categ_1 = self.env['res.partner.category'].create({'name': 'TestCateg1'})
+        categ_2 = self.env['res.partner.category'].create({'name': 'TestCateg2'})
+        # set partner category
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'category_id',
+            'update_m2m_operation': 'set',
+            'resource_ref': categ_1,
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertIn(categ_1, self.test_partner.category_id, 'ir_actions_server: tag should have been set')
+
+        # add partner category
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'category_id',
+            'update_m2m_operation': 'add',
+            'resource_ref': categ_2,
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertIn(categ_2, self.test_partner.category_id, 'ir_actions_server: new tag should have been added')
+        self.assertIn(categ_1, self.test_partner.category_id, 'ir_actions_server: old tag should still be there')
+
+        # remove partner category
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'category_id',
+            'update_m2m_operation': 'remove',
+            'resource_ref': categ_1,
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertNotIn(categ_1, self.test_partner.category_id, 'ir_actions_server: tag should have been removed')
+        self.assertIn(categ_2, self.test_partner.category_id, 'ir_actions_server: tag should still be there')
+
+        # clear partner category
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'category_id',
+            'update_m2m_operation': 'clear',
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertFalse(self.test_partner.category_id, 'ir_actions_server: tags should have been cleared')
+
     def test_37_field_path_traversal(self):
         """ Test the update_path field traversal - allowing records to be updated along relational links """
         # update the country's name via the partner
