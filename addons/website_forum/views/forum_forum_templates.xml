@@ -236,7 +236,7 @@
                         <t t-set="btn_classes" t-value="'px-2'"/>
                     </t>
                     <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } btn-link #{ 'text-dark fw-bold' if tag.message_is_follower else '' }"
-                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }}">
+                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
                         <t t-out="tag.name"/>&amp;nbsp;
                         <span class="small">(<t t-out="tag.posts_count"/>)</span>
                     </a>
