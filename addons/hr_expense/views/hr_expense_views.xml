@@ -201,9 +201,10 @@
                                        options="{'no_create': True}"/>
                                 <field name="amount_tax"/>
                             </div>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"
-                                   context="{'default_company_id': company_id}" widget="many2one_avatar_user"
-                                   options="{'no_create': True}" readonly="not sheet_is_editable"/>
+                            <t groups="hr_expense.group_hr_expense_team_approver">
+                                <field name="employee_id" groups="!hr.group_hr_user" context="{'default_company_id': company_id}" widget="many2one_avatar_employee" options="{'relation': 'hr.employee.public', 'no_create': True}" readonly="not sheet_is_editable"/>
+                                <field name="employee_id" groups="hr.group_hr_user" context="{'default_company_id': company_id}" widget="many2one_avatar_employee" options="{'relation': 'hr.employee', 'no_create': True}" readonly="not sheet_is_editable"/>
+                            </t>
                             <label id="lo" for="payment_mode" invisible="product_has_cost"/>
                             <div id="payment_mode" invisible="product_has_cost">
                                 <field name="payment_mode" widget="radio" readonly="sheet_id"/>
