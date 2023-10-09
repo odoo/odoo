@@ -12,6 +12,7 @@ import {
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeUserService,
+    makeFakeHTTPService,
 } from "../helpers/mock_services";
 import {
     setupControlPanelFavoriteMenuRegistry,
@@ -114,6 +115,10 @@ export function makeView(params) {
  */
 export function makeViewInDialog(params) {
     return _makeView(params, true);
+}
+
+export function setupHttpRegistry() {
+    serviceRegistry.add("http", makeFakeHTTPService(), { force: true });
 }
 
 export function setupViewRegistries() {

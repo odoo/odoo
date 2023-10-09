@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import weTestUtils from "@web_editor/../tests/test_utils";
-import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeView, setupHttpRegistry, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     editInput,
     getFixture,
@@ -45,6 +45,7 @@ QUnit.module('field html', (hooks) => {
         });
         serverData = { models };
         setupViewRegistries();
+        setupHttpRegistry();
 
         patchWithCleanup(Wysiwyg.prototype, {
             async _getColorpickerTemplate() {

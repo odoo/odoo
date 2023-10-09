@@ -1,51 +1,61 @@
 /** @odoo-module **/
 
+import { Component, onWillStart, useEffect } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
-import { getBundle } from "@web/core/assets";
-import { useEffect, onWillStart } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
-export class MassMailingMobilePreviewDialog extends Dialog {
-    setup() {
-        super.setup();
-        onWillStart(async () => {
-            this.bundle = await getBundle("mass_mailing.iframe_css_assets_edit");
-        });
-        useEffect((modalEl) => {
-            if (modalEl) {
-                const modalBody = modalEl.querySelector('.modal-body');
-                const invertIcon = document.createElement("span");
-                invertIcon.className = "fa fa-refresh";
-                const iframe = document.createElement("iframe");
-                iframe.srcdoc = this._getSourceDocument();
+export class MassMailingMobilePreviewDialog extends Component {
+    static components = {
+        Dialog,
+    };
+    static template = "mass_mailing.MobilePreviewDialog";
+    static props = {
+        preview: { type: String },
+        close: Function,
+    };
 
-                modalEl.classList.add('o_mailing_mobile_preview');
-                modalEl.querySelector('.modal-title').append(invertIcon);
-                modalEl.querySelector('.modal-header').addEventListener('click', () => modalBody.classList.toggle('o_invert_orientation'));
-                modalBody.append(iframe);
-            }
-        }, () => [document.querySelector(':not(.o_inactive_modal).o_dialog')]);
+    get title() {
+        return _t("Mobile Preview");
     }
 
-    _getSourceDocument() {
-        const links = this.bundle.cssLibs.map((src) => {
-            const link = document.createElement("link");
-            link.setAttribute("type", "text/css");
-            link.setAttribute("rel", "stylesheet");
-            link.setAttribute("href", src);
-            return link.outerHTML;
+    setup() {
+        this.rpc = useService("rpc");
+        onWillStart(async () => {
+            const result = await this.rpc("/mailing/preview/mobile/assets");
+            this.links = result
+                .filter((file) => file.type === "link")
+                .map((file) => {
+                    const link = document.createElement("link");
+                    link.setAttribute("type", "text/css");
+                    link.setAttribute("rel", "stylesheet");
+                    link.setAttribute("href", file.src);
+                    return link.outerHTML;
+                });
         });
-        return `
-            <!DOCTYPE html><html>
-                <head> ${links.join("")} </head>
-                <body> ${this.props.preview} </body>
-            </html>
-        `;
+        useEffect(
+            (modalEl) => {
+                if (modalEl) {
+                    this.modalBody = modalEl.querySelector(".modal-body");
+                    modalEl.classList.add("o_mailing_mobile_preview");
+                    const iframe = document.createElement("iframe");
+                    iframe.srcdoc = `
+                        <!DOCTYPE html>
+                        <html>
+                            <head>${this.links.join("")}</head>
+                            <body>${this.props.preview}</body>
+                        </html>
+                    `;
+                    this.modalBody.append(iframe);
+                }
+            },
+            () => [document.querySelector(":not(.o_inactive_modal).o_dialog")]
+        );
+    }
+
+    toggle() {
+        this.modalBody.classList.toggle("o_invert_orientation");
     }
 }
 
-MassMailingMobilePreviewDialog.props = {
-    ...Dialog.props,
-    preview: { type: String },
-    close: Function,
-};
 delete MassMailingMobilePreviewDialog.props.slots;
