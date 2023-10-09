@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/utils";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-registry.category("web_tour.tours").add("dynamic_placeholder_tour", {
+registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     test: true,
     url: "/web",
     steps: () => [

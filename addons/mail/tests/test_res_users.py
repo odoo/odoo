@@ -7,8 +7,39 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.base.models.res_users import Users
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, tagged, users
 from odoo.tools import mute_logger
+
+
+class TestNotifySecurityUpdate(MailCommon):
+
+    @users('employee')
+    def test_security_update_email(self):
+        """ User should be notified on old email address when the email changes """
+        with self.mock_mail_gateway():
+            self.env.user.write({'email': 'new@example.com'})
+
+        self.assertMailMailWEmails(['e.e@example.com'], 'outgoing', fields_values={
+            'subject': 'Security Update: Email Changed',
+        })
+
+    @users('employee')
+    def test_security_update_login(self):
+        with self.mock_mail_gateway():
+            self.env.user.write({'login': 'newlogin'})
+
+        self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
+            'subject': 'Security Update: Login Changed',
+        })
+
+    @users('employee')
+    def test_security_update_password(self):
+        with self.mock_mail_gateway():
+            self.env.user.write({'password': 'newpassword'})
+
+        self.assertMailMailWEmails([self.env.user.email_formatted], 'outgoing', fields_values={
+            'subject': 'Security Update: Password Changed',
+        })
 
 
 class TestUser(MailCommon):

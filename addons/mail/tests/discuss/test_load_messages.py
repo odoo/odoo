@@ -5,7 +5,7 @@ from odoo import Command
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestLoadMessages(odoo.tests.HttpCase):
-    def test_01_load_message_order(self):
+    def test_01_mail_message_load_order_tour(self):
         partner_admin = self.env.ref('base.partner_admin')
         channel_id = self.env["discuss.channel"].create({
             "name": "MyTestChannel",
@@ -19,4 +19,4 @@ class TestLoadMessages(odoo.tests.HttpCase):
             "author_id": partner_admin.id,
             "message_type": "comment",
         } for n in range(1, 61)])
-        self.start_tour("/web#action=mail.action_discuss", "mail.load_message_order", login="admin")
+        self.start_tour("/web#action=mail.action_discuss", "mail_message_load_order_tour", login="admin")
