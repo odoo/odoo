@@ -17,7 +17,6 @@ import { Record } from "./record";
 import { StaticList } from "./static_list";
 import {
     FetchRecordError,
-    applyProperties,
     extractInfoFromGroupData,
     getBasicEvalContext,
     getFieldsSpec,
@@ -511,9 +510,7 @@ export class RelationalModel extends Model {
      * @returns Promise<Object>
      */
     async _loadNewRecord(config, params = {}) {
-        const record = await this._onchange(config, params);
-        applyProperties([record], config.activeFields, config.fields);
-        return record;
+        return this._onchange(config, params);
     }
 
     /**
@@ -538,7 +535,6 @@ export class RelationalModel extends Model {
                 throw new FetchRecordError(resIds);
             }
 
-            applyProperties(records, config.activeFields, config.fields);
             return records;
         } else {
             return resIds.map((resId) => {
@@ -564,10 +560,7 @@ export class RelationalModel extends Model {
             count_limit:
                 config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };
-        const response = await this.orm.webSearchRead(config.resModel, config.domain, kwargs);
-
-        applyProperties(response.records, config.activeFields, config.fields);
-        return response;
+        return this.orm.webSearchRead(config.resModel, config.domain, kwargs);
     }
 
     /**
