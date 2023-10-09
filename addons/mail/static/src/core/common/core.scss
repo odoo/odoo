@@ -43,12 +43,7 @@
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    background: rgba($primary, .2) !important;
-    @extend .btn;
-    @extend .btn-sm;
-    @extend .btn-link;
-    @extend .align-baseline;
-    @extend .fw-normal;
-    @extend .px-1;
-    @extend .py-0;
+    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+    @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+    padding: map-get($spacers, 1);
 }
