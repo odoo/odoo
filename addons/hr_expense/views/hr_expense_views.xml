@@ -184,7 +184,10 @@
                                     <span class="oe_inline o_form_label ms-1 me-3"> ) </span>
                                 </div>
                             </div>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
+                            <t groups="hr_expense.group_hr_expense_team_approver">
+                                <field name="employee_id" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
+                                <field name="employee_id" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
+                            </t>
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div id="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}">
                                 <field name="payment_mode" widget="radio"/>
