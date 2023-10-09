@@ -112,7 +112,7 @@ function autocompleteWithPages(rpc, $input, options) {
             // choose url in dropdown with arrow change ev.target.value without trigger_up
             // so cannot check here if value has been updated
             ev.target.value = ui.item.value;
-            options?.urlChosen();
+            options.urlChosen?.();
             ev.preventDefault();
         },
     });
