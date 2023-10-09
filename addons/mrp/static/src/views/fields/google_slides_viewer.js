@@ -16,6 +16,15 @@ export function getGoogleSlideUrl(value, page) {
     return url;
 }
 
+export function getGoogleSlideUrl(value, page) {
+    let url = false;
+    const googleRegExp = /(^https:\/\/docs.google.com).*(\/d\/e\/|\/d\/)([A-Za-z0-9-_]+)/;
+    const google = value.match(googleRegExp);
+    if (google && google[3]) {
+        url = `https://docs.google.com/presentation${google[2]}${google[3]}/preview?slide=${page}`;
+    }
+    return url;
+}
 export class SlidesViewer extends CharField {
     setup() {
         super.setup();
@@ -38,6 +47,7 @@ export class SlidesViewer extends CharField {
         let url = false;
         if (this.props.record.data[this.props.name]) {
             // check given google slide url is valid or not
+<<<<<<< HEAD
             var googleRegExp = /(^https:\/\/docs.google.com).*(\/d\/e\/|\/d\/)([A-Za-z0-9-_]+)/;
             var google = this.props.record.data[this.props.name].match(googleRegExp);
             if (google && google[3]) {
@@ -52,6 +62,23 @@ export class SlidesViewer extends CharField {
                 this.props.record.data[this.props.name],
                 this._get_slide_page()
             );
+||||||| parent of 555af29cacf8 (temp)
+            var googleRegExp = /(^https:\/\/docs.google.com).*(\/d\/e\/|\/d\/)([A-Za-z0-9-_]+)/;
+            var google = this.props.record.data[this.props.name].match(googleRegExp);
+            if (google && google[3]) {
+                src =
+                    "https://docs.google.com/presentation" +
+                    google[2] +
+                    google[3] +
+                    "/preview?slide=" +
+                    this._get_slide_page();
+            }
+=======
+            url = getGoogleSlideUrl(
+                this.props.record.data[this.props.name],
+                this._get_slide_page()
+            );
+>>>>>>> 555af29cacf8 (temp)
         }
         return url || this.props.value;
     }
