@@ -178,6 +178,44 @@ export function setupQUnit() {
     }
 
     /**
+     * Checks that the target element (described by widget/jquery or html element)
+     * - exists
+     * - is unique
+     * - has the given attribute with the proper value
+     *
+     * @param {Widget|jQuery|HTMLElement|Component} w
+     * @param {string} attr
+     * @param {string} value
+     * @param {string} [msg]
+     */
+    function hasStyleValue(target, prop, value, msg) {
+        let $el;
+        if (target._widgetRenderAndInsert) {
+            $el = target.$el; // legacy widget
+        } else if (target instanceof Component) {
+            if (!target.el) {
+                throw new Error(
+                    `hasStyle assert with property '${prop}' called on an unmounted component`
+                );
+            }
+            $el = $(target.el);
+        } else {
+            $el = target instanceof HTMLElement ? $(target) : target;
+        }
+
+        if ($el.length !== 1) {
+            const descr = `hasStyleValue (${prop}: ${value})`;
+            QUnit.assert.ok(
+                false,
+                `Assertion '${descr}' targets ${$el.length} elements instead of 1`
+            );
+        } else {
+            msg = msg || `attribute '${prop}' of target should be '${value}'`;
+            QUnit.assert.strictEqual($el[0].style[prop], value, msg);
+        }
+    }
+
+    /**
      * Helper function, to check if a given element
      * - is unique (if it is a jquery node set)
      * - is (or not) visible
@@ -212,6 +250,7 @@ export function setupQUnit() {
     QUnit.assert.doesNotHaveClass = doesNotHaveClass;
     QUnit.assert.hasClass = hasClass;
     QUnit.assert.hasAttrValue = hasAttrValue;
+    QUnit.assert.hasStyleValue = hasStyleValue;
     QUnit.assert.isVisible = isVisible;
     QUnit.assert.isNotVisible = isNotVisible;
 

@@ -12,7 +12,8 @@
 </t>
 
 <t t-name="web.Form.InnerGroup" owl="1">
-    <div t-attf-class="{{ allClasses }}" class="o_inner_group grid" t-att-style="props.style">
+    <div t-attf-class="{{ allClasses }}" class="o_inner_group grid"
+        t-attf-style="grid-template-columns: repeat({{ props.maxCols >> 1 }}, fit-content(150px) 1fr); {{ props.style }}">
         <div t-if="props.slots and props.slots.title" t-attf-class="g-col-sm-{{ props.maxCols }}">
             <t t-slot="title" />
         </div>
