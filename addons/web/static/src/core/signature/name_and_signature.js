@@ -55,6 +55,7 @@ export class NameAndSignature extends Component {
                     this.resetSignature();
                     this.props.signature.getSignatureImage = () =>
                         this.jSignature("getData", "image");
+                    this.props.signature.resetSignature = () => this.resetSignature();
                     if (this.state.signMode === "auto") {
                         this.drawCurrentName();
                     }
