@@ -42,7 +42,13 @@ const { DEFAULT_LOCALE } = spreadsheet.constants;
  * @returns {{field: Field, aggregateOperator: string, isPositional: boolean}}
  */
 function parseGroupField(allFields, groupFieldString) {
-    let [fieldName, aggregateOperator] = groupFieldString.split(":");
+    let fieldName = groupFieldString;
+    let aggregateOperator = undefined;
+    const index = groupFieldString.indexOf(":");
+    if (index !== -1) {
+        fieldName = groupFieldString.slice(0, index);
+        aggregateOperator = groupFieldString.slice(index + 1);
+    }
     const isPositional = fieldName.startsWith("#");
     fieldName = isPositional ? fieldName.substring(1) : fieldName;
     const field = allFields[fieldName];
