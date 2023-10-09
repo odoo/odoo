@@ -364,3 +364,19 @@ class Mailing(models.Model):
                 campaign_values['name'] = _("A/B Test: %s", sms_subject)
             campaign_values['ab_testing_sms_winner_selection'] = self.ab_testing_sms_winner_selection
         return campaign_values
+
+    # --------------------------------------------------
+    # MAIL OVERRIDE
+    # --------------------------------------------------
+
+    @api.model
+    def _sort_activities_by_record(self, activities, module=False):
+        """ Override to separate mailing.mailing related activities between mass_mailing
+            and mass_mailing_sms modules depending on their mailing_type field value.
+        """
+        sms_record_ids = self.env['mailing.mailing']._search([('id', 'in', activities.mapped('res_id')), ('mailing_type', '=', 'sms')])
+        sms_activities = activities.filtered(lambda activity: activity.res_id in sms_record_ids)
+        sorted_sms_activities = super()._sort_activities_by_record(sms_activities, module='mass_mailing_sms')
+        email_activities = activities - sms_activities
+        sorted_email_activities = super()._sort_activities_by_record(email_activities, module='mass_mailing')
+        return {**sorted_sms_activities, **sorted_email_activities}

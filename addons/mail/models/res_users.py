@@ -274,42 +274,69 @@ class Users(models.Model):
     @api.model
     def systray_get_activities(self):
         activities = self.env["mail.activity"].search([("user_id", "=", self.env.uid)])
-        activities_by_record_by_model_name = defaultdict(lambda: defaultdict(lambda: self.env["mail.activity"]))
-        for activity in activities:
-            record = self.env[activity.res_model].browse(activity.res_id)
-            activities_by_record_by_model_name[activity.res_model][record] += activity
-        model_ids = list({self.env["ir.model"]._get(name).id for name in activities_by_record_by_model_name.keys()})
-        user_activities = {}
-        for model_name, activities_by_record in activities_by_record_by_model_name.items():
-            domain = [("id", "in", list({r.id for r in activities_by_record.keys()}))]
-            allowed_records = self.env[model_name].search(domain)
-            if not allowed_records:
+
+        # 1. Sorting the activities in model > module > record
+        activities_by_rec_id_by_module_by_model_name = {}
+        models = list(dict.fromkeys(activities.mapped('res_model')))
+        for model in models:
+            activities_by_rec_id_by_module_by_model_name[model] = self.env[model]._sort_activities_by_record(
+                activities.filtered_domain([('res_model', '=', model)]))
+
+        # 2. Create activity groups for the systray
+        group_custom_info = self._get_systray_group_custom_infos()
+        model_ids = list({self.env["ir.model"]._get(name).id for name in activities_by_rec_id_by_module_by_model_name})
+        user_activities = []
+        for model_name, activities_by_rec_id_by_module in activities_by_rec_id_by_module_by_model_name.items():
+            domain = [("id", "in", list(set.union(*[set(activities_by_rec_id) for activities_by_rec_id in activities_by_rec_id_by_module.values()])))]
+            allowed_records_ids = self.env[model_name].search(domain).ids
+            if not allowed_records_ids:
                 continue
-            module = self.env[model_name]._original_module
-            icon = module and modules.module.get_module_icon(module)
-            model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
-            user_activities[model_name] = {
-                "id": model.id,
-                "name": model.name,
-                "model": model_name,
-                "type": "activity",
-                "icon": icon,
-                "total_count": 0,
-                "today_count": 0,
-                "overdue_count": 0,
-                "planned_count": 0,
-                "actions": [
-                    {
-                        "icon": "fa-clock-o",
-                        "name": "Summary",
-                    }
-                ],
-            }
-            for record, activities in activities_by_record.items():
-                if record not in allowed_records:
+            for module, activities_by_rec_id in activities_by_rec_id_by_module.items():
+                count = {'today': 0, 'overdue': 0, 'planned': 0}
+                for rec_id, activities in activities_by_rec_id.items():
+                    if rec_id not in allowed_records_ids:
+                        continue
+                    for activity in activities:
+                        count[activity.state] += 1
+                if not (count['today'] or count['planned'] or count['overdue']):
                     continue
-                for activity in activities:
-                    user_activities[model_name]["%s_count" % activity.state] += 1
-                    if activity.state in ("today", "overdue"):
-                        user_activities[model_name]["total_count"] += 1
-        return list(user_activities.values())
+                icon = module and modules.module.get_module_icon(module)
+                model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
+                user_activities.append({
+                    "sequence": model.id,
+                    "name": group_custom_info[module]['name'] or model.name,
+                    "domain": group_custom_info[module]['domain'],
+                    "model": model_name,
+                    "type": "activity",
+                    "icon": icon,
+                    "total_count": count['today'] + count['overdue'],
+                    "today_count": count['today'],
+                    "overdue_count": count['overdue'],
+                    "planned_count": count['planned'],
+                    "actions": [
+                        {
+                            "icon": "fa-clock-o",
+                            "name": "Summary",
+                        }
+                    ],
+                })
+        return user_activities
+
+    @api.model
+    def _get_systray_group_custom_infos(self):
+        """ Return custom domain and name for each activity group present in the systray.
+            By default, no group's name/domain is customized. This method can be overriden
+            in other modules to change this behavior and add custom name/domain for some
+            groups.
+
+        :return: a dictionary of custom infos for activity group, i.e:
+                        - a custom name that can replace the model name
+                        - a domain to filter model records for each group
+                 nb: The keys of this dictionary are the module names also used as keys to
+                     sort activities
+
+        :rtype: dict(dict())
+                e.g. {'module 1': {'name': model_display_name_1, 'domain': custom_domain_1}, ...}
+        """
+
+        return defaultdict(lambda: defaultdict(lambda: False))

@@ -9,13 +9,10 @@ class Users(models.Model):
     _inherit = ['res.users']
 
     @api.model
-    def systray_get_activities(self):
+    def _get_systray_group_custom_infos(self):
         """ Update systray name of mailing.mailing from "Mass Mailing"
             to "Email Marketing".
         """
-        activities = super(Users, self).systray_get_activities()
-        for activity in activities:
-            if activity.get('model') == 'mailing.mailing':
-                activity['name'] = _('Email Marketing')
-                break
-        return activities
+        result = super()._get_systray_group_custom_infos()
+        result['mass_mailing']['name'] = _('Email Marketing')
+        return result
