@@ -14,4 +14,9 @@ export class Avatar extends Component {
     }
 }
 Avatar.template = "mail.Avatar";
-Avatar.props = ["resModel", "resId", "displayName"];
+Avatar.props = {
+    resModel: { type: String },
+    resId: { type: Number },
+    displayName: { type: String },
+    noSpacing: { type: Boolean, optional: true },
+};

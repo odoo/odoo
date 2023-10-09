@@ -62,6 +62,10 @@ export class ActivityListPopover extends Component {
         this.props.close();
     }
 
+    get doneActivities() {
+        return this.activities.filter((activity) => activity.state === "done");
+    }
+
     get overdueActivities() {
         return this.activities.filter((activity) => activity.state === "overdue");
     }
