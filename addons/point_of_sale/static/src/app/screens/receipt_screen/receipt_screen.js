@@ -31,7 +31,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         onWillStart(async () => {
             // When the order is paid, if there is still a part of the order
             // to send in preparation it is automatically sent
-            if (this.pos.orderPreparationCategories.size) {
+            if (this.pos.orderPreparationCategories.size && this.pos.tempScreen.name != "BillScreen") {
                 await this.pos.sendOrderInPreparation(this.currentOrder);
             }
         });
