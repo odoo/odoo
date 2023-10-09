@@ -203,9 +203,10 @@
                                        options="{'no_create': True}"/>
                                 <field name="amount_tax"/>
                             </div>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"
-                                   context="{'default_company_id': company_id}" widget="many2one_avatar_user"
-                                   options="{'no_create': True}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
+                            <t groups="hr_expense.group_hr_expense_team_approver">
+                                <field name="employee_id" groups="!hr.group_hr_user" context="{'default_company_id': company_id}" widget="many2one_avatar_employee" options="{'relation': 'hr.employee.public', 'no_create': True}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
+                                <field name="employee_id" groups="hr.group_hr_user" context="{'default_company_id': company_id}" widget="many2one_avatar_employee" options="{'relation': 'hr.employee', 'no_create': True}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
+                            </t>
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div id="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}">
                                 <field name="payment_mode" widget="radio" attrs="{'readonly': [('sheet_id', '!=', False)]}"/>
