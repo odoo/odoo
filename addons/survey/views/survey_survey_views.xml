@@ -114,25 +114,24 @@
                                         </div>
                                     </div>
                                 </group>
-                                <group string="Time &amp; Scoring" name="scoring">
+                                <group string="Time &amp; Scoring" name="scoring" invisible="survey_type == 'survey'">
                                     <!-- Time -->
                                     <label for="is_time_limited" string="Survey Time Limit"
-                                           invisible="survey_type in ('survey', 'live_session')"/>
+                                           invisible="survey_type == 'live_session'"/>
                                     <div class="o_checkbox_optional_field"
-                                         invisible="survey_type in ('survey', 'live_session')">
+                                         invisible="survey_type == 'live_session'">
                                         <field name="is_time_limited" nolabel="1"/>
                                         <div invisible="not is_time_limited">
                                             <field name="time_limit" widget="float_time" nolabel="1" class="oe_inline"/> minutes
                                         </div>
                                     </div>
                                     <!-- Scoring -->
-                                    <field name="scoring_type" widget="radio" force_save="1"
-                                           readonly="survey_type == 'survey'"/>
+                                    <field name="scoring_type" widget="radio" force_save="1"/>
                                     <field name="scoring_success_min" invisible="scoring_type == 'no_scoring'" />
                                     <label for="certification"
-                                           invisible="survey_type in ('survey', 'live_session')"/>
+                                           invisible="survey_type == 'live_session'"/>
                                     <div class="o_checkbox_optional_field"
-                                         invisible="survey_type in ('survey', 'live_session')">
+                                         invisible="survey_type == 'live_session'">
                                         <field name="certification" nolabel="1"/>
                                         <div invisible="not certification" class="w-100">
                                             <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
