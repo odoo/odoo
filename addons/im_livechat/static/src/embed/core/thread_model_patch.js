@@ -60,6 +60,7 @@ patch(Thread.prototype, {
         super.setup();
         this.chatbotTypingMessage = Record.one("Message");
         this.livechatWelcomeMessage = Record.one("Message");
+        this.operator = Record.one("Persona");
     },
     update(data) {
         super.update(...arguments);

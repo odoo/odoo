@@ -5,6 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { url } from "@web/core/utils/urls";
 import { nextTick } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
@@ -220,10 +221,10 @@ QUnit.test("Close from the bus", async () => {
     });
 });
 
-QUnit.test("Smiley face avatar for an anonymous livechat item", async () => {
+QUnit.test("Smiley face avatar for livechat item linked to a guest", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -235,7 +236,9 @@ QUnit.test("Smiley face avatar for an anonymous livechat item", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='/mail/static/src/img/smiley/avatar.jpg']"
+        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
+            `/discuss/channel/${channelId}/guest/${guestId}/avatar_128`
+        )}']`
     );
 });
 
@@ -253,7 +256,9 @@ QUnit.test("Partner profile picture for livechat item linked to a partner", asyn
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(
-        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='/web/image/res.partner/${partnerId}/avatar_128']`
+        `.o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel img[data-src='${url(
+            `/discuss/channel/${channelId}/partner/${partnerId}/avatar_128`
+        )}']`
     );
 });
 
