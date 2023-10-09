@@ -6,7 +6,6 @@ import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { legacyServiceProvider } from "@web/legacy/legacy_service_provider";
 import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
@@ -29,7 +28,6 @@ QUnit.module("WebClient", {
             .add("action", actionService)
             .add("dialog", dialogService)
             .add("hotkey", hotkeyService)
-            .add("legacy_service_provider", legacyServiceProvider)
             .add("menu", menuService)
             .add("notification", notificationService)
             .add("popover", popoverService)
