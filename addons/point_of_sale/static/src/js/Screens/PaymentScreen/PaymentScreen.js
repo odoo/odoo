@@ -234,6 +234,8 @@ export class PaymentScreen extends Component {
         let syncOrderResult, hasError;
 
         try {
+            this.env.services.ui.block()
+
             // 1. Save order to server.
             syncOrderResult = await globalState.push_single_order(this.currentOrder);
 
@@ -282,6 +284,7 @@ export class PaymentScreen extends Component {
                 throw error;
             }
         } finally {
+            this.env.services.ui.unblock()
             // Always show the next screen regardless of error since pos has to
             // continue working even offline.
             this.pos.showScreen(this.nextScreen);
