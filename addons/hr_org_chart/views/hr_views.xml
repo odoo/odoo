@@ -24,6 +24,9 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(hr_org_chart.action_hr_employee_org_chart)d" string="Org Chart" type="action" context="{'hierarchy_res_id': id}" invisible="not parent_id and not child_ids"/>
+            </xpath>
             <div id="o_work_employee_main" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
                     <separator string="Organization Chart"/>
