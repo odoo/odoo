@@ -8,9 +8,9 @@ class Partner(models.Model):
     _inherit = ['res.partner']
 
     employee_ids = fields.One2many(
-        'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",
+        'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_coach",
         help="Related employees based on their private address")
-    employees_count = fields.Integer(compute='_compute_employees_count', groups="hr.group_hr_user")
+    employees_count = fields.Integer(compute='_compute_employees_count', groups="hr.group_hr_coach")
 
     def _compute_employees_count(self):
         for partner in self:

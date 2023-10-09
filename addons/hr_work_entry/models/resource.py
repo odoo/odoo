@@ -12,7 +12,7 @@ class ResourceCalendarAttendance(models.Model):
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Work Entry Type', default=_default_work_entry_type_id,
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_coach")
 
     def _copy_attendance_vals(self):
         res = super()._copy_attendance_vals()
@@ -25,7 +25,7 @@ class ResourceCalendarLeave(models.Model):
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Work Entry Type',
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_coach")
 
     def _copy_leave_vals(self):
         res = super()._copy_leave_vals()
