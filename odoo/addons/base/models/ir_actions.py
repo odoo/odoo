@@ -527,6 +527,13 @@ class IrActionsServer(models.Model):
     update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', ondelete='cascade', compute='_compute_crud_relations', store=True, readonly=False)
     update_path = fields.Char(string='Field to Update Path', help="Path to the field to update, e.g. 'partner_id.name'", default=_default_update_path)
     update_related_model_id = fields.Many2one('ir.model', compute='_compute_crud_relations', store=True)
+    update_field_type = fields.Selection(related='update_field_id.ttype', readonly=True)
+    update_m2m_operation = fields.Selection([
+        ('add', 'Adding'),
+        ('remove', 'Removing'),
+        ('set', 'Setting it to'),
+        ('clear', 'Clearing it')
+    ], string='Many2many Operations', default='add')
 
     value = fields.Text(help="For Python expressions, this field may hold a Python expression "
                              "that can use the same values as for the code field on the server action,"
@@ -944,7 +951,7 @@ class IrActionsServer(models.Model):
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
         for action in self:
-            if action.update_field_id.ttype == 'many2one':
+            if action.update_field_id.ttype in ('many2one', 'many2many'):
                 action.value_field_to_show = 'resource_ref'
             elif action.update_field_id.ttype == 'selection':
                 action.value_field_to_show = 'selection_value'
@@ -978,6 +985,16 @@ class IrActionsServer(models.Model):
             expr = action.value
             if action.evaluation_type == 'equation':
                 expr = safe_eval(action.value, eval_context)
+            elif action.update_field_id.ttype == 'many2many':
+                operation = action.update_m2m_operation
+                if operation == 'add':
+                    expr = [Command.link(int(action.value))]
+                elif operation == 'remove':
+                    expr = [Command.unlink(int(action.value))]
+                elif operation == 'set':
+                    expr = [Command.set([int(action.value)])]
+                elif operation == 'clear':
+                    expr = [Command.clear()]
             elif action.update_field_id.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(action.value)

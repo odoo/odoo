@@ -138,6 +138,8 @@
                                                         <field name="value" invisible="1" />
                                                         <field name="selection_value" invisible="1" />
                                                         <field name="value_field_to_show" invisible="1"/>
+                                                        <field name="update_field_type" invisible="1"/>
+                                                        <field name="update_m2m_operation" invisible="1"/>
 
                                                         <!-- Icon section -->
                                                         <i
@@ -158,16 +160,26 @@
                                                         />
                                                         <field name="name" class="text-truncate" />
                                                         <t invisible="state != 'object_write'">
-                                                            <span>to</span>
-                                                            <code invisible="evaluation_type != 'equation'" t-esc="record.value.raw_value"/>
-                                                            <span invisible="evaluation_type == 'equation'" >
-                                                                <field name="selection_value" invisible="value_field_to_show != 'selection_value'" class="d-inline"/>
-                                                                <span invisible="value_field_to_show == 'selection_value'">
-                                                                    <span invisible="value == False or evaluation_type == False">"</span>
-                                                                    <field name="value" class="d-inline"/>
-                                                                    <span invisible="value == False or evaluation_type == False">"</span>
-                                                                </span>
-                                                            </span>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'clear') or evaluation_type != 'value'">
+                                                                <span>by clearing it</span>
+                                                            </t>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'add') or evaluation_type != 'value'">
+                                                                <span>by adding</span><field name="resource_ref"/>
+                                                            </t>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'remove') or evaluation_type != 'value'">
+                                                               <span>by removing</span><field name="resource_ref"/>
+                                                            </t>
+                                                            <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'set') or evaluation_type != 'value'">
+                                                                <span>by setting it to</span><field name="resource_ref"/>
+                                                             </t>
+                                                            <t invisible="update_field_type == 'many2many' and evaluation_type == 'value'">
+                                                                <span invisible="evaluation_type != 'value'">to</span>
+                                                                <span invisible="evaluation_type != 'equation'">as</span>
+                                                                <field name="resource_ref" invisible="not (value_field_to_show == 'resource_ref' and evaluation_type == 'value')" />
+                                                                <field name="selection_value" invisible="not (value_field_to_show == 'selection_value' and evaluation_type == 'value')" class="d-inline"/>
+                                                                <em invisible="not (value_field_to_show == 'value' and evaluation_type == 'value')" t-out="record.value.raw_value" class="d-inline"/>
+                                                                <code invisible="not (evaluation_type == 'equation')" t-out="record.value.raw_value"/>
+                                                            </t>
                                                         </t>
                                                         <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3 ms-auto" title="Delete Action" />
                                                     </div>
