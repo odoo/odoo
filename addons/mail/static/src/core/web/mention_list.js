@@ -60,7 +60,7 @@ export class MentionList extends Component {
             case "channel":
                 return _t("Search for a channel...");
             case "partner":
-                return _t("Search for an user...");
+                return _t("Search for a user...");
             default:
                 return _t("Search...");
         }
