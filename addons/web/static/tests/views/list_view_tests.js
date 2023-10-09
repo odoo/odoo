@@ -18627,8 +18627,12 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_field_cell.o_char_cell"));
         await editInput(target, ".o_field_cell.o_char_cell input", "TEST");
-        await clickSave(target);
+        assert.strictEqual(target.querySelector(".o_field_cell.o_char_cell input").value, "TEST");
 
+        await click(target.querySelector("[name='m2o']"));
+        assert.strictEqual(target.querySelector(".o_field_cell.o_char_cell input").value, "TEST");
+
+        await clickSave(target);
         assert.strictEqual(target.querySelector(".o_field_cell.o_char_cell").textContent, "TEST");
     });
 

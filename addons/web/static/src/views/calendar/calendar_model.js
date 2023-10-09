@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
-import { applyProperties, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -484,7 +484,6 @@ export class CalendarModel extends Model {
      */
     async loadRecords(data) {
         const rawRecords = await this.fetchRecords(data);
-        applyProperties(rawRecords, this.meta.activeFields, this.meta.fields);
         const records = {};
         for (const rawRecord of rawRecords) {
             records[rawRecord.id] = this.normalizeRecord(rawRecord);

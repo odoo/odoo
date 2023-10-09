@@ -76,39 +76,6 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
     }
 }
 
-export function applyProperties(records, activeFields, fields) {
-    for (const record of records) {
-        for (const fieldName in record) {
-            const field = fields[fieldName];
-            if (fieldName !== "id" && field.type === "properties" && record[fieldName]) {
-                const parent = record[field.definition_record];
-                const relatedPropertyField = {
-                    fieldName,
-                };
-                if (parent) {
-                    relatedPropertyField.id = parent.id;
-                    relatedPropertyField.displayName = parent.display_name;
-                }
-                for (const property of record[fieldName]) {
-                    const propertyFieldName = `${fieldName}.${property.name}`;
-                    if (!fields[propertyFieldName]) {
-                        fields[propertyFieldName] = {
-                            ...property,
-                            name: propertyFieldName,
-                            relatedPropertyField,
-                            propertyName: property.name,
-                            relation: property.comodel,
-                        };
-                    }
-                    if (!activeFields[propertyFieldName]) {
-                        activeFields[propertyFieldName] = createPropertyActiveField(property);
-                    }
-                }
-            }
-        }
-    }
-}
-
 function completeActiveField(activeField, extra) {
     if (extra.related) {
         for (const fieldName in extra.related.activeFields) {
