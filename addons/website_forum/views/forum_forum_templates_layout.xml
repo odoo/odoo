@@ -367,7 +367,18 @@
             <h5 t-out="_no_results_title"/>
             <span t-if="result_msg" t-out="result_msg"/>
             <span t-else="">
-                Sorry, we could not find any <b t-if="filters in ['unanswered', 'solved', 'unsolved']" t-out="filters"/> results
+                <t t-if="filters == 'unanswered'">
+                    Sorry, we could not find any <b>unanswered</b> results
+                </t>
+                <t t-elif="filters == 'solved'">
+                    Sorry, we could not find any <b>solved</b> results
+                </t>
+                <t t-elif="filters == 'unsolved'">
+                    Sorry, we could not find any <b>unsolved</b> results
+                </t>
+                <t t-else="">
+                    Sorry, we could not find any results
+                </t>
                 <b t-if="my == 'favourites'"> in your favourites</b>
                 <b t-elif="my == 'mine'"> in your posts</b>
                 <span t-if="search">matching "<em class="fw-bold text-break" t-out="original_search or search"/>"</span>
