@@ -2,18 +2,20 @@
 <odoo>
 
     <!-- Integration of a conditional "Manage payment methods" link in /my -->
-    <template id="payment.pay_meth_link" inherit_id="portal.portal_layout">
-        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
+    <!-- This template is no more used and should be removed once portal is merged. -->
+    <template id="payment.pay_meth_link" inherit_id="portal.side_content">
+          <!--<xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
             <t t-set="providers_allowing_tokenization"
                t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
             <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
-            <!-- Only show the link if a token can be created or if one already exists -->
+             Only show the link if a token can be created or if one already exists
             <div t-if="providers_allowing_tokenization or existing_tokens"
                  class='manage_payment_method mt16'>
                 <a href="/my/payment_method">Manage payment methods</a>
             </div>
         </xpath>
+        -->
     </template>
 
     <!-- Display of /payment/pay -->
@@ -320,6 +322,26 @@
                 <t t-if="status_message" t-out="status_message" class="mb-0"/>
                 <t t-if="tx.state_message" t-out="tx.state_message"  class="mb-0"/>
             </div>
+        </div>
+    </template>
+
+    <!-- "Manage payment methods" card on /my -->
+    <template id="portal_my_home_payment" name="Show Payment Method" customize_show="True" inherit_id="portal.portal_my_home" priority="60">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-set="partner" t-value="request.env.user.partner_id"/>
+            <t t-set="providers_allowing_tokenization"
+               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
+            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
+            <t t-if="providers_allowing_tokenization or existing_tokens" t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/payment/static/img/payment-methods.svg'"/>
+                <t t-set="title">Payment methods</t>
+                <t t-set="text">Manage your payment methods</t>
+                <t t-set="url" t-value="'/my/payment_method'"/>
+                <t t-set="config_card" t-value="True"/>
+            </t>
         </div>
     </template>
 
