@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, HttpCase, tagged, users
 from odoo.tools import convert_file
 
 
@@ -254,8 +254,15 @@ class TestMailTemplateReset(MailCommon):
         self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
 
 
-@tagged('-at_install', 'post_install')
-class TestConfigRestrictEditor(MailCommon):
+@tagged("mail_template", "-at_install", "post_install")
+class TestMailTemplateUI(HttpCase):
+
+    def test_mail_template_dynamic_placeholder_tour(self):
+        self.start_tour("/web", 'mail_template_dynamic_placeholder_tour', login="admin")
+
+
+@tagged("mail_template", "-at_install", "post_install")
+class TestTemplateConfigRestrictEditor(MailCommon):
 
     def test_switch_icp_value(self):
         # Sanity check

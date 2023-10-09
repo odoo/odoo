@@ -7,9 +7,9 @@ import { createFile, inputFiles } from "@web/../tests/utils";
  * This tour depends on data created by python test in charge of launching it.
  * It is not intended to work when launched from interface. It is needed to test
  * an action (action manager) which is not possible to test with QUnit.
- * @see mail/tests/test_mail_full_composer.py
+ * @see mail/tests/test_mail_composer.py
  */
-registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_composer_test_tour.js", {
+registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_test_tour.js", {
     test: true,
     steps: () => [
         {
@@ -65,9 +65,9 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
             trigger: '[name="subject"] input',
             run() {
                 const subjectValue = document.querySelector('[name="subject"] input').value;
-                if (subjectValue !== "Test User") {
+                if (subjectValue !== "Ernest Employee") {
                     console.error(
-                        `Full composer should have "Test User" in subject input (actual: ${subjectValue})`
+                        `Full composer should have "Ernest Employee" in subject input (actual: ${subjectValue})`
                     );
                 }
             },

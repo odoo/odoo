@@ -3,7 +3,7 @@
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, HttpCase, tagged, users
 from odoo.tools import mute_logger
 
 
@@ -258,4 +258,25 @@ class TestMailComposerRendering(TestMailComposer):
             self.body_html,
             values[self.partner_employee.id]['body_html'],
             'We must preserve (mso) comments in email html'
+        )
+
+
+@tagged("mail_composer", "-at_install", "post_install")
+class TestMailComposerUI(MailCommon, HttpCase):
+
+    def test_mail_composer_test_tour(self):
+        self.env['mail.template'].create({
+            'auto_delete': True,
+            'lang': '{{ object.lang }}',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'Test template',
+            'partner_to': '{{ object.id }}',
+        })
+        self.user_employee.write({
+            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+        })
+        self.start_tour(
+            f"/web#id={self.user_employee.partner_id.id}&model=res.partner",
+            "mail/static/tests/tours/mail_composer_test_tour.js",
+            login=self.user_employee.login
         )

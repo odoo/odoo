@@ -2,9 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-registry
-    .category("web_tour.tours")
-    .add("mail/static/tests/tours/discuss_channel_as_guest_tour.js", {
+registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
         test: true,
         steps: () => [
             {
