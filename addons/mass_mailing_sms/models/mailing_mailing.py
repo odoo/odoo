@@ -118,9 +118,9 @@ class Mailing(models.Model):
 
     def action_test(self):
         if self.mailing_type == 'sms':
-            ctx = dict(self.env.context, default_mailing_id=self.id)
+            ctx = dict(self.env.context, default_mailing_id=self.id, dialog_size='medium')
             return {
-                'name': _('Test SMS marketing'),
+                'name': _('Test Mailing'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mailing.sms.test',
