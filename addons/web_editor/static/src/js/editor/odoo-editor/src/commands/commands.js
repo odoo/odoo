@@ -148,17 +148,16 @@ export const editorCommands = {
     insert: (editor, content) => {
         if (!content) return;
         const selection = editor.document.getSelection();
-        const range = selection.getRangeAt(0);
         let startNode;
         let insertBefore = false;
-        if (selection.isCollapsed) {
-            if (range.startContainer.nodeType === Node.TEXT_NODE) {
-                insertBefore = !range.startOffset;
-                splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
-                startNode = range.startContainer;
-            }
-        } else {
+        if (!selection.isCollapsed) {
             editor.deleteRange(selection);
+        }
+        const range = selection.getRangeAt(0);
+        if (range.startContainer.nodeType === Node.TEXT_NODE) {
+            insertBefore = !range.startOffset;
+            splitTextNode(range.startContainer, range.startOffset, DIRECTIONS.LEFT);
+            startNode = range.startContainer;
         }
 
         const container = document.createElement('fake-element');

@@ -112,4 +112,14 @@ odoo.define('pos_sale.tour', function (require) {
     ReceiptScreen.do.clickNextOrder();
 
     Tour.register('PosRefundDownpayment', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.check.totalAmountIs(34.5);
+    ProductScreen.check.checkOrderlinesNumber(3);
+
+    Tour.register('PosSettleOrderNotGroupable', { test: true, url: '/pos/ui' }, getSteps());
 });
