@@ -13,6 +13,10 @@ export class SelectionField extends Component {
         placeholder: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         domain: { type: Array, optional: true },
+        autosave: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        autosave: false,
     };
 
     setup() {
@@ -68,15 +72,15 @@ export class SelectionField extends Component {
         switch (this.type) {
             case "many2one":
                 if (value === false) {
-                    this.props.record.update({ [this.props.name]: false });
+                    this.props.record.update({ [this.props.name]: false }, { save: this.props.autosave });
                 } else {
                     this.props.record.update({
                         [this.props.name]: this.options.find((option) => option[0] === value),
-                    });
+                    }, { save: this.props.autosave });
                 }
                 break;
             case "selection":
-                this.props.record.update({ [this.props.name]: value });
+                this.props.record.update({ [this.props.name]: value }, { save: this.props.autosave });
                 break;
         }
     }
@@ -87,13 +91,19 @@ export const selectionField = {
     displayName: _t("Selection"),
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps({ attrs }, dynamicInfo) {
-        return {
+    extractProps({ attrs, viewType }, dynamicInfo) {
+        const props = {
+            autosave: viewType === "kanban",
             placeholder: attrs.placeholder,
             required: dynamicInfo.required,
             domain: dynamicInfo.domain(),
         };
+        if (viewType === "kanban") {
+            props.readonly = dynamicInfo.readonly;
+        };
+        return props;
     },
 };
 
 registry.category("fields").add("selection", selectionField);
+registry.category("fields").add("kanban.selection", selectionField);
