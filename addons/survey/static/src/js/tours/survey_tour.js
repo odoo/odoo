@@ -21,21 +21,21 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Let's give it a spin!"),
     position: 'bottom',
 }, {
-    trigger: '.o_survey_start button[type=submit]',
+    trigger: 'button[type=submit]',
     content: _t("Let's get started!"),
     position: 'bottom',
 }, {
-    trigger: '.o_survey_simple_choice button[type=submit]',
+    trigger: 'button[type=submit]',
     extra_trigger: '.js_question-wrapper span:contains("How frequently")',
     content: _t("Whenever you pick an answer, Odoo saves it for you."),
     position: 'bottom',
 }, {
-    trigger: '.o_survey_numerical_box button[type=submit]',
+    trigger: 'button[type=submit]',
     extra_trigger: '.js_question-wrapper span:contains("How many")',
     content: _t("Only a single question left!"),
     position: 'bottom',
 }, {
-    trigger: '.o_survey_matrix button[value=finish]',
+    trigger: 'button[value=finish]',
     extra_trigger: '.js_question-wrapper span:contains("How likely")',
     content: _t("Now that you are done, submit your form."),
     position: 'bottom',
