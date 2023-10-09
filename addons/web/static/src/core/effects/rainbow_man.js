@@ -24,14 +24,13 @@ import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
  */
 
 /**
- * The RainbowMan widget is the widget displayed by default as a 'fun/rewarding'
- * effect in some cases.  For example, when the user marked a large deal as won,
- * or when he cleared its inbox.
+ * The RainbowMan Component is meant to display a 'fun/rewarding' message.  For
+ * example, when the user marked a large deal as won, or when he cleared its inbox.
  *
- * This widget is mostly a picture and a message with a rainbow animation around
+ * This component is mostly a picture and a message with a rainbow animation around.
  * If you want to display a RainbowMan, you probably do not want to do it by
  * importing this file.  The usual way to do that would be to use the effect
- * service (by triggering the 'show_effect' event)
+ * service.
  */
 export class RainbowMan extends Component {
     setup() {
