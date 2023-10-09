@@ -155,6 +155,8 @@ patch(Wysiwyg.prototype, 'wysiwyg_iframe.js', {
         this.$el.append(this.$iframe);
 
         return def.then(() => {
+            // Bootstrap tooltip.js waits for the DOMContentLoaded event.
+            this.$iframe[0].contentDocument.dispatchEvent(new Event('DOMContentLoaded'));
             this.options.onIframeUpdated();
         });
     },
