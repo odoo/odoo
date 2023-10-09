@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { loadJS } from "@web/core/assets";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -41,6 +42,11 @@ export class NameAndSignature extends Component {
 
         onWillStart(async () => {
             this.fonts = await this.rpc(`/web/sign/get_fonts/${this.props.defaultFont}`);
+        });
+
+        onWillStart(async () => {
+            await loadJS("/web/static/lib/jSignature/jSignatureCustom.js");
+            await loadJS("/web/static/src/libs/jSignatureCustom.js");
         });
 
         this.signatureRef = useRef("signature");

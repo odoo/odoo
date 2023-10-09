@@ -3,7 +3,7 @@
 import LegacyBus from "@web/legacy/js/core/bus";
 import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
-import { nextTick, patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
 import { registerCleanup } from "./helpers/cleanup";
 import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
@@ -298,7 +298,7 @@ function patchAssets() {
                     "%c[assets] fetch (mock) JS ressource: " + ressource,
                     "color: #66e; font-weight: bold;"
                 );
-                return nextTick();
+                return Promise.resolve();
             }
             console.log(
                 "%c[assets] fetch JS ressource: " + ressource,
@@ -312,7 +312,7 @@ function patchAssets() {
                     "%c[assets] fetch (mock) CSS ressource: " + ressource,
                     "color: #66e; font-weight: bold;"
                 );
-                return nextTick();
+                return Promise.resolve();
             }
             console.log(
                 "%c[assets] fetch CSS ressource: " + ressource,
