@@ -9,7 +9,7 @@ export const reportService = {
     start(env, { rpc, user, ui, orm }) {
         const reportActionsCache = {};
         return {
-            async download(reportXmlId, active_ids) {
+            async doAction(reportXmlId, active_ids) {
                 ui.block();
                 try {
                     if (reportXmlId === "account.account_invoices"){

@@ -255,7 +255,7 @@ export class PaymentScreen extends Component {
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                 if (syncOrderResult[0]?.account_move) {
-                    await this.report.download("account.account_invoices", [
+                    await this.report.doAction("account.account_invoices", [
                         syncOrderResult[0].account_move,
                     ]);
                 } else {
