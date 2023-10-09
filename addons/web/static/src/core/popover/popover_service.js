@@ -9,6 +9,8 @@ import { PopoverController } from "./popover_controller";
  *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
  *   onClose?: () => void;
  *   popoverClass?: string;
+ *   animation?: Boolean;
+ *   arrow?: Boolean;
  *   position?: import("@web/core/position_hook").Options["position"];
  *   fixedPosition?: boolean;
  *   onPositioned?: import("@web/core/position_hook").PositionEventHandler;
@@ -43,6 +45,8 @@ export const popoverService = {
                     popoverProps: {
                         target,
                         class: options.popoverClass,
+                        animation: options.animation,
+                        arrow: options.arrow,
                         position: options.position,
                         onPositioned: options.onPositioned,
                         fixedPosition: options.fixedPosition,
