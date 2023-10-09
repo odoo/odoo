@@ -40,8 +40,8 @@ export class SearchMessagesPanel extends Component {
             { capture: true }
         );
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread) {
-                this.messageSearch.thread = nextProps.thread;
+            if (this.props.thread.notEq(nextProps.thread)) {
+                this.env.searchMenu?.close();
             }
         });
     }
