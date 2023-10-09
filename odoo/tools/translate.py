@@ -848,6 +848,13 @@ def trans_export(lang, modules, buffer, format, cr):
     writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
     writer.write_rows(reader)
 
+# pylint: disable=redefined-builtin
+def trans_export_records(lang, model_name, ids, buffer, format, cr):
+    reader = TranslationRecordReader(cr, model_name, ids, lang=lang)
+    writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
+    writer.write_rows(reader)
+
+
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip()
@@ -974,33 +981,14 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
 ImdInfo = namedtuple('ExternalId', ['name', 'model', 'res_id', 'module'])
 
 
-class TranslationModuleReader:
-    """ Retrieve translated records per module
-
-    :param cr: cursor to database to export
-    :param modules: list of modules to filter the exported terms, can be ['all']
-                    records with no external id are always ignored
-    :param lang: language code to retrieve the translations
-                 retrieve source terms only if not set
-    """
-
-    def __init__(self, cr, modules=None, lang=None):
+class TranslationReader:
+    def __init__(self, cr, lang=None):
         self._cr = cr
-        self._modules = modules or ['all']
         self._lang = lang or 'en_US'
         self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
         self._to_translate = []
-        self._path_list = [(path, True) for path in odoo.addons.__path__]
-        self._installed_modules = [
-            m['name']
-            for m in self.env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
-        ]
-
-        self._export_translatable_records()
-        self._export_translatable_resources()
 
     def __iter__(self):
-        """ Export ir.translation values for all retrieved records """
         for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
             yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
 
@@ -1020,6 +1008,35 @@ class TranslationModuleReader:
         if not sanitized_term or len(sanitized_term) <= 1:
             return
         self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+
+    def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
+        records = self._get_translatable_records(imd_per_id.values())
+        if not records:
+            return
+
+        for record in records:
+            module = imd_per_id[record.id].module
+            xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
+            for field_name, field in record._fields.items():
+                # ir_actions_actions.name is filtered because unlike other inherited fields,
+                # this field is inherited as postgresql inherited columns.
+                # From our business perspective, the parent column is no need to be translated,
+                # but it is need to be set to jsonb column, since the child columns need to be translated
+                # And export the parent field may make one value to be translated twice in transifex
+                if not field.translate or not field.store or str(field) == 'ir.actions.actions.name':
+                    continue
+                name = model + "," + field_name
+                value_en = record[field_name] or ''
+                value_lang = record.with_context(lang=self._lang)[field_name] or ''
+                trans_type = 'model_terms' if callable(field.translate) else 'model'
+                try:
+                    translation_dictionary = field.get_translation_dictionary(value_en, {self._lang: value_lang})
+                except Exception:
+                    _logger.exception("Failed to extract terms from %s %s", xml_name, name)
+                    continue
+                for term_en, term_langs in translation_dictionary.items():
+                    term_lang = term_langs.get(self._lang)
+                    self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
 
     def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
@@ -1072,6 +1089,84 @@ class TranslationModuleReader:
         return records
 
 
+class TranslationRecordReader(TranslationReader):
+    """ Retrieve translations for specified records, the reader will
+    1. create external ids for records without external ids
+    2. export translations for stored translated and inherited translated fields
+    :param cr: cursor to database to export
+    :param model_name: model_name for the records to export
+    :param ids: ids of the records to export
+    :param field_names: field names to export, if not set, export all translatable fields
+    :param lang: language code to retrieve the translations retrieve source terms only if not set
+    """
+    def __init__(self, cr, model_name, ids, field_names=None, lang=None):
+        super().__init__(cr, lang)
+        self._records = self.env[model_name].browse(ids)
+        self._field_names = field_names or list(self._records._fields.keys())
+
+        self._export_translatable_records(self._records, self._field_names)
+
+    def _export_translatable_records(self, records, field_names):
+        """ Export translations of all stored/inherited translated fields. Create external id if needed. """
+        if not records:
+            return
+
+        fields = records._fields
+
+        if records._inherits:
+            inherited_fields = defaultdict(list)
+            for field_name in field_names:
+                field = records._fields[field_name]
+                if field.translate and not field.store and field.inherited_field:
+                    inherited_fields[field.inherited_field.model_name].append(field_name)
+            for parent_mname, parent_fname in records._inherits.items():
+                if parent_mname in inherited_fields:
+                    self._export_translatable_records(records[parent_fname], inherited_fields[parent_mname])
+
+        if not any(fields[field_name].translate and fields[field_name].store for field_name in field_names):
+            return
+
+        records._BaseModel__ensure_xml_id()
+
+        model_name = records._name
+        query = """SELECT min(concat(module, '.', name)), res_id
+                             FROM ir_model_data
+                            WHERE model = %s
+                              AND res_id = ANY(%s)
+                         GROUP BY model, res_id"""
+
+        self._cr.execute(query, (model_name, records.ids))
+
+        imd_per_id = {
+            res_id: ImdInfo((tmp := module_xml_name.split('.', 1))[1], model_name, res_id, tmp[0])
+            for module_xml_name, res_id in self._cr.fetchall()
+        }
+
+        self._export_imdinfo(model_name, imd_per_id)
+
+
+class TranslationModuleReader(TranslationReader):
+    """ Retrieve translated records per module
+
+    :param cr: cursor to database to export
+    :param modules: list of modules to filter the exported terms, can be ['all']
+                    records with no external id are always ignored
+    :param lang: language code to retrieve the translations
+                 retrieve source terms only if not set
+    """
+
+    def __init__(self, cr, modules=None, lang=None):
+        super().__init__(cr, lang)
+        self._modules = modules or ['all']
+        self._path_list = [(path, True) for path in odoo.addons.__path__]
+        self._installed_modules = [
+            m['name']
+            for m in self.env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
+        ]
+
+        self._export_translatable_records()
+        self._export_translatable_resources()
+
     def _export_translatable_records(self):
         """ Export translations of all translated records having an external id """
 
@@ -1093,31 +1188,7 @@ class TranslationModuleReader:
             records_per_model[model][res_id] = ImdInfo(xml_name, model, res_id, module)
 
         for model, imd_per_id in records_per_model.items():
-            records = self._get_translatable_records(imd_per_id.values())
-            if not records:
-                continue
-
-            for record in records:
-                module = imd_per_id[record.id].module
-                xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
-                for field_name, field in record._fields.items():
-                    # ir_actions_actions.name is filtered because unlike other inherited fields,
-                    # this field is inherited as postgresql inherited columns.
-                    # From our business perspective, the parent column is no need to be translated,
-                    # but it is need to be set to jsonb column, since the child columns need to be translated
-                    # And export the parent field may make one value to be translated twice in transifex
-                    if field.translate and field.store and str(field) != 'ir.actions.actions.name':
-                        name = model + "," + field_name
-                        try:
-                            value_en = record[field_name] or ''
-                            value_lang = record.with_context(lang=self._lang)[field_name] or ''
-                        except Exception:
-                            _logger.exception("Failed to extract terms from %s", name)
-                            continue
-                        trans_type = 'model_terms' if callable(field.translate) else 'model'
-                        for term_en, term_langs in field.get_translation_dictionary(value_en, {self._lang: value_lang}).items():
-                            term_lang = term_langs.get(self._lang)
-                            self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
+            self._export_imdinfo(model, imd_per_id)
 
     def _get_module_from_path(self, path):
         for (mp, rec) in self._path_list:
@@ -1275,7 +1346,6 @@ class TranslationImporter:
                 continue
             if row.get('type') == 'code':  # ignore code translations
                 continue
-            # TODO: CWG if the po file should not be trusted, we need to check each model term
             model_name = row.get('imd_model')
             module_name = row['module']
             if model_name not in self.env:
