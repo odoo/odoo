@@ -258,7 +258,7 @@ QUnit.module("Fields", (hooks) => {
                     records: [
                         {
                             id: 37,
-                            display_name: "Company 1",
+                            name: "Company 1",
                             definitions: [
                                 {
                                     name: "property_1",
@@ -2522,4 +2522,70 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".o_cp_action_menus span:contains(Add Properties)");
         },
     );
+
+    QUnit.test("properties: onChange return new properties", async function (assert) {
+        serverData.models.company.records[1] = {
+            id: 38,
+            display_name: "Company 2",
+            definitions: [
+                {
+                    name: "property_2_1",
+                    string: "My Char",
+                    type: "char",
+                    view_in_kanban: true,
+                },
+            ],
+        };
+        serverData.models.partner.onchanges = {
+            company_id: (changes) => {
+                if (changes.company_id === 38) {
+                    changes.properties = [
+                        {
+                            name: "property_2_2",
+                            string: "My New Char",
+                            type: "char",
+                            value: "Hello",
+                        },
+                    ];
+                }
+            },
+        };
+        async function mockRPC(route, { method }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+
+        await editInput(target, "[name='company_id'] input", "Company 2");
+        await click(target.querySelector(".dropdown-menu li"));
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='properties'] .o_property_field")].map(
+                (el) => el.textContent
+            ),
+            ["My New Char"]
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='properties'] .o_property_field input")].map(
+                (el) => el.value
+            ),
+            ["Hello"]
+        );
+    });
 });

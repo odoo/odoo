@@ -11,7 +11,7 @@ import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
     FetchRecordError,
-    applyProperties,
+    createPropertyActiveField,
     getBasicEvalContext,
     getFieldContext,
     getFieldsSpec,
@@ -451,6 +451,9 @@ export class Record extends DataPoint {
         for (const fieldName in data) {
             const value = data[fieldName];
             const field = this.fields[fieldName];
+            if (field.relatedPropertyField) {
+                continue;
+            }
             if (["char", "text", "html"].includes(field.type)) {
                 dataContext[fieldName] = this._textValues[fieldName];
             } else if (field.type === "one2many" || field.type === "many2many") {
@@ -655,6 +658,69 @@ export class Record extends DataPoint {
         });
     }
 
+    /**
+     * This function extracts all properties and adds them to fields and activeFields.
+     * @param {Object[]} properties the list of properties to be extracted
+     * @param {string} fieldName name of the field containing the properties
+     * @param {Array} parent Array with ['id, 'display_name'], representing the record to which the definition of properties is linked
+     * @param {Object} currentValues current values of the record
+     * @returns An object containing as key `${fieldName}.${property.name}` and as value the value of the property
+     */
+    _processProperties(properties, fieldName, parent, currentValues = {}) {
+        const data = {};
+
+        const relatedPropertyField = {
+            fieldName,
+        };
+        if (parent) {
+            relatedPropertyField.id = parent[0];
+            relatedPropertyField.displayName = parent[1];
+        }
+
+        const hasCurrentValues = Object.keys(currentValues).length > 0;
+        for (const property of properties) {
+            const propertyFieldName = `${fieldName}.${property.name}`;
+
+            // Add Unknown Property Field and ActiveField
+            if (hasCurrentValues || !this.fields[propertyFieldName]) {
+                this.fields[propertyFieldName] = {
+                    ...property,
+                    name: propertyFieldName,
+                    relatedPropertyField,
+                    propertyName: property.name,
+                    relation: property.comodel,
+                };
+            }
+            if (hasCurrentValues || !this.activeFields[propertyFieldName]) {
+                this.activeFields[propertyFieldName] = createPropertyActiveField(property);
+            }
+
+            // Extract property data
+            if (property.type === "many2many") {
+                let staticList = currentValues[propertyFieldName];
+                if (!staticList) {
+                    staticList = this._createStaticListDatapoint(
+                        (property.value || []).map((record) => ({
+                            id: record[0],
+                            display_name: record[1],
+                        })),
+                        propertyFieldName
+                    );
+                }
+                data[propertyFieldName] = staticList;
+            } else if (property.type === "many2one") {
+                data[propertyFieldName] =
+                    property.value.length && property.value[1] === null
+                        ? [property.value[0], _t("No Access")]
+                        : property.value;
+            } else {
+                data[propertyFieldName] = property.value ?? false;
+            }
+        }
+
+        return data;
+    }
+
     _parseServerValues(serverValues, currentValues = {}) {
         const parsedValues = {};
         if (!serverValues) {
@@ -687,26 +753,16 @@ export class Record extends DataPoint {
             } else {
                 parsedValues[fieldName] = parseServerValue(field, value);
                 if (field.type === "properties") {
-                    for (const property of parsedValues[fieldName]) {
-                        const fieldPropertyName = `${fieldName}.${property.name}`;
-                        if (property.type === "many2many") {
-                            const staticList = this._createStaticListDatapoint(
-                                (property.value || []).map((record) => ({
-                                    id: record[0],
-                                    display_name: record[1],
-                                })),
-                                fieldPropertyName
-                            );
-                            parsedValues[fieldPropertyName] = staticList;
-                        } else if (property.type === "many2one") {
-                            parsedValues[fieldPropertyName] =
-                                property.value.length && property.value[1] === null
-                                    ? [property.value[0], _t("No Access")]
-                                    : property.value;
-                        } else {
-                            parsedValues[fieldPropertyName] = property.value ?? false;
-                        }
-                    }
+                    const parent = serverValues[field.definition_record];
+                    Object.assign(
+                        parsedValues,
+                        this._processProperties(
+                            parsedValues[fieldName],
+                            fieldName,
+                            parent,
+                            currentValues
+                        )
+                    );
                 }
             }
         }
@@ -841,7 +897,14 @@ export class Record extends DataPoint {
     _preprocessPropertiesChanges(changes) {
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
-            if (field && field.relatedPropertyField) {
+            if (field.type === "properties") {
+                const parent =
+                    changes[field.definition_record] || this.data[field.definition_record];
+                Object.assign(
+                    changes,
+                    this._processProperties(value, fieldName, parent, this.data)
+                );
+            } else if (field && field.relatedPropertyField) {
                 const [propertyFieldName, propertyName] = field.name.split(".");
                 const propertiesData = this.data[propertyFieldName] || [];
                 if (!propertiesData.find((property) => property.name === propertyName)) {
@@ -857,7 +920,6 @@ export class Record extends DataPoint {
                 changes[propertyFieldName] = propertiesData.map((property) =>
                     property.name === propertyName ? { ...property, value } : property
                 );
-                delete changes[field.name];
             }
         }
     }
@@ -957,7 +1019,6 @@ export class Record extends DataPoint {
         }
         await this.model.hooks.onRecordSaved(this, changes);
         if (reload) {
-            applyProperties(records, this.config.activeFields, this.config.fields);
             if (this.resId) {
                 this.model._updateSimilarRecords(this, records[0]);
             }
