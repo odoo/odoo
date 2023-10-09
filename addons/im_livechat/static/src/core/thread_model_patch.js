@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { assignDefined } from "@mail/utils/common/misc";
@@ -82,9 +81,7 @@ patch(Thread.prototype, {
         if (this.type !== "livechat") {
             return super.imgUrl;
         }
-        return this.correspondent && this.correspondent.type !== "guest"
-            ? `/web/image/res.partner/${this.correspondent.id}/avatar_128`
-            : DEFAULT_AVATAR;
+        return this._store.env.services["mail.thread"].avatarUrl(this.correspondent, this);
     },
 
     /**

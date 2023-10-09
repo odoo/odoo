@@ -5,6 +5,8 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { url } from "@web/core/utils/urls";
+
 QUnit.module("thread (patch)");
 
 QUnit.test("Rendering of visitor banner", async (assert) => {
@@ -36,7 +38,9 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     assert.containsOnce($, "img.o-website_livechat-VisitorBanner-avatar");
     assert.containsOnce(
         $,
-        "img.o-website_livechat-VisitorBanner-avatar[data-src='/mail/static/src/img/smiley/avatar.jpg']"
+        `img.o-website_livechat-VisitorBanner-avatar[data-src='${url(
+            `/discuss/channel/${channelId}/guest/${guestId}/avatar_128`
+        )}']`
     );
     assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
