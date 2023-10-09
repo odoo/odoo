@@ -5,9 +5,11 @@ import { useForwardRefToParent } from "../utils/hooks";
 import { usePosition } from "@web/core/position_hook";
 
 export class Popover extends Component {
+    static animationTime = 200;
     setup() {
         useForwardRefToParent("ref");
-        const position = usePosition(
+        this.shouldAnimate = this.props.animation;
+        this.position = usePosition(
             "ref",
             () => this.props.target,
             {
@@ -15,7 +17,7 @@ export class Popover extends Component {
                     (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
                     if (this.props.fixedPosition) {
                         // Prevent further positioning updates if fixed position is wanted
-                        position.lock();
+                        this.position.lock();
                     }
                 },
                 position: this.props.position,
@@ -43,40 +45,56 @@ export class Popover extends Component {
         }
 
         // reset all arrow classes
-        const arrowEl = el.querySelector(".popover-arrow");
-        if (!arrowEl) {
-            return;
+        if (this.props.arrow) {
+            const arrowEl = el.querySelector(":scope > .popover-arrow");
+            arrowEl.className = "popover-arrow";
+            switch (position) {
+                case "tm": // top-middle
+                case "bm": // bottom-middle
+                case "tf": // top-fit
+                case "bf": // bottom-fit
+                    arrowEl.classList.add("start-0", "end-0", "mx-auto");
+                    break;
+                case "lm": // left-middle
+                case "rm": // right-middle
+                case "lf": // left-fit
+                case "rf": // right-fit
+                    arrowEl.classList.add("top-0", "bottom-0", "my-auto");
+                    break;
+                case "ts": // top-start
+                case "bs": // bottom-start
+                    arrowEl.classList.add("end-auto");
+                    break;
+                case "te": // top-end
+                case "be": // bottom-end
+                    arrowEl.classList.add("start-auto");
+                    break;
+                case "ls": // left-start
+                case "rs": // right-start
+                    arrowEl.classList.add("bottom-auto");
+                    break;
+                case "le": // left-end
+                case "re": // right-end
+                    arrowEl.classList.add("top-auto");
+                    break;
+            }
         }
-        arrowEl.className = "popover-arrow";
-        switch (position) {
-            case "tm": // top-middle
-            case "bm": // bottom-middle
-            case "tf": // top-fit
-            case "bf": // bottom-fit
-                arrowEl.classList.add("start-0", "end-0", "mx-auto");
-                break;
-            case "lm": // left-middle
-            case "rm": // right-middle
-            case "lf": // left-fit
-            case "rf": // right-fit
-                arrowEl.classList.add("top-0", "bottom-0", "my-auto");
-                break;
-            case "ts": // top-start
-            case "bs": // bottom-start
-                arrowEl.classList.add("end-auto");
-                break;
-            case "te": // top-end
-            case "be": // bottom-end
-                arrowEl.classList.add("start-auto");
-                break;
-            case "ls": // left-start
-            case "rs": // right-start
-                arrowEl.classList.add("bottom-auto");
-                break;
-            case "le": // left-end
-            case "re": // right-end
-                arrowEl.classList.add("top-auto");
-                break;
+
+        // opening animation
+        if (this.shouldAnimate) {
+            this.shouldAnimate = false; // animate only once
+            const transform = {
+                top: ["translateY(-5%)", "translateY(0)"],
+                right: ["translateX(5%)", "translateX(0)"],
+                bottom: ["translateY(5%)", "translateY(0)"],
+                left: ["translateX(-5%)", "translateX(0)"],
+            }[direction];
+            this.position.lock();
+            const animation = el.animate(
+                { opacity: [0, 1], transform },
+                this.constructor.animationTime
+            );
+            animation.finished.then(this.position.unlock);
         }
     }
 }
@@ -85,6 +103,9 @@ Popover.template = "web.PopoverWowl";
 Popover.defaultProps = {
     position: "bottom",
     class: "",
+    fixedPosition: false,
+    arrow: true,
+    animation: true,
 };
 Popover.props = {
     ref: {
@@ -111,6 +132,14 @@ Popover.props = {
         optional: true,
     },
     fixedPosition: {
+        type: Boolean,
+        optional: true,
+    },
+    arrow: {
+        type: Boolean,
+        optional: true,
+    },
+    animation: {
         type: Boolean,
         optional: true,
     },
