@@ -12,8 +12,8 @@ from psycopg2 import InterfaceError
 import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
+from odoo.tools.json import json_default
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools import date_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ TIMEOUT = 50
 # Bus
 #----------------------------------------------------------
 def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=date_utils.json_default)
+    return json.dumps(v, separators=(',', ':'), default=json_default)
 
 def hashable(key):
     if isinstance(key, list):

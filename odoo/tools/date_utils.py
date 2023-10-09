@@ -5,8 +5,6 @@ from datetime import date, datetime, time
 import pytz
 from dateutil.relativedelta import relativedelta
 
-from .func import lazy
-from odoo.loglevels import ustr
 
 def get_month(date):
     ''' Compute the month dates range on which the 'date' parameter belongs to.
@@ -198,19 +196,6 @@ def subtract(value, *args, **kwargs):
     :return: the resulting date/datetime.
     """
     return value - relativedelta(*args, **kwargs)
-
-def json_default(obj):
-    """
-    Properly serializes date and datetime objects.
-    """
-    from odoo import fields
-    if isinstance(obj, datetime):
-        return fields.Datetime.to_string(obj)
-    if isinstance(obj, date):
-        return fields.Date.to_string(obj)
-    if isinstance(obj, lazy):
-        return obj._value
-    return ustr(obj)
 
 
 def date_range(start, end, step=relativedelta(months=1)):
