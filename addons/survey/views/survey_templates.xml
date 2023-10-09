@@ -225,7 +225,7 @@
         An exception is made for options with images, where we always want to optimize screen space.-->
         <t t-set="minimized_display" t-value="survey.questions_layout == 'page_per_question' and not any(suggestion.value_image for suggestion in question.suggested_answer_ids)" />
         <div t-if="survey.questions_layout == 'page_per_question'"
-            t-attf-class="o_survey_page_per_question o_survey_#{question.question_type} #{'w-lg-50 mx-lg-auto' if question.question_type in ('numerical_box', 'date', 'datetime') else ''}">
+            t-attf-class="o_survey_page_per_question #{'w-lg-50 mx-lg-auto' if question.question_type in ('numerical_box', 'date', 'datetime') else ''}">
             <input type="hidden" name="question_id" t-att-value="question.id" />
             <!-- User has already answered for this session -->
             <t t-if="answer.is_session_answer and (has_answered or answer.question_time_limit_reached)">
