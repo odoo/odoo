@@ -8,7 +8,7 @@ export const reportService = {
     start(env, { rpc, user, ui }) {
         const reportActionsCache = {};
         return {
-            async download(reportXmlId, active_ids) {
+            async doAction(reportXmlId, active_ids) {
                 ui.block();
                 try {
                     reportActionsCache[reportXmlId] ||= rpc("/web/action/load", {
