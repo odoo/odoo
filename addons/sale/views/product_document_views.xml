@@ -19,12 +19,12 @@
         <field name="model">product.document</field>
         <field name="inherit_id" ref="product.product_document_kanban"/>
         <field name="arch" type="xml">
-            <span name="bottom_left" position="inside">
-                <t t-if="record.attached_on.raw_value">
-                    <strong>Visible at</strong>
-                    <field name="attached_on"/>
-                </t>
-            </span>
+            <div name="bottom" position="inside">
+                <div class="mt-2">
+                    <span>Visible at</span>
+                    <field name="attached_on" class="ms-2" widget="selection"/>
+                </div>
+            </div>
         </field>
     </record>
 

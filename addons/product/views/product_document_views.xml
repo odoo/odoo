@@ -50,7 +50,7 @@
                         <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=true" download="" class="dropdown-item">Download</a>
                     </t>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_area o_kanban_attachment oe_kanban_global_click">
+                        <div class="oe_kanban_global_area o_kanban_attachment">
                             <div class="ribbon ribbon-top-right" invisible="active">
                                 <span class="text-bg-danger">Archived</span>
                             </div>
@@ -69,16 +69,12 @@
                                     <div class="o_kanban_record_title">
                                         <field name="name" class="o_text_overflow"/>
                                     </div>
-                                    <div class="o_kanban_record_body" name="body">
+                                    <div class="o_kanban_record_body"
+                                         name="body"
+                                         t-if="record.type.raw_value == 'url'">
                                         <field name="url" widget="url" invisible="type == 'binary'"/>
                                     </div>
-                                    <div class="o_kanban_record_bottom">
-                                        <span class="oe_kanban_bottom_left" name="bottom_left">
-                                        </span>
-                                        <div class="oe_kanban_bottom_right">
-                                            <field name="create_uid" widget="many2one_avatar_user"/>
-                                        </div>
-                                    </div>
+                                    <div class="o_kanban_record_bottom flex-column" name="bottom"/>
                                 </div>
                             </div>
                         </div>
