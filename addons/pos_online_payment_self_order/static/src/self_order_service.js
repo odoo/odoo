@@ -10,12 +10,20 @@ patch(SelfOrder.prototype, {
         pos_config_id: order_pos_config_id,
     }) {
         const baseUrl = session.base_url;
-        let exitRouteUrl =
-            baseUrl + "/pos-self/" + order_pos_config_id + "?access_token=" + this.access_token;
+        const order = this.currentOrder;
         const tableIdentifier = this.table?.identifier;
-        if (tableIdentifier) {
-            exitRouteUrl += "&table_identifier=" + tableIdentifier;
+        let exitRouteUrl = `${baseUrl}/pos-self/${order_pos_config_id}`;
+
+        if (this.config.self_ordering_pay_after === "each") {
+            exitRouteUrl += `/confirmation/${order.access_token}/order`;
         }
+
+        exitRouteUrl += `?access_token=${this.access_token}`;
+
+        if (tableIdentifier) {
+            exitRouteUrl += `&table_identifier=${tableIdentifier}`;
+        }
+
         const exitRoute = encodeURIComponent(exitRouteUrl);
         window.open(
             baseUrl +

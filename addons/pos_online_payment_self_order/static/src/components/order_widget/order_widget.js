@@ -31,7 +31,7 @@ patch(OrderWidget.prototype, {
                 } else {
                     return {
                         label: _t("Pay at cashier"),
-                        disabled: this.router.activeSlot !== "product_list",
+                        disabled: false,
                     };
                 }
             }

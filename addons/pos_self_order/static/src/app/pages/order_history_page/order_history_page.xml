@@ -15,15 +15,17 @@
                         <div class="o_so_order d-flex flex-column flex-grow-1">
                             <div class="o_so_order_header p-3 bg-white" t-on-click="() => this.editOrder(order)">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h6 class="m-0"
-                                        t-esc="order.pos_reference"/>
+                                    <div class="d-flex flex-column">
+                                        <h6 class="m-0" t-esc="order.pos_reference"/>
+                                        <span class="text-muted">Tracking number: <t t-esc="order.tracking_number" /></span>
+                                    </div>
                                     <span
                                         class="badge py-2 rounded-pill text-capitalize"
                                         t-att-class="{
                                             'text-bg-success': order.state == 'paid',
                                             'text-bg-primary': order.state != 'paid'
                                         }"
-                                        t-esc="order.state"/>
+                                        t-esc="getOrderState(order.state)"/>
                                 </div>
                                 <p class="small m-0 fst-italic text-muted"
                                     t-esc="order.date"/>

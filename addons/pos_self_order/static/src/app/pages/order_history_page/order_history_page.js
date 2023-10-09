@@ -49,6 +49,10 @@ export class OrdersHistoryPage extends Component {
         }
     }
 
+    getOrderState(state) {
+        return state === "draft" ? _t("Current") : state;
+    }
+
     getNameAndDescription(line) {
         const fullName = line.full_product_name;
         const regex = /\(([^()]+)\)[^(]*$/;
@@ -66,7 +70,7 @@ export class OrdersHistoryPage extends Component {
     editOrder(order) {
         if (order.state === "draft") {
             this.selfOrder.editedOrder = order;
-            this.router.navigate("productList");
+            this.router.navigate("cart");
         }
     }
 

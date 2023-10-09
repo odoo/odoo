@@ -23,8 +23,8 @@
             <t t-set-slot="payment" route="`/pos-self/${selfOrder.pos_config_id}/payment`">
                 <PaymentPage />
             </t>
-            <t t-set-slot="payment_success" route="`/pos-self/${selfOrder.pos_config_id}/payment_success`">
-                <PaymentSuccessPage />
+            <t t-set-slot="confirmation" route="`/pos-self/${selfOrder.pos_config_id}/confirmation/{string:orderAccessToken}/{string:screenMode}`" t-slot-scope="url">
+                <ConfirmationPage orderAccessToken="url.orderAccessToken" screenMode="url.screenMode" />
             </t>
             <t t-set-slot="location" route="`/pos-self/${selfOrder.pos_config_id}/location`">
                 <EatingLocationPage />

@@ -2,12 +2,8 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.CartPage">
         <div class="order-cart-content d-flex flex-column flex-grow-1 justify-content-between overflow-y-auto">
-            <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 px-3 py-2 w-100 bg-view border-bottom overflow-x-auto z-index-1">
-                <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => this.router.back()">
-                    <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Back</span>
-                </button>
+            <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 p-3 w-100 bg-view border-bottom overflow-x-auto z-index-1">
                 <h1 class="mb-0 fw-bolder text-nowrap">Your Order</h1>
-                <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
             </div>
             <div class="order-content flex-grow-1 overflow-auto pb-4">
                 <t t-foreach="linesToDisplay" t-as="line" t-key="line.uuid">

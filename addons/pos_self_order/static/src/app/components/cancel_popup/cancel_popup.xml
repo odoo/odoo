@@ -8,7 +8,8 @@
                         <div class="modal-body p-5">
                             <div class="pb-5 fs-3 text-center">
                                 Are you sure you want to cancel this order? <br/>
-                                <span class="text-muted fs-4">All the items will be removed from the cart.</span>
+                                <span t-if="selfOrder.config.self_ordering_mode === 'kiosk'" class="text-muted fs-4">All the items will be removed from the cart.</span>
+                                <span t-else="" class="text-muted fs-4">Any items already sent will not be canceled</span>
                             </div>
                             <div class="d-flex align-items-center justify-content-center w-100 gap-3">
                                 <button type="button" class="btn btn-primary btn-lg popup_button" t-on-click="() => this.confirm()">Cancel Order</button>

@@ -54,6 +54,7 @@
                 data-bs-target="#listgroup-categories"
                 data-bs-offset="10"
                 tabindex="0">
+                <t t-set="nbrItem" t-value="0" />
                 <section
                     t-foreach="Array.from(selfOrder.categoryList)"
                     t-as="category"
@@ -64,6 +65,7 @@
                     class="product-list-category d-empty-none bg-view py-4 px-3 mb-3">
                     <t t-set="products" t-value="selfOrder.productsGroupedByCategory[category.name]" />
                     <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
+                    <t t-set="nbrItem" t-value="availableProducts.length + nbrItem" />
                     <t t-if="availableProducts.length > 0">
                         <h2 t-esc="category.name" class="mb-4 display-6 fw-bold"/>
                         <div class="o-so-products-row">
@@ -73,7 +75,7 @@
                         </div>
                     </t>
                 </section>
-                <p t-if="getFilteredProducts(selfOrder.products).length === 0" class="mx-auto mt-3 text-center">No products found</p>
+                <p t-if="nbrItem === 0" class="mx-auto mt-3 text-center">No products found</p>
             </div>
 
             <!-- Page buttons -->
