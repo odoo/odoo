@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="inside">
-                <group name="HS Code" string="HS Code" attrs="{'invisible': [('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
+                <group name="HS Code" string="HS Code" attrs="{'invisible': ['|', '|', ('current_country_code', '!=', 'KE'), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                     <field name="l10n_ke_hsn_code"/>
                     <field name="l10n_ke_hsn_name"/>
                 </group>
@@ -21,11 +21,10 @@
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <group>
-                    <group name="KRA Item Code" string="KRA Item Code">
-                        <field name="l10n_ke_hsn_code"/>
-                        <field name="l10n_ke_hsn_name"/>
-                    </group>
+                <field name="current_country_code" invisible="1"/>
+                <group name="KRA Item Code" string="KRA Item Code" attrs="{'invisible': [('current_country_code', '!=', 'KE')]}">
+                    <field name="l10n_ke_hsn_code"/>
+                    <field name="l10n_ke_hsn_name"/>
                 </group>
             </xpath>
         </field>
