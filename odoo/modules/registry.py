@@ -40,11 +40,19 @@ _REGISTRY_CACHES = {
     'default': 8192,
     'assets': 512, # arbitrary
     'templates': 1024, # arbitrary
-    'templates.cached_values': 2048, # arbitrary
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
+    'templates.cached_values': 2048, # arbitrary
 }
 
+# cache invalidation dependencies, as follows:
+# { 'cache_key': ('cache_container_1', 'cache_container_3', ...) }
+_CACHES_BY_KEY = {
+    'default': ('default', 'templates.cached_values'),
+    'assets': ('assets', 'templates.cached_values'),
+    'templates': ('templates', 'templates.cached_values'),
+    'routing': ('routing', 'routing.rewrites', 'templates.cached_values'),
+}
 
 class Registry(Mapping):
     """ Model registry for a particular database.
@@ -134,9 +142,6 @@ class Registry(Mapping):
         self._ordinary_tables = None
         self._constraint_queue = deque()
         self.__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
-        self.__caches_by_prefix = {}
-        for cache_name, cache in self.__caches.items():
-            self.__caches_by_prefix.setdefault(cache_name.split('.')[0], []).append(cache)
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -703,8 +708,8 @@ class Registry(Mapping):
         cache_names = cache_names or ('default',)
         assert not any('.' in cache_name for cache_name in cache_names)
         for cache_name in cache_names:
-            for cache in self.__caches_by_prefix[cache_name]:
-                cache.clear()
+            for cache in _CACHES_BY_KEY[cache_name]:
+                self.__caches[cache].clear()
             self.cache_invalidated.add(cache_name)
 
         # log information about invalidation_cause
@@ -718,9 +723,9 @@ class Registry(Mapping):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache``.
         """
-        for cache_name, caches in self.__caches_by_prefix.items():
+        for cache_name, caches in _CACHES_BY_KEY.items():
             for cache in caches:
-                cache.clear()
+                self.__caches[cache].clear()
             self.cache_invalidated.add(cache_name)
 
         caller_info = format_frame(inspect.currentframe().f_back)
@@ -773,7 +778,7 @@ class Registry(Mapping):
             # must be reloaded.
             # The `base_cache_signaling_...` sequences indicates when caches must
             # be invalidated (i.e. cleared).
-            sequence_names = ('base_registry_signaling', *(f'base_cache_signaling_{cache_name}' for cache_name in self.__caches_by_prefix))
+            sequence_names = ('base_registry_signaling', *(f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY))
             cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name IN %s", [sequence_names])
             existing_sequences = tuple(s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
 
@@ -791,14 +796,14 @@ class Registry(Mapping):
                           self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
     def get_sequences(self, cr):
-        cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in self.__caches_by_prefix])
-        cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in self.__caches_by_prefix])
+        cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
+        cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
         cr.execute(f"""
             SELECT base_registry_signaling.last_value, {cache_sequences_values_query}
             FROM base_registry_signaling, {cache_sequences_query}
         """)
         registry_sequence, *cache_sequences_values = cr.fetchone()
-        cache_sequences = dict(zip(self.__caches_by_prefix, cache_sequences_values))
+        cache_sequences = dict(zip(_CACHES_BY_KEY, cache_sequences_values))
         return registry_sequence, cache_sequences
 
     def check_signaling(self):
@@ -820,15 +825,19 @@ class Registry(Mapping):
                     changes += "[Registry - %s -> %s]" % (self.registry_sequence, db_registry_sequence)
             # Check if the model caches must be invalidated.
             else:
+                invalidated = []
                 for cache_name, cache_sequence in self.cache_sequences.items():
                     expected_sequence = db_cache_sequences[cache_name]
                     if cache_sequence != expected_sequence:
-                        _logger.info("Invalidating %s model caches after database signaling.", cache_name)
-                        for cache in self.__caches_by_prefix[cache_name]: # don't call clear_cache to avoid signal loop
-                            cache.clear()
+                        for cache in _CACHES_BY_KEY[cache_name]: # don't call clear_cache to avoid signal loop
+                            if cache not in invalidated:
+                                invalidated.append(cache)
+                                self.__caches[cache].clear()
                         self.cache_sequences[cache_name] = expected_sequence
                         if _logger.isEnabledFor(logging.DEBUG):
                             changes += "[Cache %s - %s -> %s]" % (cache_name, cache_sequence, expected_sequence)
+                if invalidated:
+                    _logger.info("Invalidating caches after database signaling: %s", sorted(invalidated))
             if changes:
                 _logger.debug("Multiprocess signaling check: %s", changes)
         return self
@@ -853,7 +862,7 @@ class Registry(Mapping):
         # no need to notify cache invalidation in case of registry invalidation,
         # because reloading the registry implies starting with an empty cache
         elif self.cache_invalidated:
-            _logger.info("At least one model cache has been invalidated, signaling through the database.")
+            _logger.info("Caches invalidated, signaling through the database: %s", sorted(self.cache_invalidated))
             with closing(self.cursor()) as cr:
                 for cache_name in self.cache_invalidated:
                     cr.execute("select nextval(%s)", [f'base_cache_signaling_{cache_name}'])
@@ -870,8 +879,8 @@ class Registry(Mapping):
                 self.registry_invalidated = False
         if self.cache_invalidated:
             for cache_name in self.cache_invalidated:
-                for cache in self.__caches_by_prefix[cache_name]:
-                    cache.clear()
+                for cache in _CACHES_BY_KEY[cache_name]:
+                    self.__caches[cache].clear()
             self.cache_invalidated.clear()
 
     @contextmanager
