@@ -51,11 +51,6 @@ export default class PivotDataSource extends OdooViewsDataSource {
         return model;
     }
 
-    getReportMeasures() {
-        this._assertDataIsLoaded();
-        return this._model.getReportMeasures();
-    }
-
     /**
      * @param {string[]} domain
      */
