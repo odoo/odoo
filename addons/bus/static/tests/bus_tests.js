@@ -7,7 +7,11 @@ import { multiTabService } from "@bus/multi_tab_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
-import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
+import {
+    waitUntilChannelAdded,
+    waitUntilChannelDeleted,
+    waitUntilSubscribe,
+} from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -330,20 +334,20 @@ QUnit.module(
             const firstTabEnv = await makeTestEnv();
             const secTabEnv = await makeTestEnv();
             firstTabEnv.services["bus_service"].addChannel("channel1");
-            await nextTick();
+            await waitUntilChannelAdded("channel1");
             // this should not trigger a subscription since the channel1 was
             // aleady known.
             secTabEnv.services["bus_service"].addChannel("channel1");
-            await nextTick();
+            await waitUntilChannelAdded("channel1");
             // removing channel1 from first tab should not trigger
             // re-subscription since the second tab still listens to this
             // channel.
             firstTabEnv.services["bus_service"].deleteChannel("channel1");
-            await nextTick();
+            await waitUntilChannelDeleted("channel1");
             // this should trigger a subscription since the channel2 was not
             // known.
             secTabEnv.services["bus_service"].addChannel("channel2");
-            await nextTick();
+            await waitUntilChannelAdded("channel2");
 
             assert.verifySteps(["subscribe - [channel1]", "subscribe - [channel1,channel2]"]);
         });
