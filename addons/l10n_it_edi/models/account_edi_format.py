@@ -395,7 +395,7 @@ class AccountEdiFormat(models.Model):
                     domains.append([('l10n_it_codice_fiscale', '=',
                                      self.env['res.partner']._l10n_it_edi_normalized_codice_fiscale(codice))])
                 partner = elements and self.env['res.partner'].search(AND([
-                    *self.env['res.partner']._check_company_domain(company),
+                    self.env['res.partner']._check_company_domain(company),
                     OR(domains)
                 ]), limit=1)
         if not partner:
