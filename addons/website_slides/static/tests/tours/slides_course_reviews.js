@@ -32,7 +32,7 @@ registry.category('web_tour.tours').add('course_reviews', {
 }, {
     trigger: 'a[id="review-tab"]',
 }, {
-    trigger: 'button:contains("Visible")',
+    trigger: 'label:contains("Public")',
 }, {
     trigger: 'span:contains("Edit Review")',
     // If it fails here, it means the system is allowing you to add another review.
