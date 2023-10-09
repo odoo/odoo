@@ -481,6 +481,10 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
+            if employee.tz:
+                tz = timezone(employee.tz)
+                date_from = date_from.replace(tzinfo=tz)
+                date_to = date_to.replace(tzinfo=tz)
             return employee.get_work_days_data(date_from, date_to)['days']
 
         today_hours = self.env.user.company_id.resource_calendar_id.get_work_hours_count(
