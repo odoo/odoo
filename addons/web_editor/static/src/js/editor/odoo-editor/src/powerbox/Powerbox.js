@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import { patienceDiff } from './patienceDiff.js';
 import { getRangePosition } from '../utils/utils.js';
+import { fuzzyLookup } from '@web/core/utils/search';
 
 const REGEX_RESERVED_CHARS = /[\\^$.*+?()[\]{}|]/g;
 /**
@@ -339,13 +340,7 @@ export class Powerbox {
                     .replaceAll('\u200B', '')
                     .replace(REGEX_RESERVED_CHARS, '\\$&');
                 if (term.length) {
-                    const exactRegex = new RegExp(term, 'i');
-                    const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
-                    this._context.filteredCommands = this._context.commands.filter(command => {
-                        const commandText = (command.category + ' ' + command.name);
-                        const commandDescription = command.description.replace(/\s/g, '');
-                        return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
-                    });
+                    this._context.filteredCommands = fuzzyLookup(term, this._context.commands, (categories) => categories.name + categories.description);
                 } else {
                     this._context.filteredCommands = this._context.commands;
                 }

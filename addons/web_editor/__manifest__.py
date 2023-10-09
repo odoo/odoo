@@ -255,6 +255,8 @@ Odoo Web Editor widget.
             'web/static/src/module_loader.js',
             # insert module dependencies here
             'web/static/src/core/utils/concurrency.js',
+            'web/static/src/core/utils/strings.js',
+            'web/static/src/core/utils/search.js',
 
             'web_editor/static/src/js/editor/odoo-editor/src/**/*js',
             'web_editor/static/src/js/editor/odoo-editor/test/spec/*js',
