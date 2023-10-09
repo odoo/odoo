@@ -215,8 +215,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      * Check if the given domain with the given measure has been used
      */
     isUsedValue(domain, measure) {
-        const tag = [measure, ...domain];
-        return this._usedValueDomains.has(tag.join());
+        return this._usedValueDomains.has(measure + "," + domain.join());
     }
 
     /**
@@ -230,8 +229,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      * Indicate that the given domain has been used with the given measure
      */
     markAsValueUsed(domain, measure) {
-        const toTag = [measure, ...domain];
-        this._usedValueDomains.add(toTag.join());
+        this._usedValueDomains.add(measure + "," + domain.join());
     }
 
     /**
