@@ -1434,7 +1434,7 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async () => {
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
     const { env, openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 25 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
     await contains(".o-mail-Discuss-content .o-mail-Thread", { scroll: "bottom" });
