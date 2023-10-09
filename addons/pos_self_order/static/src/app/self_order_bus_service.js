@@ -63,7 +63,10 @@ export class SelfOrderBus {
 
         if (payload.payment_result === "Success") {
             this.selfOrder.updateOrderFromServer(payload.order);
-            this.selfOrder.router.navigate("payment_success");
+            this.selfOrder.router.navigate("confirmation", {
+                orderAccessToken: payload.order.access_token,
+                screenMode: "order",
+            });
         } else {
             this.selfOrder.paymentError = true;
         }

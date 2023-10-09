@@ -90,4 +90,36 @@ export class OrderWidget extends Component {
             }
         );
     }
+
+    get leftButtonName() {
+        const order = this.selfOrder.currentOrder;
+        const back =
+            order.isSavedOnServer || this.router.activeSlot === "cart" || order.lines.length === 0;
+
+        return {
+            name: back ? _t("Back") : _t("Cancel"),
+            icon: back ? "fa fa-arrow-left" : "btn-close",
+        };
+    }
+
+    leftButton() {
+        const order = this.selfOrder.currentOrder;
+
+        if (
+            order.lines.length === 0 ||
+            order.isSavedOnServer ||
+            this.router.activeSlot === "cart"
+        ) {
+            this.router.back();
+            return;
+        } else {
+            this.dialog.add(CancelPopup, {
+                title: _t("Cancel order"),
+                confirm: () => {
+                    this.selfOrder.cancelOrder();
+                    this.router.navigate("default");
+                },
+            });
+        }
+    }
 }
