@@ -4,9 +4,6 @@ import { file } from "web.test_utils";
 import {
     afterNextRender,
     click,
-    createFile,
-    dragenterFiles,
-    dropFiles,
     insertText,
     start,
     startServer,
@@ -26,6 +23,7 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
+import { contains, createFile, dragenterFiles, dropFiles } from "@web/../tests/utils";
 import { Composer } from "@mail/composer/composer";
 import { patchUiSize, SIZES } from "../helpers/patch_ui_size";
 
@@ -649,11 +647,14 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
     assert.verifySteps([]);
 });
 
-QUnit.test("composer: drop attachments", async (assert) => {
+QUnit.test("composer: drop attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await contains(".o-mail-Dropzone", { count: 0 });
+    await contains(".o-mail-AttachmentCard", { count: 0 });
     const files = [
         await createFile({
             content: "hello, world",
@@ -666,28 +667,22 @@ QUnit.test("composer: drop attachments", async (assert) => {
             name: "text2.txt",
         }),
     ];
-    assert.containsNone($, ".o-mail-Dropzone");
-    assert.containsNone($, ".o-mail-AttachmentCard");
-
-    await afterNextRender(() => dragenterFiles($(".o-mail-Composer-input")[0]));
-    assert.containsOnce($, ".o-mail-Dropzone");
-    assert.containsNone($, ".o-mail-AttachmentCard");
-
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsNone($, ".o-mail-Dropzone");
-    assert.containsN($, ".o-mail-AttachmentCard", 2);
-
-    await afterNextRender(() => dragenterFiles($(".o-mail-Composer-input")[0]));
-    await afterNextRender(async () =>
-        dropFiles($(".o-mail-Dropzone")[0], [
-            await createFile({
-                content: "hello, world",
-                contentType: "text/plain",
-                name: "text3.txt",
-            }),
-        ])
-    );
-    assert.containsN($, ".o-mail-AttachmentCard", 3);
+    await dragenterFiles(".o-mail-Composer-input", files);
+    await contains(".o-mail-Dropzone");
+    await contains(".o-mail-AttachmentCard", { count: 0 });
+    await dropFiles(".o-mail-Dropzone", files);
+    await contains(".o-mail-Dropzone", { count: 0 });
+    await contains(".o-mail-AttachmentCard", { count: 2 });
+    const extraFiles = [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text3.txt",
+        }),
+    ];
+    await dragenterFiles(".o-mail-Composer-input", extraFiles);
+    await dropFiles(".o-mail-Dropzone", extraFiles);
+    await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
 QUnit.test("composer: add an attachment", async (assert) => {

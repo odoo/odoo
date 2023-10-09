@@ -4,8 +4,6 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
-    dragenterFiles,
-    dropFiles,
     insertText,
     isScrolledTo,
     start,
@@ -15,9 +13,7 @@ import {
 import { DELAY_FOR_SPINNER } from "@mail/web/chatter";
 
 import { editInput, triggerHotkey } from "@web/../tests/helpers/utils";
-import { file } from "web.test_utils";
-
-const { createFile } = file;
+import { contains, createFile, dragenterFiles, dropFiles } from "@web/../tests/utils";
 
 QUnit.module("chatter");
 
@@ -196,7 +192,7 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     assert.doesNotHaveClass($("button:contains(Send message)"), "btn-primary");
 });
 
-QUnit.test("chatter: drop attachments", async (assert) => {
+QUnit.test("chatter: drop attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
@@ -205,7 +201,7 @@ QUnit.test("chatter: drop attachments", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    let files = [
+    const files = [
         await createFile({
             content: "hello, world",
             contentType: "text/plain",
@@ -217,23 +213,21 @@ QUnit.test("chatter: drop attachments", async (assert) => {
             name: "text2.txt",
         }),
     ];
-    await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
-    assert.containsOnce($, ".o-mail-Dropzone");
-    assert.containsNone($, ".o-mail-AttachmentCard");
-
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsN($, ".o-mail-AttachmentCard", 2);
-
-    await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
-    files = [
+    await dragenterFiles(".o-mail-Chatter", files);
+    await contains(".o-mail-Dropzone");
+    await contains(".o-mail-AttachmentCard", { count: 0 });
+    await dropFiles(".o-mail-Dropzone", files);
+    await contains(".o-mail-AttachmentCard", { count: 2 });
+    const extraFiles = [
         await createFile({
             content: "hello, world",
             contentType: "text/plain",
             name: "text3.txt",
         }),
     ];
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsN($, ".o-mail-AttachmentCard", 3);
+    await dragenterFiles(".o-mail-Chatter", extraFiles);
+    await dropFiles(".o-mail-Dropzone", extraFiles);
+    await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
 QUnit.test("should display subject when subject isn't infered from the record", async (assert) => {
@@ -766,8 +760,8 @@ QUnit.test("upload attachment on draft record", async (assert) => {
         name: "text.txt",
     });
     assert.containsNone($, ".button[aria-label='Attach files']:contains(1)");
-    await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], [file]));
+    await dragenterFiles(".o-mail-Chatter", [file]);
+    await dropFiles(".o-mail-Dropzone", [file]);
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
 
