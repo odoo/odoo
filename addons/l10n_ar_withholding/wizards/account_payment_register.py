@@ -23,27 +23,19 @@ class AccountPaymentRegister(models.TransientModel):
             rec.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.id, 'base_amount': 0}) for x in taxes]
         (self - supplier_recs).l10n_ar_withholding_ids = False
 
-    # @api.depends('l10n_latam_check_id', 'l10n_ar_withholding_ids.amount')
-    # def _compute_amount(self):
-    #     super()._compute_amount()
-    #     for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
-    #         wizard.currency_id = wizard.l10n_latam_check_id.currency_id
-    #         wizard.l10n_ar_net_amount = wizard.l10n_latam_check_id.amount
-    #         factor = wizard._get_net_amount_simulated_factor()
-    #         withholding_net_amount = min(wizard.l10n_latam_check_id.amount, wizard.net_amount)
-    #         wizard.amount = withholding_net_amount * factor + (wizard.l10n_latam_check_id.amount - withholding_net_amount)
+    def _compute_amount(self):
+        super()._compute_amount()
+        for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
+            wizard.currency_id = wizard.l10n_latam_check_id.currency_id
+            wizard.l10n_ar_net_amount = wizard.l10n_latam_check_id.amount
+            factor = wizard._get_net_amount_simulated_factor()
+            withholding_net_amount = min(wizard.l10n_latam_check_id.amount, wizard.l10n_ar_net_amount)
+            wizard.amount = withholding_net_amount * factor + (wizard.l10n_latam_check_id.amount - withholding_net_amount)
 
     @api.depends('l10n_ar_withholding_ids.amount', 'amount', 'l10n_latam_check_id')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
-            if rec.l10n_latam_check_id:
-                rec.currency_id = rec.l10n_latam_check_id.currency_id
-                rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
-                factor = rec._get_net_amount_simulated_factor()
-                withholding_net_amount = min(rec.l10n_latam_check_id.amount, rec.l10n_ar_net_amount)
-                rec.amount = withholding_net_amount * factor + (rec.l10n_latam_check_id.amount - withholding_net_amount)
-            else:
-                rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
+            rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
 
     def _get_withholding_tax(self):
         self.ensure_one()
