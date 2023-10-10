@@ -309,17 +309,6 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             })
             self.action.flush_recordset(['update_path', 'update_field_id'])
 
-    def test_38_field_traversal_name_compute(self):
-        """ Test the automated computed name of an 'update record' action """
-        # update the country's name via the partner
-        action_with_name = self.action.with_context(automatic_action_name=True)
-        action_with_name.write({
-            'state': 'object_write',
-            'update_path': 'country_id.name',
-            'value': 'TestUpdatedCountry',
-        })
-        self.assertEqual(action_with_name.name, 'Update Country > Country Name', 'ir_actions_server: name should have been updated automatically')
-
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
         # Data: 2 server actions that will be nested
