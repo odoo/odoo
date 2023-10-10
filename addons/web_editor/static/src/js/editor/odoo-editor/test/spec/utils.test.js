@@ -753,14 +753,12 @@ describe('Utils', () => {
                 stepFunction: async editor => {
                     const sel = document.getSelection();
                     const element = sel.anchorNode;
-                    triggerEvent(editor.editable, 'keydown', { key: '/' });
+                    await triggerEvent(editor.editable, 'keydown', { key: '/' });
                     await insertText(editor, '/');
-                    triggerEvent(editor.editable, 'keyup', { key: '/' });
+                    await triggerEvent(editor.editable, 'keyup', { key: '/' });
                     await insertText(editor, 'h2');
-                    triggerEvent(element, 'keyup', { key: '2' });
-                    await nextTickFrame();
-                    triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
-                    await nextTickFrame();
+                    await triggerEvent(element, 'keyup', { key: '2' });
+                    await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     const activeElement = document.activeElement;
                     setCursorStart(activeElement.lastElementChild);
                     await nextTickFrame();
