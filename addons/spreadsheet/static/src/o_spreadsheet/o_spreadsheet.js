@@ -299,7 +299,16 @@
     const mdyDateRegexp = /^\d{1,2}(\/|-|\s)\d{1,2}((\/|-|\s)\d{1,4})?$/;
     const ymdDateRegexp = /^\d{3,4}(\/|-|\s)\d{1,2}(\/|-|\s)\d{1,2}$/;
     const timeRegexp = /((\d+(:\d+)?(:\d+)?\s*(AM|PM))|(\d+:\d+(:\d+)?))$/;
+    const CACHE = {};
     function parseDateTime(str) {
+        if (str in CACHE) {
+            return CACHE[str];
+        }
+        const date = _parseDateTime(str);
+        CACHE[str] = date;
+        return date;
+    }
+    function _parseDateTime(str) {
         str = str.trim();
         let time;
         const timeMatch = str.match(timeRegexp);
@@ -2141,8 +2150,9 @@
         }
         get zone() {
             const { left, top, bottom, right } = this._zone;
-            if (right !== undefined && bottom !== undefined)
-                return { left, top, right, bottom };
+            if (right !== undefined && bottom !== undefined) {
+                return this._zone;
+            }
             else if (bottom === undefined && right !== undefined) {
                 return { right, top, left, bottom: this.getSheetSize(this.sheetId).numberOfRows - 1 };
             }
@@ -21173,7 +21183,14 @@
                 return;
             }
             if (this.state.waitingForMove === true) {
-                this.startMovement(ev);
+                if (!this.env.model.getters.isGridSelectionActive()) {
+                    this._selectElement(index, false);
+                }
+                else {
+                    // FIXME: Consider reintroducing this feature for all type of selection if we find
+                    // a way to have the grid selection follow the other selections evolution
+                    this.startMovement(ev);
+                }
                 return;
             }
             if (this.env.model.getters.getEditionMode() === "editing") {
@@ -28133,10 +28150,11 @@
          * Reconstructs the original formula string based on a normalized form and its dependencies
          */
         buildFormulaContent(sheetId, cell, dependencies) {
-            const ranges = dependencies || [...cell.dependencies];
+            const ranges = dependencies || cell.dependencies;
+            let rangeIndex = 0;
             return concat(cell.compiledFormula.tokens.map((token) => {
                 if (token.type === "REFERENCE") {
-                    const range = ranges.shift();
+                    const range = ranges[rangeIndex++];
                     return this.getters.getRangeString(range, sheetId);
                 }
                 return token.value;
@@ -39242,6 +39260,9 @@
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
+        isGridSelectionActive() {
+            return this.selection.isListening(this);
+        }
         getActiveSheet() {
             return this.activeSheet;
         }
@@ -39616,6 +39637,7 @@
         "getSheetPosition",
         "isSelected",
         "getElementsFromSelection",
+        "isGridSelectionActive",
     ];
 
     const corePluginRegistry = new Registry()
@@ -43094,6 +43116,9 @@
                 anchor: { zone, cell: this.anchor.cell },
             });
         }
+        isListening(owner) {
+            return this.stream.isListening(owner);
+        }
         /**
          * Process a new anchor selection event. If the new anchor is inside
          * the sheet boundaries, the event is pushed to the event stream to
@@ -45459,9 +45484,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.17';
-    __info__.date = '2023-10-03T13:24:24.902Z';
-    __info__.hash = '146867a';
+    __info__.version = '16.2.18';
+    __info__.date = '2023-10-10T07:48:01.528Z';
+    __info__.hash = '451fa09';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
