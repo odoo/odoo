@@ -104,16 +104,11 @@ class PaymentWizard(models.TransientModel):
                     base_provider = self.env.ref('payment.payment_provider_paypal')
                     # Use sudo to access payment provider record that can be in different company.
                     provider = base_provider.sudo().copy(default={'company_id':self.env.company.id})
-                default_journal = new_env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(new_env.company),
-                    ('type', '=', 'bank')
-                ], limit=1)
                 provider.write({
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
                     'state': 'enabled',
                     'is_published': 'True',
-                    'journal_id': provider.journal_id or default_journal
                 })
             elif self.payment_method == 'manual':
                 manual_provider = self._get_manual_payment_provider(new_env)
