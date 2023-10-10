@@ -1,7 +1,13 @@
 /** @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { getDataURLFromFile, getOrigin, url } from "@web/core/utils/urls";
+import {
+    getDataURLFromFile,
+    getOrigin,
+    redirect,
+    RedirectionError,
+    url,
+} from "@web/core/utils/urls";
 import { patchWithCleanup } from "../../helpers/utils";
 
 QUnit.module("URLS", (hooks) => {
@@ -63,6 +69,33 @@ QUnit.module("URLS", (hooks) => {
     QUnit.test("getDataURLFromFile handles empty file", async (assert) => {
         const emptyFile = new File([""], "empty.txt", { type: "text/plain" });
         const dataUrl = await getDataURLFromFile(emptyFile);
-        assert.strictEqual(dataUrl, "data:text/plain;base64,", "dataURL for empty file is not proper");
+        assert.strictEqual(
+            dataUrl,
+            "data:text/plain;base64,",
+            "dataURL for empty file is not proper"
+        );
+    });
+
+    QUnit.test("redirect", (assert) => {
+        function testRedirect(url) {
+            browser.location = {
+                protocol: "http:",
+                host: "testhost",
+                origin: "http://www.test.com",
+                pathname: "/some/tests",
+            };
+            redirect(url);
+            return browser.location;
+        }
+
+        assert.strictEqual(testRedirect("abc"), "http://www.test.com/some/abc");
+        assert.strictEqual(testRedirect("./abc"), "http://www.test.com/some/abc");
+        assert.strictEqual(testRedirect("../abc/def"), "http://www.test.com/abc/def");
+        assert.strictEqual(testRedirect("/abc/def"), "http://www.test.com/abc/def");
+        assert.strictEqual(testRedirect("/abc/def?x=y"), "http://www.test.com/abc/def?x=y");
+        assert.strictEqual(testRedirect("/abc?x=y#a=1&b=2"), "http://www.test.com/abc?x=y#a=1&b=2");
+
+        assert.throws(() => testRedirect("https://www.odoo.com"), RedirectionError);
+        assert.throws(() => testRedirect("javascript:alert('boom');"), RedirectionError);
     });
 });
