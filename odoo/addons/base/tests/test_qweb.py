@@ -1199,7 +1199,7 @@ class TestQWebBasic(TransactionCase):
         })
         html = self.env['ir.qweb']._render(view1.id, {'text': """a
         b <b>c</b>"""})
-        self.assertEqual(html, """<root><span data-oe-type="text" data-oe-expression="text">a<br>
+        self.assertEqual(html, """<root><span>a<br>
         b &lt;b&gt;c&lt;/b&gt;</span></root>""")
 
     def test_out_markup(self):
@@ -1532,7 +1532,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch': """
                 <t t-name="base.callee">
-                    <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
+                    <t t-out="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
                 </t>
             """
         })
@@ -1555,6 +1555,63 @@ class TestQWebBasic(TransactionCase):
 
         rendered = self.env['ir.qweb'].with_context(lang=current_lang)._render(view2.id).strip()
         self.assertEqual(rendered, '9/000/000*00')
+
+    def test_render_t_field_context(self):
+        current_lang = 'en_US'
+        other_lang = 'fr_FR'
+
+        self.env['res.lang']._activate_lang(other_lang)
+
+        country_current = self.env['res.country'].with_context(lang=current_lang).browse(1)
+        country_other = self.env['res.country'].with_context(lang=other_lang).browse(1)
+
+        view = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.callee">
+                    <span t-field="country.name"/>
+                    <p t-out="country.name"/>
+                </t>
+            """
+        })
+
+        rendered = self.env['ir.qweb'].with_context(lang=current_lang)._render(view.id, {'country': country_other})
+        self.assertEqual(str(rendered).strip(), f'''<span>{country_current.name}</span>
+                    <p>{country_other.name}</p>''')
+
+        rendered = self.env['ir.qweb'].with_context(lang=other_lang)._render(view.id, {'country': country_other})
+        self.assertEqual(str(rendered).strip(), f'''<span>{country_other.name}</span>
+                    <p>{country_other.name}</p>''')
+
+        view = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.callee">
+                    <span t-field="country.name"/>
+                    <p t-out="country.with_context(lang=%r).name"/>
+                </t>
+            """ % other_lang
+        })
+
+        rendered = self.env['ir.qweb'].with_context(lang=current_lang)._render(view.id, {'country': country_current})
+        self.assertEqual(str(rendered).strip(), f'''<span>{country_current.name}</span>
+                    <p>{country_other.name}</p>''')
+
+        view = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.callee">
+                    <span t-field="country.with_context(lang=%r).name"/>
+                    <p t-out="env.user.id"/>
+                </t>
+            """ % other_lang
+        })
+
+        with self.assertRaises(QWebException, msg=r"has no effect"):
+            self.env['ir.qweb']._render(view.id, {'country': country_other})
 
     def test_render_barcode(self):
         partner = self.env['res.partner'].create({

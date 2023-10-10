@@ -58,8 +58,8 @@
                                     <t t-call="website.record_cover">
                                         <t t-set="_record" t-value="event" />
                                         <div class="o_wevent_event_date position-absolute bg-white shadow-sm text-dark">
-                                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'LLL'}" class="o_wevent_event_month" />
-                                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit" />
+                                            <span t-field="event.date_begin" t-options="{'format': 'LLL', 'tz_name': event.date_tz}" class="o_wevent_event_month" />
+                                            <span t-field="event.date_begin" t-options="{'format': 'dd', 'tz_name': event.date_tz}" class="o_wevent_event_day oe_hide_on_date_edit" />
                                         </div>
                                         <small class="o_wevent_participating text-bg-success">
                                             <i class="fa fa-check me-2" />

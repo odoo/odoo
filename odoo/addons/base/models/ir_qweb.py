@@ -1976,6 +1976,12 @@ class IrQWeb(models.AbstractModel):
             code.extend(tag_close)
             return code
         elif ttype == 't-field':
+            if '.with_context(' in expr:
+                raise ValueError("The record provided to 't-field' uses the rendering context of the view "
+                    "(or 't-call'), so 'with_context' has no effect and should be removed. You can modify the "
+                    "rendering of widgets by using their respective options from 't-options-*', or by changing the "
+                    "'t-call' options. If you want to use the record context only, you can use 't-out' choosing the "
+                    "widget and its options.")
             record, field_name = expr.rsplit('.', 1)
             code.append(indent_code(f"""
                 field_attrs, content, force_display = self._get_field({self._compile_expr(record, raise_on_missing=True)}, {field_name!r}, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)
@@ -2440,8 +2446,9 @@ class IrQWeb(models.AbstractModel):
         # get content (the return values from widget are considered to be markup safe)
         content = converter.value_to_html(value, field_options)
         attributes = {}
-        attributes['data-oe-type'] = field_options['type']
-        attributes['data-oe-expression'] = field_options['expression']
+        if field_options['inherit_branding'] or self.env.context.get('inherit_branding_auto'):
+            attributes['data-oe-type'] = field_options['type']
+            attributes['data-oe-expression'] = field_options['expression']
 
         return (attributes, content, inherit_branding)
 
