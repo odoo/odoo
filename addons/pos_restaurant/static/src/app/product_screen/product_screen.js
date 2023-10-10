@@ -16,6 +16,7 @@ patch(ProductScreen.prototype, {
     showReleaseBtn() {
         return (
             this.pos.config.module_pos_restaurant &&
+            this.pos.table &&
             !this.pos.orders.some(
                 (o) =>
                     o.tableId === this.pos.table.id && o.finalized === false && o.orderlines.length

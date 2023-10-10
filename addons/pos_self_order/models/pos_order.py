@@ -140,3 +140,25 @@ class PosOrder(models.Model):
     def _send_order(self):
         #This function is made to be overriden by pos_self_order_preparation_display
         pass
+
+    def get_standalone_self_order(self):
+        orders = self.env['pos.order'].search([
+            *self.env["pos.order"]._check_company_domain(self.env.company),
+            ('state', '=', 'draft'),
+            '|', ('pos_reference', 'ilike', 'Kiosk'),
+            ('pos_reference', 'ilike', 'Self-Order'),
+            ('table_id', '=', False),
+        ])
+        return orders
+
+    @api.model
+    def export_for_ui_shared_order(self, config_id):
+        orders = super().export_for_ui_shared_order(config_id)
+        self_orders = self.get_standalone_self_order().export_for_ui()
+        return orders + self_orders
+
+    @api.model
+    def export_for_ui_table_draft(self, table_ids):
+        orders = super().export_for_ui_table_draft(table_ids)
+        self_orders = self.get_standalone_self_order().export_for_ui()
+        return orders + self_orders
