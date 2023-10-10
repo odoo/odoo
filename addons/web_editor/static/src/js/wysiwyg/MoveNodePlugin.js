@@ -1,12 +1,39 @@
 /** @odoo-module */
-
 import {
     ancestors,
     closestElement,
     resetOuids,
     setSelection,
 } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
-import { SmoothScrollOnDrag } from "@web_editor/js/editor/smooth_scroll_on_drag";
+import { useNativeDraggable } from "@web_editor/js/editor/drag_and_drop";
+
+const simpleDraggableHook = {
+    acceptedParams: {
+        helper: [Function],
+    },
+    edgeScrolling: { enable: true },
+    onComputeParams({ ctx, params }) {
+        ctx.helper = params.helper;
+        ctx.followCursor = false;
+    },
+    onDragStart({ ctx }) {
+        ctx.current.element = ctx.helper();
+        ctx.current.element.style.left = `${ctx.pointer.x + 10}px`;
+        ctx.current.element.style.top = `${ctx.pointer.y + 10}px`;
+        ctx.current.element.style.position = "fixed";
+        // makeDraggableHook disables pointer events, we want them in this case
+        document.body.classList.remove("pe-none");
+        return ctx.current;
+    },
+    onDrag({ ctx }) {
+        ctx.current.element.style.left = `${ctx.pointer.x}px`;
+        ctx.current.element.style.top = `${ctx.pointer.y}px`;
+    },
+    onDragEnd({ ctx }) {
+        ctx.current.element.remove();
+        return ctx.current;
+    },
+};
 
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
@@ -231,28 +258,24 @@ export class MoveNodePlugin {
 
         if (this._scrollableElement) {
             this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
-            this.smoothScrollOnDrag = new SmoothScrollOnDrag($(this._moveWidget), $(this._scrollableElement), {
-                scrollBoundaries: {
-                    right: false,
-                },
-                jQueryDraggableOptions: {
-                    start: () => this._startDropzones(movableElement, containerRect),
-                    stop: () => this._stopDropzones(movableElement),
-                    helper: () => {
-                        const container = document.createElement('div');
-                        container.append(movableElement.cloneNode(true))
-                        const style = getComputedStyle(movableElement);
-                        container.style.height = style.height;
-                        container.style.width = style.width;
-                        container.style.paddingLeft = '25px';
-                        container.style.opacity = '0.4';
-                        return $(container);
-                    },
-                    appendTo: this._dragHelperContainer,
-                    cursor: 'move',
-                    scroll: false,
-                },
-                disableHorizontalScroll: true,
+            // TODO: This should be made more generic, one hook for the entire
+            // editable with each element handled.
+            this.smoothScrollOnDrag = useNativeDraggable(simpleDraggableHook, {
+                ref: { el: this._widgetContainer },
+                elements: ".oe-sidewidget-move",
+                onDragStart: () => this._startDropzones(movableElement, containerRect),
+                onDragEnd: () => this._stopDropzones(movableElement),
+                helper: () => {
+                    const container = document.createElement('div');
+                    container.append(movableElement.cloneNode(true));
+                    const style = getComputedStyle(movableElement);
+                    container.style.height = style.height;
+                    container.style.width = style.width;
+                    container.style.paddingLeft = '25px';
+                    container.style.opacity = '0.4';
+                    this._dragHelperContainer.append(container);
+                    return container;
+                }
             });
         }
     }

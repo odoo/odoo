@@ -127,7 +127,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/commands/toggleList.js',
 
             # utils
-            'web_editor/static/src/js/editor/smooth_scroll_on_drag.js',
+            'web_editor/static/src/js/editor/drag_and_drop.js',
             'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/js/wysiwyg/MoveNodePlugin.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',

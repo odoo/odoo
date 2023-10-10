@@ -17,10 +17,10 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     }),
     {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
-    trigger: '#oe_snippets .o_panel_body > .oe_snippet.ui-draggable',
+    trigger: '#oe_snippets .o_panel_body > .oe_snippet',
     run: function () {
         // Tests done here as all these are not visible on the page
-        const draggableSnippets = document.querySelectorAll('#oe_snippets .o_panel_body > .oe_snippet.ui-draggable > :nth-child(2)');
+        const draggableSnippets = document.querySelectorAll('#oe_snippets .o_panel_body > .oe_snippet.o_draggable > :nth-child(2)');
         if (![...draggableSnippets].every(el => el.dataset.snippet)) {
             console.error("error Some t-snippet are missing their template name");
         }

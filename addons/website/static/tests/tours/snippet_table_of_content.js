@@ -47,6 +47,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
         content: "Hide the first TOC on mobile",
         trigger: '[data-toggle-device-visibility="no_mobile"]',
     },
+    // Go back to blocks tabs to avoid changing the first ToC options
+    wTourUtils.goBackToBlocks(),
     {
         content: "Click on the second TOC's title",
         trigger: 'iframe .s_table_of_content:eq(1) h2',

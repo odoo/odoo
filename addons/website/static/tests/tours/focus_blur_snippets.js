@@ -29,7 +29,7 @@ function clickAndCheck(blockID, expected) {
     }, {
         content: 'Once the related overlays are enabled/disabled, check that the focus/blur calls have been correct.',
         trigger: blockID
-            ? `iframe .oe_overlay.ui-draggable:eq(${blockData.overlayIndex}).oe_active`
+            ? `iframe .oe_overlay.o_draggable:eq(${blockData.overlayIndex}).oe_active`
             : `iframe #oe_manipulators:not(:has(.oe_active))`,
         allowInvisible: !blockID,
         run: function (actions) {
@@ -57,7 +57,7 @@ wTourUtils.registerWebsitePreviewTour("focus_blur_snippets", {
     {
         content: 'Drag the custom block into the page',
         trigger: '#snippet_structure .oe_snippet:has(.oe_snippet_body.s_focusblur) .oe_snippet_thumbnail',
-        run: 'drag_and_drop iframe #wrap',
+        run: 'drag_and_drop_native iframe #wrap',
     },
     ...clickAndCheck('parent', ['focus parent']),
     ...clickAndCheck(null, ['blur parent']),

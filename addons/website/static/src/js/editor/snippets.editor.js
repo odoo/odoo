@@ -203,7 +203,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     /**
      * @override
      */
-    _getScrollOptions(options = {}) {
+    _getDragAndDropOptions(options = {}) {
+        // TODO: This is currently not in use by Odoo's D&D
+        // There is currently no way in Odoo D&D to offset the edge scrolling.
+        // When there is, this code should be adapted.
         const finalOptions = this._super(...arguments);
         if (!options.offsetElements || !options.offsetElements.$top) {
             const $header = $('#top');
@@ -212,7 +215,6 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 finalOptions.offsetElements.$top = $header;
             }
         }
-        finalOptions.jQueryDraggableOptions.iframeFix = true;
         return finalOptions;
     },
     /**

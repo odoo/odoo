@@ -23,9 +23,9 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: () => {},
 }, {
     content: 'drag the "Title" snippet from the design panel and drop it in the editor',
-    trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .ui-draggable-handle',
+    trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .oe_snippet_thumbnail',
     run: function (actions) {
-        actions.drag_and_drop('[name="body_arch"] iframe .o_editable', this.$anchor);
+        actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable', this.$anchor);
     }
 }, {
     content: 'wait for the snippet menu to finish the drop process',

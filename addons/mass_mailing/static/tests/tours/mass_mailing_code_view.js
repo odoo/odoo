@@ -50,10 +50,10 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Verify that the dropable zone was not removed',
             run: () => {},
         }, {
-            trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .ui-draggable-handle',
+            trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .oe_snippet_thumbnail',
             content: 'Drag the "Title" snippet from the design panel and drop it in the editor',
             run: function (actions) {
-                actions.drag_and_drop('[name="body_arch"] iframe .o_editable', this.$anchor);
+                actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable', this.$anchor);
             }
         }, {
             trigger: '[name="body_arch"] iframe .o_editable h1',

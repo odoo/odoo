@@ -69,7 +69,7 @@ function selectColorPalette(position = "left") {
 
 function changeColumnSize(position = "right") {
     return {
-        trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
+        trigger: `iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: markup(_t("<b>Slide</b> this button to change the column size.")),
         position: position,
     };
@@ -133,7 +133,7 @@ function changePaddingSize(direction) {
         position = "bottom";
     }
     return {
-        trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
+        trigger: `iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
         consumeEvent: 'mousedown',
         position: position,
@@ -239,7 +239,7 @@ function dragNDrop(snippet, position = "bottom") {
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop iframe #wrapwrap > footer",
+        run: "drag_and_drop_native iframe #wrapwrap > footer",
     };
 }
 

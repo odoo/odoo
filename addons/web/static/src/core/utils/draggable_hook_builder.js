@@ -94,6 +94,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
     edgeScrolling: [Object, Function],
     delay: [Number],
     tolerance: [Number],
+    iframeWindow: [Object, Function],
 };
 const DEFAULT_DEFAULT_PARAMS = {
     elements: `.${DRAGGABLE_CLASS}`,
@@ -231,7 +232,7 @@ function makeDOMHelpers(cleanup) {
         if (!el || !classNames.length) {
             return;
         }
-        cleanup.add(saveAttribute(el, "class"));
+        cleanup.add(() => el.classList.remove(...classNames));
         el.classList.add(...classNames);
     };
 
@@ -552,6 +553,11 @@ export function makeDraggableHook(hookParams) {
                 }
 
                 dom.addClass(document.body, "pe-none", "user-select-none");
+                if (params.iframeWindow) {
+                    dom.addClass(params.iframeWindow.body, "pe-none", "user-select-none");
+                }
+                // FIXME: adding pe-none and cursor on the same element makes
+                // no sense as pe-none prevents the cursor to be displayed.
                 if (ctx.cursor) {
                     dom.addStyle(document.body, { cursor: ctx.cursor });
                 }
@@ -861,6 +867,12 @@ export function makeDraggableHook(hookParams) {
                         passive: false,
                         noAddedStyle: true,
                     });
+                    if (params.iframeWindow) {
+                        dom.addListener(params.iframeWindow, "touchmove", safePrevent, {
+                            passive: false,
+                            noAddedStyle: true,
+                        });
+                    }
                 }
             };
 
@@ -987,14 +999,20 @@ export function makeDraggableHook(hookParams) {
                 },
                 () => [ctx.ref.el]
             );
+            const addWindowListener = (type, listener, options) => {
+                if (params.iframeWindow) {
+                    setupHooks.addListener(params.iframeWindow, type, listener, options);
+                }
+                setupHooks.addListener(window, type, listener, options);
+            };
             // Other global event listeners.
             const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
-            setupHooks.addListener(window, "pointermove", throttledOnPointerMove, {
+            addWindowListener("pointermove", throttledOnPointerMove, {
                 passive: false,
             });
-            setupHooks.addListener(window, "pointerup", onPointerUp);
-            setupHooks.addListener(window, "pointercancel", onPointerCancel);
-            setupHooks.addListener(window, "keydown", onKeyDown, { capture: true });
+            addWindowListener("pointerup", onPointerUp);
+            addWindowListener("pointercancel", onPointerCancel);
+            addWindowListener("keydown", onKeyDown, { capture: true });
             setupHooks.teardown(() => dragEnd(null));
 
             return state;
