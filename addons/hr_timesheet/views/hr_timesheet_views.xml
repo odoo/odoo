@@ -166,8 +166,7 @@
             </field>
         </record>
 
-        <!-- Base search view, contains the fields and filters common to timesheet and timesheet report -->
-        <record id="hr_timesheet_line_search_base" model="ir.ui.view">
+        <record id="hr_timesheet_line_search" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
@@ -199,7 +198,7 @@
         <record id="hr_timesheet_line_my_timesheet_search" model="ir.ui.view">
             <field name="name">view.search.my.timesheet.menu</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="hr_timesheet_line_search_base"/>
+            <field name="inherit_id" ref="hr_timesheet_line_search"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <field name="employee_id" position="replace"/>
@@ -209,16 +208,6 @@
                 <filter name="groupby_department" position="replace"/>
                 <filter name="groupby_manager" position="replace"/>
                 <filter name="groupby_employee" position="replace"/>
-            </field>
-        </record>
-
-        <record id="hr_timesheet_line_search" model="ir.ui.view">
-            <field name="name">view.search.my.timesheet.menu</field>
-            <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="hr_timesheet_line_search_base"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <search position="inside"/>
             </field>
         </record>
 
