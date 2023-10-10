@@ -45,7 +45,6 @@ class TestMailMCCommon(MailCommon, TestRecipients):
             'alias_contact': 'everyone',
             'alias_model_id': cls.test_model.id,
             'alias_name': 'groups',
-            'alias_user_id': False,
         })
 
         # Set a first message on public group to test update and hierarchy

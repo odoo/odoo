@@ -803,7 +803,7 @@ class MailThread(models.AbstractModel):
         if not model:
             self._routing_warn(_('target model unspecified'), message_id, route, raise_exception)
             return ()
-        elif model not in self.env:
+        if model not in self.env:
             self._routing_warn(_('unknown target model %s', model), message_id, route, raise_exception)
             return ()
         record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
@@ -855,11 +855,7 @@ class MailThread(models.AbstractModel):
                     route,
                     False
                 )
-                if error.is_config_error:
-                    alias._set_alias_invalid(message, message_dict)
-                else:
-                    body = alias._get_alias_bounced_body(message_dict)
-                    self._routing_create_bounce_email(email_from, body, message, references=message_id)
+                alias._alias_bounce_incoming_email(message, message_dict, set_invalid=error.is_config_error)
                 return False
 
         return (model, thread_id, route[2], route[3], route[4])
@@ -1165,8 +1161,8 @@ class MailThread(models.AbstractModel):
                 except Exception:
                     if alias:
                         with self.pool.cursor() as new_cr:
-                            self.with_env(self.env(cr=new_cr)).env['mail.alias'].browse(alias.id) \
-                                ._set_alias_invalid(message, message_dict)
+                            self.with_env(self.env(cr=new_cr)).env['mail.alias'].browse(alias.id
+                            )._alias_bounce_incoming_email(message, message_dict, set_invalid=True)
                     raise
                 else:
                     if alias and alias.alias_status != 'valid':
@@ -1845,13 +1841,6 @@ class MailThread(models.AbstractModel):
         if not matching_user:
             std_users = self.env['res.users'].sudo().search([('email_normalized', '=', normalized_email)], limit=1)
             matching_user = std_users[0] if std_users else self.env['res.users']
-        if matching_user:
-            return matching_user
-
-        if not matching_user and alias and alias.alias_user_id:
-            matching_user = alias and alias.alias_user_id
-        if matching_user:
-            return matching_user
 
         return matching_user
 

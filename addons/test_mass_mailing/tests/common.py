@@ -14,7 +14,6 @@ class TestMassMailCommon(MassSMSCommon):
 
         cls.test_alias = cls.env['mail.alias'].create({
             'alias_name': 'test.alias',
-            'alias_user_id': False,
             'alias_model_id': cls.env['ir.model']._get('mailing.test.simple').id,
             'alias_contact': 'everyone'
         })
