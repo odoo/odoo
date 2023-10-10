@@ -2,7 +2,7 @@
 
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { Model, DispatchResult } from "@odoo/o-spreadsheet";
+import { Model, DispatchResult, helpers } from "@odoo/o-spreadsheet";
 import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
@@ -22,6 +22,9 @@ import {
     setCellContent,
     setGlobalFilterValue,
     moveGlobalFilter,
+    setCellFormat,
+    addColumns,
+    deleteColumns,
 } from "@spreadsheet/../tests/utils/commands";
 import {
     createSpreadsheetWithPivot,
@@ -43,7 +46,9 @@ import {
 } from "@spreadsheet/../tests/utils/date_domain";
 import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+import { toRangeData } from "../utils/zones";
 const { DateTime } = luxon;
+const { toZone } = helpers;
 
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
@@ -511,6 +516,242 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             value: "Hello",
         });
         assert.equal(model.getters.getActiveFilterCount(), true);
+    });
+
+    QUnit.test("restrict text filter to a range of values", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        setCellContent(model, "A1", "Hello");
+        setCellContent(model, "A2", "World");
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        });
+
+        assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+            { value: "Hello", formattedValue: "Hello" },
+            { value: "World", formattedValue: "World" },
+        ]);
+    });
+
+    QUnit.test("duplicated values appear once in text filter with range", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        setCellContent(model, "A1", "3");
+        setCellContent(model, "A2", "=3");
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        });
+
+        assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+            { value: "3", formattedValue: "3" },
+        ]);
+    });
+
+    QUnit.test(
+        "numbers and dates are formatted in text filter with range",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            const sheetId = model.getters.getActiveSheetId();
+            setCellContent(model, "A1", "2");
+            setCellContent(model, "A2", "2");
+            setCellFormat(model, "A1", "#,##0.00");
+            setCellFormat(model, "A2", "dd-mm-yyyy");
+            await addGlobalFilter(model, {
+                id: "42",
+                type: "text",
+                label: "Text Filter",
+                rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+            });
+
+            assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+                { value: "2", formattedValue: "2.00" },
+                { value: "2", formattedValue: "01-01-1900" },
+            ]);
+        }
+    );
+
+    QUnit.test(
+        "falsy values appears (but not empty string) in text filter with range",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            const sheetId = model.getters.getActiveSheetId();
+            setCellContent(model, "A1", "0");
+            setCellContent(model, "A2", "FALSE");
+            setCellContent(model, "A3", '=""');
+            await addGlobalFilter(model, {
+                id: "42",
+                type: "text",
+                label: "Text Filter",
+                rangeOfAllowedValues: toRangeData(sheetId, "A1:A3"),
+            });
+
+            assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+                { value: "0", formattedValue: "0" },
+                { value: "false", formattedValue: "FALSE" },
+            ]);
+        }
+    );
+
+    QUnit.test("default value appears in text filter with range", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        setCellContent(model, "A1", "Hello");
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1"),
+            defaultValue: "World",
+        });
+
+        assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+            { value: "Hello", formattedValue: "Hello" },
+            { value: "World", formattedValue: "World" },
+        ]);
+    });
+
+    QUnit.test("current value appears in text filter with range", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        setCellContent(model, "A1", "Hello");
+        setCellContent(model, "A2", "World");
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        });
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: "World", // set the value to one of the allowed values
+        });
+
+        setCellContent(model, "A2", "Bob"); // change the value of the cell
+        assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+            { value: "Hello", formattedValue: "Hello" },
+            { value: "Bob", formattedValue: "Bob" },
+            { value: "World", formattedValue: "World" },
+        ]);
+    });
+
+    QUnit.test(
+        "default value appears once if the same value is in the text filter range",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            const sheetId = model.getters.getActiveSheetId();
+            setCellContent(model, "A1", "Hello");
+            await addGlobalFilter(model, {
+                id: "42",
+                type: "text",
+                label: "Text Filter",
+                rangeOfAllowedValues: toRangeData(sheetId, "A1"),
+                defaultValue: "Hello", // same value as in A1
+            });
+            assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+                { value: "Hello", formattedValue: "Hello" },
+            ]);
+        }
+    );
+
+    QUnit.test(
+        "formatted default value appears once if the same value is in the text filter range",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            const sheetId = model.getters.getActiveSheetId();
+            setCellContent(model, "A1", "0.3");
+            setCellFormat(model, "A1", "0.00%");
+            await addGlobalFilter(model, {
+                id: "42",
+                type: "text",
+                label: "Text Filter",
+                rangeOfAllowedValues: toRangeData(sheetId, "A1"),
+                defaultValue: "0.3",
+            });
+            await setGlobalFilterValue(model, {
+                id: "42",
+                value: "0.3",
+            });
+            assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+                { value: "0.3", formattedValue: "30.00%" },
+            ]);
+        }
+    );
+
+    QUnit.test(
+        "errors and empty cells if the same value is in the text filter range",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            const sheetId = model.getters.getActiveSheetId();
+            setCellContent(model, "A1", "Hello");
+            setCellContent(model, "A2", "=1/0");
+            setCellContent(model, "A3", "");
+            await addGlobalFilter(model, {
+                id: "42",
+                type: "text",
+                label: "Text Filter",
+                rangeOfAllowedValues: toRangeData(sheetId, "A1:A3"),
+                defaultValue: "Hello", // same value as in A1
+            });
+            assert.deepEqual(model.getters.getTextFilterOptions("42"), [
+                { value: "Hello", formattedValue: "Hello" },
+            ]);
+        }
+    );
+
+    QUnit.test("add column before a text filter range", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        });
+        addColumns(model, "before", "A", 1);
+
+        assert.deepEqual(
+            model.getters.getGlobalFilter("42").rangeOfAllowedValues.zone,
+            toZone("B1:B2")
+        );
+    });
+
+    QUnit.test("delete a text filter range", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        });
+        deleteColumns(model, ["A"]);
+
+        assert.strictEqual(model.getters.getGlobalFilter("42").rangeOfAllowedValues, undefined);
+    });
+
+    QUnit.test("import/export a text filter range", async function (assert) {
+        const model = await createModelWithDataSource();
+        const sheetId = model.getters.getActiveSheetId();
+        await addGlobalFilter(model, {
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+            rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        });
+        // export
+        const data = model.exportData();
+        assert.strictEqual(data.globalFilters[0].rangeOfAllowedValues, "Sheet1!A1:A2");
+        // import
+        const newModel = new Model(data);
+        const range = newModel.getters.getGlobalFilter("42").rangeOfAllowedValues;
+        assert.deepEqual(range.zone, toZone("A1:A2"));
+        assert.strictEqual(range.sheetId, sheetId);
     });
 
     QUnit.test("Get active filters with relation filter enabled", async function (assert) {
