@@ -17,9 +17,8 @@ export const patchAvatarCardPopover = {
             "work_email", 
             "job_title", 
             "department_id", 
-            "employee_parent_id",
             "employee_id",
-        ])
+        ]);
     },
     get email(){
         return this.user.work_email || this.user.email;
