@@ -44,7 +44,7 @@ patch(TicketScreen.prototype, {
         });
     },
     async _setOrder(order) {
-        if (!this.pos.config.module_pos_restaurant || this.pos.table) {
+        if (!this.pos.config.module_pos_restaurant || this.pos.table || !order.tableId) {
             return super._setOrder(...arguments);
         }
         // we came from the FloorScreen

@@ -31,7 +31,7 @@ export class Line extends Reactive {
         this.full_product_name = line.full_product_name || "";
         this.product_id = line.product_id;
         this.qty = line.qty ? line.qty : 0;
-        this.customer_note = line.customer_note;
+        this.customer_note = line.customer_note || "";
         this.price_unit = line.price_unit || 0;
         this.price_subtotal_incl = line.price_subtotal_incl || 0;
         this.price_subtotal = line.price_subtotal || 0;

@@ -8,7 +8,7 @@ patch(Order.prototype, {
     setup(options) {
         super.setup(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (!this.tableId && !options.json && this.pos.table) {
+            if (this.defaultTableNeeded(options)) {
                 this.tableId = this.pos.table.id;
             }
             this.customerCount = this.customerCount || 1;
@@ -43,6 +43,9 @@ patch(Order.prototype, {
             return this.pos.tables_by_id[this.tableId];
         }
         return null;
+    },
+    defaultTableNeeded(options) {
+        return !this.tableId && !options.json && this.pos.table;
     },
 });
 
