@@ -31,6 +31,17 @@ export class Composer extends Record {
         return composer;
     }
 
+    insertText(element) {
+        const cursorPosition = this.selection.start;
+        const content = this.textInputContent;
+        const textLeft = content.substring(0, cursorPosition);
+        const textRight = content.substring(cursorPosition, content.length);
+        this.textInputContent = textLeft + element + " " + textRight;
+        this.selection.start = textLeft.length + element.length + 1;
+        this.selection.end = textLeft.length + element.length + 1;
+        this.forceCursorMove = true;
+    }
+
     attachments = Record.many("Attachment");
     message = Record.one("Message");
     mentionedPartners = Record.many("Persona");

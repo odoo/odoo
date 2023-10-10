@@ -99,6 +99,7 @@
         <span t-if="props.composer.message" class="text-muted" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
     </div>
     <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
+    <CannedResponseList t-if="thread.showCannedResponse" composer="props.composer" />
 </t>
 
 <t t-name="mail.Composer.sendButton">

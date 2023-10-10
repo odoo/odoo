@@ -21,6 +21,9 @@ patch(ThreadService.prototype, {
                 command &&
                 (!command.channel_types || command.channel_types.includes(thread.type))
             ) {
+                if (command.func) {
+                    return await command.func(thread);
+                }
                 await this.executeCommand(thread, command, body);
                 return;
             }

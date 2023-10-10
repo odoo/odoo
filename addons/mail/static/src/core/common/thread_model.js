@@ -277,6 +277,7 @@ export class Thread extends Record {
     lastServerMessage = Record.one("Message");
     /** @type {Boolean} */
     is_editable;
+    showCannedResponse = false;
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {

@@ -18,4 +18,10 @@ commandRegistry
         channel_types: ["channel", "chat", "group"],
         help: _t("List users in the current channel"),
         methodName: "execute_command_who",
+    })
+    .add("s", {
+        help: _t("List canned response"),
+        func: (thread) => {
+            thread.showCannedResponse = true;
+        },
     });

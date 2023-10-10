@@ -2,6 +2,7 @@
 
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { cleanTerm } from "@mail/utils/common/format";
+import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 
@@ -17,7 +18,7 @@ export class SuggestionService {
     }
 
     getSupportedDelimiters(thread) {
-        return [["@"], ["#"]];
+        return [["@"], ["#"], [":"]];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {
@@ -95,6 +96,8 @@ export class SuggestionService {
             }
             case "#":
                 return this.searchChannelSuggestions(cleanedSearchTerm, thread, sort);
+            case ":":
+                return this.searchCannedResponseSuggestions(cleanTerm(term), sort);
         }
         return {
             type: undefined,
@@ -243,6 +246,47 @@ export class SuggestionService {
             type: "Thread",
             mainSuggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
             extraSuggestions: [],
+        };
+    }
+
+    searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
+        const cannedResponses = Object.values(this.store.CannedResponse.records)
+            .filter((cannedResponse) => {
+                return cleanTerm(cannedResponse.name).includes(cleanedSearchTerm);
+            })
+            .map(({ id, name, substitution }) => {
+                return {
+                    id,
+                    name,
+                    substitution: _t(substitution),
+                };
+            });
+        const sortFunc = (c1, c2) => {
+            const cleanedName1 = cleanTerm(c1.name);
+            const cleanedName2 = cleanTerm(c2.name);
+            if (
+                cleanedName1.startsWith(cleanedSearchTerm) &&
+                !cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return -1;
+            }
+            if (
+                !cleanedName1.startsWith(cleanedSearchTerm) &&
+                cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return 1;
+            }
+            if (cleanedName1 < cleanedName2) {
+                return -1;
+            }
+            if (cleanedName1 > cleanedName2) {
+                return 1;
+            }
+            return c1.id - c2.id;
+        };
+        return {
+            type: "CannedResponse",
+            mainSuggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
         };
     }
 }

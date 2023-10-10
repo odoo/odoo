@@ -38,17 +38,13 @@ export class MentionList extends Component {
                         delimiter: this.props.type === "partner" ? "@" : "#",
                         term: this.state.searchTerm,
                     });
-                    const suggestions = this.suggestionService.searchSuggestions(
+                    this.state.options = this.suggestionService.searchSuggestions(
                         {
                             delimiter: this.props.type === "partner" ? "@" : "#",
                             term: this.state.searchTerm,
                         },
                         { sort: true }
                     );
-                    this.state.options = [
-                        ...suggestions.mainSuggestions,
-                        ...suggestions.extraSuggestions,
-                    ];
                 });
             },
             () => [this.state.searchTerm]
