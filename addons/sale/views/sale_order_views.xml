@@ -24,7 +24,7 @@
         <field name="name">sale.order.calendar</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <calendar string="Sales Orders" create="0" mode="month" date_start="activity_date_deadline" color="state" event_limit="5" quick_add="False">
+            <calendar string="Sales Orders" create="0" mode="month" date_start="activity_date_deadline" color="state" event_limit="5" quick_create="0">
                 <field name="currency_id" invisible="1"/>
                 <field name="state" filters="1" invisible="1"/>
                 <field name="activity_ids" options="{'icon': 'fa fa-clock-o'}"/>

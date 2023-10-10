@@ -89,30 +89,30 @@ QUnit.test("hasEditDialog", (assert) => {
 });
 
 QUnit.test("quickCreate", (assert) => {
-    check(assert, "quick_add", "", "quickCreate", true);
-    check(assert, "quick_add", "true", "quickCreate", true);
-    check(assert, "quick_add", "True", "quickCreate", true);
-    check(assert, "quick_add", "1", "quickCreate", true);
-    check(assert, "quick_add", "false", "quickCreate", false);
-    check(assert, "quick_add", "False", "quickCreate", false);
-    check(assert, "quick_add", "0", "quickCreate", false);
-    check(assert, "quick_add", "12", "quickCreate", true);
+    check(assert, "quick_create", "", "quickCreate", true);
+    check(assert, "quick_create", "true", "quickCreate", true);
+    check(assert, "quick_create", "True", "quickCreate", true);
+    check(assert, "quick_create", "1", "quickCreate", true);
+    check(assert, "quick_create", "false", "quickCreate", false);
+    check(assert, "quick_create", "False", "quickCreate", false);
+    check(assert, "quick_create", "0", "quickCreate", false);
+    check(assert, "quick_create", "12", "quickCreate", true);
 });
 
 QUnit.test("quickCreateViewId", (assert) => {
     let arch = parseArch(
-        `<calendar date_start="start_date" quick_add="0" quick_create_view_id="12" />`
+        `<calendar date_start="start_date" quick_create="0" quick_create_view_id="12" />`
     );
     assert.strictEqual(arch.quickCreate, false);
     assert.strictEqual(arch.quickCreateViewId, null);
 
     arch = parseArch(
-        `<calendar date_start="start_date" quick_add="1" quick_create_view_id="12" />`
+        `<calendar date_start="start_date" quick_create="1" quick_create_view_id="12" />`
     );
     assert.strictEqual(arch.quickCreate, true);
     assert.strictEqual(arch.quickCreateViewId, 12);
 
-    arch = parseArch(`<calendar date_start="start_date" quick_add="1"/>`);
+    arch = parseArch(`<calendar date_start="start_date" quick_create="1"/>`);
     assert.strictEqual(arch.quickCreate, true);
     assert.strictEqual(arch.quickCreateViewId, null);
 });
