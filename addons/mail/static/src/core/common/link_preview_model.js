@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 export class LinkPreview extends Record {
     static id = "id";
@@ -55,6 +56,16 @@ export class LinkPreview extends Record {
 
     get isCard() {
         return !this.isImage && !this.isVideo;
+    }
+
+
+    get monthYear() {
+        const message = this.message ?? this._store.Message.get(this.message_id);
+        if (!message) {
+            return undefined;
+        }
+        const datetime = deserializeDateTime(message.create_date);
+        return `${datetime.monthLong}, ${datetime.year}`;
     }
 }
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.LinkAttachment">
+        <t t-foreach="this.props.links" t-as="links" t-key="links.id">
+            <div class="o-mail-LinkAttachment card rounded shadow-sm" >
+                <LinkPreview linkPreview="links" deletable="true" />
+                <div class="o-mail-LinkAttachment-Content">
+                    <a href="links.source_url" t-esc="links.source_url"></a>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>
