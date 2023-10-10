@@ -104,8 +104,6 @@ class PickingType(models.Model):
              " * Always: a backorder is automatically created for the remaining products\n"
              " * Never: remaining products are cancelled")
     show_picking_type = fields.Boolean(compute='_compute_show_picking_type')
-    show_reserved_sns = fields.Boolean('Show Reserved Lots/Serial numbers', compute='_compute_show_reserved_sns',
-        default=False, store=True, readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -153,11 +151,6 @@ class PickingType(models.Model):
                         'company_id': picking_type.env.company.id,
                     })
         return super(PickingType, self).write(vals)
-
-    @api.depends('use_existing_lots')
-    def _compute_show_reserved_sns(self):
-        for record in self:
-            record.show_reserved_sns = record.use_existing_lots and record.show_reserved_sns
 
     @api.depends('code')
     def _compute_hide_reservation_method(self):
