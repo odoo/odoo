@@ -102,7 +102,6 @@ export class Dropdown extends Component {
         }
         this.defaultDirection = direction;
         const positioningOptions = {
-            popper: "menuRef",
             position,
             onPositioned: (el, { direction }) => {
                 this.state.directionCaretClass = DIRECTION_CARET_CLASS[direction];
@@ -149,11 +148,19 @@ export class Dropdown extends Component {
             );
 
             // Position menu relatively to parent element
-            this.position = usePosition(() => this.rootRef.el.parentElement, positioningOptions);
+            this.position = usePosition(
+                "menuRef",
+                () => this.rootRef.el.parentElement,
+                positioningOptions
+            );
         } else {
             // Position menu relatively to inner toggler
             const togglerRef = useRef("togglerRef");
-            this.position = usePosition(() => togglerRef.el, positioningOptions);
+            this.position = usePosition(
+                "menuRef",
+                () => togglerRef.el,
+                positioningOptions
+            );
         }
 
         useEffect(

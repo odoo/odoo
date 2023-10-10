@@ -51,7 +51,7 @@ function getTestComponent(popperOptions = {}, target = document.createElement("d
 
     class TestComp extends Component {
         setup() {
-            usePosition(target, popperOptions);
+            usePosition("popper", () => target, popperOptions);
         }
     }
     TestComp.template = xml`<div id="popper" t-ref="popper" />`;
@@ -289,23 +289,6 @@ QUnit.test("popper is an inner element", async (assert) => {
     TestComp.template = xml`
         <div id="not-popper">
             <div id="popper" t-ref="popper"/>
-        </div>
-    `;
-    await mount(TestComp, container);
-});
-
-QUnit.test("can change the popper target name", async (assert) => {
-    assert.expect(2);
-    const TestComp = getTestComponent({
-        popper: "myRef",
-        onPositioned: (el) => {
-            assert.notOk(document.getElementById("not-popper") === el);
-            assert.ok(document.getElementById("popper") === el);
-        },
-    });
-    TestComp.template = xml`
-        <div id="not-popper">
-            <div id="popper" t-ref="myRef"/>
         </div>
     `;
     await mount(TestComp, container);
@@ -582,7 +565,7 @@ QUnit.test("popper as child of another", async (assert) => {
         `;
         setup() {
             const ref = useRef("ref");
-            usePosition(() => ref.el, { position: "left" });
+            usePosition("popper", () => ref.el, { position: "left" });
         }
     }
     const target = document.createElement("div");
@@ -591,9 +574,9 @@ QUnit.test("popper as child of another", async (assert) => {
     container.appendChild(target);
     class Parent extends Component {
         static components = { Child };
-        static template = /* xml */ xml`<div id="popper"><Child/></div>`;
+        static template = /* xml */ xml`<div id="popper" t-ref="popper"><Child/></div>`;
         setup() {
-            usePosition(target);
+            usePosition("popper", () => target);
         }
     }
 
