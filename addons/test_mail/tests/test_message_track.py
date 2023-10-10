@@ -236,7 +236,6 @@ class TestTracking(MailCommon):
                          'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id}
         self.env['mail.alias'].create({
             'alias_name': 'groups',
-            'alias_user_id': False,
             'alias_model_id': test_model.id,
             'alias_contact': 'everyone',
             'alias_defaults': custom_values})

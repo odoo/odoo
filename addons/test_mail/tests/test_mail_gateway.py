@@ -171,7 +171,6 @@ class TestMailgateway(MailCommon):
             'alias_contact': 'everyone',
             'alias_model_id': cls.mail_test_gateway_model.id,
             'alias_name': 'groups',
-            'alias_user_id': False,
         })
 
         # Set a first message on public group to test update and hierarchy
@@ -413,7 +412,6 @@ class TestMailgateway(MailCommon):
         self.env['mail.alias'].create({
             'alias_model_id': self.env['ir.model']._get_id(test_record._name),
             'alias_name': 'author-partner',
-            'alias_user_id': self.user_employee.id
         })
 
         test_record.message_subscribe((author_partner | self.user_employee.partner_id).ids)
@@ -519,47 +517,48 @@ class TestMailgateway(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models', 'odoo.sql_db')
     def test_message_process_alias_config_invalid_defaults(self):
-        """Sending a mail to a misconfigured alias must change its status to invalid + notify sender and responsible."""
+        """Sending a mail to a misconfigured alias must change its status to
+        invalid and notify sender and alias creator."""
         test_model_track = self.env['ir.model']._get('mail.test.track')
         container_custom = self.env['mail.test.container'].create({})
-        alias_valid = self.env['mail.alias'].create({
+        alias_valid = self.env['mail.alias'].with_user(self.user_admin).create({
             'alias_name': 'valid',
-            'alias_user_id': self.user_employee.id,
             'alias_model_id': test_model_track.id,
             'alias_contact': 'everyone',
             'alias_defaults': f"{{'container_id': {container_custom.id}}}",
         })
+        self.assertEqual(alias_valid.create_uid, self.user_admin)
 
         # Test that it works when the reference to container_id in alias default is not dangling.
         self.assertEqual(alias_valid.alias_status, 'not_tested')
-        with self.mock_mail_gateway(), patch('odoo.addons.mail.models.mail_alias.Alias._set_alias_invalid',
-                                             autospec=True) as _set_alias_invalid_mock:
+        with self.mock_mail_gateway(), patch('odoo.addons.mail.models.mail_alias.Alias._alias_bounce_incoming_email',
+                                             autospec=True) as _alias_bounce_incoming_email_mock:
             record = self.format_and_process(MAIL_TEMPLATE, self.email_from, f'valid@{self.alias_domain}', subject='Valid',
                                              target_model=test_model_track.model)
-        _set_alias_invalid_mock.assert_not_called()
+        _alias_bounce_incoming_email_mock.assert_not_called()
         self.assertNotSentEmail()
         self.assertEqual(record.container_id, container_custom)
         self.assertEqual(alias_valid.alias_status, 'valid')
 
         # Test with a dangling reference that must trigger bounce emails and set the alias status to invalid.
         container_custom.unlink()
-        with self.assertRaises(Exception), patch('odoo.addons.mail.models.mail_alias.Alias._set_alias_invalid',
-                                                 autospec=True) as _set_alias_invalid_mock:
+        with self.assertRaises(Exception), patch('odoo.addons.mail.models.mail_alias.Alias._alias_bounce_incoming_email',
+                                                 autospec=True) as _alias_bounce_incoming_email_mock:
             self.format_and_process(MAIL_TEMPLATE, self.email_from, f'valid@{self.alias_domain}', subject='Invalid',
                                     target_model=test_model_track.model)
 
         # method executed in another transaction, so we cannot test its result directly but just below
-        _set_alias_invalid_mock.assert_called_once()
+        _alias_bounce_incoming_email_mock.assert_called_once()
 
         # call notify_alias_invalid on the test transaction to validate its effect
-        alias, message, message_dict = _set_alias_invalid_mock.call_args.args
+        alias, message, message_dict = _alias_bounce_incoming_email_mock.call_args.args
         with self.mock_mail_gateway():
             alias = self.env['mail.alias'].browse(alias.id)  # load alias in test transaction
-            alias._set_alias_invalid(message, message_dict)
+            alias._alias_bounce_incoming_email(message, message_dict)
 
         self.assertEqual(alias_valid.alias_status, 'invalid')
         self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
-                             [alias_valid.alias_user_id.partner_id.email_formatted],
+                             [self.user_admin.email_formatted],
                              subject='Re: Invalid')
         # Not sent to self.email_from because a return path is present in MAIL_TEMPLATE
         self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
@@ -568,48 +567,33 @@ class TestMailgateway(MailCommon):
                              body=alias_valid._get_alias_invalid_body(message_dict))
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    @patch('odoo.addons.mail.models.mail_alias.Alias._set_alias_invalid')
-    def test_message_process_alias_defaults(self, _set_alias_invalid):
+    def test_message_process_alias_defaults(self):
         """ Test alias defaults and inner values """
         self.alias.write({
-            'alias_user_id': self.user_employee.id,
             'alias_defaults': "{'custom_field': 'defaults_custom'}"
         })
-
         self.assertEqual(self.alias.alias_status, 'not_tested')
 
-        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}', subject='Specific')
-
-        _set_alias_invalid.assert_not_called()
+        record = self.format_and_process(
+            MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
+            subject='Specific'
+        )
         self.assertEqual(self.alias.alias_status, 'valid')
         self.assertEqual(len(record), 1)
-        res = record.get_metadata()[0].get('create_uid') or [None]
-        self.assertEqual(res[0], self.user_employee.id)
         self.assertEqual(record.name, 'Specific')
         self.assertEqual(record.custom_field, 'defaults_custom')
 
         self.alias.write({'alias_defaults': '""'})
         self.assertEqual(self.alias.alias_status, 'not_tested', 'Updating alias_defaults must reset status')
-        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}', subject='Specific2')
 
-        _set_alias_invalid.assert_not_called()
+        record = self.format_and_process(
+            MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
+            subject='Specific2'
+        )
         self.assertEqual(len(record), 1)
-        res = record.get_metadata()[0].get('create_uid') or [None]
-        self.assertEqual(res[0], self.user_employee.id)
         self.assertEqual(record.name, 'Specific2')
         self.assertFalse(record.custom_field)
-
         self.assertEqual(self.alias.alias_status, 'valid')
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    def test_message_process_alias_user_id(self):
-        """ Test alias ownership """
-        self.alias.write({'alias_user_id': self.user_employee.id})
-
-        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}')
-        self.assertEqual(len(record), 1)
-        res = record.get_metadata()[0].get('create_uid') or [None]
-        self.assertEqual(res[0], self.user_employee.id)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_everyone(self):
@@ -825,7 +809,6 @@ class TestMailgateway(MailCommon):
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -852,7 +835,6 @@ class TestMailgateway(MailCommon):
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -882,7 +864,6 @@ class TestMailgateway(MailCommon):
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -908,7 +889,6 @@ class TestMailgateway(MailCommon):
         # test@.. will cause the creation of new mail.test
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -934,7 +914,6 @@ class TestMailgateway(MailCommon):
             'alias_contact': 'everyone',
             'alias_model_id': self.env['ir.model']._get_id('mail.test.container.mc'),
             'alias_name': 'test',
-            'alias_user_id': False,
         })
 
         test_domain = 'hello.com'
@@ -1460,7 +1439,6 @@ class TestMailgateway(MailCommon):
         """ Incoming email using references but with alias forward should not go into references destination """
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -1481,7 +1459,6 @@ class TestMailgateway(MailCommon):
         """ Incoming email using references but with alias forward on same model should be considered as a reply """
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
             'alias_contact': 'everyone',
         })
@@ -1501,7 +1478,6 @@ class TestMailgateway(MailCommon):
         """ Incoming email using references but with alias forward in CC should be considered as a repy (To > Cc) """
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -1724,7 +1700,6 @@ class TestMailgateway(MailCommon):
 
         alias = self.env['mail.alias'].create({
             'alias_name': 'test',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
@@ -1880,7 +1855,6 @@ class TestMailThreadCC(MailCommon):
             'alias_contact': 'everyone',
             'alias_model_id': cls.env['ir.model']._get('mail.test.cc').id,
             'alias_name': 'cc_record',
-            'alias_user_id': False,
         })
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
