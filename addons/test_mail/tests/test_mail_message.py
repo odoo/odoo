@@ -294,7 +294,6 @@ class TestMessageValues(MailCommon):
         test_record = self.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         alias = self.env['mail.alias'].create({
             'alias_name': 'MegaLias',
-            'alias_user_id': False,
             'alias_model_id': self.env['ir.model']._get('mail.test.simple').id,
             'alias_parent_model_id': self.env['ir.model']._get('mail.test.simple').id,
             'alias_parent_thread_id': test_record.id,

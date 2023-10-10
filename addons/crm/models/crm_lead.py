@@ -2016,8 +2016,8 @@ class Lead(models.Model):
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set an user as responsible. We prefer that
         # assignment is done automatically (scoring) or manually. Otherwise it
-        # would always be either root (gateway user) either alias owner (through
-        # alias_user_id). It also allows to exclude portal / public users.
+        # would always be root (gateway user). It also allows to exclude portal
+        # and public users.
         self = self.with_context(default_user_id=False)
 
         if custom_values is None:

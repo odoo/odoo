@@ -38,7 +38,6 @@
                             <field name="alias_force_thread_id"/>
                             <field name="alias_defaults"/>
                             <field name="alias_contact"/>
-                            <field name="alias_user_id"/>
                             <field name="alias_parent_model_id"/>
                             <field name="alias_parent_thread_id"/>
                         </group>
@@ -58,7 +57,6 @@
                     <field name="alias_name"/>
                     <field name="alias_model_id"/>
                     <field name="alias_force_thread_id" optional="hide"/>
-                    <field name="alias_user_id"/>
                     <field name="alias_parent_model_id"/>
                     <field name="alias_parent_thread_id" optional="hide"/>
                     <field name="alias_defaults" optional="hide"/>
@@ -85,14 +83,15 @@
                 <search string="Search Alias">
                     <field name="alias_name"/>
                     <field name="alias_model_id"/>
+                    <field name="create_uid"/>
                     <field name="alias_force_thread_id"/>
                     <field name="alias_parent_model_id"/>
                     <field name="alias_parent_thread_id"/>
                     <separator/>
                     <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Owner" name="groupby_user_id"
-                                context="{'group_by': 'alias_user_id'}"/>
+                        <filter string="Creator" name="groupby_create_uid"
+                                context="{'group_by': 'create_uid'}"/>
                         <filter string="Document Model" name="groupby_alias_model_id"
                                 context="{'group_by': 'alias_model_id'}"/>
                         <filter string="Container Model" name="groupby_alias_model_id"

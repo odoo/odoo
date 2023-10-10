@@ -47,11 +47,6 @@ class Alias(models.Model):
                                       # hack to only allow selecting mail_thread models (we might
                                       # (have a few false positives, though)
                                       domain="[('field_id.name', '=', 'message_ids')]")
-    alias_user_id = fields.Many2one('res.users', 'Owner',
-                                    help="The owner of records created upon receiving emails on this alias. "
-                                         "If this field is not set the system will attempt to find the right owner "
-                                         "based on the sender (From) address, or will use the Administrator account "
-                                         "if no system user is found for that address.")
     alias_defaults = fields.Text('Default Values', required=True, default='{}',
                                  help="A Python dictionary that will be evaluated to provide "
                                       "default values when creating new records for this alias.")
@@ -306,7 +301,35 @@ class Alias(models.Model):
     # MAIL GATEWAY
     # ------------------------------------------------------------
 
+    def _get_alias_bounced_body(self, message_dict):
+        """Get the body of the email return in case of bounced email when the
+        alias does not accept incoming email e.g. contact is not allowed.
+
+        :param dict message_dict: dictionary holding parsed message variables
+
+        :return: HTML to use as email body
+        """
+        lang_author = False
+        if message_dict.get('author_id'):
+            try:
+                lang_author = self.env['res.partner'].browse(message_dict['author_id']).lang
+            except Exception:
+                pass
+
+        if lang_author:
+            self = self.with_context(lang=lang_author)
+
+        if not is_html_empty(self.alias_bounced_content):
+            body = self.alias_bounced_content
+        else:
+            body = self._get_alias_bounced_body_fallback(message_dict)
+        return self.env['ir.qweb']._render('mail.mail_bounce_alias_security', {
+            'body': body,
+            'message': message_dict
+        }, minimal_qcontext=True)
+
     def _get_alias_bounced_body_fallback(self, message_dict):
+        """ Default body of bounced emails. See '_get_alias_bounced_body' """
         contact_description = self._get_alias_contact_description()
         default_email = self.env.company.partner_id.email_formatted if self.env.company.partner_id.email else self.env.company.name
         content = Markup(
@@ -331,9 +354,12 @@ class Alias(models.Model):
         return _('some specific addresses')
 
     def _get_alias_invalid_body(self, message_dict):
-        """Get the body of the bounced email returned when the alias is misconfigured (ex.: error in alias_defaults).
+        """Get the body of the bounced email returned when the alias is incorrectly
+        configured e.g. error in alias_defaults.
 
-        :param message_dict: dictionary of mail values
+        :param dict message_dict: dictionary holding parsed message variables
+
+        :return: HTML to use as email body
         """
         content = Markup(
             _("""The message below could not be accepted by the address %(alias_display_name)s.
@@ -352,44 +378,29 @@ Please try again later or contact %(company_name)s instead."""
             'message': message_dict
         }, minimal_qcontext=True)
 
-    def _get_alias_bounced_body(self, message_dict):
-        """Get the body of the email return in case of bounced email.
-
-        :param message_dict: dictionary of mail values
-        """
-        lang_author = False
-        if message_dict.get('author_id'):
-            try:
-                lang_author = self.env['res.partner'].browse(message_dict['author_id']).lang
-            except:
-                pass
-
-        if lang_author:
-            self = self.with_context(lang=lang_author)
-
-        if not is_html_empty(self.alias_bounced_content):
-            body = self.alias_bounced_content
-        else:
-            body = self._get_alias_bounced_body_fallback(message_dict)
-        return self.env['ir.qweb']._render('mail.mail_bounce_alias_security', {
-            'body': body,
-            'message': message_dict
-        }, minimal_qcontext=True)
-
-    def _set_alias_invalid(self, message, message_dict):
+    def _alias_bounce_incoming_email(self, message, message_dict, set_invalid=True):
         """Set alias status to invalid and create bounce message to the sender
         and the alias responsible.
 
         This method must be called when a message received on the alias has
         caused an error due to the mis-configuration of the alias.
 
-        :param EmailMessage message: email message that has caused the error
-        :param dict message_dict: dictionary of mail values
+        :param EmailMessage message: email message that is invalid and is about
+          to bounce;
+        :param dict message_dict: dictionary holding parsed message variables
+        :param bool set_invalid: set alias as invalid, to be done notably if
+          bounce is considered as coming from a configuration error instead of
+          being rejected due to alias rules;
         """
         self.ensure_one()
-        self.alias_status = 'invalid'
-        body = self._get_alias_invalid_body(message_dict)
-        self.env['mail.thread']._routing_create_bounce_email(message_dict['email_from'], body, message,
-                                                             references=message_dict['message_id'],
-                                                             # add the alias responsible as recipient if set
-                                                             recipient_ids=self.alias_user_id.partner_id.ids)
+        if set_invalid:
+            self.alias_status = 'invalid'
+            body = self._get_alias_invalid_body(message_dict)
+        else:
+            body = self._get_alias_bounced_body(message_dict)
+        self.env['mail.thread']._routing_create_bounce_email(
+            message_dict['email_from'], body, message,
+            references=message_dict['message_id'],
+            # add the alias creator as recipient if set
+            recipient_ids=self.create_uid.partner_id.ids if self.create_uid.active else [],
+        )
