@@ -12,6 +12,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { LinkPreview } from "@mail/core/common/link_preview";
 
 import {
     Component,
@@ -53,6 +54,7 @@ export class Chatter extends Component {
         FollowerList,
         SuggestedRecipientsList,
         SearchMessagesPanel,
+        LinkPreview,
     };
     static props = [
         "close?",
@@ -92,6 +94,7 @@ export class Chatter extends Component {
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
         this.activityService = useState(useService("mail.activity"));
+        this.attachmentUploadService = useService("mail.attachment_upload");
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
@@ -106,6 +109,11 @@ export class Chatter extends Component {
             /** @type {import("models").Thread} */
             thread: undefined,
             isSearchOpen: false,
+            current: "media",
+            media: undefined,
+            link: undefined,
+            file: undefined,
+            attachmentLength: undefined,
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
@@ -189,18 +197,6 @@ export class Chatter extends Component {
         );
         useEffect(
             () => {
-                if (
-                    this.state.thread &&
-                    !["new", "loading"].includes(this.state.thread.status) &&
-                    this.state.scrollToAttachments > 0
-                ) {
-                    this.attachmentBox.el.scrollIntoView({ block: "center" });
-                }
-            },
-            () => [this.state.thread?.status, this.state.scrollToAttachments]
-        );
-        useEffect(
-            () => {
                 if (!this.state.thread) {
                     return;
                 }
@@ -216,6 +212,28 @@ export class Chatter extends Component {
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             },
             () => [this.state.thread, this.state.thread?.isLoadingAttachments]
+        );
+        useEffect(
+            () => {
+                if (
+                    this.state.thread &&
+                    !["new", "loading"].includes(this.state.thread.status) &&
+                    this.state.scrollToAttachments > 0
+                ) {
+                    this.attachmentBox.el.scrollIntoView({ block: "center" });
+                }
+            },
+            () => [this.state.thread?.status, this.state.scrollToAttachments]
+        );
+        useEffect(
+            () => {
+                if (!this.state.thread) {
+                    return;
+                } else {
+                    this.state.attachmentLength = this.attachmentLength();
+                }
+            },
+            () => []
         );
     }
 
@@ -275,6 +293,7 @@ export class Chatter extends Component {
         threadId = this.props.threadId,
         requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
     ) {
+        this.attachmentLength();
         const { threadModel } = this.props;
         this.state.thread = this.threadService.getThread(threadModel, threadId);
         this.scrollPosition.model = this.state.thread?.scrollPosition;
@@ -415,7 +434,7 @@ export class Chatter extends Component {
     }
 
     onClickAddAttachments() {
-        if (this.attachments.length === 0) {
+        if (this.total === 0) {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
@@ -452,5 +471,74 @@ export class Chatter extends Component {
             return this.recipientsPopover.close();
         }
         this.recipientsPopover.open(ev.target, { thread: this.state.thread });
+    }
+
+    getAttachment(type) {
+        let preparedAttachment;
+        switch (type) {
+            case "media":
+                preparedAttachment = this.state.thread.attachments.filter(
+                    (attachment) => attachment.isMedia
+                );
+                this.state.attachmentLength.media = preparedAttachment.length;
+                return preparedAttachment ?? [];
+
+            case "link":
+                preparedAttachment = this.state.thread.messages
+                    .map((message) =>
+                        message.linkPreviews && message.linkPreviews.length > 0
+                            ? message.linkPreviews[0]
+                            : null
+                    )
+                    .filter((linkPreview) => linkPreview !== null);
+                this.state.attachmentLength.link = preparedAttachment.length;
+                return preparedAttachment;
+
+            case "file":
+                preparedAttachment = this.state.thread.attachments.filter(
+                    (attachment) => !attachment.isMedia
+                );
+                this.state.attachmentLength.file = preparedAttachment.length;
+                return preparedAttachment ?? [];
+
+            default:
+                return;
+        }
+    }
+
+    handleTabSelection = (ev) => {
+        if (ev.target.dataset.tab !== this.state.current) {
+            this.state.current = ev.target.dataset.tab;
+        }
+        ev.target.classList.toggle("active", true);
+    };
+
+    get total() {
+        const totalLength =
+            this.state.thread?.attachments.filter((attachment) => attachment.isMedia).length +
+            this.state.thread?.messages.reduce(
+                (count, message) =>
+                    count + (message.linkPreviews && message.linkPreviews.length > 0 ? 1 : 0),
+                0
+            ) +
+            this.state.thread?.attachments.filter((attachment) => !attachment.isMedia).length;
+        return totalLength;
+    }
+
+    attachmentLength() {
+        return {
+            media:
+                this.state.thread?.attachments.filter((attachment) => attachment.isMedia).length ||
+                0,
+            link:
+                this.state.thread?.messages.reduce(
+                    (count, message) =>
+                        count + (message.linkPreviews && message.linkPreviews.length > 0 ? 1 : 0),
+                    0
+                ) || 0,
+            file:
+                this.state.thread?.attachments.filter((attachment) => !attachment.isMedia).lenght ||
+                0,
+        };
     }
 }

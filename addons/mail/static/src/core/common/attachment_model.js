@@ -146,6 +146,10 @@ export class Attachment extends Record {
         );
     }
 
+    get isMedia() {
+        return this.isImage || this.isVideo || this.isVoice;
+    }
+
     get defaultSource() {
         const route = url(this.urlRoute, this.urlQueryParams);
         const encodedRoute = encodeURIComponent(route);
