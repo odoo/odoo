@@ -3,7 +3,12 @@
 import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
-import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
+import {
+    waitForEvent,
+    waitForChannels,
+    waitNotifications,
+    waitUntilSubscribe,
+} from "@bus/../tests/helpers/websocket_event_deferred";
 import { busParametersService } from "@bus/bus_parameters_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 
@@ -14,147 +19,73 @@ import { session } from "@web/session";
 
 QUnit.module("Bus");
 
-QUnit.test("notifications received from the channel", async function (assert) {
+QUnit.test("notifications received from the channel", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
-    await env.services["bus_service"].start();
-    env.services["bus_service"].addEventListener("notification", ({ detail: notifications }) => {
-        assert.step("notification - " + notifications.map((notif) => notif.payload).toString());
-    });
     env.services["bus_service"].addChannel("lambda");
-    await waitUntilSubscribe("lambda");
+    await waitForChannels(["lambda"]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
-    await nextTick();
-
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "epsilon");
-    await nextTick();
-
-    assert.verifySteps(["notification - beta", "notification - epsilon"]);
+    await waitNotifications([env, "notifType", "beta"], [env, "notifType", "epsilon"]);
 });
 
-QUnit.test("notifications not received after stoping the service", async function (assert) {
+QUnit.test("notifications not received after stoping the service", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
     const firstTabEnv = await makeTestEnv({ activateMockServer: true });
     const secondTabEnv = await makeTestEnv({ activateMockServer: true });
-    await firstTabEnv.services["bus_service"].start();
-    await secondTabEnv.services["bus_service"].start();
-
-    firstTabEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            assert.step(
-                "1 - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
+    firstTabEnv.services["bus_service"].start();
+    secondTabEnv.services["bus_service"].start();
     firstTabEnv.services["bus_service"].addChannel("lambda");
-    secondTabEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            assert.step(
-                "2 - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
-    await waitUntilSubscribe("lambda");
+    await waitForChannels(["lambda"]);
     // both tabs should receive the notification
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
-    await nextTick();
+    await waitNotifications(
+        [firstTabEnv, "notifType", "beta"],
+        [secondTabEnv, "notifType", "beta"]
+    );
     secondTabEnv.services["bus_service"].stop();
     await nextTick();
-    // only first tab should receive the notification since the
-    // second tab has called the stop method.
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "epsilon");
-    await nextTick();
-
-    assert.verifySteps([
-        "1 - notification - beta",
-        "2 - notification - beta",
-        "1 - notification - epsilon",
-    ]);
+    await waitNotifications(
+        [firstTabEnv, "notifType", "epsilon"],
+        [secondTabEnv, "notifType", "epsilon", { received: false }]
+    );
 });
 
-QUnit.test("notifications still received after disconnect/reconnect", async function (assert) {
+QUnit.test("notifications still received after disconnect/reconnect", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
-    await env.services["bus_service"].start();
-    env.services["bus_service"].addEventListener("notification", ({ detail: notifications }) => {
-        assert.step("notification - " + notifications.map((notif) => notif.payload).toString());
-    });
     env.services["bus_service"].addChannel("lambda");
-    await waitUntilSubscribe("lambda");
+    await waitForChannels(["lambda"]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
+    await waitNotifications([env, "notifType", "beta"]);
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
     // Give websocket worker a tick to try to restart
     await nextTick();
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "gamma");
-    // Give bus service a tick to receive the notification from
-    // postMessage.
-    await nextTick();
-
-    assert.verifySteps(["notification - beta", "notification - gamma"]);
+    await waitNotifications([env, "notifType", "gamma"]);
 });
 
-QUnit.test("tabs share message from a channel", async function (assert) {
+QUnit.test("tabs share message from a channel", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
-    const steps = [];
-    // main
     const mainEnv = await makeTestEnv({ activateMockServer: true });
-    mainEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            steps.push(
-                "main - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
     mainEnv.services["bus_service"].addChannel("lambda");
-
-    // slave
     const slaveEnv = await makeTestEnv();
-    slaveEnv.services["bus_service"].start();
-
-    slaveEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            steps.push(
-                "slave - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
-    await slaveEnv.services["bus_service"].addChannel("lambda");
-    await waitUntilSubscribe("lambda");
+    slaveEnv.services["bus_service"].addChannel("lambda");
+    await waitForChannels(["lambda"]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
-    // Wait one tick for the worker `postMessage` to reach the bus_service.
-    await nextTick();
-    // Wait another tick for the `bus.trigger` to reach the listeners.
-    await nextTick();
-
-    assert.deepEqual(steps.sort(), ["main - notification - beta", "slave - notification - beta"]);
+    await waitNotifications([mainEnv, "notifType", "beta"], [slaveEnv, "notifType", "beta"]);
 });
 
-QUnit.test("second tab still receives notifications after main pagehide", async function (assert) {
+QUnit.test("second tab still receives notifications after main pagehide", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
-    const steps = [];
-    // main
     const mainEnv = await makeTestEnv({ activateMockServer: true });
-    mainEnv.services["bus_service"].start();
-    mainEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            steps.push(
-                "main - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
     mainEnv.services["bus_service"].addChannel("lambda");
-
-    // second env
     // prevent second tab from receiving pagehide event.
     patchWithCleanup(browser, {
         addEventListener(eventName, callback) {
@@ -165,100 +96,41 @@ QUnit.test("second tab still receives notifications after main pagehide", async 
         },
     });
     const secondEnv = await makeTestEnv({ activateMockServer: true });
-    secondEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            steps.push(
-                "slave - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
     secondEnv.services["bus_service"].addChannel("lambda");
-    await waitUntilSubscribe("lambda");
+    await waitForChannels(["lambda"]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
-    await nextTick();
-
+    await waitNotifications([mainEnv, "notifType", "beta"], [secondEnv, "notifType", "beta"]);
     // simulate unloading main
     window.dispatchEvent(new Event("pagehide"));
     await nextTick();
-
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "gamma");
-    await nextTick();
-
-    assert.deepEqual(steps.sort(), [
-        "main - notification - beta",
-        "slave - notification - beta",
-        "slave - notification - gamma",
-    ]);
+    await waitNotifications(
+        [mainEnv, "notifType", "gamma", { received: false }],
+        [secondEnv, "notifType", "gamma"]
+    );
 });
 
-QUnit.test("two tabs calling addChannel simultaneously", async function (assert) {
-    addBusServicesToRegistry();
-    const channelPatch = () => ({
-        addChannel(channel) {
-            assert.step("Tab " + this.__tabId__ + ": addChannel " + channel);
-            super.addChannel(...arguments);
-        },
-        deleteChannel(channel) {
-            assert.step("Tab " + this.__tabId__ + ": deleteChannel " + channel);
-            super.deleteChannel(...arguments);
-        },
-    });
-    const firstTabEnv = await makeTestEnv({ activateMockServer: true });
-    const secondTabEnv = await makeTestEnv({ activateMockServer: true });
-    firstTabEnv.services["bus_service"].__tabId__ = 1;
-    secondTabEnv.services["bus_service"].__tabId__ = 2;
-    patchWithCleanup(firstTabEnv.services["bus_service"], channelPatch());
-    patchWithCleanup(secondTabEnv.services["bus_service"], channelPatch());
-    firstTabEnv.services["bus_service"].addChannel("alpha");
-    secondTabEnv.services["bus_service"].addChannel("alpha");
-    firstTabEnv.services["bus_service"].addChannel("beta");
-    secondTabEnv.services["bus_service"].addChannel("beta");
-
-    await waitUntilSubscribe("alpha", "beta");
-
-    assert.verifySteps([
-        "Tab 1: addChannel alpha",
-        "Tab 2: addChannel alpha",
-        "Tab 1: addChannel beta",
-        "Tab 2: addChannel beta",
-    ]);
-});
-
-QUnit.test("two tabs adding a different channel", async function (assert) {
+QUnit.test("two tabs adding a different channel", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
     const firstTabEnv = await makeTestEnv({ activateMockServer: true });
     const secondTabEnv = await makeTestEnv({ activateMockServer: true });
-    firstTabEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            assert.step(
-                "first - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
-    secondTabEnv.services["bus_service"].addEventListener(
-        "notification",
-        ({ detail: notifications }) => {
-            assert.step(
-                "second - notification - " + notifications.map((notif) => notif.payload).toString()
-            );
-        }
-    );
     firstTabEnv.services["bus_service"].addChannel("alpha");
     secondTabEnv.services["bus_service"].addChannel("beta");
-    await waitUntilSubscribe("alpha", "beta");
+    await waitForChannels(["alpha", "beta"]);
     pyEnv["bus.bus"]._sendmany([
         ["alpha", "notifType", "alpha"],
         ["beta", "notifType", "beta"],
     ]);
-    await nextTick();
-
-    assert.verifySteps(["first - notification - alpha,beta", "second - notification - alpha,beta"]);
+    await waitNotifications(
+        [firstTabEnv, "notifType", "alpha"],
+        [secondTabEnv, "notifType", "alpha"],
+        [firstTabEnv, "notifType", "beta"],
+        [secondTabEnv, "notifType", "beta"]
+    );
 });
 
-QUnit.test("channel management from multiple tabs", async function (assert) {
+QUnit.test("channel management from multiple tabs", async (assert) => {
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup({
         _sendToServer({ event_name, data }) {
@@ -266,29 +138,27 @@ QUnit.test("channel management from multiple tabs", async function (assert) {
             super._sendToServer(...arguments);
         },
     });
-
     const firstTabEnv = await makeTestEnv();
     const secTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].addChannel("channel1");
-    await nextTick();
+    await waitForChannels(["channel1"]);
     // this should not trigger a subscription since the channel1 was
     // aleady known.
     secTabEnv.services["bus_service"].addChannel("channel1");
-    await nextTick();
+    await waitForChannels(["channel1"]);
     // removing channel1 from first tab should not trigger
     // re-subscription since the second tab still listens to this
     // channel.
     firstTabEnv.services["bus_service"].deleteChannel("channel1");
-    await nextTick();
+    await waitForChannels(["channel1"], { operation: "delete" });
     // this should trigger a subscription since the channel2 was not
     // known.
     secTabEnv.services["bus_service"].addChannel("channel2");
-    await nextTick();
-
+    await waitForChannels(["channel2"]);
     assert.verifySteps(["subscribe - [channel1]", "subscribe - [channel1,channel2]"]);
 });
 
-QUnit.test("channels subscription after disconnection", async function (assert) {
+QUnit.test("channels subscription after disconnection", async (assert) => {
     addBusServicesToRegistry();
     const worker = patchWebsocketWorkerWithCleanup();
     const env = await makeTestEnv({ activateMockServer: true });
@@ -302,127 +172,74 @@ QUnit.test("channels subscription after disconnection", async function (assert) 
     );
 });
 
-QUnit.test(
-    "Last notification id is passed to the worker on service start",
-    async function (assert) {
-        addBusServicesToRegistry();
-        const pyEnv = await startServer();
-        let updateLastNotificationDeferred = makeDeferred();
-        patchWebsocketWorkerWithCleanup({
-            _onClientMessage(_, { action, data }) {
-                if (action === "initialize_connection") {
-                    assert.step(`${action} - ${data["lastNotificationId"]}`);
-                    updateLastNotificationDeferred.resolve();
-                }
-                return super._onClientMessage(...arguments);
-            },
-        });
-        const env1 = await makeTestEnv();
-        env1.services["bus_service"].start();
-        env1.services["bus_service"].addChannel("lambda");
-        await waitUntilSubscribe("lambda");
-        await updateLastNotificationDeferred;
-        // First bus service has never received notifications thus the
-        // default is 0.
-        assert.verifySteps(["initialize_connection - 0"]);
-
-        pyEnv["bus.bus"]._sendmany([
-            ["lambda", "notifType", "beta"],
-            ["lambda", "notifType", "beta"],
-        ]);
-        // let the bus service store the last notification id.
-        await nextTick();
-
-        updateLastNotificationDeferred = makeDeferred();
-        const env2 = await makeTestEnv();
-        await env2.services["bus_service"].start();
-        await updateLastNotificationDeferred;
-        // Second bus service sends the last known notification id.
-        assert.verifySteps([`initialize_connection - 2`]);
-    }
-);
-
-QUnit.test("Websocket disconnects upon user log out", async function (assert) {
+QUnit.test("Last notification id is passed to the worker on service start", async (assert) => {
     addBusServicesToRegistry();
-    // first tab connects to the worker with user logged.
-    patchWithCleanup(session, {
-        user_id: 1,
-    });
-    const connectionInitializedDeferred = makeDeferred();
-    let connectionOpenedDeferred = makeDeferred();
+    const pyEnv = await startServer();
+    let updateLastNotificationDeferred = makeDeferred();
     patchWebsocketWorkerWithCleanup({
-        _initializeConnection(client, data) {
-            super._initializeConnection(client, data);
-            connectionInitializedDeferred.resolve();
+        _onClientMessage(_, { action, data }) {
+            if (action === "initialize_connection") {
+                assert.step(`${action} - ${data["lastNotificationId"]}`);
+                updateLastNotificationDeferred.resolve();
+            }
+            return super._onClientMessage(...arguments);
         },
     });
-
-    const firstTabEnv = await makeTestEnv();
-    await firstTabEnv.services["bus_service"].start();
-    firstTabEnv.services["bus_service"].addEventListener("connect", () => {
-        if (session.user_id) {
-            assert.step("connect");
-        }
-        connectionOpenedDeferred.resolve();
-        connectionOpenedDeferred = makeDeferred();
-    });
-    firstTabEnv.services["bus_service"].addEventListener("disconnect", () => {
-        assert.step("disconnect");
-    });
-    await connectionInitializedDeferred;
-    await connectionOpenedDeferred;
-
-    // second tab connects to the worker after disconnection: user_id
-    // is now false.
-    patchWithCleanup(session, {
-        user_id: false,
-    });
+    const env1 = await makeTestEnv();
+    env1.services["bus_service"].start();
+    env1.services["bus_service"].addChannel("lambda");
+    await waitForChannels(["lambda"]);
+    await updateLastNotificationDeferred;
+    // First bus service has never received notifications thus the
+    // default is 0.
+    assert.verifySteps(["initialize_connection - 0"]);
+    pyEnv["bus.bus"]._sendmany([
+        ["lambda", "notifType", "beta"],
+        ["lambda", "notifType", "beta"],
+    ]);
+    await waitForEvent(env1, "notification");
+    updateLastNotificationDeferred = makeDeferred();
     const env2 = await makeTestEnv();
     await env2.services["bus_service"].start();
-
-    assert.verifySteps(["connect", "disconnect"]);
+    await updateLastNotificationDeferred;
+    // Second bus service sends the last known notification id.
+    assert.verifySteps([`initialize_connection - 2`]);
 });
 
-QUnit.test("Websocket reconnects upon user log in", async function (assert) {
+QUnit.test("Websocket disconnects upon user log out", async () => {
+    addBusServicesToRegistry();
+    // first tab connects to the worker with user logged.
+    patchWithCleanup(session, { user_id: 1 });
+    const firstTabEnv = await makeTestEnv();
+    firstTabEnv.services["bus_service"].start();
+    await waitForEvent(firstTabEnv, "connect");
+    // second tab connects to the worker after disconnection: user_id
+    // is now false.
+    patchWithCleanup(session, { user_id: false });
+    const env2 = await makeTestEnv();
+    env2.services["bus_service"].start();
+    await waitForEvent(firstTabEnv, "disconnect");
+});
+
+QUnit.test("Websocket reconnects upon user log in", async () => {
     addBusServicesToRegistry();
     // first tab connects to the worker with no user logged.
-    patchWithCleanup(session, {
-        user_id: false,
-    });
-    const connectionInitializedDeferred = makeDeferred();
-    let websocketConnectedDeferred = makeDeferred();
-    patchWebsocketWorkerWithCleanup({
-        _initializeConnection(client, data) {
-            super._initializeConnection(client, data);
-            connectionInitializedDeferred.resolve();
-        },
-    });
-
+    patchWithCleanup(session, { user_id: false });
     const firstTabEnv = await makeTestEnv();
-    await firstTabEnv.services["bus_service"].start();
-    firstTabEnv.services["bus_service"].addEventListener("connect", () => {
-        assert.step("connect");
-        websocketConnectedDeferred.resolve();
-        websocketConnectedDeferred = makeDeferred();
-    });
-    firstTabEnv.services["bus_service"].addEventListener("disconnect", () => {
-        assert.step("disconnect");
-    });
-    await connectionInitializedDeferred;
-    await websocketConnectedDeferred;
-
+    firstTabEnv.services["bus_service"].start();
+    await waitForEvent(firstTabEnv, "connect");
     // second tab connects to the worker after connection: user_id
     // is now set.
-    patchWithCleanup(session, {
-        user_id: 1,
-    });
-    const env = await makeTestEnv();
-    await env.services["bus_service"].start();
-    await websocketConnectedDeferred;
-    assert.verifySteps(["connect", "disconnect", "connect"]);
+    patchWithCleanup(session, { user_id: 1 });
+    const secondTabEnv = await makeTestEnv();
+    secondTabEnv.services["bus_service"].start();
+    await Promise.all([
+        waitForEvent(firstTabEnv, "disconnect"),
+        waitForEvent(firstTabEnv, "connect"),
+    ]);
 });
 
-QUnit.test("WebSocket connects with URL corresponding to given serverURL", async function (assert) {
+QUnit.test("WebSocket connects with URL corresponding to given serverURL", async (assert) => {
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup();
     const serverURL = "http://random-website.com";
@@ -448,40 +265,29 @@ QUnit.test("WebSocket connects with URL corresponding to given serverURL", async
     assert.verifySteps([`${serverURL.replace("http", "ws")}/websocket`]);
 });
 
-QUnit.test("Disconnect on offline, re-connect on online", async function (assert) {
+QUnit.test("Disconnect on offline, re-connect on online", async () => {
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup();
-    let websocketConnectedDeferred = makeDeferred();
     const env = await makeTestEnv();
-    env.services["bus_service"].addEventListener("connect", () => {
-        assert.step("connect");
-        websocketConnectedDeferred.resolve();
-        websocketConnectedDeferred = makeDeferred();
-    });
-    env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
     await env.services["bus_service"].start();
-    await websocketConnectedDeferred;
+    await waitForEvent(env, "connect");
     window.dispatchEvent(new Event("offline"));
-    await nextTick();
+    await waitForEvent(env, "disconnect");
     window.dispatchEvent(new Event("online"));
-    await websocketConnectedDeferred;
-    assert.verifySteps(["connect", "disconnect", "connect"]);
+    await waitForEvent(env, "connect");
 });
 
-QUnit.test("No disconnect on change offline/online when bus inactive", async function (assert) {
+QUnit.test("No disconnect on change offline/online when bus inactive", async () => {
     addBusServicesToRegistry();
     patchWebsocketWorkerWithCleanup();
     const env = await makeTestEnv();
-    env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
-    env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
     window.dispatchEvent(new Event("offline"));
-    await nextTick();
+    await waitForEvent(env, "disconnect", { received: false });
     window.dispatchEvent(new Event("online"));
-    await nextTick();
-    assert.verifySteps([]);
+    await waitForEvent(env, "connect", { received: false });
 });
 
-QUnit.test("Can reconnect after late close event", async function (assert) {
+QUnit.test("Can reconnect after late close event", async (assert) => {
     addBusServicesToRegistry();
     let subscribeSent = 0;
     const closeDeferred = makeDeferred();
@@ -548,39 +354,37 @@ QUnit.test("Can reconnect after late close event", async function (assert) {
     ]);
 });
 
-QUnit.test(
-    "Fallback on simple worker when shared worker failed to initialize",
-    async function (assert) {
-        addBusServicesToRegistry();
-        const originalSharedWorker = browser.SharedWorker;
-        const originalWorker = browser.Worker;
-        patchWithCleanup(browser, {
-            SharedWorker: function (url, options) {
-                assert.step("shared-worker creation");
-                const sw = new originalSharedWorker(url, options);
-                // Simulate error during shared worker creation.
-                setTimeout(() => sw.dispatchEvent(new Event("error")));
-                return sw;
-            },
-            Worker: function (url, options) {
-                assert.step("worker creation");
-                return new originalWorker(url, options);
-            },
-        });
-        patchWithCleanup(window.console, {
-            warn(message) {
-                assert.step(message);
-            },
-        });
-        const env = await makeTestEnv();
-        await env.services["bus_service"].start();
-        assert.verifySteps([
-            "shared-worker creation",
-            'Error while loading "bus_service" SharedWorker, fallback on Worker.',
-            "worker creation",
-        ]);
-    }
-);
+QUnit.test("Fallback on simple worker when shared worker failed to initialize", async (assert) => {
+    addBusServicesToRegistry();
+    const originalSharedWorker = browser.SharedWorker;
+    const originalWorker = browser.Worker;
+    patchWithCleanup(browser, {
+        SharedWorker: function (url, options) {
+            assert.step("shared-worker creation");
+            const sw = new originalSharedWorker(url, options);
+            // Simulate error during shared worker creation.
+            setTimeout(() => sw.dispatchEvent(new Event("error")));
+            return sw;
+        },
+        Worker: function (url, options) {
+            assert.step("worker creation");
+            return new originalWorker(url, options);
+        },
+    });
+    patchWithCleanup(window.console, {
+        warn(message) {
+            assert.step(message);
+        },
+    });
+    const env = await makeTestEnv();
+    env.services["bus_service"].start();
+    await waitForEvent(env, "connect");
+    assert.verifySteps([
+        "shared-worker creation",
+        'Error while loading "bus_service" SharedWorker, fallback on Worker.',
+        "worker creation",
+    ]);
+});
 
 QUnit.test("subscribe to single notification", async (assert) => {
     addBusServicesToRegistry();

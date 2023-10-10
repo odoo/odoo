@@ -2,8 +2,8 @@
 
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
 import { busParametersService } from "@bus/bus_parameters_service";
-import { multiTabService } from "@bus/multi_tab_service";
 import { busService } from "@bus/services/bus_service";
+import { multiTabService } from "@bus/multi_tab_service";
 import { presenceService } from "@bus/services/presence_service";
 
 import { registry } from "@web/core/registry";
