@@ -89,6 +89,8 @@ class SpreadsheetMixin(models.AbstractModel):
         return stream.getvalue()
 
     def _get_file_content(self, file_path):
+        if (file_path.startswith('data:image/png;base64')):
+            return base64.b64decode(file_path[len('data:image/png;base64,'):].encode('utf-8'))
         _, args = self.env['ir.http']._match(file_path)
         file_record = self.env['ir.binary']._find_record(
             xmlid=args.get('xmlid'),
