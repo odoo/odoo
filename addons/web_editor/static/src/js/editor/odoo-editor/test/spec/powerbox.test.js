@@ -130,10 +130,12 @@ describe('Powerbox', () => {
                 ],
                 editable,
             });
+            setSelection(editable, 0);
             powerbox.open();
             window.chai.expect(editable.innerText).to.eql('');
             await triggerEvent(editable, 'keydown', { key: 'Enter'});
             window.chai.expect(editable.innerText).to.eql('1');
+            powerbox.open();
             await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
             await triggerEvent(editable, 'keydown', { key: 'Enter'});
             window.chai.expect(editable.innerText).to.eql('2');
