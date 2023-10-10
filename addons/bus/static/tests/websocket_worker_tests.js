@@ -8,8 +8,6 @@ import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 QUnit.module("Websocket Worker");
 
 QUnit.test("connect event is broadcasted after calling start", async function (assert) {
-    assert.expect(2);
-
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
             assert.step(`broadcast ${type}`);
@@ -22,8 +20,6 @@ QUnit.test("connect event is broadcasted after calling start", async function (a
 });
 
 QUnit.test("disconnect event is broadcasted", async function (assert) {
-    assert.expect(3);
-
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
             assert.step(`broadcast ${type}`);
@@ -40,8 +36,6 @@ QUnit.test("disconnect event is broadcasted", async function (assert) {
 });
 
 QUnit.test("reconnecting/reconnect event is broadcasted", async function (assert) {
-    assert.expect(5);
-
     // Patch setTimeout in order for the worker to reconnect immediatly.
     patchWithCleanup(window, {
         setTimeout: (fn) => fn(),
@@ -67,8 +61,6 @@ QUnit.test("reconnecting/reconnect event is broadcasted", async function (assert
 });
 
 QUnit.test("notification event is broadcasted", async function (assert) {
-    assert.expect(3);
-
     const notifications = [
         {
             id: 70,

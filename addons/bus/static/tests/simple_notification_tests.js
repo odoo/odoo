@@ -1,29 +1,20 @@
 /* @odoo-module */
 
-import { busService } from "@bus/services/bus_service";
-import { busParametersService } from "@bus/bus_parameters_service";
-import { multiTabService } from "@bus/multi_tab_service";
 import { simpleNotificationService } from "@bus/simple_notification_service";
+import { addBusServicesToRegistry } from "@bus/../tests/helpers/test_utils";
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { contains } from "@web/../tests/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
-const serviceRegistry = registry.category("services");
-
-QUnit.module("simple_notification", {
-    beforeEach() {
-        serviceRegistry.add("bus_service", busService);
-        serviceRegistry.add("bus.parameters", busParametersService);
-        serviceRegistry.add("multi_tab", multiTabService);
-        serviceRegistry.add("simple_notification", simpleNotificationService);
-    },
-});
+QUnit.module("simple_notification");
 
 QUnit.test("receive and display simple notification with message", async () => {
+    addBusServicesToRegistry();
+    registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
     const pyEnv = await getPyEnv();
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
@@ -33,6 +24,8 @@ QUnit.test("receive and display simple notification with message", async () => {
 });
 
 QUnit.test("receive and display simple notification with title", async () => {
+    addBusServicesToRegistry();
+    registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
     const pyEnv = await getPyEnv();
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
@@ -43,6 +36,8 @@ QUnit.test("receive and display simple notification with title", async () => {
 });
 
 QUnit.test("receive and display simple notification with specific type", async () => {
+    addBusServicesToRegistry();
+    registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
     const pyEnv = await getPyEnv();
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
@@ -53,6 +48,8 @@ QUnit.test("receive and display simple notification with specific type", async (
 });
 
 QUnit.test("receive and display simple notification as sticky", async () => {
+    addBusServicesToRegistry();
+    registry.category("services").add("simple_notification", simpleNotificationService);
     await createWebClient({});
     const pyEnv = await getPyEnv();
     patchWithCleanup(browser, {
