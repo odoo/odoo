@@ -58,8 +58,7 @@ class PaymentTransaction(models.Model):
         webhook_url = urls.url_join(
             base_url, f'{MercadoPagoController._webhook_url}/{self.reference}'
         )  # Append the reference to identify the transaction from the webhook notification data.
-        return {
-            'auto_return': 'all',
+        values = {
             'back_urls': {
                 'success': return_url,
                 'pending': return_url,
@@ -72,7 +71,6 @@ class PaymentTransaction(models.Model):
                 'currency_id': self.currency_id.name,
                 'unit_price': self.amount,
             }],
-            'notification_url': webhook_url,
             'payer': {
                 'name': self.partner_name,
                 'email': self.partner_email,
@@ -88,6 +86,11 @@ class PaymentTransaction(models.Model):
                 'installments': 1,  # Prevent MP from proposing several installments for a payment.
             },
         }
+        if self.provider_id.mercadopago_use_ipn:
+            values['notification_url'] = webhook_url
+        if self.provider_id.mercadopago_autoreturn:
+            values['auto_return'] = 'all'
+        return values
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Mercado Pago data.

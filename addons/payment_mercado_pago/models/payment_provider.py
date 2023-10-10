@@ -26,6 +26,19 @@ class Paymentprovider(models.Model):
         required_if_provider='mercado_pago',
         groups='base.group_system',
     )
+    mercadopago_use_ipn = fields.Boolean(
+        string="Enable IPN",
+        groups='base.group_system',
+        default=True,
+        help="The IPN (Instant Payment Notification) is a mechanism that allows your application to receive notifications from Mercado Pago informing the status of a certain payment, chargeback and merchant_order, through a call HTTP POST to inform about your transactions."
+    )
+
+    mercadopago_autoreturn = fields.Boolean(
+        string="Autoreturn",
+        groups='base.group_system',
+        default=True,
+        help="Automatic redirect for approved payments (only works for Checkout Pro's redirect and mobile mode)."
+    )
 
     # === BUSINESS METHODS === #
 
