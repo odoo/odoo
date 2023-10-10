@@ -786,13 +786,15 @@ class TestMultiCompany(TestHrHolidaysCommon):
         cls.rd_dept.manager_id = False
         cls.hr_dept.manager_id = False
 
+        leave_day = date_utils.start_of(date.today(), 'week')
+
         cls.employee_leave = cls.env['hr.leave'].create({
             'name': 'Test',
             'holiday_status_id': cls.leave_type.id,
             'department_id': cls.employee_emp.department_id.id,
             'employee_id': cls.employee_emp.id,
-            'request_date_from': date.today(),
-            'request_date_to': date.today() + relativedelta(days=1),
+            'request_date_from': leave_day,
+            'request_date_to': leave_day,
         })
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -836,7 +838,6 @@ class TestMultiCompany(TestHrHolidaysCommon):
             employee_leave.action_approve()
         self.assertEqual(employee_leave.state, 'confirm')
 
-    @unittest.skip
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_officer(self):
         self.employee_emp.company_id = self.user_employee.company_id
@@ -847,7 +848,6 @@ class TestMultiCompany(TestHrHolidaysCommon):
         employee_leave_hruser.action_approve()
         self.assertEqual(employee_leave_hruser.state, 'validate')
 
-    @unittest.skip
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_manager(self):
         self.employee_emp.company_id = self.user_employee.company_id
