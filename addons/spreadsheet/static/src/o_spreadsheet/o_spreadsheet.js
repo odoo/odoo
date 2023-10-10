@@ -1194,7 +1194,17 @@
     function isDateTime(str, locale) {
         return parseDateTime(str, locale) !== null;
     }
+    const CACHE = new Map();
     function parseDateTime(str, locale) {
+        if (!CACHE.has(locale)) {
+            CACHE.set(locale, new Map());
+        }
+        if (!CACHE.get(locale).has(str)) {
+            CACHE.get(locale).set(str, _parseDateTime(str, locale));
+        }
+        return CACHE.get(locale).get(str);
+    }
+    function _parseDateTime(str, locale) {
         str = str.trim();
         let time = null;
         const timeMatch = str.match(timeRegexp);
@@ -3013,8 +3023,9 @@
         }
         get zone() {
             const { left, top, bottom, right } = this._zone;
-            if (right !== undefined && bottom !== undefined)
-                return { left, top, right, bottom };
+            if (right !== undefined && bottom !== undefined) {
+                return this._zone;
+            }
             else if (bottom === undefined && right !== undefined) {
                 return { right, top, left, bottom: this.getSheetSize(this.sheetId).numberOfRows - 1 };
             }
@@ -4284,7 +4295,7 @@
     const SORT_TYPES_ORDER = ["number", "string", "boolean", "undefined"];
     function assert(condition, message) {
         if (!condition()) {
-            throw new Error(message);
+            throw new EvaluationError(CellErrorType.GenericError, message);
         }
     }
     // -----------------------------------------------------------------------------
@@ -4929,7 +4940,7 @@
             return textCell((value || "").toString(), localeFormat);
         }
         catch (error) {
-            return errorCell((value || "").toString(), new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
+            return errorCell(new EvaluationError(CellErrorType.GenericError, error.message || DEFAULT_ERROR_MESSAGE));
         }
     }
     function textCell(value, localeFormat) {
@@ -4996,7 +5007,7 @@
             formattedValue,
         };
     }
-    function errorCell(content, error) {
+    function errorCell(error) {
         return {
             type: CellValueType.error,
             value: error.errorType,
@@ -31818,10 +31829,11 @@
          * Reconstructs the original formula string based on a normalized form and its dependencies
          */
         buildFormulaContent(sheetId, cell, dependencies) {
-            const ranges = dependencies || [...cell.dependencies];
+            const ranges = dependencies || cell.dependencies;
+            let rangeIndex = 0;
             return concat(cell.compiledFormula.tokens.map((token) => {
                 if (token.type === "REFERENCE") {
-                    const range = ranges.shift();
+                    const range = ranges[rangeIndex++];
                     return this.getters.getRangeString(range, sheetId);
                 }
                 return token.value;
@@ -35429,7 +35441,7 @@
             const evaluatedCell = this.getEvaluatedCell(position);
             if (evaluatedCell.type === CellValueType.empty) {
                 const cell = this.getters.getCell(position);
-                if (!cell || cell.content === "") {
+                if (!cell || (!cell.isFormula && cell.content === "")) {
                     return undefined;
                 }
             }
@@ -35649,7 +35661,7 @@
         constructor(context, getters) {
             this.context = context;
             this.getters = getters;
-            this.compilationParams = buildCompilationParameters(context, getters, (position) => this.computeCell(this.encodePosition(position)));
+            this.compilationParams = buildCompilationParameters(this.context, this.getters, this.computeAndSave.bind(this));
         }
         getEvaluatedCell(position) {
             return (this.evaluatedCells.get(this.encodePosition(position)) ||
@@ -35677,7 +35689,7 @@
             this.formulaDependencies().addDependencies(positionId, dependencies);
         }
         updateCompilationParameters() {
-            this.compilationParams = buildCompilationParameters(this.context, this.getters, (position) => this.computeCell(this.encodePosition(position)));
+            this.compilationParams = buildCompilationParameters(this.context, this.getters, this.computeAndSave.bind(this));
         }
         evaluateCells(positions) {
             const cells = positions.map(this.encodePosition.bind(this));
@@ -35793,15 +35805,21 @@
                 this.cellsBeingComputed.delete(cellId);
             }
         }
-        handleError(e, cell) {
-            if (!(e instanceof Error)) {
-                e = new Error(e);
+        computeAndSave(position) {
+            const positionId = this.encodePosition(position);
+            const evaluatedCell = this.computeCell(positionId);
+            if (!this.evaluatedCells.has(positionId)) {
+                this.setEvaluatedCell(positionId, evaluatedCell);
             }
-            const msg = e?.errorType || CellErrorType.GenericError;
-            // apply function name
+            return evaluatedCell;
+        }
+        handleError(e, cell) {
+            if (!(e instanceof EvaluationError)) {
+                e = new EvaluationError(CellErrorType.GenericError, e.message);
+            }
             const __lastFnCalled = this.compilationParams[2].__lastFnCalled || "";
-            const error = new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
-            return errorCell(cell.content, error);
+            e.message = e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled);
+            return errorCell(e);
         }
         computeFormulaCell(cellData) {
             const cellId = cellData.id;
@@ -50692,9 +50710,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.8';
-    __info__.date = '2023-10-03T13:26:24.526Z';
-    __info__.hash = 'c614d64';
+    __info__.version = '16.4.9';
+    __info__.date = '2023-10-10T07:49:44.306Z';
+    __info__.hash = '998c612';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
