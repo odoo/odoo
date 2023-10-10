@@ -18,7 +18,7 @@ import { createElement, parseXML } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
 import { computeViewClassName, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -39,11 +39,11 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 
 import {
     Component,
-    onWillStart,
     onWillUpdateProps,
     useComponent,
     useEffect,
     useEnv,
+    useState,
     useSubEnv,
 } from "@odoo/owl";
 
@@ -156,12 +156,15 @@ export function useSpecialData(loadFn) {
     }
     ormWithCache.call = (...args) => specialDataCaches[key].read(...args);
 
-    const result = {};
-    onWillStart(async () => {
-        result.data = await loadFn(ormWithCache, component.props);
+    const result = useState({});
+    useRecordObserver(async (record, props) => {
+        result.data = await loadFn(ormWithCache, { ...props, record });
     });
     onWillUpdateProps(async (props) => {
-        result.data = await loadFn(ormWithCache, props);
+        // useRecordObserver callback is not called when the record doesn't change
+        if (props.record.id === component.props.record.id) {
+            result.data = await loadFn(ormWithCache, props);
+        }
     });
     return result;
 }
