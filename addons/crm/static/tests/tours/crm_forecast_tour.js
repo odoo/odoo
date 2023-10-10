@@ -46,10 +46,6 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "click to make the datepicker disappear",
         run: "click"
     }, {
-        trigger: "body:not(:has(div.bootstrap-datetimepicker-widget))",
-        content: "wait for date_picker to disappear",
-        run: function () {},
-    }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
         position: "bottom",
@@ -72,10 +68,6 @@ registry.category("web_tour.tours").add('crm_forecast', {
             actions.text(`text ${today.plus({months: 5}).startOf('month').minus({days: 1}).toFormat("MM/dd/yyyy")}`, this.$anchor);
             this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
         },
-    }, {
-        trigger: "body:not(:has(div.bootstrap-datetimepicker-widget))",
-        content: "wait for date_picker to disappear",
-        run: function () {},
     }, {
         trigger: ".o_field_widget[name=probability] input",
         content: "max out probability",
