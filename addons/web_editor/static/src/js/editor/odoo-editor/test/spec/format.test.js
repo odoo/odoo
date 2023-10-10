@@ -961,7 +961,7 @@ describe('Format', () => {
                 // todo: It would be better to remove the zws entirely so that
                 // the P could have the "/" hint but that behavior might be
                 // complex with the current implementation.
-                contentAfterEdit: `<p>${strong(`[]\u200B`, 'first')}</p>`,
+                contentAfterEdit: `<p>${span(`[]\u200B`, 'first')}</p>`,
             });
         });
     });
