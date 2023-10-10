@@ -23,6 +23,7 @@ class TimesheetsAnalysisReport(models.Model):
     date = fields.Date("Date", readonly=True)
     amount = fields.Monetary("Amount", readonly=True)
     unit_amount = fields.Float("Hours Spent", readonly=True)
+    partner_id = fields.Many2one('res.partner', string="Partner", readonly=True)
 
     @property
     def _table_query(self):
@@ -45,7 +46,8 @@ class TimesheetsAnalysisReport(models.Model):
                 A.currency_id AS currency_id,
                 A.date AS date,
                 A.amount AS amount,
-                A.unit_amount AS unit_amount
+                A.unit_amount AS unit_amount,
+                A.partner_id AS partner_id
         """
 
     @api.model
