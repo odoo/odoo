@@ -6,7 +6,7 @@ class AccountMove(models.Model):
 
     _inherit = 'account.move'
 
-    withholding_ids = fields.One2many(
+    l10n_ar_withholding_ids = fields.One2many(
         'account.move.line', 'move_id', string='Withholdings',
         copy=False, domain=[('tax_line_id', '!=', False)],
     )

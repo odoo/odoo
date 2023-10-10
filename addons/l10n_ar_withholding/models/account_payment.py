@@ -6,8 +6,6 @@ class AccountPayment(models.Model):
 
     _inherit = 'account.payment'
 
-    l10n_ar_withholding_ids = fields.One2many(related='move_id.withholding_ids', readonly=False)
-
     def _synchronize_to_moves(self, changed_fields):
         ''' If we change a payment with witholdings, delete all withholding lines as the synchronization mechanism is not
         implemented yet
