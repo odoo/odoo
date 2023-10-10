@@ -10,12 +10,6 @@ class PurchaseRequisitionAlternativeWarning(models.TransientModel):
 
     po_ids = fields.Many2many('purchase.order', 'warning_purchase_order_rel', string="POs to Confirm")
     alternative_po_ids = fields.Many2many('purchase.order', 'warning_purchase_order_alternative_rel', string="Alternative POs")
-    alternative_po_count = fields.Integer(compute="_compute_alternative_po_count")
-
-    @api.depends("alternative_po_ids")
-    def _compute_alternative_po_count(self):
-        for wizard in self:
-            wizard.alternative_po_count = len(wizard.alternative_po_ids)
 
     def action_keep_alternatives(self):
         return self._action_done()
