@@ -5,13 +5,12 @@
     'name': "India Purchase and Warehouse Management",
     'countries': ['in'],
 
-    'summary': """
-        Get warehouse address if the bill is created from Purchase Order""",
+    'summary': "Get warehouse address if the bill is created from Purchase Order",
 
     'description': """
-        Get the warehouse address if the bill is created from the Purchase Order
+Get the warehouse address if the bill is created from the Purchase Order
 
-        So this module is to get the warehouse address if the bill is created from Purchase Order
+So this module is to get the warehouse address if the bill is created from Purchase Order
     """,
 
     'website': "https://www.odoo.com",

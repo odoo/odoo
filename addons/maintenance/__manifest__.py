@@ -6,7 +6,7 @@
     'sequence': 100,
     'category': 'Manufacturing/Maintenance',
     'description': """
-        Track equipment and maintenance requests""",
+Track equipment and maintenance requests""",
     'depends': ['mail'],
     'summary': 'Track equipment and manage maintenance requests',
     'website': 'https://www.odoo.com/app/maintenance',

@@ -3,9 +3,7 @@
     'name': 'Philippines - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ph'],
-    'summary': """
-        This is the module to manage the accounting chart for The Philippines.
-    """,
+    'summary': "This is the module to manage the accounting chart for The Philippines.",
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     'author': 'Odoo PS',

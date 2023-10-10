@@ -5,6 +5,7 @@ import warnings
 from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
+from textwrap import dedent
 import io
 import logging
 import os
@@ -702,7 +703,7 @@ class Module(models.Model):
     @staticmethod
     def get_values_from_terp(terp):
         return {
-            'description': terp.get('description', ''),
+            'description': dedent(terp.get('description', '')),
             'shortdesc': terp.get('name', ''),
             'author': terp.get('author', 'Unknown'),
             'maintainer': terp.get('maintainer', False),

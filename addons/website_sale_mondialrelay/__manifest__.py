@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     'name': "eCommerce Mondialrelay Delivery",
-    'summary': """ Let's choose Point Relais® on your ecommerce """,
+    'summary': "Let's choose Point Relais® on your ecommerce",
 
     'description': """
-        This module allow your customer to choose a Point Relais® and use it as shipping address.
+This module allow your customer to choose a Point Relais® and use it as shipping address.
     """,
     'category': 'Website/Website',
     'version': '0.1',

@@ -5,9 +5,9 @@
     'category': 'Human Resources',
     'summary': 'Surveys',
     'description': """
-        Use interview forms during recruitment process.
-        This module is integrated with the survey module
-        to allow you to define interviews for different jobs.
+Use interview forms during recruitment process.
+This module is integrated with the survey module
+to allow you to define interviews for different jobs.
     """,
     'depends': ['survey', 'hr_recruitment'],
     'data': [

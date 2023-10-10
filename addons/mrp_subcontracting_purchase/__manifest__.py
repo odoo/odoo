@@ -6,7 +6,7 @@
     'version': '0.1',
     'category': 'Manufacturing/Purchase',
     'description': """
-        This bridge module adds some smart buttons between Purchase and Subcontracting
+This bridge module adds some smart buttons between Purchase and Subcontracting
     """,
     'depends': ['mrp_subcontracting', 'purchase_mrp'],
     'data': [

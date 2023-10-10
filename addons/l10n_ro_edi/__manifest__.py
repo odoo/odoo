@@ -4,11 +4,9 @@
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'description': """
-        E-invoice implementation for Romania
+E-invoice implementation for Romania
     """,
-    'summary': """
-        E-Invoice implementation for Romania
-    """,
+    'summary': "E-Invoice implementation for Romania",
     'countries': ['ro'],
     'depends': [
         'account_edi_ubl_cii',

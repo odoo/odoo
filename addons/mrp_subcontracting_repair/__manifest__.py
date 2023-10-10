@@ -6,7 +6,7 @@
     'version': '1.0',
     'category': 'Manufacturing/Repair',
     'description': """
-        Bridge module between MRP subcontracting and Repair
+Bridge module between MRP subcontracting and Repair
     """,
     'depends': [
         'mrp_subcontracting', 'repair'

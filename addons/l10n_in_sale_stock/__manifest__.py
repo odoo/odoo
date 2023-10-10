@@ -5,14 +5,13 @@
     'name': "India Sales and Warehouse Management",
     'countries': ['in'],
 
-    'summary': """
-        Get warehouse address if the invoice is created from Sale Order""",
+    'summary': "Get warehouse address if the invoice is created from Sale Order",
 
     'description': """
-        Get the warehouse address if the invoice is created from the Sale Order
-        In Indian EDI we send shipping address details if available
+Get the warehouse address if the invoice is created from the Sale Order
+In Indian EDI we send shipping address details if available
 
-        So this module is to get the warehouse address if the invoice is created from Sale Order
+So this module is to get the warehouse address if the invoice is created from Sale Order
     """,
 
     'website': "https://www.odoo.com",

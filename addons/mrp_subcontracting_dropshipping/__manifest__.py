@@ -7,7 +7,7 @@
     'version': '0.1',
     'category': 'Inventory/Purchase',
     'description': """
-        This bridge module allows to manage subcontracting with the dropshipping module.
+This bridge module allows to manage subcontracting with the dropshipping module.
     """,
     'depends': ['mrp_subcontracting', 'stock_dropshipping'],
     'data': [

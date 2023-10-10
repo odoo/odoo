@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Website Sale Product Configurator",
-    'summary': """
-        Bridge module for website_sale / sale_product_configurator""",
+    'summary': "Bridge module for website_sale / sale_product_configurator",
     'description': """
-        Bridge module to make the website e-commerce compatible with the product configurator
+Bridge module to make the website e-commerce compatible with the product configurator
     """,
     'category': 'Hidden',
     'depends': ['website_sale', 'sale_product_configurator'],

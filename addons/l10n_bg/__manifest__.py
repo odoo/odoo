@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-        Chart accounting and taxes for Bulgaria
+Chart accounting and taxes for Bulgaria
     """,
     'depends': [
         'account',

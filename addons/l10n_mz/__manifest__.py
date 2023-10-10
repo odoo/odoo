@@ -3,7 +3,7 @@
     'name': 'Mozambique - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'description': """
-        Mozambican Accounting localization
+Mozambican Accounting localization
     """,
     'version': '1.0',
     'icon': '/account/static/description/l10n.png',

@@ -6,7 +6,7 @@
     'category': 'Hidden',
     'version': '1.0',
     'description': """
-        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.
+This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.
     """,
     'depends': ['base_setup'],
     'data': [
