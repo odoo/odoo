@@ -93,13 +93,22 @@ class AccountEdiProxyClientUser(models.Model):
         # Retrieve all new Peppol documents for every edi user in the database
         edi_users = self.env['account_edi_proxy_client.user'].search(
             [('company_id.account_peppol_proxy_state', '=', 'active')])
+        params = {
+            'domain': {
+                'direction': 'incoming',
+                'errors': False,
+            }
+        }
 
         for edi_user in edi_users:
             proxy_acks = []
+            params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
                 messages = edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/get_all_documents")
+                    url=f"{edi_user._get_server_url()}/api/peppol/1/get_all_documents",
+                    params=params,
+                )
             except AccountEdiProxyError as e:
                 _logger.error(
                     'Error while receiving the document from Peppol Proxy: %s', e.message)
@@ -108,8 +117,6 @@ class AccountEdiProxyClientUser(models.Model):
             message_uuids = [
                 message['uuid']
                 for message in messages.get('messages', [])
-                if message['direction'] == 'incoming'
-                and message['receiver'] == edi_user.edi_identification
             ]
             if not message_uuids:
                 continue
@@ -122,20 +129,6 @@ class AccountEdiProxyClientUser(models.Model):
             )
 
             for uuid, content in all_messages.items():
-                error_move_vals = {
-                    'move_type': 'in_invoice',
-                    'peppol_move_state': 'error',
-                    'company_id': company.id,
-                    'extract_can_show_send_button': False,
-                    'peppol_message_uuid': uuid,
-                }
-                if content.get('error'):
-                    # in this case there is no attachment that we could add to the account move
-                    move = self.env['account.move'].create(error_move_vals)
-                    move._message_log(body=_('Error when receiving via Peppol: %s', content['error']['message']))
-                    proxy_acks.append(uuid)
-                    continue
-
                 enc_key = content["enc_key"]
                 document_content = content["document"]
                 filename = content["filename"] or 'attachment' # default to attachment, which should not usually happen
@@ -168,27 +161,27 @@ class AccountEdiProxyClientUser(models.Model):
                             default_peppol_message_uuid=uuid,
                         )\
                         ._create_document_from_attachment(attachment.id)
-                    if partner_endpoint:
-                        move._message_log(body=_(
-                            'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
-                    else:
-                        move._message_log(
-                            body=_('Peppol document has been received successfully'))
                 # pylint: disable=broad-except
                 except Exception:
                     # if the invoice creation fails for any reason,
                     # we want to create an empty invoice with the attachment
-                    move = self.env['account.move'].create(error_move_vals)
+                    move = self.env['account.move'].create({
+                        'move_type': 'in_invoice',
+                        'peppol_move_state': 'done',
+                        'company_id': company.id,
+                        'extract_can_show_send_button': False,
+                        'peppol_message_uuid': uuid,
+                    })
                     attachment_vals.update({
                         'res_model': 'account.move',
                         'res_id': move.id,
                     })
                     self.env['ir.attachment'].create(attachment_vals)
-                    if partner_endpoint:
-                        move._message_log(body=_(
-                            'Failed to import a Peppol document. Sender endpoint: %s', partner_endpoint))
-                    else:
-                        move._message_log(body=_('Failed to import a Peppol document.'))
+                if partner_endpoint:
+                    move._message_log(body=_(
+                        'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
+                else:
+                    move._message_log(body=_('Peppol document has been received successfully'))
 
                 proxy_acks.append(uuid)
 
