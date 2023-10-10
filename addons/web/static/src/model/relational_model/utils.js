@@ -643,11 +643,12 @@ export function useRecordObserver(callback) {
     const fct = (props) => {
         const def = new Deferred();
         let firstCall = true;
+        const nextProps = omit(props, ["record"]);
         effect(
             async (record) => {
                 if (firstCall) {
                     firstCall = false;
-                    await callback(record);
+                    await callback(record, nextProps);
                     def.resolve();
                 } else {
                     return batched(
@@ -657,7 +658,7 @@ export function useRecordObserver(callback) {
                                 // We must do it manually.
                                 return;
                             }
-                            await callback(record);
+                            await callback(record, nextProps);
                             def.resolve();
                         },
                         () => new Promise((resolve) => window.requestAnimationFrame(resolve))

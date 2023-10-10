@@ -11,7 +11,7 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
     setup() {
         super.setup();
         this.specialData = useSpecialData((orm, props) => {
-            const { context, name, record } = this.props;
+            const { context, name, record } = props;
             return orm.call(
                 "res.partner",
                 "get_attendee_detail",

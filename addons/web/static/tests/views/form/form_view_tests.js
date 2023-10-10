@@ -54,6 +54,7 @@ import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
 import { IntegerField } from "@web/views/fields/integer/integer_field";
+import { useSpecialData } from "@web/views/fields/relational_utils";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
 import { companyService } from "@web/webclient/company_service";
@@ -14217,4 +14218,39 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["web_read", "web_save"]);
         }
     );
+
+    QUnit.test("field with special data", async function (assert) {
+        class MyWidget extends Component {
+            static template = xml`<div>MyWidget</div>`;
+            setup() {
+                this.specialData = useSpecialData((orm, props) => {
+                    const { record } = props;
+                    return orm.call("my.model", "get_special_data", [record.data.int_field]);
+                });
+            }
+        }
+        widgetRegistry.add("my_widget", {
+            component: MyWidget,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field" />
+                    <widget name="my_widget" />
+                </form>`,
+            resId: 2,
+            async mockRPC(route, args) {
+                if (args.method === "get_special_data") {
+                    assert.step(`get_special_data ${args.args[0]}`);
+                    return {};
+                }
+            },
+        });
+
+        await editInput(target, "[name='int_field'] input", "42");
+        assert.verifySteps(["get_special_data 9", "get_special_data 42"]);
+    });
 });
