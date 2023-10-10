@@ -1523,3 +1523,61 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantA.package_id.id, False, "There should be no package for product A as it was removed in the move.")
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
+
+    def test_storage_capacity_display_package(self):
+        package_type = self.env['stock.package.type'].create({
+            'name': "Super Pallet",
+        })
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 100,
+        })
+        stor_capacity = self.env["stock.storage.category.capacity"].create(
+            {
+                'storage_category_id': stor_category.id,
+                'package_type_id': package_type.id,
+                'quantity': 1,
+            })
+
+        self.assertEqual(
+            stor_capacity.display_name,
+            "Super Storage Category x 1.0 (Package: Super Pallet)"
+        )
+
+    def test_storage_capacity_display_product(self):
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 100,
+        })
+        stor_capacity = self.env["stock.storage.category.capacity"].create(
+            {
+                'storage_category_id': stor_category.id,
+                'product_id': self.productA.id,
+                'quantity': 1,
+            })
+
+        self.assertEqual(
+            stor_capacity.display_name,
+            "Super Storage Category x 1.0 (Product: Product A)"
+        )
+
+    def test_storage_capacity_display_both(self):
+        package_type = self.env['stock.package.type'].create({
+            'name': "Super Pallet",
+        })
+        stor_category = self.env['stock.storage.category'].create({
+            'name': 'Super Storage Category',
+            'max_weight': 100,
+        })
+        stor_capacity = self.env["stock.storage.category.capacity"].create(
+            {
+                'storage_category_id': stor_category.id,
+                'product_id': self.productA.id,
+                'package_type_id': package_type.id,
+                'quantity': 1,
+            })
+
+        self.assertEqual(
+            stor_capacity.display_name,
+            "Super Storage Category x 1.0 (Product: Product A - Package: Super Pallet)"
+        )
