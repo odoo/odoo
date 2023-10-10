@@ -2055,11 +2055,11 @@
     </template>
 
     <template id="short_cart_summary" name="Short Cart right column">
-        <div class="card js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
-            <div class="card-body">
-                <h4 class="d-none d-xl-block">Order Total</h4>
-                <hr class="d-none d-xl-block"/>
-                <div>
+        <div  name="card_body" class="card js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
+            <div class="m-3">
+                <h4 class="d-none d-xl-block mb-3">Order Total</h4>
+                <!-- <hr class="d-none d-xl-block"/> -->
+                <div id="table-card">
                     <t t-call="website_sale.total">
                         <t t-set="no_rowspan" t-value="1"/>
                     </t>
@@ -2088,7 +2088,7 @@
     -->
     <template id="cart_summary" name="Cart right column">
         <div class="card">
-            <div class="card-body p-xl-0">
+            <div class="card-body p-2">
                 <div class="toggle_summary d-xl-none">
                     <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                     <span class='fa fa-chevron-down fa-border float-end' role="img" aria-label="Details" title="Details"></span>
@@ -2103,7 +2103,7 @@
                                 <th class="border-top-0 td-img">Product</th>
                                 <th class="border-top-0"></th>
                                 <th class="border-top-0 td-qty">Quantity</th>
-                                <th class="border-top-0 text-center td-price">Price</th>
+                                <th class="border-top-0 text-center td-price pe-0">Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2131,7 +2131,7 @@
                                         <i class='fa fa-warning text-warning' t-att-title="line._get_shop_warning()" role="img" aria-label="Warning"/>
                                     </t>
                                 </td>
-                                <td class="text-center td-price">
+                                <td class="text-center td-price pe-0">
                                     <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
                                     <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
                                 </td>
@@ -2226,24 +2226,32 @@
             <table class="table mb-0">
                   <tr id="empty">
                       <t t-if='not no_rowspan'><td rowspan="10" class="border-0"/></t>
-                      <td class="col-md-2 col-3 border-0"></td>
-                      <td class="col-md-2 col-3 border-0" ></td>
+                      <td class="col-md-2 col-3 border-0 pt-1 pb-1"></td>
+                      <td class="col-md-2 col-3 border-0 pt-1 pb-1 pe-0" ></td>
                   </tr>
                   <tr id="order_total_untaxed">
-                      <td class="text-end border-0">Subtotal:</td>
-                      <td class="text-xl-end border-0" >
-                          <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
-                      </td>
+                      <t t-if='no_rowspan'>
+                        <td class="text-end border-0 pt-2 pb-2 border-top">Subtotal:</td>
+                        <td class="text-xl-end border-0 pe-0 pt-2 pb-2 border-top" >
+                            <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </td>
+                      </t>
+                      <t t-else="">
+                        <td class="text-end border-0 pt-2 pb-2">Subtotal:</td>
+                        <td class="text-xl-end border-0 pe-0 pt-2 pb-2" >
+                            <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </td>
+                      </t>
                   </tr>
                   <tr id="order_total_taxes">
-                      <td class="text-end border-0">Taxes:</td>
-                      <td class="text-xl-end border-0">
+                      <td class="text-end border-0 pt-2 pb-2">Taxes:</td>
+                      <td class="text-xl-end border-0 pe-0 pt-2 pb-2">
                            <span t-field="website_sale_order.amount_tax" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
-                      <td class="text-end border-top border-bottom-0"><strong>Total:</strong></td>
-                      <td class="text-xl-end border-top border-bottom-0">
+                      <td class="text-end border-top border-bottom-0 pt-2 pb-2"><strong>Total:</strong></td>
+                      <td class="text-xl-end border-top border-bottom-0 pe-0 pt-2 pb-2">
                           <strong t-field="website_sale_order.amount_total" class="monetary_field"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
@@ -2255,7 +2263,7 @@
     <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions">
-                <td colspan="3" class="text-center text-xl-end border-0">
+                <td colspan="3" class="text-center text-xl-end border-0 pe-0">
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
