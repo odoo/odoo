@@ -556,11 +556,51 @@ class Project(models.Model):
             domain,
             with_action,
         )
+<<<<<<< HEAD
         profitability_items['revenues']['data'] += revenue_items_from_sol['data']
         profitability_items['revenues']['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
         profitability_items['revenues']['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
         self._add_invoice_items(domain, profitability_items, with_action=with_action)
         self._add_purchase_items(profitability_items, with_action=with_action)
+||||||| parent of c79cc7e514c (temp)
+        revenues = profitability_items['revenues']
+        revenues['data'] += revenue_items_from_sol['data']
+        revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
+        revenues['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
+
+        sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
+            self._get_profitability_sale_order_items_domain(domain),
+            ['ids:array_agg(id)'],
+            ['product_id'],
+        )
+        revenue_items_from_invoices = self._get_revenues_items_from_invoices(
+            excluded_move_line_ids=self.env['sale.order.line'].browse(
+                [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
+            ).invoice_lines.ids
+        )
+        revenues['data'] += revenue_items_from_invoices['data']
+        revenues['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
+        revenues['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
+=======
+        revenues = profitability_items['revenues']
+        revenues['data'] += revenue_items_from_sol['data']
+        revenues['total']['to_invoice'] += revenue_items_from_sol['total']['to_invoice']
+        revenues['total']['invoiced'] += revenue_items_from_sol['total']['invoiced']
+
+        sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
+            self._get_profitability_sale_order_items_domain(domain),
+            ['ids:array_agg(id)'],
+            ['product_id'],
+        )
+        revenue_items_from_invoices = self._get_revenues_items_from_invoices(
+            excluded_move_line_ids=self.env['sale.order.line'].browse(
+                [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
+            ).sudo().invoice_lines.ids
+        )
+        revenues['data'] += revenue_items_from_invoices['data']
+        revenues['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
+        revenues['total']['invoiced'] += revenue_items_from_invoices['total']['invoiced']
+>>>>>>> c79cc7e514c (temp)
         return profitability_items
 
     def _get_stat_buttons(self):
