@@ -17,7 +17,7 @@
                         <t t-set="isComboCurrent" t-value="currentComboId === combo_id"/>
                         <t t-set="isComboSelected" t-value="false"/>
                         <t t-set="isNextSelected" t-value="false"/>
-                        <t t-foreach="state.selectedCombos"  t-as="selected"  t-key="selected">
+                        <t t-foreach="state.selectedCombos"  t-as="selected"  t-key="selected.id">
                             <t t-if="selected.id === combo_id" t-set="isComboSelected" t-value="true"/>
                         </t>
 
@@ -63,7 +63,7 @@
                             class="o_self_order_main_desc d-block mb-3 text-muted"
                             t-out="state.selectedProduct.description_sale"
                         />
-                        <span class="fs-3" t-esc="selfOrder.formatMonetary(state.selectedProduct.prices)"/>
+                        <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(state.selectedProduct))"/>
                     </div>
                 </div>
             </t>

@@ -21,8 +21,9 @@
                                     <span t-if="selfOrder.currentOrder.isSavedOnServer"><t t-esc="line.qty" />x </span>
                                     <strong t-esc="line.full_product_name"/>
                                 </div>
-                                <div t-if="!selfOrder.currentOrder.isSavedOnServer and this.selfOrder.productByIds[line.product_id]?.attributes.length > 0 || line.child_lines.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
+                                <div t-if="this.selfOrder.productByIds[line.product_id]?.attributes.length > 0 || childLines.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
                                     <button
+                                        t-if="!selfOrder.currentOrder.isSavedOnServer"
                                         type="button"
                                         t-on-click="() => this.clickOnLine(line)"
                                         class="btn btn-secondary"> <i class="fa fa-pencil"></i></button>
@@ -30,14 +31,16 @@
                                     <div class="vr"/>
 
                                     <div class="small">
+                                        <div t-if="childLines.length === 0" class="product-info d-flex flex-column flex-grow-1 text-muted">
+                                            <div t-foreach="getSelectedAttributes(line)" t-as="attribute" t-key="attribute.name">
+                                                - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
+                                            </div>
+                                        </div>
                                         <div t-foreach="childLines" t-as="cline" t-key="cline.uuid" class="text-muted">
                                             - <span t-esc="cline.full_product_name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
                                             <div class="product-info d-flex flex-column flex-grow-1 ms-3">
                                                 <div t-foreach="getSelectedAttributes(cline)" t-as="attribute" t-key="attribute.name">
                                                     - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
-                                                    <div t-foreach="getSelectedAttributes(line)" t-as="attribute" t-key="attribute.name" class="text-muted">
-                                                        - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -66,7 +69,7 @@
                                     <button
                                         t-else=""
                                         type="button"
-                                        t-on-click= "() => this.changeQuantity(line, false)"
+                                        t-on-click= "() => this.removeLine(line)"
                                         t-attf-class="btn btn-secondary px-3"><i class="fa fa-fw fa-trash-o"/></button>
 
                                     <div class="o-so-tabular-nums d-flex align-items-center fw-bold px-2 px-md-3 text-bg-200" t-esc="getLineChangeQty(line)"/>
