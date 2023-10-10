@@ -149,7 +149,10 @@ functionRegistry.add("ODOO.CREDIT", {
         companyId = null,
         includeUnposted = false
     ) {
-        accountCodes = toString(accountCodes).split(",").sort();
+        accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
         offset = toNumber(offset);
         dateRange = parseAccountingDate(dateRange);
         includeUnposted = toBoolean(includeUnposted);
@@ -183,7 +186,10 @@ functionRegistry.add("ODOO.DEBIT", {
         companyId = null,
         includeUnposted = false
     ) {
-        accountCodes = toString(accountCodes).split(",").sort();
+        accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
         offset = toNumber(offset);
         dateRange = parseAccountingDate(dateRange);
         includeUnposted = toBoolean(includeUnposted);
@@ -217,7 +223,10 @@ functionRegistry.add("ODOO.BALANCE", {
         companyId = null,
         includeUnposted = false
     ) {
-        accountCodes = toString(accountCodes).split(",").sort();
+        accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
         offset = toNumber(offset);
         dateRange = parseAccountingDate(dateRange);
         includeUnposted = toBoolean(includeUnposted);
