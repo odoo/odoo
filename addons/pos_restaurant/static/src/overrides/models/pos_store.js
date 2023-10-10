@@ -193,6 +193,7 @@ patch(PosStore.prototype, {
             );
             await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
             const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
+            await this._loadMissingProducts(ordersJsons);
             return ordersJsons;
         } else {
             return await super._getOrdersJson();
