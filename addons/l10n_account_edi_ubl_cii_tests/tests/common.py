@@ -181,9 +181,9 @@ class TestUBLCommon(AccountTestInvoicingCommon):
     # -------------------------------------------------------------------------
 
     @freeze_time('2017-01-01')
-    def _generate_move(self, seller, buyer, **invoice_kwargs):
+    def _create_move(self, seller, buyer, **invoice_kwargs):
         """
-        Create and post an account.move.
+        Create an account.move (without posting it).
         """
 
         # Setup the seller.
@@ -216,6 +216,15 @@ class TestUBLCommon(AccountTestInvoicingCommon):
                 for i, invoice_line_kwargs in enumerate(invoice_kwargs.get('invoice_line_ids', []))
             ],
         })
+
+        return account_move
+
+    @freeze_time('2017-01-01')
+    def _generate_move(self, seller, buyer, **invoice_kwargs):
+        """
+        Create and post an account.move.
+        """
+        account_move = self._create_move(seller, buyer, **invoice_kwargs)
 
         account_move.action_post()
         account_move._generate_pdf_and_send_invoice(self.move_template)
