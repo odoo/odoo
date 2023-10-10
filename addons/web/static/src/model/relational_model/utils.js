@@ -630,6 +630,44 @@ export function isRelational(field) {
     return field && ["one2many", "many2many", "many2one"].includes(field.type);
 }
 
+export function useDataObserver(data, callback) {
+    let alive = true;
+    const fct = (data) => {
+        const def = new Deferred();
+        let firstCall = true;
+        effect(
+            async (data) => {
+                if (firstCall) {
+                    firstCall = false;
+                    await callback(data);
+                    def.resolve();
+                } else {
+                    return batched(
+                        async (data) => {
+                            if (!alive) {
+                                // effect doesn't clean up when the component is unmounted.
+                                // We must do it manually.
+                                return;
+                            }
+                            await callback(data);
+                            def.resolve();
+                        },
+                        () => new Promise((resolve) => window.requestAnimationFrame(resolve))
+                    )(data);
+                }
+            },
+            [data]
+        );
+        return def;
+    };
+
+    onWillStart(() => fct(data));
+    onWillDestroy(() => {
+        alive = false;
+    });
+    return fct;
+}
+
 /**
  * This hook should only be used in a component field because it
  * depends on the record props.
@@ -639,42 +677,18 @@ export function isRelational(field) {
  */
 export function useRecordObserver(callback) {
     const component = useComponent();
-    let alive = true;
-    const fct = (props) => {
-        const def = new Deferred();
-        let firstCall = true;
-        effect(
-            async (record) => {
-                if (firstCall) {
-                    firstCall = false;
-                    await callback(record);
-                    def.resolve();
-                } else {
-                    return batched(
-                        async (record) => {
-                            if (!alive) {
-                                // effect doesn't clean up when the component is unmounted.
-                                // We must do it manually.
-                                return;
-                            }
-                            await callback(record);
-                            def.resolve();
-                        },
-                        () => new Promise((resolve) => window.requestAnimationFrame(resolve))
-                    )(record);
-                }
-            },
-            [props.record]
-        );
-        return def;
-    };
-    onWillDestroy(() => {
-        alive = false;
-    });
-    onWillStart(() => fct(component.props));
+    const fct = useDataObserver(component.props.record, callback);
     onWillUpdateProps((props) => {
         if (props.record.id !== component.props.record.id) {
-            return fct(props);
+            return fct(props.record);
         }
+    });
+}
+
+export function usePropsObserver(callback) {
+    const component = useComponent();
+    const fct = useDataObserver(component.props, callback);
+    onWillUpdateProps((props) => {
+        return fct(props);
     });
 }
