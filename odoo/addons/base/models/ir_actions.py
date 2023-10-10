@@ -472,7 +472,7 @@ class IrActionsServer(models.Model):
                 return field_name
         return ''
 
-    name = fields.Char(compute='_compute_name', store=True, readonly=False, required=True)
+    name = fields.Char(required=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
         ('ir_actions_server', 'Server Action'),
