@@ -179,6 +179,9 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         if (filter.type === "relation" && isEmpty(value) && defaultValue === "current_user") {
             return [this.user.userId];
         }
+        if (filter.type === "text" && preventAutomaticValue) {
+            return "";
+        }
         return value || defaultValue;
     }
 
@@ -269,6 +272,64 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         }
     }
 
+    /**
+     * Returns the possible values a text global filter can take
+     * if the values are restricted by a range of allowed values
+     * @param {string} filterId
+     * @returns {{value: string, formattedValue: string}[]}
+     */
+    getTextFilterOptions(filterId) {
+        const filter = this.getters.getGlobalFilter(filterId);
+        const range = filter.rangeOfAllowedValues;
+        if (!range) {
+            return [];
+        }
+        const additionOptions = [
+            // add the current value because it might not be in the range
+            // if the range cells changed in the meantime
+            this.getGlobalFilterValue(filterId),
+            filter.defaultValue,
+        ];
+        const options = this.getTextFilterOptionsFromRange(range, additionOptions);
+        return options;
+    }
+
+    /**
+     * Returns the possible values a text global filter can take from a range
+     * or any addition raw string value. Removes duplicates.
+     * @param {object} range
+     * @param {string[]} additionalOptionValues
+     */
+    getTextFilterOptionsFromRange(range, additionalOptionValues = []) {
+        const cells = this.getters.getEvaluatedCellsInZone(range.sheetId, range.zone);
+        const uniqueFormattedValues = new Set();
+        const uniqueValues = new Set();
+        const allowedValues = cells
+            .filter((cell) => !["empty", "error"].includes(cell.type))
+            .map((cell) => ({
+                value: cell.value.toString(),
+                formattedValue: cell.formattedValue,
+            }))
+            .filter((cell) => {
+                if (uniqueFormattedValues.has(cell.formattedValue)) {
+                    return false;
+                }
+                uniqueFormattedValues.add(cell.formattedValue);
+                uniqueValues.add(cell.value);
+                return true;
+            });
+        const additionalOptions = additionalOptionValues
+            .map((value) => ({ value, formattedValue: value }))
+            .filter((cell) => {
+                if (cell.value === undefined || cell.value === "" || uniqueValues.has(cell.value)) {
+                    return false;
+                }
+                uniqueValues.add(cell.value);
+                return true;
+            });
+        return allowedValues.concat(additionalOptions);
+    }
+
     // -------------------------------------------------------------------------
     // Handlers
     // -------------------------------------------------------------------------
@@ -319,7 +380,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         let value;
         switch (type) {
             case "text":
-                value = "";
+                value = { preventAutomaticValue: true };
                 break;
             case "date":
                 value = { preventAutomaticValue: true };
@@ -495,4 +556,6 @@ GlobalFiltersUIPlugin.getters = [
     "getGlobalFilterValue",
     "getActiveFilterCount",
     "isGlobalFilterActive",
+    "getTextFilterOptions",
+    "getTextFilterOptionsFromRange",
 ];
