@@ -415,8 +415,8 @@ class PaymentProvider(models.Model):
         try:
             response = requests.post(url=url, json=proxy_payload, timeout=60)
             response.raise_for_status()
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.warning("unable to reach endpoint at %s", url)
             raise ValidationError(_("Stripe Proxy: Could not establish the connection."))
         except requests.exceptions.HTTPError:
             _logger.exception("invalid API request at %s with data %s", url, payload)
