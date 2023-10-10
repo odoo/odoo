@@ -48,10 +48,7 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition(() => this.props.anchorRef, {
-            popper: "root",
-            position: this.props.position,
-        });
+        usePosition("root", () => this.props.anchorRef, { position: this.props.position });
         useEffect(
             () => {
                 this.open();

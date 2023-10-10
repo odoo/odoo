@@ -46,9 +46,7 @@ export class AnalyticDistribution extends Component {
         this.widgetRef = useRef("analyticDistribution");
         this.dropdownRef = useRef("analyticDropdown");
         this.mainRef = useRef("mainElement");
-        usePosition(() => this.widgetRef.el, {
-            popper: "analyticDropdown",
-        });
+        usePosition("analyticDropdown", () => this.widgetRef.el);
 
         this.nextId = 1;
         this.focusSelector = false;

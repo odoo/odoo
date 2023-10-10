@@ -64,8 +64,7 @@ export class AutoComplete extends Component {
 
         // position and size
         if (this.props.dropdown) {
-            usePosition(() => this.inputRef.el, {
-                popper: "sourcesList",
+            usePosition("sourcesList", () => this.inputRef.el, {
                 position: "bottom-start",
             });
         } else {
