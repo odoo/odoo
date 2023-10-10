@@ -95,6 +95,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
 ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
+    'GEN_START',  # added in 3.10
     'POP_BLOCK', 'POP_EXCEPT', # Seems to be a special-case of POP_BLOCK for P3
     'SETUP_LOOP', 'BREAK_LOOP', 'CONTINUE_LOOP',
     'MAKE_FUNCTION', 'CALL_FUNCTION',
