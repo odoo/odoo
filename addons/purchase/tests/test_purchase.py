@@ -174,7 +174,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             activity.note,
         )
 
-    def test_onchange_packaging_00(self):
+    def test_compute_packaging_00(self):
         """Create a PO and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
@@ -219,7 +219,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.product_qty, 12)
 
         # Do the same test but without form, to check the `product_packaging_id` and `product_packaging_qty` are set
-        # without manual call to onchanges
+        # without manual call to compute
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -237,6 +237,43 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.order_line.product_packaging_qty = 1.0
         self.assertEqual(po.order_line.product_qty, 12)
 
+    def test_compute_packaging_01(self):
+        """Create a PO and use packaging in a multicompany environment.
+        Ensure any suggested packaging matches the PO's.
+        """
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        generic_single_pack = self.env['product.packaging'].create({
+            'name': "single pack",
+            'product_id': self.product_a.id,
+            'qty': 1.0,
+            'company_id': False,
+        })
+        company2_pack_of_10 = self.env['product.packaging'].create({
+            'name': "pack of 10 by Company 2",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+            'company_id': company2.id,
+        })
+
+        po1 = self.env['purchase.order'].with_company(company1).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
+            ]
+        })
+        self.assertEqual(po1.order_line.product_packaging_id, generic_single_pack)
+        self.assertEqual(po1.order_line.product_packaging_qty, 10.0)
+
+        # verify that with the right company, we can get the other packaging
+        po2 = self.env['purchase.order'].with_company(company2).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
+            ]
+        })
+        self.assertEqual(po2.order_line.product_packaging_id, company2_pack_of_10)
+        self.assertEqual(po2.order_line.product_packaging_qty, 1.0)
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
