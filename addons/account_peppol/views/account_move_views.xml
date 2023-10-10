@@ -16,11 +16,10 @@
 
             <xpath expr="//div[@name='journal_div']" position="after">
                 <label for="peppol_move_state"
-                       attrs="{'invisible': ['|', ('peppol_move_state', '=', False), ('state', '=', 'draft')]}"/>
+                       attrs="{'invisible': ['|', '|', ('peppol_move_state', '=', False), ('state', '=', 'draft'), ('move_type', 'in', ('in_invoice', 'in_refund'))]}"/>
                 <div name="peppol_div"
                      class="d-flex"
-                     attrs="{'invisible': ['|', ('peppol_move_state', '=', False), ('state', '=', 'draft')]}">
-
+                     attrs="{'invisible': ['|', '|', ('peppol_move_state', '=', False), ('state', '=', 'draft'), ('move_type', 'in', ('in_invoice', 'in_refund'))]}">
                     <field name="peppol_move_state" class="oe_inline"/>
                     <span class="text-muted mx-3"
                           attrs="{'invisible': [('peppol_move_state', '!=', 'to_send')]}">
@@ -53,13 +52,14 @@
         </field>
     </record>
 
+    <!-- to be removed in master -->
     <record id="account_peppol_view_in_invoice_bill_tree_inherit" model="ir.ui.view">
         <field name="name">account.out.invoice.tree.inherit</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_in_invoice_tree"/>
         <field name="arch" type="xml">
             <field name="state" position="before">
-                <field name="peppol_move_state" optional="hide"/>
+                <field name="peppol_move_state" invisible="1"/>
             </field>
         </field>
     </record>
