@@ -407,6 +407,7 @@ QUnit.module("Fields", (hooks) => {
                 ".o_statusbar_status button:not(.dropdown-toggle)"
             );
             await click(buttons[buttons.length - 1]);
+            await nextTick();
             assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
         }
     );
