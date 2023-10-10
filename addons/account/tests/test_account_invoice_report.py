@@ -94,6 +94,19 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                     }),
                 ]
             },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': cls.partner_a.id,
+                'invoice_date': fields.Date.from_string('1900-01-01'),  # before the first currency rate is set
+                'currency_id': cls.currency_data['currency'].id,
+                'invoice_line_ids': [
+                    (0, None, {
+                        'product_id': cls.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 1200,
+                    }),
+                ]
+            },
         ])
 
     def assertInvoiceReportValues(self, expected_values_list):
@@ -102,6 +115,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             'price_average': vals[0],
             'price_subtotal': vals[1],
             'quantity': vals[2],
+            'price_total': vals[3],
         } for vals in expected_values_list]
 
         self.assertRecordValues(reports, expected_values_dict)
@@ -109,11 +123,12 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
     def test_invoice_report_multiple_types(self):
         self.assertInvoiceReportValues([
             #price_average   price_subtotal  quantity
-            [2000, 2000, 1],
-            [1000, 1000, 1],
-            [250, 750, 3],
-            [6, 6, 1],
-            [20, -20, -1],
-            [20, -20, -1],
-            [600, -600, -1],
+            [2000, 2000, 1, 2300],
+            [1200, 1200, 1, 1380],
+            [1000, 1000, 1, 1150],
+            [250, 750, 3, 862.5],
+            [6, 6, 1, 6.9],
+            [20, -20, -1, -23],
+            [20, -20, -1, -23],
+            [600, -600, -1, -690],
         ])
