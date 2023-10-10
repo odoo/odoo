@@ -55476,6 +55476,7 @@
         GaugeChartDesignPanel,
         ScorecardChartConfigPanel,
         ScorecardChartDesignPanel,
+        SelectionInput,
         FigureComponent,
         Menu,
         SelectionInput,

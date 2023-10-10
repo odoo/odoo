@@ -10,15 +10,28 @@
  * @property {string} type type of the field
  * @property {number} [offset] offset to apply to the field (for date filters)
  *
- * @typedef {Object} GlobalFilter
+ * @typedef TextGlobalFilter
+ * @property {"text"} type
  * @property {string} id
  * @property {string} label
- * @property {string} type "text" | "date" | "relation"
- * @property {RangeType} [rangeType]
- * @property {boolean} [automaticDefaultValue]
- * @property {RelativePeriod | "current_user" | string[] | string | undefined} defaultValue can be a period (for date filters), a list of ids (for relation filters) or simple text (for text filters)
- * @property {number} [modelID] ID of the related model
- * @property {string} [modelName] Name of the related model
+ * @property {object} [rangeOfAllowedValues]
+ * @property {string} [defaultValue]
+ *
+ * @typedef DateGlobalFilter
+ * @property {"date"} type
+ * @property {string} id
+ * @property {string} label
+ * @property {RangeType} rangeType
+ * @property {RelativePeriod} [defaultValue]
+ *
+ * @typedef RelationalGlobalFilter
+ * @property {"relation"} type
+ * @property {string} id
+ * @property {string} label
+ * @property {string} modelName
+ * @property {"current_user" | number[]} [defaultValue]
+ *
+ * @typedef {TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter} GlobalFilter
  */
 
 export const globalFiltersFieldMatchers = {};
@@ -82,12 +95,20 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER":
-                this.history.update("globalFilters", [...this.globalFilters, cmd.filter]);
+            case "ADD_GLOBAL_FILTER": {
+                const filter = { ...cmd.filter };
+                if (filter.type === "text" && filter.rangeOfAllowedValues) {
+                    filter.rangeOfAllowedValues = this.getters.getRangeFromRangeData(
+                        filter.rangeOfAllowedValues
+                    );
+                }
+                this.history.update("globalFilters", [...this.globalFilters, filter]);
                 break;
-            case "EDIT_GLOBAL_FILTER":
+            }
+            case "EDIT_GLOBAL_FILTER": {
                 this._editGlobalFilter(cmd.filter);
                 break;
+            }
             case "REMOVE_GLOBAL_FILTER": {
                 const filters = this.globalFilters.filter((filter) => filter.id !== cmd.id);
                 this.history.update("globalFilters", filters);
@@ -96,6 +117,36 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
             case "MOVE_GLOBAL_FILTER":
                 this._onMoveFilter(cmd.id, cmd.delta);
                 break;
+        }
+    }
+
+    adaptRanges(applyChange) {
+        for (const filterIndex in this.globalFilters) {
+            const filter = this.globalFilters[filterIndex];
+            if (filter.type === "text" && filter.rangeOfAllowedValues) {
+                const change = applyChange(filter.rangeOfAllowedValues);
+                switch (change.changeType) {
+                    case "REMOVE": {
+                        this.history.update(
+                            "globalFilters",
+                            filterIndex,
+                            "rangeOfAllowedValues",
+                            undefined
+                        );
+                        break;
+                    }
+                    case "RESIZE":
+                    case "MOVE":
+                    case "CHANGE": {
+                        this.history.update(
+                            "globalFilters",
+                            filterIndex,
+                            "rangeOfAllowedValues",
+                            change.range
+                        );
+                    }
+                }
+            }
         }
     }
 
@@ -182,10 +233,15 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     /**
      * Edit a global filter
      *
-     * @param {string} id Id of the filter to update
      * @param {GlobalFilter} newFilter
      */
     _editGlobalFilter(newFilter) {
+        newFilter = { ...newFilter };
+        if (newFilter.type === "text" && newFilter.rangeOfAllowedValues) {
+            newFilter.rangeOfAllowedValues = this.getters.getRangeFromRangeData(
+                newFilter.rangeOfAllowedValues
+            );
+        }
         const id = newFilter.id;
         const currentLabel = this.getGlobalFilter(id).label;
         const index = this.globalFilters.findIndex((filter) => filter.id === id);
@@ -210,6 +266,12 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      */
     import(data) {
         for (const globalFilter of data.globalFilters || []) {
+            if (globalFilter.type === "text" && globalFilter.rangeOfAllowedValues) {
+                globalFilter.rangeOfAllowedValues = this.getters.getRangeFromSheetXC(
+                    "", // there's no default sheet, global filters are cross-sheet
+                    globalFilter.rangeOfAllowedValues
+                );
+            }
             this.globalFilters.push(globalFilter);
         }
     }
@@ -219,9 +281,15 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      * @param {Object} data
      */
     export(data) {
-        data.globalFilters = this.globalFilters.map((filter) => ({
-            ...filter,
-        }));
+        data.globalFilters = this.globalFilters.map((filter) => {
+            filter = { ...filter };
+            if (filter.type === "text" && filter.rangeOfAllowedValues) {
+                filter.rangeOfAllowedValues = this.getters.getRangeString(
+                    filter.rangeOfAllowedValues
+                );
+            }
+            return filter;
+        });
     }
 
     // ---------------------------------------------------------------------
