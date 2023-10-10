@@ -13,7 +13,7 @@
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row ml16" groups="hr_expense.group_hr_expense_team_approver">
                         <div class="col">
-                            <a name="%(action_hr_expense_sheet_department_to_approve)d" type="action">
+                            <a name="action_hr_expense_sheet_department" type="object">
                                 <t t-esc="record.expense_sheets_to_approve_count.raw_value"/> Expense Reports
                             </a>
                         </div>
