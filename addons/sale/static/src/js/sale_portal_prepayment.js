@@ -42,8 +42,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
     },
 
     _onClickAmountPrepaymentButton: function (doReload=true) {
-        this.AmountTotalButton?.classList.add('opacity-50');
-        this.AmountPrepaymentButton?.classList.remove('opacity-50');
+        this.AmountTotalButton?.classList.remove('active');
+        this.AmountPrepaymentButton?.classList.add('active');
 
         if (doReload) {
             this._reloadAmount(true);
@@ -54,8 +54,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
     },
 
     _onClickAmountTotalButton: function(doReload=true) {
-        this.AmountTotalButton?.classList.remove('opacity-50');
-        this.AmountPrepaymentButton?.classList.add('opacity-50');
+        this.AmountPrepaymentButton?.classList.remove('active');
+        this.AmountTotalButton?.classList.add('active');
 
         if (doReload) {
             this._reloadAmount(false);

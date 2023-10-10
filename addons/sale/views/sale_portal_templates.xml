@@ -250,16 +250,17 @@
                                     <!-- Display choices only if a pre payment can confirm the order. -->
                                     <div t-if="prepayment_available"
                                          id="o_sale_portal_prepayment_buttons"
-                                         class="d-flex justify-content-center d-grid gap-2 btn-group"
+                                         class="d-flex btn-group"
+                                         role="group"
                                     >
-                                        <button name="o_sale_portal_amount_prepayment_button" class="btn btn-primary rounded">
+                                        <button name="o_sale_portal_amount_prepayment_button" class="btn btn-light active">
                                             Down payment <br/>
                                             <span t-esc="prepayment_amount" class="fw-bold"
                                                   t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
                                         </button>
-                                        <button name="o_sale_portal_amount_total_button" class="btn btn-primary rounded">
+                                        <button name="o_sale_portal_amount_total_button" class="btn btn-light">
                                             Full amount <br/>
-                                            <span t-field="sale_order.amount_total"/>
+                                            <span class="fw-bold" t-field="sale_order.amount_total"/>
                                         </button>
                                     </div>
                                     <p>
