@@ -8,6 +8,7 @@ import { DateFromToValue } from "../filter_date_from_to_value/filter_date_from_t
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { TextFilterValue } from "../filter_text_value/filter_text_value";
 
 export class FilterValue extends Component {
     setup() {
@@ -15,6 +16,19 @@ export class FilterValue extends Component {
         this.relativeDateRangesTypes = RELATIVE_DATE_RANGE_TYPES;
         this.nameService = useService("name");
     }
+
+    get filter() {
+        return this.props.filter;
+    }
+
+    get filterValue() {
+        return this.getters.getGlobalFilterValue(this.filter.id);
+    }
+
+    get textAllowedValues() {
+        return this.getters.getTextFilterOptions(this.filter.id);
+    }
+
     onDateInput(id, value) {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
     }
@@ -29,7 +43,7 @@ export class FilterValue extends Component {
             this.clear(id);
         } else {
             const displayNames = await this.nameService.loadDisplayNames(
-                this.props.filter.modelName,
+                this.filter.modelName,
                 resIds
             );
             this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
@@ -49,7 +63,7 @@ export class FilterValue extends Component {
     }
 }
 FilterValue.template = "spreadsheet_edition.FilterValue";
-FilterValue.components = { DateFilterValue, DateFromToValue, MultiRecordSelector };
+FilterValue.components = { DateFilterValue, DateFromToValue, MultiRecordSelector, TextFilterValue };
 FilterValue.props = {
     filter: Object,
     model: Object,
