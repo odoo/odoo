@@ -44,7 +44,6 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
             base_amount = factor * sum(tax_base_lines.mapped('price_total'))
         return self.payment_register_id.currency_id.round(base_amount / conversion_rate)
 
-
     def _tax_compute_all_helper(self):
         self.ensure_one()
         # Computes the withholding tax amount provided a base and a tax
