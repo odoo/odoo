@@ -638,10 +638,12 @@ class SaleOrderLine(models.Model):
             # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
-            # Find biggest suitable packaging
+            # suggest biggest suitable packaging matching the SO's company
             if line.product_id and line.product_uom_qty and line.product_uom:
-                line.product_packaging_id = line.product_id.packaging_ids.filtered(
-                    'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom) or line.product_packaging_id
+                suggested_packaging = line.product_id.packaging_ids\
+                        .filtered(lambda p: p.sales and (p.product_id.company_id <= p.company_id <= line.company_id))\
+                        ._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
+                line.product_packaging_id = suggested_packaging or line.product_packaging_id
 
     @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
