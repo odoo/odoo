@@ -1192,24 +1192,10 @@ class Picking(models.Model):
         for picking in self:
             if picking.picking_type_id.create_backorder != 'ask':
                 continue
-            quantity_todo = {}
-            quantity_done = {}
-            for move in picking.move_ids.filtered(lambda m: m.state != "cancel"):
-                quantity_todo.setdefault(move.product_id.id, 0)
-                quantity_done.setdefault(move.product_id.id, 0)
-                quantity_todo[move.product_id.id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
-                quantity_done[move.product_id.id] += move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
-            # FIXME: the next block doesn't seem nor should be used.
-            for ops in picking.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
-                for quant in ops.package_id.quant_ids:
-                    quantity_done.setdefault(quant.product_id.id, 0)
-                    quantity_done[quant.product_id.id] += quant.qty
-            for pack in picking.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
-                quantity_done.setdefault(pack.product_id.id, 0)
-                quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
             if any(
-                float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
-                for x in quantity_done
+                    float_compare(move.quantity_done, move.product_uom_qty, precision_digits=prec) < 0
+                    for move in picking.move_ids
+                    if move.state != 'cancel'
             ):
                 backorder_pickings |= picking
         return backorder_pickings
