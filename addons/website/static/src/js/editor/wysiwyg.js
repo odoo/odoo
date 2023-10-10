@@ -254,6 +254,18 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         return toggleDropdown($megaMenuToggles, false);
     },
     /**
+     * @override
+     */
+    _getRecordInfo: function (editable) {
+        const $editable = $(editable);
+        return {
+            resModel: $editable.data('oe-model'),
+            resId: $editable.data('oe-id'),
+            field: $editable.data('oe-field'),
+            type: $editable.data('oe-type'),
+        }
+      },
+    /**
      * Toggles the mega menu.
      *
      * @private
