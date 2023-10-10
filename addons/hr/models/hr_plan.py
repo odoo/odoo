@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class HrPlan(models.Model):
@@ -18,6 +18,12 @@ class HrPlan(models.Model):
         check_company=True)
     active = fields.Boolean(default=True)
     steps_count = fields.Integer(compute='_compute_steps_count')
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {},
+                       name=_("%s (copy)", self.name))
+        return super().copy(default=default)
 
     @api.depends('plan_activity_type_ids')
     def _compute_steps_count(self):
