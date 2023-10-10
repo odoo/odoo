@@ -1377,5 +1377,17 @@ Send it ASAP, its urgent.</field>
             <field name="progress" eval="100"/>
             <field name="status">done</field>
         </record>
+        <record id="project_update_4" model="project.update" context="{'default_project_id': ref('project.project_project_4')}">
+            <field name="name">Quality Check</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="100"/>
+            <field name="status">done</field>
+        </record>
+        <record id="project_update_5" model="project.update" context="{'default_project_id': ref('project.project_project_2')}">
+            <field name="name">Planning and Requirement Analysis</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="100"/>
+            <field name="status">done</field>
+        </record>
     </data>
 </odoo>

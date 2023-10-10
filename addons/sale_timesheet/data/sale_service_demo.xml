@@ -38,6 +38,13 @@
             <field name="privacy_visibility">followers</field>
         </record>
 
+        <record id="project_support_status1" model="project.update" context="{'default_project_id': ref('sale_timesheet.project_support')}">
+            <field name="name">Customer feedback</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="100"/>
+            <field name="status">done</field>
+        </record>
+
         <record id="support_follower_admin" model="mail.followers">
             <field name="res_model">project.project</field>
             <field name="res_id" ref="project_support"/>
