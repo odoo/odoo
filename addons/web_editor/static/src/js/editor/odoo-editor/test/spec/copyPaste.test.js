@@ -21,7 +21,7 @@ describe('Copy', () => {
                 contentBefore: '<p>[]</p>',
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    await triggerEvent(editor.editable, 'copy', { clipboardData });
                     // Check that nothing was set as clipboard content
                     window.chai.expect(clipboardData.types.length).to.be.equal(0);
                 },
@@ -31,7 +31,7 @@ describe('Copy', () => {
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
                     clipboardData.setData('text/plain', 'should stay');
-                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    await triggerEvent(editor.editable, 'copy', { clipboardData });
                     // Check that clipboard data was not overwritten
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('should stay');
                 },
@@ -44,7 +44,7 @@ describe('Copy', () => {
                 contentBefore: '<p>a[bcd]e</p>',
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    await triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('bcd');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('bcd');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('bcd');
@@ -54,7 +54,7 @@ describe('Copy', () => {
                 contentBefore: '<p>[abc<br>efg]</p>',
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    await triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('abc\nefg');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('abc<br>efg');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
@@ -64,7 +64,7 @@ describe('Copy', () => {
                 contentBefore: `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`,
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    await triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('a');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>');
@@ -80,7 +80,7 @@ describe('Cut', () => {
                 contentBefore: '<p>[]</p>',
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    await triggerEvent(editor.editable, 'cut', { clipboardData });
                     // Check that nothing was set as clipboard content
                     window.chai.expect(clipboardData.types.length).to.be.equal(0);
                 },
@@ -90,7 +90,7 @@ describe('Cut', () => {
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
                     clipboardData.setData('text/plain', 'should stay');
-                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    await triggerEvent(editor.editable, 'cut', { clipboardData });
                     // Check that clipboard data was not overwritten
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('should stay');
                 },
@@ -103,7 +103,7 @@ describe('Cut', () => {
                 contentBefore: '<p>a[bcd]e</p>',
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    await triggerEvent(editor.editable, 'cut', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('bcd');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('bcd');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('bcd');
@@ -114,7 +114,7 @@ describe('Cut', () => {
                 contentBefore: '<p>[abc<br>efg]</p>',
                 stepFunction: async editor => {
                     const clipboardData = new DataTransfer();
-                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    await triggerEvent(editor.editable, 'cut', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('abc\nefg');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('abc<br>efg');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
@@ -127,7 +127,7 @@ describe('Cut', () => {
                 contentBefore: '<p>a[bcd]e</p>',
                 stepFunction: async editor => {
                     const historyStepsCount = editor._historySteps.length;
-                    triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
+                    await triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
                     window.chai.expect(editor._historySteps.length).to.be.equal(historyStepsCount + 1);
                     undo(editor);
                 },
@@ -141,8 +141,8 @@ describe('Cut', () => {
                     // Set selection to a[bcd]e.
                     const selection = editor.document.getSelection();
                     selection.extend(selection.anchorNode, 4);
-                    triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
-                    triggerEvent(editor.editable, 'input', {
+                    await triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
+                    await triggerEvent(editor.editable, 'input', {
                         inputType: 'deleteContentForward'
                     });
                 },
@@ -1477,7 +1477,7 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the first command (Embed image)
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>xy<img src="${imageUrl}">[]z</p>`,
                 });
@@ -1488,8 +1488,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>xy<a href="${imageUrl}">${imageUrl}</a>[]z</p>`,
                 });
@@ -1731,7 +1731,7 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the first command (Embed image)
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>ab<img src="${imageUrl}">[]cd</p>`,
                 });
@@ -1742,8 +1742,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>ab<a href="${imageUrl}">${imageUrl}</a>[]cd</p>`,
                 });
@@ -1807,8 +1807,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p><a href="${url}">${url}</a>[]</p>`,
                 });
@@ -1824,8 +1824,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`,
                 });
@@ -1878,8 +1878,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
                 });
@@ -1907,8 +1907,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
                 });
@@ -1922,7 +1922,7 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick first command (Embed image)
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                         // Undo
                         await nextTick();
                         editor.historyUndo();
@@ -1936,10 +1936,9 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                         // Undo
-                        await nextTick();
                         editor.historyUndo();
                     },
                     contentAfter: '<p>[abc]</p>',
@@ -1995,9 +1994,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
-                        await nextTick();
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p><a href="${url}">${url}</a>[]</p>`,
                 });
@@ -2013,8 +2011,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`,
                 });
@@ -2067,8 +2065,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
                 });
@@ -2097,8 +2095,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick the second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     },
                     contentAfter: `<p>ab<a href="${url}">${url}</a>[]cd</p>`,
                 });
@@ -2112,9 +2110,8 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick first command (Embed video)
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                         // Undo
-                        await nextTick();
                         editor.historyUndo();
                     },
                     contentAfter: '<p>[abc]</p>',
@@ -2126,10 +2123,9 @@ describe('Paste', () => {
                         // Ensure the powerbox is active
                         window.chai.expect(editor.powerbox.isOpen).to.be.true;
                         // Pick second command (Paste as URL)
-                        triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
-                        triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                         // Undo
-                        await nextTick();
                         editor.historyUndo();
                     },
                     contentAfter: '<p>[abc]</p>',

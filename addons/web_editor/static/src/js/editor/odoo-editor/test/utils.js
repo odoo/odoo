@@ -636,7 +636,7 @@ function getEventConstructor(win, type) {
     return eventTypes[type];
 }
 
-export function triggerEvent(
+export async function triggerEvent(
     el,
     eventName,
     options,
@@ -659,6 +659,7 @@ export function triggerEvent(
     const ev = new EventClass(eventName, options);
 
     currentElement.dispatchEvent(ev);
+    await nextTick();
     return ev;
 }
 
