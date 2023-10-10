@@ -206,3 +206,32 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                 # Can't switch back to branch if used in main
                 with self.assertRaisesRegex(UserError, 'journal items linked'):
                     record.company_id = self.branch_a
+
+    def test_branch_should_keep_parent_company_currency(self):
+        test_country = self.env['res.country'].create({
+            'name': 'Gold Country',
+            'code': 'zz',
+            'currency_id': self.currency_data['currency'].id
+        })
+        root_company = self.env['res.company'].create({
+            'name': 'Gold Company',
+            'country_id': test_country.id,
+        })
+        # with the generic_coa, try_loading forces currency_id to USD and account_fiscal_country_id to United States
+        self.env['account.chart.template'].try_loading('generic_coa', company=root_company, install_demo=False)
+        # So we write these values after try_loading
+        root_company.write({
+            'currency_id': test_country.currency_id.id,
+            'account_fiscal_country_id': test_country.id,
+        })
+
+        root_company.write({
+            'child_ids': [
+                Command.create({
+                    'name': 'Gold Branch',
+                    'country_id': test_country.id,
+                }),
+            ],
+        })
+        self.env['account.chart.template'].try_loading('generic_coa', company=root_company.child_ids[0], install_demo=False)
+        self.assertEqual(root_company.currency_id, root_company.child_ids[0].currency_id)
