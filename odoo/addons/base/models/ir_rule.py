@@ -204,7 +204,7 @@ class IrRule(models.Model):
             "Sorry, %s doesn't have '%s' access to:", user_description, operations[operation])
         failing_model = _("- %s (%s)", description, model)
 
-        resolution_info = _("If you really, really need access, go bribe your friendly administrator.")
+        resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
 
         if not self.user_has_groups('base.group_no_one') or not self.env.user.has_group('base.group_user'):
             records.invalidate_recordset()
@@ -232,7 +232,7 @@ class IrRule(models.Model):
         failing_rules = _("Blame the following rules:\n%s", rules_description)
 
         if company_related:
-            failing_rules += "\n\n" + _('Note: this might be a multi-company issue.')
+            failing_rules += "\n\n" + _('Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
 
         # clean up the cache of records prefetched with display_name above
         records_sudo.invalidate_recordset()

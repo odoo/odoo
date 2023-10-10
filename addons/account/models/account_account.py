@@ -757,7 +757,7 @@ class AccountAccount(models.Model):
             account_name = partner_prop_acc.get_by_record().display_name
             raise UserError(
                 _("You can't delete the account %s, as it is used on a contact.\n\n"
-                    "Imagine that a customer’s receivables evaporate; your CFO might not like it :)"
+                    "Think of it as safeguarding your customer's receivables; your CFO would appreciate it :)"
                     , account_name)
             )
 

@@ -1478,10 +1478,10 @@ class MrpProduction(models.Model):
 
     def button_unplan(self):
         if any(wo.state == 'done' for wo in self.workorder_ids):
-            raise UserError(_("Some work orders have already been done, so you cannot unplan this manufacturing order.\n\n"
+            raise UserError(_("Some work orders are already done, so you cannot unplan this manufacturing order.\n\n"
                 "It’d be a shame to waste all that progress, right?"))
         elif any(wo.state == 'progress' for wo in self.workorder_ids):
-            raise UserError(_("Some work orders have already been started, so you cannot unplan this manufacturing order.\n\n"
+            raise UserError(_("Some work orders have already started, so you cannot unplan this manufacturing order.\n\n"
                 "It’d be a shame to waste all that progress, right?"))
 
         self.workorder_ids.leave_id.unlink()
