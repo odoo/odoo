@@ -1489,7 +1489,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
             // Ignore 0 price lines
             if (!entry[1]) {
-                return;
+                return lst;
             }
             const taxIds = entry[0] === "" ? [] : entry[0].split(",").map((str) => parseInt(str));
             lst.push({
