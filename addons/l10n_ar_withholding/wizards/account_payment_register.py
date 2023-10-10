@@ -30,7 +30,7 @@ class AccountPaymentRegister(models.TransientModel):
     #         wizard.currency_id = wizard.l10n_latam_check_id.currency_id
     #         wizard.l10n_ar_net_amount = wizard.l10n_latam_check_id.amount
     #         factor = wizard._get_net_amount_simulated_factor()
-    #         withholding_net_amount = min(wizard.l10n_latam_check_id.amount , wizard.net_amount)
+    #         withholding_net_amount = min(wizard.l10n_latam_check_id.amount, wizard.net_amount)
     #         wizard.amount = withholding_net_amount * factor + (wizard.l10n_latam_check_id.amount - withholding_net_amount)
 
     @api.depends('l10n_ar_withholding_ids.amount', 'amount', 'l10n_latam_check_id')
@@ -40,15 +40,15 @@ class AccountPaymentRegister(models.TransientModel):
                 rec.currency_id = rec.l10n_latam_check_id.currency_id
                 rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
                 factor = rec._get_net_amount_simulated_factor()
-                withholding_net_amount = min(rec.l10n_latam_check_id.amount , rec.l10n_ar_net_amount)
+                withholding_net_amount = min(rec.l10n_latam_check_id.amount, rec.l10n_ar_net_amount)
                 rec.amount = withholding_net_amount * factor + (rec.l10n_latam_check_id.amount - withholding_net_amount)
             else:
                 rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
 
     def _get_withholding_tax(self):
         self.ensure_one()
-        return self.line_ids.move_id.invoice_line_ids.product_id.l10n_ar_supplier_withholding_taxes_ids.filtered(
-                lambda y: y.company_id == self.company_id)
+        return self.line_ids.move_id.invoice_line_ids.product_id.l10n_ar_supplier_withholding_taxes_ids.filtered_domain(
+                self.env['account.tax']._check_company_domain(self.company_id))
 
     def _get_net_amount_simulated_factor(self):
         """ This method allows to simulate the total net amount of a payment and the relationship between the total and
@@ -63,7 +63,6 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _get_withholding_move_line_default_values(self):
         return {
-            'partner_id': self.partner_id.id,
             'currency_id': self.currency_id.id,
         }
 
@@ -118,23 +117,23 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _get_conversion_rate(self):
         self.ensure_one()
-        if  self.currency_id !=  self.source_currency_id:
+        if self.currency_id != self.source_currency_id:
             return self.env['res.currency']._get_conversion_rate(
                 self.currency_id,
                 self.source_currency_id,
                 self.company_id,
                 self.payment_date,
             )
-        return  1.0
+        return 1.0
 
     def _l10n_ar_get_payment_factor(self):
-        # The factor represents the portion of the invoiced amount that I am paying and is used to calculate
-        # the base amount. When pay more than billed, the factor is 1, because I should only pay tax on the invoiced amount.
-        # billed | payment | factor
-        #    100 |      50 |    0.5
-        #    100 |     100 |      1
-        #    100 |     200 |      1
-
+        """ The factor represents the portion of the invoiced amount that I am paying and is used to calculate
+        the base amount. When pay more than billed, the factor is 1, because I should only pay tax on the invoiced amount.
+        billed | payment | factor
+           100 |      50 |    0.5
+           100 |     100 |      1
+           100 |     200 |      1
+        """
         self.ensure_one()
         amount_total = sum([m.amount_total for m in self.mapped('line_ids.move_id')])
         conversion_rate = self._get_conversion_rate()

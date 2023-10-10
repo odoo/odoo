@@ -5,6 +5,7 @@
     'version': "1.0",
     'description': """Allows to register withholdings during the payment of an invoice.""",
     'author': 'ADHOC SA',
+    'countries': ['ar'],
     'category': 'Accounting/Localizations',
     'depends': [
         'account',
