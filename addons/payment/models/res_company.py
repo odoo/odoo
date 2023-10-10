@@ -27,17 +27,12 @@ class ResCompany(models.Model):
         """
         self.env.company.get_chart_of_accounts_or_fail()
 
-        self._install_modules(['payment_stripe', 'account_payment'])
+        self._install_modules(['payment_stripe'])
 
         # Create a new env including the freshly installed module(s)
         new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
         # Configure Stripe
-        default_journal = new_env['account.journal'].search([
-            *self.env['account.journal']._check_company_domain(new_env.company),
-            ('type', '=', 'bank'),
-        ], limit=1)
-
         stripe_provider = new_env['payment.provider'].search([
             *self.env['payment.provider']._check_company_domain(self.env.company),
             ('code', '=', 'stripe')
@@ -46,7 +41,6 @@ class ResCompany(models.Model):
             base_provider = self.env.ref('payment.payment_provider_stripe')
             # Use sudo to access payment provider record that can be in different company.
             stripe_provider = base_provider.sudo().copy(default={'company_id': self.env.company.id})
-        stripe_provider.journal_id = stripe_provider.journal_id or default_journal
 
         return stripe_provider.action_stripe_connect_account(menu_id=menu_id)
 

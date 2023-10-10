@@ -27,8 +27,13 @@ class PaymentProvider(models.Model):
             ], limit=1)
             if payment_method:
                 provider.journal_id = payment_method.journal_id
-            else:
-                provider.journal_id = False
+            else:  # Fallback to the first journal of type bank that we find.
+                provider.journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(provider.company_id.id),
+                    ('type', '=', 'bank'),
+                ], limit=1)
+                if provider.journal_id:
+                    self._link_payment_method_to_journal(provider)
 
     def _inverse_journal_id(self):
         for provider in self:
@@ -39,21 +44,24 @@ class PaymentProvider(models.Model):
             ], limit=1)
             if provider.journal_id:
                 if not payment_method_line:
-                    default_payment_method_id = provider._get_default_payment_method_id(code)
-                    existing_payment_method_line = self.env['account.payment.method.line'].search([
-                        *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
-                        ('payment_method_id', '=', default_payment_method_id),
-                        ('journal_id', '=', provider.journal_id.id),
-                    ], limit=1)
-                    if not existing_payment_method_line:
-                        self.env['account.payment.method.line'].create({
-                            'payment_method_id': default_payment_method_id,
-                            'journal_id': provider.journal_id.id,
-                        })
+                    self._link_payment_method_to_journal(provider)
                 else:
                     payment_method_line.journal_id = provider.journal_id
             elif payment_method_line:
                 payment_method_line.unlink()
+
+    def _link_payment_method_to_journal(self, provider):
+        default_payment_method_id = provider._get_default_payment_method_id(provider._get_code())
+        existing_payment_method_line = self.env['account.payment.method.line'].search([
+            *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
+            ('payment_method_id', '=', default_payment_method_id),
+            ('journal_id', '=', provider.journal_id.id),
+        ], limit=1)
+        if not existing_payment_method_line:
+            self.env['account.payment.method.line'].create({
+                'payment_method_id': default_payment_method_id,
+                'journal_id': provider.journal_id.id,
+            })
 
     @api.model
     def _get_default_payment_method_id(self, code):
