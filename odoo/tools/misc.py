@@ -25,7 +25,9 @@ import types
 import unicodedata
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
+from collections import defaultdict, OrderedDict
+from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
+
 from itertools import islice, groupby as itergroupby, repeat
 from lxml import etree
 
@@ -1158,9 +1160,9 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj:
             digits = currency_obj.decimal_places
         elif (hasattr(value, '_field') and getattr(value._field, 'digits', None)):
-                digits = value._field.digits[1]
-                if not digits and digits is not 0:
-                    digits = DEFAULT_DIGITS
+            digits = value._field.digits[1]
+            if not digits and digits != 0:
+                digits = DEFAULT_DIGITS
 
     if isinstance(value, pycompat.string_types) and not value:
         return ''
