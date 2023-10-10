@@ -752,6 +752,11 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
     },
 
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
