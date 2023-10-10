@@ -203,7 +203,7 @@ class TestIRRuleFeedback(Feedback):
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s (%s)
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record._name))
         # debug mode
         self.debug_mode()
@@ -219,7 +219,7 @@ Sorry, %s (id=%s) doesn't have 'write' access to:
 Blame the following rules:
 - rule 0
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
         ChildModel = self.env['test_access_right.inherits']
@@ -235,7 +235,7 @@ Sorry, %s (id=%s) doesn't have 'write' access to:
 Blame the following rules:
 - rule 0
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_locals(self):
@@ -255,7 +255,7 @@ Blame the following rules:
 - rule 0
 - rule 1
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_globals_all(self):
@@ -275,7 +275,7 @@ Blame the following rules:
 - rule 0
 - rule 1
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_globals_any(self):
@@ -297,7 +297,7 @@ Sorry, %s (id=%s) doesn't have 'write' access to:
 Blame the following rules:
 - rule 0
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_combination(self):
@@ -320,7 +320,7 @@ Blame the following rules:
 - rule 2
 - rule 3
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_warn_company_no_access(self):
@@ -343,9 +343,9 @@ Sorry, %s (id=%s) doesn't have 'write' access to:
 Blame the following rules:
 - rule 0
 
-Note: this might be a multi-company issue.
+Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_warn_company_no_company_field(self):
@@ -377,9 +377,9 @@ Sorry, %s (id=%s) doesn't have 'read' access to:
 Blame the following rules:
 - rule 0
 
-Note: this might be a multi-company issue.
+Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, child_record._description, child_record.display_name, child_record._name, child_record.id))
 
     def test_warn_company_access(self):
@@ -402,9 +402,9 @@ Sorry, %s (id=%s) doesn't have 'read' access to:
 Blame the following rules:
 - rule 0
 
-Note: this might be a multi-company issue.
+Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!
 
-If you really, really need access, go bribe your friendly administrator."""
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id, self.record.sudo().company_id.display_name))
         p = self.env['test_access_right.inherits'].create({'some_id': self.record.id})
         self.env.flush_all()
