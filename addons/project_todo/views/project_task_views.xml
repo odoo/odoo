@@ -158,6 +158,10 @@
                   js_class="todo_conversion_form">
                 <sheet>
                     <group>
+                        <!-- company_id field is used in the domain filtering project_id in
+                             hr_timesheet. Creating a bridge module just to add that field is
+                             overkill so it is added here. -->
+                        <field name="company_id" invisible="1"/>
                         <field name="project_id"
                                required="1"
                                placeholder="Select an existing project"
