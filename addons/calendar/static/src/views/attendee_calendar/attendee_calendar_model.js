@@ -46,7 +46,23 @@ export class AttendeeCalendarModel extends CalendarModel {
     /**
      * @override
      */
-
+    computeFiltersDomain(data) {
+        const [authorizedValues, avoidValues] = this.getAuthorizedValuesForFilters(data);
+        const domain = [];
+        for (const field in authorizedValues) {
+            if (field === "partner_ids") {
+                const vals = authorizedValues[field];
+                domain.push("|", [field, "in", vals], ["partner_id", "in", vals]);
+            }
+            else domain.push([field, "in", authorizedValues[field]]);
+        }
+        for (const field in avoidValues) {
+            if (avoidValues[field].length > 0) {
+                domain.push([field, "not in", avoidValues[field]]);
+            }
+        }
+        return domain;
+    }
 
     /**
      * @override

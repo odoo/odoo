@@ -367,6 +367,7 @@
                 <field name="declined_count" invisible="1"/>
                 <field name="user_can_edit" invisible="1"/>
                 <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
+                       attrs="{'invisible': [('partner_ids', '=', [])]}"
                        filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
                 />

@@ -388,9 +388,10 @@ export class CalendarModel extends Model {
     /**
      * @protected
      */
-    computeFiltersDomain(data) {
+    getAuthorizedValuesForFilters(data) {
         // List authorized values for every field
         // fields with an active "all" filter are skipped
+
         const authorizedValues = {};
         const avoidValues = {};
 
@@ -421,7 +422,13 @@ export class CalendarModel extends Model {
             }
         }
 
-        // Compute the domain
+        return [authorizedValues, avoidValues];
+    }
+    /**
+     * @protected
+     */
+    computeFiltersDomain(data) {
+        const [authorizedValues, avoidValues] = this.getAuthorizedValuesForFilters(data);
         const domain = [];
         for (const field in authorizedValues) {
             domain.push([field, "in", authorizedValues[field]]);
