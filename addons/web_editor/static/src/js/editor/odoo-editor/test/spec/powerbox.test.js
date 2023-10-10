@@ -26,7 +26,7 @@ describe('Powerbox', () => {
                 stepFunction: async editor => {
                     await insertText(editor, '/');
                     await insertText(editor, 'head');
-                    triggerEvent(editor.editable, 'keyup');
+                    await triggerEvent(editor.editable, 'keyup');
                     window.chai.expect(getCurrentCommandNames(editor.powerbox)).to.eql(['Heading 1', 'Heading 2', 'Heading 3']);
                 },
             });
@@ -38,8 +38,8 @@ describe('Powerbox', () => {
                     editor.powerbox.el.classList.add('yo');
                     await insertText(editor, '/');
                     await insertText(editor, 'head');
-                    triggerEvent(editor.editable, 'keyup');
-                    triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    await triggerEvent(editor.editable, 'keyup');
+                    await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                 },
                 contentAfter: '<h1>ab[]</h1>',
             });
@@ -52,8 +52,8 @@ describe('Powerbox', () => {
                 stepFunction: async editor => {
                     await insertText(editor,'/');
                     await insertText(editor, 'table');
-                    triggerEvent(editor.editable,'keyup');
-                    triggerEvent(editor.editable,'keydown', {key: 'Enter'});
+                    await triggerEvent(editor.editable,'keyup');
+                    await triggerEvent(editor.editable,'keydown', {key: 'Enter'});
                 },
                 contentAfter: `<table class="table table-bordered o_table"><tbody><tr><td>[]<p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`,
             });
@@ -107,13 +107,13 @@ describe('Powerbox', () => {
             });
             powerbox.open();
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('1');
-            triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('2');
-            triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('3');
-            triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('2');
-            triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowUp'});
             window.chai.expect(powerbox._context.selectedCommand.name).to.eql('1');
             powerbox.destroy();
             editable.remove();
@@ -132,10 +132,10 @@ describe('Powerbox', () => {
             });
             powerbox.open();
             window.chai.expect(editable.innerText).to.eql('');
-            triggerEvent(editable, 'keydown', { key: 'Enter'});
+            await triggerEvent(editable, 'keydown', { key: 'Enter'});
             window.chai.expect(editable.innerText).to.eql('1');
-            triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
-            triggerEvent(editable, 'keydown', { key: 'Enter'});
+            await triggerEvent(editable, 'keydown', { key: 'ArrowDown'});
+            await triggerEvent(editable, 'keydown', { key: 'Enter'});
             window.chai.expect(editable.innerText).to.eql('2');
             powerbox.destroy();
             editable.remove();
@@ -216,18 +216,18 @@ describe('Powerbox', () => {
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             // filter: '1'
             editable.append(document.createTextNode('1'));
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'b1y']);
             // filter: ''
             editable.lastChild.remove();
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             // filter: 'a'
             editable.append(document.createTextNode('a'));
-            triggerEvent(editable, 'keyup'); // filter: 'a'.
+            await triggerEvent(editable, 'keyup'); // filter: 'a'.
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3']);
             editable.append(document.createTextNode('1'));
-            triggerEvent(editable, 'keyup'); // filter: 'a1'.
+            await triggerEvent(editable, 'keyup'); // filter: 'a1'.
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1']);
             powerbox.destroy();
             editable.remove();
@@ -255,19 +255,19 @@ describe('Powerbox', () => {
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             // Text: '1y' -> filter: 'y'
             editable.append(document.createTextNode('x'));
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['b2x', 'b3x']);
             // Text: '1'
             editable.lastChild.remove();
-            triggerEvent(editable, 'keydown', { key: 'Backspace' });
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keydown', { key: 'Backspace' });
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(getCurrentCommandNames(powerbox)).to.eql(['a1', 'a2', 'a3', 'b1y', 'b2x', 'b3x']);
             window.chai.expect(powerbox.isOpen).to.eql(true);
             window.chai.expect(powerbox.el.style.display).not.to.eql('none');
             // Text: ''
             editable.lastChild.remove();
-            triggerEvent(editable, 'keydown', { key: 'Backspace' });
-            triggerEvent(editable, 'keyup');
+            await triggerEvent(editable, 'keydown', { key: 'Backspace' });
+            await triggerEvent(editable, 'keyup');
             window.chai.expect(powerbox.isOpen).to.eql(false);
             window.chai.expect(powerbox.el.style.display).to.eql('none');
             powerbox.destroy();
@@ -288,7 +288,7 @@ describe('Powerbox', () => {
             powerbox.open();
             window.chai.expect(powerbox.isOpen).to.eql(true);
             window.chai.expect(powerbox.el.style.display).not.to.eql('none');
-            triggerEvent(editable, 'keydown', { key: 'Escape' });
+            await triggerEvent(editable, 'keydown', { key: 'Escape' });
             window.chai.expect(powerbox.isOpen).to.eql(false);
             window.chai.expect(powerbox.el.style.display).to.eql('none');
             powerbox.destroy();
