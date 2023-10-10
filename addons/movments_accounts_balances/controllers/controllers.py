@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import models, fields, api
+
 
 class AccountBalance(models.Model):
     _inherit = 'account.account'
@@ -25,3 +26,12 @@ class AccountBalance(models.Model):
             results += self.env.cr.dictfetchall()
 
         return results
+    @api.model
+    def get_all_accounts(self):
+        accounts = self.env['account.account'].search([])
+
+        account_ids = []
+        for account in accounts:
+            account_ids.append(account.id)
+
+        return account_ids
