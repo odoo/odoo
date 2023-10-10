@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
-import { escapeHTML } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 
 const FETCH_LIMIT = 30;
 
@@ -949,7 +949,7 @@ export class ThreadService {
     async search(searchTerm, thread, before = false) {
         const { messages, count } = await this.rpc(this.getFetchRoute(thread), {
             ...this.getFetchParams(thread),
-            search_term: escapeHTML(searchTerm),
+            search_term: escape(searchTerm),
             before,
         });
         return {

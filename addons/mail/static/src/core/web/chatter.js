@@ -30,7 +30,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { escapeHTML } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
 
@@ -253,7 +253,7 @@ export class Chatter extends Component {
             .slice(0, 5)
             .map(({ partner }) => {
                 const text = partner.email ? partner.emailWithoutDomain : partner.name;
-                return `<span class="text-muted" title="${escapeHTML(partner.email)}">${escapeHTML(
+                return `<span class="text-muted" title="${escape(partner.email)}">${escape(
                     text
                 )}</span>`;
             });

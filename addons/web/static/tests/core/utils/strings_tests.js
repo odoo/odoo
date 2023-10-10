@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
 import {
-    escapeHTML,
+    escape,
     escapeRegExp,
     intersperse,
     isEmail,
     sprintf,
     unaccent,
-    unescapeHTML,
 } from "@web/core/utils/strings";
 import { _t, translatedTerms } from "@web/core/l10n/translation";
 import { patchWithCleanup } from "../../helpers/utils";
@@ -113,26 +112,19 @@ QUnit.module("utils", () => {
         assert.deepEqual(sprintf("Hello %(two)s %(one)s", vals), "Hello två en");
     });
 
-    QUnit.test("escapeHTML && unescapeHTML", (assert) => {
+    QUnit.test("escape", (assert) => {
+        assert.strictEqual(escape("<a>this is a link</a>"), "&lt;a&gt;this is a link&lt;/a&gt;");
         assert.strictEqual(
-            escapeHTML("<a>this is a link</a>"),
-            "&lt;a&gt;this is a link&lt;/a&gt;"
+            escape(`<a href="https://www.odoo.com">odoo<a>`),
+            `&lt;a href=&quot;https://www.odoo.com&quot;&gt;odoo&lt;a&gt;`
         );
         assert.strictEqual(
-            unescapeHTML("&lt;a&gt;this is a link&lt;/a&gt;"),
-            "<a>this is a link</a>"
+            escape(`<a href='https://www.odoo.com'>odoo<a>`),
+            `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;odoo&lt;a&gt;`
         );
         assert.strictEqual(
-            escapeHTML(`<a href="https://www.odoo.com">odoo<a>`),
-            "&lt;a href=&quot;https://www.odoo.com&quot;&gt;odoo&lt;a&gt;"
-        );
-        assert.strictEqual(
-            unescapeHTML(escapeHTML(`<a href="https://www.odoo.com">Odoo<a>`)),
-            `<a href="https://www.odoo.com">Odoo<a>`
-        );
-        assert.strictEqual(
-            unescapeHTML(escapeHTML`<a href="https://www.odoo.com">Odoo<a>`),
-            `<a href="https://www.odoo.com">Odoo<a>`
+            escape("<a href='https://www.odoo.com'>Odoo`s website<a>"),
+            `&lt;a href=&#x27;https://www.odoo.com&#x27;&gt;Odoo&#x60;s website&lt;a&gt;`
         );
     });
 
