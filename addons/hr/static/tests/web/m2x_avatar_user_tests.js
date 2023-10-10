@@ -75,7 +75,6 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
                 "work_email",
                 "job_title",
                 "department_id",
-                "employee_parent_id",
                 "employee_id"]);
                 assert.step("user read");
             }
