@@ -141,6 +141,9 @@ const hookParams = {
         };
 
         const onElementComplexPointerEnter = (ev) => {
+            if (ctx.haveAlreadyChanged) {
+                return;
+            }
             const element = ev.currentTarget;
 
             const siblingArray = [...element.parentElement.children].filter(
@@ -160,14 +163,18 @@ const hookParams = {
                 if (isDirectSibling) {
                     if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
                         element.before(current.placeHolder);
+                        ctx.haveAlreadyChanged = true;
                     } else if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
                         element.after(current.placeHolder);
+                        ctx.haveAlreadyChanged = true;
                     }
                 } else {
                     if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
                         element.before(current.placeHolder);
+                        ctx.haveAlreadyChanged = true;
                     } else if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
                         element.after(current.placeHolder);
+                        ctx.haveAlreadyChanged = true;
                     }
                 }
             }
@@ -179,21 +186,34 @@ const hookParams = {
          * @param {PointerEvent} ev
          */
         const onElementComplexPointerLeave = (ev) => {
+            if (ctx.haveAlreadyChanged) {
+                return;
+            }
             const element = ev.currentTarget;
+            const elementRect = element.getBoundingClientRect();
+
+            const relatedElement = ev.relatedTarget;
+            const relatedElementRect = element.getBoundingClientRect();
 
             const siblingArray = [...element.parentElement.children].filter(
                 (el) =>
                     el === current.placeHolder ||
                     (el.matches(elementSelector) && !el.classList.contains(DRAGGED_CLASS))
             );
+            const pointerOnSiblings = siblingArray.indexOf(relatedElement) > -1;
             const elementIndex = siblingArray.indexOf(element);
-            const isAtEdge = elementIndex === 0 || elementIndex === siblingArray.length - 1;
-            if (isAtEdge && (!groupSelector || current.group === element.closest(groupSelector))) {
-                const pos = current.placeHolder.compareDocumentPosition(element);
-                if (pos === Node.DOCUMENT_POSITION_PRECEDING) {
+            const isFirst = elementIndex === 0;
+            const isAbove = relatedElementRect.top <= elementRect.top;
+            const isLast = elementIndex === siblingArray.length - 1;
+            const isBelow = relatedElementRect.bottom >= elementRect.bottom;
+            const pos = current.placeHolder.compareDocumentPosition(element);
+            if (!pointerOnSiblings) {
+                if (isFirst && isAbove && pos === Node.DOCUMENT_POSITION_PRECEDING) {
                     element.before(current.placeHolder);
-                } else if (pos === Node.DOCUMENT_POSITION_FOLLOWING) {
+                    ctx.haveAlreadyChanged = true;
+                } else if (isLast && isBelow && pos === Node.DOCUMENT_POSITION_FOLLOWING) {
                     element.after(current.placeHolder);
+                    ctx.haveAlreadyChanged = true;
                 }
             }
             callHandler("onElementLeave", { element });
@@ -257,6 +277,9 @@ const hookParams = {
         current.element.after(current.placeHolder);
 
         return pick(current, "element", "group");
+    },
+    onDrag({ ctx }) {
+        ctx.haveAlreadyChanged = false;
     },
     onDragEnd({ ctx }) {
         return pick(ctx.current, "element", "group");
