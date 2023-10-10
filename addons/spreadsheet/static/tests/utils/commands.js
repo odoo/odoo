@@ -3,7 +3,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
 
-const { toCartesian, toZone } = spreadsheet.helpers;
+const { toCartesian, toZone, lettersToNumber } = spreadsheet.helpers;
 
 /**
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
@@ -99,6 +99,44 @@ export function setCellFormat(model, xc, format, sheetId = model.getters.getActi
  */
 export function setCellStyle(model, xc, style, sheetId = model.getters.getActiveSheetId()) {
     model.dispatch("UPDATE_CELL", { ...toCartesian(xc), sheetId, style });
+}
+
+/**
+ * Add columns
+ * @param {Model} model
+ * @param {"before"|"after"} position
+ * @param {string} column
+ * @param {number} quantity
+ * @param {UID} sheetId
+ */
+export function addColumns(
+    model,
+    position,
+    column,
+    quantity,
+    sheetId = model.getters.getActiveSheetId()
+) {
+    return model.dispatch("ADD_COLUMNS_ROWS", {
+        sheetId,
+        dimension: "COL",
+        position,
+        base: lettersToNumber(column),
+        quantity,
+    });
+}
+
+/**
+ * Delete columns
+ * @param {Model} model
+ * @param {string[]} columns
+ * @param {UID} sheetId
+ */
+export function deleteColumns(model, columns, sheetId = model.getters.getActiveSheetId()) {
+    return model.dispatch("REMOVE_COLUMNS_ROWS", {
+        sheetId,
+        dimension: "COL",
+        elements: columns.map(lettersToNumber),
+    });
 }
 
 /** Create a test chart in the active sheet*/
