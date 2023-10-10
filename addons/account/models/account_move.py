@@ -760,7 +760,7 @@ class AccountMove(models.Model):
         for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id):
             # Don't call compute_all if there is no tax.
             if not line.tax_ids:
-                if not recompute_tax_base_amount:
+                if not recompute_tax_base_amount and not line.tax_tag_ids.ids:
                     line.tax_tag_ids = [(5, 0, 0)]
                 continue
 
