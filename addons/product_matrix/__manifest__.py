@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Product Matrix",
-    'summary': """
-       Technical module: Matrix Implementation
-    """,
+    'summary': "Technical module: Matrix Implementation",
     'description': """
 Please refer to Sale Matrix or Purchase Matrix for the use of this module.
     """,

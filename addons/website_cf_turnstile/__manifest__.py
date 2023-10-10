@@ -6,7 +6,7 @@
     'category': 'Hidden',
     'version': '1.0',
     'description': """
-        This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.
+This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.
     """,
     'depends': ['website'],
     'data': [

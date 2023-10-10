@@ -5,7 +5,7 @@
     'version': '1.0.0',
     'category': 'Accounting/Localizations',
     'description': """
-    Arabic/English for GCC
+Arabic/English for GCC
 """,
     'license': 'LGPL-3',
     'depends': ['account'],

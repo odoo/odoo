@@ -7,7 +7,7 @@
     'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-        Chart of accounts and taxes for Slovenia.
+Chart of accounts and taxes for Slovenia.
     """,
     'depends': [
         'account',

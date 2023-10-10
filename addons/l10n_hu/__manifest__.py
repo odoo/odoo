@@ -7,7 +7,7 @@
     'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-        Accounting chart and localization for Hungary
+Accounting chart and localization for Hungary
     """,
     'depends': [
         'account',
