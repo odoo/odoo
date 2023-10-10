@@ -1,10 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
+from odoo.exceptions import AccessError
 from odoo.tests import tagged, JsonRpcException
 from odoo.tools import mute_logger
 
-from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.account_payment.controllers.payment import PaymentPortal
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.portal.controllers.portal import CustomerPortal
 
 
 @tagged('post_install', '-at_install')
@@ -39,6 +44,50 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         # doesn't work, and cache invalidation doesn't work either.
         self.invoice.invalidate_recordset(['transaction_ids'])
         self.assertEqual(self.invoice.transaction_ids, tx_sudo)
+
+    def test_check_portal_access_token_before_rerouting_flow(self):
+        """ Test that access to the provided invoice is checked against the portal access token
+        before rerouting the payment flow. """
+        payment_portal_controller = PaymentPortal()
+
+        with patch.object(CustomerPortal, '_document_check_access') as mock:
+            payment_portal_controller._get_extra_payment_form_values()
+            self.assertEqual(
+                mock.call_count, 0, msg="No check should be made when invoice_id is not provided."
+            )
+
+            mock.reset_mock()
+
+            payment_portal_controller._get_extra_payment_form_values(
+                invoice_id=self.invoice.id, access_token='whatever'
+            )
+            self.assertEqual(
+                mock.call_count, 1, msg="The check should be made as invoice_id is provided."
+            )
+
+    def test_check_payment_access_token_before_rerouting_flow(self):
+        """ Test that access to the provided invoice is checked against the payment access token
+        before rerouting the payment flow. """
+        payment_portal_controller = PaymentPortal()
+
+        def _document_check_access_mock(*_args, **_kwargs):
+            raise AccessError('')
+
+        with patch.object(
+            CustomerPortal, '_document_check_access', _document_check_access_mock
+        ), patch('odoo.addons.payment.utils.check_access_token') as check_payment_access_token_mock:
+            try:
+                payment_portal_controller._get_extra_payment_form_values(
+                    invoice_id=self.invoice.id, access_token='whatever'
+                )
+            except Exception:
+                pass  # We don't care if it runs or not; we only count the calls.
+            self.assertEqual(
+                check_payment_access_token_mock.call_count,
+                1,
+                msg="The access token should be checked again as a payment access token if the"
+                    " check as a portal access token failed.",
+            )
 
     @mute_logger('odoo.http')
     def test_transaction_route_rejects_unexpected_kwarg(self):

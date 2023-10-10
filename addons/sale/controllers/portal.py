@@ -418,17 +418,32 @@ class PaymentPortal(payment_portal.PaymentPortal):
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
-    def _get_extra_payment_form_values(self, sale_order_id=None, **kwargs):
+    def _get_extra_payment_form_values(self, sale_order_id=None, access_token=None, **kwargs):
         """ Override of `payment` to reroute the payment flow to the portal view of the sales order.
 
         :param str sale_order_id: The sale order for which a payment is made, as a `sale.order` id.
+        :param str access_token: The portal or payment access token, respectively if we are in a
+                                 portal or payment link flow.
         :return: The extended rendering context values.
         :rtype: dict
         """
-        form_values = super()._get_extra_payment_form_values(sale_order_id=sale_order_id, **kwargs)
+        form_values = super()._get_extra_payment_form_values(
+            sale_order_id=sale_order_id, access_token=access_token, **kwargs
+        )
         if sale_order_id:
             sale_order_id = self._cast_as_int(sale_order_id)
-            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+
+            try:  # Check document access against what could be a portal access token.
+                order_sudo = self._document_check_access('sale.order', sale_order_id, access_token)
+            except AccessError:  # It is a payment access token computed on the payment context.
+                if not payment_utils.check_access_token(
+                    access_token,
+                    kwargs.get('partner_id'),
+                    kwargs.get('amount'),
+                    kwargs.get('currency_id'),
+                ):
+                    raise
+                order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
 
             # Interrupt the payment flow if the sales order has been canceled.
             if order_sudo.state == 'cancel':

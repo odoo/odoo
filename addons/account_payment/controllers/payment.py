@@ -83,18 +83,32 @@ class PaymentPortal(payment_portal.PaymentPortal):
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
-    def _get_extra_payment_form_values(self, invoice_id=None, **kwargs):
+    def _get_extra_payment_form_values(self, invoice_id=None, access_token=None, **kwargs):
         """ Override of `payment` to reroute the payment flow to the portal view of the invoice.
 
         :param str invoice_id: The invoice for which a payment id made, as an `account.move` id.
-        :param dict kwargs: Optional data. This parameter is not used here.
+        :param str access_token: The portal or payment access token, respectively if we are in a
+                                 portal or payment link flow.
         :return: The extended rendering context values.
         :rtype: dict
         """
-        form_values = super()._get_extra_payment_form_values(invoice_id=invoice_id, **kwargs)
+        form_values = super()._get_extra_payment_form_values(
+            invoice_id=invoice_id, access_token=access_token, **kwargs
+        )
         if invoice_id:
             invoice_id = self._cast_as_int(invoice_id)
-            invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
+
+            try:  # Check document access against what could be a portal access token.
+                invoice_sudo = self._document_check_access('account.move', invoice_id, access_token)
+            except AccessError:  # It is a payment access token computed on the payment context.
+                if not payment_utils.check_access_token(
+                    access_token,
+                    kwargs.get('partner_id'),
+                    kwargs.get('amount'),
+                    kwargs.get('currency_id'),
+                ):
+                    raise
+                invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
 
             # Interrupt the payment flow if the invoice has been canceled.
             if invoice_sudo.state == 'cancel':
