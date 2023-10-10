@@ -25,7 +25,6 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/account_balance_view.xml',
 
     ],
     'demo': [
