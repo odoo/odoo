@@ -493,14 +493,17 @@ class PosGlobalState extends PosModel {
         });
 
         // Merge the loaded pricelist items with the existing pricelists
-        // Looping in the reversed order of the loaded items because we want to create the pricelist items based on priority.
+        // Prioritizing the addition of newly loaded pricelist items to the start of the existing pricelists.
+        // This ensures that the order reflects the desired priority of items in the pricelistItems array.
         // E.g. The order in the items should be: [product-pricelist-item, product-template-pricelist-item, category-pricelist-item, global-pricelist-item].
         // for reference check order of the Product Pricelist Item model
-        for (const pricelistItem of pricelistItems.reverse()) {
-            const pricelist = this.pricelists.find(pricelist => pricelist.id === pricelistItem.pricelist_id[0]);
-            if (!pricelist.items.some(item => item.id === pricelistItem.id)) {
-                pricelist.items.unshift(pricelistItem);
-            }
+        for (const pricelist of this.pricelists) {
+            const itemIds = new Set(pricelist.items.map(item => item.id));
+
+            const _pricelistItems = pricelistItems.filter(item => {
+                return item.pricelist_id[0] === pricelist.id && !itemIds.has(item.id);
+            });
+            pricelist.items = [..._pricelistItems, ...pricelist.items];
         }
     }
     // load the partners based on the ids
