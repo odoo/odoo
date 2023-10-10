@@ -69,6 +69,9 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'web.report_assets_common': [
             'hr_expense/static/src/scss/hr_expense.scss',
         ],
+        'web.qunit_suite_tests': [
+            'hr_expense/static/tests/**/*.js',
+        ],
     },
     'license': 'LGPL-3',
 }

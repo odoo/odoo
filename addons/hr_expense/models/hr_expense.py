@@ -480,8 +480,8 @@ class HrExpense(models.Model):
         )
 
     def attach_document(self, **kwargs):
-        # To override
-        pass
+        """When an attachment is uploaded as a receipt, set it as the main attachment."""
+        self.message_main_attachment_id = kwargs['attachment_ids'][-1]
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
@@ -653,29 +653,16 @@ class HrExpense(models.Model):
     def action_submit_expenses(self):
         if self.filtered(lambda expense: not expense.is_editable):
             raise UserError(_('You are not authorized to edit this expense.'))
-        context_vals = self._get_default_expense_sheet_values()
-        action_values = {
+        sheets = self.env['hr.expense.sheet'].create(self._get_default_expense_sheet_values())
+        return {
             'name': _('New Expense Reports'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.expense.sheet',
+            'context': self.env.context,
+            'views': [[False, "list"], [False, "form"]] if len(sheets) > 1 else [[False, "form"]],
+            'domain': [('id', 'in', sheets.ids)],
+            'res_id': sheets.id if len(sheets) == 1 else False,
         }
-        if len(context_vals) > 1:
-            sheets = self.env['hr.expense.sheet'].create(context_vals)
-            action_values.update({
-                'views': [[False, "list"], [False, "form"]],
-                'domain': [('id', 'in', sheets.ids)],
-                'context': self.env.context,
-            })
-        else:
-            context_vals_def = {}
-            for key in context_vals[0]:
-                context_vals_def['default_' + key] = context_vals[0][key]
-            action_values.update({
-                'views': [[False, "form"]],
-                'target': 'current',
-                'context': {f'default_{key}': value for key, value in context_vals[0].items()},
-            })
-        return action_values
 
     def action_get_attachment_view(self):
         self.ensure_one()

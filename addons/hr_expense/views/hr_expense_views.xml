@@ -127,6 +127,7 @@
                 <header>
                   <button name="action_submit_expenses" string="Create Report" type="object"
                           class="oe_highlight o_expense_submit" invisible="nb_attachment &lt;= 0 or sheet_id" data-hotkey="v"/>
+                  <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" invisible="not sheet_id or nb_attachment &lt; 1" data-hotkey="w"/>
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" invisible="nb_attachment &lt; 1"/>
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit"
@@ -135,7 +136,7 @@
                          invisible="state == 'refused'"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,submitted,refused"
                          invisible="state != 'refused'"/>
-                  <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" invisible="not sheet_id" data-hotkey="w"/>
+                  <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" invisible="not sheet_id or nb_attachment &gt;= 1" data-hotkey="w"/>
                   <button name="action_split_wizard" string="Split Expense" type="object" invisible="sheet_id or product_has_cost"/>
                 </header>
                 <sheet>
@@ -862,7 +863,7 @@
                         <page name="expenses" string="Expense">
                             <field name="expense_line_ids"
                                     nolabel="1"
-                                    widget="many2many"
+                                    widget="expense_lines_widget"
                                     mode="tree,kanban"
                                     domain="[
                                         ('sheet_id', '=', False),
@@ -879,10 +880,11 @@
                                     }"
                                     readonly="not is_editable"
                                     force_save="1">
-                                <tree editable="bottom">
+                                <tree>
                                     <field name="employee_id" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="nb_attachment" column_invisible="True"/>
+                                    <field name="message_main_attachment_id" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="company_currency_id" column_invisible="True"/>
                                     <field name="is_multiple_currency" column_invisible="True"/>
