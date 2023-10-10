@@ -97,8 +97,8 @@ class TestProductBarcode(TransactionCase):
 
     def test_duplicated_barcodes_are_allowed_for_different_companies(self):
         """Barcode needs to be unique only withing the same company"""
-        company_a = self.env.companies[0]
-        company_b = self.env.companies[1]
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'CB'})
 
         allowed_products = [
             # Allowed, barcode doesn't exist yet
