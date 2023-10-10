@@ -197,6 +197,10 @@ class SaleOrderLine(models.Model):
         price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
         name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
 
+        line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants()
+        if line_description:
+            name += line_description
+
         return {
             'name': name,
             'product_qty': purchase_qty_uom,
