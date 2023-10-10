@@ -25,12 +25,12 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-       # 'report/template.xml',
+         # 'report/template.xml',
         'views/account_balance_view.xml',
 
     ],
     'demo': [
-        'demo/demo.xml',
+       # 'demo/demo.xml',
     ],
 
 
