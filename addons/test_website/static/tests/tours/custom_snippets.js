@@ -66,13 +66,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         content: "confirm rename",
         trigger: ".oe_snippet[name='Custom Banner'] we-button.o_we_confirm_btn",
     },
-    {
-        content: "drop custom snippet",
-        trigger: ".oe_snippet[name='Bruce Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-        extra_trigger: "iframe body.editor_enable",
-        moveTrigger: ".oe_drop_zone",
-        run: "drag_and_drop iframe #wrap",
-    },
+    wTourUtils.dragNDrop({ name: "Bruce Banner" }),
     {
         content: "ensure banner section exists",
         trigger: "iframe #wrap section[data-name='Banner']",

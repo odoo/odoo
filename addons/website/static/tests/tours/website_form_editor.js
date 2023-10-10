@@ -137,7 +137,7 @@
         {
             content: "Drop the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
-            run: 'drag_and_drop iframe #wrap',
+            run: 'drag_and_drop_native iframe #wrap',
         }, {
             content: "Select form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
@@ -551,7 +551,7 @@
         {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
-            run: 'drag_and_drop iframe #wrap',
+            run: 'drag_and_drop_native iframe #wrap',
         }, {
             content: "Select the form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
