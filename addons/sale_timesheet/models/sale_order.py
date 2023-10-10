@@ -121,7 +121,7 @@ class SaleOrderLine(models.Model):
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
     remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
-    has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
+    has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell', copy=False)  # Set copy to False in order to not break the functionality when duplicating sale orders
 
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
