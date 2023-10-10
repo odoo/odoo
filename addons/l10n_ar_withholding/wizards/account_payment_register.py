@@ -29,8 +29,8 @@ class AccountPaymentRegister(models.TransientModel):
     #     for wizard in self.filtered(lambda x: x.l10n_ar_withholding_ids and x.l10n_latam_check_id):
     #         wizard.currency_id = wizard.l10n_latam_check_id.currency_id
     #         wizard.l10n_ar_net_amount = wizard.l10n_latam_check_id.amount
-    #         factor, net_amount = wizard._get_amount_net_info()
-    #         withholding_net_amount = min(wizard.l10n_latam_check_id.amount , net_amount)
+    #         factor = wizard._get_net_amount_simulated_factor()
+    #         withholding_net_amount = min(wizard.l10n_latam_check_id.amount , wizard.net_amount)
     #         wizard.amount = withholding_net_amount * factor + (wizard.l10n_latam_check_id.amount - withholding_net_amount)
 
     @api.depends('l10n_ar_withholding_ids.amount', 'amount', 'l10n_latam_check_id')
@@ -39,29 +39,27 @@ class AccountPaymentRegister(models.TransientModel):
             if rec.l10n_latam_check_id:
                 rec.currency_id = rec.l10n_latam_check_id.currency_id
                 rec.l10n_ar_net_amount = rec.l10n_latam_check_id.amount
-                factor, net_amount = rec._get_amount_net_info()
-                withholding_net_amount = min(rec.l10n_latam_check_id.amount , net_amount)
+                factor = rec._get_net_amount_simulated_factor()
+                withholding_net_amount = min(rec.l10n_latam_check_id.amount , rec.l10n_ar_net_amount)
                 rec.amount = withholding_net_amount * factor + (rec.l10n_latam_check_id.amount - withholding_net_amount)
             else:
                 rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
-
 
     def _get_withholding_tax(self):
         self.ensure_one()
         return self.line_ids.move_id.invoice_line_ids.product_id.l10n_ar_supplier_withholding_taxes_ids.filtered(
                 lambda y: y.company_id == self.company_id)
 
-    def _get_amount_net_info(self):
+    def _get_net_amount_simulated_factor(self):
+        """ This method allows to simulate the total net amount of a payment and the relationship between the total and
+        net amounts returning the factor between total and net amount
+        """
         self.ensure_one()
-        # This method allows to simulate the total net amount of a payment and the relationship between the total and net amounts.
-        # return a tupple
-        #   - factor between total and net
-        #   - Net amount total
         wizard = self.env['account.payment.register'].with_context(active_model='account.move.line', active_ids=self.line_ids.ids).new()
         wizard.currency_id = self.l10n_latam_check_id.currency_id
         wizard.payment_date = self.payment_date
         wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id, 'base_amount': x.base_amount , 'amount': x.amount}) for x in self.l10n_ar_withholding_ids]
-        return (wizard.amount / wizard.l10n_ar_net_amount, wizard.l10n_ar_net_amount)
+        return wizard.amount / wizard.l10n_ar_net_amount
 
     def _get_withholding_move_line_default_values(self):
         return {
