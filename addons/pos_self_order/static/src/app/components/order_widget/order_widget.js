@@ -8,7 +8,7 @@ import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_
 
 export class OrderWidget extends Component {
     static template = "pos_self_order.OrderWidget";
-    static props = ["action", "removeTopClasses"];
+    static props = ["action", "removeTopClasses?"];
 
     setup() {
         this.selfOrder = useSelfOrder();
