@@ -6,10 +6,6 @@
             <field name="model">purchase.requisition.alternative.warning</field>
             <field name="arch" type="xml">
                 <form string="Alternative Warning">
-                    <div>
-                        <field name="alternative_po_count"/>
-                        alternative requests for quotation are still open, do you want to cancel them?
-                    </div>
                     <field name="alternative_po_ids" nolabel="1" readonly="1">
                         <tree create="0" delete="0" edit="0">
                             <field name="currency_id" column_invisible="1"/>

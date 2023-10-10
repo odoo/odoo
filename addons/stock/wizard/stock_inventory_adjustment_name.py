@@ -8,16 +8,8 @@ class StockInventoryAdjustmentName(models.TransientModel):
     _name = 'stock.inventory.adjustment.name'
     _description = 'Inventory Adjustment Reference / Reason'
 
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        if self.env.context.get('default_quant_ids'):
-            quants = self.env['stock.quant'].browse(self.env.context['default_quant_ids'])
-            res['show_info'] = any(not quant.inventory_quantity_set for quant in quants)
-        return res
-
     quant_ids = fields.Many2many('stock.quant')
     inventory_adjustment_name = fields.Char(default="Quantity Updated", string="Inventory Reason")
-    show_info = fields.Boolean('Show warning')
 
     def action_apply(self):
         quants = self.quant_ids.filtered('inventory_quantity_set')

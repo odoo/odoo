@@ -240,7 +240,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         warning_wiz = Form(
             self.env['purchase.requisition.alternative.warning'].with_context(**action['context']))
         warning_wiz = warning_wiz.save()
-        self.assertEqual(warning_wiz.alternative_po_count, 1,
+        self.assertEqual(len(warning_wiz.alternative_po_ids), 1,
                          "POs not in a RFQ status should not be listed as possible to cancel")
         warning_wiz.action_cancel_alternatives()
         self.assertEqual(orig_po.state, 'cancel', "Original PO should have been cancelled")
