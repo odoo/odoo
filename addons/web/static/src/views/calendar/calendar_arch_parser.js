@@ -84,8 +84,8 @@ export class CalendarArchParser {
                     if (node.hasAttribute("delete")) {
                         canDelete = archParseBoolean(node.getAttribute("delete"), true);
                     }
-                    if (node.hasAttribute("quick_add")) {
-                        quickCreate = archParseBoolean(node.getAttribute("quick_add"), true);
+                    if (node.hasAttribute("quick_create")) {
+                        quickCreate = archParseBoolean(node.getAttribute("quick_create"), true);
                         if (quickCreate && node.hasAttribute("quick_create_view_id")) {
                             quickCreateViewId = parseInt(
                                 node.getAttribute("quick_create_view_id"),

@@ -1087,7 +1087,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" event_open_popup="1" quick_add="0">
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" event_open_popup="1" quick_create="0">
                     <field name="name" />
                 </calendar>
             `,
@@ -1990,7 +1990,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" mode="week" all_day="allday" quick_add="0" />
+                <calendar date_start="start" date_stop="stop" mode="week" all_day="allday" quick_create="0" />
             `,
             context: {
                 default_name: "New",
@@ -2062,7 +2062,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" mode="week" quick_add="0" />
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="week" quick_create="0" />
             `,
         });
 
@@ -3714,7 +3714,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_add="0">
+                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_create="0">
                     <field name="name" />
                     <field name="partner_id" />
                 </calendar>
@@ -3751,7 +3751,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_add="0" all_day="allday">
+                <calendar date_start="start" date_stop="stop" mode="month" event_open_popup="1" quick_create="0" all_day="allday">
                     <field name="name" />
                     <field name="partner_id" />
                 </calendar>
@@ -3889,7 +3889,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" mode="month" open_event_popup="1" quick_add="0" form_view_id="1">
+                <calendar date_start="start" date_stop="stop" mode="month" open_event_popup="1" quick_create="0" form_view_id="1">
                     <field name="name" />
                 </calendar>
             `,
@@ -4267,7 +4267,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 resModel: "event",
                 serverData,
                 arch: `
-                    <calendar create="0" event_open_popup="1" quick_add="0" date_start="start" date_stop="stop" mode="month" />
+                    <calendar create="0" event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" mode="month" />
                 `,
             });
 
@@ -4343,7 +4343,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar event_open_popup="1" quick_add="0" date_start="start" date_stop="stop" all_day="allday" mode="week" />
+                <calendar event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" all_day="allday" mode="week" />
             `,
             mockRPC(route, { args, method }) {
                 if (method === "create") {
@@ -4529,7 +4529,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar create="0" event_open_popup="1" quick_add="0" date_start="start" date_stop="stop" all_day="allday" mode="month" />
+                <calendar create="0" event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" all_day="allday" mode="month" />
             `,
         });
 
@@ -4717,7 +4717,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" quick_add="1" quick_create_view_id="2">
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" quick_create="1" quick_create_view_id="2">
                     <field name="name"/>
                 </calendar>
             `,
@@ -4776,7 +4776,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar js_class="test_calendar_view" date_start="start" date_stop="stop" all_day="allday" mode="month" quick_add="0" event_open_popup="1" />
+                <calendar js_class="test_calendar_view" date_start="start" date_stop="stop" all_day="allday" mode="month" quick_create="0" event_open_popup="1" />
             `,
         });
 
@@ -4831,7 +4831,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar quick_add="false" event_open_popup="1" date_start="start">
+                <calendar quick_create="0" event_open_popup="1" date_start="start">
                     <field name="event_type_id" />
                     <field name="properties" />
                 </calendar>
@@ -4880,7 +4880,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             resModel: "event",
             serverData,
             arch: `
-                <calendar quick_add="False" event_open_popup="1" date_start="start">
+                <calendar quick_create="0" event_open_popup="1" date_start="start">
                     <field name="event_type_id" />
                     <field name="properties" />
                 </calendar>
