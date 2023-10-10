@@ -149,7 +149,7 @@ class ProductProduct(models.Model):
         works as intended :-)
         """
         for record in self:
-            record.write_date = max(record.write_date, record.product_tmpl_id.write_date)
+            record.write_date = max(record.write_date or self.env.cr.now(), record.product_tmpl_id.write_date)
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""
