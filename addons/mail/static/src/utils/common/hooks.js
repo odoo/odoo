@@ -198,6 +198,32 @@ export function useVisible(refName, cb, { init = false } = {}) {
     return state;
 }
 
+export function useResizeObserver(refName, cb) {
+    const ref = useRef(refName);
+    const observer = new ResizeObserver(cb);
+    let el;
+    onMounted(observe);
+    onWillUnmount(() => {
+        if (!el) {
+            return;
+        }
+        observer.unobserve(el);
+    });
+    onPatched(observe);
+
+    function observe() {
+        if (ref.el !== el) {
+            if (el) {
+                observer.unobserve(el);
+            }
+            if (ref.el) {
+                observer.observe(ref.el);
+            }
+        }
+        el = ref.el;
+    }
+}
+
 /**
  * This hook eases adjusting scroll position by snapshotting scroll
  * properties of scrollable in onWillPatch / onPatched hooks.

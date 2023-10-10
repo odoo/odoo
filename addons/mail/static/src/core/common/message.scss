@@ -1,6 +1,14 @@
 .o-mail-Message {
     transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
+    &.o-important {
+        box-shadow: inset -3px 0 0 rgba($warning, 0.75);
+        &.o-alignedLeft {
+            box-shadow: inset 3px 0 0 rgba($warning, 0.75);
+        }
+        background-color: rgba($warning, 0.05);
+    }
+
     &.o-highlighted {
         transform: translateY(-#{map-get($spacers, 3)});
     }
@@ -53,6 +61,12 @@
     button:hover, .focus {
         background-color: $o-gray-200 !important;
     }
+}
+
+.o-mail-Message-important {
+    z-index: $o-mail-NavigableList-zIndex - 2;
+    background-color: lighten($warning, 5%);
+    color: black;
 }
 
 .o-mail-Message-moreMenu {
