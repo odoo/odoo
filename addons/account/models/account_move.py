@@ -4331,9 +4331,27 @@ class AccountMove(models.Model):
         composer = self.env['account.move.send'].create(composer_vals)
         return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, bypass_download=bypass_download)
 
+<<<<<<< HEAD
     def get_invoice_pdf_report_attachment(self):
         if len(self) < 2 and self.invoice_pdf_report_id:
             # if the Send & Print succeeded
+||||||| parent of 740d0c802acc (temp)
+        # from_cron=True to log errors in chatter instead of raise
+        composer.action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+
+    def generate_pdf_and_send_invoice(self):
+        """ Calls `_generate_pdf_and_send_invoice` and returns the (pdf, filename)"""
+        template = self.env.ref(self._get_mail_template())
+        self.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
+        if len(self) < 2:
+=======
+        # from_cron=True to log errors in chatter instead of raise
+        composer.action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+
+    def generate_pdf_and_send_invoice(self):
+        if len(self) < 2 and self.invoice_pdf_report_id:
+            # if the Send & Print succeeded
+>>>>>>> 740d0c802acc (temp)
             return self.invoice_pdf_report_id.raw, self.invoice_pdf_report_id.name
         elif len(self) < 2 and self.message_main_attachment_id:
             # if the Send & Print failed with fallback=True -> proforma PDF
