@@ -154,7 +154,9 @@ class PaymentPortal(portal.CustomerPortal):
             **portal_page_values,
             **payment_form_values,
             **payment_context,
-            **self._get_extra_payment_form_values(**kwargs),
+            **self._get_extra_payment_form_values(
+                **payment_context, currency_id=currency.id, **kwargs
+            ),  # Pass the payment context to allow overriding modules to check document access.
         }
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
 
