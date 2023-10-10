@@ -2,9 +2,7 @@
 {
     "name": "POS Self Order",
     'version': '1.0',
-    "summary": """
-        Addon for the POS App that allows customers to view the menu on their smartphone.
-        """,
+    "summary": "Addon for the POS App that allows customers to view the menu on their smartphone.",
     "category": "Sales/Point Of Sale",
     "depends": ["pos_restaurant", "http_routing"],
     "auto_install": ["pos_restaurant"],

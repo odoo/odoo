@@ -10,20 +10,20 @@
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'description': """
-        This module sends the taxes information (mostly VAT) of the
-        vendor bills and customer invoices to the SII.  It is called
-        Procedimiento G417 - IVA. Llevanza de libros registro.  It is
-        required for every company with a turnover of +6M€ and others can
-        already make use of it.  The invoices are automatically
-        sent after validation.
+This module sends the taxes information (mostly VAT) of the
+vendor bills and customer invoices to the SII.  It is called
+Procedimiento G417 - IVA. Llevanza de libros registro.  It is
+required for every company with a turnover of +6M€ and others can
+already make use of it.  The invoices are automatically
+sent after validation.
 
-        How the information is sent to the SII depends on the
-        configuration that is put in the taxes.  The taxes
-        that were in the chart template (l10n_es) are automatically
-        configured to have the right type.  It is possible however
-        that extra taxes need to be created for certain exempt/no sujeta reasons.
+How the information is sent to the SII depends on the
+configuration that is put in the taxes.  The taxes
+that were in the chart template (l10n_es) are automatically
+configured to have the right type.  It is possible however
+that extra taxes need to be created for certain exempt/no sujeta reasons.
 
-        You need to configure your certificate and the tax agency.
+You need to configure your certificate and the tax agency.
     """,
     'depends': [
         'l10n_es',

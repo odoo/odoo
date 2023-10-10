@@ -9,7 +9,7 @@
     'sequence': 6,
     'summary': 'Link module between Point of Sale and Mrp',
     'description': """
-    This is a link module between Point of Sale and Mrp.
+This is a link module between Point of Sale and Mrp.
 """,
     'depends': ['point_of_sale', 'mrp'],
     'installable': True,

@@ -2,12 +2,10 @@
 {
     'name': "Egyptian E-Invoice Integration",
     'countries': ['eg'],
-    'summary': """
-            Egyptian Tax Authority Invoice Integration
-        """,
+    'summary': "Egyptian Tax Authority Invoice Integration",
     'description': """
-       This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.
-       Special thanks to Plementus <info@plementus.com> for their help in developing this module.
+This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.
+Special thanks to Plementus <info@plementus.com> for their help in developing this module.
     """,
     'website': 'https://www.odoo.com',
     'category': 'account',

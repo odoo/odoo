@@ -4,11 +4,9 @@
     'version': '0.1',
     'category': 'Accounting/Localizations/EDI',
     'description': """
-        E-invoice implementation for the Denmark
+E-invoice implementation for the Denmark
     """,
-    'summary': """
-        E-Invoicing, Offentlig Information Online Universal Business Language
-    """,
+    'summary': "E-Invoicing, Offentlig Information Online Universal Business Language",
     'countries': ['dk'],
     'depends': [
         'account_edi_ubl_cii',
