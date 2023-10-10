@@ -206,10 +206,6 @@ export class Message extends Record {
         return this._store.self?.in(this.recipients);
     }
 
-    get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.resModel === "discuss.channel";
-    }
-
     get isSelfAuthored() {
         if (!this.author || !this._store.self) {
             return false;

@@ -983,26 +983,6 @@ QUnit.test(
     }
 );
 
-QUnit.test("highlight the message mentioning the current user inside the channel", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ display_name: "Test Partner" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "General",
-    });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "hello @Admin",
-        model: "discuss.channel",
-        partner_ids: [pyEnv.currentPartnerId],
-        res_id: channelId,
-    });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await contains(".o-mail-Message-bubble.bg-warning-light");
-});
-
 QUnit.test(
     "not highlighting the message if not mentioning the current user inside the channel",
     async () => {

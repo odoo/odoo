@@ -78,9 +78,8 @@
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'border': state.isEditing and !message.isNote,
-                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
-                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
-                                                    'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
+                                                    'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
+                                                    'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.isNote,
