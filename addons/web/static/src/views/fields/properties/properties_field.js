@@ -748,11 +748,11 @@ export class PropertiesField extends Component {
         const popover = document
             .querySelector(".o_field_property_definition")
             .closest(".o_popover");
-        const targetElement = document.querySelector(
+        const target = document.querySelector(
             `*[property-name="${propertyName}"] .o_field_property_open_popover`
         );
 
-        reposition(targetElement, popover, null, { position: "top", margin: 10 });
+        reposition(popover, target, { position: "top", margin: 10 });
 
         const arrow = popover.querySelector(".popover-arrow");
         if (arrow) {

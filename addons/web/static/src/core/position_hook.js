@@ -23,7 +23,6 @@ import { localization } from "@web/core/l10n/localization";
 
 /**
  * @typedef Options
- * @property {string} [popper="popper"] useRef reference to the popper element
  * @property {HTMLElement} [container] container element
  * @property {number} [margin=0]
  *  margin in pixels between the popper and the target.
@@ -82,7 +81,6 @@ const FIT_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr" };
 
 /** @type {Options} */
 const DEFAULTS = {
-    popper: "popper",
     margin: 0,
     position: "bottom",
 };
@@ -110,15 +108,15 @@ function getIFrame(el) {
  * The popper will stay at `margin` distance from its target. One could also
  * use the CSS margins of the popper element to achieve the same result.
  *
- * @param {HTMLElement} target
  * @param {HTMLElement} popper
- * @param {HTMLIFrameElement?} [iframe]
+ * @param {HTMLElement} target
  * @param {Options} options
+ * @param {HTMLIFrameElement} [iframe]
  * @returns {PositioningSolution} the best positioning solution, relative to
  *                                the containing block of the popper.
  *                                => can be applied to popper.style.(top|left)
  */
-function getBestPosition(target, popper, iframe, { container, margin, position }) {
+function getBestPosition(popper, target, { container, margin, position }, iframe) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
     const directions =
@@ -252,15 +250,13 @@ function getBestPosition(target, popper, iframe, { container, margin, position }
  * tried in different direction and variant flip orders (depending on the requested position).
  * If no position is found that fits the container, the requested position stays used.
  *
- * When the final position is applied, a corresponding CSS class is also added to the popper.
- * This could be used to further styling.
- *
- * @param {HTMLElement} target
+ * @deprecated too low level, will soon not be exported anymore, use usePosition instead
  * @param {HTMLElement} popper
- * @param {HTMLIFrameElement} [iframe]
+ * @param {HTMLElement} target
  * @param {Options} options
+ * @param {HTMLIFrameElement} [iframe]
  */
-export function reposition(target, popper, iframe, options) {
+export function reposition(popper, target, options, iframe) {
     let [directionKey, variantKey = "middle"] = options.position.split("-");
     if (localization.direction === "rtl") {
         if (["bottom", "top"].includes(directionKey)) {
@@ -279,19 +275,17 @@ export function reposition(target, popper, iframe, options) {
     popper.style.left = "0px";
 
     // Get best positioning solution and apply it
-    const position = getBestPosition(target, popper, iframe, options);
-    const { top, left, variant } = position;
+    const position = getBestPosition(popper, target, options, iframe);
+    const { top, left, direction, variant } = position;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
 
     if (variant === "fit") {
-        const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";
+        const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
         popper.style[styleProperty] = target.getBoundingClientRect()[styleProperty] + "px";
     }
 
-    if (options.onPositioned) {
-        options.onPositioned(popper, position);
-    }
+    options.onPositioned?.(popper, position);
 }
 
 const POSITION_BUS = Symbol("position-bus");
@@ -304,29 +298,29 @@ const POSITION_BUS = Symbol("position-bus");
  * If all of fallback positions are also clipped off `container`,
  * the original position is used.
  *
- * Note: The popper element should be indicated in your template with a t-ref reference.
- *       This could be customized with the `popper` option.
+ * Note: The popper element should be indicated in your template
+ *       with a t-ref reference matching the refName argument.
  *
- * @param {HTMLElement | (() => HTMLElement)} target
- * @param {Options} options
+ * @param {string} refName
+ *  name of the reference to the popper element in the template.
+ * @param {() => HTMLElement} getTarget
+ * @param {Options} [options={}] the options to be used for positioning
  * @returns {PositioningControl}
  *  control object to lock/unlock the positioning.
  */
-export function usePosition(target, options) {
-    const popperRef = useRef(options?.popper || DEFAULTS.popper);
-    const getTarget = typeof target === "function" ? target : () => target;
+export function usePosition(refName, getTarget, options = {}) {
+    const ref = useRef(refName);
     let lock = false;
     const update = () => {
         const targetEl = getTarget();
-        const popperEl = popperRef.el;
-        if (!targetEl || !popperEl || lock) {
+        if (!ref.el || !targetEl || lock) {
+            // No compute needed
             return;
         }
 
         // Prepare
         const iframe = getIFrame(targetEl);
-        const currentOptions = { ...DEFAULTS, ...options };
-        reposition(targetEl, popperEl, iframe, currentOptions);
+        reposition(ref.el, targetEl, { ...DEFAULTS, ...options }, iframe);
     };
 
     const component = useComponent();
@@ -347,7 +341,7 @@ export function usePosition(target, options) {
         if (isTopmost) {
             // Attach listeners to keep the positioning up to date
             const scrollListener = (e) => {
-                if (popperRef.el?.contains(e.target)) {
+                if (ref.el?.contains(e.target)) {
                     // In case the scroll event occurs inside the popper, do not reposition
                     return;
                 }
