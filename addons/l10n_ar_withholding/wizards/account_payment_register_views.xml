@@ -12,17 +12,17 @@
                         <tree editable="bottom">
                             <field name="withholding_sequence_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/>
                             <field name="tax_id" domain="[('l10n_ar_withholding_payment_type', '=', parent.partner_type)]" options="{'no_open': True, 'no_create': True}"/>
                             <field name="name" readonly="withholding_sequence_id"/>
                             <field name="base_amount"/>
                             <field name="amount"/>
-                            <field name="currency_id" invisible="True"/>
                         </tree>
                     </field>
                     <group invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
                         <label for="l10n_ar_net_amount" string="Net Amount" invisible="l10n_latam_check_id"/>
                         <label for="l10n_ar_net_amount" string="Check amount" invisible="not l10n_latam_check_id"/>
-                        <field name="l10n_ar_net_amount" nolabel="1" invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
+                        <field name="l10n_ar_net_amount" nolabel="1"/>
                     </group>
                     <div colspan="2" class="o_row" invisible="(can_edit_wizard and not can_group_payments) or (can_group_payments and group_payment)">
                     <p class="alert alert-warning" role="alert">You can't register withholdings when paying invoices of different partners or same partner without grouping</p>
