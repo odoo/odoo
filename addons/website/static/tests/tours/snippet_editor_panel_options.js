@@ -107,7 +107,7 @@ wTourUtils.dragNDrop({
     trigger: '.snippet-option-layout_column [data-select-count="3"]',
 }, {
     content: "The snippet should have the correct number of columns.",
-    trigger: 'iframe .s_text_block .container > .row',
+    trigger: 'iframe .s_text_block .container > .row .col-lg-4:eq(3)',
     run() {
         if (this.$anchor[0].childElementCount !== 3) {
             console.error("The snippet does not have the correct number of columns");

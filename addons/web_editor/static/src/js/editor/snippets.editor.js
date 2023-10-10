@@ -6,8 +6,8 @@ import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
+import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
 import options from "@web_editor/js/editor/snippets.options";
-import { SmoothScrollOnDrag } from "@web_editor/js/editor/smooth_scroll_on_drag";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { escape } from "@web/core/utils/strings";
@@ -113,10 +113,11 @@ var SnippetEditor = Widget.extend({
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
             this.dropped = false;
-            this.draggableComponent = this._initSmoothScrollOnDrag(".o_move_handle", this.$el);
+            this.draggableComponent = this._initDragAndDrop(".o_move_handle", ".oe_overlay", this.el);
             if (!this.$target[0].matches("section")) {
                 // Allow the user to drag the image itself to move the target.
-                this.draggableComponentImgs = this._initSmoothScrollOnDrag("img", this.$target);
+                this.$target[0].classList.add("o_draggable");
+                this.draggableComponentImgs = this._initDragAndDrop("img", ".o_draggable", this.$target[0]);
             }
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
@@ -821,20 +822,26 @@ var SnippetEditor = Widget.extend({
         });
     },
     /**
-     * Creates a SmoothScrollOnDrag object.
+     * Initialize drag and drop handlers.
      *
      * @private
      * @param {String} handle css selector for grabble element
-     * @param {jQuery} $element the smooth scroll on drag has to be set on
-     * @returns {SmoothScrollOnDrag}
+     * @param {String} elementsSelector selector for elements that will be dragged.
+     * @param {HTMLElement} element element to listen for drag events.
+     * @returns {Object} the drag state.
      */
-    _initSmoothScrollOnDrag(handle, $element) {
-        const jQueryDraggableOptions = {
-            cursorAt: {
-                left: 10,
-                top: 10
-            },
+    _initDragAndDrop(handle, elementsSelector, element) {
+        const modalAncestorEl = this.$target[0].closest('.modal');
+        const $scrollable = modalAncestorEl && $(modalAncestorEl)
+            || (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
+            || (this.$scrollingElement.length && this.$scrollingElement)
+            || $().getScrollingElement(this.ownerDocument);
+        const dragAndDropOptions = {
+            ref: { el: element },
+            elements: elementsSelector,
             handle: handle,
+            scrollingElement: $scrollable[0],
+            enable: () => !!this.$el.find('.o_move_handle:visible').length || this.dragStarted,
             helper: () => {
                 const cloneEl = this.$el[0].cloneNode(true);
                 cloneEl.style.width = "24px";
@@ -842,18 +849,17 @@ var SnippetEditor = Widget.extend({
                 cloneEl.style.border = "0";
                 this.$el[0].ownerDocument.body.appendChild(cloneEl);
                 cloneEl.classList.remove("d-none");
-                return $(cloneEl);
+                cloneEl.classList.remove("o_dragged");
+                return cloneEl;
             },
-            start: (ev, ui) => {
-                if (!this.$el.find('.o_move_handle:visible').length) {
-                    return false;
-                }
+            onDragStart: (args) => {
                 this.dragStarted = true;
-                this.mousePositionYOnElement = ev.originalEvent.clientY - ui.offset.top;
-                this.mousePositionXOnElement = ev.originalEvent.clientX - ui.offset.left;
-                this._onDragAndDropStart();
+                const targetRect = this.$target[0].getBoundingClientRect();
+                this.mousePositionYOnElement = args.y - targetRect.y;
+                this.mousePositionXOnElement = args.x - targetRect.x;
+                this._onDragAndDropStart(args);
             },
-            stop: (...args) => {
+            onDragEnd: (...args) => {
                 if (!this.dragStarted) {
                     return false;
                 }
@@ -866,16 +872,13 @@ var SnippetEditor = Widget.extend({
                     this._onDragAndDropStop(...args);
                 }, 0);
             },
-            refreshPositions: true, // So the dropzone expands when its size increases.
+            onDrag: this._onDragMove.bind(this),
+            dropzoneOver: this.dropzoneOver.bind(this),
+            dropzoneOut: this.dropzoneOut.bind(this),
+            dropzones: () => this.$dropZones?.toArray() || [],
         };
-        const scrollOptions =
-            this.options.getScrollOptions({ jQueryDraggableOptions: jQueryDraggableOptions });
-        const modalAncestorEl = this.$target[0].closest('.modal');
-        const $scrollable = modalAncestorEl && $(modalAncestorEl)
-            || (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
-            || (this.$scrollingElement.length && this.$scrollingElement)
-            || $().getScrollingElement(this.ownerDocument);
-        return new SmoothScrollOnDrag($element, $scrollable, scrollOptions);
+        const finalOptions = this.options.getDragAndDropOptions(dragAndDropOptions);
+        return useDragAndDrop(finalOptions);
     },
     /**
      * @private
@@ -935,7 +938,7 @@ var SnippetEditor = Widget.extend({
         const rowEl = previousDropzoneEl.parentNode;
 
         if (rowEl.classList.contains('o_grid_mode')) {
-            self.$body[0].removeEventListener('mousemove', self.onDragMove, false);
+            self.dragState.gridMode = false;
             const fromGridToGrid = currentDropzoneEl.classList.contains('oe_grid_zone');
             if (fromGridToGrid) {
                 // If we went from a grid dropzone to an other grid one.
@@ -989,7 +992,15 @@ var SnippetEditor = Widget.extend({
      *
      * @private
      */
-    _onDragAndDropStart: function () {
+    _onDragAndDropStart({ helper, addStyle }) {
+        // If the helper is inside the iframe, we want pointer events on the
+        // frame element so that they reach the window and properly apply
+        // the cursor.
+        const frameElement = helper.ownerDocument.defaultView.frameElement;
+        if (frameElement) {
+            addStyle(frameElement, { pointerEvents: "auto" });
+        }
+
         this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
@@ -1018,8 +1029,6 @@ var SnippetEditor = Widget.extend({
         const allowGridMode = hasGridLayoutOption || rowEl.classList.contains('o_grid_mode');
 
         // Number of grid columns and rows in the grid item (BS column).
-        let columnColCount;
-        let columnRowCount;
         if (rowEl.classList.contains('row') && this.options.isWebsite) {
             if (allowGridMode) {
                 // Toggle grid mode if it is not already on.
@@ -1037,10 +1046,8 @@ var SnippetEditor = Widget.extend({
                 const rowStart = self.$target[0].style.gridRowStart;
                 const rowEnd = self.$target[0].style.gridRowEnd;
 
-                columnColCount = columnEnd - columnStart;
-                columnRowCount = rowEnd - rowStart;
-                this.dragState.columnColCount = columnColCount;
-                this.dragState.columnRowCount = columnRowCount;
+                this.dragState.columnColCount = columnEnd - columnStart;
+                this.dragState.columnRowCount = rowEnd - rowStart;
 
                 // Storing the current grid and grid area to use them for the
                 // history.
@@ -1173,156 +1180,146 @@ var SnippetEditor = Widget.extend({
         } else if (canBeSanitizedUnless === 'form') {
             this.$dropZones = this.$dropZones.not('[data-oe-sanitize][data-oe-sanitize!="allow_form"] .oe_drop_zone');
         }
-        this.$dropZones.droppable({
-            over: function () {
-                if (self.dropped) {
-                    self.$target.detach();
-                }
+    },
+    dropzoneOver({ dropzone }) {
+        if (this.dropped) {
+            this.$target.detach();
+        }
 
-                // Prevent a column to be trapped in an upper grid dropzone at
-                // the start of the drag.
-                if (self.dragState.isColumn && self.dragState.overFirstDropzone) {
-                    self.dragState.overFirstDropzone = false;
+        // Prevent a column to be trapped in an upper grid dropzone at
+        // the start of the drag.
+        if (this.dragState.isColumn && this.dragState.overFirstDropzone) {
+            this.dragState.overFirstDropzone = false;
 
-                    // The column is considered as glued to the dropzone if the
-                    // dropzone is above and if the space between them is less
-                    // than 25px (the move handle height is 22px so 25 is a
-                    // safety margin).
-                    const columnTop = self.dragState.columnTop;
-                    const dropzoneBottom = this.getBoundingClientRect().bottom;
-                    const areDropzonesGlued = (columnTop >= dropzoneBottom) && (columnTop - dropzoneBottom < 25);
+            // The column is considered as glued to the dropzone if the
+            // dropzone is above and if the space between them is less
+            // than 25px (the move handle height is 22px so 25 is a
+            // safety margin).
+            const columnTop = this.dragState.columnTop;
+            const dropzoneBottom = dropzone.el.getBoundingClientRect().bottom;
+            const areDropzonesGlued = (columnTop >= dropzoneBottom) && (columnTop - dropzoneBottom < 25);
 
-                    if (areDropzonesGlued && this.classList.contains('oe_grid_zone')) {
-                        return;
-                    }
-                }
+            if (areDropzonesGlued && dropzone.el.classList.contains('oe_grid_zone')) {
+                return;
+            }
+        }
 
-                self.dropped = true;
-                const $dropzone = $(this).first().after(self.$target);
-                $dropzone.addClass('invisible');
+        this.dropped = true;
+        const $dropzone = $(dropzone.el).first().after(this.$target);
+        $dropzone.addClass('invisible');
 
-                // Checking if the "out" event happened before this "over": if
-                // `self.dragState.currentDropzoneEl` exists, "out" didn't
-                // happen because it deletes it. We are therefore in the case
-                // of an "over" after an "over" and we need to escape the
-                // previous dropzone first.
-                if (self.dragState.currentDropzoneEl) {
-                    self._outPreviousDropzone.apply(self.dragState.currentDropzoneEl, [self, $dropzone[0]]);
-                }
-                self.dragState.currentDropzoneEl = $dropzone[0];
+        // Checking if the "out" event happened before dropzone.el "over": if
+        // `this.dragState.currentDropzoneEl` exists, "out" didn't
+        // happen because it deletes it. We are therefore in the case
+        // of an "over" after an "over" and we need to escape the
+        // previous dropzone first.
+        if (this.dragState.currentDropzoneEl) {
+            this._outPreviousDropzone.apply(this.dragState.currentDropzoneEl, [this, $dropzone[0]]);
+        }
+        this.dragState.currentDropzoneEl = $dropzone[0];
 
-                if ($dropzone[0].classList.contains('oe_grid_zone')) {
-                    // Case where the column we are dragging is over a grid
-                    // dropzone.
-                    const rowEl = $dropzone[0].parentNode;
+        if ($dropzone[0].classList.contains('oe_grid_zone')) {
+            // Case where the column we are dragging is over a grid
+            // dropzone.
+            const rowEl = $dropzone[0].parentNode;
 
-                    // If the column doesn't come from a grid mode snippet.
-                    if (!self.$target[0].classList.contains('o_grid_item')) {
-                        // Converting the column to grid.
-                        self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-                        const spans = gridUtils._convertColumnToGrid(rowEl, self.$target[0], self.dragState.columnWidth, self.dragState.columnHeight);
-                        self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
-                        columnColCount = spans.columnColCount;
-                        columnRowCount = spans.columnRowCount;
+            // If the column doesn't come from a grid mode snippet.
+            if (!this.$target[0].classList.contains('o_grid_item')) {
+                // Converting the column to grid.
+                this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
+                const spans = gridUtils._convertColumnToGrid(rowEl, this.$target[0], this.dragState.columnWidth, this.dragState.columnHeight);
+                this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
+                this.dragState.columnColCount = spans.columnColCount;
+                this.dragState.columnRowCount = spans.columnRowCount;
 
-                        // Storing the column spans.
-                        self.dragState.columnColCount = columnColCount;
-                        self.dragState.columnRowCount = columnRowCount;
-                    }
+                // Storing the column spans.
+            }
 
-                    // Creating the drag helper.
-                    const dragHelperEl = document.createElement('div');
-                    dragHelperEl.classList.add('o_we_drag_helper');
-                    dragHelperEl.style.gridArea = `1 / 1 / ${1 + columnRowCount} / ${1 + columnColCount}`;
-                    rowEl.append(dragHelperEl);
+            const columnColCount = this.dragState.columnColCount;
+            const columnRowCount = this.dragState.columnRowCount;
+            // Creating the drag helper.
+            const dragHelperEl = document.createElement('div');
+            dragHelperEl.classList.add('o_we_drag_helper');
+            dragHelperEl.style.gridArea = `1 / 1 / ${1 + columnRowCount} / ${1 + columnColCount}`;
+            rowEl.append(dragHelperEl);
 
-                    // Creating the background grid and updating the dropzone
-                    // (in the case where the column over the dropzone is
-                    // bigger than the grid).
-                    const backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, columnRowCount);
-                    const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
-                    $dropzone[0].style.gridRowEnd = rowCount + 1;
+            // Creating the background grid and updating the dropzone
+            // (in the case where the column over the dropzone is
+            // bigger than the grid).
+            const backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, columnRowCount);
+            const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
+            $dropzone[0].style.gridRowEnd = rowCount + 1;
 
-                    self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-                    // Setting the moving grid item, the background grid and
-                    // the drag helper z-indexes. The grid item z-index is set
-                    // to its original one if we are in its starting grid, or
-                    // to the maximum z-index of the grid otherwise.
-                    if (rowEl === self.dragState.startingGrid) {
-                        self.$target[0].style.zIndex = self.dragState.startingZIndex;
-                    } else {
-                        gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
-                    }
-                    gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
-                    gridUtils._setElementToMaxZindex(dragHelperEl, rowEl);
+            this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
+            // Setting the moving grid item, the background grid and
+            // the drag helper z-indexes. The grid item z-index is set
+            // to its original one if we are in its starting grid, or
+            // to the maximum z-index of the grid otherwise.
+            if (rowEl === this.dragState.startingGrid) {
+                this.$target[0].style.zIndex = this.dragState.startingZIndex;
+            } else {
+                gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+            }
+            gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
+            gridUtils._setElementToMaxZindex(dragHelperEl, rowEl);
 
-                    // Setting the column height and width to keep its size
-                    // when the grid-area is removed (as it prevents it from
-                    // moving with the mouse).
-                    const gridProp = gridUtils._getGridProperties(rowEl);
-                    const columnHeight = columnRowCount * (gridProp.rowSize + gridProp.rowGap) - gridProp.rowGap;
-                    const columnWidth = columnColCount * (gridProp.columnSize + gridProp.columnGap) - gridProp.columnGap;
-                    self.$target[0].style.height = columnHeight + 'px';
-                    self.$target[0].style.width = columnWidth + 'px';
-                    self.$target[0].style.position = 'absolute';
-                    self.$target[0].style.removeProperty('grid-area');
-                    rowEl.style.position = 'relative';
-                    self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
+            // Setting the column height and width to keep its size
+            // when the grid-area is removed (as it prevents it from
+            // moving with the mouse).
+            const gridProp = gridUtils._getGridProperties(rowEl);
+            const columnHeight = columnRowCount * (gridProp.rowSize + gridProp.rowGap) - gridProp.rowGap;
+            const columnWidth = columnColCount * (gridProp.columnSize + gridProp.columnGap) - gridProp.columnGap;
+            this.$target[0].style.height = columnHeight + 'px';
+            this.$target[0].style.width = columnWidth + 'px';
+            this.$target[0].style.position = 'absolute';
+            this.$target[0].style.removeProperty('grid-area');
+            rowEl.style.position = 'relative';
+            this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
 
-                    // Storing useful information and adding an event listener.
-                    self.dragState.startingHeight = rowEl.clientHeight;
-                    self.dragState.currentHeight = rowEl.clientHeight;
-                    self.dragState.dragHelperEl = dragHelperEl;
-                    self.dragState.backgroundGridEl = backgroundGridEl;
-                    self.onDragMove = self._onDragMove.bind(self);
-                    self.$body[0].addEventListener('mousemove', self.onDragMove, false);
-                }
-            },
-            out: function () {
-                const dropzoneEl = this;
-                const rowEl = dropzoneEl.parentNode;
+            // Storing useful information and adding an event listener.
+            this.dragState.startingHeight = rowEl.clientHeight;
+            this.dragState.currentHeight = rowEl.clientHeight;
+            this.dragState.dragHelperEl = dragHelperEl;
+            this.dragState.backgroundGridEl = backgroundGridEl;
+            this.dragState.gridMode = true;
+        }
+    },
+    dropzoneOut({ dropzone }) {
+        const rowEl = dropzone.el.parentNode;
 
-                // Checking if the "out" event happens right after the "over"
-                // of the same dropzone. If it is not the case, we don't do
-                // anything since the previous dropzone was already escaped (at
-                // the start of the over).
-                const sameDropzoneAsCurrent = self.dragState.currentDropzoneEl === dropzoneEl;
+        // Checking if the "out" event happens right after the "over"
+        // of the same dropzone. If it is not the case, we don't do
+        // anything since the previous dropzone was already escaped (at
+        // the start of the over).
+        const sameDropzoneAsCurrent = this.dragState.currentDropzoneEl === dropzone.el;
 
-                if (sameDropzoneAsCurrent) {
-                    if (rowEl.classList.contains('o_grid_mode')) {
-                        // Removing the listener + cleaning.
-                        self.$body[0].removeEventListener('mousemove', self.onDragMove, false);
-                        gridUtils._gridCleanUp(rowEl, self.$target[0]);
-                        self.$target[0].style.removeProperty('z-index');
+        if (sameDropzoneAsCurrent) {
+            if (rowEl.classList.contains('o_grid_mode')) {
+                // Removing the listener + cleaning.
+                this.dragState.gridMode = false;
+                gridUtils._gridCleanUp(rowEl, this.$target[0]);
+                this.$target[0].style.removeProperty('z-index');
 
-                        // Removing the drag helper and the background grid and
-                        // resizing the grid and the dropzone.
-                        self.dragState.dragHelperEl.remove();
-                        self.dragState.backgroundGridEl.remove();
-                        self.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
-                        gridUtils._resizeGrid(rowEl);
-                        self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
-                        const rowCount = parseInt(rowEl.dataset.rowCount);
-                        dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
-                    }
+                // Removing the drag helper and the background grid and
+                // resizing the grid and the dropzone.
+                this.dragState.dragHelperEl.remove();
+                this.dragState.backgroundGridEl.remove();
+                this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
+                gridUtils._resizeGrid(rowEl);
+                this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
+                const rowCount = parseInt(rowEl.dataset.rowCount);
+                dropzone.el.style.gridRowEnd = Math.max(rowCount + 1, 1);
+            }
 
-                    var prev = self.$target.prev();
-                    if (this === prev[0]) {
-                        self.dropped = false;
-                        self.$target.detach();
-                        $(this).removeClass('invisible');
-                    }
+            var prev = this.$target.prev();
+            if (dropzone.el === prev[0]) {
+                this.dropped = false;
+                this.$target.detach();
+                $(dropzone.el).removeClass('invisible');
+            }
 
-                    delete self.dragState.currentDropzoneEl;
-                }
-            },
-        });
-
-        // Trigger a scroll on the draggable element so that jQuery updates
-        // the position of the drop zones.
-        self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
-            self.$el.trigger('scroll');
-        });
+            delete this.dragState.currentDropzoneEl;
+        }
     },
     /**
      * Called when the snippet is dropped after being dragged thanks to the
@@ -1332,7 +1329,7 @@ var SnippetEditor = Widget.extend({
      * @param {Event} ev
      * @param {Object} ui
      */
-    _onDragAndDropStop: function (ev, ui) {
+    _onDragAndDropStop({ x, y }) {
         this.options.wysiwyg.odooEditor.automaticStepActive();
         this.options.wysiwyg.odooEditor.automaticStepSkipStack();
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
@@ -1341,8 +1338,8 @@ var SnippetEditor = Widget.extend({
         if (rowEl && rowEl.classList.contains('o_grid_mode')) {
             // Case when dropping the column in a grid.
 
-            // Removing the event listener.
-            this.$body[0].removeEventListener('mousemove', this.onDragMove, false);
+            // Disable dragMove handler
+            this.dragState.gridMode = false;
 
             // Defining the column grid area with its position.
             const gridProp = gridUtils._getGridProperties(rowEl);
@@ -1374,7 +1371,7 @@ var SnippetEditor = Widget.extend({
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
-            let $el = $(closest(this.$body[0].querySelectorAll('.oe_drop_zone'), {x: ui.position.left, y: ui.position.top}));
+            let $el = $(closest(this.$body[0].querySelectorAll('.oe_drop_zone'), {x, y}));
             // Some drop zones might have been disabled.
             $el = $el.filter(this.$dropZones);
             if ($el.length) {
@@ -1429,7 +1426,6 @@ var SnippetEditor = Widget.extend({
             this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         }
 
-        this.$dropZones.droppable('destroy');
         this.$editable.find('.oe_drop_zone').remove();
 
         var prev = this.$target.first()[0].previousSibling;
@@ -1470,10 +1466,6 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_stop', {
             $snippet: this.$target,
         });
-        this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
-        if (this.draggableComponentImgs) {
-            this.draggableComponentImgs.$scrollTarget.off('scroll.scrolling_element');
-        }
         const samePositionAsStart = this.$target[0].classList.contains('o_grid_item')
             ? (this.$target[0].parentNode === this.dragState.startingGrid
                 && this.$target[0].style.gridArea === this.dragState.prevGridArea)
@@ -1650,7 +1642,10 @@ var SnippetEditor = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onDragMove(ev) {
+    _onDragMove({ x, y }) {
+        if (!this.dragState.gridMode || !this.dragState.currentDropzoneEl) {
+            return;
+        }
         const columnEl = this.$target[0];
         const rowEl = columnEl.parentNode;
 
@@ -1664,9 +1659,9 @@ var SnippetEditor = Widget.extend({
         const columnWidth = columnEl.clientWidth + 2 * borderWidth;
 
         // Placing the column where the mouse is.
-        let top = ev.pageY - rowElTop - this.mousePositionYOnElement;
+        let top = y - rowElTop - this.mousePositionYOnElement;
         const bottom = top + columnHeight;
-        let left = ev.pageX - rowElLeft - this.mousePositionXOnElement;
+        let left = x - rowElLeft - this.mousePositionXOnElement;
 
         // Horizontal & vertical overflow.
         left = clamp(left, 0, rowEl.clientWidth - columnWidth);
@@ -1912,7 +1907,7 @@ var SnippetsMenu = Widget.extend({
             id: 'oe_manipulators',
         });
         this.$body.prepend(this.$snippetEditorArea);
-        this.options.getScrollOptions = this._getScrollOptions.bind(this);
+        this.options.getDragAndDropOptions = this._getDragAndDropOptions.bind(this);
 
         // Add tooltips on we-title elements whose text overflows and on all
         // elements with available tooltip text. Note that the tooltips of the
@@ -3068,7 +3063,7 @@ var SnippetsMenu = Widget.extend({
         this.$el.html($html);
         this.$el.append(this.customizePanel);
         this.$el.append(this.invisibleDOMPanelEl);
-        this._makeSnippetDraggable(this.$snippets);
+        this._makeSnippetDraggable();
         this._disableUndroppableSnippets();
 
         this.$el.addClass('o_loaded');
@@ -3212,18 +3207,14 @@ var SnippetsMenu = Widget.extend({
      * @param {Object} [options={}]
      * @returns {Object}
      */
-    _getScrollOptions(options = {}) {
+    _getDragAndDropOptions(options = {}) {
+        let iframeWindow = false;
+        if (this.$body[0].ownerDocument.defaultView !== window) {
+            iframeWindow = this.$body[0].ownerDocument.defaultView;
+        }
         return Object.assign({}, options, {
-            scrollBoundaries: Object.assign({
-                right: false,
-            }, options.scrollBoundaries),
-            jQueryDraggableOptions: Object.assign({
-                appendTo: this.$body,
-                cursor: 'move',
-                greedy: true,
-                scroll: false,
-            }, options.jQueryDraggableOptions),
-            disableHorizontalScroll: true,
+            iframeWindow,
+            cursor: "move",
         });
     },
     /**
@@ -3285,10 +3276,11 @@ var SnippetsMenu = Widget.extend({
      * Make given snippets be draggable/droppable thanks to their thumbnail.
      *
      * @private
-     * @param {jQuery} $snippets
      */
-    _makeSnippetDraggable: function ($snippets) {
-        var self = this;
+    _makeSnippetDraggable() {
+        if (this.draggableComponent) {
+            this.draggableComponent.destroy();
+        }
         var $toInsert, dropped, $snippet;
         let $dropZones;
 
@@ -3298,178 +3290,179 @@ var SnippetsMenu = Widget.extend({
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
 
-        const smoothScrollOptions = this._getScrollOptions({
-            jQueryDraggableOptions: {
-                handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
-                cancel: '.oe_snippet.o_disabled',
-                helper: function () {
-                    const dragSnip = this.cloneNode(true);
-                    dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
-                        el => el.remove()
-                    );
-                    self.$el[0].ownerDocument.body.append(dragSnip);
-                    return dragSnip;
-                },
-                start: function () {
-                    self._hideSnippetTooltips();
+        const dragAndDropOptions = this.options.getDragAndDropOptions({
+            el: this.$el[0],
+            elements: ".oe_snippet",
+            scrollingElement: $scrollingElement[0],
+            handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
+            cancel: '.oe_snippet.o_disabled',
+            dropzones: () => {
+                return $dropZones.toArray();
+            },
+            helper: ({ element, elementRect, helperOffset, x, y }) => {
+                const dragSnip = element.cloneNode(true);
+                dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
+                    el => el.remove()
+                );
+                dragSnip.style.position = "fixed";
+                this.$el[0].ownerDocument.body.append(dragSnip);
+                // Prepare the offset of the helper to be at the position it was dragged from
+                helperOffset.x = x - elementRect.x;
+                helperOffset.y = y - elementRect.y;
+                return dragSnip;
+            },
+            onDragStart: ({ element }) => {
+                this._hideSnippetTooltips();
 
-                    const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
-                    self._mutex.exec(() => prom);
+                const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
+                this._mutex.exec(() => prom);
 
-                    const doc = self.options.wysiwyg.odooEditor.document;
-                    $(doc.body).addClass('oe_dropzone_active');
+                const doc = this.options.wysiwyg.odooEditor.document;
+                $(doc.body).addClass('oe_dropzone_active');
 
-                    self.options.wysiwyg.odooEditor.automaticStepUnactive();
+                this.options.wysiwyg.odooEditor.automaticStepUnactive();
 
-                    self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
-                    self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
+                this.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
+                this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
 
-                    dropped = false;
-                    $snippet = $(this);
-                    var $baseBody = $snippet.find('.oe_snippet_body');
-                    var $selectorSiblings = $();
-                    var $selectorChildren = $();
-                    const selectorExcludeAncestor = [];
-                    var temp = self.templateOptions;
-                    for (var k in temp) {
-                        if ($baseBody.is(temp[k].base_selector) && !$baseBody.is(temp[k].base_exclude)) {
-                            if (temp[k]['drop-near']) {
-                                $selectorSiblings = $selectorSiblings.add(temp[k]['drop-near'].all());
-                            }
-                            if (temp[k]['drop-in']) {
-                                $selectorChildren = $selectorChildren.add(temp[k]['drop-in'].all());
-                            }
-                            if (temp[k]['drop-exclude-ancestor']) {
-                                selectorExcludeAncestor.push(temp[k]['drop-exclude-ancestor']);
-                            }
+                dropped = false;
+                $snippet = $(element);
+                var $baseBody = $snippet.find('.oe_snippet_body');
+                var $selectorSiblings = $();
+                var $selectorChildren = $();
+                const selectorExcludeAncestor = [];
+                var temp = this.templateOptions;
+                for (var k in temp) {
+                    if ($baseBody.is(temp[k].base_selector) && !$baseBody.is(temp[k].base_exclude)) {
+                        if (temp[k]['drop-near']) {
+                            $selectorSiblings = $selectorSiblings.add(temp[k]['drop-near'].all());
+                        }
+                        if (temp[k]['drop-in']) {
+                            $selectorChildren = $selectorChildren.add(temp[k]['drop-in'].all());
+                        }
+                        if (temp[k]['drop-exclude-ancestor']) {
+                            selectorExcludeAncestor.push(temp[k]['drop-exclude-ancestor']);
                         }
                     }
+                }
 
-                    // Prevent dropping an element into another one.
-                    // (E.g. ToC inside another ToC)
-                    for (const excludedAncestorSelector of selectorExcludeAncestor) {
-                        $selectorSiblings = $selectorSiblings.filter((i, el) => !el.closest(excludedAncestorSelector));
-                        $selectorChildren = $selectorChildren.filter((i, el) => !el.closest(excludedAncestorSelector));
-                    }
+                // Prevent dropping an element into another one.
+                // (E.g. ToC inside another ToC)
+                for (const excludedAncestorSelector of selectorExcludeAncestor) {
+                    $selectorSiblings = $selectorSiblings.filter((i, el) => !el.closest(excludedAncestorSelector));
+                    $selectorChildren = $selectorChildren.filter((i, el) => !el.closest(excludedAncestorSelector));
+                }
 
-                    $toInsert = $baseBody.clone();
-                    // Color-customize dynamic SVGs in dropped snippets with current theme colors.
-                    [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
-                        const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
-                        colorCustomizedURL.searchParams.forEach((value, key) => {
-                            const match = key.match(/^c([1-5])$/);
-                            if (match) {
-                                colorCustomizedURL.searchParams.set(key, weUtils.getCSSVariableValue(`o-color-${match[1]}`));
-                            }
-                        });
-                        dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
+                $toInsert = $baseBody.clone();
+                // Color-customize dynamic SVGs in dropped snippets with current theme colors.
+                [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
+                    const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
+                    colorCustomizedURL.searchParams.forEach((value, key) => {
+                        const match = key.match(/^c([1-5])$/);
+                        if (match) {
+                            colorCustomizedURL.searchParams.set(key, weUtils.getCSSVariableValue(`o-color-${match[1]}`));
+                        }
                     });
+                    dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
+                });
 
-                    if (!$selectorSiblings.length && !$selectorChildren.length) {
-                        console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
-                        return;
-                    }
+                if (!$selectorSiblings.length && !$selectorChildren.length) {
+                    console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
+                    return;
+                }
 
-                    const forbidSanitize = $snippet.data('oeForbidSanitize');
-                    const canBeSanitizedUnless = forbidSanitize === 'form' ? 'form' : !forbidSanitize;
-                    // Specific case for inline snippet (e.g. "s_badge")
+                const forbidSanitize = $snippet.data('oeForbidSanitize');
+                const canBeSanitizedUnless = forbidSanitize === 'form' ? 'form' : !forbidSanitize;
+                // Specific case for inline snippet (e.g. "s_badge")
                     $baseBody[0].classList.remove("oe_snippet_body");
                     const toInsertInline = window.getComputedStyle($baseBody[0]).display.includes('inline');
                     $baseBody[0].classList.add("oe_snippet_body");
-                    self._activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, toInsertInline);
-                    $dropZones = self.getEditableArea().find('.oe_drop_zone');
-                    if (forbidSanitize === 'form') {
-                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]) .oe_drop_zone'));
-                    } else if (forbidSanitize) {
-                        $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize] .oe_drop_zone'));
+                    this._activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, toInsertInline);
+                $dropZones = this.getEditableArea().find('.oe_drop_zone');
+                if (forbidSanitize === 'form') {
+                    $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]) .oe_drop_zone'));
+                } else if (forbidSanitize) {
+                    $dropZones = $dropZones.filter((i, el) => !el.closest('[data-oe-sanitize] .oe_drop_zone'));
+                }
+                // If a modal is open, the scroll target must be that modal
+                const $openModal = this.getEditableArea().find('.modal:visible');
+                if ($openModal.length) {
+                    this.draggableComponent.update({ scrollingElement: $openModal[0]});
+                    $scrollingElement = $openModal;
+                }
+                this.trigger_up('drop_zone_start');
+            },
+            dropzoneOver: ({ dropzone }) => {
+                if (dropped) {
+                    $toInsert.detach();
+                    $toInsert.addClass('oe_snippet_body');
+                    [...$dropZones].forEach(dropzoneEl =>
+                        dropzoneEl.classList.remove("invisible"));
+                }
+                dropped = true;
+                $(dropzone.el).first().after($toInsert).addClass('invisible');
+                $toInsert.removeClass('oe_snippet_body');
+                this.trigger_up('drop_zone_over');
+            },
+            dropzoneOut: ({ dropzone }) => {
+                var prev = $toInsert.prev();
+                if (dropzone.el === prev[0]) {
+                    dropped = false;
+                    $toInsert.detach();
+                    $(dropzone.el).removeClass('invisible');
+                    $toInsert.addClass('oe_snippet_body');
+                }
+                this.trigger_up('drop_zone_out');
+            },
+            onDragEnd: async ({ x, y, helper }) => {
+                const doc = this.options.wysiwyg.odooEditor.document;
+                $(doc.body).removeClass('oe_dropzone_active');
+                this.options.wysiwyg.odooEditor.automaticStepUnactive();
+                this.options.wysiwyg.odooEditor.automaticStepSkipStack();
+                $toInsert.removeClass('oe_snippet_body');
+                $scrollingElement.off('scroll.scrolling_element');
+                if (!dropped && y > 3 && x + helper.getBoundingClientRect().height < this.el.getBoundingClientRect().left) {
+                    const point = { x, y };
+                    let droppedOnNotNearest = touching(doc.body.querySelectorAll('.oe_structure_not_nearest'), point);
+                    // If dropped outside of a dropzone with class oe_structure_not_nearest,
+                    // move the snippet to the nearest dropzone without it
+                    const selector = droppedOnNotNearest
+                        ? '.oe_drop_zone'
+                        : ':not(.oe_structure_not_nearest) > .oe_drop_zone';
+                    let $el = $(closest(doc.body.querySelectorAll(selector), point));
+                    // Some drop zones might have been disabled.
+                    $el = $el.filter($dropZones);
+                    if ($el.length) {
+                        $el.after($toInsert);
+                        dropped = true;
                     }
-                    $dropZones.droppable({
-                        over: function () {
-                            if (dropped) {
-                                $toInsert.detach();
-                                $toInsert.addClass('oe_snippet_body');
-                                [...$dropZones].forEach(dropzoneEl =>
-                                    dropzoneEl.classList.remove("invisible"));
-                            }
-                            dropped = true;
-                            $(this).first().after($toInsert).addClass('invisible');
-                            $toInsert.removeClass('oe_snippet_body');
-                            self.trigger_up('drop_zone_over');
-                        },
-                        out: function () {
-                            var prev = $toInsert.prev();
-                            if (this === prev[0]) {
-                                dropped = false;
-                                $toInsert.detach();
-                                $(this).removeClass('invisible');
-                                $toInsert.addClass('oe_snippet_body');
-                            }
-                            self.trigger_up('drop_zone_out');
-                        },
-                    });
-                    // If a modal is open, the scroll target must be that modal
-                    const $openModal = self.getEditableArea().find('.modal:visible');
-                    if ($openModal.length) {
-                        self.draggableComponent.$scrollTarget = $openModal;
+                }
+
+                this.getEditableArea().find('.oe_drop_zone').remove();
+
+                let $toInsertParent;
+                let prev;
+                let next;
+                if (dropped) {
+                    prev = $toInsert.first()[0].previousSibling;
+                    next = $toInsert.last()[0].nextSibling;
+
+                    $toInsertParent = $toInsert.parent();
+                    $toInsert.detach();
+                }
+
+                this.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
+
+                if (dropped) {
+                    if (prev) {
+                        $toInsert.insertAfter(prev);
+                    } else if (next) {
+                        $toInsert.insertBefore(next);
+                    } else {
+                        $toInsertParent.prepend($toInsert);
                     }
 
-                    // Trigger a scroll on the draggable element so that jQuery updates
-                    // the position of the drop zones.
-                    self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
-                        self.$el.trigger('scroll');
-                    });
-                    self.trigger_up('drop_zone_start');
-                },
-                stop: async function (ev, ui) {
-                    const doc = self.options.wysiwyg.odooEditor.document;
-                    $(doc.body).removeClass('oe_dropzone_active');
-                    self.options.wysiwyg.odooEditor.automaticStepUnactive();
-                    self.options.wysiwyg.odooEditor.automaticStepSkipStack();
-                    $toInsert.removeClass('oe_snippet_body');
-                    self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
-                    if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
-                        const point = {x: ui.position.left, y: ui.position.top};
-                        let droppedOnNotNearest = touching(doc.body.querySelectorAll('.oe_structure_not_nearest'), point);
-                        // If dropped outside of a dropzone with class oe_structure_not_nearest,
-                        // move the snippet to the nearest dropzone without it
-                        const selector = droppedOnNotNearest
-                            ? '.oe_drop_zone'
-                            : ':not(.oe_structure_not_nearest) > .oe_drop_zone';
-                        let $el = $(closest(doc.body.querySelectorAll(selector), point));
-                        // Some drop zones might have been disabled.
-                        $el = $el.filter($dropZones);
-                        if ($el.length) {
-                            $el.after($toInsert);
-                            dropped = true;
-                        }
-                    }
-
-                    $dropZones.droppable('destroy');
-                    self.getEditableArea().find('.oe_drop_zone').remove();
-
-                    let $toInsertParent;
-                    let prev;
-                    let next;
-                    if (dropped) {
-                        prev = $toInsert.first()[0].previousSibling;
-                        next = $toInsert.last()[0].nextSibling;
-
-                        $toInsertParent = $toInsert.parent();
-                        $toInsert.detach();
-                    }
-
-                    self.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
-
-                    if (dropped) {
-                        if (prev) {
-                            $toInsert.insertAfter(prev);
-                        } else if (next) {
-                            $toInsert.insertBefore(next);
-                        } else {
-                            $toInsertParent.prepend($toInsert);
-                        }
-
-                        var $target = $toInsert;
+                    var $target = $toInsert;
 
                         if ($target[0].classList.contains("o_snippet_drop_in_only")) {
                             // If it's a "drop in only" snippet, after dropping
@@ -3481,36 +3474,35 @@ var SnippetsMenu = Widget.extend({
                             delete $target[0].dataset.name;
                         }
 
-                        self.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
-                        await self._scrollToSnippet($target, self.$scrollable);
-                        self.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
+                    this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
+                    await this._scrollToSnippet($target, this.$scrollable);
+                    this.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
 
-                        browser.setTimeout(async () => {
-                            // Free the mutex now to allow following operations
-                            // (mutexed as well).
-                            dragAndDropResolve();
+                    browser.setTimeout(async () => {
+                        // Free the mutex now to allow following operations
+                        // (mutexed as well).
+                        dragAndDropResolve();
 
-                            await self.callPostSnippetDrop($target);
+                        await this.callPostSnippetDrop($target);
 
-                            // Restore editor to its normal edition state, also
-                            // make sure the undroppable snippets are updated.
-                            self._disableUndroppableSnippets();
-                            self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-                            self.options.wysiwyg.odooEditor.historyStep();
-                            self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
-                        });
-                    } else {
-                        $toInsert.remove();
-                        if (dragAndDropResolve) {
-                            dragAndDropResolve();
-                        }
-                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                        // Restore editor to its normal edition state, also
+                        // make sure the undroppable snippets are updated.
+                        this._disableUndroppableSnippets();
+                        this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+                        this.options.wysiwyg.odooEditor.historyStep();
+                        this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                    });
+                } else {
+                    $toInsert.remove();
+                    if (dragAndDropResolve) {
+                        dragAndDropResolve();
                     }
-                    self.trigger_up('drop_zone_stop');
-                },
+                    this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                }
+                this.trigger_up('drop_zone_stop');
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag($snippets, $scrollingElement, smoothScrollOptions);
+        this.draggableComponent = useDragAndDrop({ ref: { el: this.el }, ...dragAndDropOptions });
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
