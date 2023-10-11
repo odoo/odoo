@@ -1122,6 +1122,8 @@ class Picking(models.Model):
 
         # Call `_action_done`.
         pickings_not_to_backorder = self.filtered(lambda p: p.picking_type_id.create_backorder == 'never')
+        if self.env.context.get('display_detailed_backorder'):
+            pickings_not_to_backorder |= self.filtered(lambda p: p.return_id and p not in pickings_not_to_backorder)
         if self.env.context.get('picking_ids_not_to_backorder'):
             pickings_not_to_backorder |= self.browse(self.env.context['picking_ids_not_to_backorder']).filtered(
                 lambda p: p.picking_type_id.create_backorder != 'always'
