@@ -139,7 +139,7 @@
     </template>
 
     <template id="portal_timesheet_table" name="Portal Timesheet Table">
-        <table class="o_portal_my_doc_table table table-sm">
+        <table class="o_portal_my_doc_table table table-sm table-striped">
             <thead>
               <tr>
                 <th>Date</th>
@@ -149,7 +149,7 @@
                 <th t-else="" class="text-end">Hours Spent</th>
               </tr>
             </thead>
-            <tr t-foreach="timesheets" t-as="timesheet">
+            <tr t-foreach="timesheets" t-as="timesheet" valign="middle">
                 <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
                 <td t-attf-title="#{timesheet.employee_id.name}"><t t-esc="timesheet.employee_id.name"/></td>
                 <td><t t-esc="timesheet.name"/></td>
