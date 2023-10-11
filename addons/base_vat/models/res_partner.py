@@ -32,7 +32,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': '48.906.308/0001-27',
+    'br': 'either 11 digits for CPF or 14 digits for CNPJ',
     'ch': 'CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA',  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
     'co': 'CO213123432-1 or CO213.123.432-1',
@@ -256,7 +256,7 @@ class ResPartner(models.Model):
             company = self.env.company
 
         vat_label = _("VAT")
-        if country_code and company.country_id and country_code == company.country_id.code.lower():
+        if country_code and company.country_id and country_code == company.country_id.code.lower() and company.country_id.vat_label:
             vat_label = company.country_id.vat_label
 
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
@@ -721,6 +721,11 @@ class ResPartner(models.Model):
     def check_vat_t(self, vat):
         if self.country_id.code == 'JP':
             return self.simple_vat_check('jp', vat)
+
+    def check_vat_br(self, vat):
+        is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
+        is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
+        return is_cpf_valid(vat) or is_cnpj_valid(vat)
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
