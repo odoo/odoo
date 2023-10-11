@@ -1163,3 +1163,67 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltySpecificDiscountWithRewardProductDomainTour",
             login="accountman",
         )
+
+    def test_discount_with_reward_product_domain_python_evaluation(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        product_category_base = self.env.ref('product.product_category_1')
+        product_category_1 = self.env['product.category'].create({
+            'name': 'Office furnitures',
+            'parent_id': product_category_base.id
+        })
+
+        self.productA = self.env['product.product'].create(
+            {
+                'name': 'Product A',
+                'type': 'product',
+                'list_price': 15,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'categ_id': product_category_base.id
+            }
+        )
+
+        self.productB = self.env['product.product'].create(
+            {
+                'name': 'Product B',
+                'type': 'product',
+                'list_price': 50,
+                'available_in_pos': True,
+                'taxes_id': False,
+                'categ_id': product_category_1.id
+            }
+        )
+
+        lp = self.env['loyalty.program'].create({
+            'name': 'Discount on Specific Products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_domain': '["&", ("categ_id", "ilike", "office"), ("name", "ilike", "oduct")]',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+        reward_id = lp.reward_ids[0].id
+        self.main_pos_config.open_ui()
+        with self.assertLogs('odoo.addons.pos_loyalty.models.pos_session', 'WARNING') as log_catcher:
+            self.start_tour(
+                "/pos/web?config_id=%d" % self.main_pos_config.id,
+                "PosLoyaltySpecificDiscountWithRewardProductDomainTour",
+                login="accountman",
+            )
+        self.assertIn(f"""WARNING:odoo.addons.pos_loyalty.models.pos_session:At least one discount & loyalty reward Discount Product Domain was forced to be evaluated on the server.
+This can lead to performance issues if unintended.
+Concerned rewards:
+ - 'Discount on Specific Products - 50% on Product B' (reward id: {reward_id}) with the Product Domain `['&', ('categ_id', 'ilike', 'office'), ('name', 'ilike', 'oduct')]` due to the field 'name'""",
+                      log_catcher.output)

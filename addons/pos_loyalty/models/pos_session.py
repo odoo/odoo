@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import models
 from odoo.osv.expression import OR
+
+_logger = logging.getLogger(__name__)
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
@@ -54,7 +58,17 @@ class PosSession(models.Model):
         return self.env['loyalty.rule'].search_read(**params['search_params'])
 
     def _get_pos_ui_loyalty_reward(self, params):
-        return self.env['loyalty.reward'].search_read(**params['search_params'])
+        self = self.with_context(rewards_forced_python_loaded=dict())
+        res = self.env['loyalty.reward'].search_read(**params['search_params'])
+        rewards_forced_python_loaded = self.env.context['rewards_forced_python_loaded']
+        if rewards_forced_python_loaded:
+            msg = ("At least one discount & loyalty reward Discount Product Domain was forced to be evaluated on the server.\n"
+                   "This can lead to performance issues if unintended.\n"
+                   "Concerned rewards:")
+            for reward, field_name in rewards_forced_python_loaded.items():
+                msg += f"\n - '{reward.display_name}' (reward id: {reward.id}) with the Product Domain `{reward._get_discount_product_domain()}` due to the field '{field_name}'"
+            _logger.warning(msg)
+        return res
 
     def _get_pos_ui_product_product(self, params):
         result = super()._get_pos_ui_product_product(params)

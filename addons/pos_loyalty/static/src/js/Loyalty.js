@@ -7,7 +7,7 @@ import concurrency from 'web.concurrency';
 import { Gui } from 'point_of_sale.Gui';
 import { round_decimals,round_precision } from 'web.utils';
 import core from 'web.core';
-import { Domain, InvalidDomainError } from '@web/core/domain';
+import { Domain } from '@web/core/domain';
 import { sprintf } from '@web/core/utils/strings';
 
 const _t = core._t;
@@ -131,15 +131,14 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
                 .filter((product) => domain.contains(product))
                 .forEach(product => reward.all_discount_product_ids.add(product.id));
         } catch (error) {
-            if (!(error instanceof InvalidDomainError)) {
-                throw error
-            }
+            console.error(error);
             const index = this.rewards.indexOf(reward);
             if (index != -1) {
                 Gui.showPopup('ErrorPopup', {
                     title: _t('A reward could not be loaded'),
                     body:  sprintf(
-                        _t('The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client'),
+                        _t('The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client') +
+                        `\n\nTechnical details:\n${error.name}: ${error.message}`,
                         this.rewards[index].description)
                     });
                 this.rewards[index] = null;
