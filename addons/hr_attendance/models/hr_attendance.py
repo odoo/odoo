@@ -239,18 +239,18 @@ class HrAttendance(models.Model):
 
                             # Started before or after planned date within the threshold interval
                             if (delta_in > 0 and delta_in <= company_threshold) or\
-                                (delta_in < 0 and abs(delta_in) <= employee_threshold):
+                               (delta_in < 0 and abs(delta_in) <= employee_threshold):
                                 local_check_in = planned_start_dt
-                            local_check_out = pytz.utc.localize(attendance.check_out)
 
                             # same for check_out as planned_end_dt
+                            local_check_out = pytz.utc.localize(attendance.check_out)
                             delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
                             # if delta_out < 0: Checked out before supposed start of the day
                             # if delta_out > 0: Checked out after supposed start of the day
 
                             # Finised before or after planned date within the threshold interval
                             if (delta_out > 0 and delta_out <= company_threshold) or\
-                                (delta_out < 0 and abs(delta_out) <= employee_threshold):
+                               (delta_out < 0 and abs(delta_out) <= employee_threshold):
                                 local_check_out = planned_end_dt
 
                             # There is an overtime at the start of the day
@@ -279,7 +279,7 @@ class HrAttendance(models.Model):
                         overtime_duration_real = sum(attendances.mapped('worked_hours')) - planned_work_duration
 
                 overtime = overtimes.filtered(lambda o: o.date == attendance_date)
-                if not float_is_zero(overtime_duration, 2) or unfinished_shifts:
+                if not float_is_zero(overtime_duration, 2) or not float_is_zero(overtime_duration_real, 2) or unfinished_shifts:
                     # Do not create if any attendance doesn't have a check_out, update if exists
                     if unfinished_shifts:
                         overtime_duration = 0
@@ -293,7 +293,7 @@ class HrAttendance(models.Model):
                     elif overtime:
                         overtime.sudo().write({
                             'duration': overtime_duration,
-                            'duration_real': overtime_duration
+                            'duration_real': overtime_duration_real,
                         })
                 elif overtime:
                     overtime_to_unlink |= overtime
