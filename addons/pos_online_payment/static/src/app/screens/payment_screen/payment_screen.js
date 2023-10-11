@@ -7,6 +7,7 @@ import { OnlinePaymentPopup } from "@pos_online_payment/app/utils/online_payment
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { floatIsZero } from "@web/core/utils/numbers";
+import { qrCodeSrc } from "@point_of_sale/utils";
 
 patch(PaymentScreen.prototype, {
     getRemainingOnlinePaymentLines() {
@@ -96,8 +97,7 @@ patch(PaymentScreen.prototype, {
                 return false;
             }
 
-            const qrCodeData = this.currentOrder._get_online_payment_qr_code_data();
-            if (!qrCodeData || qrCodeData.length == 0) {
+            if (!this.currentOrder.server_id) {
                 this.cancelOnlinePayment(this.currentOrder);
                 this.popup.add(ErrorPopup, {
                     title: _t("Online payment unavailable"),
@@ -105,6 +105,7 @@ patch(PaymentScreen.prototype, {
                 });
                 return false;
             }
+            const qrCodeImgSrc = qrCodeSrc(`${this.pos.base_url}/pos/pay/${this.currentOrder.server_id}?access_token=${this.currentOrder.access_token}`);
 
             let prevOnlinePaymentLine = null;
             let lastOrderServerOPData = null;
@@ -132,7 +133,7 @@ patch(PaymentScreen.prototype, {
 
                     onlinePaymentLine.set_payment_status("waiting");
                     this.currentOrder.select_paymentline(onlinePaymentLine);
-                    lastOrderServerOPData = await this.showOnlinePaymentQrCode(qrCodeData, onlinePaymentLineAmount);
+                    lastOrderServerOPData = await this.showOnlinePaymentQrCode(qrCodeImgSrc, onlinePaymentLineAmount);
                     if (onlinePaymentLine.get_payment_status() === "waiting") {
                         onlinePaymentLine.set_payment_status(undefined);
                     }
