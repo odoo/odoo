@@ -132,7 +132,7 @@ export class Wysiwyg extends Component {
         }),
     }
     imageCropProps = useState({
-        rpc: this._rpc.bind(this),
+        rpc: this._serviceRpc.bind(this),
         showCount: 0,
         media: undefined,
         mimetype: undefined,
@@ -3504,9 +3504,6 @@ export class Wysiwyg extends Component {
             silent: settings.shadow,
             xhr: settings.xhr,
         });
-    }
-    _rpc({ route,  params }) {
-        return this._serviceRpc(route, params)
     }
 }
 Wysiwyg.activeCollaborationChannelNames = new Set();
