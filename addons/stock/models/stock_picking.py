@@ -685,6 +685,8 @@ class Picking(models.Model):
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_id(self):
         for picking in self:
+            if picking.return_id:
+                continue
             picking = picking.with_company(picking.company_id)
             if picking.picking_type_id:
                 if picking.picking_type_id.default_location_src_id:
