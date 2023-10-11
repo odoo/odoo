@@ -2014,6 +2014,11 @@ class PropertiesSearchCase(TestPropertiesMixin):
                 with self.assertRaises(UserError), self.assertQueryCount(0):
                     self.env['test_new_api.message'].search(domain=[], order=order)
 
+    @mute_logger('odoo.fields')
+    def test_properties_field_search(self):
+        with self.assertRaises(ValueError):
+            self.env['test_new_api.message'].search([('attributes', '=', '"Test"')])
+
 
 class PropertiesGroupByCase(TestPropertiesMixin):
     @classmethod

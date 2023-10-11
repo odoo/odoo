@@ -1023,7 +1023,7 @@ class expression(object):
                     push(dom_leaf, model, alias)
 
             elif field.type == 'properties':
-                if len(path) != 2 and "." in path[1]:
+                if len(path) != 2 or "." in path[1]:
                     raise ValueError(f"Wrong path {path}")
                 elif operator not in ('=', '!=', '>', '>=', '<', '<=', 'in', 'not in', 'like', 'ilike', 'not like', 'not ilike'):
                     raise ValueError(f"Wrong search operator {operator!r}")
