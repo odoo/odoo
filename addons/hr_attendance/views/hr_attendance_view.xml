@@ -152,4 +152,7 @@
     <menuitem id="menu_hr_attendance_kiosk_no_user_mode" name="Kiosk Mode" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_kiosk" action="hr_attendance_action_kiosk_mode"/>
 
     <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action"/>
+
+    <!-- Kiosk Mode only for Kiosk user -->
+    <menuitem id="menu_hr_attendance_kiosk" name="Attendances" sequence="10" groups="hr_attendance.group_hr_attendance_kiosk" action="hr_attendance_action_kiosk_mode" web_icon="hr_attendance,static/description/icon.svg"/>
 </odoo>
