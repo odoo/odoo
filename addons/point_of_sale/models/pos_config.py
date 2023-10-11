@@ -392,7 +392,7 @@ class PosConfig(models.Model):
         return pos_configs
 
     def _reset_default_on_vals(self, vals):
-        if 'tip_product_id' in vals and vals['iface_tipproduct'] and not vals['tip_product_id']:
+        if 'tip_product_id' in vals and not vals['tip_product_id'] and 'iface_tipproduct' in vals and vals['iface_tipproduct']:
             default_product = self.env.ref('point_of_sale.product_product_tip', False)
             if default_product:
                 vals['tip_product_id'] = default_product.id
