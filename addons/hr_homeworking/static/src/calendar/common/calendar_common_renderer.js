@@ -93,8 +93,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     onDayRender(info){
         const parsedDate = DateTime.fromJSDate(info.date).toISODate();
         if (this.props.model.scale === 'week' || this.props.model.scale === 'day'){
-            const button = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_month`)
-            const line = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .line`)
+            const button = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] o_worklocation_text`)
+            const line = info.view.context.calendar.el.querySelector(`.fc-day-header[data-date='${parsedDate}'] .o_worklocation_line`)
             if (!button || !line)
                 return;
             info.homework = true;
@@ -180,7 +180,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
     },
     onDateClick(info){
-        if (info.jsEvent && info.jsEvent.target.closest(".btnWorklocation")) {
+        if (info.jsEvent && info.jsEvent.target.closest(".o_worklocation_btn")) {
             info.homework = true
             this.props.createRecord(this.fcEventToRecord(info));
         } else {
