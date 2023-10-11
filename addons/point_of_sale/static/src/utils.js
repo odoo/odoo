@@ -53,3 +53,7 @@ export function constructFullProductName(line, attribute_value_by_id, display_na
 
     return attributeString !== "" ? `${display_name} ${attributeString}` : display_name;
 }
+
+export function qrCodeSrc(url, { size = 200 } = {}) {
+    return `/report/barcode/QR/${encodeURIComponent(url)}?width=${size}&height=${size}`;
+}
