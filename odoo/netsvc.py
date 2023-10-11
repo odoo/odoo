@@ -251,6 +251,18 @@ def init_logger():
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
 
+_logger_sql = logging.getLogger('debug_sql_file')
+def external_debug_sql(force_file):
+    _logger_sql.handlers = []
+    if not force_file:
+        _logger_sql.propagate = True
+        return
+    handler = logging.FileHandler(force_file)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(DBFormatter('%(asctime)s [%(pid)s] %(dbname)s %(message)s', "%Y-%m-%d %H:%M:%S.000 UTC"))
+    _logger_sql.setLevel(logging.DEBUG)
+    _logger_sql.addHandler(handler)
+    _logger_sql.propagate = False
 
 DEFAULT_LOG_CONFIGURATION = [
     'odoo.http.rpc.request:INFO',

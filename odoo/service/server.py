@@ -30,7 +30,7 @@ if os.name == 'posix':
     import resource
     try:
         import inotify
-        from inotify.adapters import InotifyTrees
+        from inotify.adapters import InotifyTrees, InotifyTree
         from inotify.constants import IN_MODIFY, IN_CREATE, IN_MOVED_TO
         INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
     except ImportError:
@@ -60,6 +60,7 @@ from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from odoo.tools.config import configmanager
 
 _logger = logging.getLogger(__name__)
 
@@ -277,11 +278,15 @@ class FSWatcherWatchdog(FSWatcherBase):
 
 
 class FSWatcherInotify(FSWatcherBase):
-    def __init__(self):
+    def __init__(self, force_file=None):
         self.started = False
+        self.force_file = force_file
         # ignore warnings from inotify in case we have duplicate addons paths.
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
+        if self.force_file:
+            self.watcher = InotifyTree(self.force_file, mask=INOTIFY_LISTEN_EVENTS, block_duration_s=.5)
+            return
         paths_to_watch = []
         for path in odoo.addons.__path__:
             paths_to_watch.append(path)
@@ -319,6 +324,16 @@ class FSWatcherInotify(FSWatcherBase):
         self.thread.join()
         del self.watcher  # ensures inotify watches are freed up before reexec
 
+    def handle_file(self, path):
+        if self.force_file and self.force_file and path.endswith('odoo.conf'):
+            new_config = configmanager()
+            if sys.argv[1:] and sys.argv[1] and sys.argv[1] == 'shell':
+                new_config.parse_config(sys.argv[2:])
+            else:
+                new_config.parse_config(sys.argv[1:])
+            if new_config.options.get('sql_debug_file') != config.options.get('sql_debug_file'):
+                odoo.netsvc.external_debug_sql(new_config.options.get('sql_debug_file'))
+        return super(FSWatcherInotify, self).handle_file(path)
 
 #----------------------------------------------------------
 # Servers: Threaded, Gevented and Prefork
@@ -1382,6 +1397,7 @@ def start(preload=None, stop=False):
         server = ThreadedServer(odoo.http.root)
 
     watcher = None
+    config_file_watcher = None
     if 'reload' in config['dev_mode'] and not odoo.evented:
         if inotify:
             watcher = FSWatcherInotify()
@@ -1396,10 +1412,16 @@ def start(preload=None, stop=False):
                 module = 'watchdog'
             _logger.warning("'%s' module not installed. Code autoreload feature is disabled", module)
 
+    if os.getenv('ODOO_WATCH_CONFIG_FILE') and inotify:
+        config_file_watcher = FSWatcherInotify(force_file=config.rcfile.replace('/odoo.conf', ''))
+        config_file_watcher.start()
+
     rc = server.run(preload, stop)
 
     if watcher:
         watcher.stop()
+    if config_file_watcher:
+        config_file_watcher.stop()
     # like the legend of the phoenix, all ends with beginnings
     if getattr(odoo, 'phoenix', False):
         _reexec()

@@ -552,6 +552,8 @@ class configmanager(object):
         conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
+        if self.options.get('sql_debug_file'):
+            odoo.netsvc.external_debug_sql(self.options['sql_debug_file'])
         return opt
 
     def _warn_deprecated_options(self):

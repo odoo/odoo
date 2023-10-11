@@ -41,6 +41,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700),
 
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
+_logger_sql = logging.getLogger('debug_sql_file')
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
@@ -325,6 +326,8 @@ class Cursor(BaseCursor):
             raise
         finally:
             delay = real_time() - start
+            if not _logger_sql.propagate:
+                _logger_sql.debug("LOG: duration: %.3f ms statement: %s", 1000 * delay, self._format(query, params))
             if _logger.isEnabledFor(logging.DEBUG):
                 _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
 
