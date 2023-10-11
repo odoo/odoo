@@ -15,8 +15,11 @@
                     name="timesheet_invoice_date_range"
                     invisible="not invoicing_timesheet_enabled or advance_payment_method != 'delivered'">
                     <field
+                        class="w-75 w-md-50 w-lg-25"
                         name="date_start_invoice_timesheet"
+                        string="Timesheets Period"
                         widget="daterange"
+                        required="date_start_invoice_timesheet or date_end_invoice_timesheet"
                         options="{'end_date_field': 'date_end_invoice_timesheet'}"
                         title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
                     />
