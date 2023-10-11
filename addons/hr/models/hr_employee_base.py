@@ -25,7 +25,13 @@ class HrEmployeeBase(models.AbstractModel):
     job_id = fields.Many2one('hr.job', 'Job Position', check_company=True)
     job_title = fields.Char("Job Title", compute="_compute_job_title", store=True, readonly=False)
     company_id = fields.Many2one('res.company', 'Company')
-    address_id = fields.Many2one('res.partner', 'Work Address', compute="_compute_address_id", store=True, readonly=False,
+    address_id = fields.Many2one(
+        'res.partner',
+        string='Work Address',
+        compute="_compute_address_id",
+        precompute=True,
+        store=True,
+        readonly=False,
         check_company=True)
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
