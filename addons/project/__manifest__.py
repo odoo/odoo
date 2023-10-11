@@ -150,7 +150,6 @@
             'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
-            'web/static/src/legacy/js/common_env.js',
             ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
@@ -194,9 +193,7 @@
 
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
-            'web/static/src/legacy/legacy_setup.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/js/env.js',
 
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/lib/vkbeautify/**/*',
@@ -226,7 +223,6 @@
             'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
-            'web/static/src/legacy/legacy_setup.js',
         ],
     },
     'license': 'LGPL-3',

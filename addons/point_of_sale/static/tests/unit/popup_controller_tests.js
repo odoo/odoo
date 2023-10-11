@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
-import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
@@ -52,16 +51,12 @@ QUnit.module("unit tests for PopupContainer", {
                 return obj;
             },
         });
-        const legacyEnv = makeTestEnvironment();
         registry.category("services").add("popup", popupService);
         registry.category("services").add("pos_notification", makeService({ add() {} }));
         registry.category("services").add("sound", makeService({ play() {} }));
-        registry.category("services").add("pos", makeService({ legacyEnv }));
+        registry.category("services").add("pos", makeService({}));
         clearRegistryWithCleanup(registry.category("main_components"));
         env = await makeTestEnv();
-        for (const service of ["pos_notification", "sound", "popup"]) {
-            legacyEnv.services[service] = env.services[service];
-        }
     },
 });
 

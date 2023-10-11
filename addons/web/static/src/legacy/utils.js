@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
 import {
     App,
     Component,
     onMounted,
     onWillStart,
     onWillUnmount,
-    useComponent,
     useEnv,
     useRef,
     useState,
@@ -15,20 +13,6 @@ import {
 } from "@odoo/owl";
 import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-
-export const wowlServicesSymbol = Symbol("wowlServices");
-
-/**
- * Deploys a service allowing legacy to add/remove commands.
- *
- * @param {object} legacyEnv
- * @returns a wowl deployable service
- */
-export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
-    // store wowl services on the legacy env (used by the 'useWowlService' hook)
-    legacyEnv[wowlServicesSymbol] = wowlEnv.services;
-    Object.setPrototypeOf(legacyEnv.services, wowlEnv.services);
-}
 
 const reBSTooltip = /^bs-.*$/;
 
@@ -42,20 +26,6 @@ export function cleanDomFromBootstrap() {
             tt.parentNode.removeChild(tt);
         }
     }
-}
-
-/**
- * This hook allows legacy owl Components to use services coming from the wowl env.
- * @param {string} serviceName
- * @returns {any}
- */
-export function useWowlService(serviceName) {
-    const component = useComponent();
-    const env = component.env;
-    component.env = { services: env[wowlServicesSymbol] };
-    const service = useService(serviceName);
-    component.env = env;
-    return service;
 }
 
 export function createWidgetParent(env) {

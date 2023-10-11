@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { loadBundle } from "@web/core/assets";
-import { useWowlService, attachComponent } from '@web/legacy/utils';
+import { attachComponent } from '@web/legacy/utils';
 
 export async function loadWysiwygFromTextarea(parent, textarea, options) {
     var loading = textarea.nextElementSibling;
@@ -22,9 +22,6 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
         constructor(...args) {
             super(...args);
             wysiwyg = this;
-        }
-        _useService(serviceName) {
-            return useWowlService(serviceName);
         }
     }
 

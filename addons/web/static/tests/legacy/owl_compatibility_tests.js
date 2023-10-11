@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
     import { registry } from "@web/core/registry";
-    import { attachComponent, mapLegacyEnvToWowlEnv, useWidget, useWowlService } from "@web/legacy/utils";
+    import { attachComponent, useWidget } from "@web/legacy/utils";
 
-    import makeTestEnvironment from "@web/../tests/legacy/helpers/test_env";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { getFixture, mount } from "@web/../tests/helpers/utils";
     import Widget from "@web/legacy/js/core/widget";
@@ -123,29 +122,5 @@
             assert.containsNone(target, "#widget > #component");
 
             widget.destroy();
-        });
-
-        QUnit.module("useWowlService");
-
-        QUnit.test("simple use case of useWowlService", async function (assert) {
-            assert.expect(1);
-
-            registry.category("services").add("test", {
-                start() {
-                    return "I'm a wowl service";
-                },
-            });
-            const wowlEnv = await makeTestEnv();
-            const legacyEnv = makeTestEnvironment();
-            mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
-
-            class MyComponent extends Component {
-                setup() {
-                    assert.strictEqual(useWowlService("test"), "I'm a wowl service");
-                }
-            }
-            MyComponent.template = xml`<div/>`;
-
-            await mount(MyComponent, getFixture(), { env: legacyEnv });
         });
     });

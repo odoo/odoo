@@ -186,7 +186,6 @@
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',
             ('remove', 'web/static/tests/legacy/helpers/test_utils_tests.js'),
-            'web/static/tests/legacy/legacy_setup.js',
 
             'web/static/lib/fullcalendar/core/main.css',
             'web/static/lib/fullcalendar/daygrid/main.css',

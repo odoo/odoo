@@ -89,7 +89,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
-            'web/static/src/legacy/js/common_env.js',
             ('include', 'web_editor.assets_wysiwyg'),
             ('include', 'web_editor.assets_legacy_wysiwyg'),
         ],

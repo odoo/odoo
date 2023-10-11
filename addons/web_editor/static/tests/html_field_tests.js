@@ -11,9 +11,6 @@ import { wysiwygData } from "@web_editor/../tests/test_utils";
 import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 
-// Legacy
-import legacyEnv from '@web/legacy/js/common_env';
-
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();
     iframe.addEventListener("load", function () {
@@ -446,15 +443,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 modifyImageCount += 1;
             }
         };
-        // Add the ajax service (legacy), because wysiwyg RPCs use it.
-        patchWithCleanup(legacyEnv, {
-            services: {
-                ...legacyEnv.services,
-                ajax: {
-                    rpc: mockRPC,
-                },
-            }
-        });
         await makeView({
             type: "form",
             resId: 1,
@@ -571,15 +559,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             return img;
         }
 
-        // Add the ajax service (legacy), because wysiwyg RPCs use it.
-        patchWithCleanup(legacyEnv, {
-            services: {
-                ...legacyEnv.services,
-                ajax: {
-                    rpc: mockRPC,
-                },
-            }
-        });
         await makeView({
             type: "form",
             resId: 1,
