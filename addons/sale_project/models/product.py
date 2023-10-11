@@ -32,7 +32,7 @@ class ProductTemplate(models.Model):
         'In sale order\'s project': Will use the sale order\'s configured project if defined or fallback to \
         creating a new project based on the selected template.")
     project_id = fields.Many2one(
-        'project.project', 'Project', company_dependent=True,
+        'project.project', 'Project', company_dependent=True, copy=True,
     )
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
