@@ -22,7 +22,7 @@ export class Popover extends Component {
             right: "end",
         };
         el.classList = [
-            "o_popover popover mw-100 shadow-sm",
+            "o_popover popover mw-25 shadow-sm",
             `bs-popover-${directionMap[direction]}`,
             `o-popover-${direction}`,
             `o-popover--${position}`,
