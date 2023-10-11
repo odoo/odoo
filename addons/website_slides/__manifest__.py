@@ -190,7 +190,6 @@ Featuring
             'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
-            'web/static/src/legacy/js/common_env.js',
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
             'web/static/src/libs/pdfjs.js',

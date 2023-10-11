@@ -1,14 +1,12 @@
 /** @odoo-module **/
 
 import { makeEnv, startServices } from "./env";
-import { legacySetupProm } from "./legacy/legacy_setup";
-import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
 import { templates } from "@web/core/assets";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
-import { App, whenReady } from "@odoo/owl";
+import { App, Component, whenReady } from "@odoo/owl";
 
 /**
  * Function to start a webclient.
@@ -31,10 +29,10 @@ export async function startWebClient(Webclient) {
     const env = makeEnv();
     await startServices(env);
 
+    Component.env = env;
+
     // start web client
     await whenReady();
-    const legacyEnv = await legacySetupProm;
-    mapLegacyEnvToWowlEnv(legacyEnv, env);
     const app = new App(Webclient, {
         name: "Odoo Web Client",
         env,

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import legacyEnv from '@web/legacy/js/common_env';
 
 import { useService, useBus } from "@web/core/utils/hooks";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
@@ -12,7 +11,7 @@ import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/util
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
-import { onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
+import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
 
 /**
@@ -786,7 +785,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (evType in triggers) {
             triggers[evType](ev);
         } else if (evType === 'call_service') {
-            const service = legacyEnv.services[payload.service];
+            const service = Component.env.services[payload.service];
             const result = service[payload.method].apply(service, payload.args || []);
             payload.callback(result);
         } else {

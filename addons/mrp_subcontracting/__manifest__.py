@@ -100,7 +100,6 @@
             'web/static/src/legacy/js/core/time.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
-            'web/static/src/legacy/js/common_env.js',
 
             ('include', 'web._assets_bootstrap'),
 
@@ -142,13 +141,10 @@
 
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
-            'web/static/src/legacy/legacy_setup.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/js/env.js',
 
             'mrp_subcontracting/static/src/subcontracting_portal/*',
             'web/static/src/start.js',
-            'web/static/src/legacy/legacy_setup.js',
         ],
     },
     'uninstall_hook': 'uninstall_hook',
