@@ -176,10 +176,26 @@ class CustomerPortal(Controller):
         values = self._prepare_portal_layout_values()
         return request.render("portal.portal_my_home", values)
 
+    @route(['/my/addresses'], type='http', auth='user', website=True)
+    def addresses(self):
+        values = {
+            **self._prepare_portal_layout_values(),
+            'partner': request.env.user.partner_id,
+            'page_name': 'my_addresses'
+        }
+        return request.render("portal.portal_my_addresses", values)
+
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, redirect=None, **post):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+        user_partner = request.env.user.partner_id
+        partner_id = int(post.get('address', user_partner.id))
+        if partner_id == user_partner.id:
+            partner = user_partner
+        elif partner_id in user_partner.child_ids.ids:
+            partner = user_partner.browse(partner_id)
+        else:
+            raise request.not_found()
         values.update({
             'error': {},
             'error_message': [],

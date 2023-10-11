@@ -12,7 +12,7 @@ Generate tasks in Project app from a form published on your website. This module
     'depends': ['website', 'project'],
     'data': [
         'data/website_form_project_data.xml',
-        'views/project_portal_project_task_template.xml',
+        # 'views/project_portal_project_task_template.xml',
         'views/project_portal_project_project_template.xml',
         ],
     'installable': True,

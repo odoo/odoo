@@ -131,7 +131,11 @@
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb flex-grow-1 mb-0 p-0">
             <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
+            <li t-if="page_name == 'my_addresses'" class="breadcrumb-item">Addresses</li>
+            <t t-if="page_name == 'my_details'">
+                <li class="breadcrumb-item"><a href="/my/addresses" aria-label="Addresses" title="Addresses">Addresses</a></li>
+                <li class="breadcrumb-item">Details</li>
+            </t>
         </ol>
     </template>
 
@@ -147,7 +151,6 @@
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
             <t t-set="is_portal" t-value="True"/>
-
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container my-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <t t-call="portal.portal_breadcrumbs"/>
@@ -257,7 +260,7 @@
                             <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
                             <t t-set="title">Addresses</t>
                             <t t-set="text">Add, remove or modify your addresses</t>
-                            <t t-set="url" t-value="'/my/account'"/>
+                            <t t-set="url" t-value="'/my/addresses'"/>
                             <t t-set="config_card" t-value="True"/>
                         </t>
                         <t t-call="portal.portal_docs_entry">
@@ -813,5 +816,38 @@
                 <div class="oe_structure mb32" id="oe_structure_portal_sidebar_1"/>
             </body>
         </t>
+    </template>
+
+    <template id="portal_my_addresses" name="Addresses">
+        <t t-call="portal.portal_layout">
+            <h3>Your Account Address</h3>
+            <t t-call="portal.address_card"/>
+            <h5>Other Addresses</h5>
+            <ul>
+                <t t-foreach="partner.child_ids" t-as="partner">
+                    <t t-call="portal.address_card"/>
+                </t>
+            </ul>
+        </t>
+    </template>
+
+    <template id="address_card">
+        <a t-attf-href="/my/account?address={{partner.id}}" t-att-title="title" class="d-flex justify-content-start gap-3 align-items-center h-100 p-3">
+            <div>
+                <h5 class="mb-0 d-flex gap-3">
+                    <i t-if="partner.type == 'invoice'" class="fa fa-file-text-o fa-fw" role="img"/>
+                    <i t-if="partner.type == 'delivery'" class="fa fa-truck fa-fw" role="img"/>
+                    <span t-out="partner.name"/>
+                </h5>
+
+                <span>
+                    <t t-if="partner.email" t-out="partner.email"/>
+                <div>
+                    <t t-out="partner.zip + ' '"/><t t-out="partner.city"/>
+                </div>
+                <t t-if="partner.state_id" t-out="partner.state_id.name + ' '"/><t t-out="partner.country_id.name"/>
+                </span>
+            </div>
+        </a>
     </template>
 </odoo>
