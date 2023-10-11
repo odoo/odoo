@@ -174,6 +174,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',
+            'web/static/lib/odoo_ui_icons/style.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
