@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+import re
+from stdnum.fr import siret
+
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 
@@ -121,6 +125,14 @@ class ResPartner(models.Model):
         ]
     )
 
+    @api.constrains('peppol_endpoint')
+    def _check_peppol_fields(self):
+        for partner in self:
+            if partner.peppol_endpoint and partner.peppol_eas:
+                error = self._build_error_peppol_endpoint(partner.peppol_eas, partner.peppol_endpoint)
+                if error:
+                    raise ValidationError(error)
+
     @api.depends('country_code')
     def _compute_ubl_cii_format(self):
         for partner in self:
@@ -139,35 +151,45 @@ class ResPartner(models.Model):
             else:
                 partner.ubl_cii_format = partner.ubl_cii_format
 
-    @api.depends('country_code')
+    @api.depends('peppol_eas')
     def _compute_peppol_endpoint(self):
+        """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
-            if partner.ubl_cii_format != 'facturx' and partner.country_code in EAS_MAPPING:
-                eas_to_field = EAS_MAPPING[partner.country_code]
-                # Try to set both the peppol_eas and the peppol_endpoint
-                for field_name in eas_to_field.values():
-                    if field_name and field_name in partner._fields and partner[field_name]:
-                        partner.peppol_endpoint = partner[field_name]
-                # If it's not possible to set the peppol_endpoint, just set the peppol_eas
-                if not partner.peppol_endpoint:
-                    partner.peppol_endpoint = partner.peppol_endpoint
-            else:
-                partner.peppol_endpoint = partner.peppol_endpoint
+            partner.peppol_endpoint = partner.peppol_endpoint
+            if partner.country_code in EAS_MAPPING:
+                field = EAS_MAPPING[partner.country_code].get(partner.peppol_eas)
+                if field \
+                        and field in partner._fields \
+                        and partner[field] \
+                        and not partner._build_error_peppol_endpoint(partner.peppol_eas, partner[field]):
+                    partner.peppol_endpoint = partner[field]
 
     @api.depends('country_code')
     def _compute_peppol_eas(self):
+        """
+        If the country_code changes, recompute the EAS only if there is a country_code, it exists in the
+        EAS_MAPPING, and the current EAS is not consistent with the new country_code.
+        """
         for partner in self:
-            if partner.ubl_cii_format != 'facturx' and partner.country_code in EAS_MAPPING:
+            partner.peppol_eas = partner.peppol_eas
+            if partner.country_code and partner.country_code in EAS_MAPPING:
                 eas_to_field = EAS_MAPPING[partner.country_code]
-                # Try to set both the peppol_eas and the peppol_endpoint
-                for eas, field_name in eas_to_field.items():
-                    if field_name in partner._fields and partner[field_name]:
-                        partner.peppol_eas = eas
-                # If it's not possible to set the peppol_endpoint, just set the peppol_eas
-                if not partner.peppol_eas:
-                    partner.peppol_eas = list(eas_to_field.keys())[0]
-            else:
-                partner.peppol_eas = partner.peppol_eas
+                if partner.peppol_eas not in eas_to_field.keys():
+                    new_eas = list(EAS_MAPPING[partner.country_code].keys())[0]
+                    # Iterate on the possible EAS until a valid one is found
+                    for eas, field in eas_to_field.items():
+                        if field and field in partner._fields and partner[field]:
+                            if not partner._build_error_peppol_endpoint(eas, partner[field]):
+                                new_eas = eas
+                                break
+                    partner.peppol_eas = new_eas
+
+    def _build_error_peppol_endpoint(self, eas, endpoint):
+        """ This function contains all the rules regarding the peppol_endpoint."""
+        if eas == '0208' and not re.match(r"^\d{10}$", endpoint):
+            return _("The Peppol endpoint is not valid. The expected format is: 0239843188")
+        if eas == '0009' and not siret.is_valid(endpoint):
+            return _("The Peppol endpoint is not valid. The expected format is: 73282932000074")
 
     def _get_edi_builder(self):
         self.ensure_one()
