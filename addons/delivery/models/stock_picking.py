@@ -176,13 +176,14 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
 
-    def _send_confirmation_email(self):
+    def _action_done(self):
+        res = super(StockPicking, self)._action_done()
         for pick in self:
             if pick.carrier_id:
                 if pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming':
                     pick.sudo().send_to_shipper()
             pick._check_carrier_details_compliance()
-        return super(StockPicking, self)._send_confirmation_email()
+        return res
 
     def _pre_put_in_pack_hook(self, move_line_ids):
         res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
