@@ -29,6 +29,7 @@ class MassMailingContact(models.Model):
                     (0, 0, {'list_id': list_id}) for list_id in list_ids]
         return res
 
+    active = fields.Boolean(default=True, help="The active field allows you to hide the contact without removing it.")
     name = fields.Char()
     company_name = fields.Char(string='Company Name')
     title_id = fields.Many2one('res.partner.title', string='Title')

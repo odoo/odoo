@@ -10,6 +10,9 @@
                     string="Name / Email"/>
                 <field name="tag_ids"/>
                 <field name="list_ids"/>
+                
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
                 <filter string="Valid Email Recipients"
                     name="filter_valid_email_recipient"
