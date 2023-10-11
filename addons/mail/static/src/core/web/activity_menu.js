@@ -55,7 +55,7 @@ export class ActivityMenu extends Component {
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
         };
-        let domain = [["activity_ids.user_id", "=", this.userId]];
+        let domain = [["activity_user_id", "=", this.userId]];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();
         }
