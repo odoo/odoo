@@ -46,6 +46,7 @@
         'data/event_demo.xml',
         'data/event_question_demo.xml',
         'data/event_registration_demo.xml',
+        'data/event_registration_answer_demo.xml',
     ],
     'application': True,
     'assets': {
