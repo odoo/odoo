@@ -52,7 +52,6 @@
                             <page string="Activities To Generate">
                                 <field name="plan_activity_type_ids" nolabel="1">
                                     <tree>
-                                        <field name="company_id" column_invisible="True"/>
                                         <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                                         <field name="summary"/>
                                         <field name="responsible"/>
@@ -74,7 +73,6 @@
                     <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                     <field name="summary"/>
                     <field name="responsible"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -84,12 +82,10 @@
             <field name="model">hr.plan.activity.type</field>
             <field name="arch" type="xml">
                 <form string="Activity">
-                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <group>
                             <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                             <field name="summary"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="responsible"/>
                             <field name="responsible_id" invisible="responsible != 'other'"/>
                             <field name="note"/>

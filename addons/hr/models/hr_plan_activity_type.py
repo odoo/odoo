@@ -11,7 +11,6 @@ class HrPlanActivityType(models.Model):
     _rec_name = 'summary'
     _check_company_auto = True
 
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity Type',
         default=lambda self: self.env.ref('mail.mail_activity_data_todo'),
@@ -27,7 +26,6 @@ class HrPlanActivityType(models.Model):
     responsible_id = fields.Many2one(
         'res.users',
         'Other Responsible',
-        check_company=True,
         help='Specific responsible of activity if not linked to the employee.')
     plan_id = fields.Many2one('hr.plan')
     note = fields.Html('Note')
