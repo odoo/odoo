@@ -73,20 +73,6 @@ var ServicesMixin = {
         });
         return result;
     },
-    /**
-     * Displays a notification.
-     *
-     * @param {Object} options
-     * @param {string} [options.title]
-     * @param {string} [options.subtitle]
-     * @param {string} [options.message]
-     * @param {string} [options.type='warning'] 'info', 'success', 'warning', 'danger' or ''
-     * @param {boolean} [options.sticky=false]
-     * @param {string} [options.className]
-     */
-    displayNotification: function (options) {
-        return this.call('notification', 'notify', options);
-    },
 };
 
 export default ServicesMixin;

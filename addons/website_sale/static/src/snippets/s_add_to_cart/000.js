@@ -11,6 +11,11 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
         'click': '_onClickAddToCartButton',
     },
 
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
+
     _onClickAddToCartButton: async function (ev) {
         const dataset = ev.currentTarget.dataset;
 
@@ -29,11 +34,10 @@ publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
                 product_id: productId,
             });
             if (!isAddToCartAllowed) {
-                this.displayNotification({
-                    title: 'User Error',
-                    message: _t('This product does not exist therefore it cannot be added to cart.'),
-                    type: 'warning'
-                });
+                this.notification.add(
+                    _t('This product does not exist therefore it cannot be added to cart.'),
+                    { title: 'User Error', type: 'warning' }
+                );
                 return;
             }
             this.isBuyNow = action === 'buy_now';

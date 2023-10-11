@@ -61,6 +61,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -122,9 +123,8 @@ options.registry.BlogPostTagSelection = options.Class.extend({
                 && (typeof(tag.id) === 'number' || this.tagIDs.includes(tag.id));
         });
         if (existing) {
-            return this.displayNotification({
+            return this.notification.add(_t("This tag already exists"), {
                 type: 'warning',
-                message: _t("This tag already exists"),
             });
         }
         const newTagID = uniqueId(NEW_TAG_PREFIX);

@@ -1,7 +1,5 @@
 /** @odoo-module alias=web.legacySetup **/
 
-import { registry } from "../core/registry";
-import { makeLegacyNotificationService } from "./utils";
 import legacyEnv from "@web/legacy/js/env";
 import { templates } from "@web/core/assets";
 
@@ -16,10 +14,6 @@ export const legacySetupProm = new Promise((resolve) => {
 // with the starting of the webclient)
 (async () => {
     Component.env = legacyEnv;
-    const serviceRegistry = registry.category("services");
-    // add a service to redirect rpc events triggered on the bus in the
-    // legacy env on the bus in the wowl env
-    serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     await whenReady();
     legacyEnv.templates = templates;
     legacySetupResolver(legacyEnv);

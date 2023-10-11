@@ -459,6 +459,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         this._super(...arguments);
         this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -560,10 +561,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      */
     addImages: function () {
         if(this.mode === 'product.template'){
-            this.displayNotification({
-                type: 'info',
-                message: 'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants'
-            });
+            this.notification.add(
+                'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants',
+                { type: 'info' }
+            );
         }
         let extraImageEls;
         this.call("dialog", "add", AttachmentMediaDialog, {
