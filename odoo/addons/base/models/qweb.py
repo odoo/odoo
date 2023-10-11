@@ -14,8 +14,7 @@ from textwrap import dedent
 import itertools
 from lxml import etree, html
 from psycopg2.extensions import TransactionRollbackError
-import werkzeug
-from werkzeug.utils import escape as _escape
+from odoo.tools.misc import html_escape as escape
 
 from odoo.tools import pycompat, freehash, wrap_values
 
@@ -179,8 +178,6 @@ class QWebException(Exception):
     def __repr__(self):
         return str(self)
 
-# Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-escape = (lambda text: _escape(text, quote=True)) if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0') else _escape
 
 def foreach_iterator(base_ctx, enum, name):
     ctx = base_ctx.copy()
