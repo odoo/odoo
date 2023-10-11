@@ -72,16 +72,9 @@ class AccountMove(models.Model):
                         valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
                         valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                         valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
-
-                    elif line.product_id.cost_method == 'fifo':
-                        # In this condition, we have a real price-valuated product which has not yet been received
-                        valuation_price_unit = po_currency._convert(
-                            line.purchase_line_id.price_unit, move.currency_id,
-                            po_company, move.date, round=False,
-                        )
                     else:
-                        # For average/fifo/lifo costing method, fetch real cost price from incoming moves.
-                        price_unit = line.purchase_line_id.product_uom._compute_price(line.purchase_line_id.price_unit, line.product_uom_id)
+                        po_pu = line.purchase_line_id._get_gross_price_unit()
+                        price_unit = line.product_id.uom_id._compute_price(po_pu, line.product_uom_id)
                         valuation_price_unit = po_currency._convert(
                             price_unit, move.currency_id,
                             po_company, move.date, round=False
