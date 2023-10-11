@@ -21,7 +21,7 @@
                 </t>
                 <div class="o_calendar_container">
                     <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
-                    <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
+                    <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block d-print-none">
                         <div class="d-flex justify-content-between">
                             <button
                                 class="btn btn-secondary me-1 o_calendar_button_today"
