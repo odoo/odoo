@@ -37,7 +37,6 @@ class EventRegistration(models.Model):
         'event.event.ticket', string='Event Ticket', ondelete='restrict')
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
-
     # utm informations
     utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
@@ -66,9 +65,14 @@ class EventRegistration(models.Model):
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
         string='Status', default='draft', readonly=True, copy=False, tracking=6)
+    # properties
+    registration_properties = fields.Properties(
+        'Properties', definition='event_id.registration_properties_definition', copy=True)
+
     _sql_constraints = [
         ('barcode_event_uniq', 'unique(barcode)', "Barcode should be unique")
     ]
+
     @api.depends('partner_id')
     def _compute_name(self):
         for registration in self:
