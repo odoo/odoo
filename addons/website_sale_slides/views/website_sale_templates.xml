@@ -21,8 +21,9 @@
                     <span t-if="course.image_1920" t-field="course.image_1920" t-options="{'widget': 'image', 'class': 'my-2'}"/>
                     <img t-else="" class="img img-fluid my-2" src="/website_slides/static/src/img/channel-training-default.jpg"/>
                 </div>
+                <t t-set="invitation_link" t-value="course_memberships[course].invitation_link"/>
                 <div class="col-7">
-                    <a t-attf-href="/slides/#{slug(course)}"><h3 t-out="course.name" class="m-2"/></a>
+                    <a t-att-href="invitation_link"><h3 t-out="course.name" class="m-2"/></a>
                     <div t-out="course.description_short" class="fw-light o_wslides_desc_truncate_2 ms-2"/>
                     <div class="fw-light ms-2 mt-2">
                         <t t-out="course.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
@@ -30,7 +31,7 @@
                            <t t-if="course.total_time"> - </t><t t-out="course.total_slides"/> step(s)
                         </t>
                     </div>
-                    <a role="button" class="btn btn-primary ms-2 my-2" t-attf-href="/slides/#{slug(course)}">
+                    <a role="button" class="btn btn-primary ms-2 my-2" t-att-href="invitation_link">
                         Start Learning
                     </a>
                 </div>
